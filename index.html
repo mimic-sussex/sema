@@ -22,7 +22,6 @@
 <script src="dndTree.js"></script>
 <script>
 
-
 	require.config({
 		paths: {
 			'vs': '../node_modules/monaco-editor/min/vs',
@@ -44,13 +43,13 @@
 			readOnly: false,
 			theme: "vs-dark",
 		});
+
 		var editor2 = monaco.editor.create(document.getElementById('editor2'), {
 			value: [
 				'\tconsole.log("MaxiLib Output");'
 			].join('\n'),
 			language: 'javascript'
 		});
-
 
 		var myCondition1 = editor1.createContextKey(/*key name*/'myCondition1', /*default value*/false);
 		var myCondition2 = editor1.createContextKey(/*key name*/'myCondition2', /*default value*/false);
