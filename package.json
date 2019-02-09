@@ -1,0 +1,19 @@
+{
+  "name": "eppeditor",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "live-server --port=9000 --mount=/:public"
+  },
+  "author": "Francisco Bernardo <f.bernardo@sussex.ac.uk>",
+  "license": "MIT",
+  "dependencies": {
+    "monaco-editor": "^0.15.6",
+    "monaco-themes": "^0.2.5",
+    "monaco-vim": "^0.0.10"
+  },
+  "devDependencies": {
+    "live-server": "^1.2.1"
+  }
+}
