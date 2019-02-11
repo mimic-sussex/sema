@@ -26,6 +26,10 @@ NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
 EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 
+// [FB]: Added require 
+var d3 = require('d3')
+
+
 // Get JSON data
 treeJSON = d3.json("flare.json", function(error, treeData) {
 
