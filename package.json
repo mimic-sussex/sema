@@ -3,21 +3,26 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "author": "Francisco Bernardo <f.bernardo@sussex.ac.uk>",
+  "license": "MIT",
   "scripts": {
     "test": "live-server --port=9000 --mount=/:public",
     "build": "webpack"
   },
-  "author": "Francisco Bernardo <f.bernardo@sussex.ac.uk>",
-  "license": "MIT",
   "dependencies": {
     "d3": "^5.9.1",
+    "jquery": "^3.3.1",
     "monaco-editor": "^0.15.6",
+    "monaco-editor-webpack-plugin": "^1.7.0",
     "monaco-vim": "^0.0.10",
     "moo": "^0.5.0",
     "nearley": "^2.16.0"
   },
   "devDependencies": {
+    "clean-webpack-plugin": "^1.0.1",
+    "css-loader": "^2.1.0",
     "live-server": "^1.2.1",
+    "style-loader": "^0.23.1",
     "webpack": "^4.29.1",
     "webpack-cli": "^3.2.3"
   }
