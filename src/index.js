@@ -1,3 +1,5 @@
+
+
 require.config({
   paths: {
     'vs': '../node_modules/monaco-editor/min/vs',
@@ -41,7 +43,8 @@ require(['vs/editor/editor.main', 'monaco-vim'], function(a, MonacoVim) {
 
       alert("Text:" + text + '\n\n'
             + "Selection: " + selection +  '\n\n'
-            + "Text in Selection" + valueInSelection );
+            + "Text in Selection: " + valueInSelection  +  '\n\n'
+          );
 
   }, 'myCondition1 && myCondition2')
 
