@@ -56,7 +56,16 @@
 
 		editor1.addCommand(monaco.KeyMod.Shift | monaco.KeyCode.Enter, function() {
 		    // services available in `ctx`
-		    alert('my command is executing!');
+
+				var text = editor1.getValue();
+
+
+				var selection = editor1.getSelection(); //[2,1 -> 2,34]
+				var valueInSelection = editor1.getModel().getValueInRange(selection); //[2,1 -> 2,34]
+
+		    alert("Text:" + text + '\n\n'
+							+ "Selection: " + selection +  '\n\n'
+							+ "Text in Selection" + valueInSelection );
 
 		}, 'myCondition1 && myCondition2')
 
