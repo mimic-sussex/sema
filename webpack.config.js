@@ -10,6 +10,9 @@ const outputDir = "./build/";
 module.exports = {
   mode: 'development',
   entry: './src/index.js',
+  node: {
+    fs: 'empty'
+  },
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, outputDir)
