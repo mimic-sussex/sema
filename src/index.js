@@ -3,6 +3,9 @@ import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import * as nearley from 'nearley';
 import * as processor from './eppprocessor';
 import MaxiLibEngine from './maxiLibEngine';
+//
+import treeJSON from './dndTree';
+import css from './tree.css';
 
 var editor1 = monaco.editor.create(document.getElementById('editor1'), {
   value: [
