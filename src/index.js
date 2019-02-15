@@ -2,10 +2,16 @@ import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 
 import * as nearley from 'nearley';
 import * as processor from './eppprocessor';
-import MaxiLibEngine from './maxiLibEngine';
-//
+
+
+// import snare from './assets/909.wav';
+
+import { MaxiLibEngine1, MaxiLibEngine2, Monosynth } from './maxiLibEngine';
+
+
+import MaxiLib from './maxiLib';
 import treeJSON from './dndTree';
-import css from './tree.css';
+import css from './style/tree.css';
 
 var editor1 = monaco.editor.create(document.getElementById('editor1'), {
   value: [
@@ -31,11 +37,34 @@ var editor2 = monaco.editor.create(document.getElementById('editor2'), {
 
 });
 
-
 var myCondition1 = editor1.createContextKey( /*key name*/ 'myCondition1', /*default value*/ false);
 var myCondition2 = editor1.createContextKey( /*key name*/ 'myCondition2', /*default value*/ false);
 
-// var maxiLibEngine = new MaxiLibEngine();
+// function execMaxi(){
+//   var maxiLib = MaxiLib();
+//   var audio = new maxiLib.maxiAudio();
+//   audio.init();
+//   var mySine = new maxiLib.maxiOsc();
+//   audio.play = function(){
+//   	this.output = mySine.sinewave(440);
+//   }
+// }
+// execMaxi();
+
+// MaxiLibEngine2.prototype.helloMaxi();
+
+let engine1 = new MaxiLibEngine1();
+console.log("engine loaded");
+console.log("M: " + MaxiLibEngine1);
+// console.log("engine: " + Object.keys(MaxiLibEngine1));
+// console.log("instance: " + Object.keys(MaxiLibEngine1._instance));
+// console.log("prototype: " + Object.keys(MaxiLibEngine1.prototype));
+
+engine1.init();
+
+// console.log("p_init: " + Object.keys(MaxiLibEngine.prototype.init()));
+// console.log(MaxiLibEngine.prototype.init);
+// Object.keys("enging prototype: " + maxiLibEngine.prototype);
 // maxiLibEngine.interpret( "JSON.stringify(AST)" );
 // maxiLibEngine.play();
 

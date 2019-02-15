@@ -21,7 +21,12 @@ module.exports = {
     rules: [{
       test: /\.css$/,
       use: ['style-loader', 'css-loader']
-    }]
+    },
+    {
+      test: /\.mp3$/,
+      loader: 'file-loader'
+    }
+  ]
   },
   plugins: [
     new CleanWebpackPlugin([outputDir]),

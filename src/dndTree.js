@@ -31,7 +31,7 @@ var d3 = require('d3')
 
 
 // Get JSON data
-export default treeJSON = d3.json("./flare.json", function(error, treeData) {
+var treeJSON = d3.json("./flare.json", function(error, treeData) {
 
     // Calculate total nodes, max label length
     var totalNodes = 0;
@@ -552,3 +552,5 @@ export default treeJSON = d3.json("./flare.json", function(error, treeData) {
     update(root);
     centerNode(root);
 });
+
+export { treeJSON };
