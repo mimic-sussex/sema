@@ -4,17 +4,22 @@ import MaxiLib from './maxiLib';
 class MaxiLibEngine1 {
 
   constructor(type){
+    // DEBUG:
     console.log("MaxiLibEngine1 loading...");
+
 
     //Initialization code
     this.maxiLib = MaxiLib();
-    this.audio = new maxiLib.maxiAudio();
-    let timer = new maxiLib.maxiOsc(); //this is the metronome
+
+    console.log("MaxiLibEngine1 loaded");
+
+    this.audio = new this.maxiLib.maxiAudio();
+    this.timer = new this.maxiLib.maxiOsc(); //this is the metronome
     let currentCount = 0;
     let lastCount = 0; //these values are used to check if we have a new beat this sample
     let mix = 0.0;
     let monosynthLoaded = false;
-    let mySine = new maxiLib.maxiOsc();
+    this.mySine = new this.maxiLib.maxiOsc();
 
     // audio.init();
     // console.log("MaxiLibEngine loaded");
@@ -23,13 +28,15 @@ class MaxiLibEngine1 {
     //   // direct value to output
     //   this.output = mySine.sinewave(440);
     // }
+    // DEBUG:
+
   }
 
   init() {
-    audio.init();
-    audio.play = function() {
+    this.audio.init();
+    this.audio.play = function() {
       // direct value to output
-      this.output = mySine.sinewave(440);
+      this.output = this.mySine.sinewave(440);
     }
   }
 
@@ -70,7 +77,7 @@ var MaxiLibEngine2 = function() {
 
   console.log("MaxiLibEngine loaded");
 
-  initd = function(){
+  init = function(){
     audio.init();
     audio.play = function() {
       // direct value to output
@@ -172,12 +179,7 @@ function Monosynth(a = 1000, d = 1, s = 1, r = 1000) {
   this.VCF = new maxiLib.maxiFilter();
   this.ADSR = new maxiLib.maxiEnv();
 
-  this.VCO1out = null;
-  this.VCO2out = null;
-  this.LFO1out = null;
-  this.LFO2out = null;
-  this.VCFout = null;
-  this.ADSRout = null;
+  this.VCO1out = this.VCO2out = this.LFO1out = this.LFO2out = this.VCFout = this.ADSRout = null;
 
   this.ADSR.setAttack(a);
   this.ADSR.setDecay(d);

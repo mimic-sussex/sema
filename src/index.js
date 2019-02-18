@@ -6,8 +6,7 @@ import * as processor from './eppprocessor';
 
 // import snare from './assets/909.wav';
 
-import { MaxiLibEngine1, MaxiLibEngine2, Monosynth } from './maxiLibEngine';
-
+import { MaxiLibEngine1, MaxiLibEngine2, Monosynth } from './maxiAudioEngine';
 
 import MaxiLib from './maxiLib';
 import treeJSON from './dndTree';
@@ -54,14 +53,14 @@ var myCondition2 = editor1.createContextKey( /*key name*/ 'myCondition2', /*defa
 // MaxiLibEngine2.prototype.helloMaxi();
 
 let engine1 = new MaxiLibEngine1();
-console.log("engine loaded");
-console.log("M: " + MaxiLibEngine1);
+// console.log("engine loaded");
+// console.log("M: " + MaxiLibEngine1);
 // console.log("engine: " + Object.keys(MaxiLibEngine1));
 // console.log("instance: " + Object.keys(MaxiLibEngine1._instance));
 // console.log("prototype: " + Object.keys(MaxiLibEngine1.prototype));
 
 engine1.init();
-
+//
 // console.log("p_init: " + Object.keys(MaxiLibEngine.prototype.init()));
 // console.log(MaxiLibEngine.prototype.init);
 // Object.keys("enging prototype: " + maxiLibEngine.prototype);
@@ -104,10 +103,6 @@ editor1.addCommand(monaco.KeyMod.Shift | monaco.KeyCode.Enter, function() {
 
   // console.log( JSON.stringify(AST) );
   editor2.getModel().setValue(  JSON.stringify(AST)  );
-  //
-
-
-
   // maxiLibEngine.interpret( JSON.stringify(AST) );
   // maxiLibEngine.play();
 
