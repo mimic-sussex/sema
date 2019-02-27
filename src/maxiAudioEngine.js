@@ -7,7 +7,6 @@ class MaxiLibEngine1 {
     // DEBUG:
     console.log("MaxiLibEngine1 loading...");
 
-
     //Initialization code
     this.maxiLib = MaxiLib();
 
@@ -21,32 +20,44 @@ class MaxiLibEngine1 {
     let monosynthLoaded = false;
     this.mySine = new this.maxiLib.maxiOsc();
 
-    // audio.init();
-    // console.log("MaxiLibEngine loaded");
-    //
-    // audio.play = function() {
-    //   // direct value to output
-    //   this.output = mySine.sinewave(440);
-    // }
-    // DEBUG:
+    audio.play = function() {
+      // direct value to output
+      this.mySine.sinewave(440);
+      this.output = mySine.sinewave(440);
 
+    }
   }
 
   init() {
+
+console.log(this);
     this.audio.init();
-    this.audio.play = function() {
+
+    this.audio.mzedTest();
+
+
+    console.log("this.mySine:" + this.mySine.sinewave(440));
+
+    // DEBUG:  // THIS DOES NOT WORK
+    // console.log("mySine: " + mySine.sinewave(440));
+
+    this.audio.play = () => {
       // direct value to output
+
       this.output = this.mySine.sinewave(440);
+      // return this.mySine.sinewave(440);
     }
+
+    this.audio.resetAudio();
   }
 
   loadSamples() {
     //TODO:1 – bundle files with webpack and load them
     //TODO:2 – refactor to receive json descrition and load files dynamically
-    // audio.loadSample("./assets/909b.wav", kick);
-    // audio.loadSample("./assets/909.wav", snare);
-    // audio.loadSample("./assets/909closed.wav", closedHat);
-    // audio.loadSample("./assets/909open.wav", openHat);
+    audio.loadSample("./assets/909b.wav", kick);
+    audio.loadSample("./assets/909.wav", snare);
+    audio.loadSample("./assets/909closed.wav", closedHat);
+    audio.loadSample("./assets/909open.wav", openHat);
   }
 
 }

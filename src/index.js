@@ -6,11 +6,43 @@ import * as processor from './eppprocessor';
 
 // import snare from './assets/909.wav';
 
-import { MaxiLibEngine1, MaxiLibEngine2, Monosynth } from './maxiAudioEngine';
+import {
+  MaxiLibEngine1,
+  MaxiLibEngine2,
+  Monosynth
+} from './maxiAudioEngine';
 
 import MaxiLib from './maxiLib';
 import treeJSON from './dndTree';
 import css from './style/tree.css';
+
+
+//
+
+console.log("MaxiAudio loading...");
+//Initialization code
+let maxiLib = MaxiLib();
+let audio = new maxiLib.maxiAudio();
+let timer = new maxiLib.maxiOsc(); //this is the metronome
+let currentCount = 0;
+let lastCount = 0; //these values are used to check if we have a new beat this sample
+let mix = 0.0;
+let monosynthLoaded = false;
+
+console.log("MaxiAudio loaded...");
+
+maxiAudio.play = function() {
+
+  this.output = mixer();
+
+};
+
+
+
+
+play();
+
+
 
 var editor1 = monaco.editor.create(document.getElementById('editor1'), {
   value: [
@@ -59,8 +91,6 @@ let engine1 = new MaxiLibEngine1();
 // console.log("instance: " + Object.keys(MaxiLibEngine1._instance));
 // console.log("prototype: " + Object.keys(MaxiLibEngine1.prototype));
 
-engine1.init();
-//
 // console.log("p_init: " + Object.keys(MaxiLibEngine.prototype.init()));
 // console.log(MaxiLibEngine.prototype.init);
 // Object.keys("enging prototype: " + maxiLibEngine.prototype);
@@ -102,7 +132,7 @@ editor1.addCommand(monaco.KeyMod.Shift | monaco.KeyCode.Enter, function() {
   var AST = parser.results[0];
 
   // console.log( JSON.stringify(AST) );
-  editor2.getModel().setValue(  JSON.stringify(AST)  );
+  editor2.getModel().setValue(JSON.stringify(AST));
   // maxiLibEngine.interpret( JSON.stringify(AST) );
   // maxiLibEngine.play();
 
