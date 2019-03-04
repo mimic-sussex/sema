@@ -12,35 +12,36 @@ import {
   Monosynth
 } from './maxiAudioEngine';
 
+
+
 import MaxiLib from './maxiLib';
 import treeJSON from './dndTree';
 import css from './style/tree.css';
-
+import AudioWorkletIndicator from './components';1
 
 //
 
-console.log("MaxiAudio loading...");
-//Initialization code
-let maxiLib = MaxiLib();
-let audio = new maxiLib.maxiAudio();
-let timer = new maxiLib.maxiOsc(); //this is the metronome
-let currentCount = 0;
-let lastCount = 0; //these values are used to check if we have a new beat this sample
-let mix = 0.0;
-let monosynthLoaded = false;
-
-console.log("MaxiAudio loaded...");
-
-maxiAudio.play = function() {
-
-  this.output = mixer();
-
-};
 
 
 
-
-play();
+// console.log("MaxiAudio loading...");
+// //Initialization code
+//
+// let audio = maxiLib.maxiAudio();
+// let timer = new maxiLib.maxiOsc(); //this is the metronome
+// let currentCount = 0;
+// let lastCount = 0; //these values are used to check if we have a new beat this sample
+// let mix = 0.0;
+// let monosynthLoaded = false;
+//
+// console.log("MaxiAudio loaded...");
+//
+// maxiAudio.play = function() {
+//
+//   this.output =
+// };
+//
+// play();
 
 
 
@@ -84,7 +85,8 @@ var myCondition2 = editor1.createContextKey( /*key name*/ 'myCondition2', /*defa
 
 // MaxiLibEngine2.prototype.helloMaxi();
 
-let engine1 = new MaxiLibEngine1();
+// let engine1 = new MaxiLibEngine1();
+// engine1.init();
 // console.log("engine loaded");
 // console.log("M: " + MaxiLibEngine1);
 // console.log("engine: " + Object.keys(MaxiLibEngine1));
@@ -135,6 +137,8 @@ editor1.addCommand(monaco.KeyMod.Shift | monaco.KeyCode.Enter, function() {
   editor2.getModel().setValue(JSON.stringify(AST));
   // maxiLibEngine.interpret( JSON.stringify(AST) );
   // maxiLibEngine.play();
+
+
 
 }, 'myCondition1 && myCondition2')
 

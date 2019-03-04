@@ -12,25 +12,25 @@ class MaxiLibEngine1 {
 
     console.log("MaxiLibEngine1 loaded");
 
-    this.audio = new this.maxiLib.maxiAudio();
-    this.timer = new this.maxiLib.maxiOsc(); //this is the metronome
+    this.audio = new this.maxiLib.maxiAudio;
+    this.timer = new this.maxiLib.maxiOsc; //this is the metronome
     let currentCount = 0;
     let lastCount = 0; //these values are used to check if we have a new beat this sample
     let mix = 0.0;
     let monosynthLoaded = false;
     this.mySine = new this.maxiLib.maxiOsc();
 
-    audio.play = function() {
-      // direct value to output
-      this.mySine.sinewave(440);
-      this.output = mySine.sinewave(440);
-
-    }
+    // audio.play = function() {
+    //   // direct value to output
+    //   this.mySine.sinewave(440);
+    //   this.output = mySine.sinewave(440);
+    //
+    // }
   }
 
   init() {
 
-console.log(this);
+    console.log(this);
     this.audio.init();
 
     this.audio.mzedTest();
@@ -41,14 +41,63 @@ console.log(this);
     // DEBUG:  // THIS DOES NOT WORK
     // console.log("mySine: " + mySine.sinewave(440));
 
-    this.audio.play = () => {
-      // direct value to output
+    function synSelector(n) {
 
-      this.output = this.mySine.sinewave(440);
-      // return this.mySine.sinewave(440);
+      var mySine = new this.maxiLib.maxiOsc();
+      var myOtherSine = new this.maxiLib.maxiOsc();
+      var myLastSine = new this.maxiLib.maxiOsc();
+
+      var synOut;
+
+      switch (n) {
+        case 0:
+        // Hello world
+        synOut = mySine.sinewave(440);
+        break;
+
+        case 1:
+        // Beating
+        synOut = mySine.sinewave(440) + myOtherSine.sinewave(441);
+        break;
+
+        case 2:
+        // Amplitude Modulation
+        synOut = mySine.sinewave(440) * myOtherSine.sinewave(1);
+        break;
+
+        case 3:
+        // Frequency Modulation
+        synOut = mySine.sinewave(440+(myOtherSine.sinewave(1)*100));
+        break;
+
+        case 4:
+        synOut = mySine.sinewave(myOtherSine.sinewave(30) * 440);
+        break;
+
+        case 5:
+        synOut = mySine.sinewave(myOtherSine.sinewave(myLastSine.sinewave(0.1) * 30) * 440);
+        break;
+        // default:
+        //   synOut = mySine.sinewave(myOtherSine.sinewave(myLastSine.sinewave(0.1) * 30) * 440);
+      }
+      return synOut;
     }
 
-    this.audio.resetAudio();
+    this.audio.play = function() {
+      // direct value to output
+      // this.mySine.sinewave(440);
+      console.log("synSelector"+synSelector);
+      this.output = synSelector(0);
+
+    }
+
+    // this.audio.play = () => (
+    //   // direct value to output
+    //   this.output = this.mySine.sinewave(440);
+    //   // return this.mySine.sinewave(440);
+    // )
+
+    // this.audio.resetAudio();
   }
 
   loadSamples() {
