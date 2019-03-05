@@ -36,25 +36,3 @@
 .ghostCircle, .activeDrag .ghostCircle {
   display: none;
 }
-
-#WorkletIndicator {
-  text-transform: uppercase;
-  font-size: 13px;
-  width: 170px;
-  text-align: center;
-  position: absolute;
-  top: 0;
-  right: 20px;
-}
-
-.was-indicator-found {
-  color: #4caf50;
-  border: 0.1rem solid #4caf50;
-  padding: 0.5rem;
-}
-
-.was-indicator-missing {
-  color: #dd2c00;
-  border: 0.1rem solid #dd2c00;
-  padding: 0.5rem;
-}

@@ -11,12 +11,16 @@ const AudioWorkletIndicator = () => {
 // Check if AudioWorklet is available.
 function _detectAudioWorklet() {
   let context = new OfflineAudioContext(1, 1, 44100);
-  return Boolean(
-      context.audioWorklet &&
-      typeof context.audioWorklet.addModule === 'function');
+  return Boolean(context.audioWorklet && typeof context.audioWorklet.addModule === 'function');
+}
+
+function html(s) {
+  var temp = document.createElement('div');
+  temp.innerHTML = s;
+  return temp.innerHTML;
 }
 
 
-export {
+export default {
   AudioWorkletIndicator
 };

@@ -1,0 +1,66 @@
+/* .container {
+  min-height: 200px;
+  background:red;
+} */
+
+
+/* .CodeMirror {
+    max-width: 300px;
+    max-height: 1000px;
+    width: 100%;
+    height: 100%;
+} */
+
+.CodeMirror {
+  resize: vertical;
+  overflow: auto !important;
+}
+
+#editor1 {
+  /* float:left; */
+  justify-self: stretch;
+  width: 100%;
+  height: 100%;
+  border:1px solid black;
+  margin: 0px;
+  /* margin: 0px 5px 5px 5px; */
+  /* resize: both; */
+}
+
+#editor2 {
+  /* float:left; */
+  /* height:500px; */
+  width: 100%;
+  height: 100%;
+  border:1px solid black;
+  margin: 0px;
+  /* margin: 5px 25px 0px 25px; */
+  /* resize: both; */
+
+}
+
+
+
+/* .handle {
+  background: #f7f7f7;
+  height: 20px;
+  user-select: none;
+  cursor: row-resize;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+}
+
+.handle:before {
+  content: '\2261';
+  color: #999;
+  position: absolute;
+  left: 50%;
+}
+
+.handle:hover {
+  background: #f0f0f0;
+}
+
+.handle:hover:before {
+  color: #000;
+} */

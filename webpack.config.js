@@ -3,7 +3,6 @@
 // Required packages
 const path = require("path");
 const CleanWebpackPlugin = require("clean-webpack-plugin");
-const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
 const outputDir = "./build/";
 
@@ -30,8 +29,6 @@ module.exports = {
   },
   plugins: [
     new CleanWebpackPlugin([outputDir]),
-    new MonacoWebpackPlugin({
-      languages: ['javascript', 'typescript', 'handlebars', 'html', 'css']
-    })
+  
   ]
 };

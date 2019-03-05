@@ -31,7 +31,10 @@ var d3 = require('d3')
 
 
 // Get JSON data
-var treeJSON = d3.json("./flare.json", function(error, treeData) {
+// var treeJSON = d3.json("./flare.json", function(error, treeData) {
+
+
+var treeJSON = d3.json(null, function(error, treeData) {
 
     // Calculate total nodes, max label length
     var totalNodes = 0;
