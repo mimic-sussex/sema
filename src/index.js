@@ -41,8 +41,8 @@ document.getElementById('audioWorkletIndicator').innerHTML = AudioWorkletIndicat
 
 
 var editor1 = CodeMirror(document.getElementById('editor1'), {
-  value: "@gandalf <- [.0x.0-x.0-x.-0x-.-]",
-  theme: "ambiance",
+  value: "//Synth\nosc(∆, 1.0, 1.34).osc(~, 1.0. 1.04).osc(Ø, osc(∞, 440, 1.04)+osc(≈, 66, 1.30))\n\n\/\/Gandalfsbbeat\n@gandalf <- [.0x.0-x.0-x.-0x-.-]",
+  theme: "abcdef",
   lineNumbers: true,
   // mode:  "javascript",
   lineWrapping: true
@@ -51,9 +51,9 @@ editor1.setSize('100%', '100%');
 
 
 var editor2 = CodeMirror(document.getElementById('editor2'), {
-  value: "osc tri 1.0",
+  value: "osc(∆, 1.0, Ø).osc(~, 1.0. 1.04).osc(osc(∞, 440, 1.04)+osc(≈, 66, 1.30))",
   lineNumbers: true,
-  theme: "abcdef",
+  theme: "ambiance",
   lineWrapping: true
 });
 
