@@ -1,4 +1,5 @@
-html, body { height: 100%; background: #222222}
+html, body { height: 100%; background: #000000}
+/* html, body { height: 100%; background: #222222} */
 
 .container {
   display: grid;
@@ -7,15 +8,16 @@ html, body { height: 100%; background: #222222}
     'menu main main right right'
     'footer footer footer footer footer';
 
-  grid-template-rows: 90px /* Header */
+  grid-template-rows: 60px /* Header */
                       1fr /* Main Content */
                       50px; /* Footer */
 
   grid-template-columns:  60px auto 400px;
   grid-gap: 2px;
-  background-color: #222222;
+  background-color: #000000;
+  /* background-color: #222222; */
   padding: 0px;
-  font-size: 30px;
+  font-size: 20px;
   width: 99%;
   height: 99%;
   position: absolute;
@@ -28,12 +30,15 @@ html, body { height: 100%; background: #222222}
   font-size: 30px;
 } */
 
-.containerHeader { grid-area: header; background-color: orange;}
-.containerMenu { grid-area: menu; background-color: red;}
+/* .containerHeader { grid-area: header; background-color: orange;} */
+.containerHeader { grid-area: header; background-color: black;}
+/* .containerMenu { grid-area: menu; background-color: red;} */
+.containerMenu { grid-area: menu; background-color: black;}
 
 .containerMain {
   grid-area: main;
-  background-color: blue;
+  background-color: black;
+  /* background-color: blue; */
   justify-self: stretch;
   grid-column-start: 2/5;
   grid-column-end: 3/5;
@@ -50,16 +55,19 @@ html, body { height: 100%; background: #222222}
 
 }
 
-.containerFooter { grid-area: footer; background-color: purple;}
+/* .containerFooter { grid-area: footer; background-color: purple;} */
+.containerFooter { grid-area: footer; background-color: black;}
 
 .containerHeader {
   display: inline-block;
   /* overflow: hidden; */
   /* float:left */
+  margin: 15px 0 15px 20px;
 }
 
 .headerTitle {
   text-align:left;
+  color: #ccff00;
   /* vertical-align: middle; */
   /* overflow: hidden; */
   float:left;
@@ -67,31 +75,24 @@ html, body { height: 100%; background: #222222}
 
 .headerItemList {
   padding: 0;
-  margin: 0;
-  overflow: hidden;
-  display: inline-block;
+  margin: 0 0 0 40px;
+  width: 500px;
+
+  /* display: inline-block; */
   /* text-align:right; */
   /* vertical-align: middle; */
   overflow: hidden;
-  float:right;
+  float:left;
 }
 
 .headerItem {
   margin: 0 20px 0 20px;
   float:left;
+  color: #da14ff;
  }
 
-.audioWorkletIndicator {
-  float: right;
-  overflow: hidden;
-  width:160px;
-  height:50px;
-  border:1px solid grey;
-  /* margin: 0px 25px 0px 25px; */
-}
 
-
-#WorkletIndicator {
+#audioWorkletIndicator {
   text-transform: uppercase;
   font-size: 13px;
   width: 170px;
@@ -102,8 +103,8 @@ html, body { height: 100%; background: #222222}
 }
 
 .was-indicator-found {
-  color: #4caf50;
-  border: 0.1rem solid #4caf50;
+  color: #39ff14;
+  border: 0.1rem solid #39ff14;
   padding: 0.5rem;
 }
 
