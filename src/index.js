@@ -1,7 +1,4 @@
 // import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
-
-
-
 import * as nearley from 'nearley';
 import * as processor from './eppprocessor';
 
@@ -12,7 +9,7 @@ import {
   MaxiLibEngine1,
   MaxiLibEngine2,
   Monosynth
-} from './maxiAudioEngine';
+} from './audioEngine';
 
 import MaxiLib from './maxiLib';
 import treeJSON from './dndTree'
@@ -41,13 +38,14 @@ document.getElementById('audioWorkletIndicator').innerHTML = AudioWorkletIndicat
 
 
 var editor1 = CodeMirror(document.getElementById('editor1'), {
-  value: "//Synth\nosc(∆, 1.0, 1.34).osc(~, 1.0. 1.04).osc(Ø, osc(∞, 440, 1.04)+osc(≈, 66, 1.30))\n\n\/\/Gandalfsbbeat\n@gandalf <- [.0x.0-x.0-x.-0x-.-]",
+  value: "//Synth\n☺sauron <- osc(∆, 1.0, 1.34).osc(~, 1.0. 1.04).osc(Ø, osc(∞, 440, 1.04)+osc(≈, 66, 1.30))\n\n\/\/Gandalfsbbeat\n☻gandalf <- [.0x.0-x.0-x.-0x-.-]\n\n☺sauron << ☻gandalf",
   theme: "abcdef",
   lineNumbers: true,
   // mode:  "javascript",
   lineWrapping: true
 });
 editor1.setSize('100%', '100%');
+editor1.setOption("vimMode", true);
 
 
 var editor2 = CodeMirror(document.getElementById('editor2'), {
