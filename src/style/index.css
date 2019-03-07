@@ -97,7 +97,8 @@ html, body { height: 100%; background: #000000}
 }
 
 .headerTitle {
-  /* font-family: "LatoWeb"; */
+  font-family: "LatoWebBlack";
+  font-size: 30px;
   text-align:left;
   color: #ccff00;
   /* vertical-align: middle; */

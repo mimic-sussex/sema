@@ -12,7 +12,7 @@ import {
 } from './audioEngine';
 
 import MaxiLib from './maxiLib';
-import treeJSON from './dndTree'
+// import treeJSON from './dndTree';
 import AudioWorkletIndicator from './components';
 
 
@@ -34,6 +34,7 @@ import 'codemirror/lib/codemirror.css';
 
 let audio;
 let customNode;
+let processorCount = 0;
 
 const defaultEditorCode1 = `//Synth
 ☺sauron <- osc(∆, 1.0, 1.34).osc(~, 1.0, 1.04).osc(Ø, osc(∞, 440, 1.04)+osc(≈, 66, 1.30))
@@ -52,7 +53,12 @@ function createEditor1() {
     theme: "abcdef",
     lineNumbers: true,
     // mode:  "javascript",
-    lineWrapping: true
+    lineWrapping: true,
+    extraKeys: {
+      [ "Cmd-Enter" ]: () => playAudio(editor1),
+      [ "Cmd-."]: () => stopAudio(),
+    }
+
   });
   editor1.setSize('100%', '100%');
   editor1.setOption("vimMode", true);
@@ -86,12 +92,50 @@ function createControls(){
   stopButton.textContent = `Stop: ${stopKeys.replace("-", " ")}`;
 
   container.appendChild(runButton);
-  runButton.addEventListener("click", () => playAudio(editor));
+  runButton.addEventListener("click", () => playAudio(editor1));
 
   container.appendChild(stopButton);
   stopButton.addEventListener("click", () => stopAudio());
 
 }
+
+
+// Create and registor processor node according to pattern. NOTE: Custom processor is hardcoded
+function createCustomProcessorCode(userCode, processorName) {
+
+  return `${userCode} registerProcessor("${processorName}", CustomProcessor);`;
+}
+
+const defaultUserCode = `// WARNING: Must be named CustomProcessor
+class CustomProcessor extends AudioWorkletProcessor {
+  static get parameterDescriptors() {
+    return [{
+      name: 'gain',
+      defaultValue: 0.1
+    }];
+  }
+
+  constructor() {
+    super();
+
+    // can't actually query this until this.getContextInfo() is implemented
+    // update manually if you need it
+    this.sampleRate = 44100;
+  }
+
+  process(inputs, outputs, parameters) {
+    const speakers = outputs[0];
+
+    for (let i = 0; i < speakers[0].length; i++) {
+      const noise = Math.random() * 2 - 1;
+      const gain = parameters.gain[i];
+      speakers[0][i] = noise * gain;
+      speakers[1][i] = noise * gain;
+    }
+
+    return true;
+  }
+}`;
 
 function playAudio(editor) {
 
@@ -109,10 +153,10 @@ function stopAudio() {
 
 function runEditorCode(editor) {
 
-  const userCode = editor.getDoc().getValue();
+  // const userCode = editor.getDoc().getValue();
   const processorName = `processor-${processorCount++}`;
 
-  const code = createProcessorCode(userCode, processorName);
+  const code = createCustomProcessorCode(defaultUserCode, processorName);
 
   const blob = new Blob([code], { type: "application/javascript" });
 
@@ -122,10 +166,12 @@ function runEditorCode(editor) {
 }
 
 
-function createProcessorCode(userCode, processorName) {
 
-  return `${userCode} registerProcessor("${processorName}", CustomProcessor);`;
-}
+
+
+
+
+
 
 function runAudioWorklet(workletUrl, processorName) {
 
@@ -143,6 +189,22 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('audioWorkletIndicator').innerHTML = AudioWorkletIndicator.AudioWorkletIndicator();
 
     audio = new AudioContext();
+
+    try {
+      // have to use class Expression if inside a try
+      // doing this to catch unsupported browsers
+      window.CustomAudioNode = class CustomAudioNode extends AudioWorkletNode {
+        constructor(audioContext, processorName) {
+          super(audioContext, processorName, {
+            numberOfInputs: 0,
+            numberOfOutputs: 1,
+            outputChannelCount: [2]
+          });
+        }
+      };
+    } catch (e) {
+      // unsupported
+    }
 
     document.getElementById("sampleRateIndicatorValue").textContent = audio.sampleRate;
 
