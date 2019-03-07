@@ -13,16 +13,26 @@ module.exports = {
   node: {
     fs: 'empty'
   },
+  devtool: "source-map",
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, outputDir),
     // publicPath: 'public',
   },
+
+  resolve: {
+    extensions: [".js", ".json", ".wasm"]
+  },
+
   module: {
     rules: [
       {
         test: /\.css$/,
         use: ['style-loader', 'css-loader']
+      },
+      {
+        test: /\.wasm$/,
+        loader: 'file-loader',
       },
       {
         test: /\.(mp3|wav)$/,
@@ -50,18 +60,18 @@ module.exports = {
   },
   devServer: {
     clientLogLevel: 'warning',
+    host: 'localhost',
+    port: 9001,
+    open: true
     // historyApiFallback: true,
     // hot: true,
     // publicPath: '/public',
     // inline: true,
     // overlay: true,
-    open: true,
     // contentBase: './dist',
-    host: 'localhost',
-    port: 9001
   },
   plugins: [
-    // new CleanWebpackPlugin([outputDir]),
+    new CleanWebpackPlugin([outputDir]),
     new HtmlWebpackPlugin({
       title: 'Development',
       template: './src/index.html'
