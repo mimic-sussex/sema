@@ -2,10 +2,10 @@
 import * as nearley from 'nearley';
 import * as processor from './eppprocessor';
 
-
 // import snare from './assets/909.wav';
 
 import {
+  AudioEngine,
   MaxiLibEngine1,
   MaxiLibEngine2,
   Monosynth
@@ -14,6 +14,12 @@ import {
 import MaxiLib from './maxiLib';
 import treeJSON from './dndTree'
 import AudioWorkletIndicator from './components';
+
+
+import './assets/samples/909.wav';
+import './assets/samples/909b.wav';
+import './assets/samples/909closed.wav';
+import './assets/samples/909open.wav';
 
 import './style/index.css';
 import './style/tree.css';
@@ -24,38 +30,131 @@ import 'codemirror/mode/javascript/javascript.js';
 import 'codemirror/theme/ambiance.css';
 import 'codemirror/theme/abcdef.css';
 import 'codemirror/keymap/vim.js';
-
-// import * as CodeMirror from './codeMirror';
-
 import 'codemirror/lib/codemirror.css';
 
+let audio;
+let customNode;
 
-document.getElementById('audioWorkletIndicator').innerHTML = AudioWorkletIndicator.AudioWorkletIndicator();
-// var x = AudioWorkletIndicator;
-// console.log(x.AudioWorkletIndicator());
+const defaultEditorCode1 = `//Synth
+☺sauron <- osc(∆, 1.0, 1.34).osc(~, 1.0, 1.04).osc(Ø, osc(∞, 440, 1.04)+osc(≈, 66, 1.30))
 
-// document.getElementById('audioWorkletIndicator').innerHTML = AudioWorkletIndicator();
+//Gandalfs'beat
+☻gandalf <- [.0x.0-x.0-x.-0x-.-]
+
+☺sauron << ☻gandalf
+'🎹' << '🎙️' << '🎧' << '🎚️' << '🎛️'`;
 
 
-var editor1 = CodeMirror(document.getElementById('editor1'), {
-  value: "//Synth\n☺sauron <- osc(∆, 1.0, 1.34).osc(~, 1.0. 1.04).osc(Ø, osc(∞, 440, 1.04)+osc(≈, 66, 1.30))\n\n\/\/Gandalfsbbeat\n☻gandalf <- [.0x.0-x.0-x.-0x-.-]\n\n☺sauron << ☻gandalf",
-  theme: "abcdef",
-  lineNumbers: true,
-  // mode:  "javascript",
-  lineWrapping: true
+function createEditor1() {
+
+  var editor1 = CodeMirror(document.getElementById('editor1'), {
+    value: defaultEditorCode1,
+    theme: "abcdef",
+    lineNumbers: true,
+    // mode:  "javascript",
+    lineWrapping: true
+  });
+  editor1.setSize('100%', '100%');
+  editor1.setOption("vimMode", true);
+}
+
+const defaultEditorCode2 = "∞(∆, 1.0, 1.5).∞(~, 1.0. 1.04).∞(∞(∞, 440, 1.04)+∞(≈, 66, 1.30))";
+
+function createEditor2() {
+
+  var editor2 = CodeMirror(document.getElementById('editor2'), {
+    value: defaultEditorCode2,
+    lineNumbers: true,
+    theme: "ambiance",
+    lineWrapping: true
+  });
+  editor2.setSize('100%', '100%');
+}
+
+
+function createControls(){
+
+  const isMac = CodeMirror.keyMap.default === CodeMirror.keyMap.macDefault;
+  const runKeys = isMac ? "Cmd-Enter" : "Ctrl-Enter";
+  const container = document.getElementById("containerButtons");
+
+  const runButton = document.createElement("button");
+  runButton.textContent = `Play: ${runKeys.replace("-", " ")}`;
+
+  const stopKeys = isMac ? "Cmd-." : "Ctrl-.";
+  const stopButton = document.createElement("button");
+  stopButton.textContent = `Stop: ${stopKeys.replace("-", " ")}`;
+
+  container.appendChild(runButton);
+  runButton.addEventListener("click", () => playAudio(editor));
+
+  container.appendChild(stopButton);
+  stopButton.addEventListener("click", () => stopAudio());
+
+}
+
+function playAudio(editor) {
+
+  stopAudio();
+
+  runEditorCode(editor);
+}
+
+function stopAudio() {
+  if (customNode !== undefined) {
+    customNode.disconnect(audio.destination);
+    customNode = undefined;
+  }
+}
+
+function runEditorCode(editor) {
+
+  const userCode = editor.getDoc().getValue();
+  const processorName = `processor-${processorCount++}`;
+
+  const code = createProcessorCode(userCode, processorName);
+
+  const blob = new Blob([code], { type: "application/javascript" });
+
+  const url = window.URL.createObjectURL(blob);
+
+  runAudioWorklet(url, processorName);
+}
+
+
+function createProcessorCode(userCode, processorName) {
+
+  return `${userCode} registerProcessor("${processorName}", CustomProcessor);`;
+}
+
+function runAudioWorklet(workletUrl, processorName) {
+
+  audio.audioWorklet.addModule(workletUrl).then(() => {
+    stopAudio();
+    customNode = new CustomAudioNode(audio, processorName);
+    customNode.connect(audio.destination);
+  });
+}
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    document.getElementById('audioWorkletIndicator').innerHTML = AudioWorkletIndicator.AudioWorkletIndicator();
+
+    audio = new AudioContext();
+
+    document.getElementById("sampleRateIndicatorValue").textContent = audio.sampleRate;
+
+    // resumeContextOnInteraction(audio);
+
+    createEditor1();
+
+    createEditor2();
+
+    createControls();
+
 });
-editor1.setSize('100%', '100%');
-editor1.setOption("vimMode", true);
-
-
-var editor2 = CodeMirror(document.getElementById('editor2'), {
-  value: "osc(∆, 1.0, Ø).osc(~, 1.0. 1.04).osc(osc(∞, 440, 1.04)+osc(≈, 66, 1.30))",
-  lineNumbers: true,
-  theme: "ambiance",
-  lineWrapping: true
-});
-
-editor2.setSize('100%', '100%');
 
 
 

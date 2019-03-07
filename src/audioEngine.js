@@ -1,6 +1,130 @@
 import MaxiLib from './maxiLib';
 
 
+let audio;
+let customNode;
+
+
+function main() {
+  if (window.AudioContext !== undefined && window.AudioWorkletNode !== undefined) {
+    const unsupportedEl = document.getElementById("unsupported");
+    if (unsupportedEl !== null) { unsupportedEl.remove(); }
+
+    CustomAudioNode = class CustomAudioNode extends AudioWorkletNode {
+      constructor(audioContext, processorName) {
+        super(audioContext, processorName, {
+          numberOfInputs: 1,
+          numberOfOutputs: 1,
+          outputChannelCount: [2]
+        });
+      }
+    };
+
+    audio = new AudioContext();
+    resumeContextOnInteraction(audio);
+
+  }
+}
+
+function playAudio(editor) {
+  stopAudio();
+  runEditorCode(editor);
+}
+
+
+/*
+class AudioEngine {
+
+  let audio;
+  let customNode;
+  let sourceBuffer;
+  let bufferSourceNode;
+  let bufferSourceNodeStartTime = 0;
+  let bufferSourceNodeOffset = 0;
+  let CustomAudioNode;
+  let analyserLeft;
+  let analyserRight;
+  let analyserSum;
+
+
+  const demoCode = async (context) => {
+    await context.audioWorklet.addModule('bypass-processor.js');
+    const oscillator = new OscillatorNode(context);
+    const bypasser = new AudioWorkletNode(context, 'bypass-processor');
+    oscillator.connect(bypasser).connect(context.destination);
+    oscillator.start();
+  };
+
+
+  const DemoRunner = (demoFunction) => {
+    const sourceUrl =
+        GitHubSourceUrl + window.location.pathname.slice(RepoPrefix.length);
+    const audioContext = new AudioContext();
+    const logger = new Logger();
+
+    // Creates a button and its logic.
+    let isFirstClick = true;
+    const eButton = document.createElement('button');
+    eButton.textContent = 'START';
+    eButton.disabled = _detectAudioWorklet() ? false : true;
+    eButton.onclick = (event) => {
+      if (eButton.textContent === 'START') {
+        if (isFirstClick) {
+          demoFunction(audioContext, logger);
+          isFirstClick = false;
+        }
+        audioContext.resume();
+        logger.post('Context resumed.');
+        eButton.textContent = 'STOP';
+      } else {
+        audioContext.suspend();
+        logger.post('Context suspended.');
+        eButton.textContent = 'START';
+      }
+    };
+
+    return html`
+      <div class="row was-demo-runner">
+        <div class="column">
+          <div class="was-demo-area">
+            <div class="was-demo-area-label">DEMO</div>
+            ${eButton}
+            ${logger.getElement()}
+            <div class="was-demo-area-source">
+              <a href="${sourceUrl}">See sources on GitHub</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  };
+
+}
+
+
+
+class BypassProcessor extends AudioWorkletProcessor {
+
+  // When constructor() undefined, the default constructor will be
+  // implicitly used.
+
+  process(inputs, outputs) {
+    // By default, the node has single input and output.
+    const input = inputs[0];
+    const output = outputs[0];
+
+    for (let channel = 0; channel < output.length; ++channel) {
+      output[channel].set(input[channel]);
+    }
+
+    return true;
+  }
+
+  registerProcessor('bypass-processor', BypassProcessor);
+}
+
+*/
+
 
 
 
@@ -265,6 +389,7 @@ Monosynth.prototype.play = function() {
 
 
 export {
+  // AudioEngine,
   MaxiLibEngine1,
   MaxiLibEngine2,
   Monosynth

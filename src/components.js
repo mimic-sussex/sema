@@ -10,7 +10,8 @@ const AudioWorkletIndicator = () => {
 
 // Check if AudioWorklet is available.
 function _detectAudioWorklet() {
-  let context = new OfflineAudioContext(1, 1, 44100);
+  // OfflineAudioContext doesn't render the audio to the device hardware, generates it ASAP and outputs to AudioBuffer
+  let context = new OfflineAudioContext(1, 1, 44100); 
   return Boolean(context.audioWorklet && typeof context.audioWorklet.addModule === 'function');
 }
 

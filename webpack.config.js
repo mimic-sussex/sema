@@ -3,8 +3,9 @@
 // Required packages
 const path = require("path");
 const CleanWebpackPlugin = require("clean-webpack-plugin");
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-const outputDir = "./build/";
+const outputDir = "dist";
 
 module.exports = {
   mode: 'development',
@@ -14,21 +15,56 @@ module.exports = {
   },
   output: {
     filename: 'bundle.js',
-    path: path.resolve(__dirname, outputDir)
+    path: path.resolve(__dirname, outputDir),
+    // publicPath: 'public',
   },
   module: {
-    rules: [{
-      test: /\.css$/,
-      use: ['style-loader', 'css-loader']
-    },
-    {
-      test: /\.mp3$/,
-      loader: 'file-loader'
-    }
-  ]
+    rules: [
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader']
+      },
+      {
+        test: /\.(mp3|wav)$/,
+        use: {
+          loader: 'file-loader',
+          options: {
+            name: "[name].[ext]",
+            outputPath: './samples/'
+          },
+        },
+      },
+      {
+        test: /\.(ttf|eot|woff|woff2)$/,
+        use: {
+          loader: "file-loader",
+          options: {
+            mimetype: 'application/font-woff',
+            name: "[name].[ext]",
+            // publicPath: '../public',
+            // publicPath: 'fonts/'
+          },
+        },
+      },
+    ]
+  },
+  devServer: {
+    clientLogLevel: 'warning',
+    // historyApiFallback: true,
+    // hot: true,
+    // publicPath: '/public',
+    // inline: true,
+    // overlay: true,
+    open: true,
+    // contentBase: './dist',
+    host: 'localhost',
+    port: 9001
   },
   plugins: [
-    new CleanWebpackPlugin([outputDir]),
-  
-  ]
+    // new CleanWebpackPlugin([outputDir]),
+    new HtmlWebpackPlugin({
+      title: 'Development',
+      template: './src/index.html'
+    })
+  ],
 };
