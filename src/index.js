@@ -36,6 +36,22 @@ let audio;
 let customNode;
 let processorCount = 0;
 
+function maxiEngine() {
+  let maxiLib = MaxiLib();
+}
+
+function wasmReady(){
+
+  console.log("MaxiLib WASM loaded")
+  var maxiAudio = new maxiLib.maxiAudio();
+  maxiAudio.init();
+  maxiAudio.loadSample("./assets/samples/909b.wav", kick);
+  maxiAudio.loadSample("./assets/samples/909.wav", snare);
+  maxiAudio.loadSample("./assets/samples/909closed.wav", closedHat);
+  maxiAudio.loadSample("./assets/samples/909open.wav", openHat);
+  console.log("Samples loaded")
+}
+
 const defaultEditorCode1 = `//Synth
 ☺sauron <- osc(∆, 1.0, 1.34).osc(~, 1.0, 1.04).osc(Ø, osc(∞, 440, 1.04)+osc(≈, 66, 1.30))
 
@@ -155,9 +171,8 @@ function customUserCode (expression) {
     }`;
 }
 
-// Create and registor processor node according to pattern.
-// NOTE: Processor name `CustomProcessor` is hardcoded
-// such as the Custome processor code
+// Create and register processor node CODE for injecting in a Worklet, according to pattern.
+// Processor name `CustomProcessor` is hardcoded, such as the Custom processor code
 function createAndRegisterCustomProcessorCode(userCode, processorName) {
 
   return `${userCode}
@@ -165,7 +180,8 @@ function createAndRegisterCustomProcessorCode(userCode, processorName) {
   registerProcessor("${processorName}", CustomProcessor);`;
 }
 
-
+// After Creation and register the CustomProcessor CODE with injected function,
+// set CODE in a newly created file and associate it with a CustomNode in the audio context 
 function runEditorCode(editor) {
 
   console.log('processorCount: ' + processorCount);
@@ -182,7 +198,6 @@ function runEditorCode(editor) {
 }
 
 
-
 function runAudioWorklet(workletUrl, processorName) {
 
   audio.audioWorklet.addModule(workletUrl).then(() => {
@@ -190,23 +205,6 @@ function runAudioWorklet(workletUrl, processorName) {
     customNode = new CustomAudioNode(audio, processorName);
     customNode.connect(audio.destination);
   });
-}
-
-
-function maxiEngine() {
-  let maxiLib = MaxiLib();
-}
-
-function wasmReady(){
-
-  console.log("MaxiLib WASM loaded")
-  var maxiAudio = new maxiLib.maxiAudio();
-  maxiAudio.init();
-  maxiAudio.loadSample("./assets/samples/909b.wav", kick);
-  maxiAudio.loadSample("./assets/samples/909.wav", snare);
-  maxiAudio.loadSample("./assets/samples/909closed.wav", closedHat);
-  maxiAudio.loadSample("./assets/samples/909open.wav", openHat);
-  console.log("Samples loaded")
 }
 
 
@@ -233,8 +231,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     document.getElementById("sampleRateIndicatorValue").textContent = audio.sampleRate;
-
-    // resumeContextOnInteraction(audio);
 
     createEditor1();
 
