@@ -12,6 +12,8 @@ import {
 } from './audioEngine';
 
 import MaxiLib from './maxiLib';
+import './maxiLib.wasm';
+
 // import treeJSON from './dndTree';
 import AudioWorkletIndicator from './components';
 
@@ -53,13 +55,45 @@ function wasmReady(){
 }
 
 const defaultEditorCode1 = `//Synth
-☺sauron <- osc(∆, 1.0, 1.34).osc(~, 1.0, 1.04).osc(Ø, osc(∞, 440, 1.04)+osc(≈, 66, 1.30))
+☺sauron <- osc(∆, 1.0, 1.34).osc(~, 1.0, 1.04).osc(Ø, osc(∞, bus(0, 440), 1.04)+osc(≈, 66, bus(1,1.30)))
+
+## REPL step
+
+☺sauron <- osc(∆, 1.0, 1.34).osc(~, 1.0, bus(0, 1.04)).osc(Ø, osc(∞, bus(0, 440), 1.04)+osc(≈, 66, bus(1,1.30)))
+
+bus(0, 440)
+
+## NOTE: Audio engine objects
+## busdata = {value:0, written:false}
+## buses = []
+
+☺sauron2 <- ☺sauron.osc(∆, 1.0, 1.34).osc(∆, 1.0, 1.34)
 
 //Gandalfs'beat
 ☻gandalf <- [.0x.0-x.0-x.-0x-.-]
 
 ☺sauron << ☻gandalf
-'🎹' << '🎙️' << '🎧' << '🎚️' << '🎛️'`;
+
+☺sauron = {
+  f : [@osc: (∆, 1.0, 1.34)
+       	[@osc: (~, 1.0, 1.04)
+          [@osc(Ø,
+            [@osc(∞,
+           [()=> (bus1 || 440), 1.04]
+           +
+           osc(≈, 66, 1.30))
+          ]
+         ]
+       ]
+
+# Indexed access to the tree with .dot notation
+☺sauron.f[@osc]
+
+☺sauron << '🎹'
+
+fx << '🎙️'
+
+'🎙️' << '🎧' << '🎚️' << '🎛️'`;
 
 function createEditor1() {
 
@@ -181,7 +215,7 @@ function createAndRegisterCustomProcessorCode(userCode, processorName) {
 }
 
 // After Creation and register the CustomProcessor CODE with injected function,
-// set CODE in a newly created file and associate it with a CustomNode in the audio context 
+// set CODE in a newly created file and associate it with a CustomNode in the audio context
 function runEditorCode(editor) {
 
   console.log('processorCount: ' + processorCount);
@@ -199,6 +233,8 @@ function runEditorCode(editor) {
 
 
 function runAudioWorklet(workletUrl, processorName) {
+
+  maxiEngine();
 
   audio.audioWorklet.addModule(workletUrl).then(() => {
     stopAudio();
@@ -238,6 +274,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     createControls();
 
-    // maxiEngine();
+    maxiEngine();
+
 
 });

@@ -8,12 +8,17 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const outputDir = "dist";
 
 module.exports = {
+
   mode: 'development',
+
   entry: './src/index.js',
+
   node: {
     fs: 'empty'
   },
+
   devtool: "source-map",
+
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, outputDir),
@@ -31,8 +36,14 @@ module.exports = {
         use: ['style-loader', 'css-loader']
       },
       {
-        test: /\.wasm$/,
+        test: /maxiLib\.wasm$/,
+        type: 'javascript/auto',
         loader: 'file-loader',
+        // loader: 'wasm-loader',
+        options: {
+          name: '[name].[ext]',
+          publicPath: "dist/"
+        }
       },
       {
         test: /\.(mp3|wav)$/,
