@@ -36,6 +36,12 @@ module.exports = {
         use: ['style-loader', 'css-loader']
       },
       {
+        //IMAGE LOADER
+        test: /\.(jpe?g|png|gif|svg)$/i,
+        loader:'file-loader'
+      },
+      {
+        //WASM LOADER
         test: /maxiLib\.wasm$/,
         type: 'javascript/auto',
         loader: 'file-loader',
@@ -46,6 +52,7 @@ module.exports = {
         }
       },
       {
+        //AUDIO SAMPLE LOADER
         test: /\.(mp3|wav)$/,
         use: {
           loader: 'file-loader',
@@ -56,6 +63,7 @@ module.exports = {
         },
       },
       {
+        //FONT LOADER
         test: /\.(ttf|eot|woff|woff2)$/,
         use: {
           loader: "file-loader",
@@ -73,7 +81,8 @@ module.exports = {
     clientLogLevel: 'warning',
     host: 'localhost',
     port: 9001,
-    open: true
+    open: true,
+    // mimeTypes: { typeMap: { 'application/wasm': [ 'wasm' ] } }
     // historyApiFallback: true,
     // hot: true,
     // publicPath: '/public',
@@ -82,7 +91,7 @@ module.exports = {
     // contentBase: './dist',
   },
   plugins: [
-    new CleanWebpackPlugin([outputDir]),
+    // new CleanWebpackPlugin([outputDir]),
     new HtmlWebpackPlugin({
       title: 'Development',
       template: './src/index.html'
