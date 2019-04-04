@@ -5,23 +5,23 @@ import * as processor from './eppprocessor';
 // import snare from './assets/909.wav';
 
 import {
-  AudioEngine,
-  MaxiLibEngine1,
-  MaxiLibEngine2,
-  Monosynth
-} from './audioEngine';
+  AudioEngine
+  // MaxiLibEngine1,
+  // MaxiLibEngine2,
+  // Monosynth
+} from './audioEngine/audioEngine.js';
 
-import MaxiLib from './maxiLib';
-import './maxiLib.wasm';
+import MaxiAudio from './audioEngine/maximilian.wasmmodule.js';
+import './audioEngine/maximilian.wasmmodule.js';
 
 // import treeJSON from './dndTree';
 import AudioWorkletIndicator from './components';
 
 
-import './assets/samples/909.wav';
-import './assets/samples/909b.wav';
-import './assets/samples/909closed.wav';
-import './assets/samples/909open.wav';
+import '../assets/samples/909.wav';
+import '../assets/samples/909b.wav';
+import '../assets/samples/909closed.wav';
+import '../assets/samples/909open.wav';
 
 import './style/index.css';
 import './style/tree.css';
@@ -40,8 +40,10 @@ let audio;
 let customNode;
 let processorCount = 0;
 
+let audioEngine = 0;
+
 function maxiEngine() {
-  let maxiLib = MaxiLib();
+  // let maxiLib = MaxiLib();
 }
 
 function wasmReady(){
@@ -49,10 +51,10 @@ function wasmReady(){
   console.log("MaxiLib WASM loaded")
   var maxiAudio = new maxiLib.maxiAudio();
   maxiAudio.init();
-  maxiAudio.loadSample("./assets/samples/909b.wav", kick);
-  maxiAudio.loadSample("./assets/samples/909.wav", snare);
-  maxiAudio.loadSample("./assets/samples/909closed.wav", closedHat);
-  maxiAudio.loadSample("./assets/samples/909open.wav", openHat);
+  maxiAudio.loadSample("../assets/samples/909b.wav", kick);
+  maxiAudio.loadSample("../assets/samples/909.wav", snare);
+  maxiAudio.loadSample("../assets/samples/909closed.wav", closedHat);
+  maxiAudio.loadSample("../assets/samples/909open.wav", openHat);
   console.log("Samples loaded")
 }
 
@@ -112,15 +114,23 @@ function createControls(){
 }
 
 function playAudio(editor) {
-  stopAudio();
-  runEditorCode(editor);
+
+  if(audioEngine !== undefined)
+    audioEngine.play();
+
+  // stopAudio();
+  // runEditorCode(editor);
 }
 
 function stopAudio() {
-  if (customNode !== undefined) {
-    customNode.disconnect(audio.destination);
-    customNode = undefined;
-  }
+
+  if(audioEngine !== undefined)
+    audioEngine.stop();
+
+  // if (customNode !== undefined) {
+  //   customNode.disconnect(audio.destination);
+  //   customNode = undefined;
+  // }
 }
 
 function customUserCode (expression) {
@@ -198,8 +208,6 @@ function runEditorCode(editor) {
 
 function runAudioWorklet(workletUrl, processorName) {
 
-  maxiEngine();
-
   audio.audioWorklet.addModule(workletUrl).then(() => {
     stopAudio();
     customNode = new CustomAudioNode(audio, processorName);
@@ -212,33 +220,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById('audioWorkletIndicator').innerHTML = AudioWorkletIndicator.AudioWorkletIndicator();
 
-    audio = new AudioContext();
+    audioEngine = new AudioEngine(audio);
 
-    try {
-      // have to use class Expression if inside a try
-      // doing this to catch unsupported browsers
-      window.CustomAudioNode = class CustomAudioNode extends AudioWorkletNode {
-        constructor(audioContext, processorName) {
-          super(audioContext, processorName, {
-            numberOfInputs: 0,
-            numberOfOutputs: 1,
-            outputChannelCount: [2]
-          });
-        }
-      };
-    } catch (e) {
-      // unsupported
-    }
-
-    document.getElementById("sampleRateIndicatorValue").textContent = audio.sampleRate;
+    document.getElementById("sampleRateIndicatorValue").textContent = audioEngine.sampleRate;
 
     createEditor1();
 
     createEditor2();
 
     createControls();
-
-    // maxiEngine();
 
 
 });

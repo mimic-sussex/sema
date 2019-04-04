@@ -3,7 +3,7 @@ html, body { height: 100%; background: #000000}
 
 @font-face {
     font-family: 'LatoWebBlack';
-    src: url('../assets/fonts/Lato/fonts/Lato-Black.woff');
+    src: url('../../assets/fonts/Lato/fonts/Lato-Black.woff');
 }
 
 /* @font-face {
