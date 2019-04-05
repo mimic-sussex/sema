@@ -1,4 +1,6 @@
-import './maximilian.wasmmodule.js';
+// import Module from './maximilian.wasmmodule.js';
+
+import CustomProcessor from './maxi-processor'
 
 /**
  * The CustomAudioNode is a class that extends AudioWorkletNode
@@ -8,6 +10,7 @@ import './maximilian.wasmmodule.js';
  */
 class CustomAudioNode extends AudioWorkletNode {
   constructor(audioContext, processorName) {
+    // super(audioContext, processorName);
     let options = { numberOfInputs: 0, numberOfOutputs: 1, outputChannelCount: [2] };
     super(audioContext, processorName, options);
   }
@@ -30,29 +33,11 @@ class AudioEngine {
     this.sampleRate = this.audioContext.sampleRate;
     this.processorCount = 0;
     this.il2pCode = "";
-  }
 
-  /**
-  * Re-starts audio playback by stopping and running the latest Audio Worklet Processor code
-  * @play
-  */
-  play() {
-    this.stop();
-    this.runProcessorCode();
-    this.processorCount++;
-  }
+    this.customProcessorName = 'maxi-processor';
+    this.maxiWorkletUrl = 'maxi-processor.js';
 
-  /**
-  * Stops audio by disconnecting Audio None with Audio Worklet Processor code
-  * from Web Audio graph
-  * TODO: Investigate when it is best to just STOP the graph exectution
-  * @stop
-  */
-  stop() {
-    if (this.customNode !== undefined) {
-      this.customNode.disconnect(this.audioContext.destination);
-      this.customNode = undefined;
-    }
+    console.log("AudioEngine loaded")
   }
 
   /**
@@ -60,18 +45,18 @@ class AudioEngine {
    */
   translateIntermediateLanguageToProcessorCode (expression) {
     let userDefinedFunction = "";
-    switch (expression%2) {
+    switch (expression % 2) {
       case 0:
-        userDefinedFunction = `Math.random() * 2 - 1`;
+        userDefinedFunction = `Math.random() * 2`;
         break;
       case 1:
-        userDefinedFunction = `Math.sin(400) * 2 + 1`;
+        userDefinedFunction = `(Math.sin(i) + 0.4)`;
         break;
       default:
-        userDefinedFunction = `Math.sin(Math.sin(400))`;
+        userDefinedFunction = `(Math.sin(440) + 0.4)`;
     }
 
-    // import Module from './maximilian.wasmmodule.js';
+    //import Module from './maximilian.wasmmodule.js';
     return `
       class CustomProcessor extends AudioWorkletProcessor {
         static get parameterDescriptors() {
@@ -82,17 +67,30 @@ class AudioEngine {
         }
         constructor() {
           super();
-          // can't actually query this until this.getContextInfo() is implemented
-          // update manually if you need it
           this.sampleRate = 44100;
+
+          this.port.onmessage = (event) => {
+            console.log(event.data);
+          };
+
         }
         process(inputs, outputs, parameters) {
-          const speakers = outputs[0];
-          for (let i = 0; i < speakers[0].length; i++) {
-            const func = ${userDefinedFunction};
-            const gain = parameters.gain[i];
-            speakers[0][i] = func * gain;
-            speakers[1][i] = func * gain;
+
+          const outputsLength = outputs.length;
+          for (let outputId = 0; outputId < outputsLength; ++outputId) {
+            let output = outputs[outputId];
+            const channelLenght = output.length;
+
+            for (let channelId = 0; channelId < channelLenght; ++channelId) {
+              const gain = parameters.gain;
+              const isConstant = gain.length === 1
+              let outputChannel = output[channelId];
+
+              for (let i = 0; i < outputChannel.length; ++i) {
+                const amp = isConstant ? gain[0] : gain[i]
+                outputChannel[i] = ${userDefinedFunction} * amp;
+              }
+            }
           }
           return true;
         }
@@ -110,6 +108,7 @@ class AudioEngine {
   }
 
   /**
+   * TODO: Check for memory leaks
    * @runProcessorCode
    */
   runProcessorCode() {
@@ -126,17 +125,82 @@ class AudioEngine {
 
     const blob = new Blob([code], { type: "application/javascript" });
 
+    // TODO: Check for memory leaks
+    // URL.revokeObjectURL()
     const workletUrl = window.URL.createObjectURL(blob);
 
+    // Set custom processor in audio worklet
     this.audioContext.audioWorklet.addModule(workletUrl).then(() => {
       this.stop();
       this.customNode = new CustomAudioNode(this.audioContext, processorName);
+      this.customNode.port.onmessage = (event) => {
+        //  data from the processor.
+        console.log("from processor: " + event.data);
+      };
       this.customNode.connect(this.audioContext.destination);
-    });
+    }).catch( e => console.log("Error on loading worklet: ", e) );
+  }
+
+  runMaxiProcessorCode() {
+
+    console.log('processorCount: ' + this.processorCount);
+
+    this.audioContext.audioWorklet.addModule(CustomProcessor).then(() => {
+
+      this.stop();
+      this.customNode = new CustomAudioNode(this.audioContext, this.customProcessorName);
+      this.customNode.port.onmessage = (event) => {
+        // data from the processor.
+        console.log("from processor: " + event.data);
+      };
+      this.customNode.connect(this.audioContext.destination);
+
+    }).catch( e => console.log("Error on loading worklet: ", e) );
+  }
+
+  /**
+  * Re-starts audio playback by stopping and running the latest Audio Worklet Processor code
+  * @play
+  */
+  play() {
+    this.stop();
+
+    if(this.processorCount % 3)
+      this.runProcessorCode();
+    else
+      this.runMaxiProcessorCode();
+
+    this.processorCount++;
+  }
+
+  /**
+  * Stops audio by disconnecting Audio None with Audio Worklet Processor code
+  * from Web Audio graph
+  * TODO: Investigate when it is best to just STOP the graph exectution
+  * @stop
+  */
+  stop() {
+    if (this.customNode !== undefined) {
+      this.customNode.disconnect(this.audioContext.destination);
+      this.customNode = undefined;
+    }
+  }
+
+
+  increaseVolume() {
+    if (this.customNode !== undefined) {
+      const gainParam = this.customNode.parameters.get('gain');
+      gainParam.value += 0.1;
+    }
+  }
+
+  decreaseVolume() {
+    if (this.customNode !== undefined) {
+      const gainParam = this.customNode.parameters.get('gain');
+      gainParam.value -= 0.1;
+    }
   }
 
 }
 
-export {
-  AudioEngine
-};
+export { AudioEngine };

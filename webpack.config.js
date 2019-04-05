@@ -32,6 +32,13 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /maxi-processor.js/,
+        loader: 'worklet-loader',
+        options: {
+          name: 'js/[hash].maxi-processor.js'
+        }
+      },
+      {
         test: /\.css$/,
         use: ['style-loader', 'css-loader']
       },
@@ -42,7 +49,8 @@ module.exports = {
       },
       {
         //WASM LOADER
-        test: /maxiLib\.wasm$/,
+        // test: /maxiLib\.wasm$/,
+        test: /maximilian\.wasmmodule\.js$/,
         type: 'javascript/auto',
         loader: 'file-loader',
         // loader: 'wasm-loader',

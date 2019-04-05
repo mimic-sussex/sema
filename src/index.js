@@ -4,15 +4,12 @@ import * as processor from './eppprocessor';
 
 // import snare from './assets/909.wav';
 
-import {
-  AudioEngine
-  // MaxiLibEngine1,
-  // MaxiLibEngine2,
-  // Monosynth
-} from './audioEngine/audioEngine.js';
+import { AudioEngine } from './audioEngine/audioEngine.js';
 
-import MaxiAudio from './audioEngine/maximilian.wasmmodule.js';
-import './audioEngine/maximilian.wasmmodule.js';
+import Module from './audioEngine/maximilian.wasmmodule.js';
+
+// import { CustomProcessor } from './audioEngine/maxi-processor.js';
+
 
 // import treeJSON from './dndTree';
 import AudioWorkletIndicator from './components';
@@ -40,11 +37,6 @@ let audio;
 let customNode;
 let processorCount = 0;
 
-let audioEngine = 0;
-
-function maxiEngine() {
-  // let maxiLib = MaxiLib();
-}
 
 function wasmReady(){
 
@@ -72,6 +64,8 @@ function createEditor1() {
     extraKeys: {
       [ "Cmd-Enter" ]: () => playAudio(editor1),
       [ "Cmd-."]: () => stopAudio(),
+      [ "Cmd--"]: () => decreaseVolume(),
+      [ "Cmd-="]: () => increaseVolume()
     }
 
   });
@@ -115,8 +109,8 @@ function createControls(){
 
 function playAudio(editor) {
 
-  if(audioEngine !== undefined)
-    audioEngine.play();
+  if(window.AudioEngine !== undefined)
+    window.AudioEngine.play();
 
   // stopAudio();
   // runEditorCode(editor);
@@ -124,13 +118,23 @@ function playAudio(editor) {
 
 function stopAudio() {
 
-  if(audioEngine !== undefined)
-    audioEngine.stop();
+  if(window.AudioEngine !== undefined)
+    window.AudioEngine.stop();
 
   // if (customNode !== undefined) {
   //   customNode.disconnect(audio.destination);
   //   customNode = undefined;
   // }
+}
+
+function increaseVolume() {
+  if(window.AudioEngine !== undefined)
+    window.AudioEngine.increaseVolume();
+}
+
+function decreaseVolume() {
+  if(window.AudioEngine !== undefined)
+    window.AudioEngine.decreaseVolume();
 }
 
 function customUserCode (expression) {
@@ -200,7 +204,10 @@ function runEditorCode(editor) {
 
   const blob = new Blob([code], { type: "application/javascript" });
 
+  // TODO: Check for memory leaks
+  // URL.revokeObjectURL()
   const workletUrl = window.URL.createObjectURL(blob);
+
 
   runAudioWorklet(workletUrl, processorName);
 }
@@ -220,15 +227,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById('audioWorkletIndicator').innerHTML = AudioWorkletIndicator.AudioWorkletIndicator();
 
-    audioEngine = new AudioEngine(audio);
+    window.AudioEngine = new AudioEngine(audio);
 
-    document.getElementById("sampleRateIndicatorValue").textContent = audioEngine.sampleRate;
+    document.getElementById("sampleRateIndicatorValue").textContent = window.AudioEngine.sampleRate;
 
     createEditor1();
 
     createEditor2();
 
     createControls();
-
-
 });

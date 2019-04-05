@@ -1,20 +1,9 @@
-import Module from './maximilian.wasmmodule.js';
-
-/**
- * The main Maxi Audio wrapper with a WASM-powered AudioWorkletProcessor.
- *
- * @class MaxiProcessor
- * @extends AudioWorkletProcessor
- */
 class CustomProcessor extends AudioWorkletProcessor {
 
   static get parameterDescriptors() {
     return [{ name: 'gain', defaultValue: 0.1 }];
   }
 
-  /**
-   * @constructor
-   */
   constructor() {
     super();
     this.sampleRate = 44100;
@@ -23,15 +12,8 @@ class CustomProcessor extends AudioWorkletProcessor {
       console.log(event.data);
     };
 
-    this.mySine = new Module.maxiOsc();
-    this.myOtherSine = new Module.maxiOsc();
-
-    console.log("CustomProcessor loaded");
   }
 
-  /**
-   * @process
-   */
   process(inputs, outputs, parameters) {
 
     const outputsLength = outputs.length;
@@ -46,8 +28,8 @@ class CustomProcessor extends AudioWorkletProcessor {
 
         for (let i = 0; i < outputChannel.length; ++i) {
           const amp = isConstant ? gain[0] : gain[i]
-          outputChannel[i] = (this.mySine.sinewave(2) * this.myOtherSine.sinewave(0.4)) * amp;
-          // outputChannel[i] = ( Math.sin(i) + 0.4 ) * amp;
+          // outputChannel[i] = (this.mySine.sawn(60) * this.myOtherSine.sinewave(0.4)) * amp;
+          outputChannel[i] = ( Math.sin(i) + 0.4 ) * amp;
         }
       }
     }
@@ -56,6 +38,4 @@ class CustomProcessor extends AudioWorkletProcessor {
 
 };
 
-registerProcessor("maxi-processor", CustomProcessor);
-
-// export { CustomProcessor };
+registerProcessor("maxi-processor-base", CustomProcessor);
