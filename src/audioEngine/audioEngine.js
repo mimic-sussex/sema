@@ -50,13 +50,14 @@ class AudioEngine {
         userDefinedFunction = `Math.random() * 2`;
         break;
       case 1:
-        userDefinedFunction = `(Math.sin(i) + 0.4)`;
+        userDefinedFunction = `(Math.sin(400) + 0.4)`;
         break;
       default:
         userDefinedFunction = `(Math.sin(440) + 0.4)`;
     }
 
-    //import Module from './maximilian.wasmmodule.js';
+    // We get an "Error on loading worklet:  DOMException" with the following import:
+    // import Module from './maximilian.wasmmodule.js';
     return `
       class CustomProcessor extends AudioWorkletProcessor {
         static get parameterDescriptors() {

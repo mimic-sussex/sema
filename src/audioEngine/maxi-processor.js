@@ -23,10 +23,12 @@ class CustomProcessor extends AudioWorkletProcessor {
       console.log(event.data);
     };
 
-    this.mySine = new Module.maxiOsc();
-    this.myOtherSine = new Module.maxiOsc();
+    console.log("Module.maxiOsc " + Module.maxiOsc);
 
-    console.log("CustomProcessor loaded");
+    // this.mySine = Module.maxiOsc();
+    // this.myOtherSine = new Module.maxiOsc();
+
+    console.log("CustomProcessor loaded from File");
   }
 
   /**
@@ -46,8 +48,8 @@ class CustomProcessor extends AudioWorkletProcessor {
 
         for (let i = 0; i < outputChannel.length; ++i) {
           const amp = isConstant ? gain[0] : gain[i]
-          outputChannel[i] = (this.mySine.sinewave(2) * this.myOtherSine.sinewave(0.4)) * amp;
-          // outputChannel[i] = ( Math.sin(i) + 0.4 ) * amp;
+          // outputChannel[i] = (this.mySine.sinewave(2) * this.myOtherSine.sinewave(0.4)) * amp;
+          outputChannel[i] = ( Math.sin(i) + 0.8) * amp;
         }
       }
     }
