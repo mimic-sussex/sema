@@ -65,7 +65,9 @@ function createEditor1() {
       [ "Cmd-Enter" ]: () => playAudio(editor1),
       [ "Cmd-."]: () => stopAudio(),
       [ "Cmd--"]: () => decreaseVolume(),
-      [ "Cmd-="]: () => increaseVolume()
+      [ "Cmd-="]: () => increaseVolume(),
+      [ "Cmd-]"]: () => changeSynth()
+
     }
 
   });
@@ -107,24 +109,14 @@ function createControls(){
 
 }
 
-function playAudio(editor) {
-
+function playAudio() {
   if(window.AudioEngine !== undefined)
     window.AudioEngine.play();
-
-  // stopAudio();
-  // runEditorCode(editor);
 }
 
 function stopAudio() {
-
   if(window.AudioEngine !== undefined)
     window.AudioEngine.stop();
-
-  // if (customNode !== undefined) {
-  //   customNode.disconnect(audio.destination);
-  //   customNode = undefined;
-  // }
 }
 
 function increaseVolume() {
@@ -137,6 +129,12 @@ function decreaseVolume() {
     window.AudioEngine.decreaseVolume();
 }
 
+function changeSynth() {
+  if(window.AudioEngine !== undefined)
+    window.AudioEngine.changeSynth();
+}
+
+
 document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById('audioWorkletIndicator').innerHTML = AudioWorkletIndicator.AudioWorkletIndicator();
@@ -146,7 +144,6 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("sampleRateIndicatorValue").textContent = window.AudioEngine.sampleRate;
 
     createEditor1();
-
     createEditor2();
 
     createControls();

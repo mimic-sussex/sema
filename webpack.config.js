@@ -44,7 +44,7 @@ module.exports = {
         // loader: 'worklet-loader',
         loader:'file-loader',  // files should NOT get processed, only emitted
         options: {
-           name: '[hash].maxi-processor.js'
+           name: 'maxi-processor.js'
         }
       },
       {
@@ -62,11 +62,11 @@ module.exports = {
         // wasm files should not be processed but just be emitted and we want
         // to have their public URL.
         test: /maximilian\.wasmmodule\.js$/,
-        type: 'javascript/auto',
+        // type: 'javascript/auto',
         loader: 'file-loader',    // WASM files should NOT get processed, only emitted
         // loader: 'wasm-loader', // WASM files get processed
         options: {
-          // name: '[name].[ext]',
+          name: 'maximilian.wasmmodule.js',
           publicPath: "dist/"
         }
       },
@@ -112,7 +112,7 @@ module.exports = {
   },
   plugins: [
     new webpack.ProgressPlugin(),
-    new CleanWebpackPlugin(),
+    // new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       title: 'Development',
       template: './src/index.html',
