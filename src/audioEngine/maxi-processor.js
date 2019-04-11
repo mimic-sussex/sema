@@ -6,7 +6,7 @@ import Module from './maximilian.wasmmodule.js';
  * @class MaxiProcessor
  * @extends AudioWorkletProcessor
  */
-class CustomProcessor extends AudioWorkletProcessor {
+class MaxiProcessor extends AudioWorkletProcessor {
 
   static get parameterDescriptors() {
     return [{ name: 'gain', defaultValue: 0.1 }];
@@ -19,16 +19,20 @@ class CustomProcessor extends AudioWorkletProcessor {
     super();
     this.sampleRate = 44100;
 
+    this.mySine = new Module.maxiOsc();
+    this.myOtherSine = new Module.maxiOsc();
+    this.myLastSine = new Module.maxiOsc();
+
+    this.evalExpression = eval(`() => { return this.mySine.square(30)}`);
+
     this.port.onmessage = (event) => {
-      console.log(event.data);
-    };
+      try{ this.evalExpression = eval(event.data); }
+      catch(err) {
+        console.log("Error in Worklet evaluation: " + err);
+        this.evalExpression = () => { return this.mySine.square(30) };
+      }
 
-    console.log("Module.maxiOsc " + Module.maxiOsc);
-
-    // this.mySine = Module.maxiOsc();
-    // this.myOtherSine = new Module.maxiOsc();
-
-    console.log("CustomProcessor loaded from File");
+    }
   }
 
   /**
@@ -47,9 +51,8 @@ class CustomProcessor extends AudioWorkletProcessor {
         let outputChannel = output[channelId];
 
         for (let i = 0; i < outputChannel.length; ++i) {
-          const amp = isConstant ? gain[0] : gain[i]
-          // outputChannel[i] = (this.mySine.sinewave(2) * this.myOtherSine.sinewave(0.4)) * amp;
-          outputChannel[i] = ( Math.sin(i) + 0.8) * amp;
+          const amp = isConstant ? gain[0] : gain[i];
+          outputChannel[i] = this.evalExpression() * amp;
         }
       }
     }
@@ -58,6 +61,4 @@ class CustomProcessor extends AudioWorkletProcessor {
 
 };
 
-registerProcessor("maxi-processor", CustomProcessor);
-
-// export { CustomProcessor };
+registerProcessor("maxi-processor", MaxiProcessor);

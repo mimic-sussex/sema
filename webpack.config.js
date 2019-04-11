@@ -41,7 +41,8 @@ module.exports = {
         // as the file name).
         test: /maxi-processor.js/,
         // loader: 'exports-loader',
-        loader: 'worklet-loader',
+        // loader: 'worklet-loader',
+        loader:'file-loader',  // files should NOT get processed, only emitted
         options: {
            name: '[hash].maxi-processor.js'
         }
@@ -62,7 +63,7 @@ module.exports = {
         // to have their public URL.
         test: /maximilian\.wasmmodule\.js$/,
         type: 'javascript/auto',
-        loader: 'file-loader',    // WASM files do NOT get processed
+        loader: 'file-loader',    // WASM files should NOT get processed, only emitted
         // loader: 'wasm-loader', // WASM files get processed
         options: {
           // name: '[name].[ext]',
@@ -114,7 +115,8 @@ module.exports = {
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       title: 'Development',
-      template: './src/index.html'
+      template: './src/index.html',
+      favicon: "./assets/img/favicon.ico"
     }),
     new webpack.HotModuleReplacementPlugin()
     ],

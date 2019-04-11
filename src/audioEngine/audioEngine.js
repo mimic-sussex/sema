@@ -11,7 +11,11 @@ import CustomProcessor from './maxi-processor'
 class CustomAudioNode extends AudioWorkletNode {
   constructor(audioContext, processorName) {
     // super(audioContext, processorName);
-    let options = { numberOfInputs: 0, numberOfOutputs: 1, outputChannelCount: [2] };
+    let options = {
+      numberOfInputs: 0,
+      numberOfOutputs: 1,
+      outputChannelCount: [2]
+    };
     super(audioContext, processorName, options);
   }
 }
@@ -27,7 +31,7 @@ class AudioEngine {
   /**
    * @constructor
    */
-  constructor(audioContext){
+  constructor(audioContext) {
 
     this.audioContext = new AudioContext();
     this.sampleRate = this.audioContext.sampleRate;
@@ -43,7 +47,7 @@ class AudioEngine {
   /**
    * @translateIntermediateToLanguageProcessorCode
    */
-  translateIntermediateLanguageToProcessorCode (expression) {
+  translateIntermediateLanguageToProcessorCode(expression) {
     let userDefinedFunction = "";
     switch (expression % 2) {
       case 0:
@@ -59,7 +63,8 @@ class AudioEngine {
     // We get an "Error on loading worklet:  DOMException" with the following import:
     // import Module from './maximilian.wasmmodule.js';
     return `
-      class CustomProcessor extends AudioWorkletProcessor {
+      import Module from './maximilian.wasmmodule.js';
+      cwlass CustomProcessor extends AudioWorkletProcessor {
         static get parameterDescriptors() {
           return [{
             name: 'gain',
@@ -124,7 +129,11 @@ class AudioEngine {
 
     console.log(code);
 
-    const blob = new Blob([code], { type: "application/javascript" });
+    const blob = new Blob([code], {
+      type: "application/javascript; charset=utf-8",
+
+
+    });
 
     // TODO: Check for memory leaks
     // URL.revokeObjectURL()
@@ -139,7 +148,7 @@ class AudioEngine {
         console.log("from processor: " + event.data);
       };
       this.customNode.connect(this.audioContext.destination);
-    }).catch( e => console.log("Error on loading worklet: ", e) );
+    }).catch(e => console.log("Error on loading worklet: ", e));
   }
 
   runMaxiProcessorCode() {
@@ -155,18 +164,17 @@ class AudioEngine {
         console.log("from processor: " + event.data);
       };
       this.customNode.connect(this.audioContext.destination);
-
-    }).catch( e => console.log("Error on loading worklet: ", e) );
+    }).catch(e => console.log("Error on loading worklet: ", e));
   }
 
   /**
-  * Re-starts audio playback by stopping and running the latest Audio Worklet Processor code
-  * @play
-  */
+   * Re-starts audio playback by stopping and running the latest Audio Worklet Processor code
+   * @play
+   */
   play() {
     this.stop();
 
-    if(this.processorCount % 3)
+    if (this.processorCount % 3)
       this.runProcessorCode();
     else
       this.runMaxiProcessorCode();
@@ -175,11 +183,11 @@ class AudioEngine {
   }
 
   /**
-  * Stops audio by disconnecting Audio None with Audio Worklet Processor code
-  * from Web Audio graph
-  * TODO: Investigate when it is best to just STOP the graph exectution
-  * @stop
-  */
+   * Stops audio by disconnecting Audio None with Audio Worklet Processor code
+   * from Web Audio graph
+   * TODO: Investigate when it is best to just STOP the graph exectution
+   * @stop
+   */
   stop() {
     if (this.customNode !== undefined) {
       this.customNode.disconnect(this.audioContext.destination);
