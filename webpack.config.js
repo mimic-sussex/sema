@@ -62,8 +62,8 @@ module.exports = {
         // wasm files should not be processed but just be emitted and we want
         // to have their public URL.
         test: /maximilian\.wasmmodule\.js$/,
-        // type: 'javascript/auto',
         loader: 'file-loader',    // WASM files should NOT get processed, only emitted
+        // type: 'javascript/auto',
         // loader: 'wasm-loader', // WASM files get processed
         options: {
           name: 'maximilian.wasmmodule.js',

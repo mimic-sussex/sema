@@ -56,7 +56,7 @@ class AudioEngine {
       `new Module.maxiOsc().sinewave(400)`, // Interesting case of failure, it seems we can't instantiate because of EM heap limits
     ];
 
-    console.log("AudioEngine loaded")
+    console.log("Audio engine loaded")
   }
 
 
