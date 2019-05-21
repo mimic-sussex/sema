@@ -1,5 +1,5 @@
-
-let langSketch; export default langSketch = `//Beat
+let langSketch;
+export default langSketch = `//Beat
 xo.-.xo
 
 //Loop
@@ -27,6 +27,8 @@ bus(0, 440)
 ☻gandalf <- [.0x.0-x.0-x.-0x-.-]
 
 ☺sauron << ☻gandalf
+
+∞(∆, 1.0, 1.5).∞(~, 1.0. 1.04).∞(∞(∞, 440, 1.04)+∞(≈, 66, 1.30))
 
 ☺sauron = {
   f : [@osc: (∆, 1.0, 1.34)

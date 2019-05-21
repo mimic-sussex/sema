@@ -5,7 +5,9 @@ import * as grammar from './language/eppprocessor.js';
 
 // import snare from './assets/909.wav';
 
-import { AudioEngine } from './audioEngine/audioEngine.js';
+import {
+  AudioEngine
+} from './audioEngine/audioEngine.js';
 
 // import { CustomProcessor } from './audioEngine/maxi-processor.js';
 
@@ -66,11 +68,11 @@ function createEditor1() {
     lineWrapping: true,
     extraKeys: {
       // [ "Cmd-Enter" ]: () => playAudio(),
-      [ "Cmd-Enter" ]: () => evalEditorExpression(),
-      [ "Cmd-."]: () => stopAudio(),
-      [ "Cmd--"]: () => decreaseVolume(),
-      [ "Cmd-="]: () => increaseVolume(),
-      [ "Cmd-]"]: () => changeSynth()
+      ["Cmd-Enter"]: () => evalEditorExpression(),
+      ["Cmd-."]: () => stopAudio(),
+      ["Cmd--"]: () => decreaseVolume(),
+      ["Cmd-="]: () => increaseVolume(),
+      ["Cmd-]"]: () => changeSynth()
 
     }
 
@@ -92,7 +94,7 @@ function createEditor2() {
   editor2.setSize('100%', '100%');
 }
 
-function createControls(){
+function createControls() {
 
   const isMac = CodeMirror.keyMap.default === CodeMirror.keyMap.macDefault;
   const runKeys = isMac ? "Cmd-Enter" : "Ctrl-Enter";
@@ -113,36 +115,36 @@ function createControls(){
 
 }
 
-function evalEditorExpression(){
+function evalEditorExpression() {
 
-    let ASTree = parseEditorInput(editor1.getSelection())
-    console.log(ASTree);
+  let ASTree = parseEditorInput(editor1.getSelection())
+  console.log(ASTree);
 
 }
 
 
 function playAudio() {
-  if(window.AudioEngine !== undefined)
+  if (window.AudioEngine !== undefined)
     window.AudioEngine.play();
 }
 
 function stopAudio() {
-  if(window.AudioEngine !== undefined)
+  if (window.AudioEngine !== undefined)
     window.AudioEngine.stop();
 }
 
 function increaseVolume() {
-  if(window.AudioEngine !== undefined)
-    window.AudioEngine.increaseVolume();
+  if (window.AudioEngine !== undefined)
+    window.AudioEngine.more('gainSyn');
 }
 
 function decreaseVolume() {
-  if(window.AudioEngine !== undefined)
-    window.AudioEngine.decreaseVolume();
+  if (window.AudioEngine !== undefined)
+    window.AudioEngine.less('gainSyn');
 }
 
 function changeSynth() {
-  if(window.AudioEngine !== undefined)
+  if (window.AudioEngine !== undefined)
     window.AudioEngine.changeSynth();
 }
 
@@ -161,8 +163,7 @@ function setParser() {
 
 function parseEditorInput(input) {
 
-  if(input !== undefined && parser !== undefined)
-  {
+  if (input !== undefined && parser !== undefined) {
     parser.feed(input);
     return parser.results;
   }
@@ -172,18 +173,18 @@ function parseEditorInput(input) {
 
 document.addEventListener("DOMContentLoaded", () => {
 
-    document.getElementById('audioWorkletIndicator').innerHTML = AudioWorkletIndicator.AudioWorkletIndicator();
+  document.getElementById('audioWorkletIndicator').innerHTML = AudioWorkletIndicator.AudioWorkletIndicator();
 
-    window.AudioEngine = new AudioEngine(audio);
+  window.AudioEngine = new AudioEngine(audio);
 
-    document.getElementById("sampleRateIndicatorValue").textContent = window.AudioEngine.sampleRate;
+  document.getElementById("sampleRateIndicatorValue").textContent = window.AudioEngine.sampleRate;
 
-    setParser();
+  setParser();
 
-    createEditor1();
-    createEditor2();
+  createEditor1();
+  createEditor2();
 
-    createAnalysers();
+  createAnalysers();
 
-    createControls();
+  createControls();
 });
