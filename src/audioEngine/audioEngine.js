@@ -44,6 +44,8 @@ class AudioEngine {
     this.audioWorkletUrl = 'maxi-processor.js';
     this.audioWorkletNode;
 
+    this.samplesLoaded = false;
+
     this.loadTestIntervals = []
     const SYNTH_CHANGE_MS = 50;
 
@@ -115,28 +117,21 @@ class AudioEngine {
     }
   }
 
-  sendAudioArray(sampleWorkletObjectName, float32Array) {
-    if (float32Array !== undefined && this.audioWorkletNode !== undefined) {
-      // console.log('f32array: ' + float32Array);
-      this.audioWorkletNode.port.postMessage({
-        [sampleWorkletObjectName]: float32Array,
-      });
-    }
-  }
-
-  loadSampleToAudioArray(url) {
+  loadSample(objectName, url) {
 
     if (this.audioContext !== undefined) {
-      loadSampleToArray(this.audioContext, url, this.sendAudioArray);
+      loadSampleToArray(this.audioContext, objectName, url, this.audioWorkletNode);
     } else throw "Audio Context is not initialised!";
   }
 
   loadSamples() {
-    if (audioContext !== undefined) {
-      loadSampleToArray(audioContext, "snare", "909.wav", sendAudioArray);
-      loadSampleToArray(audioContext, "kick", "909b.wav", sendAudioArray);
-      loadSampleToArray(audioContext, "closed", "909closed.wav", sendAudioArray);
-      loadSampleToArray(audioContext, "open", "909open.wav", sendAudioArray);
+    if (this.audioContext !== undefined) {
+      loadSampleToArray(this.audioContext, "snare", "samples/909.wav", this.audioWorkletNode);
+      loadSampleToArray(this.audioContext, "kick", "samples/909b.wav", this.audioWorkletNode);
+      loadSampleToArray(this.audioContext, "closed", "samples/909closed.wav", this.audioWorkletNode);
+      loadSampleToArray(this.audioContext, "open", "samples/909open.wav", this.audioWorkletNode);
+
+      this.samplesLoaded = true;
     } else throw "Audio Context is not initialised!";
   }
 

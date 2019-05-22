@@ -27,7 +27,8 @@ body {
   display: grid;
   grid-template-areas:
     'header header header header header'
-    'main main main right right'
+    /* 'main main main right right' */
+    'main main main main main'
     'footer footer footer footer footer';
 
   grid-template-rows: 60px
@@ -75,8 +76,8 @@ body {
   background-color: black;
   /* background-color: blue; */
   justify-self: stretch;
-  grid-column-start: 1/5;
-  grid-column-end: 3/5;
+  /* grid-column-start: 1/5;
+  grid-column-end: 3/5; */
   grid-row: 2;
 
 }

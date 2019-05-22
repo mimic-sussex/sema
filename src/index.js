@@ -23,8 +23,9 @@ import './style/editors.css';
 
 import * as CodeMirror from 'codemirror/lib/codemirror.js';
 import 'codemirror/mode/javascript/javascript.js';
-import 'codemirror/theme/ambiance.css';
-import 'codemirror/theme/abcdef.css';
+// import 'codemirror/theme/ambiance.css';
+import 'codemirror/theme/monokai.css';
+// import 'codemirror/theme/abcdef.css';
 import 'codemirror/keymap/vim.js';
 import 'codemirror/lib/codemirror.css';
 
@@ -36,19 +37,6 @@ let editor1, editor2;
 
 let parser;
 
-
-// function wasmReady(){
-//
-//   console.log("MaxiLib WASM loaded")
-//   var maxiAudio = new maxiLib.maxiAudio();
-//   maxiAudio.init();
-//   maxiAudio.loadSample("../assets/samples/909b.wav", kick);
-//   maxiAudio.loadSample("../assets/samples/909.wav", snare);
-//   maxiAudio.loadSample("../assets/samples/909closed.wav", closedHat);
-//   maxiAudio.loadSample("../assets/samples/909open.wav", openHat);
-//   console.log("Samples loaded")
-// }
-
 // Default editor code example is stored at 'langSketch.js'
 const defaultEditorCode1 = langSketch;
 
@@ -56,7 +44,8 @@ function createEditor1() {
 
   editor1 = CodeMirror(document.getElementById('editor1'), {
     value: defaultEditorCode1,
-    theme: "abcdef",
+    // theme: "abcdef",
+    theme: "monokai",
     lineNumbers: true,
     // mode:  "javascript",
     lineWrapping: true,
@@ -67,9 +56,7 @@ function createEditor1() {
       ["Cmd--"]: () => decreaseVolume(),
       ["Cmd-="]: () => increaseVolume(),
       ["Cmd-]"]: () => changeSynth()
-
     }
-
   });
   editor1.setSize('100%', '100%');
   editor1.setOption("vimMode", true);
@@ -106,7 +93,6 @@ function createControls() {
 
   container.appendChild(stopButton);
   stopButton.addEventListener("click", () => stopAudio());
-
 }
 
 function evalEditorExpression() {
@@ -115,6 +101,9 @@ function evalEditorExpression() {
   // console.log(ASTree);
   let expression = editor1.getSelection();
 
+  if (!window.AudioEngine.samplesLoaded)
+    window.AudioEngine.loadSamples();
+
   window.AudioEngine.evalSynth(expression);
 
   console.log(expression);
@@ -122,8 +111,9 @@ function evalEditorExpression() {
 
 
 function playAudio() {
-  if (window.AudioEngine !== undefined)
+  if (window.AudioEngine !== undefined) {
     window.AudioEngine.play();
+  }
 }
 
 function stopAudio() {
@@ -146,7 +136,6 @@ function changeSynth() {
     window.AudioEngine.changeSynth();
 }
 
-
 function createAnalysers() {
 
 }
@@ -160,7 +149,6 @@ function setParser() {
 
 
 function parseEditorInput(input) {
-
   if (input !== undefined && parser !== undefined) {
     parser.feed(input);
     return parser.results;
@@ -181,7 +169,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   createEditor1();
 
-  createEditor2();
+  // createEditor2();
 
   createAnalysers();
 

@@ -9,7 +9,8 @@
     "dev": "webpack-dev-server -w --hot  --verbose --progress --config  webpack.config.js",
     "build": "webpack  --verbose --progress --config webpack.config.js",
     "gen-stats": "webpack --profile --json > stats.json",
-    "analyse": "webpack-bundle-analyzer stats.json"
+    "analyse": "webpack-bundle-analyzer stats.json",
+    "source-map": "source-map-explorer dist/bundle.js dist/bundle.js.map"
   },
   "dependencies": {
     "codemirror": "^5.47.0",

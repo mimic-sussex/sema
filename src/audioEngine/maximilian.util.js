@@ -1,4 +1,35 @@
-export const loadSampleToArray = (audioContext, sampleObjectName, url, sendDataToWorklet) => {
+export const getArrayAsVectorDbl = (arrayIn) => {
+  var vecOut = new exports.VectorDouble();
+  for (var i = 0; i < arrayIn.length; i++) {
+    vecOut.push_back(arrayIn[i]);
+  }
+  return vecOut;
+};
+
+export const getBase64 = (str) => {
+  //check if the string is a data URI
+  if (str.indexOf(';base64,') !== -1) {
+    //see where the actual data begins
+    var dataStart = str.indexOf(';base64,') + 8;
+    //check if the data is base64-encoded, if yes, return it
+    // taken from
+    // http://stackoverflow.com/a/8571649
+    return str.slice(dataStart).match(/^([A-Za-z0-9+\/]{4})*([A-Za-z0-9+\/]{4}|[A-Za-z0-9+\/]{3}=|[A-Za-z0-9+\/]{2}==)$/) ? str.slice(dataStart) : false;
+  } else return false;
+};
+
+export const _keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+
+export const removePaddingFromBase64 = (input) => {
+  var lkey = Module.maxiTools._keyStr.indexOf(input.charAt(input.length - 1));
+  if (lkey === 64) {
+    return input.substring(0, input.length - 1);
+  }
+  return input;
+};
+
+
+export const loadSampleToArray = (audioContext, sampleObjectName, url, audioWorkletNode) => {
   var data = [];
 
   var context = audioContext;
@@ -54,8 +85,13 @@ export const loadSampleToArray = (audioContext, sampleObjectName, url, sendDataT
         // source.buffer = buffer;
         // source.loop = true;
         // source.start(0);
-        data = buffer.getChannelData(0);
-        if (data) sendDataToWorklet(sampleObjectName, data);
+        let float32Array = buffer.getChannelData(0);
+        if (data !== undefined && audioWorkletNode !== undefined) {
+          // console.log('f32array: ' + float32Array);
+          audioWorkletNode.port.postMessage({
+            [sampleObjectName]: float32Array,
+          });
+        }
       },
       function (buffer) { // errorCallback
         console.log("Error decoding source!");
@@ -77,8 +113,13 @@ export const loadSampleToArray = (audioContext, sampleObjectName, url, sendDataT
       audioContext.decodeAudioData(
         request.response,
         function (buffer) {
-          data = buffer.getChannelData(0);
-          if (data) sendDataToWorklet(sampleObjectName, data);
+          let float32Array = buffer.getChannelData(0);
+          if (data !== undefined && audioWorkletNode !== undefined) {
+            // console.log('f32array: ' + float32Array);
+            audioWorkletNode.port.postMessage({
+              [sampleObjectName]: float32Array,
+            });
+          }
         },
         function (buffer) {
           console.log("Error decoding source!");
