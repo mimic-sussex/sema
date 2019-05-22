@@ -3,14 +3,10 @@ import * as nearley from 'nearley/lib/nearley.js';
 // import * as grammar from './language/eppGrammar.js';
 import * as grammar from './language/eppprocessor.js';
 
-// import snare from './assets/909.wav';
 
 import {
   AudioEngine
 } from './audioEngine/audioEngine.js';
-
-// import { CustomProcessor } from './audioEngine/maxi-processor.js';
-
 
 // import treeJSON from './dndTree';
 import AudioWorkletIndicator from './UI/components';
@@ -35,8 +31,6 @@ import 'codemirror/lib/codemirror.css';
 import langSketch from './language/langSketch';
 
 let audio;
-let customNode;
-let processorCount = 0;
 
 let editor1, editor2;
 
@@ -117,9 +111,11 @@ function createControls() {
 
 function evalEditorExpression() {
 
-  let ASTree = parseEditorInput(editor1.getSelection())
-  console.log(ASTree);
-
+  // let ASTree = parseEditorInput(editor1.getSelection())
+  // console.log(ASTree);
+  let expression = editor1.getSelection();
+  console.log(expression);
+  window.AudioEngine.evalSynth(expression);
 }
 
 
@@ -175,16 +171,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.getElementById('audioWorkletIndicator').innerHTML = AudioWorkletIndicator.AudioWorkletIndicator();
 
-  window.AudioEngine = new AudioEngine(audio);
+  window.AudioEngine = new AudioEngine();
 
   document.getElementById("sampleRateIndicatorValue").textContent = window.AudioEngine.sampleRate;
 
   setParser();
 
   createEditor1();
+
   createEditor2();
 
   createAnalysers();
 
   createControls();
+
 });

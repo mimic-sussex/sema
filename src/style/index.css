@@ -1,9 +1,14 @@
-html, body { height: 100%; background: #000000}
+html,
+body {
+  height: 100%;
+  background: #000000
+}
+
 /* html, body { height: 100%; background: #222222} */
 
 @font-face {
-    font-family: 'LatoWebBlack';
-    src: url('../../assets/fonts/Lato/fonts/Lato-Black.woff');
+  font-family: 'LatoWebBlack';
+  src: url('../../assets/fonts/Lato/fonts/Lato-Black.woff');
 }
 
 /* @font-face {
@@ -25,11 +30,14 @@ html, body { height: 100%; background: #000000}
     'main main main right right'
     'footer footer footer footer footer';
 
-  grid-template-rows: 60px /* Header */
-                      1fr /* Main Content */
-                      50px; /* Footer */
+  grid-template-rows: 60px
+    /* Header */
+    1fr
+    /* Main Content */
+    50px;
+  /* Footer */
 
-  grid-template-columns:  60px auto auto 200px 200px;
+  grid-template-columns: 60px auto auto 200px 200px;
   grid-gap: 2px;
   background-color: #000000;
   /* background-color: #222222; */
@@ -72,6 +80,7 @@ html, body { height: 100%; background: #000000}
   grid-row: 2;
 
 }
+
 .containerRight {
   grid-area: right;
   background-color: green;
@@ -102,7 +111,7 @@ html, body { height: 100%; background: #000000}
 }
 
 #logoContainer {
-  float:left;
+  float: left;
   width: 50px;
   height: 50px;
 }
@@ -116,11 +125,11 @@ html, body { height: 100%; background: #000000}
 .headerTitle {
   font-family: "LatoWebBlack";
   font-size: 30px;
-  text-align:left;
+  text-align: left;
   color: #ccff00;
   /* vertical-align: middle; */
   /* overflow: hidden; */
-  float:left;
+  float: left;
 }
 
 .headerItemList {
@@ -132,15 +141,15 @@ html, body { height: 100%; background: #000000}
   /* text-align:right; */
   /* vertical-align: middle; */
   overflow: hidden;
-  float:left;
+  float: left;
 }
 
 .headerItem {
   font-family: "LatoWebBlack";
   margin: 0 20px 0 20px;
-  float:left;
+  float: left;
   color: #da14ff;
- }
+}
 
 #sampleRateIndicatorLabel {
   font-family: "LatoWebBlack";
@@ -154,7 +163,7 @@ html, body { height: 100%; background: #000000}
   top: 0;
   right: 20px;
   overflow: hidden;
-  float:left;
+  float: left;
 }
 
 #sampleRateIndicatorValue {

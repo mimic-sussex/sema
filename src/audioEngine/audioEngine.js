@@ -1,5 +1,4 @@
-// import Module from './maximilian.wasmmodule.js';
-
+import Module from './maximilian.wasmmodule.js'; //NOTE: We need this import here for webpack to emit maximilian.wasmmodule.js
 import CustomProcessor from './maxi-processor'
 import {
   loadSampleToArray
@@ -33,7 +32,7 @@ class AudioEngine {
   /**
    * @constructor
    */
-  constructor(audioContext) {
+  constructor() {
 
     // NOTE: We want AudioContext lazy loading (first Audio Engine play triggered by user) to prevent the warning
     this.audioContext; // = new AudioContext();
@@ -86,7 +85,7 @@ class AudioEngine {
         this.audioContext.audioWorklet.addModule(this.audioWorkletUrl).then(() => {
 
           // Custom node constructor with required parameters          
-          this.audioWorkletNode = new MaxiNode(this.audioContext, this.audioWorkletProcessorName);
+          this.audioWorkletNode = new AudioWorkletNode(this.audioContext, this.audioWorkletProcessorName);
 
           // All possible error event handlers subscribed 
           this.audioWorkletNode.onprocessorerror = (event) => { //  error from the processor
@@ -106,7 +105,7 @@ class AudioEngine {
           this.audioWorkletNode.connect(this.audioContext.destination);
           return true;
 
-        }).catch((e => console.log("Error on loading worklet: ", e)));
+        }).catch(e => console.log("Error on loading worklet: ", e.message));
       } catch (err) {
         console.log("AudioWorklet not supported in this browser: ", err.message);
         return false;
@@ -115,6 +114,32 @@ class AudioEngine {
       return false;
     }
   }
+
+  sendAudioArray(sampleWorkletObjectName, float32Array) {
+    if (float32Array !== undefined && this.audioWorkletNode !== undefined) {
+      // console.log('f32array: ' + float32Array);
+      this.audioWorkletNode.port.postMessage({
+        [sampleWorkletObjectName]: float32Array,
+      });
+    }
+  }
+
+  loadSampleToAudioArray(url) {
+
+    if (this.audioContext !== undefined) {
+      loadSampleToArray(this.audioContext, url, this.sendAudioArray);
+    } else throw "Audio Context is not initialised!";
+  }
+
+  loadSamples() {
+    if (audioContext !== undefined) {
+      loadSampleToArray(audioContext, "snare", "909.wav", sendAudioArray);
+      loadSampleToArray(audioContext, "kick", "909b.wav", sendAudioArray);
+      loadSampleToArray(audioContext, "closed", "909closed.wav", sendAudioArray);
+      loadSampleToArray(audioContext, "open", "909open.wav", sendAudioArray);
+    } else throw "Audio Context is not initialised!";
+  }
+
 
   /**
    * Re-starts audio playback by stopping and running the latest Audio Worklet Processor code
@@ -137,8 +162,7 @@ class AudioEngine {
   play() {
     if (this.audioContext === undefined) {
       this.audioContext = new AudioContext();
-      let workletIsLoaded = this.loadProcessorCode()
-      return workletIsLoaded;
+      this.loadProcessorCode();
     } else {
       if (this.audioContext.state !== "suspended") {
         this.stop();
@@ -169,26 +193,9 @@ class AudioEngine {
     }
   }
 
-
-  increaseVolume() {
-    if (this.audioWorkletNode !== undefined) {
-      const gainParam = this.audioWorkletNode.parameters.get('gain');
-      gainParam.value += 0.1;
-    }
-  }
-
-  decreaseVolume() {
-    if (this.audioWorkletNode !== undefined) {
-      const gainParam = this.audioWorkletNode.parameters.get('gain');
-      gainParam.value -= 0.1;
-    }
-  }
-
-
-
   more(gain) {
-    if (audioWorkletNode !== undefined) {
-      const gainParam = audioWorkletNode.parameters.get(gain);
+    if (this.audioWorkletNode !== undefined) {
+      const gainParam = this.audioWorkletNode.parameters.get(gain);
       gainParam.value += 0.5;
       console.log(gain + ": " + gainParam.value); // DEBUG
       return true;
@@ -196,8 +203,8 @@ class AudioEngine {
   }
 
   less(gain) {
-    if (audioWorkletNode !== undefined) {
-      const gainParam = audioWorkletNode.parameters.get(gain);
+    if (this.audioWorkletNode !== undefined) {
+      const gainParam = this.audioWorkletNode.parameters.get(gain);
       gainParam.value -= 0.5;
       console.log(gain + ": " + gainParam.value); // DEBUG
       return true;
@@ -205,7 +212,56 @@ class AudioEngine {
   }
 
 
+  evalSequence() {
+    if (this.audioWorkletNode !== undefined) {
+      let sequence;
+      if (arguments.length == 0) {
+        sequence = this.sequences[Math.floor(Math.random() * this.sequences.length)]; // Choose random entry
+        this.audioWorkletNode.port.postMessage({
+          sequence: `${sequence}`
+        }); // Send JSON object with eval prop for evaluation in processor
+      } else {
+        sequence = arguments[0];
+        this.audioWorkletNode.port.postMessage({
+          sequence: `${sequence}`
+        }); // Send JSON object with eval prop for evaluation in processor
+      }
+      return true;
+      // DEBUG:
+      // console.log("Change Sequence: " + sequence);
+    }
+    return false;
+  }
 
+
+  evalSynth() {
+    if (this.audioWorkletNode !== undefined) {
+      let userDefinedFunction;
+      if (arguments.length == 0) {
+        userDefinedFunction = this.synthDefs[Math.floor(Math.random() * this.synthDefs.length)];
+      } else {
+        userDefinedFunction = arguments[0];
+      }
+      // DEBUG:
+      this.audioWorkletNode.port.postMessage({
+        eval: `() => { return ${userDefinedFunction} }`
+      }); // Send JSON object with eval prop for evaluation in processor
+      console.log("eval: " + userDefinedFunction);
+      return true;
+    } else return false;
+  }
+
+  loadTest() {
+    if (audioContext.state === "suspended")
+      this.playAudio();
+    this.loadTestIntervals.push(setInterval('changeSynth()', this.SYNTH_CHANGE_MS));
+  }
+
+  stopLoadTest() {
+    this.loadTestIntervals.forEach(interval => {
+      clearInterval(interval);
+    });
+  }
 
 
 

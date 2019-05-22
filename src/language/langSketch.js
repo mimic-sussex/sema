@@ -1,9 +1,16 @@
 let langSketch;
-export default langSketch = `//Beat
+export default langSketch = `// Start web audio graph
+start;
+
+//Beat
 xo.-.xo
 
 //Loop
 [xo.-.xo];
+
+// Synth def
+this.osc.sinewave(60);
+
 
 //Osc definition
 osc sin 0.5 3.4
