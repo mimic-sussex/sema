@@ -246,7 +246,7 @@ class AudioEngine {
       this.audioWorkletNode.port.postMessage({
         eval: `() => { return ${userDefinedFunction} }`
       }); // Send JSON object with eval prop for evaluation in processor
-      console.log("eval: " + userDefinedFunction);
+      console.log("eval: " + userDefinedFunction); //DEBUG
       return true;
     } else return false;
   }

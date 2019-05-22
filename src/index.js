@@ -114,8 +114,10 @@ function evalEditorExpression() {
   // let ASTree = parseEditorInput(editor1.getSelection())
   // console.log(ASTree);
   let expression = editor1.getSelection();
-  console.log(expression);
+
   window.AudioEngine.evalSynth(expression);
+
+  console.log(expression);
 }
 
 
