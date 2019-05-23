@@ -31,12 +31,14 @@ body {
     'main main main main main'
     'footer footer footer footer footer';
 
-  grid-template-rows: 60px
+  grid-template-rows:
     /* Header */
-    1fr
+    60px
     /* Main Content */
+    /* 1fr */
+    600px
+    /* Footer */
     50px;
-  /* Footer */
 
   grid-template-columns: 60px auto auto 200px 200px;
   grid-gap: 2px;
@@ -73,6 +75,7 @@ body {
 
 .containerMain {
   grid-area: main;
+  align-content: stretch;
   background-color: black;
   /* background-color: blue; */
   justify-self: stretch;
