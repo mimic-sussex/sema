@@ -3,13 +3,24 @@ export default langSketch = `// Start web audio graph
 start;
 
 //Beat
-xo.-.xo
+ko c ko
 
 //Loop
-[xo.-.xo];
+[ko c ko];
 
 // Synth def
 this.osc.sinewave(60);
+
+tpb 12; 
+
+k oock s co; 
+
+[kc  kc  s]; 
+
+∞ ∆ 12;
+
+∞ ∆ (∞ ~ 12 + ∞ ◊ 1 );
+
 
 
 //Osc definition

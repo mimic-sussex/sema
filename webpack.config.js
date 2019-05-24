@@ -73,7 +73,7 @@ module.exports = {
         test: /maximilian.wasmmodule.js$/,
         type: 'javascript/auto',
         // loader: 'wasm-loader', // WASM files get processed [NOT what we want]
-        loader: 'file-loader', // WASM files should NOT get processed, only emitted to the final 
+        loader: 'file-loader', // WASM files are only emitted to the final dist, NOT processed
         options: {
           // mimetype: 'application/wasm',
           name: 'maximilian.wasmmodule.js',
@@ -112,12 +112,12 @@ module.exports = {
   },
   plugins: [
     new webpack.ProgressPlugin(),
-    // new CleanWebpackPlugin({
-    //   dry: false,
-    //   verbose: true,
-    //   cleanStaleWebpackAssets: true,
-    //   protectWebpackAssets: true,
-    // }),
+    new CleanWebpackPlugin({
+      dry: false,
+      verbose: true,
+      cleanStaleWebpackAssets: true,
+      protectWebpackAssets: true,
+    }),
     new HtmlWebpackPlugin({
       title: 'Development',
       template: './src/index.html',

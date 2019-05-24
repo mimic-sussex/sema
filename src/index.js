@@ -97,16 +97,25 @@ function createControls() {
 
 function evalEditorExpression() {
 
-  // let ASTree = parseEditorInput(editor1.getSelection())
-  // console.log(ASTree);
-  let expression = editor1.getSelection();
-
+  // TODO: for now sample loading is here, 
+  // but we want to 
   if (!window.AudioEngine.samplesLoaded)
     window.AudioEngine.loadSamples();
 
-  window.AudioEngine.evalSynth(expression);
+  let expression = editor1.getSelection();
+  console.log(`User expression to eval: ${expression}`);
+  let ASTree;
+  try {
+    ASTree = parseEditorInput(editor1.getSelection())
+    console.log(`Parse tree: ${ASTree}`);
+  } catch (error) {
+    console.log(`Error parsing the tree: ${error}`);
+  }
 
-  console.log(expression);
+
+  // window.AudioEngine.evalSynth(expression);
+
+
 }
 
 
