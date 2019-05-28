@@ -5,6 +5,8 @@ start;
 //Beat
 ko c ko
 
+nearley-test ./eppprocessor.js --input 'osc tri (osc sin (osc sin (osc square (osc phasor 12 + osc saw 12))))'
+
 //Loop
 [ko c ko];
 
