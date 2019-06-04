@@ -72,7 +72,9 @@ Statement -> Expressions                                      {% id %}
           | Comment                                           {% id %}
 
 Declaration -> %let %functionname %dquote .:* %dquote         {% id %}
+
 Import -> %import %lparen %functionname %rparen               {% id %}
+
 Comment -> %hash .:* "\n"                                     {% d => ({ "☺comment": d[3] }) %}
 
 Expressions ->
