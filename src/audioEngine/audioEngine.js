@@ -45,7 +45,7 @@ class AudioEngine {
     this.audioWorkletNode;
 
     this.samplesLoaded = false;
-     
+      
     this.loadTestIntervals = []
     const SYNTH_CHANGE_MS = 50;
 

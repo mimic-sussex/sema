@@ -60,9 +60,8 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
     this._q = []; //maxi objects
 
-    this.signal = () => {
-      return this.osc.sinewave(440);
-    };
+    this.silence = () => {return 0.0};
+    this.signal = this.silence;
 
     this.port.onmessage = event => { // message port async handler
       if ('eval' in event.data) { // check if new code is being sent for evaluation?

@@ -1,5 +1,10 @@
 let langSketch;
-export default langSketch = `// Start web audio graph
+export default langSketch = `
+
+osc tri 100 + osc sin 101.4
+
+
+// Start web audio graph
 start;
 
 //Beat

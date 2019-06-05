@@ -99,12 +99,17 @@ function createControls() {
 
 function evalEditorExpression() {
 
+
   // TODO: for now sample loading is here,
   // but we want to
   if (!window.AudioEngine.samplesLoaded)
     window.AudioEngine.loadSamples();
 
   let expression = editor1.getSelection();
+  if (expression == "") {
+    let cursorInfo = editor1.getCursor();
+    expression = editor1.getDoc().getLine(cursorInfo.line);
+  }
   console.log(`User expression to eval: ${expression}`);
   let ASTree;
   try {
@@ -154,9 +159,11 @@ function createAnalysers() {
 
 }
 
+var parserStartPoint;
 function setParser() {
   let processor = nearley.Grammar.fromCompiled(grammar);
   parser = new nearley.Parser(processor);
+  parserStartPoint = parser.save();
   console.log('Nearley parser loaded')
 }
 
@@ -164,6 +171,7 @@ function setParser() {
 
 function parseEditorInput(input) {
   if (input !== undefined && parser !== undefined) {
+    parser.restore(parserStartPoint);
     parser.feed(input);
     return parser.results;
   }
