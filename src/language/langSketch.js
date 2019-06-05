@@ -7,17 +7,19 @@ ko c ko
 
 nearley-test ./eppprocessor.js --input 'osc tri (osc sin (osc sin (osc square (osc phasor 12 + osc saw 12))))'
 
+osc tri (osc sin (osc sin (osc square (osc phasor 12 + osc saw 12))))
+
 //Loop
 [ko c ko];
 
 // Synth def
 this.osc.sinewave(60);
 
-tpb 12; 
+tpb 12;
 
-k oock s co; 
+k oock s co;
 
-[kc  kc  s]; 
+[kc  kc  s];
 
 ∞ ∆ 12;
 

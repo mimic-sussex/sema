@@ -58,37 +58,61 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
     this.setupPolysynth();
 
+    this._q = []; //maxi objects
+
     this.signal = () => {
       return this.osc.sinewave(440);
     };
 
     this.port.onmessage = event => { // message port async handler
-      for (const key in event.data) { // event from node scope packs JSON object
-
-        // console.log(key + ": " + event.data[key]); // DEBUG
-
-        if (key === 'sequence') { // User-defined DRUM sequence
-          this[key] = event.data[key];
-
-        } else if (key === 'eval') { // User-defined SIGNAL expression
-
-          try { // eval a property function, need to check if it changed   
-            this.eval = eval(event.data[key]); // Make a function out of the synth-def string tranferred from the WebAudio Node scope
-            this.eval(); // Evaluate the validity of the function before accepting it as the signal. If it is not valid, it will throw a TypeError here.
-            this.signal = this.eval; // If function is valid, set it as a this.signal() function. this.signal() wil be used in the process() loop
-          } catch (err) {
-            if (err instanceof TypeError) {
-              console.log("Error in worklet evaluation: " + err.name + " – " + err.message);
-            } else {
-              console.log("Error in worklet evaluation: " + err.name + " – " + err.message);
-            }
+      if ('eval' in event.data) { // check if new code is being sent for evaluation?
+        try {
+          console.log(event.data['setup']);
+          let setupFunction = eval(event.data['setup']);
+          let loopFunction = eval(event.data['loop']);
+          console.log(setupFunction);
+          console.log(loopFunction);
+          this._q = setupFunction();
+          this.signal = loopFunction;
+        } catch (err) {
+          if (err instanceof TypeError) {
+            console.log("TypeError in worklet evaluation: " + err.name + " – " + err.message);
+          } else {
+            console.log("Error in worklet evaluation: " + err.name + " – " + err.message);
           }
-
-        } else {
-          this[key].setSample(this.translateFloat32ArrayToBuffer(event.data[key]));
         }
-
       }
+      // for (const key in event.data) { // event from node scope packs JSON object
+      //
+      //   // console.log(key + ": " + event.data[key]); // DEBUG
+      //
+      //   if (key === 'sequence') { // User-defined DRUM sequence
+      //     this[key] = event.data[key];
+      //
+      //   } else if (key === 'eval') { // User-defined SIGNAL expression
+      //
+      //     try { // eval a property function, need to check if it changed
+      //       let setupFunction = eval(event.data[key].setup);
+      //       let loopFunction = eval(event.data[key].loop);
+      //       console.log(setupFunction);
+      //       _q = setupFunction();
+      //
+      //       // this.eval = eval(event.data[key]); // Make a function out of the synth-def string tranferred from the WebAudio Node scope
+      //       loopFunction(); // Evaluate the validity of the function before accepting it as the signal. If it is not valid, it will throw a TypeError here.
+      //       this.signal = loopFunction; // If function is valid, set it as a this.signal() function. this.signal() wil be used in the process() loop
+      //     } catch (err) {
+      //       if (err instanceof TypeError) {
+      //         console.log("Error in worklet evaluation: " + err.name + " – " + err.message);
+      //       } else {
+      //         console.log("Error in worklet evaluation: " + err.name + " – " + err.message);
+      //       }
+      //     }
+      //
+      //   } else {
+      //     this[key].setSample(this.translateFloat32ArrayToBuffer(event.data[key]));
+      //   }
+      //
+      // }
     };
   }
 
@@ -107,7 +131,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
     let arrayBuffer = null;
     let float32Array = null;
     var fileReader = new FileReader();
-    fileReader.onload = function (event) {
+    fileReader.onload = function(event) {
       arrayBuffer = event.target.result;
       float32Array = new Float32Array(arrayBuffer);
     };

@@ -45,7 +45,7 @@ class AudioEngine {
     this.audioWorkletNode;
 
     this.samplesLoaded = false;
-
+     
     this.loadTestIntervals = []
     const SYNTH_CHANGE_MS = 50;
 
@@ -86,10 +86,10 @@ class AudioEngine {
         // TODO: Might be worthwile to change this to await/async pattern instead of promise
         this.audioContext.audioWorklet.addModule(this.audioWorkletUrl).then(() => {
 
-          // Custom node constructor with required parameters          
+          // Custom node constructor with required parameters
           this.audioWorkletNode = new AudioWorkletNode(this.audioContext, this.audioWorkletProcessorName);
 
-          // All possible error event handlers subscribed 
+          // All possible error event handlers subscribed
           this.audioWorkletNode.onprocessorerror = (event) => { //  error from the processor
             console.log(`MaxiProcessor Error detected`);
           }
@@ -239,9 +239,12 @@ class AudioEngine {
       }
       // DEBUG:
       this.audioWorkletNode.port.postMessage({
-        eval: `() => { return ${userDefinedFunction} }`
-      }); // Send JSON object with eval prop for evaluation in processor
-      console.log("eval: " + userDefinedFunction); //DEBUG
+        // eval: `() => { return ${userDefinedFunction} }`
+        eval: 1,
+        setup: userDefinedFunction.setup,
+        loop: userDefinedFunction.loop
+      });
+      console.log("eval sent: " + userDefinedFunction); //DEBUG
       return true;
     } else return false;
   }
