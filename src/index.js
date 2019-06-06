@@ -3,6 +3,8 @@ import * as nearley from 'nearley/lib/nearley.js';
 // import * as grammar from './language/eppGrammar.js';
 import * as grammar from './language/eppprocessor.js';
 
+import IRToJavascript from './IR/IR.js'
+
 
 import {
   AudioEngine
@@ -59,7 +61,7 @@ function createEditor1() {
     }
   });
   editor1.setSize('100%', '100%');
-  editor1.setOption("vimMode", true);
+  editor1.setOption("vimMode", false);
 }
 
 const defaultEditorCode2 = "∞(∆, 1.0, 1.5).∞(~, 1.0. 1.04).∞(∞(∞, 440, 1.04)+∞(≈, 66, 1.30))";
@@ -97,23 +99,31 @@ function createControls() {
 
 function evalEditorExpression() {
 
-  // TODO: for now sample loading is here, 
-  // but we want to 
+
+  // TODO: for now sample loading is here,
+  // but we want to
   if (!window.AudioEngine.samplesLoaded)
     window.AudioEngine.loadSamples();
 
   let expression = editor1.getSelection();
+  if (expression == "") {
+    let cursorInfo = editor1.getCursor();
+    expression = editor1.getDoc().getLine(cursorInfo.line);
+  }
   console.log(`User expression to eval: ${expression}`);
   let ASTree;
   try {
-    ASTree = parseEditorInput(editor1.getSelection())
+    ASTree = parseEditorInput(expression)
     console.log(`Parse tree: ${ASTree}`);
+    console.log(JSON.stringify(ASTree));
+    let jscode = IRToJavascript.treeToCode(ASTree);
+    console.log(jscode);
+    window.AudioEngine.evalSynth(jscode);
   } catch (error) {
     console.log(`Error parsing the tree: ${error}`);
   }
 
 
-  // window.AudioEngine.evalSynth(expression);
 
 
 }
@@ -149,9 +159,11 @@ function createAnalysers() {
 
 }
 
+var parserStartPoint;
 function setParser() {
   let processor = nearley.Grammar.fromCompiled(grammar);
   parser = new nearley.Parser(processor);
+  parserStartPoint = parser.save();
   console.log('Nearley parser loaded')
 }
 
@@ -159,6 +171,7 @@ function setParser() {
 
 function parseEditorInput(input) {
   if (input !== undefined && parser !== undefined) {
+    parser.restore(parserStartPoint);
     parser.feed(input);
     return parser.results;
   }

@@ -1,11 +1,20 @@
 let langSketch;
-export default langSketch = `// Start web audio graph
-start;
+export default langSketch = `
+
+osc tri 100 + osc sin 101.4
+
+osc tri 955 + osc sin 1002.4 + osc sin 1001.4 + osc sin 1201.4 + osc sin 1031.4 + osc sin 1021.4 + osc sin 1101.4 + osc sin 1000.4 + osc sin 1001.3 + osc sin 1001.9
+
+
+
+// Start web audio graph
+start; 
 
 //Beat
 ko c ko
-
 nearley-test ./eppprocessor.js --input 'osc tri (osc sin (osc sin (osc square (osc phasor 12 + osc saw 12))))'
+
+osc tri (osc sin (osc sin (osc square (osc phasor 12 + osc saw 12))))
 
 //Loop
 [ko c ko];
@@ -13,11 +22,11 @@ nearley-test ./eppprocessor.js --input 'osc tri (osc sin (osc sin (osc square (o
 // Synth def
 this.osc.sinewave(60);
 
-tpb 12; 
+tpb 12;
 
-k oock s co; 
+k oock s co;
 
-[kc  kc  s]; 
+[kc  kc  s];
 
 ∞ ∆ 12;
 
