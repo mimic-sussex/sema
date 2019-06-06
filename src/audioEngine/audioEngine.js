@@ -45,7 +45,7 @@ class AudioEngine {
     this.audioWorkletNode;
 
     this.samplesLoaded = false;
-      
+
     this.loadTestIntervals = []
     const SYNTH_CHANGE_MS = 50;
 
@@ -87,12 +87,12 @@ class AudioEngine {
         this.audioContext.audioWorklet.addModule(this.audioWorkletUrl).then(() => {
 
           // Custom node constructor with required parameters
-          this.audioWorkletNode = new AudioWorkletNode(this.audioContext, this.audioWorkletProcessorName);
+          this.audioWorkletNode = new MaxiNode(this.audioContext, this.audioWorkletProcessorName);
 
           // All possible error event handlers subscribed
           this.audioWorkletNode.onprocessorerror = (event) => { //  error from the processor
             console.log(`MaxiProcessor Error detected`);
-          }
+          }  
           this.audioWorkletNode.onprocessorstatechange = event => {
             console.log(`MaxiProcessor state change detected: ` + audioWorkletNode.processorState);
           }

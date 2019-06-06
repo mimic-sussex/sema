@@ -68,7 +68,7 @@ class IRToJavascript {
         console.log(code);
         let objName = "osc" + IRToJavascript.getNextID();
         ccode.setup += `q.${objName} = new Module.maxiOsc();`;
-        ccode.loop += `this._q.${objName}.${oscMap[el]}(`;
+        ccode.loop += `q.${objName}.${oscMap[el]}(`;
         return ccode;
       },
       '@add': (ccode, el) => {
@@ -97,7 +97,7 @@ class IRToJavascript {
       })
     } else {
       Object.keys(t).map((k) => {
-        console.log(k);
+        console.log(k); 
         code = attribMap[k](code, t[k]);
       });
     }
@@ -107,7 +107,7 @@ class IRToJavascript {
   static treeToCode(tree) {
     let code = IRToJavascript.traverseTree(tree);
     code.setup = `() => {let q=[]; ${code.setup}; return q;}`;
-    code.loop = `() => {return ${code.loop};}`
+    code.loop = `(q) => {return ${code.loop};}`
     return code;
   }
 

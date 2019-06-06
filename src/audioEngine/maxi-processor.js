@@ -6,6 +6,8 @@ import Module from './maximilian.wasmmodule.js';
  * @class MaxiProcessor
  * @extends AudioWorkletProcessor
  */
+
+
 class MaxiProcessor extends AudioWorkletProcessor {
 
   /**
@@ -56,23 +58,30 @@ class MaxiProcessor extends AudioWorkletProcessor {
     this.oOsc = new Module.maxiOsc();
     this.aOsc = new Module.maxiOsc();
 
-    this.setupPolysynth();
+    // this.setupPolysynth();
 
-    this._q = []; //maxi objects
+    this._q = [[],[]]; //maxi objects
 
-    this.silence = () => {return 0.0};
-    this.signal = this.silence;
+    this.silence = (q) => {
+      return 0.0
+    };
+    this.signals = [this.silence, this.silence];
+    this.currentSignalFunction = 0;
+    this.xfadeControl = new Module.maxiLine();
 
     this.port.onmessage = event => { // message port async handler
       if ('eval' in event.data) { // check if new code is being sent for evaluation?
         try {
-          console.log(event.data['setup']);
           let setupFunction = eval(event.data['setup']);
           let loopFunction = eval(event.data['loop']);
-          console.log(setupFunction);
-          console.log(loopFunction);
-          this._q = setupFunction();
-          this.signal = loopFunction;
+          this.currentSignalFunction = 1 - this.currentSignalFunction;
+          this._q[this.currentSignalFunction] = setupFunction();
+          this.signals[this.currentSignalFunction] = loopFunction;
+          let xfadeBegin = Module.maxiMap.linlin(1.0 - this.currentSignalFunction, 0, 1, -1, 1);
+          let xfadeEnd = Module.maxiMap.linlin(this.currentSignalFunction, 0, 1, -1, 1);
+          this.xfadeControl.prepare(xfadeBegin, xfadeEnd, 5); // short xfade across signals
+          this.xfadeControl.triggerEnable(true); //no clock yet, so enable the trigger straight away
+          console.log("XFade" + [xfadeBegin, xfadeEnd]);
         } catch (err) {
           if (err instanceof TypeError) {
             console.log("TypeError in worklet evaluation: " + err.name + " – " + err.message);
@@ -81,38 +90,82 @@ class MaxiProcessor extends AudioWorkletProcessor {
           }
         }
       }
-      // for (const key in event.data) { // event from node scope packs JSON object
-      //
-      //   // console.log(key + ": " + event.data[key]); // DEBUG
-      //
-      //   if (key === 'sequence') { // User-defined DRUM sequence
-      //     this[key] = event.data[key];
-      //
-      //   } else if (key === 'eval') { // User-defined SIGNAL expression
-      //
-      //     try { // eval a property function, need to check if it changed
-      //       let setupFunction = eval(event.data[key].setup);
-      //       let loopFunction = eval(event.data[key].loop);
-      //       console.log(setupFunction);
-      //       _q = setupFunction();
-      //
-      //       // this.eval = eval(event.data[key]); // Make a function out of the synth-def string tranferred from the WebAudio Node scope
-      //       loopFunction(); // Evaluate the validity of the function before accepting it as the signal. If it is not valid, it will throw a TypeError here.
-      //       this.signal = loopFunction; // If function is valid, set it as a this.signal() function. this.signal() wil be used in the process() loop
-      //     } catch (err) {
-      //       if (err instanceof TypeError) {
-      //         console.log("Error in worklet evaluation: " + err.name + " – " + err.message);
-      //       } else {
-      //         console.log("Error in worklet evaluation: " + err.name + " – " + err.message);
-      //       }
-      //     }
-      //
       //   } else {
       //     this[key].setSample(this.translateFloat32ArrayToBuffer(event.data[key]));
       //   }
       //
       // }
     };
+  }
+
+  /**
+   * @process
+   */
+  process(inputs, outputs, parameters) {
+
+    // DEBUG:
+    // console.log(`gain: ` + parameters.gain[0]);
+    const outputsLength = outputs.length;
+
+    for (let outputId = 0; outputId < outputsLength; ++outputId) {
+      let output = outputs[outputId];
+      let channelCount = output.length;
+
+      for (let i = 0; i < output[0].length; ++i) {
+        //xfade between old and new algorhythms
+        let sig0 = this.signals[0](this._q[0]);
+        let sig1 = this.signals[1](this._q[1]);
+        let xf = this.xfadeControl.play(i==0 ? 1 : 0);
+        let w = Module.maxiXFade.xfade(sig0, sig1, xf);
+        //mono->stereo
+        for(let channel = 0;  channel < channelCount; channel++) {
+          output[channel][i] = w;
+        }
+      }
+
+      //remove old algo and data?
+      if (this.xfadeControl.isLineComplete()) {
+        let oldIdx = 1.0 - this.currentSignalFunction;
+        this.signals[oldIdx] = this.silence;
+        this._q[oldIdx] = [];
+      }
+
+
+      // for (let channel = 0; channel < output.length; ++channel) {
+      //   let outputChannel;
+      //
+      //   if (this.DAC === undefined || this.DAC.length === 0) {
+      //     outputChannel = output[channel];
+      //   } else { // If the user specified a channel configuration for DAC
+      //     if (this.DAC[channel] === undefined) // If user-specified channel configuration is invalid (e.g. channel 7 in a 5.1 layout)
+      //       break;
+      //     else {
+      //       if (output[this.DAC[channel]] !== undefined) { // If user-specified channel configuration is valid
+      //         outputChannel = output[this.DAC[channel]];
+      //       } else { // If user-specified channel configuration is a subset of the total number of channel skip loop iterations until total number
+      //         continue;
+      //       }
+      //     }
+      //   }
+
+        // for (let i = 0; i < 128; ++i) {
+        //   outputChannel[i] = this.signals[this.currentSignalFunction]();
+        // }
+
+        // if (parameters.gainSyn.length === 1 && parameters.gainSeq.length === 1) { // if gain is constant, lenght === 1, gain[0]
+        //   for (let i = 0; i < 128; ++i) {
+        //     outputChannel[i] = this.signals[this.currentSignalFunction]() * this.logGain(parameters.gainSyn[0]) + this.loopPlayer() * this.logGain(parameters.gainSeq[0]);
+        //   }
+        // } else { // if gain is varying, lenght === 128, gain[i] for each sample of the render quantum
+        //   for (let i = 0; i < 128; ++i) {
+        //     outputChannel[i] = this.signals[this.currentSignalFunction]() * this.logGain(parameters.gainSyn[i]) + this.loopPlayer() * this.logGain(parameters.gainSeq[i]);
+        //   }
+        // }
+        // DEBUG:
+        // console.log(`inputs ${inputs.length}, outputsLen ${outputs.length}, outputLen ${output.length}, outputChannelLen ${outputChannel.length}`);
+      // }
+    }
+    return true;
   }
 
   //Deprecated
@@ -369,50 +422,6 @@ class MaxiProcessor extends AudioWorkletProcessor {
     return 0.0375 * Math.exp(gain * 0.465);
   }
 
-  /**
-   * @process
-   */
-  process(inputs, outputs, parameters) {
-
-    // DEBUG:
-    // console.log(`gain: ` + parameters.gain[0]);
-    const outputsLength = outputs.length; // NOTE: Typically we will be working with outputs[0] but we need to generalise
-
-    for (let outputId = 0; outputId < outputsLength; ++outputId) {
-      let output = outputs[outputId];
-
-      for (let channel = 0; channel < output.length; ++channel) {
-        let outputChannel;
-
-        if (this.DAC === undefined || this.DAC.length === 0) {
-          outputChannel = output[channel];
-        } else { // If the user specified a channel configuration for his DAC
-          if (this.DAC[channel] === undefined) // If user-specified channel configuration is invalid (e.g. channel 7 in a 5.1 layout)
-            break;
-          else {
-            if (output[this.DAC[channel]] !== undefined) { // If user-specified channel configuration is valid
-              outputChannel = output[this.DAC[channel]];
-            } else { // If user-specified channel configuration is a subset of the total number of channel skip loop iterations until total number
-              continue;
-            }
-          }
-        }
-
-        if (parameters.gainSyn.length === 1 && parameters.gainSeq.length === 1) { // if gain is constant, lenght === 1, gain[0]
-          for (let i = 0; i < 128; ++i) {
-            outputChannel[i] = this.signal() * this.logGain(parameters.gainSyn[0]) + this.loopPlayer() * this.logGain(parameters.gainSeq[0]);
-          }
-        } else { // if gain is varying, lenght === 128, gain[i] for each sample of the render quantum
-          for (let i = 0; i < 128; ++i) {
-            outputChannel[i] = this.signal() * this.logGain(parameters.gainSyn[i]) + this.loopPlayer() * this.logGain(parameters.gainSeq[i]);
-          }
-        }
-        // DEBUG:
-        // console.log(`inputs ${inputs.length}, outputsLen ${outputs.length}, outputLen ${output.length}, outputChannelLen ${outputChannel.length}`);
-      }
-    }
-    return true;
-  }
 
 };
 
