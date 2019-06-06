@@ -11,7 +11,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
   /**
    * @getter
    */
-  static get parameterDescriptors() { // TODO: parameters are static? can we not change this map with a setter?
+  static get parameterDescriptors() { // TODO: parameters are static? Can we not change this map with a setter? 
     return [{
       name: 'gainSyn',
       defaultValue: 2.5
