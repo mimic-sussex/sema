@@ -5,6 +5,10 @@ import * as grammar from './language/eppprocessor.js';
 
 import IRToJavascript from './IR/IR.js'
 
+import testWorker from 'worker-loader!./test.worker.js';
+import irWorker from 'worker-loader!./IR/IR.worker.js';
+
+
 
 import {
   AudioEngine
@@ -38,6 +42,12 @@ let audio;
 let editor1, editor2;
 
 let parser;
+
+let irw = new irWorker();
+irw.onmessage = (e) => {
+  console.log("rcv");
+  window.AudioEngine.evalSynth(e.data);
+}
 
 // Default editor code example is stored at 'langSketch.js'
 const defaultEditorCode1 = langSketch;
@@ -116,9 +126,10 @@ function evalEditorExpression() {
     ASTree = parseEditorInput(expression)
     console.log(`Parse tree: ${ASTree}`);
     console.log(JSON.stringify(ASTree));
-    let jscode = IRToJavascript.treeToCode(ASTree);
-    console.log(jscode);
-    window.AudioEngine.evalSynth(jscode);
+    // let jscode = IRToJavascript.treeToCode(ASTree);
+    // console.log(jscode);
+    irw.postMessage(JSON.stringify(ASTree));
+    // window.AudioEngine.evalSynth(jscode);
   } catch (error) {
     console.log(`Error parsing the tree: ${error}`);
   }
@@ -186,6 +197,8 @@ document.addEventListener("DOMContentLoaded", () => {
   window.AudioEngine = new AudioEngine();
 
   document.getElementById("sampleRateIndicatorValue").textContent = window.AudioEngine.sampleRate;
+  document.getElementById("dspLoadVal").textContent = "0";
+  window.AudioEngine.onNewDSPLoadValue = (x) => {document.getElementById("dspLoadVal").textContent = `${Math.floor(x)}`;};
 
   setParser();
 
@@ -196,5 +209,6 @@ document.addEventListener("DOMContentLoaded", () => {
   createAnalysers();
 
   createControls();
+
 
 });

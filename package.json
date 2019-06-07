@@ -39,6 +39,7 @@
     "webpack-cli": "^3.3.2",
     "webpack-dev-middleware": "^3.7.0",
     "webpack-dev-server": "^3.4.1",
+    "worker-loader": "^2.0.0",
     "worklet-loader": "^1.0.0",
     "yarn-upgrade-all": "^0.5.0"
   }
