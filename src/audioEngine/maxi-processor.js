@@ -74,7 +74,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
     this.timer = new Date();
 
-    
+
     this.port.onmessage = event => { // message port async handler
       if ('eval' in event.data) { // check if new code is being sent for evaluation?
         try {
@@ -88,6 +88,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
           this.xfadeControl.prepare(xfadeBegin, xfadeEnd, 5); // short xfade across signals
           this.xfadeControl.triggerEnable(true); //no clock yet, so enable the trigger straight away
           console.log("XFade" + [xfadeBegin, xfadeEnd]);
+          this.port.postMessage("evalEnd")
         } catch (err) {
           if (err instanceof TypeError) {
             console.log("TypeError in worklet evaluation: " + err.name + " – " + err.message);

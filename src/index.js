@@ -43,6 +43,9 @@ let editor1, editor2;
 
 let parser;
 
+let compileTS = 0;
+let evalTS = 0;
+
 // let irw = new irWorker();
 // irw.onmessage = (e) => {
 //   console.log("rcv");
@@ -51,8 +54,11 @@ let parser;
 
 let langWorker = new nearleyWorker();
 langWorker.onmessage = (e) => {
-  console.log("rcv");
+  compileTS = window.performance.now() - compileTS;
+  evalTS = window.performance.now();
   window.AudioEngine.evalSynth(e.data);
+  console.log(`Compile time: ${compileTS} ms`)
+  console.log("rcv");
 }
 
 // Default editor code example is stored at 'langSketch.js'
@@ -115,7 +121,6 @@ function createControls() {
 
 function evalEditorExpression() {
 
-
   // TODO: for now sample loading is here,
   // but we want to
   if (!window.AudioEngine.samplesLoaded)
@@ -127,13 +132,9 @@ function evalEditorExpression() {
     expression = editor1.getDoc().getLine(cursorInfo.line);
   }
   console.log(`User expression to eval: ${expression}`);
-  let ASTree;
   try {
+    compileTS = window.performance.now();
     langWorker.postMessage(expression);
-    // ASTree = parseEditorInput(expression)
-    // console.log(`Parse tree: ${ASTree}`);
-    // console.log(JSON.stringify(ASTree));
-    // irw.postMessage(JSON.stringify(ASTree));
   } catch (error) {
     console.log(`Error parsing the tree: ${error}`);
   }
@@ -182,6 +183,10 @@ document.addEventListener("DOMContentLoaded", () => {
   window.AudioEngine.onNewDSPLoadValue = (x) => {
     document.getElementById("dspLoadVal").textContent = `${Math.floor(x)}`;
   };
+  window.AudioEngine.onEvalTimestamp = (x) => {
+    let evalTime = x - evalTS;
+    console.log(`Eval time: ${evalTime} ms`)
+  }
 
   // setParser();
 

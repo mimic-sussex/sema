@@ -131,6 +131,10 @@ class AudioEngine {
         this.dspTime = ((this.dspTime * 0.9) + (this.ts * 0.1)) ;  //time for 128 sample buffer
         this.onNewDSPLoadValue(this.dspTime / 2.90249433106576 * 100);
       }
+      if (data == 'evalEnd') {
+        let evalts = window.performance.now();
+        this.onEvalTimestamp(evalts);
+      }
   }
 
   loadSample(objectName, url) {
