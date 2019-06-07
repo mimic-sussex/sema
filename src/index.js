@@ -1,12 +1,12 @@
 // import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
-import * as nearley from 'nearley/lib/nearley.js';
 // import * as grammar from './language/eppGrammar.js';
+import * as nearley from 'nearley/lib/nearley.js';
 import * as grammar from './language/eppprocessor.js';
 
 import IRToJavascript from './IR/IR.js'
 
-import testWorker from 'worker-loader!./test.worker.js';
-import irWorker from 'worker-loader!./IR/IR.worker.js';
+// import irWorker from 'worker-loader!./IR/IR.worker.js';
+import nearleyWorker from 'worker-loader!./language/nearley.worker.js';
 
 
 
@@ -43,8 +43,14 @@ let editor1, editor2;
 
 let parser;
 
-let irw = new irWorker();
-irw.onmessage = (e) => {
+// let irw = new irWorker();
+// irw.onmessage = (e) => {
+//   console.log("rcv");
+//   window.AudioEngine.evalSynth(e.data);
+// }
+
+let langWorker = new nearleyWorker();
+langWorker.onmessage = (e) => {
   console.log("rcv");
   window.AudioEngine.evalSynth(e.data);
 }
@@ -123,20 +129,14 @@ function evalEditorExpression() {
   console.log(`User expression to eval: ${expression}`);
   let ASTree;
   try {
-    ASTree = parseEditorInput(expression)
-    console.log(`Parse tree: ${ASTree}`);
-    console.log(JSON.stringify(ASTree));
-    // let jscode = IRToJavascript.treeToCode(ASTree);
-    // console.log(jscode);
-    irw.postMessage(JSON.stringify(ASTree));
-    // window.AudioEngine.evalSynth(jscode);
+    langWorker.postMessage(expression);
+    // ASTree = parseEditorInput(expression)
+    // console.log(`Parse tree: ${ASTree}`);
+    // console.log(JSON.stringify(ASTree));
+    // irw.postMessage(JSON.stringify(ASTree));
   } catch (error) {
     console.log(`Error parsing the tree: ${error}`);
   }
-
-
-
-
 }
 
 
@@ -170,25 +170,6 @@ function createAnalysers() {
 
 }
 
-var parserStartPoint;
-function setParser() {
-  let processor = nearley.Grammar.fromCompiled(grammar);
-  parser = new nearley.Parser(processor);
-  parserStartPoint = parser.save();
-  console.log('Nearley parser loaded')
-}
-
-
-
-function parseEditorInput(input) {
-  if (input !== undefined && parser !== undefined) {
-    parser.restore(parserStartPoint);
-    parser.feed(input);
-    return parser.results;
-  }
-}
-
-
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -198,9 +179,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.getElementById("sampleRateIndicatorValue").textContent = window.AudioEngine.sampleRate;
   document.getElementById("dspLoadVal").textContent = "0";
-  window.AudioEngine.onNewDSPLoadValue = (x) => {document.getElementById("dspLoadVal").textContent = `${Math.floor(x)}`;};
+  window.AudioEngine.onNewDSPLoadValue = (x) => {
+    document.getElementById("dspLoadVal").textContent = `${Math.floor(x)}`;
+  };
 
-  setParser();
+  // setParser();
 
   createEditor1();
 
