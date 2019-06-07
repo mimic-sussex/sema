@@ -204,3 +204,16 @@ body {
   border: 0.1rem solid #dd2c00;
   padding: 0.5rem;
 }
+
+#dspLoad {
+  font-family: "LatoWebBlack";
+  color: #da14ff;
+  text-transform: uppercase;
+  font-size: 12px;
+  /* width: 170px; */
+  text-align: center;
+  /* top: 0;
+  right: 20px; */
+  overflow: hidden;
+  /* float:left; */
+}

@@ -46,8 +46,12 @@ class AudioEngine {
 
     this.samplesLoaded = false;
 
+    this.onNewDSPLoadValue = (x)=>{};
+
     this.loadTestIntervals = []
     const SYNTH_CHANGE_MS = 50;
+
+    this.dspTime = 0;
 
     this.sequences = [
       `kc kc k scos`,
@@ -92,12 +96,12 @@ class AudioEngine {
           // All possible error event handlers subscribed
           this.audioWorkletNode.onprocessorerror = (event) => { //  error from the processor
             console.log(`MaxiProcessor Error detected`);
-          }  
+          }
           this.audioWorkletNode.onprocessorstatechange = event => {
             console.log(`MaxiProcessor state change detected: ` + audioWorkletNode.processorState);
           }
           this.audioWorkletNode.port.onmessage = (event) => {
-            console.log(`Message from processor: ` + event.data);
+            this.messageHandler(event.data);
           };
           this.audioWorkletNode.port.onmessageerror = (event) => { //  error from the processor port
             console.log(`Error message from port: ` + event.data);
@@ -115,6 +119,22 @@ class AudioEngine {
     } else {
       return false;
     }
+  }
+
+
+  messageHandler(data) {
+      if (data == "dspStart") {
+          this.ts = window.performance.now();
+      }
+      if (data == "dspEnd") {
+        this.ts = window.performance.now() - this.ts;
+        this.dspTime = ((this.dspTime * 0.9) + (this.ts * 0.1)) ;  //time for 128 sample buffer
+        this.onNewDSPLoadValue(this.dspTime / 2.90249433106576 * 100);
+      }
+      if (data == 'evalEnd') {
+        let evalts = window.performance.now();
+        this.onEvalTimestamp(evalts);
+      }
   }
 
   loadSample(objectName, url) {
@@ -136,19 +156,19 @@ class AudioEngine {
   }
 
 
-  /**
-   * Re-starts audio playback by stopping and running the latest Audio Worklet Processor code
-   * @changeSynth
-   */
-  changeSynth() {
-    if (this.audioWorkletNode !== undefined) {
-      let userDefinedFunction = this.fs[Math.floor(Math.random() * this.fs.length)];
-      this.audioWorkletNode.port.postMessage(`() => { return ${userDefinedFunction} }`);
-      // DEBUG:
-      console.log("Change synth: " + userDefinedFunction);
-    }
-  }
-
+  // /**
+  //  * Re-starts audio playback by stopping and running the latest Audio Worklet Processor code
+  //  * @changeSynth
+  //  */
+  // changeSynth() {
+  //   if (this.audioWorkletNode !== undefined) {
+  //     let userDefinedFunction = this.fs[Math.floor(Math.random() * this.fs.length)];
+  //     this.audioWorkletNode.port.postMessage(`() => { return ${userDefinedFunction} }`);
+  //     // DEBUG:
+  //     console.log("Change synth: " + userDefinedFunction);
+  //   }
+  // }
+  //
 
   /**
    * Re-starts audio playback by stopping and running the latest Audio Worklet Processor code

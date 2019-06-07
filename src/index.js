@@ -1,9 +1,13 @@
 // import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
-import * as nearley from 'nearley/lib/nearley.js';
 // import * as grammar from './language/eppGrammar.js';
+import * as nearley from 'nearley/lib/nearley.js';
 import * as grammar from './language/eppprocessor.js';
 
 import IRToJavascript from './IR/IR.js'
+
+// import irWorker from 'worker-loader!./IR/IR.worker.js';
+import nearleyWorker from 'worker-loader!./language/nearley.worker.js';
+
 
 
 import {
@@ -38,6 +42,24 @@ let audio;
 let editor1, editor2;
 
 let parser;
+
+let compileTS = 0;
+let evalTS = 0;
+
+// let irw = new irWorker();
+// irw.onmessage = (e) => {
+//   console.log("rcv");
+//   window.AudioEngine.evalSynth(e.data);
+// }
+
+let langWorker = new nearleyWorker();
+langWorker.onmessage = (e) => {
+  compileTS = window.performance.now() - compileTS;
+  evalTS = window.performance.now();
+  window.AudioEngine.evalSynth(e.data);
+  console.log(`Compile time: ${compileTS} ms`)
+  console.log("rcv");
+}
 
 // Default editor code example is stored at 'langSketch.js'
 const defaultEditorCode1 = langSketch;
@@ -99,7 +121,6 @@ function createControls() {
 
 function evalEditorExpression() {
 
-
   // TODO: for now sample loading is here,
   // but we want to
   if (!window.AudioEngine.samplesLoaded)
@@ -111,21 +132,12 @@ function evalEditorExpression() {
     expression = editor1.getDoc().getLine(cursorInfo.line);
   }
   console.log(`User expression to eval: ${expression}`);
-  let ASTree;
   try {
-    ASTree = parseEditorInput(expression)
-    console.log(`Parse tree: ${ASTree}`);
-    console.log(JSON.stringify(ASTree));
-    let jscode = IRToJavascript.treeToCode(ASTree);
-    console.log(jscode);
-    window.AudioEngine.evalSynth(jscode);
+    compileTS = window.performance.now();
+    langWorker.postMessage(expression);
   } catch (error) {
     console.log(`Error parsing the tree: ${error}`);
   }
-
-
-
-
 }
 
 
@@ -159,25 +171,6 @@ function createAnalysers() {
 
 }
 
-var parserStartPoint;
-function setParser() {
-  let processor = nearley.Grammar.fromCompiled(grammar);
-  parser = new nearley.Parser(processor);
-  parserStartPoint = parser.save();
-  console.log('Nearley parser loaded')
-}
-
-
-
-function parseEditorInput(input) {
-  if (input !== undefined && parser !== undefined) {
-    parser.restore(parserStartPoint);
-    parser.feed(input);
-    return parser.results;
-  }
-}
-
-
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -186,8 +179,16 @@ document.addEventListener("DOMContentLoaded", () => {
   window.AudioEngine = new AudioEngine();
 
   document.getElementById("sampleRateIndicatorValue").textContent = window.AudioEngine.sampleRate;
+  document.getElementById("dspLoadVal").textContent = "0";
+  window.AudioEngine.onNewDSPLoadValue = (x) => {
+    document.getElementById("dspLoadVal").textContent = `${Math.floor(x)}`;
+  };
+  window.AudioEngine.onEvalTimestamp = (x) => {
+    let evalTime = x - evalTS;
+    console.log(`Eval time: ${evalTime} ms`)
+  }
 
-  setParser();
+  // setParser();
 
   createEditor1();
 
@@ -196,5 +197,6 @@ document.addEventListener("DOMContentLoaded", () => {
   createAnalysers();
 
   createControls();
+
 
 });

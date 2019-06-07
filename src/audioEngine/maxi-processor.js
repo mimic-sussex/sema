@@ -60,7 +60,10 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
     // this.setupPolysynth();
 
-    this._q = [[],[]]; //maxi objects
+    this._q = [
+      [],
+      []
+    ]; //maxi objects
 
     this.silence = (q) => {
       return 0.0
@@ -68,6 +71,9 @@ class MaxiProcessor extends AudioWorkletProcessor {
     this.signals = [this.silence, this.silence];
     this.currentSignalFunction = 0;
     this.xfadeControl = new Module.maxiLine();
+
+    this.timer = new Date();
+
 
     this.port.onmessage = event => { // message port async handler
       if ('eval' in event.data) { // check if new code is being sent for evaluation?
@@ -82,6 +88,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
           this.xfadeControl.prepare(xfadeBegin, xfadeEnd, 5); // short xfade across signals
           this.xfadeControl.triggerEnable(true); //no clock yet, so enable the trigger straight away
           console.log("XFade" + [xfadeBegin, xfadeEnd]);
+          this.port.postMessage("evalEnd")
         } catch (err) {
           if (err instanceof TypeError) {
             console.log("TypeError in worklet evaluation: " + err.name + " – " + err.message);
@@ -102,6 +109,10 @@ class MaxiProcessor extends AudioWorkletProcessor {
    * @process
    */
   process(inputs, outputs, parameters) {
+    this.port.postMessage("dspStart");
+
+
+    // let ts = this.timer.getTime();
 
     // DEBUG:
     // console.log(`gain: ` + parameters.gain[0]);
@@ -115,10 +126,10 @@ class MaxiProcessor extends AudioWorkletProcessor {
         //xfade between old and new algorhythms
         let sig0 = this.signals[0](this._q[0]);
         let sig1 = this.signals[1](this._q[1]);
-        let xf = this.xfadeControl.play(i==0 ? 1 : 0);
+        let xf = this.xfadeControl.play(i == 0 ? 1 : 0);
         let w = Module.maxiXFade.xfade(sig0, sig1, xf);
         //mono->stereo
-        for(let channel = 0;  channel < channelCount; channel++) {
+        for (let channel = 0; channel < channelCount; channel++) {
           output[channel][i] = w;
         }
       }
@@ -129,6 +140,13 @@ class MaxiProcessor extends AudioWorkletProcessor {
         this.signals[oldIdx] = this.silence;
         this._q[oldIdx] = [];
       }
+
+      this.port.postMessage("dspEnd");
+
+
+      // ts = this.timer.getTime() - ts;
+      // console.log(ts + ", " + 128/44100*1000);
+
 
 
       // for (let channel = 0; channel < output.length; ++channel) {
@@ -148,21 +166,21 @@ class MaxiProcessor extends AudioWorkletProcessor {
       //     }
       //   }
 
-        // for (let i = 0; i < 128; ++i) {
-        //   outputChannel[i] = this.signals[this.currentSignalFunction]();
-        // }
+      // for (let i = 0; i < 128; ++i) {
+      //   outputChannel[i] = this.signals[this.currentSignalFunction]();
+      // }
 
-        // if (parameters.gainSyn.length === 1 && parameters.gainSeq.length === 1) { // if gain is constant, lenght === 1, gain[0]
-        //   for (let i = 0; i < 128; ++i) {
-        //     outputChannel[i] = this.signals[this.currentSignalFunction]() * this.logGain(parameters.gainSyn[0]) + this.loopPlayer() * this.logGain(parameters.gainSeq[0]);
-        //   }
-        // } else { // if gain is varying, lenght === 128, gain[i] for each sample of the render quantum
-        //   for (let i = 0; i < 128; ++i) {
-        //     outputChannel[i] = this.signals[this.currentSignalFunction]() * this.logGain(parameters.gainSyn[i]) + this.loopPlayer() * this.logGain(parameters.gainSeq[i]);
-        //   }
-        // }
-        // DEBUG:
-        // console.log(`inputs ${inputs.length}, outputsLen ${outputs.length}, outputLen ${output.length}, outputChannelLen ${outputChannel.length}`);
+      // if (parameters.gainSyn.length === 1 && parameters.gainSeq.length === 1) { // if gain is constant, lenght === 1, gain[0]
+      //   for (let i = 0; i < 128; ++i) {
+      //     outputChannel[i] = this.signals[this.currentSignalFunction]() * this.logGain(parameters.gainSyn[0]) + this.loopPlayer() * this.logGain(parameters.gainSeq[0]);
+      //   }
+      // } else { // if gain is varying, lenght === 128, gain[i] for each sample of the render quantum
+      //   for (let i = 0; i < 128; ++i) {
+      //     outputChannel[i] = this.signals[this.currentSignalFunction]() * this.logGain(parameters.gainSyn[i]) + this.loopPlayer() * this.logGain(parameters.gainSeq[i]);
+      //   }
+      // }
+      // DEBUG:
+      // console.log(`inputs ${inputs.length}, outputsLen ${outputs.length}, outputLen ${output.length}, outputChannelLen ${outputChannel.length}`);
       // }
     }
     return true;

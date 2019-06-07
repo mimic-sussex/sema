@@ -12,8 +12,9 @@ module.exports = {
   devtool: "source-map",
   output: {
     filename: 'bundle.js',
-    path: path.resolve(__dirname, './dist') // All files inside webpack's output.path directory will be removed, but the directory itself will not be.
+    path: path.resolve(__dirname, './dist'), // All files inside webpack's output.path directory will be removed, but the directory itself will not be.
     // publicPath: 'public',
+    globalObject: 'self'
   },
   // Issue pointed out by Surma on the following gist – https://gist.github.com/surma/b2705b6cca29357ebea1c9e6e15684cc
   // This is necessary due to the fact that emscripten puts both Node and web
@@ -123,6 +124,6 @@ module.exports = {
       template: './src/index.html',
       favicon: "./assets/img/favicon.ico"
     }),
-    new webpack.HotModuleReplacementPlugin()
+    new webpack.HotModuleReplacementPlugin(),
   ],
 };
