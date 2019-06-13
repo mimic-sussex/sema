@@ -264,7 +264,7 @@ class AudioEngine {
         setup: userDefinedFunction.setup,
         loop: userDefinedFunction.loop
       });
-      console.log("eval sent: " + userDefinedFunction); //DEBUG
+      // console.log("eval sent: " + userDefinedFunction); //DEBUG
       return true;
     } else return false;
   }

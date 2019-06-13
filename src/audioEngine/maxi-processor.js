@@ -13,7 +13,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
   /**
    * @getter
    */
-  static get parameterDescriptors() { // TODO: parameters are static? Can we not change this map with a setter? 
+  static get parameterDescriptors() { // TODO: parameters are static? Can we not change this map with a setter?
     return [{
       name: 'gainSyn',
       defaultValue: 2.5
@@ -87,7 +87,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
           let xfadeEnd = Module.maxiMap.linlin(this.currentSignalFunction, 0, 1, -1, 1);
           this.xfadeControl.prepare(xfadeBegin, xfadeEnd, 5); // short xfade across signals
           this.xfadeControl.triggerEnable(true); //no clock yet, so enable the trigger straight away
-          console.log("XFade" + [xfadeBegin, xfadeEnd]);
+          // console.log("XFade" + [xfadeBegin, xfadeEnd]);
           this.port.postMessage("evalEnd")
         } catch (err) {
           if (err instanceof TypeError) {
@@ -109,7 +109,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
    * @process
    */
   process(inputs, outputs, parameters) {
-    this.port.postMessage("dspStart");
+    // this.port.postMessage("dspStart");
 
 
     // let ts = this.timer.getTime();
@@ -141,7 +141,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
         this._q[oldIdx] = [];
       }
 
-      this.port.postMessage("dspEnd");
+      // this.port.postMessage("dspEnd");
 
 
       // ts = this.timer.getTime() - ts;

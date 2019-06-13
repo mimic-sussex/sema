@@ -44,6 +44,7 @@ let editor1, editor2;
 let parser;
 
 let compileTS = 0;
+let treeTS=0;
 let evalTS = 0;
 
 // let irw = new irWorker();
@@ -54,11 +55,20 @@ let evalTS = 0;
 
 let langWorker = new nearleyWorker();
 langWorker.onmessage = (e) => {
-  compileTS = window.performance.now() - compileTS;
-  evalTS = window.performance.now();
-  window.AudioEngine.evalSynth(e.data);
-  console.log(`Compile time: ${compileTS} ms`)
-  console.log("rcv");
+  // console.log(e.data);
+  if (e.data['loop']) {
+    let rightNow = window.performance.now();
+    evalTS = rightNow;
+    testResult[3] = rightNow - treeTS
+    window.AudioEngine.evalSynth(e.data);
+    // console.log(`IR translate time: ${compileTS} ms`)
+    // console.log("rcv");
+  }else if (e.data['treeTS']) {
+    let rightNow = window.performance.now();
+    testResult[2] = rightNow - compileTS;
+    treeTS = rightNow;
+    // console.log(`nearley parse time: ${treeTS - compileTS}`);
+  }
 }
 
 // Default editor code example is stored at 'langSketch.js'
@@ -117,6 +127,18 @@ function createControls() {
 
   container.appendChild(stopButton);
   stopButton.addEventListener("click", () => stopAudio());
+
+  const testButton = document.createElement("button");
+  testButton.textContent = `Test`;
+  container.appendChild(testButton);
+  testButton.addEventListener("click", () => runTest());
+
+}
+
+function evalExpression(expression) {
+  compileTS = window.performance.now();
+  langWorker.postMessage(expression);
+
 }
 
 function evalEditorExpression() {
@@ -133,8 +155,7 @@ function evalEditorExpression() {
   }
   console.log(`User expression to eval: ${expression}`);
   try {
-    compileTS = window.performance.now();
-    langWorker.postMessage(expression);
+    evalExpression(expression);
   } catch (error) {
     console.log(`Error parsing the tree: ${error}`);
   }
@@ -185,7 +206,13 @@ document.addEventListener("DOMContentLoaded", () => {
   };
   window.AudioEngine.onEvalTimestamp = (x) => {
     let evalTime = x - evalTS;
-    console.log(`Eval time: ${evalTime} ms`)
+    // console.log(`Eval time: ${evalTime} ms`)
+    testResult[4] = evalTime;
+    testResults.push(testResult.slice());
+    if (testResults.length % 50 == 0)
+      console.log("Test complete: " + testResults.length)
+    // console.log(testResults)
+    setTimeout(loadTest, 200);
   }
 
   // setParser();
@@ -200,3 +227,64 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 });
+
+var testActive = false;
+var testTS=0;
+function runTest() {
+  if (!testActive) {
+    testActive = true;
+
+    console.log("Testing");
+    testTS = window.performance.now();
+    loadTest();
+  }else{
+    testActive = false;
+    testTS = window.performance.now() - testTS;
+    console.log("Testing ended");
+    console.log(testResults);
+    console.log("Test time: " + (testTS))
+
+  }
+}
+
+function genTestCode(objs, depths) {
+    function randFreq() {
+           return 100 + Math.floor(Math.random() * 1000)
+    }
+    function genParam() {
+        let val="";
+        if (Math.random() < Math.max(0,0.5 - (depths / 20))) {
+          // if (Math.random() < 0.5 - (depths / 100)) {
+            let moreCode = genTestCode(0,depths + 1)
+            val = `(${moreCode[0]})`;
+            if (moreCode[2] > depths) {
+                depths = moreCode[2];
+            }
+            objs += moreCode[1]
+        }else{
+            val = randFreq()
+        }
+
+        return val;
+    }
+    // let nOscs = Math.floor(Math.random() * 5) + 1
+    let nOscs = Math.floor(Math.pow(Math.random(), 2.2) * 30) + 1;
+    let code = "";
+    for(let i=0; i < nOscs; i++) {
+        objs++;
+        code += (i>0?" + ":"") + "osc sin " + genParam()
+    }
+    return [code, objs, depths];
+}
+var testResult =[0,0,0,0,0]
+var testResults = []
+function loadTest() {
+  if (testActive) {
+    let test = genTestCode(0,0)
+    evalExpression(test[0])
+    testResult[0] = test[1]
+    testResult[1] = test[2]
+    // console.log(test[1]);
+  }
+
+}
