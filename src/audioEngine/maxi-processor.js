@@ -78,11 +78,16 @@ class MaxiProcessor extends AudioWorkletProcessor {
     this.port.onmessage = event => { // message port async handler
       if ('eval' in event.data) { // check if new code is being sent for evaluation?
         try {
+          console.log(event.data);
+          // let setupFunction = new Function(`return ${event.data['setup']}`);
           let setupFunction = eval(event.data['setup']);
           let loopFunction = eval(event.data['loop']);
+          // let loopFunction = new Function(`return ${event.data['loop']}`);
           this.currentSignalFunction = 1 - this.currentSignalFunction;
           this._q[this.currentSignalFunction] = setupFunction();
+          // this._q[this.currentSignalFunction] = setupFunction()();
           this.signals[this.currentSignalFunction] = loopFunction;
+          // this.signals[this.currentSignalFunction] = loopFunction();
           let xfadeBegin = Module.maxiMap.linlin(1.0 - this.currentSignalFunction, 0, 1, -1, 1);
           let xfadeEnd = Module.maxiMap.linlin(this.currentSignalFunction, 0, 1, -1, 1);
           this.xfadeControl.prepare(xfadeBegin, xfadeEnd, 5); // short xfade across signals
