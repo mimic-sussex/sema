@@ -1,13 +1,12 @@
 // import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 // import * as grammar from './language/eppGrammar.js';
-import * as nearley from 'nearley/lib/nearley.js';
-import * as grammar from './language/eppprocessor.js';
-
-import IRToJavascript from './IR/IR.js'
+// import * as nearley from 'nearley/lib/nearley.js';
+// import * as grammar from './language/eppprocessor.js';
+// import IRToJavascript from './IR/IR.js'
 
 // import irWorker from 'worker-loader!./IR/IR.worker.js';
 import nearleyWorker from 'worker-loader!./language/nearley.worker.js';
-
+import oscIO from './interfaces/oscInterface.js';
 
 
 import {
@@ -44,7 +43,7 @@ let editor1, editor2;
 let parser;
 
 let compileTS = 0;
-let treeTS=0;
+let treeTS = 0;
 let evalTS = 0;
 
 // let irw = new irWorker();
@@ -63,7 +62,7 @@ langWorker.onmessage = (e) => {
     window.AudioEngine.evalSynth(e.data);
     // console.log(`IR translate time: ${compileTS} ms`)
     // console.log("rcv");
-  }else if (e.data['treeTS']) {
+  } else if (e.data['treeTS']) {
     let rightNow = window.performance.now();
     testResult[2] = rightNow - compileTS;
     treeTS = rightNow;
@@ -155,7 +154,7 @@ function evalEditorExpression() {
   }
   console.log(`User expression to eval: ${expression}`);
   try {
-    evalExpression(expression);
+    evalExpression(expression); 
   } catch (error) {
     console.log(`Error parsing the tree: ${error}`);
   }
@@ -215,7 +214,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setTimeout(loadTest, 200);
   }
 
-  // setParser(); 
+  // setParser();
 
   createEditor1();
 
@@ -225,11 +224,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
   createControls();
 
+  oscIO.OSCResponder((msg) => {
+    console.log("OSC in:", msg);
+    window.AudioEngine.oscMessage(msg);
+  });
+
 
 });
 
 var testActive = false;
-var testTS=0;
+var testTS = 0;
+
 function runTest() {
   if (!testActive) {
     testActive = true;
@@ -237,7 +242,7 @@ function runTest() {
     console.log("Testing");
     testTS = window.performance.now();
     loadTest();
-  }else{
+  } else {
     testActive = false;
     testTS = window.performance.now() - testTS;
     console.log("Testing ended");
@@ -248,39 +253,41 @@ function runTest() {
 }
 
 function genTestCode(objs, depths) {
-    function randFreq() {
-           return 100 + Math.floor(Math.random() * 1000)
-    }
-    function genParam() {
-        let val="";
-        if (Math.random() < Math.max(0,0.5 - (depths / 20))) {
-          // if (Math.random() < 0.5 - (depths / 100)) {
-            let moreCode = genTestCode(0,depths + 1)
-            val = `(${moreCode[0]})`;
-            if (moreCode[2] > depths) {
-                depths = moreCode[2];
-            }
-            objs += moreCode[1]
-        }else{
-            val = randFreq()
-        }
+  function randFreq() {
+    return 100 + Math.floor(Math.random() * 1000)
+  }
 
-        return val;
+  function genParam() {
+    let val = "";
+    if (Math.random() < Math.max(0, 0.5 - (depths / 20))) {
+      // if (Math.random() < 0.5 - (depths / 100)) {
+      let moreCode = genTestCode(0, depths + 1)
+      val = `(${moreCode[0]})`;
+      if (moreCode[2] > depths) {
+        depths = moreCode[2];
+      }
+      objs += moreCode[1]
+    } else {
+      val = randFreq()
     }
-    // let nOscs = Math.floor(Math.random() * 5) + 1
-    let nOscs = Math.floor(Math.pow(Math.random(), 2.2) * 30) + 1;
-    let code = "";
-    for(let i=0; i < nOscs; i++) {
-        objs++;
-        code += (i>0?" + ":"") + "osc sin " + genParam()
-    }
-    return [code, objs, depths];
+
+    return val;
+  }
+  // let nOscs = Math.floor(Math.random() * 5) + 1
+  let nOscs = Math.floor(Math.pow(Math.random(), 2.2) * 30) + 1;
+  let code = "";
+  for (let i = 0; i < nOscs; i++) {
+    objs++;
+    code += (i > 0 ? " + " : "") + "osc sin " + genParam()
+  }
+  return [code, objs, depths];
 }
-var testResult =[0,0,0,0,0]
+var testResult = [0, 0, 0, 0, 0]
 var testResults = []
+
 function loadTest() {
   if (testActive) {
-    let test = genTestCode(0,0)
+    let test = genTestCode(0, 0)
     evalExpression(test[0])
     testResult[0] = test[1]
     testResult[1] = test[2]

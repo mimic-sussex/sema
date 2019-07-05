@@ -74,9 +74,19 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
     this.timer = new Date();
 
+    this.OSCMessages = {};
+
+    this.OSCTransducer = function(address, argIdx) {
+      let val = this.OSCMessages[address];
+      return val ? val[argIdx] : 0.0;
+    };
 
     this.port.onmessage = event => { // message port async handler
-      if ('eval' in event.data) { // check if new code is being sent for evaluation?
+      if ('address' in event.data) {
+        //this must be an OSC message
+        this.OSCMessages[event.data.address] = event.data.args;
+        console.log(this.OSCMessages);
+      }else if ('eval' in event.data) { // check if new code is being sent for evaluation?
         try {
           console.log(event.data);
           // let setupFunction = new Function(`return ${event.data['setup']}`);

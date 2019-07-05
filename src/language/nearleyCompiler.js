@@ -1,10 +1,10 @@
 import * as nearley from 'nearley/lib/nearley.js';
 import * as grammar from './eppprocessor';
 
-const nearley = require("nearley");
-const compile = require("nearley/lib/compile");
-const generate = require("nearley/lib/generate");
-const nearleyGrammar = require("nearley/lib/nearley-language-bootstrapped");
+// const nearley = require("nearley");
+// const compile = require("nearley/lib/compile");
+// const generate = require("nearley/lib/generate");
+// const nearleyGrammar = require("nearley/lib/nearley-language-bootstrapped");
 
 
 function compileGrammar(sourceCode) {

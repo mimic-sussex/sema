@@ -1,0 +1,23 @@
+{
+    "name": "osc.js-examples-udp-ws",
+    "main": "index.js",
+    "version": "0.1.1",
+    "description": "Example of how to bi-directionally send OSC messages between a web browser and a UDP socket.",
+    "author": "Colin Clark",
+    "homepage": "http://flockingjs.org/",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/colinbdclark/osc.js-examples.git"
+    },
+    "readmeFilename": "README.md",
+    "bugs": "https://github.com/colinbdclark/osc.js/issues",
+    "license": "(MIT OR GPL-2.0)",
+    "keywords": [
+        "Open Sound Control",
+        "OSC"
+    ],
+    "dependencies": {
+        "osc": "2.3.0",
+        "ws": "7.0.0"
+    }
+}

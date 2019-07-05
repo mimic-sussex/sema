@@ -73,6 +73,8 @@ class AudioEngine {
       `new Module.maxiOsc().sinewave(400)`, // Interesting case of failure, it seems we can't instantiate because of EM heap limits
     ];
 
+    this.oscThru = (msg) => {console.log(msg);};
+
     console.log("Audio engine loaded")
   }
 
@@ -178,6 +180,7 @@ class AudioEngine {
     if (this.audioContext === undefined) {
       this.audioContext = new AudioContext();
       this.loadProcessorCode();
+      this.oscThru = (msg) => {this.audioWorkletNode.port.postMessage(msg)};
     } else {
       if (this.audioContext.state !== "suspended") {
         this.stop();
@@ -267,6 +270,10 @@ class AudioEngine {
       // console.log("eval sent: " + userDefinedFunction); //DEBUG
       return true;
     } else return false;
+  }
+
+  oscMessage(msg) {
+    this.oscThru(msg);
   }
 
   loadTest() {

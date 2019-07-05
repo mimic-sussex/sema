@@ -29,9 +29,14 @@ module.exports = {
     fs: 'empty'
   },
   resolve: {
-    extensions: [".js", ".json", ".wasm"]
+    extensions: [".js", ".json", ".wasm"],
+    alias: {
+    }
   },
   module: {
+    externals: {
+      osc:'osc'
+    },
     rules: [{
         //FONT LOADER
         test: /\.(ttf|eot|woff|woff2)$/,
