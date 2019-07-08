@@ -6,6 +6,7 @@
 
 // import irWorker from 'worker-loader!./IR/IR.worker.js';
 import nearleyWorker from 'worker-loader!./language/nearley.worker.js';
+import tfWorker from 'worker-loader!./machineLearning/tfjs.worker.js';
 import oscIO from './interfaces/oscInterface.js';
 
 
@@ -46,11 +47,10 @@ let compileTS = 0;
 let treeTS = 0;
 let evalTS = 0;
 
-// let irw = new irWorker();
-// irw.onmessage = (e) => {
-//   console.log("rcv");
-//   window.AudioEngine.evalSynth(e.data);
-// }
+let tfW = new tfWorker();
+tfW.onmessage = (e) => {
+  window.AudioEngine.postMessage(e.data);
+}
 
 let langWorker = new nearleyWorker();
 langWorker.onmessage = (e) => {
@@ -95,7 +95,7 @@ function createEditor1() {
   editor1.setOption("vimMode", false);
 }
 
-const defaultEditorCode2 = "∞(∆, 1.0, 1.5).∞(~, 1.0. 1.04).∞(∞(∞, 440, 1.04)+∞(≈, 66, 1.30))";
+const defaultEditorCode2 = "//js";
 
 function createEditor2() {
 
@@ -196,7 +196,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // document.getElementById('audioWorkletIndicator').innerHTML = AudioWorkletIndicator.AudioWorkletIndicator();
 
-  window.AudioEngine = new AudioEngine();
+  window.AudioEngine = new AudioEngine((msg) => {
+    tfW.postMessage(msg);
+  });
 
   // // document.getElementById("sampleRateIndicatorValue").textContent = window.AudioEngine.sampleRate;
   // // document.getElementById("dspLoadVal").textContent = "0";
@@ -218,7 +220,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   createEditor1();
 
-  // createEditor2();
+  createEditor2();
 
   createAnalysers();
 

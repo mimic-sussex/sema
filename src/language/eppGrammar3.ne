@@ -5,6 +5,7 @@ const moo = require("moo"); // this 'require' creates a node dependency
 
 const lexer = moo.compile({
   oscMsg:       ['oscIn'],
+  mlModel:       ['mlmodel'],
   osc:          ['osc',    '∞'],
   sinosc:       ['sin',    '~'],
   cososc:       ['cos',    '≈'],
@@ -77,18 +78,6 @@ Synth ->
       Function                                              {% d => ({ "@func": d[0] }) %}
 
 
-# Function ->
-#       Oscillator _ %lparen _ Function _ %rparen               {% d => ({ "@comp": [d[0]].concat(d[4])}) %}
-#       # | Oscillator _ Params _ %add _ Function                 {% d => [{ "@add": [ Object.assign({}, d[0], { param: d[2]}) ].concat(d[6])}] %}
-#       # | Oscillator _ Params _ %mult _ Function                {% d => [{ "@mul": [ Object.assign({}, d[0], { param: d[2]}) ].concat(d[6])}] %}
-#       # | Oscillator _ Params _ %hyphen _ Function              {% d => [{ "@sub": [ Object.assign({}, d[0], { param: d[2]}) ].concat(d[6])}] %}
-#       # | Oscillator _ Params _ %div _ Function                 {% d => [{ "@div": [ Object.assign({}, d[0], { param: d[2]}) ].concat(d[6])}] %}
-#       | Oscillator _ Params                                   {% d => Object.assign({}, d[0], { param: d[2]}) %}
-#       | Function _ %add _ Function                            {% d => [{ "@add": [ Object.assign({}, d[0]) ].concat(d[4])}] %}
-#       | Function _ %mult _ Function                           {% d => [{ "@mul": [ Object.assign({}, d[0]) ].concat(d[4])}] %}
-#       | Function _ %hyphen _ Function                         {% d => [{ "@sub": [ Object.assign({}, d[0]) ].concat(d[4])}] %}
-#       | Function _ %div _ Function                            {% d => [{ "@div": [ Object.assign({}, d[0]) ].concat(d[4])}] %}
-
 Function ->
   OscFunc _ %add _ Function                                    {% d => [{ "@add": [ Object.assign({}, d[0]) ].concat(d[4])}] %}
   | IOFunc _ %add _ Function                                    {% d => [{ "@add": [ Object.assign({}, d[0]) ].concat(d[4])}] %}
@@ -104,7 +93,9 @@ OscFunc ->
       # | Oscillator _ Params _ %add _ OscFunc                   {% d => [{ "@add": [ Object.assign({}, d[0]) ].concat(d[6])}] %}
 
 Transducer ->
-  %oscMsg _ %oscAddress                                                   {% d => ({"@OSCMsg": {addr: d[2].value}}) %}
+  %oscMsg _ %oscAddress                                        {% d => ({"@OSCMsg": {addr: d[2].value}}) %}
+  | %mlModel _ %number                                           {% d => ({"@MLModel": {input: d[2].value}}) %}
+
 
 Oscillator ->
     %osc _ Sinewave                                           {% d => ({ "@osc": "@sin" }) %}

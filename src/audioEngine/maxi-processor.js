@@ -7,6 +7,28 @@ import Module from './maximilian.wasmmodule.js';
  * @extends AudioWorkletProcessor
  */
 
+class PostMsgTransducer {
+  //todo convert sendperiod to Hz
+  constructor(msgPort, sendPeriod=100) {
+    this.sendPeriod = 20000;
+    this.sendCounter=0;
+    this.port = msgPort;
+    this.val = 0;
+  }
+  incoming(msg) {
+    this.val = msg.val;
+  }
+  io(sendMsg) {
+    if (this.sendCounter==0) {
+      this.port.postMessage("dataplease");
+    }
+    this.sendCounter++;
+    if (this.sendCounter == this.sendPeriod) {
+      this.sendCounter = 0;
+    }
+    return this.val;
+  }
+}
 
 class MaxiProcessor extends AudioWorkletProcessor {
 
@@ -54,10 +76,10 @@ class MaxiProcessor extends AudioWorkletProcessor {
     this.initialised = false;
 
     // TODO: Synth pool
-    this.osc = new Module.maxiOsc();
-    this.oOsc = new Module.maxiOsc();
-    this.aOsc = new Module.maxiOsc();
-
+    // this.osc = new Module.maxiOsc();
+    // this.oOsc = new Module.maxiOsc();
+    // this.aOsc = new Module.maxiOsc();
+    //
     // this.setupPolysynth();
 
     this._q = [
@@ -81,12 +103,33 @@ class MaxiProcessor extends AudioWorkletProcessor {
       return val ? val[argIdx] : 0.0;
     };
 
+    this.incoming = {};
+    this.mlModelTransducer = function(modelInput) {
+      this.port.postMessage("toWkr");
+      let val = this.incoming['test'];
+      return val ? val : 0.0;
+    }
+
+    this.transducers = {};
+    this.registerTransducer = (name, trans) => {
+      this.transducers[name] = trans;
+      console.log(this.transducers);
+    };
+
     this.port.onmessage = event => { // message port async handler
       if ('address' in event.data) {
         //this must be an OSC message
         this.OSCMessages[event.data.address] = event.data.args;
         console.log(this.OSCMessages);
-      }else if ('eval' in event.data) { // check if new code is being sent for evaluation?
+      }
+      else if ('worker' in event.data) {  //from a worker
+        //this must be an OSC message
+        if (this.transducers[event.data.worker]) {
+          console.log(this.transducers[event.data.worker]);
+          this.transducers[event.data.worker].incoming(event.data);
+        }
+      }
+      else if ('eval' in event.data) { // check if new code is being sent for evaluation?
         try {
           console.log(event.data);
           // let setupFunction = new Function(`return ${event.data['setup']}`);

@@ -27,12 +27,13 @@ class MaxiNode extends AudioWorkletNode {
  * TODO: Implement Singleton pattern
  * @class AudioEngine
  */
+
 class AudioEngine {
 
   /**
    * @constructor
    */
-  constructor() {
+  constructor(msgHandler) {
 
     // NOTE: We want AudioContext lazy loading (first Audio Engine play triggered by user) to prevent the warning
     this.audioContext; // = new AudioContext();
@@ -40,13 +41,15 @@ class AudioEngine {
     this.processorCount = 0;
     this.il2pCode = "";
 
+    this.msgHandler = msgHandler;
+
     this.audioWorkletProcessorName = 'maxi-processor';
     this.audioWorkletUrl = 'maxi-processor.js';
     this.audioWorkletNode;
 
     this.samplesLoaded = false;
 
-    this.onNewDSPLoadValue = (x)=>{};
+    this.onNewDSPLoadValue = (x) => {};
 
     this.loadTestIntervals = []
     const SYNTH_CHANGE_MS = 50;
@@ -73,7 +76,9 @@ class AudioEngine {
       `new Module.maxiOsc().sinewave(400)`, // Interesting case of failure, it seems we can't instantiate because of EM heap limits
     ];
 
-    this.oscThru = (msg) => {console.log(msg);};
+    this.oscThru = (msg) => {
+      console.log(msg);
+    };
 
     console.log("Audio engine loaded")
   }
@@ -125,18 +130,24 @@ class AudioEngine {
 
 
   messageHandler(data) {
-      if (data == "dspStart") {
-          this.ts = window.performance.now();
-      }
-      if (data == "dspEnd") {
-        this.ts = window.performance.now() - this.ts;
-        this.dspTime = ((this.dspTime * 0.9) + (this.ts * 0.1)) ;  //time for 128 sample buffer
-        this.onNewDSPLoadValue(this.dspTime / 2.90249433106576 * 100);
-      }
-      if (data == 'evalEnd') {
-        let evalts = window.performance.now();
-        this.onEvalTimestamp(evalts);
-      }
+    if (data == "dspStart") {
+      this.ts = window.performance.now();
+    } else
+    if (data == "dspEnd") {
+      this.ts = window.performance.now() - this.ts;
+      this.dspTime = ((this.dspTime * 0.9) + (this.ts * 0.1)); //time for 128 sample buffer
+      this.onNewDSPLoadValue(this.dspTime / 2.90249433106576 * 100);
+    } else
+    if (data == 'evalEnd') {
+      let evalts = window.performance.now();
+      this.onEvalTimestamp(evalts);
+    } else {
+      this.msgHandler(data);
+    }
+  }
+
+  postMessage(msg) {
+    this.audioWorkletNode.port.postMessage(msg);
   }
 
   loadSample(objectName, url) {
@@ -158,19 +169,6 @@ class AudioEngine {
   }
 
 
-  // /**
-  //  * Re-starts audio playback by stopping and running the latest Audio Worklet Processor code
-  //  * @changeSynth
-  //  */
-  // changeSynth() {
-  //   if (this.audioWorkletNode !== undefined) {
-  //     let userDefinedFunction = this.fs[Math.floor(Math.random() * this.fs.length)];
-  //     this.audioWorkletNode.port.postMessage(`() => { return ${userDefinedFunction} }`);
-  //     // DEBUG:
-  //     console.log("Change synth: " + userDefinedFunction);
-  //   }
-  // }
-  //
 
   /**
    * Re-starts audio playback by stopping and running the latest Audio Worklet Processor code
@@ -180,7 +178,9 @@ class AudioEngine {
     if (this.audioContext === undefined) {
       this.audioContext = new AudioContext();
       this.loadProcessorCode();
-      this.oscThru = (msg) => {this.audioWorkletNode.port.postMessage(msg)};
+      this.oscThru = (msg) => {
+        this.audioWorkletNode.port.postMessage(msg)
+      };
     } else {
       if (this.audioContext.state !== "suspended") {
         this.stop();

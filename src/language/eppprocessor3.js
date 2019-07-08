@@ -7,6 +7,7 @@ const moo = require("moo"); // this 'require' creates a node dependency
 
 const lexer = moo.compile({
   oscMsg:       ['oscIn'],
+  mlModel:       ['mlmodel'],
   osc:          ['osc',    '∞'],
   sinosc:       ['sin',    '~'],
   cososc:       ['cos',    '≈'],
@@ -79,6 +80,7 @@ var grammar = {
     {"name": "OscFunc", "symbols": ["Oscillator", "_", (lexer.has("lparen") ? {type: "lparen"} : lparen), "_", "Function", "_", (lexer.has("rparen") ? {type: "rparen"} : rparen)], "postprocess": d => ({ "@comp": [d[0]].concat(d[4])})},
     {"name": "OscFunc", "symbols": ["Oscillator", "_", "Params"], "postprocess": d => Object.assign({}, d[0], { param: d[2]})},
     {"name": "Transducer", "symbols": [(lexer.has("oscMsg") ? {type: "oscMsg"} : oscMsg), "_", (lexer.has("oscAddress") ? {type: "oscAddress"} : oscAddress)], "postprocess": d => ({"@OSCMsg": {addr: d[2].value}})},
+    {"name": "Transducer", "symbols": [(lexer.has("mlModel") ? {type: "mlModel"} : mlModel), "_", (lexer.has("number") ? {type: "number"} : number)], "postprocess": d => ({"@MLModel": {input: d[2].value}})},
     {"name": "Oscillator", "symbols": [(lexer.has("osc") ? {type: "osc"} : osc), "_", "Sinewave"], "postprocess": d => ({ "@osc": "@sin" })},
     {"name": "Oscillator", "symbols": [(lexer.has("osc") ? {type: "osc"} : osc), "_", "Coswave"], "postprocess": d => ({ "@osc": "@cos" })},
     {"name": "Oscillator", "symbols": [(lexer.has("osc") ? {type: "osc"} : osc), "_", "Phasor"], "postprocess": d => ({ "@osc": "@pha" })},

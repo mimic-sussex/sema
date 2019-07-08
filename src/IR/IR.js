@@ -82,6 +82,12 @@ class IRToJavascript {
         ccode.loop += `(this.OSCTransducer('${el.addr}', 0)`;
         return ccode;
       },
+      '@MLModel': (ccode, el) => {
+        let objName = "wkt" + IRToJavascript.getNextID();
+        ccode.setup += `q.${objName} = new PostMsgTransducer(this.port); this.registerTransducer('testmodel', q.${objName});`;
+        ccode.loop += `(q.${objName}.io(${el.input})`;
+        return ccode;
+      },
       '@add': (ccode, el) => {
         // console.log(el);
         //expecting two arguments
