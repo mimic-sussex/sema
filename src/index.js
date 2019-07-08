@@ -154,7 +154,7 @@ function evalEditorExpression() {
   }
   console.log(`User expression to eval: ${expression}`);
   try {
-    evalExpression(expression); 
+    evalExpression(expression);
   } catch (error) {
     console.log(`Error parsing the tree: ${error}`);
   }
@@ -194,15 +194,15 @@ function createAnalysers() {
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  document.getElementById('audioWorkletIndicator').innerHTML = AudioWorkletIndicator.AudioWorkletIndicator();
+  // document.getElementById('audioWorkletIndicator').innerHTML = AudioWorkletIndicator.AudioWorkletIndicator();
 
   window.AudioEngine = new AudioEngine();
 
-  document.getElementById("sampleRateIndicatorValue").textContent = window.AudioEngine.sampleRate;
-  document.getElementById("dspLoadVal").textContent = "0";
-  window.AudioEngine.onNewDSPLoadValue = (x) => {
-    document.getElementById("dspLoadVal").textContent = `${Math.floor(x)}`;
-  };
+  // // document.getElementById("sampleRateIndicatorValue").textContent = window.AudioEngine.sampleRate;
+  // // document.getElementById("dspLoadVal").textContent = "0";
+  // window.AudioEngine.onNewDSPLoadValue = (x) => {
+  //   document.getElementById("dspLoadVal").textContent = `${Math.floor(x)}`;
+  // };
   window.AudioEngine.onEvalTimestamp = (x) => {
     let evalTime = x - evalTS;
     // console.log(`Eval time: ${evalTime} ms`)

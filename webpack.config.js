@@ -33,10 +33,10 @@ module.exports = {
     alias: {
     }
   },
+  // externals: {
+  //   osc:'osc'
+  // },
   module: {
-    externals: {
-      osc:'osc'
-    },
     rules: [{
         //FONT LOADER
         test: /\.(ttf|eot|woff|woff2)$/,

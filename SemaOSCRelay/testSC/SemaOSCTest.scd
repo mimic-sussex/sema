@@ -5,7 +5,7 @@ w = Window.new("osc test");
 f = w.addFlowLayout(5@5, 5@5);
 
 [1,2,3,4].do({arg num;
-	var oscpath = "/fader%/out".format(num);
+	var oscpath = "/fader%".format(num);
 	EZSlider.new(
 		w,
 		30@200,
@@ -13,7 +13,7 @@ f = w.addFlowLayout(5@5, 5@5);
 		action: {arg tez;
 
 			(oscpath ++ ", " ++ tez.value).postln;
-			n.sendMsg(oscpath, tez.value);
+			n.sendMsg(oscpath, tez.value * 1000);
 
 		},
 		layout:'vert'

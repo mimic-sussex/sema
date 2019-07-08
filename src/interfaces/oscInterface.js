@@ -1,4 +1,4 @@
-import * as osc from 'osc';
+import * as osc from 'osc/dist/osc-browser'; 
 
 // set up OSC
 
