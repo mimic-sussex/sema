@@ -110,6 +110,7 @@ function createEditor2() {
     lineWrapping: true,
     extraKeys: {
       ["Cmd-Enter"]: () => evalEditor2Expression(),
+      ["Shift-Enter"]: () => evalEditor2ExpressionBlock(),
     }
 
   });
@@ -177,6 +178,41 @@ function evalEditor2Expression() {
   }
   console.log(`User expression to eval: ${expression}`);
   tfW.postMessage({"eval":expression});
+  window.localStorage.setItem("editor2", editor2.getValue());
+}
+function evalEditor2ExpressionBlock() {
+  let divider = "__________";
+  let cursorInfo = editor2.getCursor();
+  //find post divider
+  let line = cursorInfo.line;
+  let linePost = editor2.lastLine();
+  while (line < linePost) {
+    // console.log(editor2.getLine(line));
+    if (editor2.getLine(line) == divider) {
+      linePost = line-1;
+      break;
+    }
+    line++;
+  };
+  line = cursorInfo.line;
+  let linePre = -1;
+  while (line >= 0) {
+    // console.log(editor2.getLine(line));
+    if (editor2.getLine(line) == divider) {
+      linePre = line;
+      break;
+    }
+    line--;
+  };
+  console.log(linePre);
+  console.log(linePost);
+
+  if (linePre > -1) {
+    linePre++;
+  }
+  let code = editor2.getRange({line:linePre,ch:0}, {line:linePost+1,ch:0});
+  console.log(code);
+  tfW.postMessage({"eval":code});
   window.localStorage.setItem("editor2", editor2.getValue());
 }
 
