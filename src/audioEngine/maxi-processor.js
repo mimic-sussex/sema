@@ -20,7 +20,7 @@ class PostMsgTransducer {
   }
   io(sendMsg) {
     if (this.sendCounter==0) {
-      this.port.postMessage("dataplease");
+      this.port.postMessage({rq:"dataplease"});
     }
     this.sendCounter++;
     if (this.sendCounter == this.sendPeriod) {
@@ -104,11 +104,11 @@ class MaxiProcessor extends AudioWorkletProcessor {
     };
 
     this.incoming = {};
-    this.mlModelTransducer = function(modelInput) {
-      this.port.postMessage("toWkr");
-      let val = this.incoming['test'];
-      return val ? val : 0.0;
-    }
+    // this.mlModelTransducer = function(modelInput) {
+    //   this.port.postMessage("toWkr");
+    //   let val = this.incoming['test'];
+    //   return val ? val : 0.0;
+    // }
 
     this.transducers = {};
     this.registerTransducer = (name, trans) => {
@@ -125,7 +125,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
       else if ('worker' in event.data) {  //from a worker
         //this must be an OSC message
         if (this.transducers[event.data.worker]) {
-          console.log(this.transducers[event.data.worker]);
+          // console.log(this.transducers[event.data.worker]);
           this.transducers[event.data.worker].incoming(event.data);
         }
       }

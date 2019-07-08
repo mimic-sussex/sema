@@ -103,7 +103,11 @@ function createEditor2() {
     value: defaultEditorCode2,
     lineNumbers: true,
     theme: "ambiance",
-    lineWrapping: true
+    lineWrapping: true,
+    extraKeys: {
+      ["Cmd-Enter"]: () => evalEditor2Expression(),
+    }
+
   });
   editor2.setSize('100%', '100%');
 }
@@ -158,6 +162,17 @@ function evalEditorExpression() {
   } catch (error) {
     console.log(`Error parsing the tree: ${error}`);
   }
+}
+
+function evalEditor2Expression() {
+
+  let expression = editor2.getSelection();
+  if (expression == "") {
+    let cursorInfo = editor2.getCursor();
+    expression = editor2.getDoc().getLine(cursorInfo.line);
+  }
+  console.log(`User expression to eval: ${expression}`);
+  tfW.postMessage({"eval":expression});
 }
 
 

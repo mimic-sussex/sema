@@ -13,6 +13,7 @@
     "source-map": "source-map-explorer dist/bundle.js dist/bundle.js.map"
   },
   "dependencies": {
+    "@magenta/music": "^1.8.0",
     "codemirror": "^5.47.0",
     "d3": "^5.9.2",
     "dgram": "^1.0.1",
