@@ -28,8 +28,8 @@ import './style/tree.css';
 import './style/editors.css';
 
 import * as CodeMirror from 'codemirror/lib/codemirror.js';
-import 'codemirror/mode/javascript/javascript.js';
-// import 'codemirror/theme/ambiance.css';
+import 'codemirror/mode/javascript/javascript';
+import 'codemirror/theme/idea.css';
 import 'codemirror/theme/monokai.css';
 // import 'codemirror/theme/abcdef.css';
 import 'codemirror/keymap/vim.js';
@@ -95,14 +95,18 @@ function createEditor1() {
   editor1.setOption("vimMode", false);
 }
 
-const defaultEditorCode2 = "//js";
 
 function createEditor2() {
+  let defaultEditorCode2 = "//js";
+  let editor2code = window.localStorage.getItem("editor2");
+  if (editor2code)
+    defaultEditorCode2 = editor2code;
 
   editor2 = CodeMirror(document.getElementById('editor2'), {
     value: defaultEditorCode2,
     lineNumbers: true,
-    theme: "ambiance",
+    mode: "javascript",
+    theme: "idea",
     lineWrapping: true,
     extraKeys: {
       ["Cmd-Enter"]: () => evalEditor2Expression(),
@@ -173,6 +177,7 @@ function evalEditor2Expression() {
   }
   console.log(`User expression to eval: ${expression}`);
   tfW.postMessage({"eval":expression});
+  window.localStorage.setItem("editor2", editor2.getValue());
 }
 
 
