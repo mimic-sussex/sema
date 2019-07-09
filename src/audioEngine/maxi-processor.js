@@ -8,10 +8,12 @@ import Module from './maximilian.wasmmodule.js';
  */
 
 class PostMsgTransducer {
-  //todo convert sendperiod to Hz
-  constructor(msgPort, sendPeriod=100) {
-    this.sendPeriod = 20000;
-    this.sendCounter=0;
+  constructor(msgPort, sampleRate, sendFrequency=2) {
+    if(sendFrequency==0)
+      this.sendPeriod = Number.MAX_SAFE_INTEGER;
+    else
+      this.sendPeriod = 1.0/sendFrequency * sampleRate;
+    this.sendCounter=this.sendPeriod;
     this.port = msgPort;
     this.val = 0;
   }
@@ -19,12 +21,11 @@ class PostMsgTransducer {
     this.val = msg.val;
   }
   io(sendMsg) {
-    if (this.sendCounter==0) {
-      this.port.postMessage({rq:"dataplease"});
-    }
-    this.sendCounter++;
-    if (this.sendCounter == this.sendPeriod) {
-      this.sendCounter = 0;
+    if (this.sendCounter >= this.sendPeriod) {
+      this.port.postMessage({rq:"dataplease", val:0});
+      this.sendCounter -= this.sendPeriod;
+    }else{
+      this.sendCounter++;
     }
     return this.val;
   }
@@ -111,10 +112,13 @@ class MaxiProcessor extends AudioWorkletProcessor {
     // }
 
     this.transducers = {};
-    this.registerTransducer = (name, trans) => {
+    this.registerTransducer = (name, rate) => {
+      let trans = new PostMsgTransducer(this.port, this.sampleRate, rate);
       this.transducers[name] = trans;
       console.log(this.transducers);
+      return trans;
     };
+
 
     this.port.onmessage = event => { // message port async handler
       if ('address' in event.data) {

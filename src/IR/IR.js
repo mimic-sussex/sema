@@ -84,7 +84,7 @@ class IRToJavascript {
       },
       '@MLModel': (ccode, el) => {
         let objName = "wkt" + IRToJavascript.getNextID();
-        ccode.setup += `q.${objName} = new PostMsgTransducer(this.port); this.registerTransducer('testmodel', q.${objName});`;
+        ccode.setup += `q.${objName} = this.registerTransducer('testmodel', ${el.input});`;
         ccode.loop += `(q.${objName}.io(${el.input})`;
         return ccode;
       },

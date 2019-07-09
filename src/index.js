@@ -180,7 +180,9 @@ function evalEditor2Expression() {
   tfW.postMessage({"eval":expression});
   window.localStorage.setItem("editor2", editor2.getValue());
 }
+
 function evalEditor2ExpressionBlock() {
+  //find code between dividers
   let divider = "__________";
   let cursorInfo = editor2.getCursor();
   //find post divider
@@ -204,9 +206,6 @@ function evalEditor2ExpressionBlock() {
     }
     line--;
   };
-  console.log(linePre);
-  console.log(linePost);
-
   if (linePre > -1) {
     linePre++;
   }
