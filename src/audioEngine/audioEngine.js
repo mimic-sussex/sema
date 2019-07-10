@@ -46,7 +46,7 @@ class AudioEngine {
 
     this.samplesLoaded = false;
 
-    this.onNewDSPLoadValue = (x)=>{};
+    this.onNewDSPLoadValue = (x) => {};
 
     this.loadTestIntervals = []
     const SYNTH_CHANGE_MS = 50;
@@ -123,18 +123,18 @@ class AudioEngine {
 
 
   messageHandler(data) {
-      if (data == "dspStart") {
-          this.ts = window.performance.now();
-      }
-      if (data == "dspEnd") {
-        this.ts = window.performance.now() - this.ts;
-        this.dspTime = ((this.dspTime * 0.9) + (this.ts * 0.1)) ;  //time for 128 sample buffer
-        this.onNewDSPLoadValue(this.dspTime / 2.90249433106576 * 100);
-      }
-      if (data == 'evalEnd') {
-        let evalts = window.performance.now();
-        this.onEvalTimestamp(evalts);
-      }
+    if (data == "dspStart") {
+      this.ts = window.performance.now();
+    }
+    if (data == "dspEnd") {
+      this.ts = window.performance.now() - this.ts;
+      this.dspTime = ((this.dspTime * 0.9) + (this.ts * 0.1)); //time for 128 sample buffer
+      this.onNewDSPLoadValue(this.dspTime / 2.90249433106576 * 100);
+    }
+    if (data == 'evalEnd') {
+      let evalts = window.performance.now();
+      this.onEvalTimestamp(evalts);
+    }
   }
 
   loadSample(objectName, url) {
@@ -280,9 +280,6 @@ class AudioEngine {
       clearInterval(interval);
     });
   }
-
-
-
 }
 
 export {
