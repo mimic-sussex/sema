@@ -7,7 +7,6 @@ const moo = require("moo"); // this 'require' creates a node dependency
 
 const lexer = moo.compile({
   oscMsg:       ['oscIn'],
-  mlModel:       ['mlmodel'],
   separator:    /,/,
   pipe:        /∑/,
   paramBegin:   /∆/,
@@ -40,10 +39,10 @@ var grammar = {
     {"name": "Statement$ebnf$1", "symbols": [], "postprocess": function(d) {return null;}},
     {"name": "Statement", "symbols": ["Expression", "Statement$ebnf$1"], "postprocess": d => [{ "@spawn": d[0] }]},
     {"name": "Statement", "symbols": [(lexer.has("hash") ? {type: "hash"} : hash), /./, {"literal":"\n"}], "postprocess": d => ({ "@comment": d[3] })},
-    {"name": "Expression", "symbols": [(lexer.has("paramBegin") ? {type: "paramBegin"} : paramBegin), "Params", (lexer.has("pipe") ? {type: "pipe"} : pipe), (lexer.has("funcName") ? {type: "funcName"} : funcName)], "postprocess": d => ({ "@synth": d[1], "@jsfunc":d[3]} )},
+    {"name": "Expression", "symbols": [(lexer.has("paramBegin") ? {type: "paramBegin"} : paramBegin), "Params", (lexer.has("pipe") ? {type: "pipe"} : pipe), (lexer.has("funcName") ? {type: "funcName"} : funcName)], "postprocess": d => ({ "@synth": {"@params":d[1], "@jsfunc":d[3]}} )},
     {"name": "Params$subexpression$1", "symbols": [(lexer.has("number") ? {type: "number"} : number)]},
-    {"name": "Params", "symbols": ["Params$subexpression$1"], "postprocess": (d) => ({"@num":d[0]})},
-    {"name": "Params", "symbols": ["Expression"], "postprocess": (d) => ({"@num":d[0]})},
+    {"name": "Params", "symbols": ["Params$subexpression$1"], "postprocess": (d) => ([{"@num":d[0][0]}])},
+    {"name": "Params", "symbols": ["Expression"], "postprocess": (d) => ([{"@num":d[0]}])},
     {"name": "Params", "symbols": [(lexer.has("number") ? {type: "number"} : number), (lexer.has("separator") ? {type: "separator"} : separator), "Params"], "postprocess": d => [{ "@num": d[0]}].concat(d[2])},
     {"name": "Params", "symbols": ["Expression", (lexer.has("separator") ? {type: "separator"} : separator), "Params"], "postprocess": d => [{ "@num": d[0]}].concat(d[2])},
     {"name": "_$ebnf$1", "symbols": []},

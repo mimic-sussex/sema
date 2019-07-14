@@ -1,5 +1,5 @@
 import * as nearley from 'nearley/lib/nearley.js';
-import * as grammar from './eppprocessor3.js';
+import * as grammar from './eppprocessor4.js';
 import IRToJavascript from '../IR/IR.js'
 
 var parserStartPoint;

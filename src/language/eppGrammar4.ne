@@ -9,7 +9,6 @@ const moo = require("moo"); // this 'require' creates a node dependency
 
 const lexer = moo.compile({
   oscMsg:       ['oscIn'],
-  mlModel:       ['mlmodel'],
   separator:    /,/,
   pipe:        /∑/,
   paramBegin:   /∆/,
@@ -45,13 +44,13 @@ Statement ->
       | %hash . "\n"                                          {% d => ({ "@comment": d[3] }) %}
 
 Expression ->
-      %paramBegin Params  %pipe  %funcName                           {% d => ({ "@synth": d[1], "@jsfunc":d[3]} ) %}
+      %paramBegin Params  %pipe  %funcName                           {% d => ({ "@synth": {"@params":d[1], "@jsfunc":d[3]}} ) %}
       # | %funcName                           {% d => ({ "@synth": [], "@jsfunc":d[0]} ) %}
 
 Params ->
-  (%number)                                      {% (d) => ({"@num":d[0]}) %}
+  (%number)                                      {% (d) => ([{"@num":d[0][0]}]) %}
   |
-  Expression                                      {% (d) => ({"@num":d[0]}) %}
+  Expression                                      {% (d) => ([{"@num":d[0]}]) %}
   |
   %number %separator Params                    {% d => [{ "@num": d[0]}].concat(d[2]) %}
   |

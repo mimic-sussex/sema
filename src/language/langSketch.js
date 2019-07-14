@@ -2,8 +2,14 @@ let langSketch;
 export default langSketch = `
 # ML:
 
+∆200∑saw
+∆∆300∑saw∑saw
+
+∆∆10∑mlmodel∑saw
+
+
 osc saw (mlmodel 0)
- 
+
 oscIn /fader1
 
 

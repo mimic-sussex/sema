@@ -19,7 +19,9 @@ body {
 /* @import url('./fonts/Lato-Black.woff'); */
 /* @import url('../assets/fonts/Lato/fonts/Lato-Black.woff'); */
 
-
+.test {
+  font-size:300%;
+}
 
 
 

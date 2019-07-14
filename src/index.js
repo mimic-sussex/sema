@@ -71,13 +71,17 @@ langWorker.onmessage = (e) => {
 }
 
 // Default editor code example is stored at 'langSketch.js'
-const defaultEditorCode1 = langSketch;
+// const defaultEditorCode1 = "langSketch";
 
 function createEditor1() {
+  let defaultEditorCode1 = "//livecode window";
+  let editor1code = window.localStorage.getItem("editor1");
+  if (editor1code)
+    defaultEditorCode1 = editor1code;
 
   editor1 = CodeMirror(document.getElementById('editor1'), {
-    value: defaultEditorCode1,
     // theme: "abcdef",
+    value:defaultEditorCode1,
     theme: "monokai",
     lineNumbers: true,
     // mode:  "javascript",
@@ -157,8 +161,9 @@ function evalEditorExpression() {
     window.AudioEngine.loadSamples();
 
   let expression = editor1.getSelection();
+  let cursorInfo = editor1.getCursor();
   if (expression == "") {
-    let cursorInfo = editor1.getCursor();
+    console.log(cursorInfo);
     expression = editor1.getDoc().getLine(cursorInfo.line);
   }
   console.log(`User expression to eval: ${expression}`);
@@ -167,6 +172,8 @@ function evalEditorExpression() {
   } catch (error) {
     console.log(`Error parsing the tree: ${error}`);
   }
+  window.localStorage.setItem("editor1", editor1.getValue());
+  // editor1.markText({line:cursorInfo.line, ch:0}, {line:cursorInfo.line, ch:1},{"className":"test"});
 }
 
 function evalEditor2Expression() {

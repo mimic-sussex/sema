@@ -97,11 +97,21 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
     this.timer = new Date();
 
+    this.add = (x,y)=>{return x+y;}
+    this.sub = (x,y)=>{return x-y;}
+    this.mul = (x,y)=>{return x*y;}
+    this.div = (x,y)=>{return x/y;}
+
     this.OSCMessages = {};
 
-    this.OSCTransducer = function(address, argIdx) {
-      let val = this.OSCMessages[address];
-      return val ? val[argIdx] : 0.0;
+    // this.OSCTransducer = function(address, argIdx) {
+    //   let val = this.OSCMessages[address];
+    //   return val ? val[argIdx] : 0.0;
+    // };
+
+    this.OSCTransducer = function(x) {
+      let val = this.OSCMessages['/fader1'];
+      return val ? val[0] : 0.0;
     };
 
     this.incoming = {};
