@@ -1,7 +1,6 @@
 # lang:
 # 16∑denom  -- now all integers are divided by 16.  can run this locally or globally
-# ∆10,∆10∑ml∑saw
-
+# (10,(10)ml)saw
 # Builtins make your parser slower. For efficiency, use lexer like Moo
 # functionkeyword: [, 'tri', 'square', 'pulse', 'noise', 'cososc', 'phasor', 'adsr', 'filter', 'samp'],
 @{%
@@ -10,8 +9,8 @@ const moo = require("moo"); // this 'require' creates a node dependency
 const lexer = moo.compile({
   oscMsg:       ['oscIn'],
   separator:    /,/,
-  pipe:        /∑/,
-  paramBegin:   /∆/,
+  pipe:        /}/,
+  paramBegin:   /{/,
   oscAddress:   /\/[a-zA-Z0-9]+/,
   add:          /\+/,
   mult:         /\*/,
@@ -44,7 +43,7 @@ Statement ->
       | %hash . "\n"                                          {% d => ({ "@comment": d[3] }) %}
 
 Expression ->
-      %paramBegin Params  %pipe  %funcName                           {% d => ({ "@synth": {"@params":d[1], "@jsfunc":d[3]}} ) %}
+      %paramBegin Params  %pipe  %funcName                           {% d => ({ "@synth": {"@params":d[1], "@jsfunc":d[3], "paramBegin":d[0], "paramEnd":d[2]}} ) %}
       # | %funcName                           {% d => ({ "@synth": [], "@jsfunc":d[0]} ) %}
 
 Params ->

@@ -19,7 +19,67 @@ body {
 /* @import url('./fonts/Lato-Black.woff'); */
 /* @import url('../assets/fonts/Lato/fonts/Lato-Black.woff'); */
 
-.test {
+.param100 {
+  font-size:100%;
+}
+.param110 {
+  font-size:110%;
+}
+.param120 {
+  font-size:120%;
+}
+.param130 {
+  font-size:130%;
+}
+.param140 {
+  font-size:140%;
+}
+.param150 {
+  font-size:150%;
+}
+.param160 {
+  font-size:160%;
+}
+.param170 {
+  font-size:170%;
+}
+.param180 {
+  font-size:180%;
+}
+.param190 {
+  font-size:190%;
+}
+.param200 {
+  font-size:200%;
+}
+.param210 {
+  font-size:210%;
+}
+.param220 {
+  font-size:220%;
+}
+.param230 {
+  font-size:230%;
+}
+.param240 {
+  font-size:240%;
+}
+.param250 {
+  font-size:250%;
+}
+.param260 {
+  font-size:260%;
+}
+.param270 {
+  font-size:270%;
+}
+.param280 {
+  font-size:280%;
+}
+.param290 {
+  font-size:290%;
+}
+.param300 {
   font-size:300%;
 }
 

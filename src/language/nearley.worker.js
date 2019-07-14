@@ -21,6 +21,8 @@ onmessage = (m) => {
       // console.log(`Parse tree complete`);
       console.log(JSON.stringify(parser.results));
       let jscode = IRToJavascript.treeToCode(parser.results);
+      jscode.paramMarkers = JSON.stringify(jscode.paramMarkers);
+      console.log(jscode);
       postMessage(jscode);
     } catch (err) {
       console.log("Error" + err); // "Error at character 9"

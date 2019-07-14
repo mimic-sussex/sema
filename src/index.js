@@ -54,12 +54,23 @@ tfW.onmessage = (e) => {
 
 let langWorker = new nearleyWorker();
 langWorker.onmessage = (e) => {
-  // console.log(e.data);
+  console.log(e.data);
   if (e.data['loop']) {
     let rightNow = window.performance.now();
     evalTS = rightNow;
     testResult[3] = rightNow - treeTS
     window.AudioEngine.evalSynth(e.data);
+
+    //update editor
+    let pms = JSON.parse(e.data.paramMarkers);
+    let cursorInfo = editor1.getCursor();
+    for (let v in pms) {
+      console.log(pms[v].l);
+      let fontStyle = 300 - ((pms[v].l) * 30);
+      console.log(`FS: ${fontStyle}`);
+      editor1.markText({line:cursorInfo.line, ch:pms[v].s.offset}, {line:cursorInfo.line, ch:pms[v].s.offset+1},{"className":`param${fontStyle}`});
+      editor1.markText({line:cursorInfo.line, ch:pms[v].e.offset}, {line:cursorInfo.line, ch:pms[v].e.offset+1},{"className":`param${fontStyle}`});
+    }
     // console.log(`IR translate time: ${compileTS} ms`)
     // console.log("rcv");
   } else if (e.data['treeTS']) {
@@ -81,7 +92,7 @@ function createEditor1() {
 
   editor1 = CodeMirror(document.getElementById('editor1'), {
     // theme: "abcdef",
-    value:defaultEditorCode1,
+    value: defaultEditorCode1,
     theme: "monokai",
     lineNumbers: true,
     // mode:  "javascript",
@@ -184,7 +195,9 @@ function evalEditor2Expression() {
     expression = editor2.getDoc().getLine(cursorInfo.line);
   }
   console.log(`User expression to eval: ${expression}`);
-  tfW.postMessage({"eval":expression});
+  tfW.postMessage({
+    "eval": expression
+  });
   window.localStorage.setItem("editor2", editor2.getValue());
 }
 
@@ -198,7 +211,7 @@ function evalEditor2ExpressionBlock() {
   while (line < linePost) {
     // console.log(editor2.getLine(line));
     if (editor2.getLine(line) == divider) {
-      linePost = line-1;
+      linePost = line - 1;
       break;
     }
     line++;
@@ -216,9 +229,17 @@ function evalEditor2ExpressionBlock() {
   if (linePre > -1) {
     linePre++;
   }
-  let code = editor2.getRange({line:linePre,ch:0}, {line:linePost+1,ch:0});
+  let code = editor2.getRange({
+    line: linePre,
+    ch: 0
+  }, {
+    line: linePost + 1,
+    ch: 0
+  });
   console.log(code);
-  tfW.postMessage({"eval":code});
+  tfW.postMessage({
+    "eval": code
+  });
   window.localStorage.setItem("editor2", editor2.getValue());
 }
 
