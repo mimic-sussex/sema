@@ -13,7 +13,7 @@ class MaxiNode extends AudioWorkletNode {
   constructor(audioContext, processorName) {
     // super(audioContext, processorName);
     let options = {
-      numberOfInputs: 0,
+      numberOfInputs: 1,
       numberOfOutputs: 1,
       outputChannelCount: [2]
     };
