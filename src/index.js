@@ -66,7 +66,7 @@ langWorker.onmessage = (e) => {
     let cursorInfo = editor1.getCursor();
     for (let v in pms) {
       console.log(pms[v].l);
-      let fontStyle = 300 - ((pms[v].l) * 30);
+      let fontStyle = 300 - ((pms[v].l) * 50);
       console.log(`FS: ${fontStyle}`);
       editor1.markText({line:cursorInfo.line, ch:pms[v].s.offset}, {line:cursorInfo.line, ch:pms[v].s.offset+1},{"className":`param${fontStyle}`});
       editor1.markText({line:cursorInfo.line, ch:pms[v].e.offset}, {line:cursorInfo.line, ch:pms[v].e.offset+1},{"className":`param${fontStyle}`});
