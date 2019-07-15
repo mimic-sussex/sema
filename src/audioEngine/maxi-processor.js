@@ -100,7 +100,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
     this.OSCMessages = {};
 
     this.OSCTransducer = function(x) {
-      let val = this.OSCMessages['/fader1'];
+      let val = this.OSCMessages[x];
       return val ? val[0] : 0.0;
     };
 
@@ -144,7 +144,6 @@ class MaxiProcessor extends AudioWorkletProcessor {
           let xfadeEnd = Module.maxiMap.linlin(this.currentSignalFunction, 0, 1, -1, 1);
           this.xfadeControl.prepare(xfadeBegin, xfadeEnd, 5); // short xfade across signals
           this.xfadeControl.triggerEnable(true); //no clock yet, so enable the trigger straight away
-          // console.log("XFade" + [xfadeBegin, xfadeEnd]);
           this.port.postMessage("evalEnd")
         } catch (err) {
           if (err instanceof TypeError) {

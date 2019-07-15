@@ -104,6 +104,13 @@ class IRToJavascript {
           ccode = IRToJavascript.traverseTree(el, ccode, level);
         }
         return ccode;
+      },
+      '@oscaddr': (ccode, el) => {
+        console.log(el.value);
+        // ccode.loop += `${el.value}`;
+        ccode.loop += `this.OSCTransducer('${el.value}')`;
+
+        return ccode;
       }
       // '@func': (ccode, el) => {
       //   // console.log(el);
