@@ -9,7 +9,7 @@ const lexer = moo.compile({
   separator:    /,/,
   paramEnd:        /}/,
   paramBegin:   /{/,
-  oscAddress:   /\/[a-zA-Z0-9]+/,
+  oscAddress:   /(?:\/[a-zA-Z0-9]+)+/,
   add:          /\+/,
   mult:         /\*/,
   div:          /\//,
