@@ -99,9 +99,9 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
     this.OSCMessages = {};
 
-    this.OSCTransducer = function(x) {
+    this.OSCTransducer = function(x, idx=0) {
       let val = this.OSCMessages[x];
-      return val ? val[0] : 0.0;
+      return val ? val[idx] : 0.0;
     };
 
     this.incoming = {};

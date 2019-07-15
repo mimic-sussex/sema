@@ -96,6 +96,41 @@ class IRToJavascript {
 
         return ccode;
       },
+      '@oscreceiver': (ccode, el) => {
+        console.log(el);
+        // console.log(el['@jsfunc']);
+
+
+        let setupCode="";
+        let idxCode = "0";
+        if (el['@params'].length > 0) {
+          let paramMarkers = [{"s":el['paramBegin'], "e":el['paramEnd'], "l":level}]
+          ccode.paramMarkers = ccode.paramMarkers.concat(paramMarkers);
+          let allParams=[];
+          for (let p = 0; p < el['@params'].length; p++) {
+            let params = IRToJavascript.emptyCode();
+            params = IRToJavascript.traverseTree(el['@params'][p], params, level+1);
+            console.log(params);
+            allParams[p] = params;
+          }
+          console.log(allParams);
+          for(let param in allParams) {
+            setupCode += allParams[param].setup;
+            ccode.paramMarkers = ccode.paramMarkers.concat(allParams[param].paramMarkers);
+          }
+          idxCode = allParams[0].loop;
+        }
+        let oscCode = `this.OSCTransducer('${el['@oscaddr'].value}',${idxCode})`;
+
+        // IRToJavascript.traverseTree(el['@oscaddr'], IRToJavascript.emptyCode(), level+1);
+
+        ccode.setup += `${setupCode}`;
+        ccode.loop += `${oscCode}`;
+
+        console.log(ccode.paramMarkers);
+
+        return ccode;
+      },
       '@num': (ccode, el) => {
         if (el.value) {
           console.log(el.value);
@@ -106,7 +141,7 @@ class IRToJavascript {
         return ccode;
       },
       '@oscaddr': (ccode, el) => {
-        console.log(el.value);
+        console.log(el);
         // ccode.loop += `${el.value}`;
         ccode.loop += `this.OSCTransducer('${el.value}')`;
 
@@ -180,7 +215,7 @@ class IRToJavascript {
       })
     } else {
       Object.keys(t).map((k) => {
-        // console.log(k);
+        console.log(k);
         code = attribMap[k](code, t[k]);
       });
     }

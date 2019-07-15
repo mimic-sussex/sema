@@ -43,19 +43,24 @@ Statement ->
 
 Expression ->
       %paramBegin Params  %paramEnd  %funcName                           {% d => ({ "@synth": {"@params":d[1], "@jsfunc":d[3], "paramBegin":d[0], "paramEnd":d[2]}} ) %}
+      |
+      %paramBegin Params  %paramEnd  %oscAddress                           {% d => ({ "@oscreceiver": {"@params":d[1], "@oscaddr":d[3], "paramBegin":d[0], "paramEnd":d[2]}} ) %}
+      |
+      %oscAddress                           {% d => ({ "@oscreceiver": {"@params":{}, "@oscaddr":d[0]}} ) %}
+
       # | %funcName                           {% d => ({ "@synth": [], "@jsfunc":d[0]} ) %}
 
 Params ->
 (%number)                                      {% (d) => ([{"@num":d[0][0]}]) %}
 |
-(%oscAddress)                                      {% (d) => ([{"@oscaddr":d[0][0]}]) %}
-|
+# (%oscAddress)                                      {% (d) => ([{"@oscaddr":d[0][0]}]) %}
+# |
   Expression                                      {% (d) => ([{"@num":d[0]}]) %}
   |
   %number %separator Params                    {% d => [{ "@num": d[0]}].concat(d[2]) %}
   |
-  %oscAddress %separator Params                    {% d => [{ "@oscaddr": d[0]}].concat(d[2]) %}
-  |
+  # %oscAddress %separator Params                    {% d => [{ "@oscaddr": d[0]}].concat(d[2]) %}
+  # |
   Expression %separator Params                    {% d => [{ "@num": d[0]}].concat(d[2]) %}
   |
   %paramBegin Params  %paramEnd           {%(d) => ([{"@list":d[1]}])%}
