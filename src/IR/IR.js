@@ -22,6 +22,7 @@ const jsFuncMap = {
   'lpz': {"setup":(o,p)=>`${o} = new Module.maxiFilter()`, "loop":(o,p)=>`${o}.lores(${p[0].loop},${p[1].loop},${p[2].loop})`},
   'hpz': {"setup":(o,p)=>`${o} = new Module.maxiFilter()`, "loop":(o,p)=>`${o}.hires(${p[0].loop},${p[1].loop},${p[2].loop})`},
   'mlmodel': {"setup":(o,p)=>`${o} = this.registerTransducer('testmodel', ${p[0].loop})`, "loop":(o,p)=>`${o}.io()`},
+  'adc': {"setup":(o,p)=>"", "loop":(o,p)=>`inputs[${p[0].loop}]`},
   // 'oscinput': ["","this.OSCTransducer"]
 }
 
@@ -183,7 +184,7 @@ class IRToJavascript {
     // console.log(tree);
     let code = IRToJavascript.traverseTree(tree, IRToJavascript.emptyCode(), 0);
     code.setup = `() => {let q=[]; ${code.setup}; return q;}`;
-    code.loop = `(q) => {return ${code.loop};}`
+    code.loop = `(q, inputs) => {return ${code.loop};}`
     console.log(code.loop);
     console.log(code.paramMarkers);
     return code;

@@ -88,7 +88,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
       []
     ]; //maxi objects
 
-    this.silence = (q) => {
+    this.silence = (q, inputs) => {
       return 0.0
     };
     this.signals = [this.silence, this.silence];
@@ -97,17 +97,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
     this.timer = new Date();
 
-    this.add = (x,y)=>{return x+y;}
-    this.sub = (x,y)=>{return x-y;}
-    this.mul = (x,y)=>{return x*y;}
-    this.div = (x,y)=>{return x/y;}
-
     this.OSCMessages = {};
-
-    // this.OSCTransducer = function(address, argIdx) {
-    //   let val = this.OSCMessages[address];
-    //   return val ? val[argIdx] : 0.0;
-    // };
 
     this.OSCTransducer = function(x) {
       let val = this.OSCMessages['/fader1'];
@@ -115,11 +105,6 @@ class MaxiProcessor extends AudioWorkletProcessor {
     };
 
     this.incoming = {};
-    // this.mlModelTransducer = function(modelInput) {
-    //   this.port.postMessage("toWkr");
-    //   let val = this.incoming['test'];
-    //   return val ? val : 0.0;
-    // }
 
     this.transducers = {};
     this.registerTransducer = (name, rate) => {
@@ -169,11 +154,6 @@ class MaxiProcessor extends AudioWorkletProcessor {
           }
         }
       }
-      //   } else {
-      //     this[key].setSample(this.translateFloat32ArrayToBuffer(event.data[key]));
-      //   }
-      //
-      // }
     };
   }
 
@@ -196,8 +176,8 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
       for (let i = 0; i < output[0].length; ++i) {
         //xfade between old and new algorhythms
-        let sig0 = this.signals[0](this._q[0]);
-        let sig1 = this.signals[1](this._q[1]);
+        let sig0 = this.signals[0](this._q[0], inputs[0]);
+        let sig1 = this.signals[1](this._q[1], inputs[0]);
         let xf = this.xfadeControl.play(i == 0 ? 1 : 0);
         let w = Module.maxiXFade.xfade(sig0, sig1, xf);
         //mono->stereo

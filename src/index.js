@@ -65,9 +65,7 @@ langWorker.onmessage = (e) => {
     let pms = JSON.parse(e.data.paramMarkers);
     let cursorInfo = editor1.getCursor();
     for (let v in pms) {
-      console.log(pms[v].l);
       let fontStyle = 300 - ((pms[v].l) * 50);
-      console.log(`FS: ${fontStyle}`);
       editor1.markText({line:cursorInfo.line, ch:pms[v].s.offset}, {line:cursorInfo.line, ch:pms[v].s.offset+1},{"className":`param${fontStyle}`});
       editor1.markText({line:cursorInfo.line, ch:pms[v].e.offset}, {line:cursorInfo.line, ch:pms[v].e.offset+1},{"className":`param${fontStyle}`});
     }
@@ -100,10 +98,11 @@ function createEditor1() {
     extraKeys: {
       // [ "Cmd-Enter" ]: () => playAudio(),
       ["Cmd-Enter"]: () => evalEditorExpression(),
-      ["Cmd-."]: () => stopAudio(),
-      ["Cmd--"]: () => decreaseVolume(),
-      ["Cmd-="]: () => increaseVolume(),
-      ["Cmd-]"]: () => changeSynth()
+      ["Ctrl-Enter"]: () => evalEditorExpression(),
+      // ["Cmd-."]: () => stopAudio(),
+      // ["Cmd--"]: () => decreaseVolume(),
+      // ["Cmd-="]: () => increaseVolume(),
+      // ["Cmd-]"]: () => changeSynth()
     }
   });
   editor1.setSize('100%', '100%');
@@ -125,6 +124,7 @@ function createEditor2() {
     lineWrapping: true,
     extraKeys: {
       ["Cmd-Enter"]: () => evalEditor2Expression(),
+      ["Ctrl-Enter"]: () => evalEditor2Expression(),
       ["Shift-Enter"]: () => evalEditor2ExpressionBlock(),
     }
 
