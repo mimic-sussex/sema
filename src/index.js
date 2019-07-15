@@ -1,13 +1,13 @@
 // import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 // import * as grammar from './language/eppGrammar.js';
-import * as nearley from 'nearley/lib/nearley.js';
-import * as grammar from './language/eppprocessor.js';
-
-import IRToJavascript from './IR/IR.js'
+// import * as nearley from 'nearley/lib/nearley.js';
+// import * as grammar from './language/eppprocessor.js';
+// import IRToJavascript from './IR/IR.js'
 
 // import irWorker from 'worker-loader!./IR/IR.worker.js';
 import nearleyWorker from 'worker-loader!./language/nearley.worker.js';
-
+import tfWorker from 'worker-loader!./machineLearning/tfjs.worker.js';
+import oscIO from './interfaces/oscInterface.js';
 
 
 import {
@@ -28,8 +28,8 @@ import './style/tree.css';
 import './style/editors.css';
 
 import * as CodeMirror from 'codemirror/lib/codemirror.js';
-import 'codemirror/mode/javascript/javascript.js';
-// import 'codemirror/theme/ambiance.css';
+import 'codemirror/mode/javascript/javascript';
+import 'codemirror/theme/idea.css';
 import 'codemirror/theme/monokai.css';
 // import 'codemirror/theme/abcdef.css';
 import 'codemirror/keymap/vim.js';
@@ -44,14 +44,13 @@ let editor1, editor2;
 let parser;
 
 let compileTS = 0;
-let treeTS=0;
+let treeTS = 0;
 let evalTS = 0;
 
-// let irw = new irWorker();
-// irw.onmessage = (e) => {
-//   console.log("rcv");
-//   window.AudioEngine.evalSynth(e.data);
-// }
+let tfW = new tfWorker();
+tfW.onmessage = (e) => {
+  window.AudioEngine.postMessage(e.data);
+}
 
 let langWorker = new nearleyWorker();
 langWorker.onmessage = (e) => {
@@ -63,7 +62,7 @@ langWorker.onmessage = (e) => {
     window.AudioEngine.evalSynth(e.data);
     // console.log(`IR translate time: ${compileTS} ms`)
     // console.log("rcv");
-  }else if (e.data['treeTS']) {
+  } else if (e.data['treeTS']) {
     let rightNow = window.performance.now();
     testResult[2] = rightNow - compileTS;
     treeTS = rightNow;
@@ -96,15 +95,24 @@ function createEditor1() {
   editor1.setOption("vimMode", false);
 }
 
-const defaultEditorCode2 = "∞(∆, 1.0, 1.5).∞(~, 1.0. 1.04).∞(∞(∞, 440, 1.04)+∞(≈, 66, 1.30))";
 
 function createEditor2() {
+  let defaultEditorCode2 = "//js";
+  let editor2code = window.localStorage.getItem("editor2");
+  if (editor2code)
+    defaultEditorCode2 = editor2code;
 
   editor2 = CodeMirror(document.getElementById('editor2'), {
     value: defaultEditorCode2,
     lineNumbers: true,
-    theme: "ambiance",
-    lineWrapping: true
+    mode: "javascript",
+    theme: "idea",
+    lineWrapping: true,
+    extraKeys: {
+      ["Cmd-Enter"]: () => evalEditor2Expression(),
+      ["Shift-Enter"]: () => evalEditor2ExpressionBlock(),
+    }
+
   });
   editor2.setSize('100%', '100%');
 }
@@ -161,6 +169,52 @@ function evalEditorExpression() {
   }
 }
 
+function evalEditor2Expression() {
+
+  let expression = editor2.getSelection();
+  if (expression == "") {
+    let cursorInfo = editor2.getCursor();
+    expression = editor2.getDoc().getLine(cursorInfo.line);
+  }
+  console.log(`User expression to eval: ${expression}`);
+  tfW.postMessage({"eval":expression});
+  window.localStorage.setItem("editor2", editor2.getValue());
+}
+
+function evalEditor2ExpressionBlock() {
+  //find code between dividers
+  let divider = "__________";
+  let cursorInfo = editor2.getCursor();
+  //find post divider
+  let line = cursorInfo.line;
+  let linePost = editor2.lastLine();
+  while (line < linePost) {
+    // console.log(editor2.getLine(line));
+    if (editor2.getLine(line) == divider) {
+      linePost = line-1;
+      break;
+    }
+    line++;
+  };
+  line = cursorInfo.line;
+  let linePre = -1;
+  while (line >= 0) {
+    // console.log(editor2.getLine(line));
+    if (editor2.getLine(line) == divider) {
+      linePre = line;
+      break;
+    }
+    line--;
+  };
+  if (linePre > -1) {
+    linePre++;
+  }
+  let code = editor2.getRange({line:linePre,ch:0}, {line:linePost+1,ch:0});
+  console.log(code);
+  tfW.postMessage({"eval":code});
+  window.localStorage.setItem("editor2", editor2.getValue());
+}
+
 
 function playAudio() {
   if (window.AudioEngine !== undefined) {
@@ -195,15 +249,17 @@ function createAnalysers() {
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  document.getElementById('audioWorkletIndicator').innerHTML = AudioWorkletIndicator.AudioWorkletIndicator();
+  // document.getElementById('audioWorkletIndicator').innerHTML = AudioWorkletIndicator.AudioWorkletIndicator();
 
-  window.AudioEngine = new AudioEngine();
+  window.AudioEngine = new AudioEngine((msg) => {
+    tfW.postMessage(msg);
+  });
 
-  document.getElementById("sampleRateIndicatorValue").textContent = window.AudioEngine.sampleRate;
-  document.getElementById("dspLoadVal").textContent = "0";
-  window.AudioEngine.onNewDSPLoadValue = (x) => {
-    document.getElementById("dspLoadVal").textContent = `${Math.floor(x)}`;
-  };
+  // // document.getElementById("sampleRateIndicatorValue").textContent = window.AudioEngine.sampleRate;
+  // // document.getElementById("dspLoadVal").textContent = "0";
+  // window.AudioEngine.onNewDSPLoadValue = (x) => {
+  //   document.getElementById("dspLoadVal").textContent = `${Math.floor(x)}`;
+  // };
   window.AudioEngine.onEvalTimestamp = (x) => {
     let evalTime = x - evalTS;
     // console.log(`Eval time: ${evalTime} ms`)
@@ -215,21 +271,27 @@ document.addEventListener("DOMContentLoaded", () => {
     setTimeout(loadTest, 200);
   }
 
-  // setParser(); 
+  // setParser();
 
   createEditor1();
 
-  // createEditor2();
+  createEditor2();
 
   createAnalysers();
 
   createControls();
 
+  oscIO.OSCResponder((msg) => {
+    console.log("OSC in:", msg);
+    window.AudioEngine.oscMessage(msg);
+  });
+
 
 });
 
 var testActive = false;
-var testTS=0;
+var testTS = 0;
+
 function runTest() {
   if (!testActive) {
     testActive = true;
@@ -237,7 +299,7 @@ function runTest() {
     console.log("Testing");
     testTS = window.performance.now();
     loadTest();
-  }else{
+  } else {
     testActive = false;
     testTS = window.performance.now() - testTS;
     console.log("Testing ended");
@@ -248,39 +310,41 @@ function runTest() {
 }
 
 function genTestCode(objs, depths) {
-    function randFreq() {
-           return 100 + Math.floor(Math.random() * 1000)
-    }
-    function genParam() {
-        let val="";
-        if (Math.random() < Math.max(0,0.5 - (depths / 20))) {
-          // if (Math.random() < 0.5 - (depths / 100)) {
-            let moreCode = genTestCode(0,depths + 1)
-            val = `(${moreCode[0]})`;
-            if (moreCode[2] > depths) {
-                depths = moreCode[2];
-            }
-            objs += moreCode[1]
-        }else{
-            val = randFreq()
-        }
+  function randFreq() {
+    return 100 + Math.floor(Math.random() * 1000)
+  }
 
-        return val;
+  function genParam() {
+    let val = "";
+    if (Math.random() < Math.max(0, 0.5 - (depths / 20))) {
+      // if (Math.random() < 0.5 - (depths / 100)) {
+      let moreCode = genTestCode(0, depths + 1)
+      val = `(${moreCode[0]})`;
+      if (moreCode[2] > depths) {
+        depths = moreCode[2];
+      }
+      objs += moreCode[1]
+    } else {
+      val = randFreq()
     }
-    // let nOscs = Math.floor(Math.random() * 5) + 1
-    let nOscs = Math.floor(Math.pow(Math.random(), 2.2) * 30) + 1;
-    let code = "";
-    for(let i=0; i < nOscs; i++) {
-        objs++;
-        code += (i>0?" + ":"") + "osc sin " + genParam()
-    }
-    return [code, objs, depths];
+
+    return val;
+  }
+  // let nOscs = Math.floor(Math.random() * 5) + 1
+  let nOscs = Math.floor(Math.pow(Math.random(), 2.2) * 30) + 1;
+  let code = "";
+  for (let i = 0; i < nOscs; i++) {
+    objs++;
+    code += (i > 0 ? " + " : "") + "osc sin " + genParam()
+  }
+  return [code, objs, depths];
 }
-var testResult =[0,0,0,0,0]
+var testResult = [0, 0, 0, 0, 0]
 var testResults = []
+
 function loadTest() {
   if (testActive) {
-    let test = genTestCode(0,0)
+    let test = genTestCode(0, 0)
     evalExpression(test[0])
     testResult[0] = test[1]
     testResult[1] = test[2]

@@ -7,6 +7,29 @@ import Module from './maximilian.wasmmodule.js';
  * @extends AudioWorkletProcessor
  */
 
+class PostMsgTransducer {
+  constructor(msgPort, sampleRate, sendFrequency=2) {
+    if(sendFrequency==0)
+      this.sendPeriod = Number.MAX_SAFE_INTEGER;
+    else
+      this.sendPeriod = 1.0/sendFrequency * sampleRate;
+    this.sendCounter=this.sendPeriod;
+    this.port = msgPort;
+    this.val = 0;
+  }
+  incoming(msg) {
+    this.val = msg.val;
+  }
+  io(sendMsg) {
+    if (this.sendCounter >= this.sendPeriod) {
+      this.port.postMessage({rq:"dataplease", val:0});
+      this.sendCounter -= this.sendPeriod;
+    }else{
+      this.sendCounter++;
+    }
+    return this.val;
+  }
+}
 
 class MaxiProcessor extends AudioWorkletProcessor {
 
@@ -54,10 +77,10 @@ class MaxiProcessor extends AudioWorkletProcessor {
     this.initialised = false;
 
     // TODO: Synth pool
-    this.osc = new Module.maxiOsc();
-    this.oOsc = new Module.maxiOsc();
-    this.aOsc = new Module.maxiOsc();
-
+    // this.osc = new Module.maxiOsc();
+    // this.oOsc = new Module.maxiOsc();
+    // this.aOsc = new Module.maxiOsc();
+    //
     // this.setupPolysynth();
 
     this._q = [
@@ -74,9 +97,43 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
     this.timer = new Date();
 
+    this.OSCMessages = {};
+
+    this.OSCTransducer = function(address, argIdx) {
+      let val = this.OSCMessages[address];
+      return val ? val[argIdx] : 0.0;
+    };
+
+    this.incoming = {};
+    // this.mlModelTransducer = function(modelInput) {
+    //   this.port.postMessage("toWkr");
+    //   let val = this.incoming['test'];
+    //   return val ? val : 0.0;
+    // }
+
+    this.transducers = {};
+    this.registerTransducer = (name, rate) => {
+      let trans = new PostMsgTransducer(this.port, this.sampleRate, rate);
+      this.transducers[name] = trans;
+      console.log(this.transducers);
+      return trans;
+    };
+
 
     this.port.onmessage = event => { // message port async handler
-      if ('eval' in event.data) { // check if new code is being sent for evaluation?
+      if ('address' in event.data) {
+        //this must be an OSC message
+        this.OSCMessages[event.data.address] = event.data.args;
+        console.log(this.OSCMessages);
+      }
+      else if ('worker' in event.data) {  //from a worker
+        //this must be an OSC message
+        if (this.transducers[event.data.worker]) {
+          // console.log(this.transducers[event.data.worker]);
+          this.transducers[event.data.worker].incoming(event.data);
+        }
+      }
+      else if ('eval' in event.data) { // check if new code is being sent for evaluation?
         try {
           console.log(event.data);
           // let setupFunction = new Function(`return ${event.data['setup']}`);

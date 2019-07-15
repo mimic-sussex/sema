@@ -29,8 +29,13 @@ module.exports = {
     fs: 'empty'
   },
   resolve: {
-    extensions: [".js", ".json", ".wasm"]
+    extensions: [".js", ".json", ".wasm"],
+    alias: {
+    }
   },
+  // externals: {
+  //   osc:'osc'
+  // },
   module: {
     rules: [{
         //FONT LOADER

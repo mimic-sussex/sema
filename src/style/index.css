@@ -29,18 +29,20 @@ body {
     'header header header header header'
     /* 'main main main right right' */
     'main main main main main'
+    'main2 main2 main2 main2 main2'
     'footer footer footer footer footer';
 
   grid-template-rows:
     /* Header */
-    60px
+    5%
     /* Main Content */
     /* 1fr */
-    600px
+    45%
+    45%
     /* Footer */
-    50px;
+    5%;
 
-  grid-template-columns: 60px auto auto 200px 200px;
+  grid-template-columns: 60px auto auto 200px 50px;
   grid-gap: 2px;
   background-color: #000000;
   /* background-color: #222222; */
@@ -82,6 +84,17 @@ body {
   /* grid-column-start: 1/5;
   grid-column-end: 3/5; */
   grid-row: 2;
+
+}
+.containerMain2 {
+  grid-area: main2;
+  align-content: stretch;
+  background-color: black;
+  /* background-color: blue; */
+  justify-self: stretch;
+  /* grid-column-start: 1/5;
+  grid-column-end: 3/5; */
+  grid-row: 3;
 
 }
 

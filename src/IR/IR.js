@@ -71,6 +71,23 @@ class IRToJavascript {
         ccode.loop += `q.${objName}.${oscMap[el]}(`;
         return ccode;
       },
+      '@io': (ccode, el) => {
+        console.log('IO');
+        console.log(el);
+        return IRToJavascript.traverseTree(el, ccode);
+      },
+      '@OSCMsg': (ccode, el) => {
+        console.log('OSCMsg');
+        console.log(el);
+        ccode.loop += `(this.OSCTransducer('${el.addr}', 0)`;
+        return ccode;
+      },
+      '@MLModel': (ccode, el) => {
+        let objName = "wkt" + IRToJavascript.getNextID();
+        ccode.setup += `q.${objName} = this.registerTransducer('testmodel', ${el.input});`;
+        ccode.loop += `(q.${objName}.io(${el.input})`;
+        return ccode;
+      },
       '@add': (ccode, el) => {
         // console.log(el);
         //expecting two arguments
@@ -85,8 +102,8 @@ class IRToJavascript {
         return ccode;
       }
     }
-    // console.log("Traverse")
-    // console.log(t)
+    console.log("Traverse")
+    console.log(t)
     if (Array.isArray(t)) {
       t.map((el) => {
         Object.keys(el).map((k) => {
@@ -105,9 +122,11 @@ class IRToJavascript {
   }
 
   static treeToCode(tree) {
+    // console.log(tree);
     let code = IRToJavascript.traverseTree(tree);
     code.setup = `() => {let q=[]; ${code.setup}; return q;}`;
     code.loop = `(q) => {return ${code.loop};}`
+    console.log(code.loop);
     return code;
   }
 
