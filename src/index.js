@@ -36,6 +36,7 @@ import 'codemirror/keymap/vim.js';
 import 'codemirror/lib/codemirror.css';
 
 import langSketch from './language/langSketch';
+import { hidden } from 'ansi-colors';
 
 let audio;
 
@@ -108,6 +109,8 @@ function createEditor1() {
   editor1.setSize('100%', '100%');
   editor1.setOption("vimMode", false);
 }
+
+
 
 
 function createEditor2() {
@@ -275,7 +278,20 @@ function createAnalysers() {
 }
 
 
+function setStartAudioButton(){
+
+  let button_startAudio = document.getElementById('buttonStartAudio');
+  button_startAudio.onclick = () => {
+    let overlay = document.getElementById('overlay');
+    overlay.style.visibility = 'hidden';
+    playAudio();
+  }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
+
+  setStartAudioButton();
+
 
   // document.getElementById('audioWorkletIndicator').innerHTML = AudioWorkletIndicator.AudioWorkletIndicator();
 

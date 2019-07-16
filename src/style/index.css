@@ -183,19 +183,22 @@ body {
   bottom: 0;
   justify-self: center;
   align-content: center;
-  grid-column-start: 1/5;
-  grid-column-end: 5/5;
-  grid-row-start: 1/4;
-  grid-row-end: 4/4;
   background-color: rgba(0, 0, 0, 0.5);
   /* Black background with opacity */
-  z-index: 2;
+  z-index: 4;
   /* Specify a stack order in case you're using a different order for other elements */
   cursor: pointer;
   /* Add a pointer on hover */
+  visibility: visible;
 }
 
-
+#buttonStartAudio {
+  margin:0 auto;
+  display:block;
+  width: 100px; 
+  height:100px; 
+  align-self: stretch;
+}
 
 /* .containerMenu { grid-area: menu; background-color: red;} */
 .containerMenu {
