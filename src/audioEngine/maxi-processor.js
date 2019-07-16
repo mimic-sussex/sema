@@ -22,7 +22,7 @@ class PostMsgTransducer {
   }
   io(sendMsg) {
     if (this.sendCounter >= this.sendPeriod) {
-      this.port.postMessage({rq:"dataplease", val:0});
+      this.port.postMessage({rq:"dataplease", val:sendMsg});
       this.sendCounter -= this.sendPeriod;
     }else{
       this.sendCounter++;
@@ -101,7 +101,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
     this.OSCTransducer = function(x, idx=0) {
       let val = this.OSCMessages[x];
-      return val ? val[idx] : 0.0;
+      return val ? idx >=0 ? val[idx] : val : 0.0;
     };
 
     this.incoming = {};
