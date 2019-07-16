@@ -2,10 +2,6 @@ import Module from './maximilian.wasmmodule.js';
 // import {
 //   MMLLOnsetDetector
 // } from '../machineListening/MMLLOnsetDetector.js';
-import {
-  MMLLOnsetDetector
-} from '../machineListening/MMLL.js';
-
 
 /**
  * The main Maxi Audio wrapper with a WASM-powered AudioWorkletProcessor.
