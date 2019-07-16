@@ -1,5 +1,5 @@
 import Module from './maximilian.wasmmodule.js'; //NOTE: We need this import here for webpack to emit maximilian.wasmmodule.js
-import CustomProcessor from './maxi-processor'
+import CustomProcessor from './maxi-processor';
 import {
   loadSampleToArray
 } from './maximilian.util';
@@ -91,6 +91,26 @@ class AudioEngine {
 
   }
 
+  setInput(customNode) {
+    const constraints = window.constraints = {
+      audio: true,
+      video: false
+    };
+
+    function onAudioInputInit(stream) {
+      console.log("Got audio in");
+      let mediaStreamSource = audioContext.createMediaStreamSource(stream);
+      mediaStreamSource.connect(customNode);
+    }
+
+    function onAudioInputFail(error) {
+      console.log("Audio input fail: ", error.message, error.name);
+    }
+
+    navigator.mediaDevices.getUserMedia(constraints).then(onAudioInputInit).catch(onAudioInputFail);
+  }
+
+
   loadProcessorCode() {
     if (this.audioContext !== undefined) {
       try {
@@ -116,6 +136,8 @@ class AudioEngine {
 
           // Connect the worklet node to the audio graph
           this.audioWorkletNode.connect(this.audioContext.destination);
+
+
           return true;
 
         }).catch(e => console.log("Error on loading worklet: ", e.message));

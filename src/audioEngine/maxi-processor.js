@@ -1,4 +1,11 @@
 import Module from './maximilian.wasmmodule.js';
+// import {
+//   MMLLOnsetDetector
+// } from '../machineListening/MMLLOnsetDetector.js';
+import {
+  MMLLOnsetDetector
+} from '../machineListening/MMLL.js';
+
 
 /**
  * The main Maxi Audio wrapper with a WASM-powered AudioWorkletProcessor.
@@ -8,12 +15,12 @@ import Module from './maximilian.wasmmodule.js';
  */
 
 class PostMsgTransducer {
-  constructor(msgPort, sampleRate, sendFrequency=2) {
-    if(sendFrequency==0)
+  constructor(msgPort, sampleRate, sendFrequency = 2) {
+    if (sendFrequency == 0)
       this.sendPeriod = Number.MAX_SAFE_INTEGER;
     else
-      this.sendPeriod = 1.0/sendFrequency * sampleRate;
-    this.sendCounter=this.sendPeriod;
+      this.sendPeriod = 1.0 / sendFrequency * sampleRate;
+    this.sendCounter = this.sendPeriod;
     this.port = msgPort;
     this.val = 0;
   }
@@ -22,9 +29,12 @@ class PostMsgTransducer {
   }
   io(sendMsg) {
     if (this.sendCounter >= this.sendPeriod) {
-      this.port.postMessage({rq:"dataplease", val:0});
+      this.port.postMessage({
+        rq: "dataplease",
+        val: 0
+      });
       this.sendCounter -= this.sendPeriod;
-    }else{
+    } else {
       this.sendCounter++;
     }
     return this.val;
@@ -54,6 +64,8 @@ class MaxiProcessor extends AudioWorkletProcessor {
     this.sampleRate = 44100;
 
     this.DAC = [0];
+
+    // this.onsetDetector = new MMLLOnsetDetector(this.sampleRate);
 
     this.tempo = 120.0; // tempo (in beats per minute);
     this.secondsPerBeat = (60.0 / this.tempo);
@@ -99,7 +111,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
     this.OSCMessages = {};
 
-    this.OSCTransducer = function(x) {
+    this.OSCTransducer = function (x) {
       let val = this.OSCMessages['/fader1'];
       return val ? val[0] : 0.0;
     };
@@ -120,15 +132,13 @@ class MaxiProcessor extends AudioWorkletProcessor {
         //this must be an OSC message
         this.OSCMessages[event.data.address] = event.data.args;
         console.log(this.OSCMessages);
-      }
-      else if ('worker' in event.data) {  //from a worker
+      } else if ('worker' in event.data) { //from a worker
         //this must be an OSC message
         if (this.transducers[event.data.worker]) {
           // console.log(this.transducers[event.data.worker]);
           this.transducers[event.data.worker].incoming(event.data);
         }
-      }
-      else if ('eval' in event.data) { // check if new code is being sent for evaluation?
+      } else if ('eval' in event.data) { // check if new code is being sent for evaluation?
         try {
           console.log(event.data);
           // let setupFunction = new Function(`return ${event.data['setup']}`);
@@ -184,6 +194,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
         for (let channel = 0; channel < channelCount; channel++) {
           output[channel][i] = w;
         }
+
       }
 
       //remove old algo and data?
@@ -253,7 +264,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
     let arrayBuffer = null;
     let float32Array = null;
     var fileReader = new FileReader();
-    fileReader.onload = function(event) {
+    fileReader.onload = function (event) {
       arrayBuffer = event.target.result;
       float32Array = new Float32Array(arrayBuffer);
     };
