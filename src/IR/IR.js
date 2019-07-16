@@ -17,15 +17,13 @@ const jsFuncMap = {
   'sawn': {"setup":(o,p)=>`${o} = new Module.maxiOsc()`, "loop":(o,p)=>`${o}.sawn(${p[0].loop})`},
   'add': {"setup":(o,p)=>"", "loop":(o,p)=>`(${p[0].loop} + ${p[1].loop})`},
   'mul': {"setup":(o,p)=>"", "loop":(o,p)=>`(${p[0].loop} * ${p[1].loop})`},
-  'sub': {"setup":(o,p)=>"", "loop":(o,p)=>`(${p[0].loop} - ${p[1].loop})`},
-  'div': {"setup":(o,p)=>"", "loop":(o,p)=>`(${p[0].loop} / ${p[1].loop})`},
-  'abs': {"setup":(o,p)=>"", "loop":(o,p)=>`Math.abs(${p[0].loop}, ${p[1].loop})`},
   'lpf': {"setup":(o,p)=>`${o} = new Module.maxiFilter()`, "loop":(o,p)=>`${o}.lopass(${p[0].loop},${p[1].loop})`},
   'hpf': {"setup":(o,p)=>`${o} = new Module.maxiFilter()`, "loop":(o,p)=>`${o}.hipass(${p[0].loop},${p[1].loop})`},
   'lpz': {"setup":(o,p)=>`${o} = new Module.maxiFilter()`, "loop":(o,p)=>`${o}.lores(${p[0].loop},${p[1].loop},${p[2].loop})`},
   'hpz': {"setup":(o,p)=>`${o} = new Module.maxiFilter()`, "loop":(o,p)=>`${o}.hires(${p[0].loop},${p[1].loop},${p[2].loop})`},
-  'mlmodel': {"setup":(o,p)=>`${o} = this.registerTransducer('testmodel', ${p[0].loop})`, "loop":(o,p)=>`${o}.io(${p[1].loop})`},
+  'mlmodel': {"setup":(o,p)=>`${o} = this.registerTransducer('testmodel', ${p[0].loop})`, "loop":(o,p)=>`${o}.io()`},
   'adc': {"setup":(o,p)=>"", "loop":(o,p)=>`inputs[${p[0].loop}]`},
+  // 'oscinput': ["","this.OSCTransducer"]
 }
 
 class IRToJavascript {
@@ -76,6 +74,8 @@ class IRToJavascript {
         // console.log(funcInfo);
         let objName = "q.u" + IRToJavascript.getNextID();
 
+        // console.log(el['@params']);
+        // console.log(el['@params'].length);
         let allParams=[];
         for (let p = 0; p < el['@params'].length; p++) {
           let params = IRToJavascript.emptyCode();
@@ -98,8 +98,11 @@ class IRToJavascript {
       },
       '@oscreceiver': (ccode, el) => {
         console.log(el);
+        // console.log(el['@jsfunc']);
+
+
         let setupCode="";
-        let idxCode = "-1";
+        let idxCode = "0";
         if (el['@params'].length > 0) {
           let paramMarkers = [{"s":el['paramBegin'], "e":el['paramEnd'], "l":level}]
           ccode.paramMarkers = ccode.paramMarkers.concat(paramMarkers);
@@ -118,6 +121,8 @@ class IRToJavascript {
           idxCode = allParams[0].loop;
         }
         let oscCode = `this.OSCTransducer('${el['@oscaddr'].value}',${idxCode})`;
+
+        // IRToJavascript.traverseTree(el['@oscaddr'], IRToJavascript.emptyCode(), level+1);
 
         ccode.setup += `${setupCode}`;
         ccode.loop += `${oscCode}`;
