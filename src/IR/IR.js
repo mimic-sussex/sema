@@ -9,6 +9,7 @@ const oscMap = {
 };
 
 const jsFuncMap = {
+<<<<<<< HEAD
   'saw': {
     "setup": (o, p) => `${o} = new Module.maxiOsc()`,
     "loop": (o, p) => `${o}.saw(${p[0].loop})`
@@ -74,6 +75,25 @@ const jsFuncMap = {
     "loop": (o, p) => `${o}.next(${p[0].loop});`
   },
   // 'oscinput': ["","this.OSCTransducer"]
+=======
+  'saw': {"setup":(o,p)=>`${o} = new Module.maxiOsc()`, "loop":(o,p)=>`${o}.saw(${p[0].loop})`},
+  'sin': {"setup":(o,p)=>`${o} = new Module.maxiOsc()`, "loop":(o,p)=>`${o}.sinewave(${p[0].loop})`},
+  'tri': {"setup":(o,p)=>`${o} = new Module.maxiOsc()`, "loop":(o,p)=>`${o}.triangle(${p[0].loop})`},
+  'pha': {"setup":(o,p)=>`${o} = new Module.maxiOsc()`, "loop":(o,p)=>`${o}.phasor(${p[0].loop})`},
+  'sqr': {"setup":(o,p)=>`${o} = new Module.maxiOsc()`, "loop":(o,p)=>`${o}.square(${p[0].loop})`},
+  'sawn': {"setup":(o,p)=>`${o} = new Module.maxiOsc()`, "loop":(o,p)=>`${o}.sawn(${p[0].loop})`},
+  'add': {"setup":(o,p)=>"", "loop":(o,p)=>`(${p[0].loop} + ${p[1].loop})`},
+  'mul': {"setup":(o,p)=>"", "loop":(o,p)=>`(${p[0].loop} * ${p[1].loop})`},
+  'sub': {"setup":(o,p)=>"", "loop":(o,p)=>`(${p[0].loop} - ${p[1].loop})`},
+  'div': {"setup":(o,p)=>"", "loop":(o,p)=>`(${p[0].loop} / ${p[1].loop})`},
+  'abs': {"setup":(o,p)=>"", "loop":(o,p)=>`Math.abs(${p[0].loop}, ${p[1].loop})`},
+  'lpf': {"setup":(o,p)=>`${o} = new Module.maxiFilter()`, "loop":(o,p)=>`${o}.lopass(${p[0].loop},${p[1].loop})`},
+  'hpf': {"setup":(o,p)=>`${o} = new Module.maxiFilter()`, "loop":(o,p)=>`${o}.hipass(${p[0].loop},${p[1].loop})`},
+  'lpz': {"setup":(o,p)=>`${o} = new Module.maxiFilter()`, "loop":(o,p)=>`${o}.lores(${p[0].loop},${p[1].loop},${p[2].loop})`},
+  'hpz': {"setup":(o,p)=>`${o} = new Module.maxiFilter()`, "loop":(o,p)=>`${o}.hires(${p[0].loop},${p[1].loop},${p[2].loop})`},
+  'mlmodel': {"setup":(o,p)=>`${o} = this.registerTransducer('testmodel', ${p[0].loop})`, "loop":(o,p)=>`${o}.io(${p[1].loop})`},
+  'adc': {"setup":(o,p)=>"", "loop":(o,p)=>`inputs[${p[0].loop}]`},
+>>>>>>> 14a0acacabaef14d9ff98c60ba685e2a1806217b
 }
 
 class IRToJavascript {
@@ -128,9 +148,13 @@ class IRToJavascript {
         // console.log(funcInfo);
         let objName = "q.u" + IRToJavascript.getNextID();
 
+<<<<<<< HEAD
         // console.log(el['@params']);
         // console.log(el['@params'].length);
         let allParams = [];
+=======
+        let allParams=[];
+>>>>>>> 14a0acacabaef14d9ff98c60ba685e2a1806217b
         for (let p = 0; p < el['@params'].length; p++) {
           let params = IRToJavascript.emptyCode();
           // console.log(el['@params'][p]);
@@ -150,6 +174,36 @@ class IRToJavascript {
 
         return ccode;
       },
+      '@oscreceiver': (ccode, el) => {
+        console.log(el);
+        let setupCode="";
+        let idxCode = "-1";
+        if (el['@params'].length > 0) {
+          let paramMarkers = [{"s":el['paramBegin'], "e":el['paramEnd'], "l":level}]
+          ccode.paramMarkers = ccode.paramMarkers.concat(paramMarkers);
+          let allParams=[];
+          for (let p = 0; p < el['@params'].length; p++) {
+            let params = IRToJavascript.emptyCode();
+            params = IRToJavascript.traverseTree(el['@params'][p], params, level+1);
+            console.log(params);
+            allParams[p] = params;
+          }
+          console.log(allParams);
+          for(let param in allParams) {
+            setupCode += allParams[param].setup;
+            ccode.paramMarkers = ccode.paramMarkers.concat(allParams[param].paramMarkers);
+          }
+          idxCode = allParams[0].loop;
+        }
+        let oscCode = `this.OSCTransducer('${el['@oscaddr'].value}',${idxCode})`;
+
+        ccode.setup += `${setupCode}`;
+        ccode.loop += `${oscCode}`;
+
+        console.log(ccode.paramMarkers);
+
+        return ccode;
+      },
       '@num': (ccode, el) => {
         if (el.value) {
           console.log(el.value);
@@ -157,6 +211,13 @@ class IRToJavascript {
         } else {
           ccode = IRToJavascript.traverseTree(el, ccode, level);
         }
+        return ccode;
+      },
+      '@oscaddr': (ccode, el) => {
+        console.log(el);
+        // ccode.loop += `${el.value}`;
+        ccode.loop += `this.OSCTransducer('${el.value}')`;
+
         return ccode;
       }
       // '@func': (ccode, el) => {
@@ -227,7 +288,7 @@ class IRToJavascript {
       })
     } else {
       Object.keys(t).map((k) => {
-        // console.log(k);
+        console.log(k);
         code = attribMap[k](code, t[k]);
       });
     }

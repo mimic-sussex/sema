@@ -15,6 +15,7 @@ import {
  */
 
 class PostMsgTransducer {
+
   constructor(msgPort, sampleRate, sendFrequency = 2) {
     if (sendFrequency == 0)
       this.sendPeriod = Number.MAX_SAFE_INTEGER;
@@ -24,14 +25,16 @@ class PostMsgTransducer {
     this.port = msgPort;
     this.val = 0;
   }
+
   incoming(msg) {
     this.val = msg.val;
   }
+
   io(sendMsg) {
     if (this.sendCounter >= this.sendPeriod) {
       this.port.postMessage({
         rq: "dataplease",
-        val: 0
+        val: sendMsg
       });
       this.sendCounter -= this.sendPeriod;
     } else {
@@ -111,9 +114,9 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
     this.OSCMessages = {};
 
-    this.OSCTransducer = function (x) {
-      let val = this.OSCMessages['/fader1'];
-      return val ? val[0] : 0.0;
+    this.OSCTransducer = function (x, idx = 0) {
+      let val = this.OSCMessages[x];
+      return val ? idx >= 0 ? val[idx] : val : 0.0;
     };
 
     this.incoming = {};
@@ -154,7 +157,6 @@ class MaxiProcessor extends AudioWorkletProcessor {
           let xfadeEnd = Module.maxiMap.linlin(this.currentSignalFunction, 0, 1, -1, 1);
           this.xfadeControl.prepare(xfadeBegin, xfadeEnd, 5); // short xfade across signals
           this.xfadeControl.triggerEnable(true); //no clock yet, so enable the trigger straight away
-          // console.log("XFade" + [xfadeBegin, xfadeEnd]);
           this.port.postMessage("evalEnd")
         } catch (err) {
           if (err instanceof TypeError) {
