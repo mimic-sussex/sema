@@ -135,6 +135,29 @@ function createEditor2() {
   editor2.setSize('100%', '100%');
 }
 
+function createEditor3() {
+  let defaultEditorCode3 = "//BNF grammar";
+  let editor3code = window.localStorage.getItem("editor3");
+  if (editor3code)
+    defaultEditorCode3 = editor3code;
+
+  editor3 = CodeMirror(document.getElementById('editor3'), {
+    value: defaultEditorCode3,
+    lineNumbers: true,
+    mode: "javascript",
+    theme: "idea",
+    lineWrapping: true,
+    extraKeys: {
+      // ["Cmd-Enter"]: () => evalEditor3Expression(),
+      // ["Ctrl-Enter"]: () => evalEditor3Expression(),
+      ["Shift-Enter"]: () => evalEditor3ExpressionBlock(),
+    }
+
+  });
+  editor2.setSize('100%', '100%');
+}
+
+
 function createControls() {
 
   const isMac = CodeMirror.keyMap.default === CodeMirror.keyMap.macDefault;
@@ -158,6 +181,24 @@ function createControls() {
   testButton.textContent = `Test`;
   container.appendChild(testButton);
   testButton.addEventListener("click", () => runTest());
+
+  const startAudioButton = document.getElementById('buttonStartAudio');
+  startAudioButton.onclick = () => {
+    let overlay = document.getElementById('overlay');
+    overlay.style.visibility = 'hidden';
+    playAudio();
+  }
+
+  const containerTabs = document.getElementById("containerTabs");
+  const modelButton = document.createElement("button");
+  modelButton.textContent = `Model`;
+  containerTabs.appendChild(modelButton);
+  modelButton.addEventListener("click", () => playAudio(editor1));
+  const grammarButton = document.createElement("button"); 
+  grammarButton.textContent = `Grammar`;
+  containerTabs.appendChild(grammarButton);
+  grammarButton.addEventListener("click", () => playAudio(editor1));
+
 
 }
 
@@ -277,20 +318,9 @@ function createAnalysers() {
 
 }
 
-
-function setStartAudioButton(){
-
-  let button_startAudio = document.getElementById('buttonStartAudio');
-  button_startAudio.onclick = () => {
-    let overlay = document.getElementById('overlay');
-    overlay.style.visibility = 'hidden';
-    playAudio();
-  }
-}
-
 document.addEventListener("DOMContentLoaded", () => {
 
-  setStartAudioButton();
+
 
 
   // document.getElementById('audioWorkletIndicator').innerHTML = AudioWorkletIndicator.AudioWorkletIndicator();
