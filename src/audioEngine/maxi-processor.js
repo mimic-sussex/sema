@@ -94,18 +94,21 @@ class MaxiProcessor extends AudioWorkletProcessor {
     //
     // this.setupPolysynth();
 
-    this._q = [
-      {"vars":[]},
-      {"vars":[]}
+    this._q = [{
+        "vars": []
+      },
+      {
+        "vars": []
+      }
     ]; //maxi objects
 
-    this.setvar = (q,name,val) =>{
+    this.setvar = (q, name, val) => {
       console.log(q);
       q.vars[name] = val;
       return val;
     };
 
-    this.getvar = (q,name) => {
+    this.getvar = (q, name) => {
       return q.vars[name];
     };
 
@@ -120,7 +123,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
     this.OSCMessages = {};
 
-    this.OSCTransducer = function (x, idx = 0) {
+    this.OSCTransducer = function(x, idx = 0) {
       let val = this.OSCMessages[x];
       return val ? idx >= 0 ? val[idx] : val : 0.0;
     };
@@ -272,7 +275,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
     let arrayBuffer = null;
     let float32Array = null;
     var fileReader = new FileReader();
-    fileReader.onload = function (event) {
+    fileReader.onload = function(event) {
       arrayBuffer = event.target.result;
       float32Array = new Float32Array(arrayBuffer);
     };

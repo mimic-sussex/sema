@@ -25,7 +25,7 @@ const jsFuncMap = {
   'hpf': {"setup":(o,p)=>`${o} = new Module.maxiFilter()`, "loop":(o,p)=>`${o}.hipass(${p[0].loop},${p[1].loop})`},
   'lpz': {"setup":(o,p)=>`${o} = new Module.maxiFilter()`, "loop":(o,p)=>`${o}.lores(${p[0].loop},${p[1].loop},${p[2].loop})`},
   'hpz': {"setup":(o,p)=>`${o} = new Module.maxiFilter()`, "loop":(o,p)=>`${o}.hires(${p[0].loop},${p[1].loop},${p[2].loop})`},
-  'mlmodel': {"setup":(o,p)=>`${o} = this.registerTransducer('testmodel', ${p[0].loop})`, "loop":(o,p)=>`${o}.io()`},
+  'mlmodel': {"setup":(o,p)=>`${o} = this.registerTransducer('testmodel', ${p[0].loop})`, "loop":(o,p)=>`${o}.io(${p[1].loop})`},
   'adc': {"setup":(o,p)=>"", "loop":(o,p)=>`inputs[${p[0].loop}]`},
 }
 
@@ -102,7 +102,7 @@ class IRToJavascript {
         // console.log(el['@jsfunc']);
 
         let setupCode="";
-        let idxCode = "0";
+        let idxCode = "-1";
         if (el['@params'].length > 0) {
           let paramMarkers = [{"s":el['paramBegin'], "e":el['paramEnd'], "l":level}]
           ccode.paramMarkers = ccode.paramMarkers.concat(paramMarkers);
