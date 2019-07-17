@@ -43,7 +43,6 @@ import 'codemirror/keymap/vim.js';
 import 'codemirror/lib/codemirror.css';
 
 import langSketch from './language/langSketch';
-import { hidden } from 'ansi-colors';
 
 let audio;
 
@@ -57,8 +56,25 @@ let evalTS = 0;
 
 let machineLearningWorker = new tfWorker();
 machineLearningWorker.onmessage = (e) => {
-  console.log("DEBUG:machineLearningWorker:onMsg "+ e.data);
-  window.AudioEngine.postMessage(e.data); 
+  console.log("DEBUG:machineLearningWorker:onMsg ");
+  console.log(e.data);
+  if (e.data.func) {
+    let responders = {
+        "data": (data) => {
+          window.AudioEngine.postMessage(data);
+        },
+        "save": (data) => {
+          console.log("save");
+          window.localStorage.setItem(data.name, data.val);
+        },
+        "load": (data) => {
+          console.log("load");
+          let msg = {name:data.name, val:window.localStorage.getItem(data.name)};
+          machineLearningWorker.postMessage(msg);
+        }
+    };
+    responders[e.data.func](e.data);
+  }
 }
 
 let languageWorker = new nearleyWorker();
@@ -117,8 +133,6 @@ function createEditor1() {
   editor1.setSize('100%', '100%');
   editor1.setOption("vimMode", false);
 }
-
-
 
 
 function createEditor2() {
@@ -194,13 +208,13 @@ function createControls() {
   startAudioButton.addEventListener("click", () => setupAudio());
 
   const containerTabs = document.getElementById("containerTabs");
-  
+
   const modelButton = document.createElement("button");
   modelButton.textContent = `Model`;
   containerTabs.appendChild(modelButton);
   modelButton.addEventListener("click", () => changeEditorTab());
-  
-  const grammarButton = document.createElement("button"); 
+
+  const grammarButton = document.createElement("button");
   grammarButton.textContent = `Grammar`;
   containerTabs.appendChild(grammarButton);
   grammarButton.addEventListener("click", () => changeEditorTab());
@@ -236,7 +250,7 @@ function evalModelEditorExpression() {
     let cursorInfo = editor2.getCursor();
     expression = editor2.getDoc().getLine(cursorInfo.line);
   }
-  console.log(`DEBUG:Main:evalModelEditorExpression: ${expression}`);
+  // console.log(`DEBUG:Main:evalModelEditorExpression: ${expression}`);
   machineLearningWorker.postMessage({
     "eval": expression
   });
@@ -313,20 +327,20 @@ function stopAudio() {
     window.AudioEngine.stop();
 }
 
-function increaseVolume() {
-  if (window.AudioEngine !== undefined)
-    window.AudioEngine.more('gainSyn');
-}
-
-function decreaseVolume() {
-  if (window.AudioEngine !== undefined)
-    window.AudioEngine.less('gainSyn');
-}
-
-function changeSynth() {
-  if (window.AudioEngine !== undefined)
-    window.AudioEngine.changeSynth();
-}
+// function increaseVolume() {
+//   if (window.AudioEngine !== undefined)
+//     window.AudioEngine.more('gainSyn');
+// }
+//
+// function decreaseVolume() {
+//   if (window.AudioEngine !== undefined)
+//     window.AudioEngine.less('gainSyn');
+// }
+//
+// function changeSynth() {
+//   if (window.AudioEngine !== undefined)
+//     window.AudioEngine.changeSynth();
+// }
 
 function createAnalysers() {
 
@@ -413,7 +427,7 @@ document.addEventListener("DOMContentLoaded", () => {
   createControls();
 
   oscIO.OSCResponder((msg) => {
-    console.log("OSC in:", msg);
+    // console.log("OSC in:", msg);
     window.AudioEngine.oscMessage(msg);
   });
 
