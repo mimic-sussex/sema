@@ -7,7 +7,7 @@ geval("var next = (x) => {return 0;}");
 geval(`
 var loadResponders = {};
 var sema = {
-  save: (name, val) => {
+  saveF32Array: (name, val) => {
     postMessage({
       "func": "save",
       "name": name,
@@ -15,7 +15,7 @@ var sema = {
     });
     return 0;
   },
-  load: (name, onload) => {
+  loadF32Array: (name, onload) => {
     postMessage({
       "func": "load",
       "name": name,
@@ -33,7 +33,9 @@ onmessage = (m) => {
   }else if ('val' in m.data) {
     console.log("val");
     let val = m.data.val;
-    // console.log(val);
+    console.log(val);
+    val = JSON.parse(`[${val}]`)
+    console.log(val);
     // console.log(loadResponders);
     loadResponders[m.data.name](val);
     delete loadResponders[m.data.name];
