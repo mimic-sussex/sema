@@ -20,88 +20,108 @@ body {
 /* @import url('../assets/fonts/Lato/fonts/Lato-Black.woff'); */
 
 .param100 {
-  font-size:100%;
-  font-weight:100;
+  font-size: 100%;
+  font-weight: 100;
 }
+
 .param110 {
-  font-size:110%;
-  font-weight:100;
+  font-size: 110%;
+  font-weight: 100;
 }
+
 .param120 {
-  font-size:120%;
-  font-weight:100;
+  font-size: 120%;
+  font-weight: 100;
 }
+
 .param130 {
-  font-size:130%;
-  font-weight:100;
+  font-size: 130%;
+  font-weight: 100;
 }
+
 .param140 {
-  font-size:140%;
-  font-weight:100;
+  font-size: 140%;
+  font-weight: 100;
 }
+
 .param150 {
-  font-weight:100;
-  font-size:150%;
+  font-weight: 100;
+  font-size: 150%;
 }
+
 .param160 {
-  font-size:160%;
-  font-weight:100;
+  font-size: 160%;
+  font-weight: 100;
 }
+
 .param170 {
-  font-size:170%;
-  font-weight:100;
+  font-size: 170%;
+  font-weight: 100;
 }
+
 .param180 {
-  font-size:180%;
-  font-weight:100;
+  font-size: 180%;
+  font-weight: 100;
 }
+
 .param190 {
-  font-size:190%;
-  font-weight:100;
+  font-size: 190%;
+  font-weight: 100;
 }
+
 .param200 {
-  font-size:200%;
-  font-weight:100;
+  font-size: 200%;
+  font-weight: 100;
 }
+
 .param210 {
-  font-weight:100;
-  font-size:210%;
+  font-weight: 100;
+  font-size: 210%;
 }
+
 .param220 {
-  font-weight:100;
-  font-size:220%;
+  font-weight: 100;
+  font-size: 220%;
 }
+
 .param230 {
-  font-size:230%;
-  font-weight:100;
+  font-size: 230%;
+  font-weight: 100;
 }
+
 .param240 {
-  font-size:240%;
-  font-weight:100;
+  font-size: 240%;
+  font-weight: 100;
 }
+
 .param250 {
-  font-size:250%;
-  font-weight:100;
+  font-size: 250%;
+  font-weight: 100;
 }
+
 .param260 {
-  font-size:260%;
-  font-weight:100;
+  font-size: 260%;
+  font-weight: 100;
 }
+
 .param270 {
-  font-size:270%;
-  font-weight:100;
+  font-size: 270%;
+  font-weight: 100;
 }
+
 .param280 {
-  font-size:280%;
-  font-weight:100;
+  font-size: 280%;
+  font-weight: 100;
 }
+
 .param290 {
-  font-size:290%;
-  font-weight:100;
+  font-size: 290%;
+  font-weight: 100;
 }
+
 .param300 {
-  font-size:300%;
-  font-weight:100;
+  font-size: 300%;
+  font-weight: 100;
 }
 
 
@@ -120,8 +140,7 @@ body {
     5%
     /* Main Content */
     /* 1fr */
-    45%
-    45%
+    45% 45%
     /* Footer */
     5%;
 
@@ -149,7 +168,58 @@ body {
   background-color: black;
 }
 
+#overlay {
+  position: fixed;
+  /* Sit on top of the page content */
+  display: grid;
+  /* Hidden by default */
+  width: 100%;
+  /* Full width (cover the whole page) */
+  height: 100%;
+  /* Full height (cover the whole page) */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  justify-self: center;
+  align-content: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  /* Black background with opacity */
+  z-index: 4;
+  /* Specify a stack order in case you're using a different order for other elements */
+  cursor: pointer;
+  /* Add a pointer on hover */
+  visibility: visible;
+}
 
+#buttonStartAudio {
+  margin:0 auto;
+  display:block;
+  width: 100px; 
+  height:100px; 
+  align-self: stretch;
+}
+
+.tabItem{
+  padding:8px 16px;
+  float:left;
+  width:auto;
+  border:none;
+  display:block;
+  outline:0;
+}
+/* .tabItem{
+  width:100%;
+  display:inline-block;
+  padding:8px 16px;
+  text-align:left;
+  border:none;
+  white-space:normal;
+  float:none;
+  outline:0
+} */
+
+.w3-red,.w3-hover-red:hover{color:#fff!important;background-color:#f44336!important}
 
 
 /* .containerMenu { grid-area: menu; background-color: red;} */
@@ -169,6 +239,7 @@ body {
   grid-row: 2;
 
 }
+
 .containerMain2 {
   grid-area: main2;
   align-content: stretch;
@@ -180,6 +251,12 @@ body {
   grid-row: 3;
 
 }
+
+.containerTabs{width:100%;overflow:hidden}
+.containerTabs{display:inline-block;width:auto}
+.containerTabs{padding:8px 16px;float:left;width:auto;border:none;display:block;outline:0}
+.containerTabs{position:static;float:left}
+.containerTabs{white-space:normal}
 
 .containerRight {
   grid-area: right;

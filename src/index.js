@@ -36,6 +36,7 @@ import 'codemirror/keymap/vim.js';
 import 'codemirror/lib/codemirror.css';
 
 import langSketch from './language/langSketch';
+import { hidden } from 'ansi-colors';
 
 let audio;
 
@@ -110,6 +111,8 @@ function createEditor1() {
 }
 
 
+
+
 function createEditor2() {
   let defaultEditorCode2 = "//js";
   let editor2code = window.localStorage.getItem("editor2");
@@ -131,6 +134,29 @@ function createEditor2() {
   });
   editor2.setSize('100%', '100%');
 }
+
+function createEditor3() {
+  let defaultEditorCode3 = "//BNF grammar";
+  let editor3code = window.localStorage.getItem("editor3");
+  if (editor3code)
+    defaultEditorCode3 = editor3code;
+
+  editor3 = CodeMirror(document.getElementById('editor3'), {
+    value: defaultEditorCode3,
+    lineNumbers: true,
+    mode: "javascript",
+    theme: "idea",
+    lineWrapping: true,
+    extraKeys: {
+      // ["Cmd-Enter"]: () => evalEditor3Expression(),
+      // ["Ctrl-Enter"]: () => evalEditor3Expression(),
+      ["Shift-Enter"]: () => evalEditor3ExpressionBlock(),
+    }
+
+  });
+  editor2.setSize('100%', '100%');
+}
+
 
 function createControls() {
 
@@ -155,6 +181,24 @@ function createControls() {
   testButton.textContent = `Test`;
   container.appendChild(testButton);
   testButton.addEventListener("click", () => runTest());
+
+  const startAudioButton = document.getElementById('buttonStartAudio');
+  startAudioButton.onclick = () => {
+    let overlay = document.getElementById('overlay');
+    overlay.style.visibility = 'hidden';
+    playAudio();
+  }
+
+  const containerTabs = document.getElementById("containerTabs");
+  const modelButton = document.createElement("button");
+  modelButton.textContent = `Model`;
+  containerTabs.appendChild(modelButton);
+  modelButton.addEventListener("click", () => playAudio(editor1));
+  const grammarButton = document.createElement("button"); 
+  grammarButton.textContent = `Grammar`;
+  containerTabs.appendChild(grammarButton);
+  grammarButton.addEventListener("click", () => playAudio(editor1));
+
 
 }
 
@@ -274,8 +318,10 @@ function createAnalysers() {
 
 }
 
-
 document.addEventListener("DOMContentLoaded", () => {
+
+
+
 
   // document.getElementById('audioWorkletIndicator').innerHTML = AudioWorkletIndicator.AudioWorkletIndicator();
 
