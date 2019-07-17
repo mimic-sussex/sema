@@ -195,9 +195,11 @@ body {
 #buttonStartAudio {
   margin:0 auto;
   display:block;
-  width: 100px; 
-  height:100px; 
+  width: 500px;
+  height:500px;
   align-self: stretch;
+  font-size:300%;
+  font-family:monospace;
 }
 
 .tabItem{

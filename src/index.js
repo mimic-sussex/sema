@@ -31,6 +31,7 @@ import * as CodeMirror from 'codemirror/lib/codemirror.js';
 import 'codemirror/mode/javascript/javascript';
 import 'codemirror/theme/idea.css';
 import 'codemirror/theme/monokai.css';
+import 'codemirror/theme/oceanic-next.css';
 // import 'codemirror/theme/abcdef.css';
 import 'codemirror/keymap/vim.js';
 import 'codemirror/lib/codemirror.css';
@@ -47,15 +48,34 @@ let compileTS = 0;
 let treeTS = 0;
 let evalTS = 0;
 
-let tfW = new tfWorker();
-tfW.onmessage = (e) => {
-  // console.log(e);
-  window.AudioEngine.postMessage(e.data);
+let machineLearningWorker = new tfWorker();
+
+
+machineLearningWorker.onmessage = (e) => {
+  console.log("DEBUG:tfWorker:onMsg ");
+  console.log( e.data);
+  if (e.data.func) {
+    let responders = {
+        "data": (data) => {
+            window.AudioEngine.postMessage(data);
+        },
+        "save": (data) => {
+          console.log("save");
+          window.localStorage.setItem(data.name, data.val);
+        },
+        "load": (data) => {
+          console.log("load");
+          let msg = {name:data.name, val:window.localStorage.getItem(data.name)};
+          machineLearningWorker.postMessage(msg);
+        }
+    };
+    responders[e.data.func](e.data);
+  }
 }
 
-let langWorker = new nearleyWorker();
-langWorker.onmessage = (e) => {
-  console.log(e.data);
+let languageWorker = new nearleyWorker();
+languageWorker.onmessage = (e) => {
+  console.log("DEBUG:nearleyWorker:onMsg "+ e.data);
   if (e.data['loop']) {
     let rightNow = window.performance.now();
     evalTS = rightNow;
@@ -98,8 +118,8 @@ function createEditor1() {
     lineWrapping: true,
     extraKeys: {
       // [ "Cmd-Enter" ]: () => playAudio(),
-      ["Cmd-Enter"]: () => evalEditorExpression(),
-      ["Ctrl-Enter"]: () => evalEditorExpression(),
+      ["Cmd-Enter"]: () => evalLiveCodeEditorExpression(),
+      ["Ctrl-Enter"]: () => evalLiveCodeEditorExpression(),
       // ["Cmd-."]: () => stopAudio(),
       // ["Cmd--"]: () => decreaseVolume(),
       // ["Cmd-="]: () => increaseVolume(),
@@ -124,14 +144,37 @@ function createEditor2() {
     theme: "idea",
     lineWrapping: true,
     extraKeys: {
-      ["Cmd-Enter"]: () => evalEditor2Expression(),
-      ["Ctrl-Enter"]: () => evalEditor2Expression(),
-      ["Shift-Enter"]: () => evalEditor2ExpressionBlock(),
+      ["Cmd-Enter"]: () => evalModelEditorExpression(),
+      ["Ctrl-Enter"]: () => evalModelEditorExpression(),
+      ["Shift-Enter"]: () => evalModelEditorExpressionBlock(),
     }
 
   });
   editor2.setSize('100%', '100%');
 }
+
+function createEditor3() {
+  let defaultEditorCode3 = "//BNF grammar";
+  let editor3code = window.localStorage.getItem("editor3");
+  if (editor3code)
+    defaultEditorCode3 = editor3code;
+
+  editor3 = CodeMirror(document.getElementById('editor3'), {
+    value: defaultEditorCode3,
+    lineNumbers: true,
+    mode: "javascript",
+    theme: "oceanic-next",
+    lineWrapping: true,
+    extraKeys: {
+      // ["Cmd-Enter"]: () => evalEditor3Expression(),
+      // ["Ctrl-Enter"]: () => evalEditor3Expression(),
+      ["Shift-Enter"]: () => evalEditor3ExpressionBlock(),
+    }
+
+  });
+  editor2.setSize('100%', '100%');
+}
+
 
 function createControls() {
 
@@ -157,20 +200,26 @@ function createControls() {
   container.appendChild(testButton);
   testButton.addEventListener("click", () => runTest());
 
+  const startAudioButton = document.getElementById('buttonStartAudio');
+  startAudioButton.addEventListener("click", () => setupAudio());
+
+  const containerTabs = document.getElementById("containerTabs");
+  const modelButton = document.createElement("button");
+  modelButton.textContent = `Model`;
+  containerTabs.appendChild(modelButton);
+  modelButton.addEventListener("click", () => changeEditorTab());
+  const grammarButton = document.createElement("button");
+  grammarButton.textContent = `Grammar`;
+  containerTabs.appendChild(grammarButton);
+  grammarButton.addEventListener("click", () => changeEditorTab());
 }
 
 function evalExpression(expression) {
   compileTS = window.performance.now();
-  langWorker.postMessage(expression);
-
+  languageWorker.postMessage(expression);
 }
 
-function evalEditorExpression() {
-
-  // TODO: for now sample loading is here,
-  // but we want to
-  if (!window.AudioEngine.samplesLoaded)
-    window.AudioEngine.loadSamples();
+function evalLiveCodeEditorExpression() {
 
   let expression = editor1.getSelection();
   let cursorInfo = editor1.getCursor();
@@ -188,21 +237,21 @@ function evalEditorExpression() {
   // editor1.markText({line:cursorInfo.line, ch:0}, {line:cursorInfo.line, ch:1},{"className":"test"});
 }
 
-function evalEditor2Expression() {
+function evalModelEditorExpression() {
 
   let expression = editor2.getSelection();
   if (expression == "") {
     let cursorInfo = editor2.getCursor();
     expression = editor2.getDoc().getLine(cursorInfo.line);
   }
-  console.log(`User expression to eval: ${expression}`);
-  tfW.postMessage({
+  console.log(`DEBUG:Main:evalModelEditorExpression: ${expression}`);
+  machineLearningWorker.postMessage({
     "eval": expression
   });
   window.localStorage.setItem("editor2", editor2.getValue());
 }
 
-function evalEditor2ExpressionBlock() {
+function evalModelEditorExpressionBlock() {
   //find code between dividers
   let divider = "__________";
   let cursorInfo = editor2.getCursor();
@@ -237,13 +286,22 @@ function evalEditor2ExpressionBlock() {
     line: linePost + 1,
     ch: 0
   });
-  console.log(code);
-  tfW.postMessage({
+  console.log("DEBUG:Main:evalModelEditorExpressionBlock: " + code);
+  machineLearningWorker.postMessage({
     "eval": code
   });
   window.localStorage.setItem("editor2", editor2.getValue());
 }
 
+function setupAudio(){
+   let overlay = document.getElementById('overlay');
+   overlay.style.visibility = 'hidden';
+   // Start Audio Context
+   playAudio();
+   // Load Samples
+   if (!window.AudioEngine.samplesLoaded)
+     window.AudioEngine.loadSamples();
+}
 
 function playAudio() {
   if (window.AudioEngine !== undefined) {
@@ -275,13 +333,12 @@ function createAnalysers() {
 
 }
 
-
 document.addEventListener("DOMContentLoaded", () => {
 
   // document.getElementById('audioWorkletIndicator').innerHTML = AudioWorkletIndicator.AudioWorkletIndicator();
 
   window.AudioEngine = new AudioEngine((msg) => {
-    tfW.postMessage(msg);
+    machineLearningWorker.postMessage(msg);
   });
 
   // // document.getElementById("sampleRateIndicatorValue").textContent = window.AudioEngine.sampleRate;
