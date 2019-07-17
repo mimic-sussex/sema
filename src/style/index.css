@@ -200,6 +200,28 @@ body {
   align-self: stretch;
 }
 
+.tabItem{
+  padding:8px 16px;
+  float:left;
+  width:auto;
+  border:none;
+  display:block;
+  outline:0;
+}
+/* .tabItem{
+  width:100%;
+  display:inline-block;
+  padding:8px 16px;
+  text-align:left;
+  border:none;
+  white-space:normal;
+  float:none;
+  outline:0
+} */
+
+.w3-red,.w3-hover-red:hover{color:#fff!important;background-color:#f44336!important}
+
+
 /* .containerMenu { grid-area: menu; background-color: red;} */
 .containerMenu {
   grid-area: menu;
@@ -229,6 +251,12 @@ body {
   grid-row: 3;
 
 }
+
+.containerTabs{width:100%;overflow:hidden}
+.containerTabs{display:inline-block;width:auto}
+.containerTabs{padding:8px 16px;float:left;width:auto;border:none;display:block;outline:0}
+.containerTabs{position:static;float:left}
+.containerTabs{white-space:normal}
 
 .containerRight {
   grid-area: right;
