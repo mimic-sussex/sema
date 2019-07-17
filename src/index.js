@@ -49,14 +49,14 @@ let compileTS = 0;
 let treeTS = 0;
 let evalTS = 0;
 
-let tfW = new tfWorker();
-tfW.onmessage = (e) => {
+let machineLearningWorker = new tfWorker();
+machineLearningWorker.onmessage = (e) => {
   console.log("DEBUG:tfWorker:onMsg "+ e.data);
   window.AudioEngine.postMessage(e.data); 
 }
 
-let langWorker = new nearleyWorker();
-langWorker.onmessage = (e) => {
+let languageWorker = new nearleyWorker();
+languageWorker.onmessage = (e) => {
   console.log("DEBUG:nearleyWorker:onMsg "+ e.data);
   if (e.data['loop']) {
     let rightNow = window.performance.now();
@@ -185,37 +185,25 @@ function createControls() {
   testButton.addEventListener("click", () => runTest());
 
   const startAudioButton = document.getElementById('buttonStartAudio');
-  startAudioButton.onclick = () => {
-    let overlay = document.getElementById('overlay');
-    overlay.style.visibility = 'hidden';
-    playAudio();
-  }
+  startAudioButton.addEventListener("click", () => setupAudio());
 
   const containerTabs = document.getElementById("containerTabs");
   const modelButton = document.createElement("button");
   modelButton.textContent = `Model`;
   containerTabs.appendChild(modelButton);
-  modelButton.addEventListener("click", () => playAudio(editor1));
+  modelButton.addEventListener("click", () => changeEditorTab());
   const grammarButton = document.createElement("button"); 
   grammarButton.textContent = `Grammar`;
   containerTabs.appendChild(grammarButton);
-  grammarButton.addEventListener("click", () => playAudio(editor1));
-
-
+  grammarButton.addEventListener("click", () => changeEditorTab());
 }
 
 function evalExpression(expression) {
   compileTS = window.performance.now();
-  langWorker.postMessage(expression);
-
+  languageWorker.postMessage(expression);
 }
 
 function evalLiveCodeEditorExpression() {
-
-  // TODO: for now sample loading is here,
-  // but we want to
-  if (!window.AudioEngine.samplesLoaded)
-    window.AudioEngine.loadSamples();
 
   let expression = editor1.getSelection();
   let cursorInfo = editor1.getCursor();
@@ -240,8 +228,8 @@ function evalModelEditorExpression() {
     let cursorInfo = editor2.getCursor();
     expression = editor2.getDoc().getLine(cursorInfo.line);
   }
-  console.log(`User expression to eval: ${expression}`);
-  tfW.postMessage({
+  console.log(`DEBUG:Main:evalModelEditorExpression: ${expression}`);
+  machineLearningWorker.postMessage({
     "eval": expression
   });
   window.localStorage.setItem("editor2", editor2.getValue());
@@ -282,13 +270,22 @@ function evalModelEditorExpressionBlock() {
     line: linePost + 1,
     ch: 0
   });
-  console.log(code);
-  tfW.postMessage({
+  console.log("DEBUG:Main:evalModelEditorExpressionBlock: " + code);
+  machineLearningWorker.postMessage({
     "eval": code
   });
   window.localStorage.setItem("editor2", editor2.getValue());
 }
 
+function setupAudio(){
+   let overlay = document.getElementById('overlay');
+   overlay.style.visibility = 'hidden';
+   // Start Audio Context
+   playAudio();
+   // Load Samples
+   if (!window.AudioEngine.samplesLoaded)
+     window.AudioEngine.loadSamples();
+}
 
 function playAudio() {
   if (window.AudioEngine !== undefined) {
@@ -322,13 +319,10 @@ function createAnalysers() {
 
 document.addEventListener("DOMContentLoaded", () => {
 
-
-
-
   // document.getElementById('audioWorkletIndicator').innerHTML = AudioWorkletIndicator.AudioWorkletIndicator();
 
   window.AudioEngine = new AudioEngine((msg) => {
-    tfW.postMessage(msg);
+    machineLearningWorker.postMessage(msg);
   });
 
   // // document.getElementById("sampleRateIndicatorValue").textContent = window.AudioEngine.sampleRate;
