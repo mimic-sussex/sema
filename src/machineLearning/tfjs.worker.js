@@ -3,7 +3,8 @@ importScripts("https://cdn.jsdelivr.net/npm/@tensorflow/tfjs");
 
 // let a = tf.tensor([100]);
 var geval = eval; // puts eval into global scope https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/eval
-geval("var next = (x) => {return 0;}");
+geval("var input = (id,x) => {}");
+geval("var output = (x) => {return 0;}");
 geval(`
 var loadResponders = {};
 var sema = {
@@ -40,11 +41,16 @@ onmessage = (m) => {
     loadResponders[m.data.name](val);
     delete loadResponders[m.data.name];
   }else {
-    postMessage({
-      func:"data",
-      worker: 'testmodel',
-      val: next(m.data.val)
-    });
-    // a = tf.add(a, tf.scalar(10));
+    console.log(m.data.rq);
+    if (m.data.rq=="send") {
+      input(m.data.id, m.data.value);
+    }else{
+      //receive request
+      postMessage({
+        func:"data",
+        worker: 'testmodel',
+        val: output(m.data.val)
+      });
+    }
   }
 };

@@ -26,11 +26,26 @@ class PostMsgTransducer {
     this.val = msg.val;
   }
 
-  io(sendMsg) {
+  send(id, sendMsg) {
     if (this.sendCounter >= this.sendPeriod) {
       this.port.postMessage({
-        rq: "dataplease",
-        val: sendMsg
+        rq: "send",
+        value: sendMsg,
+        id: id
+
+      });
+      this.sendCounter -= this.sendPeriod;
+    } else {
+      this.sendCounter++;
+    }
+    return 0;
+  }
+
+  receive(sendMsg) {
+    if (this.sendCounter >= this.sendPeriod) {
+      this.port.postMessage({
+        rq: "recv",
+        value: sendMsg,
       });
       this.sendCounter -= this.sendPeriod;
     } else {
@@ -38,6 +53,19 @@ class PostMsgTransducer {
     }
     return this.val;
   }
+
+  // io(sendMsg) {
+  //   if (this.sendCounter >= this.sendPeriod) {
+  //     this.port.postMessage({
+  //       rq: "dataplease",
+  //       value: sendMsg
+  //     });
+  //     this.sendCounter -= this.sendPeriod;
+  //   } else {
+  //     this.sendCounter++;
+  //   }
+  //   return this.val;
+  // }
 }
 
 class MaxiProcessor extends AudioWorkletProcessor {
