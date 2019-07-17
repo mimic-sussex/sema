@@ -31,6 +31,7 @@ import * as CodeMirror from 'codemirror/lib/codemirror.js';
 import 'codemirror/mode/javascript/javascript';
 import 'codemirror/theme/idea.css';
 import 'codemirror/theme/monokai.css';
+import 'codemirror/theme/oceanic-next.css';
 // import 'codemirror/theme/abcdef.css';
 import 'codemirror/keymap/vim.js';
 import 'codemirror/lib/codemirror.css';
@@ -50,12 +51,13 @@ let evalTS = 0;
 
 let tfW = new tfWorker();
 tfW.onmessage = (e) => {
-  window.AudioEngine.postMessage(e.data);
+  console.log("DEBUG:tfWorker:onMsg "+ e.data);
+  window.AudioEngine.postMessage(e.data); 
 }
 
 let langWorker = new nearleyWorker();
 langWorker.onmessage = (e) => {
-  console.log(e.data);
+  console.log("DEBUG:nearleyWorker:onMsg "+ e.data);
   if (e.data['loop']) {
     let rightNow = window.performance.now();
     evalTS = rightNow;
@@ -98,8 +100,8 @@ function createEditor1() {
     lineWrapping: true,
     extraKeys: {
       // [ "Cmd-Enter" ]: () => playAudio(),
-      ["Cmd-Enter"]: () => evalEditorExpression(),
-      ["Ctrl-Enter"]: () => evalEditorExpression(),
+      ["Cmd-Enter"]: () => evalLiveCodeEditorExpression(),
+      ["Ctrl-Enter"]: () => evalLiveCodeEditorExpression(),
       // ["Cmd-."]: () => stopAudio(),
       // ["Cmd--"]: () => decreaseVolume(),
       // ["Cmd-="]: () => increaseVolume(),
@@ -126,9 +128,9 @@ function createEditor2() {
     theme: "idea",
     lineWrapping: true,
     extraKeys: {
-      ["Cmd-Enter"]: () => evalEditor2Expression(),
-      ["Ctrl-Enter"]: () => evalEditor2Expression(),
-      ["Shift-Enter"]: () => evalEditor2ExpressionBlock(),
+      ["Cmd-Enter"]: () => evalModelEditorExpression(),
+      ["Ctrl-Enter"]: () => evalModelEditorExpression(),
+      ["Shift-Enter"]: () => evalModelEditorExpressionBlock(),
     }
 
   });
@@ -145,7 +147,7 @@ function createEditor3() {
     value: defaultEditorCode3,
     lineNumbers: true,
     mode: "javascript",
-    theme: "idea",
+    theme: "oceanic-next",
     lineWrapping: true,
     extraKeys: {
       // ["Cmd-Enter"]: () => evalEditor3Expression(),
@@ -208,7 +210,7 @@ function evalExpression(expression) {
 
 }
 
-function evalEditorExpression() {
+function evalLiveCodeEditorExpression() {
 
   // TODO: for now sample loading is here,
   // but we want to
@@ -231,7 +233,7 @@ function evalEditorExpression() {
   // editor1.markText({line:cursorInfo.line, ch:0}, {line:cursorInfo.line, ch:1},{"className":"test"});
 }
 
-function evalEditor2Expression() {
+function evalModelEditorExpression() {
 
   let expression = editor2.getSelection();
   if (expression == "") {
@@ -245,7 +247,7 @@ function evalEditor2Expression() {
   window.localStorage.setItem("editor2", editor2.getValue());
 }
 
-function evalEditor2ExpressionBlock() {
+function evalModelEditorExpressionBlock() {
   //find code between dividers
   let divider = "__________";
   let cursorInfo = editor2.getCursor();
