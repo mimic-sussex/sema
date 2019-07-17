@@ -245,7 +245,7 @@ function evalModelEditorExpression() {
     let cursorInfo = editor2.getCursor();
     expression = editor2.getDoc().getLine(cursorInfo.line);
   }
-  console.log(`DEBUG:Main:evalModelEditorExpression: ${expression}`);
+  // console.log(`DEBUG:Main:evalModelEditorExpression: ${expression}`);
   machineLearningWorker.postMessage({
     "eval": expression
   });
