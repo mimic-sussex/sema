@@ -17,11 +17,17 @@ import {
 // import treeJSON from './dndTree';
 import AudioWorkletIndicator from './UI/components';
 
+// import '../assets/samples/909.wav';
+// import '../assets/samples/909b.wav';
+// import '../assets/samples/909closed.wav';
+// import '../assets/samples/909open.wav';
+// import '../assets/samples/noinoi.wav';
 
-import '../assets/samples/909.wav';
-import '../assets/samples/909b.wav';
-import '../assets/samples/909closed.wav';
-import '../assets/samples/909open.wav';
+// let sample = 'noinoi';
+// import (`../assets/samples/${sample}.wav`).then(module => {
+//   window.AudioEngine.loadSample(sample, `samples/${sample}.wav`);
+// });
+
 
 import './style/index.css';
 import './style/tree.css';
@@ -51,13 +57,13 @@ let evalTS = 0;
 
 let machineLearningWorker = new tfWorker();
 machineLearningWorker.onmessage = (e) => {
-  console.log("DEBUG:tfWorker:onMsg "+ e.data);
+  console.log("DEBUG:machineLearningWorker:onMsg "+ e.data);
   window.AudioEngine.postMessage(e.data); 
 }
 
 let languageWorker = new nearleyWorker();
 languageWorker.onmessage = (e) => {
-  console.log("DEBUG:nearleyWorker:onMsg "+ e.data);
+  console.log("DEBUG:languageWorker:onMsg "+ e.data);
   if (e.data['loop']) {
     let rightNow = window.performance.now();
     evalTS = rightNow;
@@ -279,6 +285,13 @@ function evalModelEditorExpressionBlock() {
   window.localStorage.setItem("editor2", editor2.getValue());
 }
 
+
+/*
+ *
+  Audio engine wrappers
+ *
+ */
+
 function setupAudio(){
    let overlay = document.getElementById('overlay');
    overlay.style.visibility = 'hidden';
@@ -286,7 +299,7 @@ function setupAudio(){
    playAudio();
    // Load Samples
    if (!window.AudioEngine.samplesLoaded)
-     window.AudioEngine.loadSamples();
+      loadImportedSamples();
 }
 
 function playAudio() {
@@ -318,6 +331,52 @@ function changeSynth() {
 function createAnalysers() {
 
 }
+
+
+
+/*
+ *
+  Dynamic sample loading
+ *
+ */
+
+const getSamplesNames = () => {
+  const r = require.context('../assets/samples', false, /\.wav$/);
+
+  // return an array list of filenames (with extension)
+  const importAll = (r) => r.keys().map(file => file.match(/[^\/]+$/)[0]);
+
+  return importAll(r);
+};
+
+/* Webpack Magic Comments */
+/* webpackMode: "lazy-once" */ // Generates a single lazy-loadable chunk that can satisfy all calls to import().
+/* webpackMode: "lazy" */  //(default): Generates a lazy-loadable chunk for each import()ed module.
+const lazyLoadSample = (sampleName, sample) => {
+
+  import(
+    /* webpackMode: "lazy" */
+    `../assets/samples/${sampleName}`
+  )
+  .then(sample => window.AudioEngine.loadSample(sampleName, `samples/${sampleName}`))
+  .catch(err => console.error(`ERROR:Main:lazyLoadImage: ` + err));
+}
+
+const loadImportedSamples = () => {
+  let samplesNames =  getSamplesNames();
+  console.log("DEBUG:Main:getSamplesNames: " + samplesNames)
+
+  samplesNames.forEach(sampleName => { lazyLoadSample(sampleName) });
+}
+
+
+
+
+/*
+ *
+  DOMContentLoaded 
+ *
+ */
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -358,11 +417,19 @@ document.addEventListener("DOMContentLoaded", () => {
     window.AudioEngine.oscMessage(msg);
   });
 
-
 });
 
 var testActive = false;
 var testTS = 0;
+
+
+
+
+/*
+ *
+  Performance tests
+ *
+ */
 
 function runTest() {
   if (!testActive) {

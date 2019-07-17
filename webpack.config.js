@@ -118,12 +118,12 @@ module.exports = {
   },
   plugins: [
     new webpack.ProgressPlugin(),
-    new CleanWebpackPlugin({
-      dry: false,
-      verbose: true,
-      cleanStaleWebpackAssets: true,
-      protectWebpackAssets: true,
-    }),
+    // new CleanWebpackPlugin({
+    //   dry: false,
+    //   verbose: true,
+    //   cleanStaleWebpackAssets: true,
+    //   protectWebpackAssets: true,
+    // }),
     new HtmlWebpackPlugin({
       title: 'Development',
       template: './src/index.html',

@@ -1,5 +1,8 @@
 var objectID = 0;
 
+
+
+
 const oscMap = {
   '@sin': "sinewave",
   "@saw": "saw",
@@ -27,6 +30,9 @@ const jsFuncMap = {
   'hpz': {"setup":(o,p)=>`${o} = new Module.maxiFilter()`, "loop":(o,p)=>`${o}.hires(${p[0].loop},${p[1].loop},${p[2].loop})`},
   'mlmodel': {"setup":(o,p)=>`${o} = this.registerTransducer('testmodel', ${p[0].loop})`, "loop":(o,p)=>`${o}.io(${p[1].loop})`},
   'adc': {"setup":(o,p)=>"", "loop":(o,p)=>`inputs[${p[0].loop}]`},
+  'sample': {"setup":(o,p)=>`${o} = new Module.maxiSample(); 
+                                    Module.setSample(${o}, this.translateFloat32ArrayToBuffer(event.data[${o}]));`,
+            "loop":(o,p)=>`() => { if(zx([${p[0].loop}]) ${o}.trigger(); return ${o}.playOnce()}`},
 }
 
 class IRToJavascript {
