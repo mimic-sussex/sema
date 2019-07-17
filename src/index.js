@@ -188,10 +188,12 @@ function createControls() {
   startAudioButton.addEventListener("click", () => setupAudio());
 
   const containerTabs = document.getElementById("containerTabs");
+  
   const modelButton = document.createElement("button");
   modelButton.textContent = `Model`;
   containerTabs.appendChild(modelButton);
   modelButton.addEventListener("click", () => changeEditorTab());
+  
   const grammarButton = document.createElement("button"); 
   grammarButton.textContent = `Grammar`;
   containerTabs.appendChild(grammarButton);
@@ -211,7 +213,7 @@ function evalLiveCodeEditorExpression() {
     console.log(cursorInfo);
     expression = editor1.getDoc().getLine(cursorInfo.line);
   }
-  console.log(`User expression to eval: ${expression}`);
+  console.log(`DEBUG:Main:evalLiveEditorExpression: ${expression}`);
   try {
     evalExpression(expression);
   } catch (error) {
