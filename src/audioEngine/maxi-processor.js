@@ -84,9 +84,19 @@ class MaxiProcessor extends AudioWorkletProcessor {
     // this.setupPolysynth();
 
     this._q = [
-      [],
-      []
+      {"vars":[]},
+      {"vars":[]}
     ]; //maxi objects
+
+    this.setvar = (q,name,val) =>{
+      console.log(q);
+      q.vars[name] = val;
+      return val;
+    };
+
+    this.getvar = (q,name) => {
+      return q.vars[name];
+    };
 
     this.silence = (q, inputs) => {
       return 0.0

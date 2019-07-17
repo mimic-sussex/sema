@@ -19,7 +19,8 @@ const jsFuncMap = {
   'mul': {"setup":(o,p)=>"", "loop":(o,p)=>`(${p[0].loop} * ${p[1].loop})`},
   'sub': {"setup":(o,p)=>"", "loop":(o,p)=>`(${p[0].loop} - ${p[1].loop})`},
   'div': {"setup":(o,p)=>"", "loop":(o,p)=>`(${p[0].loop} / ${p[1].loop})`},
-  'abs': {"setup":(o,p)=>"", "loop":(o,p)=>`Math.abs(${p[0].loop}, ${p[1].loop})`},
+  'pow': {"setup":(o,p)=>"", "loop":(o,p)=>`Math.pow(${p[0].loop},${p[1].loop})`},
+  'abs': {"setup":(o,p)=>"", "loop":(o,p)=>`Math.abs(${p[0].loop})`},
   'lpf': {"setup":(o,p)=>`${o} = new Module.maxiFilter()`, "loop":(o,p)=>`${o}.lopass(${p[0].loop},${p[1].loop})`},
   'hpf': {"setup":(o,p)=>`${o} = new Module.maxiFilter()`, "loop":(o,p)=>`${o}.hipass(${p[0].loop},${p[1].loop})`},
   'lpz': {"setup":(o,p)=>`${o} = new Module.maxiFilter()`, "loop":(o,p)=>`${o}.lores(${p[0].loop},${p[1].loop},${p[2].loop})`},
@@ -45,11 +46,6 @@ class IRToJavascript {
 
   static traverseTree(t, code, level) {
     console.log(`Level: ${level}`);
-    // if (!code) {
-    //   // console.log("Creating code");
-    //   code = IRToJavascript.emptyCode();
-    //   // console.log(code);
-    // }
     let attribMap = {
       '@lang': (ccode, el) => {
         // console.log("lang")
@@ -61,13 +57,11 @@ class IRToJavascript {
         return ccode;
       },
       '@spawn': (ccode, el) => {
-        // console.log(el);
         return IRToJavascript.traverseTree(el, ccode, level);
       },
       '@synth': (ccode, el) => {
         console.log(el);
         // console.log(el['@jsfunc']);
-
         let paramMarkers = [{"s":el['paramBegin'], "e":el['paramEnd'], "l":level}]
         ccode.paramMarkers = ccode.paramMarkers.concat(paramMarkers);
 
@@ -79,8 +73,6 @@ class IRToJavascript {
         let allParams=[];
         for (let p = 0; p < el['@params'].length; p++) {
           let params = IRToJavascript.emptyCode();
-          // console.log(el['@params'][p]);
-          // if (p > 0) params.loop += ",";
           params = IRToJavascript.traverseTree(el['@params'][p], params, level+1);
           console.log(params);
           allParams[p] = params;
@@ -93,7 +85,12 @@ class IRToJavascript {
         }
         ccode.setup += `${setupCode} ${funcInfo.setup(objName, allParams)};`;
         ccode.loop += `${funcInfo.loop(objName, allParams)}`;
-
+        return ccode;
+      },
+      '@setvar': (ccode, el) => {
+        let varValueCode = IRToJavascript.traverseTree(el['@varvalue'], IRToJavascript.emptyCode(), level+1);
+        ccode.setup += varValueCode.setup;
+        ccode.loop = `this.setvar(q, '${el['@varname']}', ${varValueCode.loop})`;
         return ccode;
       },
       '@oscreceiver': (ccode, el) => {
@@ -139,7 +136,6 @@ class IRToJavascript {
         console.log(el);
         // ccode.loop += `${el.value}`;
         ccode.loop += `this.OSCTransducer('${el.value}')`;
-
         return ccode;
       }
       // '@func': (ccode, el) => {
