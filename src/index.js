@@ -49,6 +49,7 @@ let treeTS = 0;
 let evalTS = 0;
 
 let machineLearningWorker = new tfWorker();
+<<<<<<< HEAD
 
 
 machineLearningWorker.onmessage = (e) => {
@@ -71,6 +72,11 @@ machineLearningWorker.onmessage = (e) => {
     };
     responders[e.data.func](e.data);
   }
+=======
+machineLearningWorker.onmessage = (e) => {
+  console.log("DEBUG:tfWorker:onMsg "+ e.data);
+  window.AudioEngine.postMessage(e.data); 
+>>>>>>> 70baf98e8bf1a5c59e02995d3a8039a26e4f11f9
 }
 
 let languageWorker = new nearleyWorker();
@@ -204,11 +210,17 @@ function createControls() {
   startAudioButton.addEventListener("click", () => setupAudio());
 
   const containerTabs = document.getElementById("containerTabs");
+  
   const modelButton = document.createElement("button");
   modelButton.textContent = `Model`;
   containerTabs.appendChild(modelButton);
   modelButton.addEventListener("click", () => changeEditorTab());
+<<<<<<< HEAD
   const grammarButton = document.createElement("button");
+=======
+  
+  const grammarButton = document.createElement("button"); 
+>>>>>>> 70baf98e8bf1a5c59e02995d3a8039a26e4f11f9
   grammarButton.textContent = `Grammar`;
   containerTabs.appendChild(grammarButton);
   grammarButton.addEventListener("click", () => changeEditorTab());
@@ -227,7 +239,7 @@ function evalLiveCodeEditorExpression() {
     console.log(cursorInfo);
     expression = editor1.getDoc().getLine(cursorInfo.line);
   }
-  console.log(`User expression to eval: ${expression}`);
+  console.log(`DEBUG:Main:evalLiveEditorExpression: ${expression}`);
   try {
     evalExpression(expression);
   } catch (error) {

@@ -77,7 +77,7 @@ class AudioEngine {
     ];
 
     this.oscThru = (msg) => {
-      console.log(msg);
+      console.log("DEBUG:AudioEngine:OscThru: " + msg);
     };
 
     console.log("Audio engine loaded")
@@ -91,22 +91,19 @@ class AudioEngine {
 
   }
 
-  setInput(customNode) {
+  connectMediaStreamSourceInput(customNode) {
     const constraints = window.constraints = {
       audio: true,
       video: false
     };
-
     function onAudioInputInit(stream) {
-      console.log("Got audio in");
+      console.log("DEBUG:AudioEngine: Audio Input init");
       let mediaStreamSource = audioContext.createMediaStreamSource(stream);
       mediaStreamSource.connect(customNode);
     }
-
     function onAudioInputFail(error) {
-      console.log("Audio input fail: ", error.message, error.name);
+      console.log("DEBUG:AudioEngine: Audio Input fail: ", error.message, error.name);
     }
-
     navigator.mediaDevices.getUserMedia(constraints).then(onAudioInputInit).catch(onAudioInputFail);
   }
 
@@ -137,6 +134,8 @@ class AudioEngine {
           // Connect the worklet node to the audio graph
           this.audioWorkletNode.connect(this.audioContext.destination);
 
+          // Connect the micro to the audio graph with the worklet node 
+          this.connectMediaStreamSourceInput(this.audioWorkletNode);
 
           return true;
 
