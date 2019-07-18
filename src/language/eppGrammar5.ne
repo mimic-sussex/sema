@@ -9,7 +9,7 @@ const lexer = moo.compile({
   paramBegin:   /{/,
   variable:     /:[a-zA-Z0-9]+:/,
   oscAddress:   /(?:\/[a-zA-Z0-9]+)+/,
-  sampleName:   /(?:\\[a-zA-Z0-9]+)+/,
+  sample:       /\\[a-zA-Z0-9]+/,
   add:          /\+/,
   mult:         /\*/,
   div:          /\//,
@@ -33,29 +33,21 @@ const lexer = moo.compile({
 main -> _ Statement _                                         {% d => ({ "@lang" : d[1] })  %}
 
 Statement ->
-      Expression _ %semicolon _ Statement                     {% d => [{ "@spawn": d[0] }].concat(d[4]) %}
-      | Expression ( _ %semicolon ):?                         {% d => [{ "@spawn": d[0] }] %}
-      | %hash . "\n"                                          {% d => ({ "@comment": d[3] }) %}
+      Expression _ (%semicolon | "\n") _ Statement                     {% d => [{ "@spawn": d[0] }].concat(d[4]) %}
+      |
+      Expression                          {% d => [{ "@spawn": d[0] }] %}
+      # | %hash . "\n"                                          {% d => ({ "@comment": d[3] }) %}
 
 Expression ->
-<<<<<<< HEAD
-      %variable %paramBegin Params  %paramEnd  %funcName                            {% d => ({"@setvar": {"@varname":d[0],"@varvalue":{ "@synth": {"@params":d[2], "@jsfunc":d[4], "paramBegin":d[1], "paramEnd":d[3]}}}} ) %}
-      |
-      %variable %paramBegin Params  %paramEnd  %sample                              {% d => ({ "@sample": {"@params":d[1], "@filename":d[3], "paramBegin":d[0], "paramEnd":d[2]}} ) %}
-      |
-      %variable %paramBegin Params  %paramEnd  %oscAddress                          {% d => ({ "@oscreceiver": {"@params":d[1], "@oscaddr":d[3], "paramBegin":d[0], "paramEnd":d[2]}} ) %}
-      |
-      %oscAddress                                                                   {% d => ({ "@oscreceiver": {"@params":{}, "@oscaddr":d[0]}} ) %}
-=======
 %variable %paramBegin Params  %paramEnd  %funcName                           {% d => ({"@setvar": {"@varname":d[0],"@varvalue":{ "@synth": {"@params":d[2], "@jsfunc":d[4], "paramBegin":d[1], "paramEnd":d[3]}}}} ) %}
 |
 %paramBegin Params  %paramEnd  %funcName                           {% d => ({"@setvar": {"@varname":":default:","@varvalue":{ "@synth": {"@params":d[1], "@jsfunc":d[3], "paramBegin":d[0], "paramEnd":d[2]}}}} ) %}
 # |
 # %paramBegin Params  %paramEnd  %oscAddress                  {% d => ({ "@synth": {"paramBegin":d[0], "paramEnd":d[2], "@params":[{"@string":d[3].value},d[1][0]], "@jsfunc":{value:"oscin"}}} ) %}       {% d => ({ "@oscreceiver": {"@params":d[1], "@oscaddr":d[3], "paramBegin":d[0], "paramEnd":d[2]}} ) %}
 |
-# %oscAddress                                                        {% d => ({ "@oscreceiver": {"@params":{}, "@oscaddr":d[0]}} ) %}
+%paramBegin Params %paramEnd %sample       {% d => ({ "@synth": {"@params":[{"@string":d[3].value}].concat(d[1]), "@jsfunc":{value:"sampler"}, "paramBegin":d[0], "paramEnd":d[2]}} ) %}
+|
 %oscAddress                                                        {% d => ({ "@synth": {"@params":[{"@string":d[0].value},{"@num":{value:-1}}], "@jsfunc":{value:"oscin"}}} ) %}
->>>>>>> b215bf50fd3862c17fe31924f2f66a01a4c28d34
 
       # | %funcName                           {% d => ({ "@synth": [], "@jsfunc":d[0]} ) %}
 
@@ -77,38 +69,6 @@ Params ->
   # | Expression %separator Params                    {% d => [{ "@num": d[0]}].concat(d[2]) %}
   # | %funcName %separator Params       {% d => ([{ "@jsfunc": d[0]}].concat(d[2])) %}
 
-
-# Synth ->
-#       Function                                              {% d => ({ "@func": d[0] }) %}
-#
-#
-# Function ->
-#   OscFunc _ %add _ Function                                    {% d => [{ "@add": [ Object.assign({}, d[0]) ].concat(d[4])}] %}
-#   | OscFunc
-#
-# OscFunc ->
-#       Oscillator _ %lparen _ Function _ %rparen               {% d => ({ "@comp": [d[0]].concat(d[4])}) %}
-#       | Oscillator _ Params                                   {% d => Object.assign({}, d[0], { param: d[2]}) %}
-#       # | Oscillator _ Params _ %add _ OscFunc                   {% d => [{ "@add": [ Object.assign({}, d[0]) ].concat(d[6])}] %}
-#
-#
-# Oscillator ->
-#     %osc _ Sinewave                                           {% d => ({ "@osc": "@sin" }) %}
-#     | %osc _ Coswave                                          {% d => ({ "@osc": "@cos" }) %}
-#     | %osc _ Phasor                                           {% d => ({ "@osc": "@pha" }) %}
-#     | %osc _ Saw                                              {% d => ({ "@osc": "@saw" }) %}
-#     | %osc _ Triangle                                         {% d => ({ "@osc": "@tri" }) %}
-#     | %osc _ Square                                           {% d => ({ "@osc": "@square" }) %}
-#     | %osc _ Pulse                                            {% d => ({ "@osc": "@pulse" }) %}
-#     | %osc _ Noise                                            {% id %}
-#
-# Sinewave -> %sinosc                                           {% id %}
-# Coswave -> %cososc                                            {% id %}
-# Phasor -> %phasosc                                            {% id %}
-# Saw -> %sawosc                                                {% id %}
-# Triangle -> %triosc                                           {% id %}
-# Square -> %squareosc                                          {% id %}
-# Pulse -> %pulseosc                                            {% id %}
 
 
 

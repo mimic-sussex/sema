@@ -11,7 +11,7 @@ const lexer = moo.compile({
   paramEnd:       /}/,
   paramBegin:     /{/,
   oscAddress:     /(?:\/[a-zA-Z0-9]+)+/,
-  sample:         /(?:\\[a-zA-Z0-9]+)+/,
+  sample:         /\\[a-zA-Z0-9]+/,
   add:            /\+/,
   mult:           /\*/,
   div:            /\//,
@@ -58,8 +58,8 @@ Params ->
       |
       %number %separator Params                                   {% d => ([ { "@num": d[0]}].concat(d[2]) ) %}
       |
-      Expression                                                  {% d => ([ { "@num":d[0]}]) %}     
-      # Expression                                                  {% d => ([ d[0] ]) %}     
+      Expression                                                  {% d => ([ { "@num":d[0]}]) %}
+      # Expression                                                  {% d => ([ d[0] ]) %}
       |
       Expression %separator Params                                {% d => ([ { "@num": d[0]}].concat(d[2]) ) %}
       # Expression %separator Params                                {% d => ([ d[0] ].concat(d[2]) ) %}

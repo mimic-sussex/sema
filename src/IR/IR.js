@@ -17,13 +17,20 @@ const jsFuncMap = {
   'tri': {"setup":(o,p)=>`${o} = new Module.maxiOsc()`, "loop":(o,p)=>`${o}.triangle(${p[0].loop})`},
   'pha': {"setup":(o,p)=>`${o} = new Module.maxiOsc()`, "loop":(o,p)=>`${o}.phasor(${p[0].loop})`},
   'sqr': {"setup":(o,p)=>`${o} = new Module.maxiOsc()`, "loop":(o,p)=>`${o}.square(${p[0].loop})`},
+  'pul': {"setup":(o,p)=>`${o} = new Module.maxiOsc()`, "loop":(o,p)=>`${o}.pulse(${p[0].loop},${p[1].loop})`},
   'sawn': {"setup":(o,p)=>`${o} = new Module.maxiOsc()`, "loop":(o,p)=>`${o}.sawn(${p[0].loop})`},
+  'gt': {"setup":(o,p)=>"", "loop":(o,p)=>`(${p[0].loop} > ${p[1].loop}) ? 1 : 0`},
+  'lt': {"setup":(o,p)=>"", "loop":(o,p)=>`(${p[0].loop} < ${p[1].loop}) ? 1 : 0`},
+  'mod': {"setup":(o,p)=>"", "loop":(o,p)=>`(${p[0].loop} % ${p[1].loop})`},
   'add': {"setup":(o,p)=>"", "loop":(o,p)=>`(${p[0].loop} + ${p[1].loop})`},
   'mul': {"setup":(o,p)=>"", "loop":(o,p)=>`(${p[0].loop} * ${p[1].loop})`},
   'sub': {"setup":(o,p)=>"", "loop":(o,p)=>`(${p[0].loop} - ${p[1].loop})`},
   'div': {"setup":(o,p)=>"", "loop":(o,p)=>`(${p[0].loop} / ${p[1].loop})`},
   'pow': {"setup":(o,p)=>"", "loop":(o,p)=>`Math.pow(${p[0].loop},${p[1].loop})`},
   'abs': {"setup":(o,p)=>"", "loop":(o,p)=>`Math.abs(${p[0].loop})`},
+  'sum': {"setup":(o,p)=>"", "loop":(o,p)=>{let s=`(${p[0].loop}`; for(let i=1; i < p.length; i++) s += `+${p[i].loop}`; return s+")";}},
+  'mix': {"setup":(o,p)=>"", "loop":(o,p)=>{let s=`((${p[0].loop}`; for(let i=1; i < p.length; i++) s += `+${p[i].loop}`; return s+`)/${p.length})`;}},
+  'prod': {"setup":(o,p)=>"", "loop":(o,p)=>{let s=`(${p[0].loop}`; for(let i=1; i < p.length; i++) s += `*${p[i].loop}`; return s+")";}},
   'env': {"setup":(o,p)=>`${o} = new Module.maxiEnv();${o}.setAttack(${p[0].loop});${o}.setDecay(${p[0].loop});${o}.setSustain(${p[1].loop});${o}.setRelease(${p[2].loop});`, "loop":(o,p)=>`${o}.trigger = 1;`},
   'blin': {"setup":(o,p)=>"", "loop":(o,p)=>`Module.maxiMap.linlin(${p[0].loop}, -1, 1, ${p[1].loop}, ${p[2].loop})`},
   'ulin': {"setup":(o,p)=>"", "loop":(o,p)=>`Module.maxiMap.linlin(${p[0].loop}, 0, 1, ${p[1].loop}, ${p[2].loop})`},
@@ -31,6 +38,7 @@ const jsFuncMap = {
   'uexp': {"setup":(o,p)=>"", "loop":(o,p)=>`Module.maxiMap.linexp(${p[0].loop}, 0.0000001, 1, ${p[1].loop}, ${p[2].loop})`},
   'linlin': {"setup":(o,p)=>"", "loop":(o,p)=>`Module.maxiMap.linlin(${p[0].loop}, ${p[1].loop}, ${p[2].loop}),${p[3].loop}, ${p[4].loop})`},
   'linexp': {"setup":(o,p)=>"", "loop":(o,p)=>`Module.maxiMap.linexp(${p[0].loop}, ${p[1].loop}, ${p[2].loop}),${p[3].loop}, ${p[4].loop})`},
+  'dist': {"setup":(o,p)=>`${o} = new Module.maxiDistortion()`, "loop":(o,p)=>`${o}.atanDist(${p[0].loop},${p[1].loop})`},
   'lpf': {"setup":(o,p)=>`${o} = new Module.maxiFilter()`, "loop":(o,p)=>`${o}.lopass(${p[0].loop},${p[1].loop})`},
   'hpf': {"setup":(o,p)=>`${o} = new Module.maxiFilter()`, "loop":(o,p)=>`${o}.hipass(${p[0].loop},${p[1].loop})`},
   'lpz': {"setup":(o,p)=>`${o} = new Module.maxiFilter()`, "loop":(o,p)=>`${o}.lores(${p[0].loop},${p[1].loop},${p[2].loop})`},
@@ -38,9 +46,16 @@ const jsFuncMap = {
   'toModel': {"setup":(o,p)=>`${o} = this.registerTransducer('testmodel', ${p[0].loop})`, "loop":(o,p)=>`${o}.send(${p[1].loop}, ${p[2].loop})`},
   'fromModel': {"setup":(o,p)=>`${o} = this.registerTransducer('testmodel', ${p[0].loop})`, "loop":(o,p)=>`${o}.receive(${p[1].loop})`},
   'adc': {"setup":(o,p)=>"", "loop":(o,p)=>`inputs[${p[0].loop}]`},
+<<<<<<< HEAD
   'sample': {"setup":(o,p)=>`${o} = new Module.maxiSample(); 
                                     Module.setSample(${o}, this.translateFloat32ArrayToBuffer(event.data[${o}]));`,
             "loop":(o,p)=>`() => { if(${o}.zx([${p[0].loop}]) ${o}.trigger(); return ${o}.playOnce()}`},
+=======
+  'sampler': {"setup":(o,p)=>`${o} = new Module.maxiSample();
+                                  ${o}.setSample(this.getSampleBuffer(${p[0].loop}));`,
+                                  "loop":(o,p)=>`(${o}.isReady() ? ${o}.playOnZX(${p[1].loop}) : 0.0)`},
+  'oscin':{"setup":(o,p)=>"", "loop":(o,p)=>`this.OSCTransducer(${p[0].loop},${p[1].loop})`},
+>>>>>>> 098d575601306be10ce1331030a3a28100796f8f
 }
 
 class IRToJavascript {
@@ -71,10 +86,17 @@ class IRToJavascript {
         return ccode;
       },
       '@spawn': (ccode, el) => {
+        // el.map((spawnEl) => {
+        //
+        //   ccode = IRToJavascript.traverseTree(spawnEl, ccode, level);
+        //
+        // });
+
         return IRToJavascript.traverseTree(el, ccode, level);
+        // return ccode;
       },
       '@synth': (ccode, el) => {
-        console.log(el);
+        // console.log(el);
         // console.log(el['@jsfunc']);
         let paramMarkers = [{"s":el['paramBegin'], "e":el['paramEnd'], "l":level}]
         ccode.paramMarkers = ccode.paramMarkers.concat(paramMarkers);
@@ -92,7 +114,7 @@ class IRToJavascript {
         for (let p = 0; p < el['@params'].length; p++) {
           let params = IRToJavascript.emptyCode();
           params = IRToJavascript.traverseTree(el['@params'][p], params, level+1);
-          console.log(params);
+          // console.log(params);
           allParams[p] = params;
         }
         console.log(allParams);
@@ -111,6 +133,7 @@ class IRToJavascript {
         ccode.loop = `this.setvar(q, '${el['@varname']}', ${varValueCode.loop})`;
         return ccode;
       },
+<<<<<<< HEAD
       '@oscreceiver': (ccode, el) => {
         console.log(el);
         // console.log(el['@jsfunc']);
@@ -133,6 +156,15 @@ class IRToJavascript {
             ccode.paramMarkers = ccode.paramMarkers.concat(allParams[param].paramMarkers);
           }
           idxCode = allParams[0].loop;
+=======
+      '@string': (ccode, el) => {
+        // console.log(el);
+        if (typeof el === 'string' || el instanceof String) {
+          console.log("String: " + el);
+          ccode.loop += `'${el}'`;
+        } else {
+          ccode = IRToJavascript.traverseTree(el, ccode, level);
+>>>>>>> 098d575601306be10ce1331030a3a28100796f8f
         }
         let oscCode = `this.OSCTransducer('${el['@oscaddr'].value}',${idxCode})`;
 
@@ -147,7 +179,7 @@ class IRToJavascript {
       },
       '@num': (ccode, el) => {
         if (el.value) {
-          console.log(el.value);
+          // console.log(el.value);
           ccode.loop += `${el.value}`;
         } else {
           ccode = IRToJavascript.traverseTree(el, ccode, level);
@@ -224,8 +256,6 @@ class IRToJavascript {
     if (Array.isArray(t)) {
       t.map((el) => {
         Object.keys(el).map((k) => {
-          // console.log(el);
-          // console.log(k);
           code = attribMap[k](code, el[k]);
         });
       })
