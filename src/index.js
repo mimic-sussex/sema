@@ -181,7 +181,7 @@ function createEditor3() {
 
 
 function createControls() {
- 
+
   const isMac = CodeMirror.keyMap.default === CodeMirror.keyMap.macDefault;
   const runKeys = isMac ? "Cmd-Enter" : "Ctrl-Enter";
   const container = document.getElementById("containerButtons");
@@ -311,9 +311,6 @@ function setupAudio(){
    overlay.style.visibility = 'hidden';
    // Start Audio Context
    playAudio();
-   // Load Samples
-   if (!window.AudioEngine.samplesLoaded)
-      loadImportedSamples();
 }
 
 function playAudio() {
@@ -327,20 +324,6 @@ function stopAudio() {
     window.AudioEngine.stop();
 }
 
-// function increaseVolume() {
-//   if (window.AudioEngine !== undefined)
-//     window.AudioEngine.more('gainSyn');
-// }
-//
-// function decreaseVolume() {
-//   if (window.AudioEngine !== undefined)
-//     window.AudioEngine.less('gainSyn');
-// }
-//
-// function changeSynth() {
-//   if (window.AudioEngine !== undefined)
-//     window.AudioEngine.changeSynth();
-// }
 
 function createAnalysers() {
 
@@ -397,7 +380,13 @@ document.addEventListener("DOMContentLoaded", () => {
   // document.getElementById('audioWorkletIndicator').innerHTML = AudioWorkletIndicator.AudioWorkletIndicator();
 
   window.AudioEngine = new AudioEngine((msg) => {
-    machineLearningWorker.postMessage(msg);
+    if (msg == "giveMeSomeSamples") {
+      // Load Samples
+      if (!window.AudioEngine.samplesLoaded)
+         loadImportedSamples();
+    }else{
+      machineLearningWorker.postMessage(msg);
+    }
   });
 
   // // document.getElementById("sampleRateIndicatorValue").textContent = window.AudioEngine.sampleRate;

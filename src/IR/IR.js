@@ -39,8 +39,8 @@ const jsFuncMap = {
   'fromModel': {"setup":(o,p)=>`${o} = this.registerTransducer('testmodel', ${p[0].loop})`, "loop":(o,p)=>`${o}.receive(${p[1].loop})`},
   'adc': {"setup":(o,p)=>"", "loop":(o,p)=>`inputs[${p[0].loop}]`},
   'sampler': {"setup":(o,p)=>`${o} = new Module.maxiSample();
-                                    Module.setSample(${o}, this.getSampleBuffer(${p[0].loop}));`,
-            "loop":(o,p)=>`() => {return ${o}.playOnce(${p[1].loop})}`},
+                                  ${o}.setSample(this.getSampleBuffer(${p[0].loop}));`,
+            "loop":(o,p)=>`() => {return ${o}.playOnZX(${p[1].loop})}`},
   'oscin':{"setup":(o,p)=>"", "loop":(o,p)=>`this.OSCTransducer(${p[0].loop},${p[1].loop})`},
 }
 

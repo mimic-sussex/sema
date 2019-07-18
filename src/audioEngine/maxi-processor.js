@@ -151,6 +151,8 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
     this.incoming = {};
 
+    this.sampleBuffers={};
+
     this.transducers = {};
     this.registerTransducer = (name, rate) => {
       let trans = new PostMsgTransducer(this.port, this.sampleRate, rate);
@@ -159,6 +161,11 @@ class MaxiProcessor extends AudioWorkletProcessor {
       return trans;
     };
 
+    this.getSampleBuffer = (bufferName) => {
+      console.log(this.sampleBuffers);
+      console.log(bufferName);
+        return this.translateFloat32ArrayToBuffer(this.sampleBuffers[bufferName]);
+    };
 
     this.port.onmessage = event => { // message port async handler
       if ('address' in event.data) {
@@ -171,6 +178,11 @@ class MaxiProcessor extends AudioWorkletProcessor {
           // console.log(this.transducers[event.data.worker]);
           this.transducers[event.data.worker].incoming(event.data);
         }
+      } else if ('sample' in event.data) { //from a worker
+        console.log("sample received");
+        console.log(event.data);
+        let sampleKey = event.data.sample.substr(0,event.data.sample.length - 4)
+        this.sampleBuffers[sampleKey] = event.data.buffer;
       } else if ('eval' in event.data) { // check if new code is being sent for evaluation?
         try {
           console.log(event.data);
@@ -197,6 +209,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
         }
       }
     };
+    this.port.postMessage("giveMeSomeSamples");
   }
 
   /**
