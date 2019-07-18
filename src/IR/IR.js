@@ -24,6 +24,8 @@ const jsFuncMap = {
   'div': {"setup":(o,p)=>"", "loop":(o,p)=>`(${p[0].loop} / ${p[1].loop})`},
   'pow': {"setup":(o,p)=>"", "loop":(o,p)=>`Math.pow(${p[0].loop},${p[1].loop})`},
   'abs': {"setup":(o,p)=>"", "loop":(o,p)=>`Math.abs(${p[0].loop})`},
+  'sum': {"setup":(o,p)=>"", "loop":(o,p)=>{let s=`(${p[0].loop}`; for(let i=1; i < p.length; i++) s += `+${p[i].loop}`; return s+")";}},
+  'prod': {"setup":(o,p)=>"", "loop":(o,p)=>{let s=`(${p[0].loop}`; for(let i=1; i < p.length; i++) s += `*${p[i].loop}`; return s+")";}},
   'env': {"setup":(o,p)=>`${o} = new Module.maxiEnv();${o}.setAttack(${p[0].loop});${o}.setDecay(${p[0].loop});${o}.setSustain(${p[1].loop});${o}.setRelease(${p[2].loop});`, "loop":(o,p)=>`${o}.trigger = 1;`},
   'blin': {"setup":(o,p)=>"", "loop":(o,p)=>`Module.maxiMap.linlin(${p[0].loop}, -1, 1, ${p[1].loop}, ${p[2].loop})`},
   'ulin': {"setup":(o,p)=>"", "loop":(o,p)=>`Module.maxiMap.linlin(${p[0].loop}, 0, 1, ${p[1].loop}, ${p[2].loop})`},

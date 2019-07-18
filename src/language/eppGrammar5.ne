@@ -33,9 +33,9 @@ const lexer = moo.compile({
 main -> _ Statement _                                         {% d => ({ "@lang" : d[1] })  %}
 
 Statement ->
-      Expression _ %semicolon _ Statement                     {% d => [{ "@spawn": d[0] }].concat(d[4]) %}
-      | Expression ( _ %semicolon ):?                         {% d => [{ "@spawn": d[0] }] %}
-      | %hash . "\n"                                          {% d => ({ "@comment": d[3] }) %}
+      # Expression _ %semicolon _ Statement                     {% d => [{ "@spawn": d[0] }].concat(d[4]) %}
+      Expression                          {% d => [{ "@spawn": d[0] }] %}
+      # | %hash . "\n"                                          {% d => ({ "@comment": d[3] }) %}
 
 Expression ->
 %variable %paramBegin Params  %paramEnd  %funcName                           {% d => ({"@setvar": {"@varname":d[0],"@varvalue":{ "@synth": {"@params":d[2], "@jsfunc":d[4], "paramBegin":d[1], "paramEnd":d[3]}}}} ) %}
