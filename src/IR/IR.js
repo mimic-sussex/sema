@@ -11,6 +11,7 @@ const oscMap = {
   "@pha": "phasor"
 };
 
+
 const jsFuncMap = {
   'saw': {"setup":(o,p)=>`${o} = new Module.maxiOsc()`, "loop":(o,p)=>`${o}.saw(${p[0].loop})`},
   'sin': {"setup":(o,p)=>`${o} = new Module.maxiOsc()`, "loop":(o,p)=>`${o}.sinewave(${p[0].loop})`},
@@ -37,7 +38,7 @@ const jsFuncMap = {
   'toModel': {"setup":(o,p)=>`${o} = this.registerTransducer('testmodel', ${p[0].loop})`, "loop":(o,p)=>`${o}.send(${p[1].loop}, ${p[2].loop})`},
   'fromModel': {"setup":(o,p)=>`${o} = this.registerTransducer('testmodel', ${p[0].loop})`, "loop":(o,p)=>`${o}.receive(${p[1].loop})`},
   'adc': {"setup":(o,p)=>"", "loop":(o,p)=>`inputs[${p[0].loop}]`},
-  'sample': {"setup":(o,p)=>`${o} = new Module.maxiSample(); 
+  'sample': {"setup":(o,p)=>`${o} = new Module.maxiSample();
                                     Module.setSample(${o}, this.translateFloat32ArrayToBuffer(event.data[${o}]));`,
             "loop":(o,p)=>`() => { if(zx([${p[0].loop}]) ${o}.trigger(); return ${o}.playOnce()}`},
 }
