@@ -38,6 +38,15 @@ Statement ->
       | %hash . "\n"                                          {% d => ({ "@comment": d[3] }) %}
 
 Expression ->
+<<<<<<< HEAD
+      %variable %paramBegin Params  %paramEnd  %funcName                            {% d => ({"@setvar": {"@varname":d[0],"@varvalue":{ "@synth": {"@params":d[2], "@jsfunc":d[4], "paramBegin":d[1], "paramEnd":d[3]}}}} ) %}
+      |
+      %variable %paramBegin Params  %paramEnd  %sample                              {% d => ({ "@sample": {"@params":d[1], "@filename":d[3], "paramBegin":d[0], "paramEnd":d[2]}} ) %}
+      |
+      %variable %paramBegin Params  %paramEnd  %oscAddress                          {% d => ({ "@oscreceiver": {"@params":d[1], "@oscaddr":d[3], "paramBegin":d[0], "paramEnd":d[2]}} ) %}
+      |
+      %oscAddress                                                                   {% d => ({ "@oscreceiver": {"@params":{}, "@oscaddr":d[0]}} ) %}
+=======
 %variable %paramBegin Params  %paramEnd  %funcName                           {% d => ({"@setvar": {"@varname":d[0],"@varvalue":{ "@synth": {"@params":d[2], "@jsfunc":d[4], "paramBegin":d[1], "paramEnd":d[3]}}}} ) %}
 |
 %paramBegin Params  %paramEnd  %funcName                           {% d => ({"@setvar": {"@varname":":default:","@varvalue":{ "@synth": {"@params":d[1], "@jsfunc":d[3], "paramBegin":d[0], "paramEnd":d[2]}}}} ) %}
@@ -46,6 +55,7 @@ Expression ->
 |
 # %oscAddress                                                        {% d => ({ "@oscreceiver": {"@params":{}, "@oscaddr":d[0]}} ) %}
 %oscAddress                                                        {% d => ({ "@synth": {"@params":[{"@string":d[0].value},{"@num":{value:-1}}], "@jsfunc":{value:"oscin"}}} ) %}
+>>>>>>> b215bf50fd3862c17fe31924f2f66a01a4c28d34
 
       # | %funcName                           {% d => ({ "@synth": [], "@jsfunc":d[0]} ) %}
 
