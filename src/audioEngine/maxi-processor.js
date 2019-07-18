@@ -121,17 +121,10 @@ class MaxiProcessor extends AudioWorkletProcessor {
     // this.aOsc = new Module.maxiOsc();
     //
     // this.setupPolysynth();
-
-    this._q = [{
-        "vars": []
-      },
-      {
-        "vars": []
-      }
-    ]; //maxi objects
+    this.newq = () => {return {"vars":{}}};
+    this._q = [this.newq(),this.newq()];
 
     this.setvar = (q, name, val) => {
-      console.log(q);
       q.vars[name] = val;
       return val;
     };
@@ -240,7 +233,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
       if (this.xfadeControl.isLineComplete()) {
         let oldIdx = 1.0 - this.currentSignalFunction;
         this.signals[oldIdx] = this.silence;
-        this._q[oldIdx] = [];
+        this._q[oldIdx] = this.newq();
       }
 
       // this.port.postMessage("dspEnd");
