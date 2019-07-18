@@ -31,6 +31,9 @@ var grammar = {
     Lexer: lexer,
     ParserRules: [
     {"name": "main", "symbols": ["_", "Statement", "_"], "postprocess": d => ({ "@lang" : d[1] })},
+    {"name": "Statement$subexpression$1", "symbols": [(lexer.has("semicolon") ? {type: "semicolon"} : semicolon)]},
+    {"name": "Statement$subexpression$1", "symbols": [{"literal":"\n"}]},
+    {"name": "Statement", "symbols": ["Expression", "_", "Statement$subexpression$1", "_", "Statement"], "postprocess": d => [{ "@spawn": d[0] }].concat(d[4])},
     {"name": "Statement", "symbols": ["Expression"], "postprocess": d => [{ "@spawn": d[0] }]},
     {"name": "Expression", "symbols": [(lexer.has("variable") ? {type: "variable"} : variable), (lexer.has("paramBegin") ? {type: "paramBegin"} : paramBegin), "Params", (lexer.has("paramEnd") ? {type: "paramEnd"} : paramEnd), (lexer.has("funcName") ? {type: "funcName"} : funcName)], "postprocess": d => ({"@setvar": {"@varname":d[0],"@varvalue":{ "@synth": {"@params":d[2], "@jsfunc":d[4], "paramBegin":d[1], "paramEnd":d[3]}}}} )},
     {"name": "Expression", "symbols": [(lexer.has("paramBegin") ? {type: "paramBegin"} : paramBegin), "Params", (lexer.has("paramEnd") ? {type: "paramEnd"} : paramEnd), (lexer.has("funcName") ? {type: "funcName"} : funcName)], "postprocess": d => ({"@setvar": {"@varname":":default:","@varvalue":{ "@synth": {"@params":d[1], "@jsfunc":d[3], "paramBegin":d[0], "paramEnd":d[2]}}}} )},

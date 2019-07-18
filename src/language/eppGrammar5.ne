@@ -33,7 +33,8 @@ const lexer = moo.compile({
 main -> _ Statement _                                         {% d => ({ "@lang" : d[1] })  %}
 
 Statement ->
-      # Expression _ %semicolon _ Statement                     {% d => [{ "@spawn": d[0] }].concat(d[4]) %}
+      Expression _ (%semicolon | "\n") _ Statement                     {% d => [{ "@spawn": d[0] }].concat(d[4]) %}
+      |
       Expression                          {% d => [{ "@spawn": d[0] }] %}
       # | %hash . "\n"                                          {% d => ({ "@comment": d[3] }) %}
 

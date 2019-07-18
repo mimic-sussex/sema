@@ -17,7 +17,11 @@ const jsFuncMap = {
   'tri': {"setup":(o,p)=>`${o} = new Module.maxiOsc()`, "loop":(o,p)=>`${o}.triangle(${p[0].loop})`},
   'pha': {"setup":(o,p)=>`${o} = new Module.maxiOsc()`, "loop":(o,p)=>`${o}.phasor(${p[0].loop})`},
   'sqr': {"setup":(o,p)=>`${o} = new Module.maxiOsc()`, "loop":(o,p)=>`${o}.square(${p[0].loop})`},
+  'pul': {"setup":(o,p)=>`${o} = new Module.maxiOsc()`, "loop":(o,p)=>`${o}.pulse(${p[0].loop},${p[1].loop})`},
   'sawn': {"setup":(o,p)=>`${o} = new Module.maxiOsc()`, "loop":(o,p)=>`${o}.sawn(${p[0].loop})`},
+  'gt': {"setup":(o,p)=>"", "loop":(o,p)=>`(${p[0].loop} > ${p[1].loop}) ? 1 : 0`},
+  'lt': {"setup":(o,p)=>"", "loop":(o,p)=>`(${p[0].loop} < ${p[1].loop}) ? 1 : 0`},
+  'mod': {"setup":(o,p)=>"", "loop":(o,p)=>`(${p[0].loop} % ${p[1].loop})`},
   'add': {"setup":(o,p)=>"", "loop":(o,p)=>`(${p[0].loop} + ${p[1].loop})`},
   'mul': {"setup":(o,p)=>"", "loop":(o,p)=>`(${p[0].loop} * ${p[1].loop})`},
   'sub': {"setup":(o,p)=>"", "loop":(o,p)=>`(${p[0].loop} - ${p[1].loop})`},
@@ -25,6 +29,7 @@ const jsFuncMap = {
   'pow': {"setup":(o,p)=>"", "loop":(o,p)=>`Math.pow(${p[0].loop},${p[1].loop})`},
   'abs': {"setup":(o,p)=>"", "loop":(o,p)=>`Math.abs(${p[0].loop})`},
   'sum': {"setup":(o,p)=>"", "loop":(o,p)=>{let s=`(${p[0].loop}`; for(let i=1; i < p.length; i++) s += `+${p[i].loop}`; return s+")";}},
+  'mix': {"setup":(o,p)=>"", "loop":(o,p)=>{let s=`((${p[0].loop}`; for(let i=1; i < p.length; i++) s += `+${p[i].loop}`; return s+`)/${p.length})`;}},
   'prod': {"setup":(o,p)=>"", "loop":(o,p)=>{let s=`(${p[0].loop}`; for(let i=1; i < p.length; i++) s += `*${p[i].loop}`; return s+")";}},
   'env': {"setup":(o,p)=>`${o} = new Module.maxiEnv();${o}.setAttack(${p[0].loop});${o}.setDecay(${p[0].loop});${o}.setSustain(${p[1].loop});${o}.setRelease(${p[2].loop});`, "loop":(o,p)=>`${o}.trigger = 1;`},
   'blin': {"setup":(o,p)=>"", "loop":(o,p)=>`Module.maxiMap.linlin(${p[0].loop}, -1, 1, ${p[1].loop}, ${p[2].loop})`},
@@ -42,7 +47,6 @@ const jsFuncMap = {
   'adc': {"setup":(o,p)=>"", "loop":(o,p)=>`inputs[${p[0].loop}]`},
   'sampler': {"setup":(o,p)=>`${o} = new Module.maxiSample();
                                   ${o}.setSample(this.getSampleBuffer(${p[0].loop}));`,
-                                  // "loop":(o,p)=>`() => {return ${o}.playOnZX(${p[1].loop})}`},
                                   "loop":(o,p)=>`(${o}.isReady() ? ${o}.playOnZX(${p[1].loop}) : 0.0)`},
   'oscin':{"setup":(o,p)=>"", "loop":(o,p)=>`this.OSCTransducer(${p[0].loop},${p[1].loop})`},
 }
@@ -236,8 +240,6 @@ class IRToJavascript {
     if (Array.isArray(t)) {
       t.map((el) => {
         Object.keys(el).map((k) => {
-          // console.log(el);
-          // console.log(k);
           code = attribMap[k](code, el[k]);
         });
       })
