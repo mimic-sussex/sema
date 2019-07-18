@@ -23,6 +23,7 @@
   height: 100%;
   border:1px solid black;
   margin: 0px;
+  caret-color: green;
   /* margin: 0px 5px 5px 5px; */
   /* resize: both; */
 }
