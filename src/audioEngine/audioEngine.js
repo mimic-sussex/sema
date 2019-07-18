@@ -135,7 +135,7 @@ class AudioEngine {
           this.audioWorkletNode.connect(this.audioContext.destination);
 
           // Connect the micro to the audio graph with the worklet node 
-          this.connectMediaStreamSourceInput(this.audioWorkletNode);
+          // this.connectMediaStreamSourceInput(this.audioWorkletNode);
 
           return true;
 
@@ -175,7 +175,8 @@ class AudioEngine {
 
     if (this.audioContext !== undefined) {
       loadSampleToArray(this.audioContext, objectName, url, this.audioWorkletNode);
-    } else throw "Audio Context is not initialised!";
+    } else 
+        throw "Audio Context is not initialised!";
   }
 
   loadSamples() {
@@ -185,8 +186,14 @@ class AudioEngine {
       loadSampleToArray(this.audioContext, "closed", "samples/909closed.wav", this.audioWorkletNode);
       loadSampleToArray(this.audioContext, "open", "samples/909open.wav", this.audioWorkletNode);
 
+      loadSampleToArray(this.audioContext, "snare", "samples/noinoi.wav", this.audioWorkletNode);
+      loadSampleToArray(this.audioContext, "kick", "samples/noise1.wav", this.audioWorkletNode);
+      loadSampleToArray(this.audioContext, "closed", "samples/MeimunaNau.wav", this.audioWorkletNode);
+      loadSampleToArray(this.audioContext, "open", "samples/bellrip3.wav", this.audioWorkletNode);
+
       this.samplesLoaded = true;
-    } else throw "Audio Context is not initialised!";
+    } else 
+        throw "Audio Context is not initialised!";
   }
 
 

@@ -85,11 +85,11 @@ export const loadSampleToArray = (audioContext, sampleObjectName, url, audioWork
         // source.buffer = buffer;
         // source.loop = true;
         // source.start(0);
-        let float32Array = buffer.getChannelData(0);
+        let float32ArrayBuffer = buffer.getChannelData(0);
         if (data !== undefined && audioWorkletNode !== undefined) {
           // console.log('f32array: ' + float32Array);
           audioWorkletNode.port.postMessage({
-            [sampleObjectName]: float32Array,
+            [sampleObjectName]: float32ArrayBuffer,
           });
         }
       },
@@ -113,11 +113,11 @@ export const loadSampleToArray = (audioContext, sampleObjectName, url, audioWork
       audioContext.decodeAudioData(
         request.response,
         function (buffer) {
-          let float32Array = buffer.getChannelData(0);
+          let float32ArrayBuffer = buffer.getChannelData(0);
           if (data !== undefined && audioWorkletNode !== undefined) {
             // console.log('f32array: ' + float32Array);
             audioWorkletNode.port.postMessage({
-              [sampleObjectName]: float32Array,
+              [sampleObjectName]: float32ArrayBuffer,
             });
           }
         },
