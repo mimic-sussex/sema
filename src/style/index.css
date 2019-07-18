@@ -297,7 +297,7 @@ body {
   width: 45%;
   height: 45%;
   margin: 0 auto;
-  display:block; 
+  display: grid; 
 }
 
 /* resize images */
