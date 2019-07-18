@@ -11,7 +11,6 @@ const oscMap = {
   "@pha": "phasor"
 };
 
-
 const jsFuncMap = {
   'saw': {"setup":(o,p)=>`${o} = new Module.maxiOsc()`, "loop":(o,p)=>`${o}.saw(${p[0].loop})`},
   'sin': {"setup":(o,p)=>`${o} = new Module.maxiOsc()`, "loop":(o,p)=>`${o}.sinewave(${p[0].loop})`},
@@ -19,8 +18,6 @@ const jsFuncMap = {
   'pha': {"setup":(o,p)=>`${o} = new Module.maxiOsc()`, "loop":(o,p)=>`${o}.phasor(${p[0].loop})`},
   'sqr': {"setup":(o,p)=>`${o} = new Module.maxiOsc()`, "loop":(o,p)=>`${o}.square(${p[0].loop})`},
   'sawn': {"setup":(o,p)=>`${o} = new Module.maxiOsc()`, "loop":(o,p)=>`${o}.sawn(${p[0].loop})`},
-  'sum': {"setup":(o,p)=>"", "loop":(o,p)=>{let s=`(${p[0].loop}`; for(let i=1; i < p.length; i++) s += `+${p[i].loop}`; return s+")";}},
-  'prod': {"setup":(o,p)=>"", "loop":(o,p)=>{let s=`(${p[0].loop}`; for(let i=1; i < p.length; i++) s += `*${p[i].loop}`; return s+")";}},
   'add': {"setup":(o,p)=>"", "loop":(o,p)=>`(${p[0].loop} + ${p[1].loop})`},
   'mul': {"setup":(o,p)=>"", "loop":(o,p)=>`(${p[0].loop} * ${p[1].loop})`},
   'sub': {"setup":(o,p)=>"", "loop":(o,p)=>`(${p[0].loop} - ${p[1].loop})`},
@@ -41,7 +38,7 @@ const jsFuncMap = {
   'toModel': {"setup":(o,p)=>`${o} = this.registerTransducer('testmodel', ${p[0].loop})`, "loop":(o,p)=>`${o}.send(${p[1].loop}, ${p[2].loop})`},
   'fromModel': {"setup":(o,p)=>`${o} = this.registerTransducer('testmodel', ${p[0].loop})`, "loop":(o,p)=>`${o}.receive(${p[1].loop})`},
   'adc': {"setup":(o,p)=>"", "loop":(o,p)=>`inputs[${p[0].loop}]`},
-  'sample': {"setup":(o,p)=>`${o} = new Module.maxiSample();
+  'sample': {"setup":(o,p)=>`${o} = new Module.maxiSample(); 
                                     Module.setSample(${o}, this.translateFloat32ArrayToBuffer(event.data[${o}]));`,
             "loop":(o,p)=>`() => { if(${o}.zx([${p[0].loop}]) ${o}.trigger(); return ${o}.playOnce()}`},
 }
@@ -62,7 +59,7 @@ class IRToJavascript {
   }
 
   static traverseTree(t, code, level) {
-    console.log(`Level: ${level}`);
+    console.log(`DEBUG:IR:traverseTree: level: ${level}`);
     let attribMap = {
       '@lang': (ccode, el) => {
         // console.log("lang")
