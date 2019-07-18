@@ -121,17 +121,10 @@ class MaxiProcessor extends AudioWorkletProcessor {
     // this.aOsc = new Module.maxiOsc();
     //
     // this.setupPolysynth();
-
-    this._q = [{
-        "vars": []
-      },
-      {
-        "vars": []
-      }
-    ]; //maxi objects
+    this.newq = () => {return {"vars":{}}};
+    this._q = [this.newq(),this.newq()];
 
     this.setvar = (q, name, val) => {
-      console.log(q);
       q.vars[name] = val;
       return val;
     };
@@ -158,6 +151,8 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
     this.incoming = {};
 
+    this.sampleBuffers={};
+
     this.transducers = {};
     this.registerTransducer = (name, rate) => {
       let trans = new PostMsgTransducer(this.port, this.sampleRate, rate);
@@ -166,6 +161,11 @@ class MaxiProcessor extends AudioWorkletProcessor {
       return trans;
     };
 
+    this.getSampleBuffer = (bufferName) => {
+      console.log(this.sampleBuffers);
+      console.log(bufferName);
+        return this.translateFloat32ArrayToBuffer(this.sampleBuffers[bufferName]);
+    };
 
     this.port.onmessage = event => { // message port async handler
       if ('address' in event.data) {
@@ -178,6 +178,11 @@ class MaxiProcessor extends AudioWorkletProcessor {
           // console.log(this.transducers[event.data.worker]);
           this.transducers[event.data.worker].incoming(event.data);
         }
+      } else if ('sample' in event.data) { //from a worker
+        console.log("sample received");
+        console.log(event.data);
+        let sampleKey = event.data.sample.substr(0,event.data.sample.length - 4)
+        this.sampleBuffers[sampleKey] = event.data.buffer;
       } else if ('eval' in event.data) { // check if new code is being sent for evaluation?
         try {
           console.log(event.data);
@@ -204,6 +209,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
         }
       }
     };
+    this.port.postMessage("giveMeSomeSamples");
   }
 
   /**
@@ -240,7 +246,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
       if (this.xfadeControl.isLineComplete()) {
         let oldIdx = 1.0 - this.currentSignalFunction;
         this.signals[oldIdx] = this.silence;
-        this._q[oldIdx] = [];
+        this._q[oldIdx] = this.newq();
       }
 
       // this.port.postMessage("dspEnd");
@@ -316,11 +322,11 @@ class MaxiProcessor extends AudioWorkletProcessor {
     return maxiSampleBufferData;
   }
 
-  translateFloat32ArrayToBuffer(audioFloat32Array) {
+  translateFloat32ArrayToBuffer(audioFloat32ArrayBuffer) {
 
     var maxiSampleBufferData = new Module.VectorDouble();
-    for (var i = 0; i < audioFloat32Array.length; i++) {
-      maxiSampleBufferData.push_back(audioFloat32Array[i]);
+    for (var i = 0; i < audioFloat32ArrayBuffer.length; i++) {
+      maxiSampleBufferData.push_back(audioFloat32ArrayBuffer[i]);
     }
     return maxiSampleBufferData;
   }

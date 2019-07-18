@@ -134,7 +134,7 @@ class AudioEngine {
           // Connect the worklet node to the audio graph
           this.audioWorkletNode.connect(this.audioContext.destination);
 
-          // Connect the micro to the audio graph with the worklet node 
+          // Connect the micro to the audio graph with the worklet node
           // this.connectMediaStreamSourceInput(this.audioWorkletNode);
 
           return true;
@@ -162,7 +162,9 @@ class AudioEngine {
     if (data == 'evalEnd') {
       let evalts = window.performance.now();
       this.onEvalTimestamp(evalts);
-    } else {
+    } else if (data == 'giveMeSomeSamples') {
+      this.msgHandler("giveMeSomeSamples");
+    }else {
       this.msgHandler(data);
     }
   }
@@ -175,26 +177,26 @@ class AudioEngine {
 
     if (this.audioContext !== undefined) {
       loadSampleToArray(this.audioContext, objectName, url, this.audioWorkletNode);
-    } else 
+    } else
         throw "Audio Context is not initialised!";
   }
 
-  loadSamples() {
-    if (this.audioContext !== undefined) {
-      loadSampleToArray(this.audioContext, "snare", "samples/909.wav", this.audioWorkletNode);
-      loadSampleToArray(this.audioContext, "kick", "samples/909b.wav", this.audioWorkletNode);
-      loadSampleToArray(this.audioContext, "closed", "samples/909closed.wav", this.audioWorkletNode);
-      loadSampleToArray(this.audioContext, "open", "samples/909open.wav", this.audioWorkletNode);
-
-      loadSampleToArray(this.audioContext, "snare", "samples/noinoi.wav", this.audioWorkletNode);
-      loadSampleToArray(this.audioContext, "kick", "samples/noise1.wav", this.audioWorkletNode);
-      loadSampleToArray(this.audioContext, "closed", "samples/MeimunaNau.wav", this.audioWorkletNode);
-      loadSampleToArray(this.audioContext, "open", "samples/bellrip3.wav", this.audioWorkletNode);
-
-      this.samplesLoaded = true;
-    } else 
-        throw "Audio Context is not initialised!";
-  }
+  // loadSamples() {
+  //   if (this.audioContext !== undefined) {
+  //     loadSampleToArray(this.audioContext, "snare", "samples/909.wav", this.audioWorkletNode);
+  //     loadSampleToArray(this.audioContext, "kick", "samples/909b.wav", this.audioWorkletNode);
+  //     loadSampleToArray(this.audioContext, "closed", "samples/909closed.wav", this.audioWorkletNode);
+  //     loadSampleToArray(this.audioContext, "open", "samples/909open.wav", this.audioWorkletNode);
+  //
+  //     loadSampleToArray(this.audioContext, "snare", "samples/noinoi.wav", this.audioWorkletNode);
+  //     loadSampleToArray(this.audioContext, "kick", "samples/noise1.wav", this.audioWorkletNode);
+  //     loadSampleToArray(this.audioContext, "closed", "samples/MeimunaNau.wav", this.audioWorkletNode);
+  //     loadSampleToArray(this.audioContext, "open", "samples/bellrip3.wav", this.audioWorkletNode);
+  //
+  //     this.samplesLoaded = true;
+  //   } else
+  //       throw "Audio Context is not initialised!";
+  // }
 
 
 
