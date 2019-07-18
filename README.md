@@ -8,7 +8,7 @@ Sema provides an online integrated environment that implements support for desig
 
 * Single sample signal processing – Per-sample sound processing including techniques that use feedback loops, such as physical modelling, reverberation and IIR filtering.
 
-* Single sample rate using transduction — It is simpler to do signal processing using the audio rate as the principal sample rate. We use the concept of a transducer for resolving different sample rate requirements of dependent objects. The transducer concept enables us to accommodate a variety of processes with varying sample rates (video, spectral rate, sensors, ML model inference) within a single engine.
+* Single sample rate using transduction – It is simpler to do signal processing using the audio rate as the principal sample rate. We use the concept of a transducer for resolving different sample rate requirements of dependent objects. The transducer concept enables us to accommodate a variety of processes with varying sample rates (video, spectral rate, sensors, ML model inference) within a single engine.
 
 * Minimal abstractions – There are no high-level abstractions such as buses, synths, nodes, servers, or any language scaffolding in our signal engine. Such abstractions sit within the end-user mini-language design space.
 
