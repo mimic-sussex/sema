@@ -46,16 +46,10 @@ const jsFuncMap = {
   'toModel': {"setup":(o,p)=>`${o} = this.registerTransducer('testmodel', ${p[0].loop})`, "loop":(o,p)=>`${o}.send(${p[1].loop}, ${p[2].loop})`},
   'fromModel': {"setup":(o,p)=>`${o} = this.registerTransducer('testmodel', ${p[0].loop})`, "loop":(o,p)=>`${o}.receive(${p[1].loop})`},
   'adc': {"setup":(o,p)=>"", "loop":(o,p)=>`inputs[${p[0].loop}]`},
-<<<<<<< HEAD
-  'sample': {"setup":(o,p)=>`${o} = new Module.maxiSample(); 
-                                    Module.setSample(${o}, this.translateFloat32ArrayToBuffer(event.data[${o}]));`,
-            "loop":(o,p)=>`() => { if(${o}.zx([${p[0].loop}]) ${o}.trigger(); return ${o}.playOnce()}`},
-=======
   'sampler': {"setup":(o,p)=>`${o} = new Module.maxiSample();
                                   ${o}.setSample(this.getSampleBuffer(${p[0].loop}));`,
                                   "loop":(o,p)=>`(${o}.isReady() ? ${o}.playOnZX(${p[1].loop}) : 0.0)`},
   'oscin':{"setup":(o,p)=>"", "loop":(o,p)=>`this.OSCTransducer(${p[0].loop},${p[1].loop})`},
->>>>>>> 098d575601306be10ce1331030a3a28100796f8f
 }
 
 class IRToJavascript {
@@ -133,30 +127,6 @@ class IRToJavascript {
         ccode.loop = `this.setvar(q, '${el['@varname']}', ${varValueCode.loop})`;
         return ccode;
       },
-<<<<<<< HEAD
-      '@oscreceiver': (ccode, el) => {
-        console.log(el);
-        // console.log(el['@jsfunc']);
-
-        let setupCode="";
-        let idxCode = "-1";
-        if (el['@params'].length > 0) {
-          let paramMarkers = [{"s":el['paramBegin'], "e":el['paramEnd'], "l":level}]
-          ccode.paramMarkers = ccode.paramMarkers.concat(paramMarkers);
-          let allParams=[];
-          for (let p = 0; p < el['@params'].length; p++) {
-            let params = IRToJavascript.emptyCode();
-            params = IRToJavascript.traverseTree(el['@params'][p], params, level+1);
-            console.log(params);
-            allParams[p] = params;
-          }
-          console.log(allParams);
-          for(let param in allParams) {
-            setupCode += allParams[param].setup;
-            ccode.paramMarkers = ccode.paramMarkers.concat(allParams[param].paramMarkers);
-          }
-          idxCode = allParams[0].loop;
-=======
       '@string': (ccode, el) => {
         // console.log(el);
         if (typeof el === 'string' || el instanceof String) {
@@ -164,7 +134,6 @@ class IRToJavascript {
           ccode.loop += `'${el}'`;
         } else {
           ccode = IRToJavascript.traverseTree(el, ccode, level);
->>>>>>> 098d575601306be10ce1331030a3a28100796f8f
         }
         let oscCode = `this.OSCTransducer('${el['@oscaddr'].value}',${idxCode})`;
 
