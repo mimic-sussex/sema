@@ -41,7 +41,6 @@ const jsFuncMap = {
   'sample': {"setup":(o,p)=>`${o} = new Module.maxiSample(); 
                                     Module.setSample(${o}, this.translateFloat32ArrayToBuffer(event.data[${o}]));`,
             "loop":(o,p)=>`() => { if(${o}.zx([${p[0].loop}]) ${o}.trigger(); return ${o}.playOnce()}`},
-  'oscin':{"setup":(o,p)=>"", "loop":(o,p)=>`this.OSCTransducer(${p[0].loop},${p[1].loop})`},
 }
 
 class IRToJavascript {
@@ -112,49 +111,38 @@ class IRToJavascript {
         ccode.loop = `this.setvar(q, '${el['@varname']}', ${varValueCode.loop})`;
         return ccode;
       },
-      // '@oscreceiver': (ccode, el) => {
-      //   console.log(el);
-      //   // console.log(el['@jsfunc']);
-      //
-      //   let setupCode="";
-      //   let idxCode = "-1";
-      //   if (el['@params'].length > 0) {
-      //     let paramMarkers = [{"s":el['paramBegin'], "e":el['paramEnd'], "l":level}]
-      //     ccode.paramMarkers = ccode.paramMarkers.concat(paramMarkers);
-      //     let allParams=[];
-      //     for (let p = 0; p < el['@params'].length; p++) {
-      //       let params = IRToJavascript.emptyCode();
-      //       params = IRToJavascript.traverseTree(el['@params'][p], params, level+1);
-      //       console.log(params);
-      //       allParams[p] = params;
-      //     }
-      //     console.log(allParams);
-      //     for(let param in allParams) {
-      //       setupCode += allParams[param].setup;
-      //       ccode.paramMarkers = ccode.paramMarkers.concat(allParams[param].paramMarkers);
-      //     }
-      //     idxCode = allParams[0].loop;
-      //   }
-      //   let oscCode = `this.OSCTransducer('${el['@oscaddr'].value}',${idxCode})`;
-      //
-      //   // IRToJavascript.traverseTree(el['@oscaddr'], IRToJavascript.emptyCode(), level+1);
-      //
-      //   ccode.setup += `${setupCode}`;
-      //   ccode.loop += `${oscCode}`;
-      //
-      //   console.log(ccode.paramMarkers);
-      //
-      //   return ccode;
-      // },
-      '@string': (ccode, el) => {
+      '@oscreceiver': (ccode, el) => {
         console.log(el);
-        //TODO: detect object or string
-        if (typeof el === 'string' || el instanceof String) {
-          console.log("String: " + el);
-          ccode.loop += `'${el}'`;
-        } else {
-          ccode = IRToJavascript.traverseTree(el, ccode, level);
+        // console.log(el['@jsfunc']);
+
+        let setupCode="";
+        let idxCode = "-1";
+        if (el['@params'].length > 0) {
+          let paramMarkers = [{"s":el['paramBegin'], "e":el['paramEnd'], "l":level}]
+          ccode.paramMarkers = ccode.paramMarkers.concat(paramMarkers);
+          let allParams=[];
+          for (let p = 0; p < el['@params'].length; p++) {
+            let params = IRToJavascript.emptyCode();
+            params = IRToJavascript.traverseTree(el['@params'][p], params, level+1);
+            console.log(params);
+            allParams[p] = params;
+          }
+          console.log(allParams);
+          for(let param in allParams) {
+            setupCode += allParams[param].setup;
+            ccode.paramMarkers = ccode.paramMarkers.concat(allParams[param].paramMarkers);
+          }
+          idxCode = allParams[0].loop;
         }
+        let oscCode = `this.OSCTransducer('${el['@oscaddr'].value}',${idxCode})`;
+
+        // IRToJavascript.traverseTree(el['@oscaddr'], IRToJavascript.emptyCode(), level+1);
+
+        ccode.setup += `${setupCode}`;
+        ccode.loop += `${oscCode}`;
+
+        console.log(ccode.paramMarkers);
+
         return ccode;
       },
       '@num': (ccode, el) => {
@@ -171,7 +159,10 @@ class IRToJavascript {
         // ccode.loop += `${el.value}`;
         ccode.loop += `this.OSCTransducer('${el.value}')`;
         return ccode;
-      }
+      },
+      '@sample': (ccode,el) => {
+        
+      } 
       // '@func': (ccode, el) => {
       //   // console.log(el);
       //   let newCode = IRToJavascript.traverseTree(el, ccode);
@@ -250,7 +241,7 @@ class IRToJavascript {
   static treeToCode(tree) {
     // console.log(tree);
     let code = IRToJavascript.traverseTree(tree, IRToJavascript.emptyCode(), 0);
-    code.setup = `() => {let q=this.newq(); ${code.setup}; return q;}`;
+    code.setup = `() => {let q=[]; ${code.setup}; return q;}`;
     code.loop = `(q, inputs) => {return ${code.loop};}`
     console.log(code.loop);
     console.log(code.paramMarkers);
