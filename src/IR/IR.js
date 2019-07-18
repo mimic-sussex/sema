@@ -38,6 +38,7 @@ const jsFuncMap = {
   'uexp': {"setup":(o,p)=>"", "loop":(o,p)=>`Module.maxiMap.linexp(${p[0].loop}, 0.0000001, 1, ${p[1].loop}, ${p[2].loop})`},
   'linlin': {"setup":(o,p)=>"", "loop":(o,p)=>`Module.maxiMap.linlin(${p[0].loop}, ${p[1].loop}, ${p[2].loop}),${p[3].loop}, ${p[4].loop})`},
   'linexp': {"setup":(o,p)=>"", "loop":(o,p)=>`Module.maxiMap.linexp(${p[0].loop}, ${p[1].loop}, ${p[2].loop}),${p[3].loop}, ${p[4].loop})`},
+  'dist': {"setup":(o,p)=>`${o} = new Module.maxiDistortion()`, "loop":(o,p)=>`${o}.atanDist(${p[0].loop},${p[1].loop})`},
   'lpf': {"setup":(o,p)=>`${o} = new Module.maxiFilter()`, "loop":(o,p)=>`${o}.lopass(${p[0].loop},${p[1].loop})`},
   'hpf': {"setup":(o,p)=>`${o} = new Module.maxiFilter()`, "loop":(o,p)=>`${o}.hipass(${p[0].loop},${p[1].loop})`},
   'lpz': {"setup":(o,p)=>`${o} = new Module.maxiFilter()`, "loop":(o,p)=>`${o}.lores(${p[0].loop},${p[1].loop},${p[2].loop})`},
@@ -79,10 +80,17 @@ class IRToJavascript {
         return ccode;
       },
       '@spawn': (ccode, el) => {
+        // el.map((spawnEl) => {
+        //
+        //   ccode = IRToJavascript.traverseTree(spawnEl, ccode, level);
+        //
+        // });
+
         return IRToJavascript.traverseTree(el, ccode, level);
+        // return ccode;
       },
       '@synth': (ccode, el) => {
-        console.log(el);
+        // console.log(el);
         // console.log(el['@jsfunc']);
         let paramMarkers = [{"s":el['paramBegin'], "e":el['paramEnd'], "l":level}]
         ccode.paramMarkers = ccode.paramMarkers.concat(paramMarkers);
@@ -100,7 +108,7 @@ class IRToJavascript {
         for (let p = 0; p < el['@params'].length; p++) {
           let params = IRToJavascript.emptyCode();
           params = IRToJavascript.traverseTree(el['@params'][p], params, level+1);
-          console.log(params);
+          // console.log(params);
           allParams[p] = params;
         }
         console.log(allParams);
@@ -119,43 +127,8 @@ class IRToJavascript {
         ccode.loop = `this.setvar(q, '${el['@varname']}', ${varValueCode.loop})`;
         return ccode;
       },
-      // '@oscreceiver': (ccode, el) => {
-      //   console.log(el);
-      //   // console.log(el['@jsfunc']);
-      //
-      //   let setupCode="";
-      //   let idxCode = "-1";
-      //   if (el['@params'].length > 0) {
-      //     let paramMarkers = [{"s":el['paramBegin'], "e":el['paramEnd'], "l":level}]
-      //     ccode.paramMarkers = ccode.paramMarkers.concat(paramMarkers);
-      //     let allParams=[];
-      //     for (let p = 0; p < el['@params'].length; p++) {
-      //       let params = IRToJavascript.emptyCode();
-      //       params = IRToJavascript.traverseTree(el['@params'][p], params, level+1);
-      //       console.log(params);
-      //       allParams[p] = params;
-      //     }
-      //     console.log(allParams);
-      //     for(let param in allParams) {
-      //       setupCode += allParams[param].setup;
-      //       ccode.paramMarkers = ccode.paramMarkers.concat(allParams[param].paramMarkers);
-      //     }
-      //     idxCode = allParams[0].loop;
-      //   }
-      //   let oscCode = `this.OSCTransducer('${el['@oscaddr'].value}',${idxCode})`;
-      //
-      //   // IRToJavascript.traverseTree(el['@oscaddr'], IRToJavascript.emptyCode(), level+1);
-      //
-      //   ccode.setup += `${setupCode}`;
-      //   ccode.loop += `${oscCode}`;
-      //
-      //   console.log(ccode.paramMarkers);
-      //
-      //   return ccode;
-      // },
       '@string': (ccode, el) => {
-        console.log(el);
-        //TODO: detect object or string
+        // console.log(el);
         if (typeof el === 'string' || el instanceof String) {
           console.log("String: " + el);
           ccode.loop += `'${el}'`;
@@ -166,7 +139,7 @@ class IRToJavascript {
       },
       '@num': (ccode, el) => {
         if (el.value) {
-          console.log(el.value);
+          // console.log(el.value);
           ccode.loop += `${el.value}`;
         } else {
           ccode = IRToJavascript.traverseTree(el, ccode, level);
