@@ -5,11 +5,11 @@ const moo = require("moo"); // this 'require' creates a node dependency
 
 const lexer = moo.compile({
   separator:    /,/,
-  paramEnd:        /}/,
+  paramEnd:     /}/,
   paramBegin:   /{/,
   variable:     /:[a-zA-Z0-9]+:/,
   oscAddress:   /(?:\/[a-zA-Z0-9]+)+/,
-  sample:   /(?:\\[a-zA-Z0-9]+)+/,
+  sample:       /(?:\\[a-zA-Z0-9]+)+/,
   add:          /\+/,
   mult:         /\*/,
   div:          /\//,
