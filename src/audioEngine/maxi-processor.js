@@ -171,7 +171,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
       if ('address' in event.data) {
         //this must be an OSC message
         this.OSCMessages[event.data.address] = event.data.args;
-        console.log(this.OSCMessages);
+        //console.log(this.OSCMessages);
       } else if ('worker' in event.data) { //from a worker
         //this must be an OSC message
         if (this.transducers[event.data.worker]) {
