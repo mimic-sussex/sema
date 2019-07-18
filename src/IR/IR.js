@@ -40,7 +40,8 @@ const jsFuncMap = {
   'adc': {"setup":(o,p)=>"", "loop":(o,p)=>`inputs[${p[0].loop}]`},
   'sampler': {"setup":(o,p)=>`${o} = new Module.maxiSample();
                                   ${o}.setSample(this.getSampleBuffer(${p[0].loop}));`,
-            "loop":(o,p)=>`() => {return ${o}.playOnZX(${p[1].loop})}`},
+                                  // "loop":(o,p)=>`() => {return ${o}.playOnZX(${p[1].loop})}`},
+                                  "loop":(o,p)=>`(${o}.isReady() ? ${o}.playOnZX(${p[1].loop}) : 0.0)`},
   'oscin':{"setup":(o,p)=>"", "loop":(o,p)=>`this.OSCTransducer(${p[0].loop},${p[1].loop})`},
 }
 
