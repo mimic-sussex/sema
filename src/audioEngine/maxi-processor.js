@@ -316,11 +316,11 @@ class MaxiProcessor extends AudioWorkletProcessor {
     return maxiSampleBufferData;
   }
 
-  translateFloat32ArrayToBuffer(audioFloat32Array) {
+  translateFloat32ArrayToBuffer(audioFloat32ArrayBuffer) {
 
     var maxiSampleBufferData = new Module.VectorDouble();
-    for (var i = 0; i < audioFloat32Array.length; i++) {
-      maxiSampleBufferData.push_back(audioFloat32Array[i]);
+    for (var i = 0; i < audioFloat32ArrayBuffer.length; i++) {
+      maxiSampleBufferData.push_back(audioFloat32ArrayBuffer[i]);
     }
     return maxiSampleBufferData;
   }

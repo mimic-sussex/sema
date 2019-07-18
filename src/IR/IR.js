@@ -24,6 +24,7 @@ const jsFuncMap = {
   'div': {"setup":(o,p)=>"", "loop":(o,p)=>`(${p[0].loop} / ${p[1].loop})`},
   'pow': {"setup":(o,p)=>"", "loop":(o,p)=>`Math.pow(${p[0].loop},${p[1].loop})`},
   'abs': {"setup":(o,p)=>"", "loop":(o,p)=>`Math.abs(${p[0].loop})`},
+  'env': {"setup":(o,p)=>`${o} = new Module.maxiEnv();${o}.setAttack(${p[0].loop});${o}.setDecay(${p[0].loop});${o}.setSustain(${p[1].loop});${o}.setRelease(${p[2].loop});`, "loop":(o,p)=>`${o}.trigger = 1;`},
   'lpf': {"setup":(o,p)=>`${o} = new Module.maxiFilter()`, "loop":(o,p)=>`${o}.lopass(${p[0].loop},${p[1].loop})`},
   'hpf': {"setup":(o,p)=>`${o} = new Module.maxiFilter()`, "loop":(o,p)=>`${o}.hipass(${p[0].loop},${p[1].loop})`},
   'lpz': {"setup":(o,p)=>`${o} = new Module.maxiFilter()`, "loop":(o,p)=>`${o}.lores(${p[0].loop},${p[1].loop},${p[2].loop})`},
@@ -33,7 +34,7 @@ const jsFuncMap = {
   'adc': {"setup":(o,p)=>"", "loop":(o,p)=>`inputs[${p[0].loop}]`},
   'sample': {"setup":(o,p)=>`${o} = new Module.maxiSample(); 
                                     Module.setSample(${o}, this.translateFloat32ArrayToBuffer(event.data[${o}]));`,
-            "loop":(o,p)=>`() => { if(zx([${p[0].loop}]) ${o}.trigger(); return ${o}.playOnce()}`},
+            "loop":(o,p)=>`() => { if(${o}.zx([${p[0].loop}]) ${o}.trigger(); return ${o}.playOnce()}`},
 }
 
 class IRToJavascript {
