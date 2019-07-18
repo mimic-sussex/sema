@@ -181,7 +181,7 @@ function createEditor3() {
 
 
 function createControls() {
-
+ 
   const isMac = CodeMirror.keyMap.default === CodeMirror.keyMap.macDefault;
   const runKeys = isMac ? "Cmd-Enter" : "Ctrl-Enter";
   const container = document.getElementById("containerButtons");
@@ -388,7 +388,7 @@ const loadImportedSamples = () => {
 
 /*
  *
-  DOMContentLoaded 
+  DOMContentLoaded
  *
  */
 
