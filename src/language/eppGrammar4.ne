@@ -7,65 +7,66 @@
 const moo = require("moo"); // this 'require' creates a node dependency
 
 const lexer = moo.compile({
-  separator:    /,/,
-  paramEnd:        /}/,
-  paramBegin:   /{/,
-  oscAddress:   /(?:\/[a-zA-Z0-9]+)+/,
-  add:          /\+/,
-  mult:         /\*/,
-  div:          /\//,
-  dot:          /\./,
-  hash:         /\#/,
-  hyphen:       /\-/,
-  ndash:        /\–/,
-  mdash:        /\—/,
-  comma:        /\,/,
-  colon:        /\:/,
-  semicolon:    /\;/,
-  split:        /\<:/,
-  merge:        /\:>/,
-  tilde:        /\~/,
-  funcName: /[a-zA-Z][a-zA-Z0-9]*/,
-  number:       /[-+]?[0-9]*\.?[0-9]+/,
-  ws:   {match: /\s+/, lineBreaks: true},
+  separator:      /,/,
+  paramEnd:       /}/,
+  paramBegin:     /{/,
+  oscAddress:     /(?:\/[a-zA-Z0-9]+)+/,
+  sample:         /(?:\\[a-zA-Z0-9]+)+/,
+  add:            /\+/,
+  mult:           /\*/,
+  div:            /\//,
+  dot:            /\./,
+  hash:           /\#/,
+  hyphen:         /\-/,
+  ndash:          /\–/,
+  mdash:          /\—/,
+  comma:          /\,/,
+  colon:          /\:/,
+  semicolon:      /\;/,
+  split:          /\<:/,
+  merge:          /\:>/,
+  tilde:          /\~/,
+  funcName:       /[a-zA-Z][a-zA-Z0-9]*/,
+  number:         /[-+]?[0-9]*\.?[0-9]+/,
+  ws:             {match: /\s+/, lineBreaks: true},
 });
 %}
 
 # Pass your lexer object using the @lexer option
 @lexer lexer
 
-main -> _ Statement _                                         {% d => ({ "@lang" : d[1] })  %}
+main -> _ Statement _                                             {% d => ({ "@lang" : d[1] })  %}
 
 Statement ->
-      Expression _ %semicolon _ Statement                     {% d => [{ "@spawn": d[0] }].concat(d[4]) %}
-      | Expression ( _ %semicolon ):?                         {% d => [{ "@spawn": d[0] }] %}
-      | %hash . "\n"                                          {% d => ({ "@comment": d[3] }) %}
+      Expression _ %semicolon _ Statement                         {% d => [{ "@spawn": d[0] }].concat(d[4]) %}
+      | Expression ( _ %semicolon ):?                             {% d => [{ "@spawn": d[0] }] %}
+      | %hash . "\n"                                              {% d => ({ "@comment": d[3] }) %}
 
 Expression ->
-      %paramBegin Params  %paramEnd  %funcName                           {% d => ({ "@synth": {"@params":d[1], "@jsfunc":d[3], "paramBegin":d[0], "paramEnd":d[2]}} ) %}
+      %paramBegin Params  %paramEnd  %funcName                    {% d => ({ "@synth": {"@params":d[1], "@jsfunc":d[3], "paramBegin":d[0], "paramEnd":d[2]}} ) %}
       |
-      %paramBegin Params  %paramEnd  %oscAddress                           {% d => ({ "@oscreceiver": {"@params":d[1], "@oscaddr":d[3], "paramBegin":d[0], "paramEnd":d[2]}} ) %}
+      %variable %paramBegin Params  %paramEnd  %sample            {% d => ({ "@sample": {"@params":d[1], "@filename":d[3], "paramBegin":d[0], "paramEnd":d[2]}} ) %}
       |
-      %oscAddress                           {% d => ({ "@oscreceiver": {"@params":{}, "@oscaddr":d[0]}} ) %}
+      %paramBegin Params  %paramEnd  %oscAddress                  {% d => ({ "@oscreceiver": {"@params":d[1], "@oscaddr":d[3], "paramBegin":d[0], "paramEnd":d[2]}} ) %}
+      |
+      %oscAddress                                                 {% d => ({ "@oscreceiver": {"@params":{}, "@oscaddr":d[0]}} ) %}
 
-      # | %funcName                           {% d => ({ "@synth": [], "@jsfunc":d[0]} ) %}
+      # | %funcName                                               {% d => ({ "@synth": [], "@jsfunc":d[0]} ) %}
 
 Params ->
-(%number)                                      {% (d) => ([{"@num":d[0][0]}]) %}
-|
-# (%oscAddress)                                      {% (d) => ([{"@oscaddr":d[0][0]}]) %}
-# |
-  Expression                                      {% (d) => ([{"@num":d[0]}]) %}
-  |
-  %number %separator Params                    {% d => [{ "@num": d[0]}].concat(d[2]) %}
-  |
-  # %oscAddress %separator Params                    {% d => [{ "@oscaddr": d[0]}].concat(d[2]) %}
-  # |
-  Expression %separator Params                    {% d => [{ "@num": d[0]}].concat(d[2]) %}
-  |
-  %paramBegin Params  %paramEnd           {%(d) => ([{"@list":d[1]}])%}
-  |
-  %paramBegin Params  %paramEnd  %separator Params     {% d => [{ "@list": d[1]}].concat(d[4]) %}
+      (%number)                                                   {% (d) => ([{"@num":d[0][0]}]) %}
+      |
+      Expression                                                  {% (d) => ([{"@num":d[0]}]) %}
+      |
+      %number %separator Params                                   {% d => [{ "@num": d[0]}].concat(d[2]) %}
+      |
+      # %oscAddress %separator Params                             {% d => [{ "@oscaddr": d[0]}].concat(d[2]) %}
+      # |
+      Expression %separator Params                                {% d => [{ "@num": d[0]}].concat(d[2]) %}
+      |
+      %paramBegin Params  %paramEnd                               {%(d) => ([{"@list":d[1]}])%}
+      |
+      %paramBegin Params  %paramEnd  %separator Params            {% d => [{ "@list": d[1]}].concat(d[4]) %}
 
   # | Expression %separator Params                    {% d => [{ "@num": d[0]}].concat(d[2]) %}
   # | %funcName %separator Params       {% d => ([{ "@jsfunc": d[0]}].concat(d[2])) %}

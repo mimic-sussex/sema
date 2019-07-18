@@ -43,6 +43,8 @@ Statement ->
 Expression ->
       %variable %paramBegin Params  %paramEnd  %funcName                            {% d => ({"@setvar": {"@varname":d[0],"@varvalue":{ "@synth": {"@params":d[2], "@jsfunc":d[4], "paramBegin":d[1], "paramEnd":d[3]}}}} ) %}
       |
+      %variable %paramBegin Params  %paramEnd  %sample                              {% d => ({ "@sample": {"@params":d[1], "@filename":d[3], "paramBegin":d[0], "paramEnd":d[2]}} ) %}
+      |
       %variable %paramBegin Params  %paramEnd  %oscAddress                          {% d => ({ "@oscreceiver": {"@params":d[1], "@oscaddr":d[3], "paramBegin":d[0], "paramEnd":d[2]}} ) %}
       |
       %oscAddress                                                                   {% d => ({ "@oscreceiver": {"@params":{}, "@oscaddr":d[0]}} ) %}
