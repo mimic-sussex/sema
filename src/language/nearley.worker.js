@@ -1,5 +1,5 @@
 import * as nearley from 'nearley/lib/nearley.js';
-import * as grammar from './eppprocessor3.js';
+import * as grammar from './eppprocessor5.js';
 import IRToJavascript from '../IR/IR.js'
 
 var parserStartPoint;
@@ -21,6 +21,8 @@ onmessage = (m) => {
       // console.log(`Parse tree complete`);
       console.log(JSON.stringify(parser.results));
       let jscode = IRToJavascript.treeToCode(parser.results);
+      jscode.paramMarkers = JSON.stringify(jscode.paramMarkers);
+      console.log(jscode);
       postMessage(jscode);
     } catch (err) {
       console.log("Error" + err); // "Error at character 9"

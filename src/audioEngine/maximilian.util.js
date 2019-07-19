@@ -85,11 +85,12 @@ export const loadSampleToArray = (audioContext, sampleObjectName, url, audioWork
         // source.buffer = buffer;
         // source.loop = true;
         // source.start(0);
-        let float32Array = buffer.getChannelData(0);
+        let float32ArrayBuffer = buffer.getChannelData(0);
         if (data !== undefined && audioWorkletNode !== undefined) {
           // console.log('f32array: ' + float32Array);
           audioWorkletNode.port.postMessage({
-            [sampleObjectName]: float32Array,
+            "sample":sampleObjectName,
+            "buffer": float32ArrayBuffer,
           });
         }
       },
@@ -103,7 +104,7 @@ export const loadSampleToArray = (audioContext, sampleObjectName, url, audioWork
     // Uncaught ReferenceError: XMLHttpRequest is not defined (index):97 MaxiProcessor Error detected: undefined
     // NOTE: followed the trail to the wasmmodule.js
     // when loading on if (typeof XMLHttpRequest !== 'undefined') {
-    // throw new Error("Lazy loading should have been performed (contents set) in createLazyFile, but it was not. Lazy loading only works in web workers. 
+    // throw new Error("Lazy loading should have been performed (contents set) in createLazyFile, but it was not. Lazy loading only works in web workers.
     // Use --embed-file or --preload-file in emcc on the main thread.");
     var request = new XMLHttpRequest();
     request.addEventListener("load", () => console.log("The transfer is complete."));
@@ -113,11 +114,12 @@ export const loadSampleToArray = (audioContext, sampleObjectName, url, audioWork
       audioContext.decodeAudioData(
         request.response,
         function (buffer) {
-          let float32Array = buffer.getChannelData(0);
+          let float32ArrayBuffer = buffer.getChannelData(0);
           if (data !== undefined && audioWorkletNode !== undefined) {
             // console.log('f32array: ' + float32Array);
             audioWorkletNode.port.postMessage({
-              [sampleObjectName]: float32Array,
+              "sample":sampleObjectName,
+              "buffer": float32ArrayBuffer,
             });
           }
         },

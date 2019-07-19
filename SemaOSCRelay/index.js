@@ -15,7 +15,8 @@ var getIPAddresses = function () {
         for (var i = 0; i < addresses.length; i++) {
             var addressInfo = addresses[i];
 
-            if (addressInfo.family === "IPv4" && !addressInfo.internal) {
+            if (addressInfo.family === "IPv4") {
+              // if (addressInfo.family === "IPv4" && !addressInfo.internal) {
                 ipAddresses.push(addressInfo.address);
             }
         }

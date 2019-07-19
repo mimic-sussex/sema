@@ -1,4 +1,69 @@
 import Module from './maximilian.wasmmodule.js';
+// import {
+//   MMLLOnsetDetector
+// } from '../machineListening/MMLLOnsetDetector.js';
+
+
+
+class PostMsgTransducer {
+
+  constructor(msgPort, sampleRate, sendFrequency = 2) {
+    if (sendFrequency == 0)
+      this.sendPeriod = Number.MAX_SAFE_INTEGER;
+    else
+      this.sendPeriod = 1.0 / sendFrequency * sampleRate;
+    this.sendCounter = this.sendPeriod;
+    this.port = msgPort;
+    this.val = 0;
+  }
+
+  incoming(msg) {
+    this.val = msg.val;
+  }
+
+  send(id, sendMsg) {
+    if (this.sendCounter >= this.sendPeriod) {
+      this.port.postMessage({
+        rq: "send",
+        value: sendMsg,
+        id: id
+
+      });
+      this.sendCounter -= this.sendPeriod;
+    } else {
+      this.sendCounter++;
+    }
+    return 0;
+  }
+
+  receive(sendMsg) {
+    if (this.sendCounter >= this.sendPeriod) {
+      this.port.postMessage({
+        rq: "recv",
+        value: sendMsg,
+      });
+      this.sendCounter -= this.sendPeriod;
+    } else {
+      this.sendCounter++;
+    }
+    return this.val;
+  }
+
+  // io(sendMsg) {
+  //   if (this.sendCounter >= this.sendPeriod) {
+  //     this.port.postMessage({
+  //       rq: "dataplease",
+  //       value: sendMsg
+  //     });
+  //     this.sendCounter -= this.sendPeriod;
+  //   } else {
+  //     this.sendCounter++;
+  //   }
+  //   return this.val;
+  // }
+}
+
+
 
 /**
  * The main Maxi Audio wrapper with a WASM-powered AudioWorkletProcessor.
@@ -6,31 +71,6 @@ import Module from './maximilian.wasmmodule.js';
  * @class MaxiProcessor
  * @extends AudioWorkletProcessor
  */
-
-class PostMsgTransducer {
-  constructor(msgPort, sampleRate, sendFrequency=2) {
-    if(sendFrequency==0)
-      this.sendPeriod = Number.MAX_SAFE_INTEGER;
-    else
-      this.sendPeriod = 1.0/sendFrequency * sampleRate;
-    this.sendCounter=this.sendPeriod;
-    this.port = msgPort;
-    this.val = 0;
-  }
-  incoming(msg) {
-    this.val = msg.val;
-  }
-  io(sendMsg) {
-    if (this.sendCounter >= this.sendPeriod) {
-      this.port.postMessage({rq:"dataplease", val:0});
-      this.sendCounter -= this.sendPeriod;
-    }else{
-      this.sendCounter++;
-    }
-    return this.val;
-  }
-}
-
 class MaxiProcessor extends AudioWorkletProcessor {
 
   /**
@@ -54,6 +94,8 @@ class MaxiProcessor extends AudioWorkletProcessor {
     this.sampleRate = 44100;
 
     this.DAC = [0];
+
+    // this.onsetDetector = new MMLLOnsetDetector(this.sampleRate);
 
     this.tempo = 120.0; // tempo (in beats per minute);
     this.secondsPerBeat = (60.0 / this.tempo);
@@ -82,13 +124,19 @@ class MaxiProcessor extends AudioWorkletProcessor {
     // this.aOsc = new Module.maxiOsc();
     //
     // this.setupPolysynth();
+    this.newq = () => {return {"vars":{}}};
+    this._q = [this.newq(),this.newq()];
 
-    this._q = [
-      [],
-      []
-    ]; //maxi objects
+    this.setvar = (q, name, val) => {
+      q.vars[name] = val;
+      return val;
+    };
 
-    this.silence = (q) => {
+    this.getvar = (q, name) => {
+      return q.vars[name];
+    };
+
+    this.silence = (q, inputs) => {
       return 0.0
     };
     this.signals = [this.silence, this.silence];
@@ -99,17 +147,14 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
     this.OSCMessages = {};
 
-    this.OSCTransducer = function(address, argIdx) {
-      let val = this.OSCMessages[address];
-      return val ? val[argIdx] : 0.0;
+    this.OSCTransducer = function(x, idx = 0) {
+      let val = this.OSCMessages[x];
+      return val ? idx >= 0 ? val[idx] : val : 0.0;
     };
 
     this.incoming = {};
-    // this.mlModelTransducer = function(modelInput) {
-    //   this.port.postMessage("toWkr");
-    //   let val = this.incoming['test'];
-    //   return val ? val : 0.0;
-    // }
+
+    this.sampleBuffers={};
 
     this.transducers = {};
     this.registerTransducer = (name, rate) => {
@@ -119,21 +164,29 @@ class MaxiProcessor extends AudioWorkletProcessor {
       return trans;
     };
 
+    this.getSampleBuffer = (bufferName) => {
+      console.log(this.sampleBuffers);
+      console.log(bufferName);
+        return this.translateFloat32ArrayToBuffer(this.sampleBuffers[bufferName]);
+    };
 
     this.port.onmessage = event => { // message port async handler
       if ('address' in event.data) {
         //this must be an OSC message
         this.OSCMessages[event.data.address] = event.data.args;
-        console.log(this.OSCMessages);
-      }
-      else if ('worker' in event.data) {  //from a worker
+        //console.log(this.OSCMessages);
+      } else if ('worker' in event.data) { //from a worker
         //this must be an OSC message
         if (this.transducers[event.data.worker]) {
           // console.log(this.transducers[event.data.worker]);
           this.transducers[event.data.worker].incoming(event.data);
         }
-      }
-      else if ('eval' in event.data) { // check if new code is being sent for evaluation?
+      } else if ('sample' in event.data) { //from a worker
+        console.log("sample received");
+        console.log(event.data);
+        let sampleKey = event.data.sample.substr(0,event.data.sample.length - 4)
+        this.sampleBuffers[sampleKey] = event.data.buffer;
+      } else if ('eval' in event.data) { // check if new code is being sent for evaluation?
         try {
           console.log(event.data);
           // let setupFunction = new Function(`return ${event.data['setup']}`);
@@ -149,7 +202,6 @@ class MaxiProcessor extends AudioWorkletProcessor {
           let xfadeEnd = Module.maxiMap.linlin(this.currentSignalFunction, 0, 1, -1, 1);
           this.xfadeControl.prepare(xfadeBegin, xfadeEnd, 5); // short xfade across signals
           this.xfadeControl.triggerEnable(true); //no clock yet, so enable the trigger straight away
-          // console.log("XFade" + [xfadeBegin, xfadeEnd]);
           this.port.postMessage("evalEnd")
         } catch (err) {
           if (err instanceof TypeError) {
@@ -159,12 +211,8 @@ class MaxiProcessor extends AudioWorkletProcessor {
           }
         }
       }
-      //   } else {
-      //     this[key].setSample(this.translateFloat32ArrayToBuffer(event.data[key]));
-      //   }
-      //
-      // }
     };
+    this.port.postMessage("giveMeSomeSamples");
   }
 
   /**
@@ -186,21 +234,22 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
       for (let i = 0; i < output[0].length; ++i) {
         //xfade between old and new algorhythms
-        let sig0 = this.signals[0](this._q[0]);
-        let sig1 = this.signals[1](this._q[1]);
+        let sig0 = this.signals[0](this._q[0], inputs[0]);
+        let sig1 = this.signals[1](this._q[1], inputs[0]);
         let xf = this.xfadeControl.play(i == 0 ? 1 : 0);
         let w = Module.maxiXFade.xfade(sig0, sig1, xf);
         //mono->stereo
         for (let channel = 0; channel < channelCount; channel++) {
           output[channel][i] = w;
         }
+
       }
 
       //remove old algo and data?
       if (this.xfadeControl.isLineComplete()) {
         let oldIdx = 1.0 - this.currentSignalFunction;
         this.signals[oldIdx] = this.silence;
-        this._q[oldIdx] = [];
+        this._q[oldIdx] = this.newq();
       }
 
       // this.port.postMessage("dspEnd");
@@ -276,11 +325,11 @@ class MaxiProcessor extends AudioWorkletProcessor {
     return maxiSampleBufferData;
   }
 
-  translateFloat32ArrayToBuffer(audioFloat32Array) {
+  translateFloat32ArrayToBuffer(audioFloat32ArrayBuffer) {
 
     var maxiSampleBufferData = new Module.VectorDouble();
-    for (var i = 0; i < audioFloat32Array.length; i++) {
-      maxiSampleBufferData.push_back(audioFloat32Array[i]);
+    for (var i = 0; i < audioFloat32ArrayBuffer.length; i++) {
+      maxiSampleBufferData.push_back(audioFloat32ArrayBuffer[i]);
     }
     return maxiSampleBufferData;
   }

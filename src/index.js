@@ -1,4 +1,3 @@
-// import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 // import * as grammar from './language/eppGrammar.js';
 // import * as nearley from 'nearley/lib/nearley.js';
 // import * as grammar from './language/eppprocessor.js';
@@ -17,11 +16,17 @@ import {
 // import treeJSON from './dndTree';
 import AudioWorkletIndicator from './UI/components';
 
+// import '../assets/samples/909.wav';
+// import '../assets/samples/909b.wav';
+// import '../assets/samples/909closed.wav';
+// import '../assets/samples/909open.wav';
+// import '../assets/samples/noinoi.wav';
 
-import '../assets/samples/909.wav';
-import '../assets/samples/909b.wav';
-import '../assets/samples/909closed.wav';
-import '../assets/samples/909open.wav';
+// let sample = 'noinoi';
+// import (`../assets/samples/${sample}.wav`).then(module => {
+//   window.AudioEngine.loadSample(sample, `samples/${sample}.wav`);
+// });
+
 
 import './style/index.css';
 import './style/tree.css';
@@ -31,6 +36,7 @@ import * as CodeMirror from 'codemirror/lib/codemirror.js';
 import 'codemirror/mode/javascript/javascript';
 import 'codemirror/theme/idea.css';
 import 'codemirror/theme/monokai.css';
+import 'codemirror/theme/oceanic-next.css';
 // import 'codemirror/theme/abcdef.css';
 import 'codemirror/keymap/vim.js';
 import 'codemirror/lib/codemirror.css';
@@ -47,19 +53,46 @@ let compileTS = 0;
 let treeTS = 0;
 let evalTS = 0;
 
-let tfW = new tfWorker();
-tfW.onmessage = (e) => {
-  window.AudioEngine.postMessage(e.data);
+let machineLearningWorker = new tfWorker();
+machineLearningWorker.onmessage = (e) => {
+  console.log("DEBUG:machineLearningWorker:onMsg ");
+  console.log(e.data);
+  if (e.data.func) {
+    let responders = {
+        "data": (data) => {
+          window.AudioEngine.postMessage(data);
+        },
+        "save": (data) => {
+          console.log("save");
+          window.localStorage.setItem(data.name, data.val);
+        },
+        "load": (data) => {
+          console.log("load");
+          let msg = {name:data.name, val:window.localStorage.getItem(data.name)};
+          machineLearningWorker.postMessage(msg);
+        }
+    };
+    responders[e.data.func](e.data);
+  }
 }
 
-let langWorker = new nearleyWorker();
-langWorker.onmessage = (e) => {
-  // console.log(e.data);
+let languageWorker = new nearleyWorker();
+languageWorker.onmessage = (e) => {
+  console.log("DEBUG:languageWorker:onMsg "+ e.data);
   if (e.data['loop']) {
     let rightNow = window.performance.now();
     evalTS = rightNow;
     testResult[3] = rightNow - treeTS
     window.AudioEngine.evalSynth(e.data);
+
+    //update editor
+    let pms = JSON.parse(e.data.paramMarkers);
+    let cursorInfo = editor1.getCursor();
+    for (let v in pms) {
+      let fontStyle = 300 - ((pms[v].l) * 50);
+      editor1.markText({line:cursorInfo.line, ch:pms[v].s.offset}, {line:cursorInfo.line, ch:pms[v].s.offset+1},{"className":`param${fontStyle}`});
+      editor1.markText({line:cursorInfo.line, ch:pms[v].e.offset}, {line:cursorInfo.line, ch:pms[v].e.offset+1},{"className":`param${fontStyle}`});
+    }
     // console.log(`IR translate time: ${compileTS} ms`)
     // console.log("rcv");
   } else if (e.data['treeTS']) {
@@ -71,24 +104,29 @@ langWorker.onmessage = (e) => {
 }
 
 // Default editor code example is stored at 'langSketch.js'
-const defaultEditorCode1 = langSketch;
+// const defaultEditorCode1 = "langSketch";
 
 function createEditor1() {
+  let defaultEditorCode1 = "//livecode window";
+  let editor1code = window.localStorage.getItem("editor1");
+  if (editor1code)
+    defaultEditorCode1 = editor1code;
 
   editor1 = CodeMirror(document.getElementById('editor1'), {
-    value: defaultEditorCode1,
     // theme: "abcdef",
+    value: defaultEditorCode1,
     theme: "monokai",
     lineNumbers: true,
     // mode:  "javascript",
     lineWrapping: true,
     extraKeys: {
       // [ "Cmd-Enter" ]: () => playAudio(),
-      ["Cmd-Enter"]: () => evalEditorExpression(),
-      ["Cmd-."]: () => stopAudio(),
-      ["Cmd--"]: () => decreaseVolume(),
-      ["Cmd-="]: () => increaseVolume(),
-      ["Cmd-]"]: () => changeSynth()
+      ["Cmd-Enter"]: () => evalLiveCodeEditorExpression(),
+      ["Ctrl-Enter"]: () => evalLiveCodeEditorExpression(),
+      // ["Cmd-."]: () => stopAudio(),
+      // ["Cmd--"]: () => decreaseVolume(),
+      // ["Cmd-="]: () => increaseVolume(),
+      // ["Cmd-]"]: () => changeSynth()
     }
   });
   editor1.setSize('100%', '100%');
@@ -109,13 +147,37 @@ function createEditor2() {
     theme: "idea",
     lineWrapping: true,
     extraKeys: {
-      ["Cmd-Enter"]: () => evalEditor2Expression(),
-      ["Shift-Enter"]: () => evalEditor2ExpressionBlock(),
+      ["Cmd-Enter"]: () => evalModelEditorExpression(),
+      ["Ctrl-Enter"]: () => evalModelEditorExpression(),
+      ["Shift-Enter"]: () => evalModelEditorExpressionBlock(),
     }
 
   });
   editor2.setSize('100%', '100%');
 }
+
+function createEditor3() {
+  let defaultEditorCode3 = "//BNF grammar";
+  let editor3code = window.localStorage.getItem("editor3");
+  if (editor3code)
+    defaultEditorCode3 = editor3code;
+
+  editor3 = CodeMirror(document.getElementById('editor3'), {
+    value: defaultEditorCode3,
+    lineNumbers: true,
+    mode: "javascript",
+    theme: "oceanic-next",
+    lineWrapping: true,
+    extraKeys: {
+      // ["Cmd-Enter"]: () => evalEditor3Expression(),
+      // ["Ctrl-Enter"]: () => evalEditor3Expression(),
+      ["Shift-Enter"]: () => evalEditor3ExpressionBlock(),
+    }
+
+  });
+  editor2.setSize('100%', '100%');
+}
+
 
 function createControls() {
 
@@ -141,47 +203,60 @@ function createControls() {
   container.appendChild(testButton);
   testButton.addEventListener("click", () => runTest());
 
+  const startAudioButton = document.getElementById('buttonStartAudio');
+  startAudioButton.addEventListener("click", () => setupAudio());
+
+  const containerTabs = document.getElementById("containerTabs");
+
+  const modelButton = document.createElement("button");
+  modelButton.textContent = `Model`;
+  containerTabs.appendChild(modelButton);
+  modelButton.addEventListener("click", () => changeEditorTab());
+
+  const grammarButton = document.createElement("button");
+  grammarButton.textContent = `Grammar`;
+  containerTabs.appendChild(grammarButton);
+  grammarButton.addEventListener("click", () => changeEditorTab());
 }
 
 function evalExpression(expression) {
   compileTS = window.performance.now();
-  langWorker.postMessage(expression);
-
+  languageWorker.postMessage(expression);
 }
 
-function evalEditorExpression() {
-
-  // TODO: for now sample loading is here,
-  // but we want to
-  if (!window.AudioEngine.samplesLoaded)
-    window.AudioEngine.loadSamples();
+function evalLiveCodeEditorExpression() {
 
   let expression = editor1.getSelection();
+  let cursorInfo = editor1.getCursor();
   if (expression == "") {
-    let cursorInfo = editor1.getCursor();
+    console.log(cursorInfo);
     expression = editor1.getDoc().getLine(cursorInfo.line);
   }
-  console.log(`User expression to eval: ${expression}`);
+  console.log(`DEBUG:Main:evalLiveEditorExpression: ${expression}`);
   try {
     evalExpression(expression);
   } catch (error) {
     console.log(`Error parsing the tree: ${error}`);
   }
+  window.localStorage.setItem("editor1", editor1.getValue());
+  // editor1.markText({line:cursorInfo.line, ch:0}, {line:cursorInfo.line, ch:1},{"className":"test"});
 }
 
-function evalEditor2Expression() {
+function evalModelEditorExpression() {
 
   let expression = editor2.getSelection();
   if (expression == "") {
     let cursorInfo = editor2.getCursor();
     expression = editor2.getDoc().getLine(cursorInfo.line);
   }
-  console.log(`User expression to eval: ${expression}`);
-  tfW.postMessage({"eval":expression});
+  // console.log(`DEBUG:Main:evalModelEditorExpression: ${expression}`);
+  machineLearningWorker.postMessage({
+    "eval": expression
+  });
   window.localStorage.setItem("editor2", editor2.getValue());
 }
 
-function evalEditor2ExpressionBlock() {
+function evalModelEditorExpressionBlock() {
   //find code between dividers
   let divider = "__________";
   let cursorInfo = editor2.getCursor();
@@ -191,7 +266,7 @@ function evalEditor2ExpressionBlock() {
   while (line < linePost) {
     // console.log(editor2.getLine(line));
     if (editor2.getLine(line) == divider) {
-      linePost = line-1;
+      linePost = line - 1;
       break;
     }
     line++;
@@ -209,12 +284,33 @@ function evalEditor2ExpressionBlock() {
   if (linePre > -1) {
     linePre++;
   }
-  let code = editor2.getRange({line:linePre,ch:0}, {line:linePost+1,ch:0});
-  console.log(code);
-  tfW.postMessage({"eval":code});
+  let code = editor2.getRange({
+    line: linePre,
+    ch: 0
+  }, {
+    line: linePost + 1,
+    ch: 0
+  });
+  console.log("DEBUG:Main:evalModelEditorExpressionBlock: " + code);
+  machineLearningWorker.postMessage({
+    "eval": code
+  });
   window.localStorage.setItem("editor2", editor2.getValue());
 }
 
+
+/*
+ *
+  Audio engine wrappers
+ *
+ */
+
+function setupAudio(){
+   let overlay = document.getElementById('overlay');
+   overlay.style.visibility = 'hidden';
+   // Start Audio Context
+   playAudio();
+}
 
 function playAudio() {
   if (window.AudioEngine !== undefined) {
@@ -227,32 +323,69 @@ function stopAudio() {
     window.AudioEngine.stop();
 }
 
-function increaseVolume() {
-  if (window.AudioEngine !== undefined)
-    window.AudioEngine.more('gainSyn');
-}
-
-function decreaseVolume() {
-  if (window.AudioEngine !== undefined)
-    window.AudioEngine.less('gainSyn');
-}
-
-function changeSynth() {
-  if (window.AudioEngine !== undefined)
-    window.AudioEngine.changeSynth();
-}
 
 function createAnalysers() {
 
 }
 
 
+
+/*
+ *
+  Dynamic sample loading
+ *
+ */
+
+const getSamplesNames = () => {
+  const r = require.context('../assets/samples', false, /\.wav$/);
+
+  // return an array list of filenames (with extension)
+  const importAll = (r) => r.keys().map(file => file.match(/[^\/]+$/)[0]);
+
+  return importAll(r);
+};
+
+/* Webpack Magic Comments */
+/* webpackMode: "lazy-once" */ // Generates a single lazy-loadable chunk that can satisfy all calls to import().
+/* webpackMode: "lazy" */  //(default): Generates a lazy-loadable chunk for each import()ed module.
+const lazyLoadSample = (sampleName, sample) => {
+
+  import(
+    /* webpackMode: "lazy" */
+    `../assets/samples/${sampleName}`
+  )
+  .then(sample => window.AudioEngine.loadSample(sampleName, `samples/${sampleName}`))
+  .catch(err => console.error(`ERROR:Main:lazyLoadImage: ` + err));
+}
+
+const loadImportedSamples = () => {
+  let samplesNames =  getSamplesNames();
+  console.log("DEBUG:Main:getSamplesNames: " + samplesNames)
+
+  samplesNames.forEach(sampleName => { lazyLoadSample(sampleName) });
+}
+
+
+
+
+/*
+ *
+  DOMContentLoaded
+ *
+ */
+
 document.addEventListener("DOMContentLoaded", () => {
 
   // document.getElementById('audioWorkletIndicator').innerHTML = AudioWorkletIndicator.AudioWorkletIndicator();
 
   window.AudioEngine = new AudioEngine((msg) => {
-    tfW.postMessage(msg);
+    if (msg == "giveMeSomeSamples") {
+      // Load Samples
+      if (!window.AudioEngine.samplesLoaded)
+         loadImportedSamples();
+    }else{
+      machineLearningWorker.postMessage(msg);
+    }
   });
 
   // // document.getElementById("sampleRateIndicatorValue").textContent = window.AudioEngine.sampleRate;
@@ -282,15 +415,23 @@ document.addEventListener("DOMContentLoaded", () => {
   createControls();
 
   oscIO.OSCResponder((msg) => {
-    console.log("OSC in:", msg);
+    // console.log("OSC in:", msg);
     window.AudioEngine.oscMessage(msg);
   });
-
 
 });
 
 var testActive = false;
 var testTS = 0;
+
+
+
+
+/*
+ *
+  Performance tests
+ *
+ */
 
 function runTest() {
   if (!testActive) {

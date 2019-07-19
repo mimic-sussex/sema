@@ -1,5 +1,5 @@
 import Module from './maximilian.wasmmodule.js'; //NOTE: We need this import here for webpack to emit maximilian.wasmmodule.js
-import CustomProcessor from './maxi-processor'
+import CustomProcessor from './maxi-processor';
 import {
   loadSampleToArray
 } from './maximilian.util';
@@ -13,7 +13,7 @@ class MaxiNode extends AudioWorkletNode {
   constructor(audioContext, processorName) {
     // super(audioContext, processorName);
     let options = {
-      numberOfInputs: 0,
+      numberOfInputs: 1,
       numberOfOutputs: 1,
       outputChannelCount: [2]
     };
@@ -77,7 +77,7 @@ class AudioEngine {
     ];
 
     this.oscThru = (msg) => {
-      console.log(msg);
+//       console.log("DEBUG:AudioEngine:OscThru: " + msg);
     };
 
     console.log("Audio engine loaded")
@@ -90,6 +90,23 @@ class AudioEngine {
   translateIntermediateLanguageToProcessorCode(expression) {
 
   }
+
+  connectMediaStreamSourceInput(customNode) {
+    const constraints = window.constraints = {
+      audio: true,
+      video: false
+    };
+    function onAudioInputInit(stream) {
+      console.log("DEBUG:AudioEngine: Audio Input init");
+      let mediaStreamSource = audioContext.createMediaStreamSource(stream);
+      mediaStreamSource.connect(customNode);
+    }
+    function onAudioInputFail(error) {
+      console.log("DEBUG:AudioEngine: Audio Input fail: ", error.message, error.name);
+    }
+    navigator.mediaDevices.getUserMedia(constraints).then(onAudioInputInit).catch(onAudioInputFail);
+  }
+
 
   loadProcessorCode() {
     if (this.audioContext !== undefined) {
@@ -116,6 +133,10 @@ class AudioEngine {
 
           // Connect the worklet node to the audio graph
           this.audioWorkletNode.connect(this.audioContext.destination);
+
+          // Connect the micro to the audio graph with the worklet node
+          // this.connectMediaStreamSourceInput(this.audioWorkletNode);
+
           return true;
 
         }).catch(e => console.log("Error on loading worklet: ", e.message));
@@ -145,7 +166,9 @@ class AudioEngine {
     if (data == 'evalEnd') {
       let evalts = window.performance.now();
       this.onEvalTimestamp(evalts);
-    } else {
+    } else if (data == 'giveMeSomeSamples') {
+      this.msgHandler("giveMeSomeSamples");
+    }else {
       this.msgHandler(data);
     }
   }
@@ -158,19 +181,26 @@ class AudioEngine {
 
     if (this.audioContext !== undefined) {
       loadSampleToArray(this.audioContext, objectName, url, this.audioWorkletNode);
-    } else throw "Audio Context is not initialised!";
+    } else
+        throw "Audio Context is not initialised!";
   }
 
-  loadSamples() {
-    if (this.audioContext !== undefined) {
-      loadSampleToArray(this.audioContext, "snare", "samples/909.wav", this.audioWorkletNode);
-      loadSampleToArray(this.audioContext, "kick", "samples/909b.wav", this.audioWorkletNode);
-      loadSampleToArray(this.audioContext, "closed", "samples/909closed.wav", this.audioWorkletNode);
-      loadSampleToArray(this.audioContext, "open", "samples/909open.wav", this.audioWorkletNode);
-
-      this.samplesLoaded = true;
-    } else throw "Audio Context is not initialised!";
-  }
+  // loadSamples() {
+  //   if (this.audioContext !== undefined) {
+  //     loadSampleToArray(this.audioContext, "snare", "samples/909.wav", this.audioWorkletNode);
+  //     loadSampleToArray(this.audioContext, "kick", "samples/909b.wav", this.audioWorkletNode);
+  //     loadSampleToArray(this.audioContext, "closed", "samples/909closed.wav", this.audioWorkletNode);
+  //     loadSampleToArray(this.audioContext, "open", "samples/909open.wav", this.audioWorkletNode);
+  //
+  //     loadSampleToArray(this.audioContext, "snare", "samples/noinoi.wav", this.audioWorkletNode);
+  //     loadSampleToArray(this.audioContext, "kick", "samples/noise1.wav", this.audioWorkletNode);
+  //     loadSampleToArray(this.audioContext, "closed", "samples/MeimunaNau.wav", this.audioWorkletNode);
+  //     loadSampleToArray(this.audioContext, "open", "samples/bellrip3.wav", this.audioWorkletNode);
+  //
+  //     this.samplesLoaded = true;
+  //   } else
+  //       throw "Audio Context is not initialised!";
+  // }
 
 
 
