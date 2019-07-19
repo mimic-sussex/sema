@@ -2,7 +2,7 @@
 
 Sema is a playground where you can rapid prototype mini-languages for live coding that integrate signal synthesis, machine learning and machine listening. 
 
-Sema provides an online integrated environment that implements support for designing abstract high-level languages to more powerful low-level languages.
+Sema provides an online integrated environment that implements support for designing both abstract high-level languages and more powerful low-level languages.
 
 * Single sample signal processing – Per-sample sound processing including techniques that use feedback loops, such as physical modelling, reverberation and IIR filtering.
 
