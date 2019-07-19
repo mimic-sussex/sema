@@ -183,24 +183,16 @@ body {
   bottom: 0;
   justify-self: center;
   align-content: center;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.85);
   /* Black background with opacity */
   z-index: 4;
   /* Specify a stack order in case you're using a different order for other elements */
-  cursor: pointer;
+  cursor: auto;
   /* Add a pointer on hover */
   visibility: visible;
 }
 
-#buttonStartAudio {
-  margin:0 auto;
-  display:block;
-  width: 500px;
-  height:500px;
-  align-self: stretch;
-  font-size:300%;
-  font-family:monospace;
-}
+
 
 .tabItem{
   padding:8px 16px;
@@ -289,16 +281,39 @@ body {
   margin: 15px 0 15px 20px;
 }
 
+#buttonStartAudio {
+  margin:0 auto;
+  display:block;
+  width: 350px;
+  height: 350px;
+  align-self: stretch;
+  font-size: 200%;
+  font-family:monospace;
+  cursor: pointer;
+}
+
 #logoContainer {
-  float: left;
-  width: 50px;
-  height: 50px;
+  float: none;
+  width: 45%;
+  height: 45%;
+  margin: 0 auto;
+  display: grid; 
 }
 
 /* resize images */
-#logo {
+#semaLogo {
   width: 100%;
   height: auto;
+}
+
+/* resize images */
+#semaType {
+  width: 100%;
+  height: auto;
+  font-size:150%; 
+  margin: 0px 0px 0px 0px; 
+  color: rgb(50, 50, 50);
+  /* font-family: 'LatoWebBlack';  */
 }
 
 .headerTitle {
