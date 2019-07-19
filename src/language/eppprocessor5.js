@@ -12,6 +12,7 @@ const lexer = moo.compile({
   variable:     /:[a-zA-Z0-9]+:/,
   oscAddress:   /(?:\/[a-zA-Z0-9]+)+/,
   sample:       /\\[a-zA-Z0-9]+/,
+  number: /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?(?:[eE][-+]?[0-9]+)?\b/,
   add:          /\+/,
   mult:         /\*/,
   div:          /\//,
@@ -23,8 +24,8 @@ const lexer = moo.compile({
   comma:        /\,/,
   colon:        /\:/,
   semicolon:    /\;/,
-  funcName: /[a-zA-Z][a-zA-Z0-9]*/,
-  number:       /[-+]?[0-9]*\.?[0-9]+/,
+  funcName:     /[a-zA-Z][a-zA-Z0-9]*/,
+  
   ws:   {match: /\s+/, lineBreaks: true},
 });
 var grammar = {
@@ -40,7 +41,7 @@ var grammar = {
     {"name": "Expression", "symbols": [(lexer.has("paramBegin") ? {type: "paramBegin"} : paramBegin), "Params", (lexer.has("paramEnd") ? {type: "paramEnd"} : paramEnd), (lexer.has("sample") ? {type: "sample"} : sample)], "postprocess": d => ({ "@synth": {"@params":[{"@string":d[3].value}].concat(d[1]), "@jsfunc":{value:"sampler"}, "paramBegin":d[0], "paramEnd":d[2]}} )},
     {"name": "Expression", "symbols": [(lexer.has("oscAddress") ? {type: "oscAddress"} : oscAddress)], "postprocess": d => ({ "@synth": {"@params":[{"@string":d[0].value},{"@num":{value:-1}}], "@jsfunc":{value:"oscin"}}} )},
     {"name": "Params$subexpression$1", "symbols": [(lexer.has("number") ? {type: "number"} : number)]},
-    {"name": "Params", "symbols": ["Params$subexpression$1"], "postprocess": (d) => ([{"@num":d[0][0]}])},
+    {"name": "Params", "symbols": ["Params$subexpression$1"], "postprocess": function(d) { console.log("nearly: " + d ); return [ {"@num":d[0][0]} ]; }},
     {"name": "Params", "symbols": ["Expression"], "postprocess": (d) => ([{"@num":d[0]}])},
     {"name": "Params", "symbols": [(lexer.has("number") ? {type: "number"} : number), (lexer.has("separator") ? {type: "separator"} : separator), "Params"], "postprocess": d => [{ "@num": d[0]}].concat(d[2])},
     {"name": "Params", "symbols": ["Expression", (lexer.has("separator") ? {type: "separator"} : separator), "Params"], "postprocess": d => [{ "@num": d[0]}].concat(d[2])},
