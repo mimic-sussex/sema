@@ -19,7 +19,6 @@ Sema requires the following dependencies to be installed:
  - Node.js version 8.9 or higher
  - [NPM cli](https://docs.npmjs.com/cli/npm) OR [Yarn](https://yarnpkg.com/en/)
 
-<<<<<<< HEAD
 ## How to build an example
 
 ```sh
@@ -28,8 +27,6 @@ yarn build
 yarn dev
 ```
 
-=======
 ## Documentation
 
 [Livecoding with the default grammar](doc/LiveCodingAPI_defaultGrammar.md)
->>>>>>> master
