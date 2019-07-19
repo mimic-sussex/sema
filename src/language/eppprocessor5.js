@@ -11,8 +11,8 @@ const lexer = moo.compile({
   paramBegin:   /{/,
   variable:     /:[a-zA-Z0-9]+:/,
   oscAddress:   /(?:\/[a-zA-Z0-9]+)+/,
-  sample:       /\\[a-zA-Z0-9]+/,
-  number: /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?(?:[eE][-+]?[0-9]+)?\b/,
+  sample:       /@[a-zA-Z0-9]+/,
+  number:       /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?(?:[eE][-+]?[0-9]+)?\b/,
   add:          /\+/,
   mult:         /\*/,
   div:          /\//,
@@ -25,7 +25,6 @@ const lexer = moo.compile({
   colon:        /\:/,
   semicolon:    /\;/,
   funcName:     /[a-zA-Z][a-zA-Z0-9]*/,
-  
   ws:   {match: /\s+/, lineBreaks: true},
 });
 var grammar = {
@@ -38,7 +37,7 @@ var grammar = {
     {"name": "Statement", "symbols": ["Expression"], "postprocess": d => [{ "@spawn": d[0] }]},
     {"name": "Expression", "symbols": [(lexer.has("variable") ? {type: "variable"} : variable), (lexer.has("paramBegin") ? {type: "paramBegin"} : paramBegin), "Params", (lexer.has("paramEnd") ? {type: "paramEnd"} : paramEnd), (lexer.has("funcName") ? {type: "funcName"} : funcName)], "postprocess": d => ({"@setvar": {"@varname":d[0],"@varvalue":{ "@synth": {"@params":d[2], "@jsfunc":d[4], "paramBegin":d[1], "paramEnd":d[3]}}}} )},
     {"name": "Expression", "symbols": [(lexer.has("paramBegin") ? {type: "paramBegin"} : paramBegin), "Params", (lexer.has("paramEnd") ? {type: "paramEnd"} : paramEnd), (lexer.has("funcName") ? {type: "funcName"} : funcName)], "postprocess": d => ({"@setvar": {"@varname":":default:","@varvalue":{ "@synth": {"@params":d[1], "@jsfunc":d[3], "paramBegin":d[0], "paramEnd":d[2]}}}} )},
-    {"name": "Expression", "symbols": [(lexer.has("paramBegin") ? {type: "paramBegin"} : paramBegin), "Params", (lexer.has("paramEnd") ? {type: "paramEnd"} : paramEnd), (lexer.has("sample") ? {type: "sample"} : sample)], "postprocess": d => ({ "@synth": {"@params":[{"@string":d[3].value}].concat(d[1]), "@jsfunc":{value:"sampler"}, "paramBegin":d[0], "paramEnd":d[2]}} )},
+    {"name": "Expression", "symbols": [(lexer.has("paramBegin") ? {type: "paramBegin"} : paramBegin), "Params", (lexer.has("paramEnd") ? {type: "paramEnd"} : paramEnd), (lexer.has("sample") ? {type: "sample"} : sample)], "postprocess": d => ({ "@synth": {"@params":[{"@string":d[3].value.substr(1)}].concat(d[1]), "@jsfunc":{value:"sampler"}, "paramBegin":d[0], "paramEnd":d[2]}} )},
     {"name": "Expression", "symbols": [(lexer.has("oscAddress") ? {type: "oscAddress"} : oscAddress)], "postprocess": d => ({ "@synth": {"@params":[{"@string":d[0].value},{"@num":{value:-1}}], "@jsfunc":{value:"oscin"}}} )},
     {"name": "Params$subexpression$1", "symbols": [(lexer.has("number") ? {type: "number"} : number)]},
     {"name": "Params", "symbols": ["Params$subexpression$1"], "postprocess": function(d) { console.log("nearly: " + d ); return [ {"@num":d[0][0]} ]; }},

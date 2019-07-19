@@ -7,7 +7,7 @@
 import nearleyWorker from 'worker-loader!./language/nearley.worker.js';
 import tfWorker from 'worker-loader!./machineLearning/tfjs.worker.js';
 import oscIO from './interfaces/oscInterface.js';
-
+import fileSaver from 'filesaver/src/Filesaver.js'
 
 import {
   AudioEngine
