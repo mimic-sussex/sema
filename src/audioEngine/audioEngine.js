@@ -77,7 +77,7 @@ class AudioEngine {
     ];
 
     this.oscThru = (msg) => {
-      console.log("DEBUG:AudioEngine:OscThru: " + msg);
+//       console.log("DEBUG:AudioEngine:OscThru: " + msg);
     };
 
     console.log("Audio engine loaded")

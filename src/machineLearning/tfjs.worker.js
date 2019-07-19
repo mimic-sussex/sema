@@ -34,16 +34,16 @@ onmessage = (m) => {
     let evalRes = geval(m.data.eval);
     console.log(evalRes);
   }else if ('val' in m.data) {
-    console.log("val");
+//    console.log("val");
     let val = m.data.val;
-    console.log(val);
+//    console.log(val);
     val = JSON.parse(`[${val}]`)
-    console.log(val);
+//    console.log(val);
     // console.log(loadResponders);
     loadResponders[m.data.name](val);
     delete loadResponders[m.data.name];
   }else {
-    console.log(m.data.rq);
+//     console.log(m.data.rq);
     if (m.data.rq=="send") {
       input(m.data.id, m.data.value);
     }else{
