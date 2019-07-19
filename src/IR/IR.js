@@ -138,14 +138,14 @@ class IRToJavascript {
         } else {
           ccode = IRToJavascript.traverseTree(el, ccode, level);
         }
-        let oscCode = `this.OSCTransducer('${el['@oscaddr'].value}',${idxCode})`;
+        // let oscCode = `this.OSCTransducer('${el['@oscaddr'].value}',${idxCode})`;
 
         // IRToJavascript.traverseTree(el['@oscaddr'], IRToJavascript.emptyCode(), level+1);
 
-        ccode.setup += `${setupCode}`;
-        ccode.loop += `${oscCode}`;
+        // ccode.setup += `${setupCode}`;
+        // ccode.loop += `${oscCode}`;
 
-        console.log(ccode.paramMarkers);
+        // console.log(ccode.paramMarkers);
 
         return ccode;
       },
@@ -165,8 +165,8 @@ class IRToJavascript {
         return ccode;
       },
       '@sample': (ccode,el) => {
-        
-      } 
+
+      }
       // '@func': (ccode, el) => {
       //   // console.log(el);
       //   let newCode = IRToJavascript.traverseTree(el, ccode);
@@ -243,7 +243,7 @@ class IRToJavascript {
   static treeToCode(tree) {
     // console.log(tree);
     let code = IRToJavascript.traverseTree(tree, IRToJavascript.emptyCode(), 0);
-    code.setup = `() => {let q=[]; ${code.setup}; return q;}`;
+    code.setup = `() => {let q=this.newq(); ${code.setup}; return q;}`;
     code.loop = `(q, inputs) => {return ${code.loop};}`
     console.log(code.loop);
     console.log(code.paramMarkers);
