@@ -69,21 +69,17 @@ NOT WORKING YET
 
 Play a sample:
 
-`{1}\909open`
+`{1}@909open`
 
 These are preloaded when the audio engine starts up, look at the filenames at the top of the console window to see what is there.
 
 Repeat:
 
-`{{1}sqr}\909open`
+`{{1}sqr}@909open`
 
 With some rhythm:
 
-`{{{1}sqr,{5}saw}add}\909open`
-
-KNOWN ISSUE:
-
-the '\' as start point has some issues with it also being used as an escape sequence. See issue [#22](https://github.com/mimic-sussex/eppEditor/issues/22)
+`{{{1}sqr,{5}saw}add}@909open`
 
   
 # filters
