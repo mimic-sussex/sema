@@ -30,6 +30,12 @@ first argument is always the frequency
 
 `{500}sawn`
 
+# noise
+
+argument is the amplitude
+
+`{0.8}noiz`
+
 # envelope
 
 The envelope is an adsr envelope, so the arguments are "input signal", attack (in ms), decay (in ms), sustain level (0-1), release (in ms). So here with a square wave as input:

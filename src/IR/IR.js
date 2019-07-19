@@ -18,6 +18,7 @@ const jsFuncMap = {
   'pha': {"setup":(o,p)=>`${o} = new Module.maxiOsc()`, "loop":(o,p)=>`${o}.phasor(${p[0].loop})`},
   'sqr': {"setup":(o,p)=>`${o} = new Module.maxiOsc()`, "loop":(o,p)=>`${o}.square(${p[0].loop})`},
   'pul': {"setup":(o,p)=>`${o} = new Module.maxiOsc()`, "loop":(o,p)=>`${o}.pulse(${p[0].loop},${p[1].loop})`},
+  'noiz': {"setup":(o,p)=>`${o} = new Module.maxiOsc()`, "loop":(o,p)=>`${o}.noise()*${p[0].loop}`},
   'sawn': {"setup":(o,p)=>`${o} = new Module.maxiOsc()`, "loop":(o,p)=>`${o}.sawn(${p[0].loop})`},
   'gt': {"setup":(o,p)=>"", "loop":(o,p)=>`(${p[0].loop} > ${p[1].loop}) ? 1 : 0`},
   'lt': {"setup":(o,p)=>"", "loop":(o,p)=>`(${p[0].loop} < ${p[1].loop}) ? 1 : 0`},
