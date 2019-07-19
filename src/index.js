@@ -1,4 +1,3 @@
-// import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 // import * as grammar from './language/eppGrammar.js';
 // import * as nearley from 'nearley/lib/nearley.js';
 // import * as grammar from './language/eppprocessor.js';
