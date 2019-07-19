@@ -1,4 +1,4 @@
-## Sema – Live Coding Language Design Playground ##
+# Sema – Live Coding Language Design Playground #
 
 Sema is a playground where you can rapid prototype mini-languages for live coding that integrate signal synthesis, machine learning and machine listening. 
 
@@ -12,7 +12,7 @@ Sema provides an online integrated environment that implements support for desig
 
 * Minimal abstractions — There are no high-level abstractions such as buses, synths, nodes, servers, or any language scaffolding in our signal engine. Such abstractions sit within the end-user mini-language design space.
 
-# Dependencies
+## Dependencies
 
 Sema requires the following dependencies to be installed:
 
