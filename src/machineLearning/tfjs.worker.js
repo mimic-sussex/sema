@@ -25,9 +25,17 @@ var sema = {
     });
     loadResponders[name] = onload;
     return 0;
+  },
+  download: (name) => {
+    postMessage({
+      "func": "download",
+      "name": name,
+    });
   }
 };
 `);
+
+
 
 onmessage = (m) => {
   if ('eval' in m.data) {
