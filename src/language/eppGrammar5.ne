@@ -1,5 +1,7 @@
 # now with variables
 
+#  number:       /[-+]?[0-9]*\.?[0-9]+/,
+
 @{%
 const moo = require("moo"); // this 'require' creates a node dependency
 
@@ -10,6 +12,7 @@ const lexer = moo.compile({
   variable:     /:[a-zA-Z0-9]+:/,
   oscAddress:   /(?:\/[a-zA-Z0-9]+)+/,
   sample:       /\\[a-zA-Z0-9]+/,
+  number:       /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?(?:[eE][-+]?[0-9]+)?\b/,
   add:          /\+/,
   mult:         /\*/,
   div:          /\//,
@@ -22,10 +25,11 @@ const lexer = moo.compile({
   colon:        /\:/,
   semicolon:    /\;/,
   funcName:     /[a-zA-Z][a-zA-Z0-9]*/,
-  number:       /[-+]?[0-9]*\.?[0-9]+/,
   ws:   {match: /\s+/, lineBreaks: true},
 });
 %}
+
+
 
 # Pass your lexer object using the @lexer option
 @lexer lexer
@@ -52,7 +56,8 @@ Expression ->
       # | %funcName                                              {% d => ({ "@synth": [], "@jsfunc":d[0]} ) %}
 
 Params ->
-  (%number)                                                   {% (d) => ([{"@num":d[0][0]}]) %}
+  # (%number)                                                   {% (d) => ([{"@num":d[0][0]}]) %}
+  (%number)                                                   {% function(d) { console.log("nearly: " + d ); return [ {"@num":d[0][0]} ]; }  %}
   |
   Expression                                                  {% (d) => ([{"@num":d[0]}]) %}
   |
