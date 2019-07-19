@@ -88,7 +88,7 @@ machineLearningWorker.onmessage = (e) => {
           let downloadData = window.localStorage.getItem(data.name);
           let blob = new Blob([downloadData], {type: "text/plain;charset=utf-8"});
           console.log(blob);
-          saveData(blob, "data.data");
+          saveData(blob, `${data.name}.data`);
         }
     };
     responders[e.data.func](e.data);
