@@ -9,7 +9,7 @@ const lexer = moo.compile({
   paramBegin:   /{/,
   variable:     /:[a-zA-Z0-9]+:/,
   oscAddress:   /(?:\/[a-zA-Z0-9]+)+/,
-  sample:       /\\[a-zA-Z0-9]+/,
+  sample:       /@[a-zA-Z0-9]+/,
   add:          /\+/,
   mult:         /\*/,
   div:          /\//,
@@ -45,7 +45,7 @@ Expression ->
 # |
 # %paramBegin Params  %paramEnd  %oscAddress                  {% d => ({ "@synth": {"paramBegin":d[0], "paramEnd":d[2], "@params":[{"@string":d[3].value},d[1][0]], "@jsfunc":{value:"oscin"}}} ) %}       {% d => ({ "@oscreceiver": {"@params":d[1], "@oscaddr":d[3], "paramBegin":d[0], "paramEnd":d[2]}} ) %}
 |
-%paramBegin Params %paramEnd %sample                          {% d => ({ "@synth": {"@params":[{"@string":d[3].value}].concat(d[1]), "@jsfunc":{value:"sampler"}, "paramBegin":d[0], "paramEnd":d[2]}} ) %}
+%paramBegin Params %paramEnd %sample                          {% d => ({ "@synth": {"@params":[{"@string":d[3].value.substr(1)}].concat(d[1]), "@jsfunc":{value:"sampler"}, "paramBegin":d[0], "paramEnd":d[2]}} ) %}
 |
 %oscAddress                                                   {% d => ({ "@synth": {"@params":[{"@string":d[0].value},{"@num":{value:-1}}], "@jsfunc":{value:"oscin"}}} ) %}
 
