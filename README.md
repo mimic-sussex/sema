@@ -19,7 +19,7 @@ Sema requires the following dependencies to be installed:
  - Node.js version 8.9 or higher
  - [NPM cli](https://docs.npmjs.com/cli/npm) OR [Yarn](https://yarnpkg.com/en/)
 
-## How to build an example
+## How to build and run the Sema playground on your machine 
 
 ```sh
 cd sema
