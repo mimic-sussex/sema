@@ -18,6 +18,10 @@ first argument is always the frequency
 
 `{500}pha`
 
+// phasor with start and end phase
+
+`{500,0.3,0.8}ph2`
+
 // square
 
 `{500}sqr`
