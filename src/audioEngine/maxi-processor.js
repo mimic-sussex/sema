@@ -3,12 +3,7 @@ import Module from './maximilian.wasmmodule.js';
 //   MMLLOnsetDetector
 // } from '../machineListening/MMLLOnsetDetector.js';
 
-/**
- * The main Maxi Audio wrapper with a WASM-powered AudioWorkletProcessor.
- *
- * @class MaxiProcessor
- * @extends AudioWorkletProcessor
- */
+
 
 class PostMsgTransducer {
 
@@ -68,6 +63,14 @@ class PostMsgTransducer {
   // }
 }
 
+
+
+/**
+ * The main Maxi Audio wrapper with a WASM-powered AudioWorkletProcessor.
+ *
+ * @class MaxiProcessor
+ * @extends AudioWorkletProcessor
+ */
 class MaxiProcessor extends AudioWorkletProcessor {
 
   /**
