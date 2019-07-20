@@ -129,11 +129,11 @@ body {
 #container {
   display: grid;
   grid-template-areas:
-    'header header header header header'
+    'header'
     /* 'main main main right right' */
-    'main main main main main'
-    'main2 main2 main2 main2 main2'
-    'footer footer footer footer footer';
+    'main'
+    'main2'
+    'footer';
 
   grid-template-rows:
     /* Header */
@@ -144,7 +144,7 @@ body {
     /* Footer */
     5%;
 
-  grid-template-columns: 60px auto auto 200px 50px;
+  grid-template-columns: 100%;
   grid-gap: 2px;
   background-color: #000000;
   /* background-color: #222222; */
@@ -194,14 +194,14 @@ body {
 
 
 
-.tabItem{
+/* .tabItem{
   padding:8px 16px;
   float:left;
   width:auto;
   border:none;
   display:block;
   outline:0;
-}
+} */
 /* .tabItem{
   width:100%;
   display:inline-block;
@@ -223,43 +223,43 @@ body {
 }
 
 .containerMain {
-  grid-area: main;
-  align-content: stretch;
+    grid-area: main;
+  /* align-content: stretch; */
   background-color: black;
   /* background-color: blue; */
-  justify-self: stretch;
-  /* grid-column-start: 1/5;
-  grid-column-end: 3/5; */
-  grid-row: 2;
+  /* justify-self: stretch; */
+  /* grid-column-start: 1/1;
+  grid-column-end: 1/1; */
+  /* grid-row: 2; */
 
 }
 
 .containerMain2 {
   grid-area: main2;
-  align-content: stretch;
+  /* align-content: stretch; */
   background-color: black;
   /* background-color: blue; */
-  justify-self: stretch;
+  /* justify-self: stretch; */
   /* grid-column-start: 1/5;
   grid-column-end: 3/5; */
-  grid-row: 3;
+  /* grid-row: 3; */
 
 }
 
-.containerTabs{width:100%;overflow:hidden}
+/* .containerTabs{width:100%;overflow:hidden}
 .containerTabs{display:inline-block;width:auto}
 .containerTabs{padding:8px 16px;float:left;width:auto;border:none;display:block;outline:0}
 .containerTabs{position:static;float:left}
-.containerTabs{white-space:normal}
+.containerTabs{white-space:normal} */
 
-.containerRight {
+/* .containerRight {
   grid-area: right;
   background-color: green;
   justify-self: stretch;
   grid-column-start: 3/5;
   grid-column-end: 5/5;
   grid-row: 2;
-}
+} */
 
 /* .containerFooter { grid-area: footer; background-color: purple;} */
 #containerFooter {
@@ -297,7 +297,7 @@ body {
   width: 45%;
   height: 55%;
   margin: 0 auto;
-  display: grid; 
+  display: grid;
 }
 
 /* resize images */
@@ -310,8 +310,8 @@ body {
 #semaType {
   width: 100%;
   height: auto;
-  font-size:150%; 
-  margin: 0px 0px 0px 0px; 
+  font-size:150%;
+  margin: 0px 0px 0px 0px;
   color: rgb(50, 50, 50);
   /* font-family: 'LatoWebBlack';  */
 }

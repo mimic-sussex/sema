@@ -55,8 +55,8 @@ let evalTS = 0;
 
 let machineLearningWorker = new tfWorker();
 machineLearningWorker.onmessage = (e) => {
-  console.log("DEBUG:machineLearningWorker:onMsg ");
-  console.log(e.data);
+  // console.log("DEBUG:machineLearningWorker:onMsg ");
+  // console.log(e.data);
   if (e.data.func) {
     let responders = {
         "data": (data) => {
@@ -217,10 +217,10 @@ function createControls() {
   container.appendChild(stopButton);
   stopButton.addEventListener("click", () => stopAudio());
 
-  const testButton = document.createElement("button");
-  testButton.textContent = `Test`;
-  container.appendChild(testButton);
-  testButton.addEventListener("click", () => runTest());
+  // const testButton = document.createElement("button");
+  // testButton.textContent = `Test`;
+  // container.appendChild(testButton);
+  // testButton.addEventListener("click", () => runTest());
 
   const startAudioButton = document.getElementById('buttonStartAudio');
   startAudioButton.addEventListener("click", () => setupAudio());
