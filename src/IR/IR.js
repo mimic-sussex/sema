@@ -133,6 +133,10 @@ class IRToJavascript {
         ccode.loop = `this.setvar(q, '${el['@varname']}', ${varValueCode.loop})`;
         return ccode;
       },
+      '@getvar': (ccode, el) => {
+        ccode.loop += `this.getvar(q, '${el.value}')`;
+        return ccode;
+      },
       '@string': (ccode, el) => {
         if (typeof el === 'string' || el instanceof String) {
           console.log("String: " + el);

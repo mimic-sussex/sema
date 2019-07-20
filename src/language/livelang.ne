@@ -1,5 +1,3 @@
-# now with variables
-
 #  number:       /[-+]?[0-9]*\.?[0-9]+/,
 
 @{%
@@ -37,9 +35,9 @@ const lexer = moo.compile({
 main -> _ Statement _                                         {% d => ({ "@lang" : d[1] })  %}
 
 Statement ->
-      Expression _ (%semicolon | "\n") _ Statement            {% d => [{ "@spawn": d[0] }].concat(d[4]) %}
+      Expression _ %semicolon _ Statement            {% d => [{ "@spawn": d[0] }].concat(d[4]) %}
       |
-      Expression                                              {% d => [{"@sigOut": { "@spawn": d[0] }}] %}
+      Expression                                      {% d => [{"@sigOut": { "@spawn": d[0] }}] %}
       # | %hash . "\n"                                          {% d => ({ "@comment": d[3] }) %}
 
 Expression ->
@@ -57,8 +55,12 @@ Expression ->
       # | %funcName                                              {% d => ({ "@synth": [], "@jsfunc":d[0]} ) %}
 
 Params ->
-  # (%number)                                                   {% (d) => ([{"@num":d[0][0]}]) %}
-  (%number)                                                   {% function(d) { console.log("nearly: " + d ); return [ {"@num":d[0][0]} ]; }  %}
+  (%number)                                                   {% (d) => ([{"@num":d[0][0]}]) %}
+  # (%number)                                                   {% function(d) { return [ {"@num":d[0][0]} ]; }  %}
+  |
+  (%variable)                                                   {% (d) => ([{"@getvar":d[0][0]}]) %}
+  |
+  (%variable) %separator Params                                 {% (d) => ([{"@getvar":d[0][0]}].concat(d[2])) %}
   |
   Expression                                                  {% (d) => ([{"@num":d[0]}]) %}
   |
@@ -72,8 +74,6 @@ Params ->
   |
   %paramBegin Params  %paramEnd  %separator Params            {% d => [{ "@list": d[1]}].concat(d[4]) %}
 
-  # | Expression %separator Params                    {% d => [{ "@num": d[0]}].concat(d[2]) %}
-  # | %funcName %separator Params       {% d => ([{ "@jsfunc": d[0]}].concat(d[2])) %}
 
 
 

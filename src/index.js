@@ -245,14 +245,55 @@ function evalExpression(expression) {
   languageWorker.postMessage(expression);
 }
 
-function evalLiveCodeEditorExpression() {
 
-  let expression = editor1.getSelection();
-  let cursorInfo = editor1.getCursor();
-  if (expression == "") {
-    console.log(cursorInfo);
-    expression = editor1.getDoc().getLine(cursorInfo.line);
+
+function getBlock(editor) {
+  //find code between dividers
+  const divider = "__________";
+  let cursorInfo = editor.getCursor();
+  //find post divider
+  let line = cursorInfo.line;
+  let linePost = editor.lastLine();
+  while (line < linePost) {
+    // console.log(editor2.getLine(line));
+    if (editor.getLine(line) == divider) {
+      linePost = line - 1;
+      break;
+    }
+    line++;
+  };
+  line = cursorInfo.line;
+  let linePre = -1;
+  while (line >= 0) {
+    // console.log(editor2.getLine(line));
+    if (editor.getLine(line) == divider) {
+      linePre = line;
+      break;
+    }
+    line--;
+  };
+  if (linePre > -1) {
+    linePre++;
   }
+  let code = editor.getRange({
+    line: linePre,
+    ch: 0
+  }, {
+    line: linePost + 1,
+    ch: 0
+  });
+
+  return code;
+}
+function evalLiveCodeEditorExpression() {
+  let expression =  getBlock(editor1);
+
+  // let expression = editor1.getSelection();
+  // let cursorInfo = editor1.getCursor();
+  // if (expression == "") {
+  //   // console.log(cursorInfo);
+  //   expression = editor1.getDoc().getLine(cursorInfo.line);
+  // }
   console.log(`DEBUG:Main:evalLiveEditorExpression: ${expression}`);
   try {
     evalExpression(expression);
@@ -263,6 +304,7 @@ function evalLiveCodeEditorExpression() {
   // editor1.markText({line:cursorInfo.line, ch:0}, {line:cursorInfo.line, ch:1},{"className":"test"});
 }
 
+
 function evalModelEditorExpression() {
 
   let expression = editor2.getSelection();
@@ -270,7 +312,7 @@ function evalModelEditorExpression() {
     let cursorInfo = editor2.getCursor();
     expression = editor2.getDoc().getLine(cursorInfo.line);
   }
-  // console.log(`DEBUG:Main:evalModelEditorExpression: ${expression}`);
+  console.log(`DEBUG:Main:evalModelEditorExpression: ${expression}`);
   machineLearningWorker.postMessage({
     "eval": expression
   });
@@ -278,41 +320,8 @@ function evalModelEditorExpression() {
 }
 
 function evalModelEditorExpressionBlock() {
-  //find code between dividers
-  let divider = "__________";
-  let cursorInfo = editor2.getCursor();
-  //find post divider
-  let line = cursorInfo.line;
-  let linePost = editor2.lastLine();
-  while (line < linePost) {
-    // console.log(editor2.getLine(line));
-    if (editor2.getLine(line) == divider) {
-      linePost = line - 1;
-      break;
-    }
-    line++;
-  };
-  line = cursorInfo.line;
-  let linePre = -1;
-  while (line >= 0) {
-    // console.log(editor2.getLine(line));
-    if (editor2.getLine(line) == divider) {
-      linePre = line;
-      break;
-    }
-    line--;
-  };
-  if (linePre > -1) {
-    linePre++;
-  }
-  let code = editor2.getRange({
-    line: linePre,
-    ch: 0
-  }, {
-    line: linePost + 1,
-    ch: 0
-  });
-  console.log("DEBUG:Main:evalModelEditorExpressionBlock: " + code);
+  // console.log("DEBUG:Main:evalModelEditorExpressionBlock: " + code);
+  let code = getBlock(editor2);
   machineLearningWorker.postMessage({
     "eval": code
   });
