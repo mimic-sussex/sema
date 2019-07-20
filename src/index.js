@@ -225,17 +225,17 @@ function createControls() {
   const startAudioButton = document.getElementById('buttonStartAudio');
   startAudioButton.addEventListener("click", () => setupAudio());
 
-  const containerTabs = document.getElementById("containerTabs");
+  // const containerTabs = document.getElementById("containerTabs");
 
-  const modelButton = document.createElement("button");
-  modelButton.textContent = `Model`;
-  containerTabs.appendChild(modelButton);
-  modelButton.addEventListener("click", () => changeEditorTab());
-
-  const grammarButton = document.createElement("button");
-  grammarButton.textContent = `Grammar`;
-  containerTabs.appendChild(grammarButton);
-  grammarButton.addEventListener("click", () => changeEditorTab());
+  // const modelButton = document.createElement("button");
+  // modelButton.textContent = `Model`;
+  // containerTabs.appendChild(modelButton);
+  // modelButton.addEventListener("click", () => changeEditorTab());
+  //
+  // const grammarButton = document.createElement("button");
+  // grammarButton.textContent = `Grammar`;
+  // containerTabs.appendChild(grammarButton);
+  // grammarButton.addEventListener("click", () => changeEditorTab());
 }
 
 function evalExpression(expression) {
