@@ -133,7 +133,8 @@ class MaxiProcessor extends AudioWorkletProcessor {
     };
 
     this.getvar = (q, name) => {
-      return q.vars[name];
+      let val = q.vars[name];
+      return val ? val : 0.0;
     };
 
     this.silence = (q, inputs) => {
