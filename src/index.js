@@ -8,6 +8,11 @@ import nearleyWorker from 'worker-loader!./language/nearley.worker.js';
 import tfWorker from 'worker-loader!./machineLearning/tfjs.worker.js';
 import oscIO from './interfaces/oscInterface.js';
 import fileSaver from 'filesaver/src/Filesaver.js'
+import * as tf from '@tensorflow/tfjs'
+import * as tfvis from '@tensorflow/tfjs-vis';
+
+window.tf = tf;
+window.tfvis = tfvis;
 
 import {
   AudioEngine
@@ -152,7 +157,6 @@ function createEditor1() {
   editor1.setOption("vimMode", false);
 }
 
-
 function createEditor2() {
   let defaultEditorCode2 = "//js";
   let editor2code = window.localStorage.getItem("editor2");
@@ -197,7 +201,6 @@ function createEditor3() {
   editor2.setSize('100%', '100%');
 }
 
-
 function createControls() {
 
   const isMac = CodeMirror.keyMap.default === CodeMirror.keyMap.macDefault;
@@ -236,7 +239,27 @@ function createControls() {
   grammarButton.textContent = `Grammar`;
   containerTabs.appendChild(grammarButton);
   grammarButton.addEventListener("click", () => changeEditorTab());
+
+  const tfvisButton = document.createElement("button");
+  tfvisButton.textContent = `Visor`;
+  tfvisButton.setAttribute("style", "color: blue, margin-top:5px");
+  containerTabs.appendChild(tfvisButton);
+  tfvisButton.addEventListener("click", () => showVisor());
+
 }
+
+function changeEditorTab(){
+
+
+}
+
+function showVisor(){
+  const visorInstance = tfvis.visor();
+  // if (!visorInstance.isOpen()) {
+    visorInstance.toggle();
+  // }
+}
+
 
 function evalExpression(expression) {
   compileTS = window.performance.now();
@@ -342,7 +365,6 @@ function stopAudio() {
     window.AudioEngine.stop();
 }
 
-
 function createAnalysers() {
 
 }
@@ -362,7 +384,7 @@ const getSamplesNames = () => {
   const importAll = (r) => r.keys().map(file => file.match(/[^\/]+$/)[0]);
 
   return importAll(r);
-};
+}; 
 
 /* Webpack Magic Comments */
 /* webpackMode: "lazy-once" */ // Generates a single lazy-loadable chunk that can satisfy all calls to import().
@@ -392,7 +414,6 @@ const loadImportedSamples = () => {
   DOMContentLoaded
  *
  */
-
 document.addEventListener("DOMContentLoaded", () => {
 
   // document.getElementById('audioWorkletIndicator').innerHTML = AudioWorkletIndicator.AudioWorkletIndicator();

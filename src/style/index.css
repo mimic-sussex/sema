@@ -273,6 +273,16 @@ body {
   grid-column-end: 3/5;
 }
 
+#buttonTFVis {
+  margin:0 auto;
+  display:block;
+  width: 350px;
+  height: 350px;
+  align-self: right;
+  font-size: 200%;
+  font-family:monospace;
+  cursor: pointer;
+}
 
 .containerHeader {
   display: inline-block;
