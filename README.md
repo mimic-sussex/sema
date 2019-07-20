@@ -1,8 +1,8 @@
-## Sema – Live Coding Language Design Playground ##
+# Sema – Live Coding Language Design Playground #
 
 Sema is a playground where you can rapid prototype mini-languages for live coding that integrate signal synthesis, machine learning and machine listening. 
 
-Sema provides an online integrated environment that implements support for designing abstract high-level languages to more powerful low-level languages.
+Sema provides an online integrated environment that implements support for designing both abstract high-level languages and more powerful low-level languages.
 
 * Single sample signal processing – Per-sample sound processing including techniques that use feedback loops, such as physical modelling, reverberation and IIR filtering.
 
@@ -12,14 +12,14 @@ Sema provides an online integrated environment that implements support for desig
 
 * Minimal abstractions — There are no high-level abstractions such as buses, synths, nodes, servers, or any language scaffolding in our signal engine. Such abstractions sit within the end-user mini-language design space.
 
-# Dependencies
+## Dependencies
 
 Sema requires the following dependencies to be installed:
 
  - Node.js version 8.9 or higher
  - [NPM cli](https://docs.npmjs.com/cli/npm) OR [Yarn](https://yarnpkg.com/en/)
 
-## How to build an example
+## How to build and run the Sema playground on your machine 
 
 ```sh
 cd sema

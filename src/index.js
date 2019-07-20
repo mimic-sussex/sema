@@ -70,6 +70,25 @@ machineLearningWorker.onmessage = (e) => {
           console.log("load");
           let msg = {name:data.name, val:window.localStorage.getItem(data.name)};
           machineLearningWorker.postMessage(msg);
+        },
+        "download": (data) => {
+          console.log("download");
+          var saveData = (function() {
+            var a = document.createElement("a");
+            document.body.appendChild(a);
+            a.style = "display: none";
+            return function(blob, fileName) {
+              var url = window.URL.createObjectURL(blob);
+              a.href = url;
+              a.download = fileName;
+              a.click();
+              window.URL.revokeObjectURL(url);
+            };
+          }());
+          let downloadData = window.localStorage.getItem(data.name);
+          let blob = new Blob([downloadData], {type: "text/plain;charset=utf-8"});
+          console.log(blob);
+          saveData(blob, `${data.name}.data`);
         }
     };
     responders[e.data.func](e.data);
