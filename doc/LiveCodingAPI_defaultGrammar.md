@@ -81,10 +81,6 @@ With some rhythm:
 
 `{{{1}sqr,{5}saw}add}\909open`
 
-KNOWN ISSUE:
-
-the '\' as start point has some issues with it also being used as an escape sequence. See issue [#22](https://github.com/mimic-sussex/eppEditor/issues/22)
-
   
 # filters
 
@@ -186,7 +182,7 @@ Multiply signals:
 - `uexp` : unipolar exponential map from range 0,1 to range between arg 2 and arg 3
 
 - `linlin` : arbitrary linear map from range between arg 2 and 3, to range between arg 4 and arg 5
-- `linexp : arbitrary exponential map from range between arg 2 and 3, to range between arg 4 and arg 5
+- `linexp` : arbitrary exponential map from range between arg 2 and 3, to range between arg 4 and arg 5
 
 
 # communication to the model (lower editor window)
