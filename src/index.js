@@ -144,6 +144,7 @@ function createEditor1() {
       // [ "Cmd-Enter" ]: () => playAudio(),
       ["Cmd-Enter"]: () => evalLiveCodeEditorExpression(),
       ["Ctrl-Enter"]: () => evalLiveCodeEditorExpression(),
+      ["Shift-Enter"]: () => evalLiveCodeEditorExpression(),
       // ["Cmd-."]: () => stopAudio(),
       // ["Cmd--"]: () => decreaseVolume(),
       // ["Cmd-="]: () => increaseVolume(),
@@ -168,9 +169,9 @@ function createEditor2() {
     theme: "idea",
     lineWrapping: true,
     extraKeys: {
-      ["Cmd-Enter"]: () => evalModelEditorExpression(),
-      ["Ctrl-Enter"]: () => evalModelEditorExpression(),
-      ["Shift-Enter"]: () => evalModelEditorExpressionBlock(),
+      ["Cmd-Enter"]: () => evalModelEditorExpressionBlock(),
+      ["Shift-Enter"]: () => evalModelEditorExpression(),
+      ["Ctrl-Enter"]: () => evalModelEditorExpressionBlock(),
     }
 
   });
