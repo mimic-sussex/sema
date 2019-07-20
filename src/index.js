@@ -104,14 +104,16 @@ languageWorker.onmessage = (e) => {
     testResult[3] = rightNow - treeTS
     window.AudioEngine.evalSynth(e.data);
 
+    //*** temp disable editor update while sorting out blocks
+
     //update editor
-    let pms = JSON.parse(e.data.paramMarkers);
-    let cursorInfo = editor1.getCursor();
-    for (let v in pms) {
-      let fontStyle = 300 - ((pms[v].l) * 50);
-      editor1.markText({line:cursorInfo.line, ch:pms[v].s.offset}, {line:cursorInfo.line, ch:pms[v].s.offset+1},{"className":`param${fontStyle}`});
-      editor1.markText({line:cursorInfo.line, ch:pms[v].e.offset}, {line:cursorInfo.line, ch:pms[v].e.offset+1},{"className":`param${fontStyle}`});
-    }
+    // let pms = JSON.parse(e.data.paramMarkers);
+    // let cursorInfo = editor1.getCursor();
+    // for (let v in pms) {
+    //   let fontStyle = 300 - ((pms[v].l) * 50);
+    //   editor1.markText({line:cursorInfo.line, ch:pms[v].s.offset}, {line:cursorInfo.line, ch:pms[v].s.offset+1},{"className":`param${fontStyle}`});
+    //   editor1.markText({line:cursorInfo.line, ch:pms[v].e.offset}, {line:cursorInfo.line, ch:pms[v].e.offset+1},{"className":`param${fontStyle}`});
+    // }
     // console.log(`IR translate time: ${compileTS} ms`)
     // console.log("rcv");
   } else if (e.data['treeTS']) {

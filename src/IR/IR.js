@@ -73,31 +73,31 @@ class IRToJavascript {
   }
 
   static traverseTree(t, code, level) {
-    console.log(`DEBUG:IR:traverseTree: level: ${level}`);
+    // console.log(`DEBUG:IR:traverseTree: level: ${level}`);
     let attribMap = {
       '@lang': (ccode, el) => {
         // console.log("lang")
         // console.log(el);
         // console.log(ccode)
+        let statements = [];
         el.map((langEl) => {
-          ccode = IRToJavascript.traverseTree(langEl, ccode, level);
+          let statementCode = IRToJavascript.traverseTree(langEl, IRToJavascript.emptyCode(), level);
+          console.log("@lang: " + statementCode.loop);
+          ccode.setup += statementCode.setup;
+          ccode.loop += statementCode.loop;
+          // ccode.paramMarkers
         });
         return ccode;
       },
       '@sigOut': (ccode, el) => {
         ccode = IRToJavascript.traverseTree(el, ccode, level);
-        ccode.loop = `q.sigOut = ${ccode.loop}`;
+        ccode.loop = `q.sigOut = ${ccode.loop};`;
         return ccode;
       },
       '@spawn': (ccode, el) => {
-        // el.map((spawnEl) => {
-        //
-        //   ccode = IRToJavascript.traverseTree(spawnEl, ccode, level);
-        //
-        // });
-
-        return IRToJavascript.traverseTree(el, ccode, level);
-        // return ccode;
+        ccode = IRToJavascript.traverseTree(el, ccode, level);
+        ccode.loop += ";";
+        return ccode;
       },
       '@synth': (ccode, el) => {
         // console.log(el);
@@ -107,11 +107,7 @@ class IRToJavascript {
 
         let functionName = el['@jsfunc'].value;
         let funcInfo = jsFuncMap[functionName];
-        // console.log(funcInfo);
         let objName = "q.u" + IRToJavascript.getNextID();
-
-        // console.log(el['@params']);
-        // console.log(el['@params'].length);
 
         let allParams=[];
 
@@ -182,9 +178,9 @@ class IRToJavascript {
     // console.log(tree);
     let code = IRToJavascript.traverseTree(tree, IRToJavascript.emptyCode(), 0);
     code.setup = `() => {let q=this.newq(); ${code.setup}; return q;}`;
-    code.loop = `(q, inputs) => {${code.loop}; return q.sigOut;}`
+    code.loop = `(q, inputs) => {${code.loop} return q.sigOut;}`
     console.log(code.loop);
-    console.log(code.paramMarkers);
+    // console.log(code.paramMarkers);
     return code;
   }
 
