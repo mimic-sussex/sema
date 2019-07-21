@@ -31,3 +31,9 @@ yarn dev
 ## Documentation
 
 [Livecoding with the default grammar](doc/LiveCodingAPI_defaultGrammar.md)
+
+[Sema Intermediate Language](doc/semaIR.md)
+
+[Data storage and loading](doc/Model_loading_storing.md)
+
+[Maximilian DSP Library API](doc/maxi_API_doc.md)

@@ -1,7 +1,7 @@
 
 
 
-# Sema Intermediate Langauge
+# Sema Intermediate Language
 
 ## Oscillators
 
