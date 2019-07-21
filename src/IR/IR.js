@@ -19,6 +19,7 @@ const jsFuncMap = {
   'ph2': {"setup":(o,p)=>`${o} = new Module.maxiOsc()`, "loop":(o,p)=>`${o}.phasor(${p[0].loop},${p[1].loop},${p[2].loop})`},
   'sqr': {"setup":(o,p)=>`${o} = new Module.maxiOsc()`, "loop":(o,p)=>`${o}.square(${p[0].loop})`},
   'pul': {"setup":(o,p)=>`${o} = new Module.maxiOsc()`, "loop":(o,p)=>`${o}.pulse(${p[0].loop},${p[1].loop})`},
+  'imp': {"setup":(o,p)=>`${o} = new Module.maxiOsc()`, "loop":(o,p)=>`${o}.impulse(${p[0].loop})`},
   'noiz': {"setup":(o,p)=>`${o} = new Module.maxiOsc()`, "loop":(o,p)=>`${o}.noise()*${p[0].loop}`},
   'sawn': {"setup":(o,p)=>`${o} = new Module.maxiOsc()`, "loop":(o,p)=>`${o}.sawn(${p[0].loop})`},
   'gt': {"setup":(o,p)=>"", "loop":(o,p)=>`(${p[0].loop} > ${p[1].loop}) ? 1 : 0`},
@@ -52,8 +53,8 @@ const jsFuncMap = {
   'fromModel': {"setup":(o,p)=>`${o} = this.registerTransducer('testmodel', ${p[0].loop})`, "loop":(o,p)=>`${o}.receive(${p[1].loop})`},
   'adc': {"setup":(o,p)=>"", "loop":(o,p)=>`inputs[${p[0].loop}]`},
   'sampler': {"setup":(o,p)=>`${o} = new Module.maxiSample();
-                                  ${o}.setSample(this.getSampleBuffer(${p[0].loop}));`,
-                                  "loop":(o,p)=>`(${o}.isReady() ? ${o}.playOnZX(${p[1].loop}) : 0.0)`},
+                                  ${o}.setSample(this.getSampleBuffer(${p[1].loop}));`,
+                                  "loop":(o,p)=>`(${o}.isReady() ? ${o}.playOnZX(${p[0].loop}) : 0.0)`},
   'oscin':{"setup":(o,p)=>"", "loop":(o,p)=>`this.OSCTransducer(${p[0].loop},${p[1].loop})`},
 }
 
@@ -149,9 +150,10 @@ class IRToJavascript {
       '@num': (ccode, el) => {
         if (el.value) {
           ccode.loop += `${el.value}`;
-        } else {
-          ccode = IRToJavascript.traverseTree(el, ccode, level);
         }
+        //  else {
+        //   ccode = IRToJavascript.traverseTree(el, ccode, level);
+        // }
         return ccode;
       },
       // '@oscaddr': (ccode, el) => {

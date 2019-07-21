@@ -29,7 +29,7 @@ module.exports = {
     fs: 'empty'
   },
   resolve: {
-    extensions: [".js", ".json", ".wasm"],
+    extensions: [".js", ".json", ".wasm" ],
     alias: {
     }
   },
@@ -57,6 +57,11 @@ module.exports = {
         //IMAGE LOADER
         test: /\.(jpe?g|png|gif|svg)$/i,
         loader: ['file-loader']
+      },
+      {
+        //SEMA EXAMPLES LOADER
+        test: /\.tf$/i,
+        loader: ['raw-loader']
       },
       {
         // Issue pointed out by Surma on the following gist – https://gist.github.com/surma/b2705b6cca29357ebea1c9e6e15684cc

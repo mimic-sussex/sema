@@ -1,4 +1,8 @@
+
 @{%
+var semaIR = require('./semaIR.js');
+console.log(semaIR);
+
 const moo = require("moo"); // this 'require' creates a node dependency
 
 const lexer = moo.compile({
@@ -13,6 +17,7 @@ const lexer = moo.compile({
   funcName:     /[a-zA-Z][a-zA-Z0-9]*/,
   ws:           {match: /\s+/, lineBreaks: true},
 });
+
 %}
 
 
@@ -30,20 +35,19 @@ Statement ->
 
 Expression ->
   ParameterList _ %funcName
-  {% d => ({ "@synth": Object.assign(d[0],{"@jsfunc":d[2]})}) %}
+  {% d=> semaIR.synth(d[2].value, d[0]["@params"])%}
   |
   ParameterList _ %sample
-  {% d => {d[0]["@params"] = d[0]["@params"].concat([{"@string":d[2].value}]);
-  return { "@synth": Object.assign(d[0],{"@jsfunc":{value:"sampler"}})}} %}
+  {% d => semaIR.synth("sampler", d[0]["@params"].concat([semaIR.str(d[2].value)]))%}
   |
   %oscAddress
-  {% d => ({ "@synth": {"@params":[{"@string":d[0].value},{"@num":{value:-1}}], "@jsfunc":{value:"oscin"}}} ) %}
+  {% d=> semaIR.synth("oscin", [semaIR.str(d[0].value),semaIR.num(-1)])%}
   |
   ParameterList _ %oscAddress
-  {% d => ({ "@synth": {"@params":[{"@string":d[2].value},d[0]["@params"][0]], "@jsfunc":{value:"oscin"}}} ) %}
+  {% d=> semaIR.synth("oscin", [semaIR.str(d[2].value),d[0]["@params"][0]])%}
   |
   %variable _ Expression
-  {% d => ({"@setvar": {"@varname":d[0],"@varvalue":d[2]}} ) %}
+  {% d => semaIR.setvar(d[0],d[2]) %}
 
 ParameterList ->
   %paramBegin Params  %paramEnd

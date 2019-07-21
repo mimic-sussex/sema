@@ -1,21 +1,30 @@
+
+import Myo from 'myo/myo.js';
+
 class myo {
 
   constructor() {
-    // this.oscResponderFunction = (msg)=>{
-    //   console.log("OSC message:", msg);
-    // };
-
-    this.port = new osc.WebSocketPort({
-        url: "ws://localhost:8081"
-    });
-    // this.port.on("message", this.oscResponderFunction);
-    this.port.open();
+    this.myMyos = [];
+    this.myoCount = 0;
+    Myo.on('connected', myo => this.setupMyo(myo));
+    Myo.on('emg', (myo, data) => this.onEMG(myo, data));
+    // Myo.on('orientation', data => console.log(`quaternion W:${data.w} X:${data.x} Y:${data.y} Z:${data.z}`));
+    Myo.onError = () => console.log("Couldn't connect to Myo Connect");
+    
+    Myo.connect('io.github.sema'); // NOTE:FB: Required format, otherwise connection error!
   }
 
-  OSCResponder(newFunc) {
-    this.oscResponderFunction = newFunc;
-    this.port.on("message", this.oscResponderFunction);
+  setupMyo (myo) {
+    this.myMyos.push(myo);
+    this.myoCount++; 
+    Myo.methods.streamEMG(true);
+  } 
+
+  onEMG (myo, data) {
+    console.log(`emg: ${data}`);
   }
+};
 
-
+export {
+  myo
 };

@@ -13,6 +13,15 @@ import {
   AudioEngine
 } from './audioEngine/audioEngine.js';
 
+import hello_world_code_example from './machineLearning/tfjs/hello-world/hello-world.tf';
+import two_layer_non_linear_code_example from './machineLearning/tfjs/non-linear/two-layer-non-linear.tf';
+import binary_classification_code_example from './machineLearning/tfjs/non-linear/binary-classification.tf';
+import echo_state_network_code_example from './machineLearning/tfjs/echo-state/echo-state-network.tf';
+import lstm_txt_gen_code_example from './machineLearning/tfjs/rnn/lstm-txt-gen.tf';
+
+import { myo } from './interfaces/myo.js';
+import { leapMotion } from './interfaces/leapMotion.js';
+
 // import treeJSON from './dndTree';
 import AudioWorkletIndicator from './UI/components';
 
@@ -42,6 +51,7 @@ import 'codemirror/keymap/vim.js';
 import 'codemirror/lib/codemirror.css';
 
 import langSketch from './language/langSketch';
+import { createSecretKey } from 'crypto';
 
 let audio;
 
@@ -207,6 +217,9 @@ function createControls() {
   const runKeys = isMac ? "Cmd-Enter" : "Ctrl-Enter";
   const container = document.getElementById("containerButtons");
 
+  const startAudioButton = document.getElementById('buttonStartAudio');
+  startAudioButton.addEventListener("click", () => setupAudio());
+
   const runButton = document.createElement("button");
   runButton.textContent = `Play: ${runKeys.replace("-", " ")}`;
 
@@ -220,33 +233,98 @@ function createControls() {
   container.appendChild(stopButton);
   stopButton.addEventListener("click", () => stopAudio());
 
+  createModelSelector();
+
+  /* NOTE:FB do not delete */
+
+  // const grammarButton = document.createElement("button");
+  // grammarButton.textContent = `Grammar`;
+  // containerTabs.appendChild(grammarButton);
+  // grammarButton.addEventListener("click", () => changeEditorTab());
+
+  // const myoButton = document.createElement("button");
+  // myoButton.textContent = `Myo`;
+  // container.appendChild(myoButton);
+  // myoButton.addEventListener("click", () => connectMyo());
+
+  // const leapButton = document.createElement("button");
+  // leapButton.textContent = `Leap`;
+  // container.appendChild(leapButton);
+  // leapButton.addEventListener("click", () => connectLeap());
+
   // const testButton = document.createElement("button");
   // testButton.textContent = `Test`;
   // container.appendChild(testButton);
   // testButton.addEventListener("click", () => runTest());
 
-  const startAudioButton = document.getElementById('buttonStartAudio');
-  startAudioButton.addEventListener("click", () => setupAudio());
-
-  // const containerTabs = document.getElementById("containerTabs");
-
-  // const modelButton = document.createElement("button");
-  // modelButton.textContent = `Model`;
-  // containerTabs.appendChild(modelButton);
-  // modelButton.addEventListener("click", () => changeEditorTab());
-  //
-  // const grammarButton = document.createElement("button");
-  // grammarButton.textContent = `Grammar`;
-  // containerTabs.appendChild(grammarButton);
-  // grammarButton.addEventListener("click", () => changeEditorTab());
 }
+
+function createModelSelector(){
+
+  const container = document.getElementById("containerButtons");
+  const modelSelect = document.createElement("SELECT");
+
+
+  
+  const injectModelExampleInModelEditor = (e) => {
+   
+
+    console.log(e);
+    switch (e) {
+      case "Add Model: hello-world":
+        editor2.setValue(hello_world_code_example);
+        break;
+      case "two-layer-non-linear":
+        editor2.setValue(two_layer_non_linear_code_example);
+        break;
+      case "binary-classification":
+        editor2.setValue(binary_classification_code_example);
+        break;
+      case "echo-state-network":
+        editor2.setValue(echo_state_network_code_example);
+        break;
+      case "lstm-txt-generator":
+        editor2.setValue(lstm_txt_gen_code_example);
+        break;
+      default:
+        editor2.setValue("sssdfgsdf");
+        break;
+    }
+  }
+
+  // modelSelect.addEventListener("onchange", e => injectModelExampleInModelEditor(e));
+  modelSelect.addEventListener("change", () => { injectModelExampleInModelEditor(modelSelect.value)});
+
+  const createModelSelectOptions = (optionTextEntry, selectElement) => {
+    let option = document.createElement("option");
+    option.text = optionTextEntry;
+    selectElement.add(option);
+  };
+
+  createModelSelectOptions("Add Model: hello-world", modelSelect); 
+  createModelSelectOptions("two-layer-non-linear", modelSelect); 
+  createModelSelectOptions("binary-classification", modelSelect); 
+  createModelSelectOptions("lstm-txt-generator", modelSelect); 
+  createModelSelectOptions("echo-state-network", modelSelect); 
+
+  container.appendChild(modelSelect);
+}
+
+
+function connectMyo(){
+  let myoInterface = new myo();
+  
+}
+
+function connectLeap(){
+  let leapInterface = new leapMotion();
+}
+
 
 function evalExpression(expression) {
   compileTS = window.performance.now();
   languageWorker.postMessage(expression);
 }
-
-
 
 function getBlock(editor) {
   //find code between dividers
@@ -449,6 +527,9 @@ document.addEventListener("DOMContentLoaded", () => {
     // console.log("OSC in:", msg);
     window.AudioEngine.oscMessage(msg);
   });
+
+  
+
 
 });
 
