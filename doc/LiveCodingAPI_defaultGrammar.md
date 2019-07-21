@@ -44,7 +44,7 @@ argument is the amplitude
 
 The envelope is an adsr envelope, so the arguments are "input signal", attack (in ms), decay (in ms), sustain level (0-1), release (in ms). So here with a square wave as input:
 
-`{{1}sqr,10,200,0.05,200}env}`
+`{{1}sqr,10,200,0.05,200}env`
 
 multiplied with a sine wave:
 
@@ -198,7 +198,7 @@ Send data ten times per second (argument 1) with ID 0 (argument 2). The third ar
 In js (lower window):
 
 ```
-`input = (id,x) => {console.log([id,x])};`
+input = (id,x) => {console.log([id,x])};
 
 ```
 
@@ -211,6 +211,12 @@ In js (lower window):
 ```
 y=100;
 output = (x) => {console.log("in "+x); y++; return y;}
+```
+
+Note: to separate the two functions in the model window you use 10 underscores:
+
+```
+__________
 ```
 
 # osc communication
