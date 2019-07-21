@@ -9,7 +9,7 @@ const lexer = moo.compile({
   paramEnd:     /}/,
   paramBegin:   /{/,
   variable:     /:[a-zA-Z0-9]+:/,
-  sample:       { match: /\\[a-zA-Z0-9]+/, lineBreaks: true, value: x => x.slice(0, x.length)},
+  sample:       { match: /\\[a-zA-Z0-9]+/, lineBreaks: true, value: x => x.slice(1, x.length)},
   oscAddress:   /(?:\/[a-zA-Z0-9]+)+/,
   number:       /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?(?:[eE][-+]?[0-9]+)?\b/,
   add:          /\+/,
@@ -48,10 +48,8 @@ Expression ->
 # |
 # %paramBegin Params  %paramEnd  %oscAddress                  {% d => ({ "@synth": {"paramBegin":d[0], "paramEnd":d[2], "@params":[{"@string":d[3].value},d[1][0]], "@jsfunc":{value:"oscin"}}} ) %}       {% d => ({ "@oscreceiver": {"@params":d[1], "@oscaddr":d[3], "paramBegin":d[0], "paramEnd":d[2]}} ) %}
 |
-# %paramBegin Params %paramEnd %sample                          {% d => ({ "@synth": {"@params":[{"@string":d[3].value.substr(1)}].concat(d[1]), "@jsfunc":{value:"sampler"}, "paramBegin":d[0], "paramEnd":d[2]}} ) %}
-%paramBegin Params %paramEnd %sample                          {% d => ({ "@synth": {"@params":[{"@string":d[3].value.substr(1)}].concat(d[1]), "@jsfunc":{value:"sampler"}, "paramBegin":d[0], "paramEnd":d[2]}} ) %}
+%paramBegin Params %paramEnd %sample                          {% d => ({ "@synth": {"@params":[{"@string":d[3].value}].concat(d[1]), "@jsfunc":{value:"sampler"}, "paramBegin":d[0], "paramEnd":d[2]}} ) %}
 |
-# %paramBegin Params %paramEnd %sample                          {% d => ({ "@synth": {"@params":[{"@string":d[3].value.substr(1)}].concat(d[1]), "@jsfunc":{value:"sampler"}, "paramBegin":d[0], "paramEnd":d[2]}} ) %}
 %variable %paramBegin Params %paramEnd %sample                          {% d => ({"@setvar": {"@varname":d[0],"@varvalue":{ "@synth": {"@params":[{"@string":d[4].value.substr(1)}].concat(d[2]), "@jsfunc":{value:"sampler"}, "paramBegin":d[1], "paramEnd":d[3]}}}} ) %}
 |
 %oscAddress                                                   {% d => ({ "@synth": {"@params":[{"@string":d[0].value},{"@num":{value:-1}}], "@jsfunc":{value:"oscin"}}} ) %}
