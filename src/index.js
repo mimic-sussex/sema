@@ -210,6 +210,9 @@ function createControls() {
   const runKeys = isMac ? "Cmd-Enter" : "Ctrl-Enter";
   const container = document.getElementById("containerButtons");
 
+  const startAudioButton = document.getElementById('buttonStartAudio');
+  startAudioButton.addEventListener("click", () => setupAudio());
+
   const runButton = document.createElement("button");
   runButton.textContent = `Play: ${runKeys.replace("-", " ")}`;
 
@@ -223,36 +226,83 @@ function createControls() {
   container.appendChild(stopButton);
   stopButton.addEventListener("click", () => stopAudio());
 
+  createModelSelector();
+
+  /* NOTE:FB do not delete */
+
+  // const grammarButton = document.createElement("button");
+  // grammarButton.textContent = `Grammar`;
+  // containerTabs.appendChild(grammarButton);
+  // grammarButton.addEventListener("click", () => changeEditorTab());
+
+  // const myoButton = document.createElement("button");
+  // myoButton.textContent = `Myo`;
+  // container.appendChild(myoButton);
+  // myoButton.addEventListener("click", () => connectMyo());
+
+  // const leapButton = document.createElement("button");
+  // leapButton.textContent = `Leap`;
+  // container.appendChild(leapButton);
+  // leapButton.addEventListener("click", () => connectLeap());
+
   // const testButton = document.createElement("button");
   // testButton.textContent = `Test`;
   // container.appendChild(testButton);
   // testButton.addEventListener("click", () => runTest());
 
-  const myoButton = document.createElement("button");
-  myoButton.textContent = `Myo`;
-  container.appendChild(myoButton);
-  myoButton.addEventListener("click", () => connectMyo());
-
-  const leapButton = document.createElement("button");
-  leapButton.textContent = `Leap`;
-  container.appendChild(leapButton);
-  leapButton.addEventListener("click", () => connectLeap());
-
-  const startAudioButton = document.getElementById('buttonStartAudio');
-  startAudioButton.addEventListener("click", () => setupAudio());
-
-  // const containerTabs = document.getElementById("containerTabs");
-
-  // const modelButton = document.createElement("button");
-  // modelButton.textContent = `Model`;
-  // containerTabs.appendChild(modelButton);
-  // modelButton.addEventListener("click", () => changeEditorTab());
-  //
-  // const grammarButton = document.createElement("button");
-  // grammarButton.textContent = `Grammar`;
-  // containerTabs.appendChild(grammarButton);
-  // grammarButton.addEventListener("click", () => changeEditorTab());
 }
+
+function createModelSelector(){
+
+  const container = document.getElementById("containerButtons");
+  const modelSelect = document.createElement("SELECT");
+  modelSelect.textContent = `Models`;
+  container.appendChild(modelSelect);
+
+  var option1 = document.createElement("option");
+  option1.text = "Add Model: hello-world";
+  option1.addEventListener("click", function(e) {
+    console.log(e);
+  });
+  modelSelect.add(option1);
+
+  var option2 = document.createElement("option");
+  option2.text = "two-layer-non-linear";
+  option2.addEventListener("click", function(e) {
+    console.log(e);
+  });
+  modelSelect.add(option2);
+
+  var option3 = document.createElement("option");
+  option3.text = "binary-classification";
+  option3.addEventListener("click", function(e) {
+    console.log(e); 
+  });
+  modelSelect.add(option3);
+
+  var option4 = document.createElement("option");
+  option4.text = "lstm-txt-generator";
+  option4.addEventListener("click", function(e) {
+    console.log(e); 
+  });
+  modelSelect.add(option4);
+
+  var option5 = document.createElement("option");
+  option5.text = "echo-state-network";
+  option5.addEventListener("click", function(e) {
+    
+  });
+  modelSelect.add(option5);
+
+  modelSelect.addEventListener("click", () => injectModelExampleInModelEditor());
+
+}
+
+function injectModelExampleInModelEditor(){
+
+
+}
+
 
 function connectMyo(){
   let myoInterface = new myo();
@@ -268,8 +318,6 @@ function evalExpression(expression) {
   compileTS = window.performance.now();
   languageWorker.postMessage(expression);
 }
-
-
 
 function getBlock(editor) {
   //find code between dividers
