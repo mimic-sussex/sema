@@ -265,9 +265,9 @@ function createModelSelector(){
   const modelSelect = document.createElement("SELECT");
 
 
-  
+
   const injectModelExampleInModelEditor = (e) => {
-   
+
 
     console.log(e);
     switch (e) {
@@ -301,12 +301,12 @@ function createModelSelector(){
     selectElement.add(option);
   };
 
-  createModelSelectOptions("Open model example:", modelSelect); 
-  createModelSelectOptions("hello-world", modelSelect); 
-  createModelSelectOptions("two-layer-non-linear", modelSelect); 
-  createModelSelectOptions("binary-classification", modelSelect); 
-  createModelSelectOptions("lstm-txt-generator", modelSelect); 
-  createModelSelectOptions("echo-state-network", modelSelect); 
+  createModelSelectOptions("Open model example:", modelSelect);
+  createModelSelectOptions("hello-world", modelSelect);
+  createModelSelectOptions("two-layer-non-linear", modelSelect);
+  createModelSelectOptions("binary-classification", modelSelect);
+  createModelSelectOptions("lstm-txt-generator", modelSelect);
+  createModelSelectOptions("echo-state-network", modelSelect);
 
   container.appendChild(modelSelect);
 }
@@ -314,7 +314,7 @@ function createModelSelector(){
 
 function connectMyo(){
   let myoInterface = new myo();
-  
+
 }
 
 function connectLeap(){
@@ -529,7 +529,7 @@ document.addEventListener("DOMContentLoaded", () => {
     window.AudioEngine.oscMessage(msg);
   });
 
-  
+
 
 
 });
