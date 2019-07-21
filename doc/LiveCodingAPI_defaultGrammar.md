@@ -7,11 +7,12 @@ There are two windows in the sema system. The top one is the sematic window for 
 
 # oscillators
 
-first argument is always the frequency
+first argument is always the frequency, the last argument the phase.
 
 // sine
 
 `{500}sin`
+`{500,0.2}sin`
 
 // saw
 
@@ -36,6 +37,12 @@ first argument is always the frequency
 // pulse (second argument is pulsewidth)
 
 `{500,0.7}pul`
+
+// impulse (single impulse, useful for triggering)
+
+`{2}imp`
+`{2,0.2}imp`
+
 
 // saw negative
 
