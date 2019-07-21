@@ -1,3 +1,10 @@
+# The Sema System
+
+The code examples below work for *one* sematic language, the default demo language. To run these commands, paste them in the top window and hit cmd+enter. That will evaluate the line. To evaluate many lines, you need to separate them with a semicolon ";" after every line. 
+
+There are two windows in the sema system. The top one is the sematic window for the unique language. The bottom one is a window for JavaScript code, where we, for example, run machine learning models.
+
+
 # oscillators
 
 first argument is always the frequency
