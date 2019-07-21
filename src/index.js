@@ -9,12 +9,18 @@ import tfWorker from 'worker-loader!./machineLearning/tfjs.worker.js';
 import oscIO from './interfaces/oscInterface.js';
 import fileSaver from 'filesaver/src/Filesaver.js'
 
-import { myo } from './interfaces/myo.js';
-import { leapMotion } from './interfaces/leapMotion.js';
-
 import {
   AudioEngine
 } from './audioEngine/audioEngine.js';
+
+import hello_world_code_example from './machineLearning/tfjs/hello-world/hello-world.tf';
+import two_layer_non_linear_code_example from './machineLearning/tfjs/non-linear/two-layer-non-linear.tf';
+import binary_classification_code_example from './machineLearning/tfjs/non-linear/binary-classification.tf';
+import echo_state_network_code_example from './machineLearning/tfjs/echo-state/echo-state-network.tf';
+import lstm_txt_gen_code_example from './machineLearning/tfjs/rnn/lstm-txt-gen.tf';
+
+import { myo } from './interfaces/myo.js';
+import { leapMotion } from './interfaces/leapMotion.js';
 
 // import treeJSON from './dndTree';
 import AudioWorkletIndicator from './UI/components';
@@ -45,6 +51,7 @@ import 'codemirror/keymap/vim.js';
 import 'codemirror/lib/codemirror.css';
 
 import langSketch from './language/langSketch';
+import { createSecretKey } from 'crypto';
 
 let audio;
 
@@ -256,51 +263,51 @@ function createModelSelector(){
 
   const container = document.getElementById("containerButtons");
   const modelSelect = document.createElement("SELECT");
-  modelSelect.textContent = `Models`;
+
+
+  
+  const injectModelExampleInModelEditor = (e) => {
+   
+
+    console.log(e);
+    switch (e) {
+      case "Add Model: hello-world":
+        editor2.setValue(hello_world_code_example);
+        break;
+      case "two-layer-non-linear":
+        editor2.setValue(two_layer_non_linear_code_example);
+        break;
+      case "binary-classification":
+        editor2.setValue(binary_classification_code_example);
+        break;
+      case "echo-state-network":
+        editor2.setValue(echo_state_network_code_example);
+        break;
+      case "lstm-txt-generator":
+        editor2.setValue(lstm_txt_gen_code_example);
+        break;
+      default:
+        editor2.setValue("sssdfgsdf");
+        break;
+    }
+  }
+
+  // modelSelect.addEventListener("onchange", e => injectModelExampleInModelEditor(e));
+  modelSelect.addEventListener("change", () => { injectModelExampleInModelEditor(modelSelect.value)});
+
+  const createModelSelectOptions = (optionTextEntry, selectElement) => {
+    let option = document.createElement("option");
+    option.text = optionTextEntry;
+    selectElement.add(option);
+  };
+
+  createModelSelectOptions("Add Model: hello-world", modelSelect); 
+  createModelSelectOptions("two-layer-non-linear", modelSelect); 
+  createModelSelectOptions("binary-classification", modelSelect); 
+  createModelSelectOptions("lstm-txt-generator", modelSelect); 
+  createModelSelectOptions("echo-state-network", modelSelect); 
+
   container.appendChild(modelSelect);
-
-  var option1 = document.createElement("option");
-  option1.text = "Add Model: hello-world";
-  option1.addEventListener("click", function(e) {
-    console.log(e);
-  });
-  modelSelect.add(option1);
-
-  var option2 = document.createElement("option");
-  option2.text = "two-layer-non-linear";
-  option2.addEventListener("click", function(e) {
-    console.log(e);
-  });
-  modelSelect.add(option2);
-
-  var option3 = document.createElement("option");
-  option3.text = "binary-classification";
-  option3.addEventListener("click", function(e) {
-    console.log(e); 
-  });
-  modelSelect.add(option3);
-
-  var option4 = document.createElement("option");
-  option4.text = "lstm-txt-generator";
-  option4.addEventListener("click", function(e) {
-    console.log(e); 
-  });
-  modelSelect.add(option4);
-
-  var option5 = document.createElement("option");
-  option5.text = "echo-state-network";
-  option5.addEventListener("click", function(e) {
-    
-  });
-  modelSelect.add(option5);
-
-  modelSelect.addEventListener("click", () => injectModelExampleInModelEditor());
-
-}
-
-function injectModelExampleInModelEditor(){
-
-
 }
 
 
