@@ -9,20 +9,10 @@ const lexer = moo.compile({
   paramEnd:     /}/,
   paramBegin:   /{/,
   variable:     /:[a-zA-Z0-9]+:/,
-  sample:       { match: /\\[a-zA-Z0-9]+/, lineBreaks: true, value: x => x.slice(0, x.length)},
+  sample:       { match: /\\[a-zA-Z0-9]+/, lineBreaks: true, value: x => x.slice(1, x.length)},
   oscAddress:   /(?:\/[a-zA-Z0-9]+)+/,
   number:       /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?(?:[eE][-+]?[0-9]+)?\b/,
-  add:          /\+/,
-  mult:         /\*/,
-  div:          /\//,
-  dot:          /\./,
-  hash:         /\#/,
-  hyphen:       /\-/,
-  ndash:        /\–/,
-  mdash:        /\—/,
-  comma:        /\,/,
-  colon:        /\:/,
-  semicolon:    /\;/,
+  semicolon:    /;/,
   funcName:     /[a-zA-Z][a-zA-Z0-9]*/,
   ws:           {match: /\s+/, lineBreaks: true},
 });
@@ -42,42 +32,40 @@ Statement ->
       # | %hash . "\n"                                          {% d => ({ "@comment": d[3] }) %}
 
 Expression ->
-%variable %paramBegin Params  %paramEnd  %funcName            {% d => ({"@setvar": {"@varname":d[0],"@varvalue":{ "@synth": {"@params":d[2], "@jsfunc":d[4], "paramBegin":d[1], "paramEnd":d[3]}}}} ) %}
-|
-%paramBegin Params  %paramEnd  %funcName                      {% d => ({ "@synth": {"@params":d[1], "@jsfunc":d[3], "paramBegin":d[0], "paramEnd":d[2]}} ) %}
-# |
-# %paramBegin Params  %paramEnd  %oscAddress                  {% d => ({ "@synth": {"paramBegin":d[0], "paramEnd":d[2], "@params":[{"@string":d[3].value},d[1][0]], "@jsfunc":{value:"oscin"}}} ) %}       {% d => ({ "@oscreceiver": {"@params":d[1], "@oscaddr":d[3], "paramBegin":d[0], "paramEnd":d[2]}} ) %}
-|
-# %paramBegin Params %paramEnd %sample                          {% d => ({ "@synth": {"@params":[{"@string":d[3].value.substr(1)}].concat(d[1]), "@jsfunc":{value:"sampler"}, "paramBegin":d[0], "paramEnd":d[2]}} ) %}
-%paramBegin Params %paramEnd %sample                          {% d => ({ "@synth": {"@params":[{"@string":d[3].value.substr(1)}].concat(d[1]), "@jsfunc":{value:"sampler"}, "paramBegin":d[0], "paramEnd":d[2]}} ) %}
-|
-# %paramBegin Params %paramEnd %sample                          {% d => ({ "@synth": {"@params":[{"@string":d[3].value.substr(1)}].concat(d[1]), "@jsfunc":{value:"sampler"}, "paramBegin":d[0], "paramEnd":d[2]}} ) %}
-%variable %paramBegin Params %paramEnd %sample                          {% d => ({"@setvar": {"@varname":d[0],"@varvalue":{ "@synth": {"@params":[{"@string":d[4].value.substr(1)}].concat(d[2]), "@jsfunc":{value:"sampler"}, "paramBegin":d[1], "paramEnd":d[3]}}}} ) %}
-|
-%oscAddress                                                   {% d => ({ "@synth": {"@params":[{"@string":d[0].value},{"@num":{value:-1}}], "@jsfunc":{value:"oscin"}}} ) %}
+  ParameterList _ %funcName
+  {% d => ({ "@synth": Object.assign(d[0],{"@jsfunc":d[2]})}) %}
+  |
+  ParameterList _ %sample
+  {% d => {d[0]["@params"] = d[0]["@params"].concat([{"@string":d[2].value}]);
+  return { "@synth": Object.assign(d[0],{"@jsfunc":{value:"sampler"}})}} %}
+  |
+  %oscAddress
+  {% d => ({ "@synth": {"@params":[{"@string":d[0].value},{"@num":{value:-1}}], "@jsfunc":{value:"oscin"}}} ) %}
+  |
+  ParameterList _ %oscAddress
+  {% d => ({ "@synth": {"@params":[{"@string":d[2].value},d[0]["@params"][0]], "@jsfunc":{value:"oscin"}}} ) %}
+  |
+  %variable _ Expression
+  {% d => ({"@setvar": {"@varname":d[0],"@varvalue":d[2]}} ) %}
 
-      # | %funcName                                              {% d => ({ "@synth": [], "@jsfunc":d[0]} ) %}
+ParameterList ->
+  %paramBegin Params  %paramEnd
+  {% d => ({"paramBegin":d[0], "@params":d[1], "paramEnd":d[2]} ) %}
+
 
 Params ->
-  (%number)                                                   {% (d) => ([{"@num":d[0][0]}]) %}
-  # (%number)                                                   {% function(d) { return [ {"@num":d[0][0]} ]; }  %}
+  ParamElement                                                   {% (d) => ([d[0]]) %}
   |
-  (%variable)                                                   {% (d) => ([{"@getvar":d[0][0]}]) %}
-  |
-  (%variable) %separator Params                                 {% (d) => ([{"@getvar":d[0][0]}].concat(d[2])) %}
-  |
-  Expression                                                  {% (d) => ([{"@num":d[0]}]) %}
-  |
-  %number %separator Params                                   {% d => [{ "@num": d[0]}].concat(d[2]) %}
-  |
-  # %oscAddress %separator Params                             {% d => [{ "@oscaddr": d[0]}].concat(d[2]) %}
-  # |
-  Expression %separator Params                                {% d => [{ "@num": d[0]}].concat(d[2]) %}
-  |
-  %paramBegin Params  %paramEnd                               {%(d) => ([{"@list":d[1]}])%}
-  |
-  %paramBegin Params  %paramEnd  %separator Params            {% d => [{ "@list": d[1]}].concat(d[4]) %}
+  ParamElement _ %separator _ Params                             {% d => [d[0]].concat(d[4]) %}
 
+ParamElement ->
+  %number                                                     {% (d) => ({"@num":d[0]}) %}
+  |
+  Expression                                                  {% id %}
+  |
+  %variable                                                   {% (d) => ({"@getvar":d[0]}) %}
+  |
+  %paramBegin Params  %paramEnd                               {%(d) => ({"@list":d[1]})%}
 
 
 
