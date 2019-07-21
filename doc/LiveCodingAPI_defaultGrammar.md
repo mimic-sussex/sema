@@ -193,7 +193,7 @@ Multiply signals:
 - `uexp` : unipolar exponential map from range 0,1 to range between arg 2 and arg 3
 
 - `linlin` : arbitrary linear map from range between arg 2 and 3, to range between arg 4 and arg 5
-- `linexp : arbitrary exponential map from range between arg 2 and 3, to range between arg 4 and arg 5
+- `linexp` : arbitrary exponential map from range between arg 2 and 3, to range between arg 4 and arg 5
 
 
 # communication to the model (lower editor window)

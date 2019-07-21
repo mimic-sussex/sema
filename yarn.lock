@@ -1852,6 +1852,11 @@ commander@2.17.x:
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.17.1.tgz#bd77ab7de6de94205ceacc72f1716d29f20a77bf"
   integrity sha512-wPMUt6FnH2yzG95SA6mzjQOEKUU3aLaDEmzs1ti+1E9h+CsrZghRlqEM/EJ4KscsQVG8uNN4uVreUeT8+drlgg==
 
+commander@~0.6.1:
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-0.6.1.tgz#fa68a14f6a945d54dbbe50d8cdb3320e9e3b1a06"
+  integrity sha1-+mihT2qUXVTbvlDYzbMyDp47GgY=
+
 commander@~2.19.0:
   version "2.19.0"
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.19.0.tgz#f6198aa84e5b83c46054b94ddedbfed5ee9ff12a"
@@ -3341,6 +3346,11 @@ github-from-package@0.0.0:
   resolved "https://registry.yarnpkg.com/github-from-package/-/github-from-package-0.0.0.tgz#97fb5d96bfde8973313f20e8288ef9a167fa64ce"
   integrity sha1-l/tdlr/eiXMxPyDoKI75oWf6ZM4=
 
+gl-matrix@2.2.1:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/gl-matrix/-/gl-matrix-2.2.1.tgz#015bdcd55b6c632860980b13b31296628ae10cce"
+  integrity sha1-AVvc1VtsYyhgmAsTsxKWYorhDM4=
+
 glamor-tachyons@^1.0.0-alpha.1:
   version "1.0.0-alpha.1"
   resolved "https://registry.yarnpkg.com/glamor-tachyons/-/glamor-tachyons-1.0.0-alpha.1.tgz#76c295f9c3bfad056a30341a5a9cea7ac865d78d"
@@ -4168,6 +4178,15 @@ lcid@^2.0.0:
   dependencies:
     invert-kv "^2.0.0"
 
+leapjs@^0.6.4:
+  version "0.6.4"
+  resolved "https://registry.yarnpkg.com/leapjs/-/leapjs-0.6.4.tgz#90588b0f29c1d39244b97a14d76daa4027c78ada"
+  integrity sha1-kFiLDynB05JEuXoU122qQCfHito=
+  dependencies:
+    gl-matrix "2.2.1"
+    underscore "1.4.4"
+    ws "0.4.25"
+
 live-server@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/live-server/-/live-server-1.2.1.tgz#670630dd409d22fe9c513ab1c1894686c757153e"
@@ -4611,6 +4630,11 @@ multicast-dns@^6.0.1:
     dns-packet "^1.3.1"
     thunky "^1.0.2"
 
+myo@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/myo/-/myo-3.0.0.tgz#227907064a17bc2a7f5d32d658e1e04325ce7eb1"
+  integrity sha1-InkHBkoXvCp/XTLWWOHgQyXOfrE=
+
 nan@^2.12.1, nan@^2.13.2:
   version "2.14.0"
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.14.0.tgz#7818f722027b2459a86f0295d434d1fc2336c52c"
@@ -4985,6 +5009,11 @@ opn@latest:
   integrity sha512-I9PKfIZC+e4RXZ/qr1RhgyCnGgYX0UEIlXgWnCOVACIvFgaC9rz6Won7xbdhoHrd8IIhV7YEpHjreNUNkqCGkQ==
   dependencies:
     is-wsl "^1.1.0"
+
+options@latest:
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/options/-/options-0.0.6.tgz#ec22d312806bb53e731773e7cdaefcf1c643128f"
+  integrity sha1-7CLTEoBrtT5zF3Pnza788cZDEo8=
 
 original@^1.0.0:
   version "1.0.2"
@@ -6490,6 +6519,11 @@ timers-browserify@^2.0.4:
   dependencies:
     setimmediate "^1.0.4"
 
+tinycolor@0.x:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/tinycolor/-/tinycolor-0.0.1.tgz#320b5a52d83abb5978d81a3e887d4aefb15a6164"
+  integrity sha1-MgtaUtg6u1l42Bo+iH1K77FaYWQ=
+
 to-arraybuffer@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/to-arraybuffer/-/to-arraybuffer-1.0.1.tgz#7d229b1fcc637e466ca081180836a7aabff83f43"
@@ -6736,6 +6770,11 @@ uglify-to-browserify@~1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/uglify-to-browserify/-/uglify-to-browserify-1.0.2.tgz#6e0924d6bda6b5afe349e39a6d632850a0f882b7"
   integrity sha1-bgkk1r2mta/jSeOabWMoUKD4grc=
+
+underscore@1.4.4:
+  version "1.4.4"
+  resolved "https://registry.yarnpkg.com/underscore/-/underscore-1.4.4.tgz#61a6a32010622afa07963bf325203cf12239d604"
+  integrity sha1-YaajIBBiKvoHljvzJSA88SI51gQ=
 
 unicode-canonical-property-names-ecmascript@^1.0.4:
   version "1.0.4"
@@ -7473,6 +7512,15 @@ wrappy@1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/wrappy/-/wrappy-1.0.2.tgz#b5243d8f3ec1aa35f1364605bc0d1036e30ab69f"
   integrity sha1-tSQ9jz7BqjXxNkYFvA0QNuMKtp8=
+
+ws@0.4.25:
+  version "0.4.25"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-0.4.25.tgz#3dca06feddc25944af780d7b01da2cf63da7acc8"
+  integrity sha1-PcoG/t3CWUSveA17Ados9j2nrMg=
+  dependencies:
+    commander "~0.6.1"
+    options latest
+    tinycolor "0.x"
 
 ws@6.2.0:
   version "6.2.0"
