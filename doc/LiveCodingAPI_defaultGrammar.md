@@ -88,10 +88,6 @@ With some rhythm:
 
 `{{{1}sqr,{5}saw}add}\909open`
 
-KNOWN ISSUE:
-
-the '\' as start point has some issues with it also being used as an escape sequence. See issue [#22](https://github.com/mimic-sussex/eppEditor/issues/22)
-
   
 # filters
 
