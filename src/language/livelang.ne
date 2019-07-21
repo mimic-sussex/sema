@@ -59,25 +59,18 @@ Expression ->
       # | %funcName                                              {% d => ({ "@synth": [], "@jsfunc":d[0]} ) %}
 
 Params ->
-  (%number)                                                   {% (d) => ([{"@num":d[0][0]}]) %}
-  # (%number)                                                   {% function(d) { return [ {"@num":d[0][0]} ]; }  %}
+  ParamElement                                                   {% (d) => ([d[0]]) %}
   |
-  (%variable)                                                   {% (d) => ([{"@getvar":d[0][0]}]) %}
-  |
-  (%variable) %separator Params                                 {% (d) => ([{"@getvar":d[0][0]}].concat(d[2])) %}
-  |
-  Expression                                                  {% (d) => ([{"@num":d[0]}]) %}
-  |
-  %number %separator Params                                   {% d => [{ "@num": d[0]}].concat(d[2]) %}
-  |
-  # %oscAddress %separator Params                             {% d => [{ "@oscaddr": d[0]}].concat(d[2]) %}
-  # |
-  Expression %separator Params                                {% d => [{ "@num": d[0]}].concat(d[2]) %}
-  |
-  %paramBegin Params  %paramEnd                               {%(d) => ([{"@list":d[1]}])%}
-  |
-  %paramBegin Params  %paramEnd  %separator Params            {% d => [{ "@list": d[1]}].concat(d[4]) %}
+  ParamElement %separator Params                                   {% d => [d[0]].concat(d[2]) %}
 
+ParamElement ->
+  %number                                                   {% (d) => ({"@num":d[0]}) %}
+  |
+  Expression                                                  {% id %}
+  |
+  %variable                                                   {% (d) => ({"@getvar":d[0]}) %}
+  |
+  %paramBegin Params  %paramEnd                               {%(d) => ({"@list":d[1]})%}
 
 
 

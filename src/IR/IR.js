@@ -149,9 +149,10 @@ class IRToJavascript {
       '@num': (ccode, el) => {
         if (el.value) {
           ccode.loop += `${el.value}`;
-        } else {
-          ccode = IRToJavascript.traverseTree(el, ccode, level);
         }
+        //  else {
+        //   ccode = IRToJavascript.traverseTree(el, ccode, level);
+        // }
         return ccode;
       },
       // '@oscaddr': (ccode, el) => {
