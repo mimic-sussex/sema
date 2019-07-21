@@ -9,6 +9,9 @@ import tfWorker from 'worker-loader!./machineLearning/tfjs.worker.js';
 import oscIO from './interfaces/oscInterface.js';
 import fileSaver from 'filesaver/src/Filesaver.js'
 
+import { myo } from './interfaces/myo.js';
+import { leapMotion } from './interfaces/leapMotion.js';
+
 import {
   AudioEngine
 } from './audioEngine/audioEngine.js';
@@ -225,6 +228,16 @@ function createControls() {
   // container.appendChild(testButton);
   // testButton.addEventListener("click", () => runTest());
 
+  const myoButton = document.createElement("button");
+  myoButton.textContent = `Myo`;
+  container.appendChild(myoButton);
+  myoButton.addEventListener("click", () => connectMyo());
+
+  const leapButton = document.createElement("button");
+  leapButton.textContent = `Leap`;
+  container.appendChild(leapButton);
+  leapButton.addEventListener("click", () => connectLeap());
+
   const startAudioButton = document.getElementById('buttonStartAudio');
   startAudioButton.addEventListener("click", () => setupAudio());
 
@@ -240,6 +253,16 @@ function createControls() {
   // containerTabs.appendChild(grammarButton);
   // grammarButton.addEventListener("click", () => changeEditorTab());
 }
+
+function connectMyo(){
+  let myoInterface = new myo();
+  
+}
+
+function connectLeap(){
+  let leapInterface = new leapMotion();
+}
+
 
 function evalExpression(expression) {
   compileTS = window.performance.now();
@@ -449,6 +472,9 @@ document.addEventListener("DOMContentLoaded", () => {
     // console.log("OSC in:", msg);
     window.AudioEngine.oscMessage(msg);
   });
+
+  
+
 
 });
 

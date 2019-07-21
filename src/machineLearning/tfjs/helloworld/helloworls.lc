@@ -1,0 +1,3 @@
+{10,0,{{{50}sin}abs,10}mul}toModel;
+
+{{10,1}fromModel}saw
