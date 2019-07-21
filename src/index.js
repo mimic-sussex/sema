@@ -271,7 +271,7 @@ function createModelSelector(){
 
     console.log(e);
     switch (e) {
-      case "Add Model: hello-world":
+      case "hello-world":
         editor2.setValue(hello_world_code_example);
         break;
       case "two-layer-non-linear":
@@ -287,7 +287,7 @@ function createModelSelector(){
         editor2.setValue(lstm_txt_gen_code_example);
         break;
       default:
-        editor2.setValue("sssdfgsdf");
+        editor2.setValue("// js - select a model from the dropdown");
         break;
     }
   }
@@ -301,7 +301,8 @@ function createModelSelector(){
     selectElement.add(option);
   };
 
-  createModelSelectOptions("Add Model: hello-world", modelSelect); 
+  createModelSelectOptions("Open model example:", modelSelect); 
+  createModelSelectOptions("hello-world", modelSelect); 
   createModelSelectOptions("two-layer-non-linear", modelSelect); 
   createModelSelectOptions("binary-classification", modelSelect); 
   createModelSelectOptions("lstm-txt-generator", modelSelect); 
