@@ -4,7 +4,7 @@ Sema is a playground where you can rapid prototype mini-languages for live codin
 
 Sema provides an online integrated environment that implements support for designing both abstract high-level languages and more powerful low-level languages.
 
-Sema follows a set of core design principles:
+Sema implements a set of core design principles:
 
 * Integrated signal engine — There is no conceptual split between the language and signal engine. Everything is a signal.
 
