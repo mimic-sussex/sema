@@ -138,7 +138,8 @@ languageWorker.onmessage = (e) => {
 // const defaultEditorCode1 = "langSketch";
 
 function createEditor1() {
-  let defaultEditorCode1 = "//livecode window";
+  // let defaultEditorCode1 = "//livecode window";
+  let defaultEditorCode1 = "";
   let editor1code = window.localStorage.getItem("editor1");
   if (editor1code)
     defaultEditorCode1 = editor1code;
