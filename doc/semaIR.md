@@ -1,6 +1,4 @@
 
-
-
 # **Sema Intermediate Representation**
 
 # @lang
