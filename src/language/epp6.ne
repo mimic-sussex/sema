@@ -64,7 +64,7 @@ ParamElement ->
   |
   Expression                                                  {% id %}
   |
-  %variable                                                   {% (d) => ({"@getvar":d[0]}) %}
+  %variable                                                   {% (d) => semaIR.getvar(d[0]) %}
   |
   %paramBegin Params  %paramEnd                               {%(d) => ({"@list":d[1]})%}
 
