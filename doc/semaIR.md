@@ -260,6 +260,10 @@ Creates a sampler with a signal input, the sample plays when the input has a pos
 Creates a sampler that plays in a continuous loop
  1. Speed
  2. Sample name
+### sah
+Sample and hold
+1. Input signal
+2. Hold time (ms)
 
 ## Networking
 
