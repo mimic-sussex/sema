@@ -1,7 +1,53 @@
 
 
 
-# Sema Intermediate Langauge
+# **Sema Intermediate Representation**
+
+# @lang
+This is the top level node of the tree, and contains an array of branches
+
+```
+{ "@lang" : [branches]}
+  ```
+# @sigOut  
+
+Output a signal from the signal engine
+```
+{"@sigOut": <branch>}
+```
+
+# @spawn
+Execute a branch of a tree
+```
+{ "@spawn":<branch>}
+```
+# @num
+```
+{"@num":{value:val}}
+```
+# @str
+```
+{"@string":val}
+```
+# @setvar
+Set a variable, with the output from a branch of the tree.
+```
+{"@setvar": {"@varname":<string>,"@varvalue":<branch>}};
+```
+# @getvar
+Get a variable
+
+```
+{"@getvar":<string>}
+```
+
+# @sigp
+@sigp represents a signal processor or signal generation.  It looks like this:
+
+```
+{"@sigp": {"@params":[params], "@func":<string>}}
+```
+It needs a function name, and an array of parameters.   You can use any of the options below:
 
 ## Oscillators
 

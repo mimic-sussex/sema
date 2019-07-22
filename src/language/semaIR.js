@@ -7,7 +7,7 @@ function str(val) {
 };
 
 function synth(functionName, params ) {
-  let branch = {"@synth": {"@params":params, "@jsfunc":{value:functionName}}};
+  let branch = {"@sigp": {"@params":params, "@func":{value:functionName}}};
   return branch;
 };
 

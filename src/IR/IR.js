@@ -103,13 +103,11 @@ class IRToJavascript {
         ccode.loop += ";";
         return ccode;
       },
-      '@synth': (ccode, el) => {
-        // console.log(el);
-        // console.log(el['@jsfunc']);
+      '@sigp': (ccode, el) => {
         let paramMarkers = [{"s":el['paramBegin'], "e":el['paramEnd'], "l":level}]
         ccode.paramMarkers = ccode.paramMarkers.concat(paramMarkers);
 
-        let functionName = el['@jsfunc'].value;
+        let functionName = el['@func'].value;
         let funcInfo = jsFuncMap[functionName];
         let objName = "q.u" + IRToJavascript.getNextID();
 
@@ -159,12 +157,6 @@ class IRToJavascript {
         // }
         return ccode;
       },
-      // '@oscaddr': (ccode, el) => {
-      //   console.log(el);
-      //   // ccode.loop += `${el.value}`;
-      //   ccode.loop += `this.OSCTransducer('${el.value}')`;
-      //   return ccode;
-      // },
     }
     // console.log("Traverse")
     // console.log(t)
