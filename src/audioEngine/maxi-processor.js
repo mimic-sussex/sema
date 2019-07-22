@@ -166,8 +166,8 @@ class MaxiProcessor extends AudioWorkletProcessor {
     };
 
     this.getSampleBuffer = (bufferName) => {
-      console.log(this.sampleBuffers);
-      console.log(bufferName);
+      // console.log(this.sampleBuffers);
+      // console.log(bufferName);
         return this.translateFloat32ArrayToBuffer(this.sampleBuffers[bufferName]);
     };
 
