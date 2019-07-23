@@ -28,5 +28,12 @@ input = () => {
 
 output = () => {
   let pitch = sequence[stepIdx++ % sequence.length];
-  return 440 * 2 ** ((pitch - 69) / 12)
+  if(typeof pitch === 'number'){
+    console.log(pitch);
+  	return 440 * 2 ** ((pitch - 69) / 12);
+  }
+  else
+  {
+  	return 0;
+  }
 }
