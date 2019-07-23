@@ -44,7 +44,7 @@ onmessage = (m) => {
   }else if ('val' in m.data) {
 //    console.log("val");
     let val = m.data.val;
-//    console.log(val);
+   // console.log(val);
     val = JSON.parse(`[${val}]`)
 //    console.log(val);
     // console.log(loadResponders);
@@ -59,7 +59,7 @@ onmessage = (m) => {
       postMessage({
         func:"data",
         worker: 'testmodel',
-        val: output(m.data.val)
+        val: output(m.data.value)
       });
     }
   }
