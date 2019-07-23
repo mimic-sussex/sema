@@ -59,7 +59,8 @@ onmessage = (m) => {
       postMessage({
         func:"data",
         worker: 'testmodel',
-        val: output(m.data.value)
+        val: output(m.data.value),
+        tname: m.data.tname
       });
     }
   }
