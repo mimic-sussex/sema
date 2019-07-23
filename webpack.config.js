@@ -56,7 +56,7 @@ module.exports = {
       {
         //IMAGE LOADER
         test: /\.(jpe?g|png|gif|svg)$/i,
-        loader: ['file-loader']
+        loader: ['file-loader'],
       },
       {
         //SEMA EXAMPLES LOADER

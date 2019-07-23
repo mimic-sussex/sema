@@ -23,6 +23,8 @@ import music_rnn_example from './machineLearning/magenta/music-rnn.tf';
 import { myo } from './interfaces/myo.js';
 import { leapMotion } from './interfaces/leapMotion.js';
 
+import sema_png from '../assets/img/sema.png';
+
 // import treeJSON from './dndTree';
 import AudioWorkletIndicator from './UI/components';
 
@@ -493,6 +495,7 @@ const loadImportedSamples = () => {
 document.addEventListener("DOMContentLoaded", () => {
 
   // document.getElementById('audioWorkletIndicator').innerHTML = AudioWorkletIndicator.AudioWorkletIndicator();
+  document.getElementById('semaLogo').src = sema_png; 
 
   window.AudioEngine = new AudioEngine((msg) => {
     if (msg == "giveMeSomeSamples") {
