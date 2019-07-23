@@ -202,7 +202,7 @@ Multiply signals:
 
 Send data ten times per second (argument 1) with ID 0 (argument 2). The third argument is what to send (in this case the output of `{1}sin`.
 
-`{10,0,{1}sin}toModel`
+`{10,0,{1}sin}toJS`
 
 In js (lower window):
 
@@ -213,7 +213,7 @@ input = (id,x) => {console.log([id,x])};
 
 Receive data from model:
 
-`{{10,1}fromModel}saw`
+`{{10,1}fromJS}saw`
 
 In js (lower window):
 
