@@ -49,8 +49,12 @@ const jsFuncMap = {
   'hpf': {"setup":(o,p)=>`${o} = new Module.maxiFilter()`, "loop":(o,p)=>`${o}.hipass(${p[0].loop},${p[1].loop})`},
   'lpz': {"setup":(o,p)=>`${o} = new Module.maxiFilter()`, "loop":(o,p)=>`${o}.lores(${p[0].loop},${p[1].loop},${p[2].loop})`},
   'hpz': {"setup":(o,p)=>`${o} = new Module.maxiFilter()`, "loop":(o,p)=>`${o}.hires(${p[0].loop},${p[1].loop},${p[2].loop})`},
+  //>>> deprecated
   'toModel': {"setup":(o,p)=>`${o} = this.registerTransducer('testmodel', ${p[0].loop})`, "loop":(o,p)=>`${o}.send(${p[1].loop}, ${p[2].loop})`},
   'fromModel': {"setup":(o,p)=>`${o} = this.registerTransducer('testmodel', ${p[0].loop})`, "loop":(o,p)=>`${o}.receive(${p[1].loop})`},
+  //<<< deprecated
+  'toJS': {"setup":(o,p)=>`${o} = this.registerTransducer('testmodel', ${p[0].loop})`, "loop":(o,p)=>`${o}.send(${p[1].loop}, ${p[2].loop})`},
+  'fromJS': {"setup":(o,p)=>`${o} = this.registerTransducer('testmodel', ${p[0].loop})`, "loop":(o,p)=>`${o}.receive(${p[1].loop})`},
   'adc': {"setup":(o,p)=>"", "loop":(o,p)=>`inputs[${p[0].loop}]`},
   'sampler': {"setup":(o,p)=>`${o} = new Module.maxiSample();
                                   ${o}.setSample(this.getSampleBuffer(${p[1].loop}));`,
@@ -61,6 +65,15 @@ const jsFuncMap = {
   'oscin':{"setup":(o,p)=>"", "loop":(o,p)=>`this.OSCTransducer(${p[0].loop},${p[1].loop})`},
 
   'sah':{"setup":(o,p)=>`${o} = new Module.maxiSampleAndHold();`, "loop":(o,p)=>`${o}.sah(${p[0].loop},${p[1].loop})`},
+  'stretch': {"setup":(o,p)=>`${o} = new Module.maxiSample();
+                                  ${o}.setSample(this.getSampleBuffer(${p[4].loop}));
+                                  ${o}stretch = new Module.maxiStretch();
+                                  ${o}stretch.setSample(${o});
+                                  `,
+                                  "loop":(o,p)=>`(${o}.isReady() ? ${o}stretch.play(${p[0].loop},${p[1].loop},${p[2].loop},${p[3].loop},0.0) : 0.0)`},
+                                  // "loop":(o,p)=>`(0.0)`},
+                                  // "loop":(o,p)=>`(${o}.isReady() ? 0.0 : 0.0)`},
+
 
 }
 
