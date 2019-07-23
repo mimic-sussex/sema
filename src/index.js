@@ -64,6 +64,20 @@ let compileTS = 0;
 let treeTS = 0;
 let evalTS = 0;
 
+var saveData = (function() {
+  var a = document.createElement("a");
+  document.body.appendChild(a);
+  a.style = "display: none";
+  return function(blob, fileName) {
+    var url = window.URL.createObjectURL(blob);
+    a.href = url;
+    a.download = fileName;
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
+}());
+
+
 let machineLearningWorker = new tfWorker();
 machineLearningWorker.onmessage = (e) => {
   // console.log("DEBUG:machineLearningWorker:onMsg ");
@@ -84,21 +98,8 @@ machineLearningWorker.onmessage = (e) => {
         },
         "download": (data) => {
           console.log("download");
-          var saveData = (function() {
-            var a = document.createElement("a");
-            document.body.appendChild(a);
-            a.style = "display: none";
-            return function(blob, fileName) {
-              var url = window.URL.createObjectURL(blob);
-              a.href = url;
-              a.download = fileName;
-              a.click();
-              window.URL.revokeObjectURL(url);
-            };
-          }());
           let downloadData = window.localStorage.getItem(data.name);
           let blob = new Blob([downloadData], {type: "text/plain;charset=utf-8"});
-          console.log(blob);
           saveData(blob, `${data.name}.data`);
         }
     };
@@ -234,6 +235,23 @@ function createControls() {
 
   container.appendChild(stopButton);
   stopButton.addEventListener("click", () => stopAudio());
+
+  const downloadButton = document.createElement("button");
+  downloadButton.textContent = `Download JS Code`;
+  container.appendChild(downloadButton);
+  downloadButton.addEventListener("click", () => {
+    let downloadData = window.localStorage.getItem("editor2");
+    let blob = new Blob([downloadData], {type: "text/plain;charset=utf-8"});
+    saveData(blob, `semaCode.js`);
+  });
+  const downloadButtonLC = document.createElement("button");
+  downloadButtonLC.textContent = `Download Live Code`;
+  container.appendChild(downloadButtonLC);
+  downloadButtonLC.addEventListener("click", () => {
+    let downloadData = window.localStorage.getItem("editor1");
+    let blob = new Blob([downloadData], {type: "text/plain;charset=utf-8"});
+    saveData(blob, `liveCode.sema`);
+  });
 
   createModelSelector();
 
