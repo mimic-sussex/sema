@@ -119,7 +119,7 @@ module.exports = {
     // publicPath: '/public',
     // inline: true,
     // overlay: true,
-    // contentBase: './dist',
+    contentBase: "./magenta_checkpoints"
   },
   plugins: [
     new webpack.ProgressPlugin(),

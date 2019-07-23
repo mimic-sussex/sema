@@ -1,0 +1,8 @@
+{
+  "type": "MusicRNN",
+  "dataConverter": {
+      "type": "MelodyConverter",
+      "args": {"minPitch": 48, "maxPitch": 83}
+  },
+  "chordEncoder": "PitchChordEncoder"
+}

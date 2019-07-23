@@ -18,6 +18,7 @@ import two_layer_non_linear_code_example from './machineLearning/tfjs/non-linear
 import binary_classification_code_example from './machineLearning/tfjs/non-linear/binary-classification.tf';
 import echo_state_network_code_example from './machineLearning/tfjs/echo-state/echo-state-network.tf';
 import lstm_txt_gen_code_example from './machineLearning/tfjs/rnn/lstm-txt-gen.tf';
+import music_rnn_example from './machineLearning/magenta/music-rnn.tf';
 
 import { myo } from './interfaces/myo.js';
 import { leapMotion } from './interfaces/leapMotion.js';
@@ -287,6 +288,9 @@ function createModelSelector(){
       case "lstm-txt-generator":
         editor2.setValue(lstm_txt_gen_code_example);
         break;
+        case "music-rnn":
+          editor2.setValue(music_rnn_example);
+          break;
       default:
         editor2.setValue("// js - select a model from the dropdown");
         break;
@@ -308,6 +312,7 @@ function createModelSelector(){
   createModelSelectOptions("binary-classification", modelSelect);
   createModelSelectOptions("lstm-txt-generator", modelSelect);
   createModelSelectOptions("echo-state-network", modelSelect);
+  createModelSelectOptions("music-rnn", modelSelect);
 
   container.appendChild(modelSelect);
 }
