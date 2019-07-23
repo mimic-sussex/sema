@@ -1,8 +1,8 @@
 "use strict";
 importScripts("https://cdn.jsdelivr.net/npm/@tensorflow/tfjs");
 importScripts("http://mlweb.loria.fr/lalolib.js");
-
 import "./magenta/magentamusic.js";
+
 
 // let a = tf.tensor([100]);
 var geval = eval; // puts eval into global scope https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/eval
@@ -32,7 +32,14 @@ var sema = {
       "func": "download",
       "name": name,
     });
+  },
+  sendCode: (code) => {
+    postMessage({
+      "func": "sendcode",
+      "code": code,
+    });
   }
+
 };
 `);
 

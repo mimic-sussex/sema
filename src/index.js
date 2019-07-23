@@ -103,6 +103,9 @@ machineLearningWorker.onmessage = (e) => {
           let downloadData = window.localStorage.getItem(data.name);
           let blob = new Blob([downloadData], {type: "text/plain;charset=utf-8"});
           saveData(blob, `${data.name}.data`);
+        },
+        "sendcode": (data) => {
+            console.log(data);
         }
     };
     responders[e.data.func](e.data);
@@ -355,14 +358,14 @@ function evalExpression(expression) {
 
 function getBlock(editor) {
   //find code between dividers
-  const divider = "__________";
+  // const divider = "__________";
   let cursorInfo = editor.getCursor();
   //find post divider
   let line = cursorInfo.line;
   let linePost = editor.lastLine();
   while (line < linePost) {
     // console.log(editor2.getLine(line));
-    if (editor.getLine(line) == divider) {
+    if (/___+/.test(editor.getLine(line))) { //at least 3 underscores
       linePost = line - 1;
       break;
     }
@@ -372,7 +375,7 @@ function getBlock(editor) {
   let linePre = -1;
   while (line >= 0) {
     // console.log(editor2.getLine(line));
-    if (editor.getLine(line) == divider) {
+    if (/___+/.test(editor.getLine(line))) {
       linePre = line;
       break;
     }
@@ -513,7 +516,7 @@ const loadImportedSamples = () => {
 document.addEventListener("DOMContentLoaded", () => {
 
   // document.getElementById('audioWorkletIndicator').innerHTML = AudioWorkletIndicator.AudioWorkletIndicator();
-  document.getElementById('semaLogo').src = sema_png; 
+  document.getElementById('semaLogo').src = sema_png;
 
   window.AudioEngine = new AudioEngine((msg) => {
     if (msg == "giveMeSomeSamples") {
