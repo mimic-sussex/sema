@@ -127,7 +127,9 @@ class MaxiProcessor extends AudioWorkletProcessor {
     //
     // this.setupPolysynth();
     this.newq = () => {return {"vars":{}}};
+    this.newmem = () => {return new Float64Array(512)};
     this._q = [this.newq(),this.newq()];
+    this._mems =[this.newmem(), this.newmem()];
 
     this.setvar = (q, name, val) => {
       q.vars[name] = val;
@@ -198,6 +200,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
           // let loopFunction = new Function(`return ${event.data['loop']}`);
           this.currentSignalFunction = 1 - this.currentSignalFunction;
           this._q[this.currentSignalFunction] = setupFunction();
+          this._mems[this.currentSignalFunction] = this.newmem();
           // this._q[this.currentSignalFunction] = setupFunction()();
           this.signals[this.currentSignalFunction] = loopFunction;
           // this.signals[this.currentSignalFunction] = loopFunction();
@@ -237,8 +240,8 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
       for (let i = 0; i < output[0].length; ++i) {
         //xfade between old and new algorhythms
-        let sig0 = this.signals[0](this._q[0], inputs[0]);
-        let sig1 = this.signals[1](this._q[1], inputs[0]);
+        let sig0 = this.signals[0](this._q[0], inputs[0], this._mems[0]);
+        let sig1 = this.signals[1](this._q[1], inputs[0], this._mems[1]);
         let xf = this.xfadeControl.play(i == 0 ? 1 : 0);
         let w = Module.maxiXFade.xfade(sig0, sig1, xf);
         //mono->stereo
