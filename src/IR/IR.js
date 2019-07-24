@@ -94,8 +94,8 @@ class IRToJavascript {
   }
 
   static traverseTree(t, code, level, vars) {
-    console.log(`DEBUG:IR:traverseTree: level: ${level}`);
-    console.log(vars);
+    // console.log(`DEBUG:IR:traverseTree: level: ${level}`);
+    // console.log(vars);
     let attribMap = {
       '@lang': (ccode, el) => {
         // console.log("lang")
@@ -148,8 +148,8 @@ class IRToJavascript {
         return ccode;
       },
       '@setvar': (ccode, el) => {
-        console.log("memset");
-        console.log(vars);
+        // console.log("memset");
+        // console.log(vars);
         let memIdx = vars[el['@varname']];
         if (memIdx == undefined) {
           memIdx = Object.keys(vars).length;
@@ -173,7 +173,7 @@ class IRToJavascript {
       },
       '@string': (ccode, el) => {
         if (typeof el === 'string' || el instanceof String) {
-          console.log("String: " + el);
+          // console.log("String: " + el);
           ccode.loop += `'${el}'`;
         } else {
           ccode = IRToJavascript.traverseTree(el, ccode, level, vars);
