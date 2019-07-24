@@ -26,7 +26,7 @@ const jsFuncMap = {
   'lt': {"setup":(o,p)=>"", "loop":(o,p)=>`(${p[0].loop} < ${p[1].loop}) ? 1 : 0`},
   'mod': {"setup":(o,p)=>"", "loop":(o,p)=>`(${p[0].loop} % ${p[1].loop})`},
   'add': {"setup":(o,p)=>"", "loop":(o,p)=>`Module.maxiMath.add(${p[0].loop},${p[1].loop})`},
-  'mul': {"setup":(o,p)=>"", "loop":(o,p)=>`Module.maxiMath.sub(${p[0].loop},${p[1].loop})`},
+  'mul': {"setup":(o,p)=>"", "loop":(o,p)=>`Module.maxiMath.mul(${p[0].loop},${p[1].loop})`},
   'sub': {"setup":(o,p)=>"", "loop":(o,p)=>`Module.maxiMath.sub(${p[0].loop},${p[1].loop})`},
   'div': {"setup":(o,p)=>"", "loop":(o,p)=>`Module.maxiMath.div(${p[0].loop},${p[1].loop})`},
   'pow': {"setup":(o,p)=>"", "loop":(o,p)=>`Module.maxiMath.pow(${p[0].loop},${p[1].loop})`},
@@ -55,7 +55,8 @@ const jsFuncMap = {
   //<<< deprecated
   'toJS': {"setup":(o,p)=>`${o} = this.registerTransducer('${o}', ${p[0].loop})`, "loop":(o,p)=>`${o}.send(${p[1].loop}, ${p[2].loop})`},
   'fromJS': {"setup":(o,p)=>`${o} = this.registerTransducer('${o}', ${p[0].loop})`, "loop":(o,p)=>`${o}.receive(${p[1].loop})`},
-  'adc': {"setup":(o,p)=>"", "loop":(o,p)=>`inputs[${p[0].loop}]`},
+  // 'adc': {"setup":(o,p)=>"", "loop":(o,p)=>`inputs[${p[0].loop}]`},
+  'adc': {"setup":(o,p)=>"", "loop":(o,p)=>`inputs`},
   'sampler': {"setup":(o,p)=>`${o} = new Module.maxiSample();
                                   ${o}.setSample(this.getSampleBuffer(${p[1].loop}));`,
                                   "loop":(o,p)=>`(${o}.isReady() ? ${o}.playOnZX(${p[0].loop}) : 0.0)`},

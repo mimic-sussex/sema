@@ -63,18 +63,18 @@ class AudioEngine {
     ];
 
     // DEBUG:
-    this.synthDefs = [
-      `this.mySine.sawn(60) * this.myOtherSine.sinewave(0.4)`,
-      `this.mySine.sawn(60)`,
-      `this.myOtherSine.sinewave(400)`,
-      `this.mySine.sinewave(440) + this.myOtherSine.sinewave(441)`,
-      `this.mySine.sinewave(440) * this.myOtherSine.sinewave(1)`,
-      `this.mySine.sinewave(440 + (this.myOtherSine.sinewave(1) * 100))`,
-      `this.mySine.sinewave(this.myOtherSine.sinewave(30) * 440)`,
-      `this.mySine.sinewave(this.myOtherSine.sinewave(this.myLastSine.sinewave(0.1) * 30) * 440)`,
-      `new Module.maxiOsc()`,
-      `new Module.maxiOsc().sinewave(400)`, // Interesting case of failure, it seems we can't instantiate because of EM heap limits
-    ];
+    // this.synthDefs = [
+    //   `this.mySine.sawn(60) * this.myOtherSine.sinewave(0.4)`,
+    //   `this.mySine.sawn(60)`,
+    //   `this.myOtherSine.sinewave(400)`,
+    //   `this.mySine.sinewave(440) + this.myOtherSine.sinewave(441)`,
+    //   `this.mySine.sinewave(440) * this.myOtherSine.sinewave(1)`,
+    //   `this.mySine.sinewave(440 + (this.myOtherSine.sinewave(1) * 100))`,
+    //   `this.mySine.sinewave(this.myOtherSine.sinewave(30) * 440)`,
+    //   `this.mySine.sinewave(this.myOtherSine.sinewave(this.myLastSine.sinewave(0.1) * 30) * 440)`,
+    //   `new Module.maxiOsc()`,
+    //   `new Module.maxiOsc().sinewave(400)`, // Interesting case of failure, it seems we can't instantiate because of EM heap limits
+    // ];
 
     this.oscThru = (msg) => {
 //       console.log("DEBUG:AudioEngine:OscThru: " + msg);
@@ -133,6 +133,19 @@ class AudioEngine {
 
           // Connect the worklet node to the audio graph
           this.audioWorkletNode.connect(this.audioContext.destination);
+
+          let handleConnection = function(stream) {
+            console.log("Connecting audio input");
+            console.log(stream);
+            this.audioInputSource = this.audioContext.createMediaStreamSource(stream);
+            this.audioInputSource.connect(this.audioWorkletNode);
+          }.bind(this);
+          navigator.mediaDevices.getUserMedia({
+              audio: true,
+              video: false
+            })
+            .then(handleConnection);
+
 
           // Connect the micro to the audio graph with the worklet node
           // this.connectMediaStreamSourceInput(this.audioWorkletNode);
