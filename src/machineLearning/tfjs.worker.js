@@ -48,8 +48,10 @@ var sema = {
 onmessage = (m) => {
   if ('eval' in m.data) {
     let evalRes = geval(m.data.eval);
-    if (evalRes != "undefined")
+    if (evalRes != undefined)
       console.log(evalRes);
+    else
+      console.log("0");
   }else if ('val' in m.data) {
 //    console.log("val");
     let val = m.data.val;
