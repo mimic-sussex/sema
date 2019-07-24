@@ -15,4 +15,8 @@ function setvar (name,branch) {
     return {"@setvar": {"@varname":name,"@varvalue":branch}};
 };
 
-module.exports = {num,str,synth,setvar};
+function getvar (name) {
+    return {"@getvar":name};
+};
+
+module.exports = {num,str,synth,setvar,getvar};

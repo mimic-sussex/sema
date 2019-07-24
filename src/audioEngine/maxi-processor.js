@@ -7,7 +7,7 @@ import Module from './maximilian.wasmmodule.js';
 
 class PostMsgTransducer {
 
-  constructor(msgPort, sampleRate, sendFrequency = 2) {
+  constructor(msgPort, sampleRate, sendFrequency = 2, name) {
     if (sendFrequency == 0)
       this.sendPeriod = Number.MAX_SAFE_INTEGER;
     else
@@ -15,6 +15,7 @@ class PostMsgTransducer {
     this.sendCounter = this.sendPeriod;
     this.port = msgPort;
     this.val = 0;
+    this.name=name;
   }
 
   incoming(msg) {
@@ -41,6 +42,7 @@ class PostMsgTransducer {
       this.port.postMessage({
         rq: "recv",
         value: sendMsg,
+        tname: this.name
       });
       this.sendCounter -= this.sendPeriod;
     } else {
@@ -159,7 +161,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
     this.transducers = {};
     this.registerTransducer = (name, rate) => {
-      let trans = new PostMsgTransducer(this.port, this.sampleRate, rate);
+      let trans = new PostMsgTransducer(this.port, this.sampleRate, rate, name);
       this.transducers[name] = trans;
       console.log(this.transducers);
       return trans;
@@ -178,9 +180,9 @@ class MaxiProcessor extends AudioWorkletProcessor {
         //console.log(this.OSCMessages);
       } else if ('worker' in event.data) { //from a worker
         //this must be an OSC message
-        if (this.transducers[event.data.worker]) {
-          // console.log(this.transducers[event.data.worker]);
-          this.transducers[event.data.worker].incoming(event.data);
+        if (this.transducers[event.data.tname]) {
+          // console.log(this.transducers[event.data.tname]);
+          this.transducers[event.data.tname].incoming(event.data);
         }
       } else if ('sample' in event.data) { //from a worker
         console.log("sample received");

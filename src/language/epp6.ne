@@ -11,6 +11,7 @@ const lexer = moo.compile({
   paramBegin:   /{/,
   variable:     /:[a-zA-Z0-9]+:/,
   sample:       { match: /\\[a-zA-Z0-9]+/, lineBreaks: true, value: x => x.slice(1, x.length)},
+  stretch:       { match: /\@[a-zA-Z0-9]+/, lineBreaks: true, value: x => x.slice(1, x.length)},
   oscAddress:   /(?:\/[a-zA-Z0-9]+)+/,
   number:       /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?(?:[eE][-+]?[0-9]+)?\b/,
   semicolon:    /;/,
@@ -40,6 +41,9 @@ Expression ->
   ParameterList _ %sample
   {% d => semaIR.synth("sampler", d[0]["@params"].concat([semaIR.str(d[2].value)]))%}
   |
+  ParameterList _ %stretch
+  {% d => semaIR.synth("stretch", d[0]["@params"].concat([semaIR.str(d[2].value)]))%}
+  |
   %oscAddress
   {% d=> semaIR.synth("oscin", [semaIR.str(d[0].value),semaIR.num(-1)])%}
   |
@@ -64,7 +68,7 @@ ParamElement ->
   |
   Expression                                                  {% id %}
   |
-  %variable                                                   {% (d) => ({"@getvar":d[0]}) %}
+  %variable                                                   {% (d) => semaIR.getvar(d[0]) %}
   |
   %paramBegin Params  %paramEnd                               {%(d) => ({"@list":d[1]})%}
 

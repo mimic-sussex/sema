@@ -18,9 +18,12 @@ import two_layer_non_linear_code_example from './machineLearning/tfjs/non-linear
 import binary_classification_code_example from './machineLearning/tfjs/non-linear/binary-classification.tf';
 import echo_state_network_code_example from './machineLearning/tfjs/echo-state/echo-state-network.tf';
 import lstm_txt_gen_code_example from './machineLearning/tfjs/rnn/lstm-txt-gen.tf';
+import music_rnn_example from './machineLearning/magenta/music-rnn.tf';
 
 import { myo } from './interfaces/myo.js';
 import { leapMotion } from './interfaces/leapMotion.js';
+
+import sema_png from '../assets/img/sema.png';
 
 // import treeJSON from './dndTree';
 import AudioWorkletIndicator from './UI/components';
@@ -63,6 +66,20 @@ let compileTS = 0;
 let treeTS = 0;
 let evalTS = 0;
 
+var saveData = (function() {
+  var a = document.createElement("a");
+  document.body.appendChild(a);
+  a.style = "display: none";
+  return function(blob, fileName) {
+    var url = window.URL.createObjectURL(blob);
+    a.href = url;
+    a.download = fileName;
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
+}());
+
+
 let machineLearningWorker = new tfWorker();
 machineLearningWorker.onmessage = (e) => {
   // console.log("DEBUG:machineLearningWorker:onMsg ");
@@ -83,22 +100,12 @@ machineLearningWorker.onmessage = (e) => {
         },
         "download": (data) => {
           console.log("download");
-          var saveData = (function() {
-            var a = document.createElement("a");
-            document.body.appendChild(a);
-            a.style = "display: none";
-            return function(blob, fileName) {
-              var url = window.URL.createObjectURL(blob);
-              a.href = url;
-              a.download = fileName;
-              a.click();
-              window.URL.revokeObjectURL(url);
-            };
-          }());
           let downloadData = window.localStorage.getItem(data.name);
           let blob = new Blob([downloadData], {type: "text/plain;charset=utf-8"});
-          console.log(blob);
           saveData(blob, `${data.name}.data`);
+        },
+        "sendcode": (data) => {
+            console.log(data);
         }
     };
     responders[e.data.func](e.data);
@@ -234,6 +241,23 @@ function createControls() {
   container.appendChild(stopButton);
   stopButton.addEventListener("click", () => stopAudio());
 
+  const downloadButton = document.createElement("button");
+  downloadButton.textContent = `Download JS Code`;
+  container.appendChild(downloadButton);
+  downloadButton.addEventListener("click", () => {
+    let downloadData = window.localStorage.getItem("editor2");
+    let blob = new Blob([downloadData], {type: "text/plain;charset=utf-8"});
+    saveData(blob, `semaCode.js`);
+  });
+  const downloadButtonLC = document.createElement("button");
+  downloadButtonLC.textContent = `Download Live Code`;
+  container.appendChild(downloadButtonLC);
+  downloadButtonLC.addEventListener("click", () => {
+    let downloadData = window.localStorage.getItem("editor1");
+    let blob = new Blob([downloadData], {type: "text/plain;charset=utf-8"});
+    saveData(blob, `liveCode.sema`);
+  });
+
   createModelSelector();
 
   /* NOTE:FB do not delete */
@@ -287,6 +311,9 @@ function createModelSelector(){
       case "lstm-txt-generator":
         editor2.setValue(lstm_txt_gen_code_example);
         break;
+        case "music-rnn":
+          editor2.setValue(music_rnn_example);
+          break;
       default:
         editor2.setValue("// js - select a model from the dropdown");
         break;
@@ -308,6 +335,7 @@ function createModelSelector(){
   createModelSelectOptions("binary-classification", modelSelect);
   createModelSelectOptions("lstm-txt-generator", modelSelect);
   createModelSelectOptions("echo-state-network", modelSelect);
+  createModelSelectOptions("music-rnn", modelSelect);
 
   container.appendChild(modelSelect);
 }
@@ -330,14 +358,14 @@ function evalExpression(expression) {
 
 function getBlock(editor) {
   //find code between dividers
-  const divider = "__________";
+  // const divider = "__________";
   let cursorInfo = editor.getCursor();
   //find post divider
   let line = cursorInfo.line;
   let linePost = editor.lastLine();
   while (line < linePost) {
     // console.log(editor2.getLine(line));
-    if (editor.getLine(line) == divider) {
+    if (/___+/.test(editor.getLine(line))) { //at least 3 underscores
       linePost = line - 1;
       break;
     }
@@ -347,7 +375,7 @@ function getBlock(editor) {
   let linePre = -1;
   while (line >= 0) {
     // console.log(editor2.getLine(line));
-    if (editor.getLine(line) == divider) {
+    if (/___+/.test(editor.getLine(line))) {
       linePre = line;
       break;
     }
@@ -488,6 +516,7 @@ const loadImportedSamples = () => {
 document.addEventListener("DOMContentLoaded", () => {
 
   // document.getElementById('audioWorkletIndicator').innerHTML = AudioWorkletIndicator.AudioWorkletIndicator();
+  document.getElementById('semaLogo').src = sema_png;
 
   window.AudioEngine = new AudioEngine((msg) => {
     if (msg == "giveMeSomeSamples") {

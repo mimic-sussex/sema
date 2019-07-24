@@ -1,6 +1,6 @@
 # The Sema System
 
-The code examples below work for *one* sematic language, the default demo language. To run these commands, paste them in the top window and hit cmd+enter. That will evaluate the line. To evaluate many lines, you need to separate them with a semicolon ";" after every line. 
+The code examples below work for *one* sematic language, the default demo language. To run these commands, paste them in the top window and hit cmd+enter. That will evaluate the line. To evaluate many lines, you need to separate them with a semicolon ";" after every line.
 
 There are two windows in the sema system. The top one is the sematic window for the unique language. The bottom one is a window for JavaScript code, where we, for example, run machine learning models.
 
@@ -47,6 +47,12 @@ argument is the amplitude
 
 `{0.8}noiz`
 
+# control
+
+//sample and hold
+
+`{{{{0.1}pha,40,1000}ulin,500}sah}saw`
+
 # envelope
 
 The envelope is an adsr envelope, so the arguments are "input signal", attack (in ms), decay (in ms), sustain level (0-1), release (in ms). So here with a square wave as input:
@@ -70,7 +76,7 @@ Note that the pulse starts at -1, so higher pulse widths give shorter envelopes 
 
 NOT WORKING YET
 
-`{0}adc` 
+`{0}adc`
 
 # sample playback
 
@@ -88,7 +94,7 @@ With some rhythm:
 
 `{{{1}sqr,{5}saw}add}\909open`
 
-  
+
 # filters
 
 // lowpass: arguments are "input signal" and a cutoff factor between 0 and 1. The function implemented internally is: `output=outputs[0] + cutoff*(input-outputs[0]);`
@@ -196,7 +202,7 @@ Multiply signals:
 
 Send data ten times per second (argument 1) with ID 0 (argument 2). The third argument is what to send (in this case the output of `{1}sin`.
 
-`{10,0,{1}sin}toModel`
+`{10,0,{1}sin}toJS`
 
 In js (lower window):
 
@@ -207,7 +213,7 @@ input = (id,x) => {console.log([id,x])};
 
 Receive data from model:
 
-`{{10,1}fromModel}saw`
+`{{10,1}fromJS}saw`
 
 In js (lower window):
 
@@ -223,7 +229,7 @@ __________
 ```
 
 # osc communication
-  
+
 ??? how to select data from incoming osc to use in signal chain???
 
 // forward data coming at the osc address `/minibee/data` to the model fifty times per second with ID 2
