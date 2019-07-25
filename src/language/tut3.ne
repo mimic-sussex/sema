@@ -78,6 +78,26 @@ SampleName -> (%click | %convol1 | %heart) # We add a new expression to the gram
 # You can now scroll back to where you were.
 
 
+
+
+
+# ---- RUNNING OUR LANGUAGE ---- #
+
+ # As before, we can test our language by running these commands in the terminal:
+
+   # nearleyc tut3.ne -o livelang.js
+    # (compile)
+
+   # nearley-test -i "<any of our tokens>" livelang.js
+    # (test before building)
+
+   # yarn build
+
+   # yarn dev
+    # (open a browser window and start SEMA)
+
+
+
 # --- WHITESPACE HANDLING ---- #
 
 _  -> wschar:*                                                {% function(d) {return null;} %}
