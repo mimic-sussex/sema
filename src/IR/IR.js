@@ -64,6 +64,7 @@ const jsFuncMap = {
                                   ${o}.setSample(this.getSampleBuffer(${p[1].loop}));`,
                                   "loop":(o,p)=>`(${o}.isReady() ? ${o}.play(${p[0].loop}) : 0.0)`},
   'oscin':{"setup":(o,p)=>"", "loop":(o,p)=>`this.OSCTransducer(${p[0].loop},${p[1].loop})`},
+  'oscout':{"setup":(o,p)=>"", "loop":(o,p)=>`this.OSCTransducer(${p[0].loop},${p[1].loop})`},
 
   'sah':{"setup":(o,p)=>`${o} = new Module.maxiSampleAndHold();`, "loop":(o,p)=>`${o}.sah(${p[0].loop},${p[1].loop})`},
   'stretch': {"setup":(o,p)=>`${o} = new Module.maxiSample();
