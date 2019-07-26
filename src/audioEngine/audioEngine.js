@@ -134,21 +134,8 @@ class AudioEngine {
           // Connect the worklet node to the audio graph
           this.audioWorkletNode.connect(this.audioContext.destination);
 
-          let handleConnection = function(stream) {
-            console.log("Connecting audio input");
-            console.log(stream);
-            this.audioInputSource = this.audioContext.createMediaStreamSource(stream);
-            this.audioInputSource.connect(this.audioWorkletNode);
-          }.bind(this);
-          navigator.mediaDevices.getUserMedia({
-              audio: true,
-              video: false
-            })
-            .then(handleConnection);
-
-
           // Connect the micro to the audio graph with the worklet node
-          // this.connectMediaStreamSourceInput(this.audioWorkletNode);
+          this.connectMediaStreamSourceInput(this.audioWorkletNode);
 
           return true;
 
