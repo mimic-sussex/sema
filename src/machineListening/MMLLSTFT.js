@@ -1,7 +1,12 @@
+import MMLLwindowing from './MMLLwindowing.js'
+
 //short term Fourier transform
 //currently just calculates power spectrum, could modify later for phase spectrum etc
 
-function MMLLSTFT(fftsize=1024,hopsize=512,windowtype=0,postfftfunction) {
+// function MMLLSTFT(fftsize=1024,hopsize=512,windowtype=0,postfftfunction) {
+class MMLLSTFT {
+    
+  constructor(fftsize=1024,hopsize=512,windowtype=0,postfftfunction) {
     
     var self = this;
     
@@ -36,8 +41,9 @@ function MMLLSTFT(fftsize=1024,hopsize=512,windowtype=0,postfftfunction) {
     
     //4 =2*2 compensates for half magnitude if only take non-conjugate part, fftsize compensates for 1/N
     self.fftnormmult = 4*self.fftsize; //*fftsize;// /4; //1.0/fftsize;  or 1/(fftsize.sqrt)
-    
-    self.next = function(input) {
+  }
+
+  next(input) {
         
         //update by audioblocksize samples
         var ready = self.windowing.next(input);
@@ -90,12 +96,10 @@ function MMLLSTFT(fftsize=1024,hopsize=512,windowtype=0,postfftfunction) {
             
             
         }
-        
+       
         return ready;
-        
-    }
-    
-   
-
+  }
 }
+
+export default MMLLSTFT;
 
