@@ -5,24 +5,25 @@ class MMLLwindowing {
     
     constructor (windowsize=1024,hopsize=512) {
     
-    var self = this;
-    
-    self.windowsize = windowsize;
-    
-    if(hopsize>windowsize) hopsize = windowsize;
-    
-    self.hopsize = hopsize;
-    self.overlap = windowsize - hopsize;
-    
-    self.store = new Array(windowsize);
-    
-    //only zero old data
-    for (var ii=0; ii<self.overlap; ++ii)
-        self.store[ii] = 0;
+        var self = this;
         
-    self.storepointer = self.overlap;
+        self.windowsize = windowsize;
+        
+        if(hopsize>windowsize) hopsize = windowsize;
+        
+        self.hopsize = hopsize;
+        self.overlap = windowsize - hopsize;
+        
+        self.store = new Array(windowsize);
+        
+        //only zero old data
+        for (var ii=0; ii<self.overlap; ++ii)
+            self.store[ii] = 0;
+            
+        self.storepointer = self.overlap;
+    }
 
-    self.next = function(input) {
+    function next(input) {
         
         var n = input.length; //code assumes n divides hopsize
         

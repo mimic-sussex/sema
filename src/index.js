@@ -23,6 +23,9 @@ import music_rnn_example from './machineLearning/magenta/music-rnn.tf';
 import { myo } from './interfaces/myo.js';
 import { leapMotion } from './interfaces/leapMotion.js';
 
+// import MMLLOnsetDetector from './machineListening/MMLLOnsetDetector.js';
+// import MMLLOnsetDetector from './machineListening/MMLL.js';
+
 import sema_png from '../assets/img/sema.png';
 
 // import treeJSON from './dndTree';
@@ -159,6 +162,8 @@ function createEditor1() {
       ["Cmd-Enter"]: () => evalLiveCodeEditorExpression(),
       ["Ctrl-Enter"]: () => evalLiveCodeEditorExpression(),
       ["Shift-Enter"]: () => evalLiveCodeEditorExpression(),
+      ["Ctrl-U"]: () => addBlockDelimiter(editor1),
+      ["Ctrl-/"]: () => addComment(editor1),
       // ["Cmd-."]: () => stopAudio(),
       // ["Cmd--"]: () => decreaseVolume(),
       // ["Cmd-="]: () => increaseVolume(),
@@ -186,6 +191,8 @@ function createEditor2() {
       ["Cmd-Enter"]: () => evalModelEditorExpressionBlock(),
       ["Shift-Enter"]: () => evalModelEditorExpression(),
       ["Ctrl-Enter"]: () => evalModelEditorExpressionBlock(),
+      ["Ctrl-U"]: () => addBlockDelimiter(editor2),
+      ["Ctrl-/"]: () => addComment(editor2),
     }
 
   });
@@ -268,11 +275,7 @@ function createModelSelector(){
   const container = document.getElementById("containerButtons");
   const modelSelect = document.createElement("SELECT");
 
-
-
   const injectModelExampleInModelEditor = (e) => {
-
-
     console.log(e);
     switch (e) {
       case "hello-world":
@@ -319,6 +322,13 @@ function createModelSelector(){
   container.appendChild(modelSelect);
 }
 
+function addBlockDelimiter(editor){
+  const blockDelimiter = "__________";
+}
+
+function addComment(editor){
+  const commentSymbol = "//";
+}
 
 function connectMyo(){
   let myoInterface = new myo();
@@ -373,6 +383,7 @@ function getBlock(editor) {
 
   return code;
 }
+
 function evalLiveCodeEditorExpression() {
   let expression =  getBlock(editor1);
 
@@ -485,6 +496,20 @@ const loadImportedSamples = () => {
 
 
 
+function setupMMLLOnsetDetect(){
+
+ let mmllOD = new MMLLOnsetDetector(44100, 0.34);
+ console.log(mmllOD);
+
+}
+
+function runMMLLOnsetDetect(){
+
+
+
+
+}
+
 
 /*
  *
@@ -496,6 +521,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // document.getElementById('audioWorkletIndicator').innerHTML = AudioWorkletIndicator.AudioWorkletIndicator();
   document.getElementById('semaLogo').src = sema_png; 
+
+  setupMMLLOnsetDetect();
 
   window.AudioEngine = new AudioEngine((msg) => {
     if (msg == "giveMeSomeSamples") {

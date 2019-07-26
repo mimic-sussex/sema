@@ -6,9 +6,9 @@ console.log(semaIR);
 const moo = require("moo"); // this 'require' creates a node dependency
 
 const lexer = moo.compile({
-  click:         /click/,
-  convol1:       /convol1/,
-  heart:       /heart/,
+  click:        /click/,
+  convol1:      /convol1/,
+  heart:        /heart/,
   ws:           {match: /\s+/, lineBreaks: true},
 });
 

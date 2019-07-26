@@ -6,7 +6,7 @@ console.log(semaIR);
 const moo = require("moo"); // this 'require' creates a node dependency
 
 const lexer = moo.compile({
-  click:         /click/,
+  click:        /click/,
   ws:           {match: /\s+/, lineBreaks: true},
 });
 
@@ -17,11 +17,20 @@ const lexer = moo.compile({
 # Pass your lexer object using the @lexer option
 @lexer lexer
 
-main -> _ Statement _                                         {% d => ({ "@lang" : d[1] })  %}
+main -> _ Statement _ {% function(d) { console.log(d); } %}                                         
+      {% d => ({ "@lang" : d[1] })  %}
 
 Statement ->
-      %click
-      {% d => [{"@sigOut": { "@spawn": semaIR.synth('loop',[semaIR.num(1),semaIR.str('click')]) }}] %}
+      %click {% function(d) { return d; } %} 
+      {% d => [{"@sigOut": { "@spawn": semaIR.synth('loop',[  
+                                                            semaIR.num(1),
+                                                            semaIR.str('click')
+                                                            ]
+                                                    )
+                            }
+                }
+              ] 
+      %}
 
 
 # Whitespace

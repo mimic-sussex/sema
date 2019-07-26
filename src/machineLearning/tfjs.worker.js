@@ -1,4 +1,5 @@
 "use strict";
+// import * as tf from '@tensorflow/tfjs';
 importScripts("https://cdn.jsdelivr.net/npm/@tensorflow/tfjs");
 importScripts("http://mlweb.loria.fr/lalolib.js");
 

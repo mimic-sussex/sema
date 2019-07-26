@@ -6,8 +6,15 @@ function str(val) {
     return {"@string":val}
 };
 
+//
 function synth(functionName, params ) {
-  let branch = {"@sigp": {"@params":params, "@func":{value:functionName}}};
+  let branch = { 
+    "@sigp": {
+        "@params": params, 
+        "@func": { 
+            value: functionName }
+        }
+    };
   return branch;
 };
 
