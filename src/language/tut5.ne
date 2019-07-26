@@ -39,16 +39,16 @@ Statement ->
                 [ { '@sigp': // We
                      { '@params':
                        [ { '@num':
-                         { value: '1' } },
-                         { '@string': 'click' } ], // For simplicity, we'll return to hard-coding the sample names and speed values for now.
+                         { value: d[2].value  } },
+                         { '@string': d[0] } ], // we get the speed and sample name parameters exactly as we did in tutorial 4
                        '@func': { value: 'loop' }
                      }
                    },
                   { '@sigp':
                      { '@params':
                        [ { '@num':
-                         { value: '1' } },
-                         { '@string': 'paper' } ],
+                         { value: d[6].value } }, // everything is now wrapped in one array, so we access the values with different indexes for each signal processor 
+                         { '@string': d[4] } ],
                        '@func': { value: 'loop' }
                        }
                      }
