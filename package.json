@@ -10,7 +10,8 @@
     "build": "webpack  --verbose --progress --config webpack.config.js",
     "gen-stats": "webpack --profile --json > stats.json",
     "analyse": "webpack-bundle-analyzer stats.json",
-    "source-map": "source-map-explorer dist/bundle.js dist/bundle.js.map"
+    "source-map": "source-map-explorer dist/bundle.js dist/bundle.js.map",
+    "test": "webpack  --verbose --progress --config webpack.config.js"
   },
   "dependencies": {
     "@magenta/music": "^1.8.0",
