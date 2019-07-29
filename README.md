@@ -1,3 +1,8 @@
+[![Build Status](https://travis-ci.com/mimic-sussex/eppEditor.svg?branch=master)](https://travis-ci.com/mimic-sussex/eppEditor.svg?branch=master)
+
+<br />
+
+
 # Sema – Live Coding Language Design Playground #
 
 Sema is a playground where you can rapid prototype mini-languages for live coding that integrate signal synthesis, machine learning and machine listening. 
