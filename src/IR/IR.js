@@ -9,6 +9,7 @@ const oscMap = {
   "@pha": "phasor"
 };
 
+
 const jsFuncMap = {
   'saw': {"setup":(o,p)=>`${o} = new Module.maxiOsc(); ${o}.phaseReset(${p.length>1 ? p[1].loop : 0.0});`, "loop":(o,p)=>`${o}.saw(${p[0].loop})`},
   'sin': {"setup":(o,p)=>`${o} = new Module.maxiOsc(); ${o}.phaseReset(${p.length>1 ? p[1].loop : 0.0});`, "loop":(o,p)=>`${o}.sinewave(${p[0].loop})`},
