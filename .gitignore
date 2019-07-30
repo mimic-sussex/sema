@@ -60,6 +60,7 @@ typings/
 # Yarn Integrity file
 .yarn-integrity
 
+# Package manager lock files
 yarn.lock
 package-lock.json
 
