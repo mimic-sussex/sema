@@ -65,3 +65,11 @@ typings/
 
 # next.js build output
 .next
+
+# build files
+yarn.lock
+
+package-lock.json
+
+# visual studio
+.vs/
