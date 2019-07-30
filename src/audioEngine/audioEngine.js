@@ -33,9 +33,9 @@ class AudioEngine {
 	constructor(msgHandler) {
 		// NOTE: We want AudioContext lazy loading (first Audio Engine play triggered by user) to prevent the warning
 		this.audioContext; // = new AudioContext();
-		this.sampleRate; // = this.audioContext.sampleRate;
-		this.processorCount = 0;
-		this.il2pCode = "";
+		// this.sampleRate; // = this.audioContext.sampleRate;
+		// this.processorCount = 0;
+		// this.il2pCode = "";
 
 		this.msgHandler = msgHandler;
 
@@ -76,7 +76,7 @@ class AudioEngine {
 	/**
 	 * @connectMediaStreamSourceInput
 	 */
-	connectMediaStreamSourceInput(customNode) {
+	connectMediaStreamSourceInput(audioContext, customNode) {
 		const constraints = (window.constraints = {
 			audio: true,
 			video: false
@@ -138,7 +138,7 @@ class AudioEngine {
 						this.audioWorkletNode.connect(this.audioContext.destination);
 
 						// Connect the micro to the audio graph with the worklet node
-						this.connectMediaStreamSourceInput(this.audioWorkletNode);
+						this.connectMediaStreamSourceInput(this.audioContext, this.audioWorkletNode);
 
 						return true;
 					})
@@ -191,23 +191,6 @@ class AudioEngine {
 			);
 		} else throw "Audio Context is not initialised!";
 	}
-
-	// loadSamples() {
-	//   if (this.audioContext !== undefined) {
-	//     loadSampleToArray(this.audioContext, "snare", "samples/909.wav", this.audioWorkletNode);
-	//     loadSampleToArray(this.audioContext, "kick", "samples/909b.wav", this.audioWorkletNode);
-	//     loadSampleToArray(this.audioContext, "closed", "samples/909closed.wav", this.audioWorkletNode);
-	//     loadSampleToArray(this.audioContext, "open", "samples/909open.wav", this.audioWorkletNode);
-	//
-	//     loadSampleToArray(this.audioContext, "snare", "samples/noinoi.wav", this.audioWorkletNode);
-	//     loadSampleToArray(this.audioContext, "kick", "samples/noise1.wav", this.audioWorkletNode);
-	//     loadSampleToArray(this.audioContext, "closed", "samples/MeimunaNau.wav", this.audioWorkletNode);
-	//     loadSampleToArray(this.audioContext, "open", "samples/bellrip3.wav", this.audioWorkletNode);
-	//
-	//     this.samplesLoaded = true;
-	//   } else
-	//       throw "Audio Context is not initialised!";
-	// }
 
 	/**
 	 * Re-starts audio playback by stopping and running the latest Audio Worklet Processor code
