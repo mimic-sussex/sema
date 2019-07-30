@@ -133,7 +133,7 @@ languageWorker.onmessage = (e) => {
     // }
     // console.log(`IR translate time: ${compileTS} ms`)
     // console.log("rcv");
-  } else if (e.data['treeTS']) {
+  } else if (e.data['treeTS']) {  // TODO:FB Decouple tests from main
     let rightNow = window.performance.now();
     testResult[2] = rightNow - compileTS;
     treeTS = rightNow;
@@ -289,12 +289,8 @@ function createModelSelector(){
   const container = document.getElementById("containerButtons");
   const modelSelect = document.createElement("SELECT");
 
-
-
   const injectModelExampleInModelEditor = (e) => {
-
-
-    console.log(e);
+    // console.log("DEBUG:Main:injectModelExampleInModelEditor: " +e );
     switch (e) {
       case "hello-world":
         editor2.setValue(hello_world_code_example);
@@ -320,7 +316,6 @@ function createModelSelector(){
     }
   }
 
-  // modelSelect.addEventListener("onchange", e => injectModelExampleInModelEditor(e));
   modelSelect.addEventListener("change", () => { injectModelExampleInModelEditor(modelSelect.value)});
 
   const createModelSelectOptions = (optionTextEntry, selectElement) => {
@@ -349,7 +344,6 @@ function connectMyo(){
 function connectLeap(){
   let leapInterface = new leapMotion();
 }
-
 
 function evalExpression(expression) {
   compileTS = window.performance.now();
@@ -394,6 +388,7 @@ function getBlock(editor) {
 
   return code;
 }
+
 function evalLiveCodeEditorExpression() {
   let expression =  getBlock(editor1);
 
