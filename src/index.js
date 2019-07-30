@@ -23,19 +23,8 @@ import { leapMotion } from "./interfaces/leapMotion.js";
 
 import sema_png from "../assets/img/sema.png";
 
-// import treeJSON from './dndTree';
 import AudioWorkletIndicator from "./UI/components";
-
-// import '../assets/samples/909.wav';
-// import '../assets/samples/909b.wav';
-// import '../assets/samples/909closed.wav';
-// import '../assets/samples/909open.wav';
-// import '../assets/samples/noinoi.wav';
-
-// let sample = 'noinoi';
-// import (`../assets/samples/${sample}.wav`).then(module => {
-//   window.AudioEngine.loadSample(sample, `samples/${sample}.wav`);
-// });
+// import treeJSON from './dndTree';
 
 import "./style/index.css";
 import "./style/tree.css";
@@ -159,13 +148,13 @@ function createEditor1() {
 		lineNumbers: true,
 		// mode:  "javascript",
 		lineWrapping: true,
-		matchBrackets: true,
+		matchBrackets: true, 
 		extraKeys: {
 			// [ "Cmd-Enter" ]: () => playAudio(),
 			["Cmd-Enter"]: () => evalLiveCodeEditorExpression(),
 			["Ctrl-Enter"]: () => evalLiveCodeEditorExpression(),
-			["Shift-Enter"]: () => evalLiveCodeEditorExpression()
-			// ["Cmd-."]: () => stopAudio(),
+			["Shift-Enter"]: () => evalLiveCodeEditorExpression(),
+			["Cmd-."]: () => stopAudio(),
 			// ["Cmd--"]: () => decreaseVolume(),
 			// ["Cmd-="]: () => increaseVolume(),
 			// ["Cmd-]"]: () => changeSynth()

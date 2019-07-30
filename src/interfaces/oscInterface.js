@@ -25,13 +25,7 @@ class oscInterface {
 }
 
 const oscIO = new oscInterface();
+
 // oscIO.connect();
-// var sayHello = function () {
-//     port.send({
-//         address: "/hello",
-//         args: ["world"]
-//     });
-// };
-// sayHello();
 
 export default oscIO;
