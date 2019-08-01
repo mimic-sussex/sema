@@ -161,17 +161,23 @@ const jsFuncMap = {
 	uexp: {
 		setup: (o, p) => "",
 		loop: (o, p) =>
-			`Module.maxiMap.linexp(${p[0].loop}, 0.0000001, 1, ${p[1].loop}, ${p[2].loop})`
+			`Module.maxiMap.linexp(${p[0].loop}, 0.0000001, 1, ${p[1].loop}, ${
+				p[2].loop
+			})`
 	},
 	linlin: {
 		setup: (o, p) => "",
 		loop: (o, p) =>
-			`Module.maxiMap.linlin(${p[0].loop}, ${p[1].loop}, ${p[2].loop}),${p[3].loop}, ${p[4].loop})`
+			`Module.maxiMap.linlin(${p[0].loop}, ${p[1].loop}, ${p[2].loop}),${
+				p[3].loop
+			}, ${p[4].loop})`
 	},
 	linexp: {
 		setup: (o, p) => "",
 		loop: (o, p) =>
-			`Module.maxiMap.linexp(${p[0].loop}, ${p[1].loop}, ${p[2].loop}), ${p[3].loop}, ${p[4].loop})`
+			`Module.maxiMap.linexp(${p[0].loop}, ${p[1].loop}, ${p[2].loop}), ${
+				p[3].loop
+			}, ${p[4].loop})`
 	},
 	dist: {
 		setup: (o, p) => `${o} = new Module.maxiDistortion()`,
@@ -180,52 +186,44 @@ const jsFuncMap = {
 	flange: {
 		setup: (o, p) => `${o} = new Module.maxiFlanger()`,
 		loop: (o, p) =>
-			`${o}.flange(${p[0].loop},${p[1].loop},${p[2].loop},${p[3].loop},${p[4].loop})`
+			`${o}.flange(${p[0].loop},${p[1].loop},${p[2].loop},${p[3].loop},${
+				p[4].loop
+			})`
 	},
 	chor: {
 		setup: (o, p) => `${o} = new Module.maxiChorus()`,
 		loop: (o, p) =>
-			`${o}.chorus(${p[0].loop},${p[1].loop},${p[2].loop},${p[3].loop},${p[4].loop})`
+			`${o}.chorus(${p[0].loop},${p[1].loop},${p[2].loop},${p[3].loop},${
+				p[4].loop
+			})`
 	},
 	dl: {
 		setup: (o, p) => `${o} = new Module.maxiDelayline()`,
-		loop: (o, p) =>  `${o}.dl(${p[0].loop},${p[1].loop},${p[2].loop})`
+		loop: (o, p) => `${o}.dl(${p[0].loop},${p[1].loop},${p[2].loop})`
 	},
 	lpf: {
 		setup: (o, p) => `${o} = new Module.maxiFilter()`,
-		loop: (o, p) =>  `${o}.lopass(${p[0].loop},${p[1].loop})`
+		loop: (o, p) => `${o}.lopass(${p[0].loop},${p[1].loop})`
 	},
 	hpf: {
 		setup: (o, p) => `${o} = new Module.maxiFilter()`,
-		loop: (o, p) =>  `${o}.hipass(${p[0].loop},${p[1].loop})`
+		loop: (o, p) => `${o}.hipass(${p[0].loop},${p[1].loop})`
 	},
 	lpz: {
 		setup: (o, p) => `${o} = new Module.maxiFilter()`,
-		loop: (o, p) =>  `${o}.lores(${p[0].loop},${p[1].loop},${p[2].loop})`
+		loop: (o, p) => `${o}.lores(${p[0].loop},${p[1].loop},${p[2].loop})`
 	},
 	hpz: {
 		setup: (o, p) => `${o} = new Module.maxiFilter()`,
-		loop: (o, p) =>  `${o}.hires(${p[0].loop},${p[1].loop},${p[2].loop})`
+		loop: (o, p) => `${o}.hires(${p[0].loop},${p[1].loop},${p[2].loop})`
 	},
-	// //>>> deprecated
-	// toModel: {
-	// 	setup: (o, p) =>
-	// 		`${o} = this.registerTransducer('testmodel', ${p[0].loop})`,
-	// 	loop: (o, p) => `${o}.send(${p[1].loop}, ${p[2].loop})`
-	// },
-	// fromModel: {
-	// 	setup: (o, p) =>
-	// 		`${o} = this.registerTransducer('testmodel', ${p[0].loop})`,
-	// 	loop: (o, p) => `${o}.receive(${p[1].loop})`
-	// },
-	// //<<< deprecated
 	toJS: {
 		setup: (o, p) => `${o} = this.registerTransducer('${o}', ${p[0].loop})`,
-		loop: (o, p) =>  `${o}.send(${p[1].loop}, ${p[2].loop})`
+		loop: (o, p) => `${o}.send(${p[1].loop}, ${p[2].loop})`
 	},
 	fromJS: {
 		setup: (o, p) => `${o} = this.registerTransducer('${o}', ${p[0].loop})`,
-		loop: (o, p) =>  `${o}.receive(${p[1].loop})`
+		loop: (o, p) => `${o}.receive(${p[1].loop})`
 	},
 	// 'adc': {"setup":(o,p)=>"", "loop":(o,p)=>`inputs[${p[0].loop}]`},
 	adc: { setup: (o, p) => "", loop: (o, p) => `inputs` },
@@ -236,9 +234,7 @@ const jsFuncMap = {
 	},
 	loop: {
 		setup: (o, p) => `${o} = new Module.maxiSample();
-                      ${o}.setSample(this.getSampleBuffer(${
-			p[1].loop
-		}));`,
+                      ${o}.setSample(this.getSampleBuffer(${p[1].loop}));`,
 		loop: (o, p) => `(${o}.isReady() ? ${o}.play(${p[0].loop}) : 0.0)`
 	},
 	oscin: {
@@ -249,7 +245,6 @@ const jsFuncMap = {
 		setup: (o, p) => "",
 		loop: (o, p) => `this.OSCTransducer(${p[0].loop},${p[1].loop})`
 	},
-
 	sah: {
 		setup: (o, p) => `${o} = new Module.maxiSampleAndHold();`,
 		loop: (o, p) => `${o}.sah(${p[0].loop},${p[1].loop})`
@@ -262,9 +257,22 @@ const jsFuncMap = {
                                   `,
 		loop: (o, p) =>
 			`(${o}.isReady() ? 
-        ${o}stretch.play(${p[0].loop},${p[1].loop},${p[2].loop
-			},${p[3].loop},0.0) : 0.0)`
+        ${o}stretch.play(${p[0].loop},${p[1].loop},${p[2].loop},${
+				p[3].loop
+			},0.0) : 0.0)`
 	}
+	// //>>> deprecated
+	// toModel: {
+	// 	setup: (o, p) =>
+	// 		`${o} = this.registerTransducer('testmodel', ${p[0].loop})`,
+	// 	loop: (o, p) => `${o}.send(${p[1].loop}, ${p[2].loop})`
+	// },
+	// fromModel: {
+	// 	setup: (o, p) =>
+	// 		`${o} = this.registerTransducer('testmodel', ${p[0].loop})`,
+	// 	loop: (o, p) => `${o}.receive(${p[1].loop})`
+	// },
+	// //<<< deprecated
 	// "loop":(o,p)=>`(0.0)`},
 	// "loop":(o,p)=>`(${o}.isReady() ? 0.0 : 0.0)`},
 };
