@@ -168,6 +168,12 @@ body {
   background-color: black;
 }
 
+.analysers {
+  z-index: -2; 
+  position:absolute; 
+  bottom: 0;
+}
+
 #overlay {
   position: fixed;
   /* Sit on top of the page content */

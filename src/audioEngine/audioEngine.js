@@ -31,20 +31,21 @@ class AudioEngine {
 	 * @constructor
 	 */
 	constructor(msgHandler) {
-		// NOTE: We want AudioContext lazy loading (first Audio Engine play triggered by user) to prevent the warning
-		this.audioContext; // = new AudioContext();
+		// NOTE:FB AudioContext needs lazy loading to counteract the Chrome warning
+		// Audio Engine first play() call, triggered by user, prevents the warning
+		// by setting this.audioContext = new AudioContext();
+		this.audioContext;
 		// this.sampleRate; // = this.audioContext.sampleRate;
 		// this.processorCount = 0;
-		// this.il2pCode = "";
-
-		this.msgHandler = msgHandler;
-
 		this.audioWorkletProcessorName = "maxi-processor";
 		this.audioWorkletUrl = "maxi-processor.js";
 		this.audioWorkletNode;
 
 		this.samplesLoaded = false;
 
+		this.analysers = [];
+
+		this.msgHandler = msgHandler;
 		this.onNewDSPLoadValue = x => {};
 
 		this.loadTestIntervals = [];
@@ -74,9 +75,10 @@ class AudioEngine {
 	}
 
 	/**
+	 * Sets up an AudioIn WAAPI sub-graph
 	 * @connectMediaStreamSourceInput
 	 */
-	connectMediaStreamSourceInput(audioContext, customNode) {
+	async connectMediaStream() {
 		const constraints = (window.constraints = {
 			audio: true,
 			video: false
@@ -84,8 +86,10 @@ class AudioEngine {
 
 		function onAudioInputInit(stream) {
 			// console.log("DEBUG:AudioEngine: Audio Input init");
-			let mediaStreamSource = audioContext.createMediaStreamSource(stream);
-			mediaStreamSource.connect(customNode);
+			let mediaStreamSource = window.AudioEngine.audioContext.createMediaStreamSource(
+				stream
+			);
+			mediaStreamSource.connect(window.AudioEngine.audioWorkletNode);
 		}
 
 		function onAudioInputFail(error) {
@@ -102,47 +106,44 @@ class AudioEngine {
 			.catch(onAudioInputFail);
 	}
 
-	loadProcessorCode() {
+	async loadWorkletProcessorCode() {
 		if (this.audioContext !== undefined) {
 			try {
-				// TODO: Might be worthwile to change this to await/async pattern instead of promise
-				this.audioContext.audioWorklet
-					.addModule(this.audioWorkletUrl)
-					.then(() => {
-						// Custom node constructor with required parameters
-						this.audioWorkletNode = new MaxiNode(
-							this.audioContext,
-							this.audioWorkletProcessorName
-						);
+				await this.audioContext.audioWorklet.addModule(this.audioWorkletUrl);
 
-						// All possible error event handlers subscribed
-						this.audioWorkletNode.onprocessorerror = event => {
-							//  error from the processor
-							console.log(`MaxiProcessor Error detected`);
-						};
-						this.audioWorkletNode.onprocessorstatechange = event => {
-							console.log(
-								`MaxiProcessor state change detected: ` +
-									audioWorkletNode.processorState
-							);
-						};
-						this.audioWorkletNode.port.onmessage = event => {
-							this.messageHandler(event.data);
-						};
-						this.audioWorkletNode.port.onmessageerror = event => {
-							//  error from the processor port
-							console.log(`Error message from port: ` + event.data);
-						};
+				// Custom node constructor with required parameters
+				this.audioWorkletNode = new MaxiNode(
+					this.audioContext,
+					this.audioWorkletProcessorName
+				);
+				
+				// All possible error event handlers subscribed
+				this.audioWorkletNode.onprocessorerror = event => {
+					// Errors from the processor
+					console.log(`MaxiProcessor Error detected`);
+				};
+				this.audioWorkletNode.port.onmessageerror = event => {
+					//  error from the processor port
+					console.log(`Error message from port: ` + event.data);
+				};
 
-						// Connect the worklet node to the audio graph
-						this.audioWorkletNode.connect(this.audioContext.destination);
+				// State changes in the audio worklet processor
+				this.audioWorkletNode.onprocessorstatechange = event => {
+					console.log(
+						`MaxiProcessor state change detected: ` +
+							audioWorkletNode.processorState
+					);
+				};
 
-						// Connect the micro to the audio graph with the worklet node
-						this.connectMediaStreamSourceInput(this.audioContext, this.audioWorkletNode);
+				// Worklet Processor message handler 
+				this.audioWorkletNode.port.onmessage = event => {
+					this.messageHandler(event.data);
+				};
 
-						return true;
-					})
-					.catch(e => console.log("Error on loading worklet: ", e.message));
+				// Connect the worklet node to the audio graph
+				this.audioWorkletNode.connect(this.audioContext.destination);
+
+				return true;
 			} catch (err) {
 				console.log(
 					"AudioWorklet not supported in this browser: ",
@@ -154,6 +155,7 @@ class AudioEngine {
 			return false;
 		}
 	}
+
 
 	messageHandler(data) {
 		if (data == "dspStart") {
@@ -177,10 +179,6 @@ class AudioEngine {
 		}
 	}
 
-	postMessage(msg) {
-		this.audioWorkletNode.port.postMessage(msg);
-	}
-
 	loadSample(objectName, url) {
 		if (this.audioContext !== undefined) {
 			loadSampleToArray(
@@ -193,17 +191,28 @@ class AudioEngine {
 	}
 
 	/**
-	 * Re-starts audio playback by stopping and running the latest Audio Worklet Processor code
+	 * Initialises audio context and sets worklet processor code
 	 * @play
 	 */
-	play() {
+	async init() {
 		if (this.audioContext === undefined) {
 			this.audioContext = new AudioContext();
-			this.loadProcessorCode();
+			await this.loadWorkletProcessorCode();
+			this.connectMediaStream();
+			// TODO:FB Remove this to somewhere where it makes sense
 			this.oscThru = msg => {
 				this.audioWorkletNode.port.postMessage(msg);
 			};
-		} else {
+		}
+	}
+
+	/**
+	 * Initialises audio context and sets worklet processor code
+	 * or re-starts audio playback by stopping and running the latest Audio Worklet Processor code
+	 * @play
+	 */
+	play() {
+		if (this.audioContext !== undefined) {
 			if (this.audioContext.state !== "suspended") {
 				this.stop();
 				return false;
@@ -274,17 +283,8 @@ class AudioEngine {
 		return false;
 	}
 
-	evalSynth() {
+	evalSynth(userDefinedFunction) {
 		if (this.audioWorkletNode !== undefined) {
-			let userDefinedFunction;
-			if (arguments.length == 0) {
-				userDefinedFunction = this.synthDefs[
-					Math.floor(Math.random() * this.synthDefs.length)
-				];
-			} else {
-				userDefinedFunction = arguments[0];
-			}
-			// DEBUG:
 			this.audioWorkletNode.port.postMessage({
 				// eval: `() => { return ${userDefinedFunction} }`
 				eval: 1,
@@ -294,10 +294,6 @@ class AudioEngine {
 			// console.log("eval sent: " + userDefinedFunction); //DEBUG
 			return true;
 		} else return false;
-	}
-
-	oscMessage(msg) {
-		this.oscThru(msg);
 	}
 
 	loadTest() {

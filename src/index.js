@@ -6,6 +6,7 @@
 // import irWorker from 'worker-loader!./IR/IR.worker.js';
 import nearleyWorker from "worker-loader!./language/nearley.worker.js";
 import tfWorker from "worker-loader!./machineLearning/tfjs.worker.js";
+
 import oscIO from "./interfaces/oscInterface.js";
 import fileSaver from "filesaver/src/Filesaver.js";
 
@@ -39,12 +40,15 @@ import "codemirror/addon/edit/matchbrackets.js";
 import "codemirror/keymap/vim.js";
 import "codemirror/lib/codemirror.css";
 
+import NexusUI from "nexusui/dist/NexusUI.js";
+
 import langSketch from "./language/langSketch";
 import { createSecretKey } from "crypto";
 
 let audio;
 
 let editor1, editor2;
+let oscilloscope, spectrogram;
 
 let parser;
 
@@ -205,12 +209,17 @@ function createEditor3() {
 }
 
 function createControls() {
+
+	// document.getElementById('audioWorkletIndicator').innerHTML = AudioWorkletIndicator.AudioWorkletIndicator();
+
+	document.getElementById("semaLogo").src = sema_png;
+
 	const isMac = CodeMirror.keyMap.default === CodeMirror.keyMap.macDefault;
 	const runKeys = isMac ? "Cmd-Enter" : "Ctrl-Enter";
 	const container = document.getElementById("containerButtons");
 
 	const startAudioButton = document.getElementById("buttonStartAudio");
-	startAudioButton.addEventListener("click", () => setupAudio());
+	startAudioButton.addEventListener("click", () => start());
 
 	const runButton = document.createElement("button");
 	runButton.textContent = `Play: ${runKeys.replace("-", " ")}`;
@@ -266,6 +275,37 @@ function createControls() {
 	// container.appendChild(testButton);
 	// testButton.addEventListener("click", () => runTest());
 }
+
+function createNexusUI() {
+
+  // window.AudioEngine.initWithAudioContext(NexusUI.context);	
+
+	NexusUI.context = window.AudioEngine.audioContext; 
+	oscilloscope = new NexusUI.Oscilloscope("oscilloscope", {
+		size: [window.innerWidth, 120]
+	});
+	oscilloscope.colorize("fill", "#000");
+	oscilloscope.colorize("accent", "#FFF");
+	// window.AudioEngine.addAnalyser(oscilloscope); // Inject oscilloscope analyser, keep encapsulation for worklet node
+	oscilloscope.connect(window.AudioEngine.audioWorkletNode);
+
+	spectrogram = new NexusUI.Spectrogram("spectrogram", {
+		size: [window.innerWidth, 50]
+	});
+	spectrogram.colorize("fill", "#000");
+	spectrogram.colorize("accent", "#FFF");
+	// window.AudioEngine.addAnalyser(spectrogram); // Inject oscilloscope analyser, keep encapsulation for worklet node
+	spectrogram.connect(window.AudioEngine.audioWorkletNode);
+
+	window.addEventListener("resize", function(event) {
+		oscilloscope.resize(window.innerWidth, 120);
+		spectrogram.resize(window.innerWidth, 150);
+	});
+
+	// window.AudioEngine.connectAnalysers();
+}
+
+
 
 function createModelSelector() {
 	const container = document.getElementById("containerButtons");
@@ -416,17 +456,27 @@ function evalModelEditorExpressionBlock() {
 	window.localStorage.setItem("editor2", editor2.getValue());
 }
 
+async function start() {
+	let overlay = document.getElementById("overlay");
+	overlay.style.visibility = "hidden";
+
+	await setupAudio();
+	// Create Osciloscope and spectrogram
+	createNexusUI();
+}
+
+
 /*
  *
   Audio engine wrappers
  *
  */
+async function setupAudio() {
+	if (window.AudioEngine !== undefined) {
+		// Start Audio Context and connect WAAPI graph elements
+		await window.AudioEngine.init();
 
-function setupAudio() {
-	let overlay = document.getElementById("overlay");
-	overlay.style.visibility = "hidden";
-	// Start Audio Context
-	playAudio();
+	}
 }
 
 function playAudio() {
@@ -436,17 +486,15 @@ function playAudio() {
 }
 
 function stopAudio() {
-	if (window.AudioEngine !== undefined) window.AudioEngine.stop();
+	if (window.AudioEngine !== undefined) 
+		window.AudioEngine.stop();
 }
-
-function createAnalysers() {}
 
 /*
  *
   Dynamic sample loading
  *
  */
-
 const getSamplesNames = () => {
 	const r = require.context("../assets/samples", false, /\.wav$/);
 
@@ -457,12 +505,12 @@ const getSamplesNames = () => {
 };
 
 /* 
-  * Webpack Magic Comments 
+ * Webpack Magic Comments 
     webpackMode: "lazy" // Generates a single lazy-loadable chunk that can satisfy all calls to import(). 
     (default): Generates a lazy-loadable chunk for each import()ed module.
-  *
-/* webpackMode: "lazy-once" */
-
+ *
+ * webpackMode: "lazy-once" 
+ */
 const lazyLoadSample = (sampleName, sample) => {
 	import(
 		/* webpackMode: "lazy" */
@@ -477,7 +525,6 @@ const lazyLoadSample = (sampleName, sample) => {
 const loadImportedSamples = () => {
 	let samplesNames = getSamplesNames();
 	// console.log("DEBUG:Main:getSamplesNames: " + samplesNames);
-
 	samplesNames.forEach(sampleName => {
 		lazyLoadSample(sampleName);
 	});
@@ -485,14 +532,15 @@ const loadImportedSamples = () => {
 
 /*
  *
-  DOMContentLoaded
+  Application Entry Point – DOMContentLoaded
  *
  */
-
 document.addEventListener("DOMContentLoaded", () => {
-	// document.getElementById('audioWorkletIndicator').innerHTML = AudioWorkletIndicator.AudioWorkletIndicator();
-	document.getElementById("semaLogo").src = sema_png;
 
+  // NOTE:FB 
+	// Injecting a function in the ctor of the audio engine that is defined in this context and that posts
+	// messages to the ML worker makes this code extremely convoluted and hard to reason about. 
+	// Please don't change code that was good, just for a hack sake.
 	window.AudioEngine = new AudioEngine(msg => {
 		if (msg == "giveMeSomeSamples") {
 			// Load Samples
@@ -501,6 +549,8 @@ document.addEventListener("DOMContentLoaded", () => {
 			machineLearningWorker.postMessage(msg);
 		}
 	});
+
+
 
 	// // document.getElementById("sampleRateIndicatorValue").textContent = window.AudioEngine.sampleRate;
 	// // document.getElementById("dspLoadVal").textContent = "0";
@@ -524,9 +574,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	createEditor2();
 
-	createAnalysers();
-
 	createControls();
+
 
 	oscIO.OSCResponder(msg => {
 		// console.log("OSC in:", msg);
