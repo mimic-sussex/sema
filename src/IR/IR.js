@@ -1,6 +1,5 @@
 var objectID = 0;
 
-
 const oscMap = {
   '@sin': "sinewave",
   "@saw": "saw",
@@ -9,8 +8,6 @@ const oscMap = {
   "@pha": "phasor"
 };
 
-
-
 const jsFuncMap = {
 	saw: {
 		setup: (o, p) => `${o} = new Module.maxiOsc(); 
@@ -18,35 +15,43 @@ const jsFuncMap = {
 		loop:  (o, p) => `${o}.saw(${p[0].loop})`
 	},
 	sin: {
-		setup: (o, p) => `${o} = new Module.maxiOsc(); ${o}.phaseReset(${p.length > 1 ? p[1].loop : 0.0});`,
+		setup: (o, p) => `${o} = new Module.maxiOsc(); 
+                      ${o}.phaseReset(${p.length > 1 ? p[1].loop : 0.0});`,
 		loop:  (o, p) => `${o}.sinewave(${p[0].loop})`
 	},
 	tri: {
-		setup: (o, p) => `${o} = new Module.maxiOsc(); ${o}.phaseReset(${p.length > 1 ? p[1].loop : 0.0});`,
+		setup: (o, p) => `${o} = new Module.maxiOsc(); 
+                      ${o}.phaseReset(${p.length > 1 ? p[1].loop : 0.0});`,
 		loop:  (o, p) => `${o}.triangle(${p[0].loop})`
 	},
 	pha: {
-		setup: (o, p) => `${o} = new Module.maxiOsc(); ${o}.phaseReset(${p.length > 1 ? p[1].loop : 0.0});`,
+		setup: (o, p) => `${o} = new Module.maxiOsc(); 
+                      ${o}.phaseReset(${p.length > 1 ? p[1].loop : 0.0});`,
 		loop:  (o, p) => `${o}.phasor(${p[0].loop})`
 	},
 	ph2: {
-		setup: (o, p) => `${o} = new Module.maxiOsc(); ${o}.phaseReset(${p.length > 3 ? p[3].loop : 0.0});`,
+		setup: (o, p) => `${o} = new Module.maxiOsc(); 
+                      ${o}.phaseReset(${p.length > 3 ? p[3].loop : 0.0});`,
 		loop:  (o, p) => `${o}.phasor(${p[0].loop},${p[1].loop},${p[2].loop})`
 	},
 	sqr: {
-		setup: (o, p) => `${o} = new Module.maxiOsc(); ${o}.phaseReset(${p.length > 1 ? p[1].loop : 0.0});`,
+		setup: (o, p) => `${o} = new Module.maxiOsc(); 
+                      ${o}.phaseReset(${p.length > 1 ? p[1].loop : 0.0});`,
 		loop:  (o, p) => `${o}.square(${p[0].loop})`
 	},
 	pul: {
-		setup: (o, p) => `${o} = new Module.maxiOsc(); ${o}.phaseReset(${p.length > 2 ? p[2].loop : 0.0});`,
+		setup: (o, p) => `${o} = new Module.maxiOsc(); 
+                      ${o}.phaseReset(${p.length > 2 ? p[2].loop : 0.0});`,
 		loop:  (o, p) => `${o}.pulse(${p[0].loop},${p[1].loop})`
 	},
 	imp: {
-		setup: (o, p) => `${o} = new Module.maxiOsc(); ${o}.phaseReset(${p.length > 1 ? p[1].loop : 0.0});`,
+		setup: (o, p) => `${o} = new Module.maxiOsc(); 
+                      ${o}.phaseReset(${p.length > 1 ? p[1].loop : 0.0});`,
 		loop:  (o, p) => `${o}.impulse(${p[0].loop})`
 	},
 	sawn: {
-		setup: (o, p) => `${o} = new Module.maxiOsc(); ${o}.phaseReset(${p.length > 1 ? p[1].loop : 0.0});`,
+		setup: (o, p) => `${o} = new Module.maxiOsc(); 
+                      ${o}.phaseReset(${p.length > 1 ? p[1].loop : 0.0});`,
 		loop:  (o, p) => `${o}.sawn(${p[0].loop})`
 	},
 	noiz: {
@@ -217,24 +222,9 @@ const jsFuncMap = {
                       ${o}stretch.setSample(${o});`,
 		loop:  (o, p) => `(${o}.isReady() ? ${o}stretch.play(${p[0].loop},${p[1].loop},${p[2].loop},${p[3].loop},0.0) : 0.0)`
 	}
-	// //>>> deprecated
-	// toModel: {
-	// 	setup: (o, p) =>
-	// 		`${o} = this.registerTransducer('testmodel', ${p[0].loop})`,
-	// 	loop: (o, p) => `${o}.send(${p[1].loop}, ${p[2].loop})`
-	// },
-	// fromModel: {
-	// 	setup: (o, p) =>
-	// 		`${o} = this.registerTransducer('testmodel', ${p[0].loop})`,
-	// 	loop: (o, p) => `${o}.receive(${p[1].loop})`
-	// },
-	// //<<< deprecated
-	// "loop":(o,p)=>`(0.0)`},
-	// "loop":(o,p)=>`(${o}.isReady() ? 0.0 : 0.0)`},
 };
 
 class IRToJavascript {
-
 
   static getNextID() {
     objectID = objectID > 9999 ? 0 : ++objectID;
@@ -343,8 +333,7 @@ class IRToJavascript {
         return ccode;
       },
     }
-    // console.log("Traverse")
-    // console.log(t)
+
     if (Array.isArray(t)) {
       t.map((el) => {
         Object.keys(el).map((k) => {
@@ -370,7 +359,6 @@ class IRToJavascript {
     // console.log(code.paramMarkers);
     return code;
   }
-
 }
 
 export default IRToJavascript;
