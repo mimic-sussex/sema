@@ -242,6 +242,7 @@ function createControls() {
 		let blob = new Blob([downloadData], { type: "text/plain;charset=utf-8" });
 		saveData(blob, `semaCode.js`);
 	});
+
 	const downloadButtonLC = document.createElement("button");
 	downloadButtonLC.textContent = `Download Live Code`;
 	container.appendChild(downloadButtonLC);
@@ -484,6 +485,8 @@ async function setupAudio() {
 function playAudio() {
 	if (window.AudioEngine !== undefined) {
 		window.AudioEngine.play();
+
+		// createNexusUI();
 	}
 }
 
