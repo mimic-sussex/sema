@@ -11,140 +11,30 @@ body {
   src: url('../../assets/fonts/Lato/fonts/Lato-Black.woff');
 }
 
-/* @font-face {
-    font-family: 'LatoWebBlack';
-    src: url('./Lato-Black.woff');
-} */
-
-/* @import url('./fonts/Lato-Black.woff'); */
-/* @import url('../assets/fonts/Lato/fonts/Lato-Black.woff'); */
-
-.param100 {
-  font-size: 100%;
-  font-weight: 100;
-}
-
-.param110 {
-  font-size: 110%;
-  font-weight: 100;
-}
-
-.param120 {
-  font-size: 120%;
-  font-weight: 100;
-}
-
-.param130 {
-  font-size: 130%;
-  font-weight: 100;
-}
-
-.param140 {
-  font-size: 140%;
-  font-weight: 100;
-}
-
-.param150 {
-  font-weight: 100;
-  font-size: 150%;
-}
-
-.param160 {
-  font-size: 160%;
-  font-weight: 100;
-}
-
-.param170 {
-  font-size: 170%;
-  font-weight: 100;
-}
-
-.param180 {
-  font-size: 180%;
-  font-weight: 100;
-}
-
-.param190 {
-  font-size: 190%;
-  font-weight: 100;
-}
-
-.param200 {
-  font-size: 200%;
-  font-weight: 100;
-}
-
-.param210 {
-  font-weight: 100;
-  font-size: 210%;
-}
-
-.param220 {
-  font-weight: 100;
-  font-size: 220%;
-}
-
-.param230 {
-  font-size: 230%;
-  font-weight: 100;
-}
-
-.param240 {
-  font-size: 240%;
-  font-weight: 100;
-}
-
-.param250 {
-  font-size: 250%;
-  font-weight: 100;
-}
-
-.param260 {
-  font-size: 260%;
-  font-weight: 100;
-}
-
-.param270 {
-  font-size: 270%;
-  font-weight: 100;
-}
-
-.param280 {
-  font-size: 280%;
-  font-weight: 100;
-}
-
-.param290 {
-  font-size: 290%;
-  font-weight: 100;
-}
-
-.param300 {
-  font-size: 300%;
-  font-weight: 100;
-}
-
-
-
 #container {
   display: grid;
   grid-template-areas:
-    'header'
-    /* 'main main main right right' */
-    'main'
-    'main2'
-    'footer';
+    'header header '
+    'main right '
+    /* 'main' */
+    'main2 main2'
+    'footer footer';
 
   grid-template-rows:
     /* Header */
     5%
     /* Main Content */
     /* 1fr */
-    45% 45%
+    45%
+    45%
     /* Footer */
     5%;
 
-  grid-template-columns: 100%;
+  grid-template-columns: 
+    70%
+    30%
+    ;
+
   grid-gap: 2px;
   background-color: #000000;
   /* background-color: #222222; */
@@ -168,11 +58,7 @@ body {
   background-color: black;
 }
 
-.analysers {
-  z-index: -2; 
-  position:absolute; 
-  bottom: 0;
-}
+
 
 #overlay {
   position: fixed;
@@ -229,15 +115,30 @@ body {
 }
 
 .containerMain {
-    grid-area: main;
-  /* align-content: stretch; */
+  grid-area: main;
+  align-content: stretch;
   background-color: black;
   /* background-color: blue; */
-  /* justify-self: stretch; */
-  /* grid-column-start: 1/1;
-  grid-column-end: 1/1; */
-  /* grid-row: 2; */
+  justify-self: stretch;
+  grid-column-start: 1/3;
+  grid-column-end: 2/3;
+  grid-row: 2;
+  display: inline-block
 
+}
+
+.analysers {
+  grid-area: right;
+  /* z-index: -2;  */
+  width: auto;
+  height: auto;
+  position:absolute; 
+  bottom: 0;
+}
+
+#oscilloscope #spectrogram {
+  width: 100%;
+  height: 100%;
 }
 
 .containerMain2 {
@@ -412,4 +313,109 @@ body {
   right: 20px; */
   overflow: hidden;
   /* float:left; */
+}
+
+.param100 {
+  font-size: 100%;
+  font-weight: 100;
+}
+
+.param110 {
+  font-size: 110%;
+  font-weight: 100;
+}
+
+.param120 {
+  font-size: 120%;
+  font-weight: 100;
+}
+
+.param130 {
+  font-size: 130%;
+  font-weight: 100;
+}
+
+.param140 {
+  font-size: 140%;
+  font-weight: 100;
+}
+
+.param150 {
+  font-weight: 100;
+  font-size: 150%;
+}
+
+.param160 {
+  font-size: 160%;
+  font-weight: 100;
+}
+
+.param170 {
+  font-size: 170%;
+  font-weight: 100;
+}
+
+.param180 {
+  font-size: 180%;
+  font-weight: 100;
+}
+
+.param190 {
+  font-size: 190%;
+  font-weight: 100;
+}
+
+.param200 {
+  font-size: 200%;
+  font-weight: 100;
+}
+
+.param210 {
+  font-weight: 100;
+  font-size: 210%;
+}
+
+.param220 {
+  font-weight: 100;
+  font-size: 220%;
+}
+
+.param230 {
+  font-size: 230%;
+  font-weight: 100;
+}
+
+.param240 {
+  font-size: 240%;
+  font-weight: 100;
+}
+
+.param250 {
+  font-size: 250%;
+  font-weight: 100;
+}
+
+.param260 {
+  font-size: 260%;
+  font-weight: 100;
+}
+
+.param270 {
+  font-size: 270%;
+  font-weight: 100;
+}
+
+.param280 {
+  font-size: 280%;
+  font-weight: 100;
+}
+
+.param290 {
+  font-size: 290%;
+  font-weight: 100;
+}
+
+.param300 {
+  font-size: 300%;
+  font-weight: 100;
 }

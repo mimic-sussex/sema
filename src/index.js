@@ -279,10 +279,11 @@ function createControls() {
 function createNexusUI() {
 
   // window.AudioEngine.initWithAudioContext(NexusUI.context);	
-
+	let analysers = document.getElementsByClassName("analysers");
+	
 	NexusUI.context = window.AudioEngine.audioContext; 
 	oscilloscope = new NexusUI.Oscilloscope("oscilloscope", {
-		size: [window.innerWidth, 120]
+		// size: default
 	});
 	oscilloscope.colorize("fill", "#000");
 	oscilloscope.colorize("accent", "#FFF");
@@ -290,7 +291,7 @@ function createNexusUI() {
 	oscilloscope.connect(window.AudioEngine.audioWorkletNode);
 
 	spectrogram = new NexusUI.Spectrogram("spectrogram", {
-		size: [window.innerWidth, 50]
+		// size: [100, 50]
 	});
 	spectrogram.colorize("fill", "#000");
 	spectrogram.colorize("accent", "#FFF");
@@ -298,8 +299,9 @@ function createNexusUI() {
 	spectrogram.connect(window.AudioEngine.audioWorkletNode);
 
 	window.addEventListener("resize", function(event) {
-		oscilloscope.resize(window.innerWidth, 120);
-		spectrogram.resize(window.innerWidth, 150);
+		// oscilloscope.resize(100, 120);
+		// spectrogram.resize(100, 150);
+		// console.log(analysers);
 	});
 
 	// window.AudioEngine.connectAnalysers();
