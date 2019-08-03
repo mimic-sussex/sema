@@ -71,4 +71,4 @@ package-lock.json
 .next
 
 .vscode/*
-.vscode/
+**/.vscode/
