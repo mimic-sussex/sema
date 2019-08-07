@@ -5,7 +5,7 @@ console.log(semaIR);
 
 const moo = require("moo"); // load tokeniser
 
-// This time, as well as sample names and whitespace, we want to match integers, and we want to introduce a separator character. Our plan is to play samples back as before, but now also to manipulate their speed. In our new language, typing:
+// This time, as well as sample names and whitespace, we want to match numbers, and we want to introduce a separator character. Our plan is to play samples back as before, but now also to manipulate their playback speed with a number. In our new language, typing:
 
   // click>2
 
@@ -16,7 +16,7 @@ const lexer = moo.compile({
   convol1:      /convol1/,
   heart:        /heart/,
   separator:    />/,
-  number:       /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?(?:[eE][-+]?[0-9]+)?\b/, // This is a standard regex sequence for matching integers.
+  number:       /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?(?:[eE][-+]?[0-9]+)?\b/, // This is a standard regex sequence for matching integers, negative, floating point and exponential numbers.
   ws:           {match: /\s+/, lineBreaks: true},
 });
 
@@ -32,7 +32,7 @@ main -> _ Statement _
 %}
 
 Statement ->
-  SampleName %separator %number # <Statement> contains any of the possible contents of <SampleName> (further down the page), followed by the > separator character, followed by an integer.
+  SampleName %separator %number # <Statement> contains any of the possible contents of <SampleName> (further down the page), followed by the > separator character, followed by a number of some kind.
 
   # The array created when Nearley matches <Statement> will be in the format [SampleName, separator, number], so we will access its values accordingly.
 
@@ -41,7 +41,7 @@ Statement ->
     '@spawn':
       { '@sigp':
         { '@params': [
-          { '@num': { value: d[2].value } }, // The syntax here might be a little confusing! We access <d[2].value> and not just d[2] because when we initially pass the %number token to the grammar, it is an object. We have to access the integer itself *inside* that object using the <.value> key.
+          { '@num': { value: d[2].value } }, // The syntax here might be a little confusing! We access <d[2].value> and not just d[2] because when we initially pass the %number token to the grammar, it is an object. We have to access the number itself *inside* that object using the <.value> key.
           { '@string': d[0] } // We already returned the sample name as a string with no other data when we matched <SampleName>, so we can simply access d[0].
           ],
           '@func': {
