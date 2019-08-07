@@ -10,7 +10,8 @@
     "build": "webpack  --verbose --progress --config webpack.config.js",
     "gen-stats": "webpack --profile --json > stats.json",
     "analyse": "webpack-bundle-analyzer stats.json",
-    "source-map": "source-map-explorer dist/bundle.js dist/bundle.js.map"
+    "source-map": "source-map-explorer dist/bundle.js dist/bundle.js.map",
+    "test": "webpack  --verbose --progress --config webpack.config.js"
   },
   "dependencies": {
     "@magenta/music": "^1.8.0",
@@ -24,6 +25,7 @@
     "moo": "^0.5.0",
     "myo": "^3.0.0",
     "nearley": "^2.16.0",
+    "nexusui": "^2.0.10",
     "osc": "^2.3.1",
     "osc-js": "^2.0.3",
     "serialport": "^7.1.5"

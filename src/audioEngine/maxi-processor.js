@@ -187,8 +187,8 @@ class MaxiProcessor extends AudioWorkletProcessor {
           this.transducers[event.data.tname].incoming(event.data);
         }
       } else if ('sample' in event.data) { //from a worker
-        console.log("sample received");
-        console.log(event.data);
+        // console.log("sample received");
+        // console.log(event.data);
         let sampleKey = event.data.sample.substr(0,event.data.sample.length - 4)
         this.sampleBuffers[sampleKey] = event.data.buffer;
       } else if ('eval' in event.data) { // check if new code is being sent for evaluation?
@@ -240,8 +240,8 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
       for (let i = 0; i < output[0].length; ++i) {
         //xfade between old and new algorhythms
-        let sig0 = this.signals[0](this._q[0], inputs[0], this._mems[0]);
-        let sig1 = this.signals[1](this._q[1], inputs[0], this._mems[1]);
+        let sig0 = this.signals[0](this._q[0], inputs[0][0][i], this._mems[0]);
+        let sig1 = this.signals[1](this._q[1], inputs[0][0][i], this._mems[1]);
         let xf = this.xfadeControl.play(i == 0 ? 1 : 0);
         let w = Module.maxiXFade.xfade(sig0, sig1, xf);
         //mono->stereo
