@@ -4,6 +4,7 @@
 function id(x) { return x[0]; }
 
 var semaIR = require('./semaIR.js');
+console.log(semaIR);
 
 const moo = require("moo"); // this 'require' creates a node dependency
 
@@ -13,11 +14,12 @@ const lexer = moo.compile({
   paramBegin:   /{/,
   variable:     /:[a-zA-Z0-9]+:/,
   sample:       { match: /\\[a-zA-Z0-9]+/, lineBreaks: true, value: x => x.slice(1, x.length)},
-  stretch:       { match: /\@[a-zA-Z0-9]+/, lineBreaks: true, value: x => x.slice(1, x.length)},
+  stretch:      { match: /\@[a-zA-Z0-9]+/, lineBreaks: true, value: x => x.slice(1, x.length)},
   oscAddress:   /(?:\/[a-zA-Z0-9]+)+/,
   number:       /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?(?:[eE][-+]?[0-9]+)?\b/,
   semicolon:    /;/,
   funcName:     /[a-zA-Z][a-zA-Z0-9]*/,
+  comment:      /#[^\n]*/,
   ws:           {match: /\s+/, lineBreaks: true},
 });
 
@@ -33,6 +35,7 @@ var grammar = {
     {"name": "Expression", "symbols": [(lexer.has("oscAddress") ? {type: "oscAddress"} : oscAddress)], "postprocess": d=> semaIR.synth("oscin", [semaIR.str(d[0].value),semaIR.num(-1)])},
     {"name": "Expression", "symbols": ["ParameterList", "_", (lexer.has("oscAddress") ? {type: "oscAddress"} : oscAddress)], "postprocess": d=> semaIR.synth("oscin", [semaIR.str(d[2].value),d[0]["@params"][0]])},
     {"name": "Expression", "symbols": [(lexer.has("variable") ? {type: "variable"} : variable), "_", "Expression"], "postprocess": d => semaIR.setvar(d[0],d[2])},
+    {"name": "Expression", "symbols": [(lexer.has("comment") ? {type: "comment"} : comment)], "postprocess": id},
     {"name": "ParameterList", "symbols": [(lexer.has("paramBegin") ? {type: "paramBegin"} : paramBegin), "Params", (lexer.has("paramEnd") ? {type: "paramEnd"} : paramEnd)], "postprocess": d => ({"paramBegin":d[0], "@params":d[1], "paramEnd":d[2]} )},
     {"name": "Params", "symbols": ["ParamElement"], "postprocess": (d) => ([d[0]])},
     {"name": "Params", "symbols": ["ParamElement", "_", (lexer.has("separator") ? {type: "separator"} : separator), "_", "Params"], "postprocess": d => [d[0]].concat(d[4])},

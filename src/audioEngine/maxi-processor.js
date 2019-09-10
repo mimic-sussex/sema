@@ -193,6 +193,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
         this.sampleBuffers[sampleKey] = event.data.buffer;
       } else if ('eval' in event.data) { // check if new code is being sent for evaluation?
         try {
+          console.log("[DEBUG]:MaxiProcessor:Process: ");
           console.log(event.data);
           // let setupFunction = new Function(`return ${event.data['setup']}`);
           let setupFunction = eval(event.data['setup']);

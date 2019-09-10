@@ -11,6 +11,7 @@ const lexer = moo.compile({
   number:       /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?(?:[eE][-+]?[0-9]+)?\b/,
   semicolon:    /;/,
   funcName:     /[a-zA-Z][a-zA-Z0-9]*/,
+  comment:      /\#[^\n]:*/, 
   ws:           {match: /\s+/, lineBreaks: true},
 });
 %}
@@ -44,6 +45,8 @@ Expression ->
   |
   %variable _ Expression
   {% d => ({"@setvar": {"@varname":d[0],"@varvalue":d[2]}} ) %}
+  |
+  %comment {% id %}
 
 ParameterList ->
   %paramBegin Params  %paramEnd
