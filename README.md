@@ -31,7 +31,7 @@ Sema requires the following dependencies to be installed:
 
 ## How to build and run the Sema playground on your machine 
 
-If you decide to go with Yarn (our prefered package manager)
+If you decide to go with Yarn (our prefered package manager), use:
 ```sh
 cd sema
 yarn
@@ -39,7 +39,7 @@ yarn build
 yarn dev
 ```
 
-If you decide to go with NPM
+If you decide to go with NPM instead, use:
 
 ```sh
 cd sema
