@@ -42,7 +42,7 @@ import "codemirror/lib/codemirror.css";
 
 import NexusUI from "nexusui/dist/NexusUI.js";
 
-import langSketch from "./language/langSketch";
+// import langSketch from "./language/langSketch";
 import { createSecretKey } from "crypto";
 
 let audio;
