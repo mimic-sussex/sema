@@ -9,7 +9,7 @@
 
 Sema is a playground where you can rapid prototype live coding mini-languages for signal synthesis, machine learning and machine listening. 
 
-Sema provides an online integrated environment that implements support for designing both abstract high-level languages and more powerful low-level languages.
+Sema aims to provide an online integrated environment for designing both abstract high-level languages and more powerful low-level languages.
 
 Sema implements a set of core design principles:
 
