@@ -7,7 +7,7 @@
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/mimic-sussex/eppEditor/blob/master/CONTRIBUTING.md)
 <br />
 
-Sema is a playground where you can rapid prototype mini-languages for live coding that integrate signal synthesis, machine learning and machine listening. 
+Sema is a playground where you can rapid prototype live coding mini-languages for signal synthesis, machine learning and machine listening. 
 
 Sema provides an online integrated environment that implements support for designing both abstract high-level languages and more powerful low-level languages.
 
