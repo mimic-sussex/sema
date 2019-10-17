@@ -28,19 +28,29 @@
   /* resize: both; */
 }
 
+
+
 #editor2 {
   /* float:left; */
   /* height:500px; */
   width: 100%;
   height: 100%;
-  border:1px solid black;
+  /* border:1px solid black; */
   margin: 0px;
   /* margin: 5px 25px 0px 25px; */
   /* resize: both; */
-
 }
 
-
+#editor3 {
+  /* float:left; */
+  /* height:500px; */
+  width: 100%;
+  height: 100%;
+  /* border:1px solid black; */
+  margin: 0px;
+  /* margin: 5px 25px 0px 25px; */
+  /* resize: both; */
+}
 
 /* .handle {
   background: #f7f7f7;

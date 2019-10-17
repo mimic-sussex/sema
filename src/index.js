@@ -4,10 +4,10 @@
 // import IRToJavascript from './IR/IR.js'
 
 // import irWorker from 'worker-loader!./IR/IR.worker.js';
-import nearleyWorker from "worker-loader!./language/nearley.worker.js";
+import parserWorker from "worker-loader!./compiler/parser.worker.js";
 import tfWorker from "worker-loader!./machineLearning/tfjs.worker.js";
 
-import oscIO from "./interfaces/oscInterface.js";
+import oscIO from "./input/oscInterface.js";
 import fileSaver from "filesaver/src/Filesaver.js";
 
 import { AudioEngine } from "./audioEngine/audioEngine.js";
@@ -19,8 +19,8 @@ import echo_state_network_code_example from "./machineLearning/tfjs/echo-state/e
 import lstm_txt_gen_code_example from "./machineLearning/tfjs/rnn/lstm-txt-gen.tf";
 import music_rnn_example from "./machineLearning/magenta/music-rnn.tf";
 
-import { myo } from "./interfaces/myo.js";
-import { leapMotion } from "./interfaces/leapMotion.js";
+import { myo } from "./input/myo.js";
+import { leapMotion } from "./input/leapMotion.js";
 
 import sema_png from "../assets/img/sema.png";
 
@@ -33,6 +33,7 @@ import "./style/editors.css";
 
 import * as CodeMirror from "codemirror/lib/codemirror.js";
 import "codemirror/mode/javascript/javascript";
+import "codemirror/mode/ebnf/ebnf";
 import "codemirror/theme/idea.css";
 import "codemirror/theme/monokai.css";
 import "codemirror/theme/oceanic-next.css";
@@ -44,13 +45,14 @@ import NexusUI from "nexusui/dist/NexusUI.js";
 
 // import langSketch from "./language/langSketch";
 import { createSecretKey } from "crypto";
+import { visible, hidden } from "ansi-colors";
 
 let audio;
 
-let editor1, editor2;
+let editor1, editor2, editor3;
 let oscilloscope, spectrogram;
 
-let parser;
+let selectedTab = 0;
 
 let compileTS = 0;
 let treeTS = 0;
@@ -106,7 +108,7 @@ machineLearningWorker.onmessage = e => {
 	}
 };
 
-let languageWorker = new nearleyWorker();
+let languageWorker = new parserWorker();
 languageWorker.onmessage = e => {
 	console.log("DEBUG:languageWorker:onMsg " + e.data);
 	if (e.data["loop"]) {
@@ -139,73 +141,119 @@ languageWorker.onmessage = e => {
 // Default editor code example is stored at 'langSketch.js'
 // const defaultEditorCode1 = "langSketch";
 
-function createEditor1() {
+function initMainCodeEditor() {
 	// let defaultEditorCode1 = "//livecode window";
 	let defaultEditorCode1 = "";
 	let editor1code = window.localStorage.getItem("editor1");
 	if (editor1code) defaultEditorCode1 = editor1code;
 
-	editor1 = CodeMirror(document.getElementById("editor1"), {
-		// theme: "abcdef",
-		value: defaultEditorCode1,
-		theme: "monokai",
-		lineNumbers: true,
-		// mode:  "javascript",
-		lineWrapping: true,
-		matchBrackets: true, 
-		extraKeys: {
-			// [ "Cmd-Enter" ]: () => playAudio(),
-			["Cmd-Enter"]: () => evalLiveCodeEditorExpression(),
-			["Ctrl-Enter"]: () => evalLiveCodeEditorExpression(),
-			["Shift-Enter"]: () => evalLiveCodeEditorExpression(),
-			["Cmd-."]: () => stopAudio(),
-			// ["Cmd--"]: () => decreaseVolume(),
-			// ["Cmd-="]: () => increaseVolume(),
-			// ["Cmd-]"]: () => changeSynth()
-		}
-	});
-	editor1.setSize("100%", "100%");
-	editor1.setOption("vimMode", false);
+  if (editor1 instanceof CodeMirror) {
+		editor1.refresh();
+	} 
+	else {
+		editor1 = CodeMirror(document.getElementById("editor1"), {
+			value: defaultEditorCode1,
+			theme: "monokai",
+			lineNumbers: true,
+			lineWrapping: true,
+			matchBrackets: true,
+			extraKeys: {
+				// [ "Cmd-Enter" ]: () => playAudio(),
+				["Cmd-Enter"]: () => evalLiveCodeEditorExpression(),
+				["Ctrl-Enter"]: () => evalLiveCodeEditorExpression(),
+				["Shift-Enter"]: () => evalLiveCodeEditorExpression(),
+				["Cmd-."]: () => stopAudio()
+				// ["Cmd--"]: () => decreaseVolume(),
+				// ["Cmd-="]: () => increaseVolume(),
+				// ["Cmd-]"]: () => changeSynth()
+			}
+		});
+		editor1.setSize("100%", "100%");
+		editor1.setOption("vimMode", false);
+	}
 }
 
-function createEditor2() {
-	let defaultEditorCode2 = "//js";
-	let editor2code = window.localStorage.getItem("editor2");
+function initJavascriptEditor() { 
+
+	let defaultEditorCode2 = "//JS";
+	let editor2code = window.localStorage.getItem("javascript");
 	if (editor2code) defaultEditorCode2 = editor2code;
 
-	editor2 = CodeMirror(document.getElementById("editor2"), {
-		value: defaultEditorCode2,
-		lineNumbers: true,
-		mode: "javascript",
-		theme: "idea",
-		lineWrapping: true,
-		extraKeys: {
-			["Cmd-Enter"]: () => evalModelEditorExpressionBlock(),
-			["Shift-Enter"]: () => evalModelEditorExpression(),
-			["Ctrl-Enter"]: () => evalModelEditorExpressionBlock()
-		}
-	});
-	editor2.setSize("100%", "100%");
+  if (editor2 instanceof CodeMirror) {
+		editor2.refresh();
+	} 
+	else {
+		editor2 = CodeMirror(document.getElementById("editor2"), {
+			value: defaultEditorCode2,
+			lineNumbers: true,
+			mode: "javascript",
+			theme: "idea",
+			lineWrapping: true,
+			extraKeys: {
+				["Cmd-Enter"]: () => evalModelEditorExpressionBlock(),
+				["Shift-Enter"]: () => evalModelEditorExpression(),
+				["Ctrl-Enter"]: () => evalModelEditorExpressionBlock()
+			}
+		});
+		editor2.setSize("100%", "100%");
+		// document.getElementById("editor2").style.visibility = "block";
+	}
+	
 }
 
-function createEditor3() {
-	let defaultEditorCode3 = "//BNF grammar";
-	let editor3code = window.localStorage.getItem("editor3");
+function initGrammarEditor() {
+	let defaultEditorCode3 = "//EBNF grammar";
+	let editor3code = window.localStorage.getItem("grammar");
 	if (editor3code) defaultEditorCode3 = editor3code;
 
-	editor3 = CodeMirror(document.getElementById("editor3"), {
-		value: defaultEditorCode3,
-		lineNumbers: true,
-		mode: "javascript",
-		theme: "oceanic-next",
-		lineWrapping: true,
-		extraKeys: {
-			// ["Cmd-Enter"]: () => evalEditor3Expression(),
-			// ["Ctrl-Enter"]: () => evalEditor3Expression(),
-			["Shift-Enter"]: () => evalEditor3ExpressionBlock()
-		}
-	});
-	editor2.setSize("100%", "100%");
+  if (editor3 instanceof CodeMirror) {
+		editor3.refresh();
+	}
+	else{
+				editor3 = CodeMirror(document.getElementById("editor3"), {
+					value: defaultEditorCode3,
+					lineNumbers: true,
+					mode: "ebnf",
+					theme: "oceanic-next",
+					lineWrapping: true,
+					extraKeys: {
+						// ["Cmd-Enter"]: () => evalEditor3Expression(),
+						// ["Ctrl-Enter"]: () => evalEditor3Expression(),
+						["Shift-Enter"]: () => evalEditor3ExpressionBlock()
+					}
+				});
+				editor3.setSize("100%", "100%");
+				// document.getElementById("editor3").style.visibility = "block";
+			}
+	
+}
+
+function initSecondaryEditors() {
+	initGrammarEditor();
+	initJavascriptEditor();
+}
+
+function switchSecondaryEditor(evt, editorName) {
+
+	var i, tablinks;
+	
+	tablinks = document.getElementsByClassName("tablinks");
+	for (i = 0; i < tablinks.length; i++) {
+		tablinks[i].className = tablinks[i].className.replace(" active", "");
+	}
+	evt.currentTarget.className += " active";
+	
+	if (editorName === "Grammar") {
+		window.localStorage.setItem("javascript", editor2.getValue());
+		document.getElementById("editor2").style.display = "none";
+		document.getElementById("editor3").style.display = "block";
+		initGrammarEditor();
+	} else {
+		window.localStorage.setItem("grammar", editor3.getValue());
+		document.getElementById("editor2").style.display = "block";
+		document.getElementById("editor3").style.display = "none";
+		initJavascriptEditor();
+	}
 }
 
 function createControls() {
@@ -254,60 +302,10 @@ function createControls() {
 
 	createModelSelector();
 
-	/* NOTE:FB do not delete */
+	createTabs();
 
-	// const grammarButton = document.createElement("button");
-	// grammarButton.textContent = `Grammar`;
-	// containerTabs.appendChild(grammarButton);
-	// grammarButton.addEventListener("click", () => changeEditorTab());
 
-	// const myoButton = document.createElement("button");
-	// myoButton.textContent = `Myo`;
-	// container.appendChild(myoButton);
-	// myoButton.addEventListener("click", () => connectMyo());
-
-	// const leapButton = document.createElement("button");
-	// leapButton.textContent = `Leap`;
-	// container.appendChild(leapButton);
-	// leapButton.addEventListener("click", () => connectLeap());
-
-	// const testButton = document.createElement("button");
-	// testButton.textContent = `Test`;
-	// container.appendChild(testButton);
-	// testButton.addEventListener("click", () => runTest());
 }
-
-function createNexusUI() {
-
-  // window.AudioEngine.initWithAudioContext(NexusUI.context);	
-	let analysers = document.getElementsByClassName("analysers");
-	
-	NexusUI.context = window.AudioEngine.audioContext; 
-	oscilloscope = new NexusUI.Oscilloscope("oscilloscope", {
-		// size: default
-	});
-	oscilloscope.colorize("fill", "#000");
-	oscilloscope.colorize("accent", "#FFF");
-	// window.AudioEngine.addAnalyser(oscilloscope); // Inject oscilloscope analyser, keep encapsulation for worklet node
-	oscilloscope.connect(window.AudioEngine.audioWorkletNode);
-
-	spectrogram = new NexusUI.Spectrogram("spectrogram", {
-		// size: [100, 50]
-	});
-	spectrogram.colorize("fill", "#000");
-	spectrogram.colorize("accent", "#FFF");
-	// window.AudioEngine.addAnalyser(spectrogram); // Inject oscilloscope analyser, keep encapsulation for worklet node
-	spectrogram.connect(window.AudioEngine.audioWorkletNode);
-
-	window.addEventListener("resize", function(event) {
-		// oscilloscope.resize(100, 120);
-		// spectrogram.resize(100, 150);
-		// console.log(analysers);
-	});
-
-	// window.AudioEngine.connectAnalysers();
-}
-
 
 
 function createModelSelector() {
@@ -361,6 +359,63 @@ function createModelSelector() {
 
 	container.appendChild(modelSelect);
 }
+
+function createTabs(){
+
+	const tab = document.getElementById("tab");
+
+	const javascriptTabButton = document.createElement("button");
+	javascriptTabButton.id = `Javascript`;
+	javascriptTabButton.className = `tablinks active`;
+	javascriptTabButton.textContent = `Javascript`;
+	javascriptTabButton.addEventListener("click", event =>
+		switchSecondaryEditor(event, javascriptTabButton.id)
+	);
+	tab.appendChild(javascriptTabButton);
+
+	const grammarTabButton = document.createElement("button");
+	grammarTabButton.id = `Grammar`;
+	grammarTabButton.className = `tablinks`;
+	grammarTabButton.textContent = `Grammar`;
+	grammarTabButton.addEventListener("click", event =>
+		switchSecondaryEditor(event, grammarTabButton.id)
+	);
+	tab.appendChild(grammarTabButton);
+}
+
+function createNexusUI() {
+
+  // window.AudioEngine.initWithAudioContext(NexusUI.context);	
+	let analysers = document.getElementsByClassName("analysers");
+	
+	NexusUI.context = window.AudioEngine.audioContext; 
+	oscilloscope = new NexusUI.Oscilloscope("oscilloscope", {
+		// size: default
+	});
+	oscilloscope.colorize("fill", "#000");
+	oscilloscope.colorize("accent", "#FFF");
+	// window.AudioEngine.addAnalyser(oscilloscope); // Inject oscilloscope analyser, keep encapsulation for worklet node
+	oscilloscope.connect(window.AudioEngine.audioWorkletNode);
+
+	spectrogram = new NexusUI.Spectrogram("spectrogram", {
+		// size: [100, 50]
+	});
+	spectrogram.colorize("fill", "#000");
+	spectrogram.colorize("accent", "#FFF");
+	// window.AudioEngine.addAnalyser(spectrogram); // Inject oscilloscope analyser, keep encapsulation for worklet node
+	spectrogram.connect(window.AudioEngine.audioWorkletNode);
+
+	window.addEventListener("resize", function(event) {
+		// oscilloscope.resize(100, 120);
+		// spectrogram.resize(100, 150);
+		// console.log(analysers);
+	});
+
+	// window.AudioEngine.connectAnalysers();
+}
+
+
+
 
 function connectMyo() {
 	let myoInterface = new myo();
@@ -575,12 +630,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	// setParser();
 
-	createEditor1();
+	initMainCodeEditor();
 
-	createEditor2();
+	initSecondaryEditors();
 
 	createControls();
-
 
 	oscIO.OSCResponder(msg => {
 		// console.log("OSC in:", msg);

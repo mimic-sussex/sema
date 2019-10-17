@@ -3,7 +3,7 @@
 (function () {
 function id(x) { return x[0]; }
 
-var semaIR = require('./semaIR.js');
+var semaIR = require('../IR/semaIR.js');
 console.log(semaIR);
 
 const moo = require("moo"); // this 'require' creates a node dependency
