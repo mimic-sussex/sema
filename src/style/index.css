@@ -1,7 +1,31 @@
-html,
-body {
+
+:root {
+  --yellow: #ffc600;
+  --black: #272727;
+}
+
+html {
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   height: 100%;
-  background: #000000
+  color: var(--black);
+  background: #000;
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.07);
+}
+
+/*  We inherit box-sizing: border-box; from our <html> selector
+  Apparently this is a bit better than applying box-sizing: border-box; directly to the * selector
+*/
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+body {
+
+  
 }
 
 /* html, body { height: 100%; background: #222222} */
@@ -11,10 +35,43 @@ body {
   src: url('../../assets/fonts/Lato/fonts/Lato-Black.woff');
 }
 
-#container {
+.header {
+  height: 60px;
+  background: #1c2128;
+  box-shadow: 0 0 5px rgba(28,33,40,0);
+  z-index: 100;
+  width: 100vw;
+  color: #ccc;
+}
+
+.sema-logo-type-header {
+  font-family: monospace;
+  font-weight: normal;
+  font-size: 36px;
+}
+
+#sema-logo-header-container {
+  display: grid;
+  float: left;
+  width: 45%;
+  height: 55%;
+  margin: 0 auto;
+  width: 100%;
+  height: auto;
+}
+
+
+
+#sema-logo-header{
+  float:left;
+  width: 50px;
+}
+
+
+#layout-container {
   display: grid;
   grid-template-areas:
-    'header header '
+    /* 'header header ' */
     'main right'
     /* 'main' */
     'main2 main2'
@@ -22,7 +79,7 @@ body {
 
   grid-template-rows:
     /* Header */
-    5%
+    /* 5% */
     /* Main Content */
     /* 1fr */
     45%
@@ -32,7 +89,7 @@ body {
 
   grid-template-columns: 
     71%
-    auto
+    auto-fit
     ;
 
   grid-gap: 2px;
@@ -124,15 +181,22 @@ body {
 
 .w3-red,.w3-hover-red:hover{color:#fff!important;background-color:#f44336!important}
 
+.layout-container{
+  position: relative;
+  display: grid;
+  grid-template-columns: 210px 1fr;
+  grid-template-areas: "sidebar content";
+}
 
 /* .containerMenu { grid-area: menu; background-color: red;} */
-.containerMenu {
-  grid-area: menu;
+.sidebar-container{
+  display: flex;
+  grid-area: sidebar;
   background-color: black;
 }
 
-.containerMain {
-  grid-area: main;
+.content-container {
+  grid-area: content;
   align-content: stretch;
   background-color: black;
   /* background-color: blue; */
@@ -144,7 +208,30 @@ body {
 
 }
 
-.analysers {
+.gutter-vertical{
+    content: "";
+    display: block;
+    height: 8px;
+    width: 100%;
+    position: absolute;
+    top: -3px;
+    z-index: 10;
+
+}
+
+.gutter {
+  background: #2d333b;
+  position: relative;
+} 
+
+.gutter-horizontal{
+  cursor: ew-resize;
+  height: 100%;
+  float: left;
+  height: 1px;
+}
+
+.panel-analysers {
   background-color:#272822;
   grid-area: right;
   /* z-index: -2;  */
@@ -161,19 +248,30 @@ body {
 
 .containerMain2 {
   grid-area: main2;
-  /* align-content: stretch; */
+  display: inline-flex;
   background-color: black;
   /* background-color: blue; */
-  justify-self: auto;
+  align-self: auto;
+  align-content: stretch;
+  justify-self: stretch;
   /* grid-column-start: 1/5;
   grid-column-end: 3/5; */
   /* grid-row: 3; */
 
 }
 
-.containerTabs {
-  display: contents;
+#tabControl {
+  display: inline-flex;
+  align-self: auto;
+  align-content: stretch;
+  justify-self: stretch;
+}
 
+.containerTabs {
+  display: inline-flex;
+  align-self: auto;
+  align-content: stretch;
+  justify-self: stretch;
 }
 
 #containerFooter {

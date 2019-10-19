@@ -386,7 +386,7 @@ function createTabs(){
 function createNexusUI() {
 
   // window.AudioEngine.initWithAudioContext(NexusUI.context);	
-	let analysers = document.getElementsByClassName("analysers");
+	let analysers = document.getElementsByClassName("panel-analysers");
 	
 	NexusUI.context = window.AudioEngine.audioContext; 
 	oscilloscope = new NexusUI.Oscilloscope("oscilloscope", {
@@ -406,9 +406,9 @@ function createNexusUI() {
 	spectrogram.connect(window.AudioEngine.audioWorkletNode);
 
 	window.addEventListener("resize", function(event) {
-		// oscilloscope.resize(100, 120);
-		// spectrogram.resize(100, 150);
-		// console.log(analysers);
+		oscilloscope.resize(100, 120);
+		spectrogram.resize(100, 150);
+		console.log(analysers);
 	});
 
 	// window.AudioEngine.connectAnalysers();

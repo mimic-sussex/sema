@@ -2,51 +2,57 @@
 <html>
 
 <head>
-	<title>Sema</title>
+	<title>sema</title>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 	<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
 </head>
 
 <body>
-	<div id="container">
+	<div class="header">
+		<h1 class="sema-logo-type-header">sema</h1>
+		<!-- <ul class="headerItemList">
+			<li class="headerItem"><a href="#">Home</a></li>
+			<li class="headerItem"><a href="#">About</a></li>
+			<li class="headerItem"><a href="#">TUTORIAL</a></li>
+			<li class="headerItem"><a href="#">GRAMMAR</a></li>
+			<li class="headerItem"><a href="#">EDITOR</a></li>
+		</ul> -->
+		<!-- <div class="sampleRateIndicator" id="sampleRateIndicatorLabel">Sample rate: <span class="sampleRateIndicator"
+			id="sampleRateIndicatorValue"></span></div>
+		<div  id="dspLoad" class="dspLoad">Dsp: <span class="dspLoad" id="dspLoadVal"></span></div>
+		<div id="audioWorkletIndicator"></div> -->
+		<!-- <div class="sema-logo-header-container">
+			<img id="sema-logo-header"></img>
+		</div> -->
+	</div>
+	<div id="layout-container">
 		<div id="overlay">
 			<button class="button" id="buttonStartAudio">
 				<div id="logoContainer">
 					<img id="semaLogo"></img>
-					<span id="semaType">Sema</span><br><br>
+					<span class="sema-logo-type">sema</span><br><br>
 				</div>
 			</button>
 			<!-- <button class="button" id="buttonStartAudio"><span style="font-size:200%">Sema</span><br><br>Start Audio</button> -->
 		</div>
-		<div class="containerHeader">
-			<!-- <ul class="headerItemList">
-				<li class="headerItem"><a href="#">Home</a></li>
-				<li class="headerItem"><a href="#">About</a></li>
-				<li class="headerItem"><a href="#">TUTORIAL</a></li>
-				<li class="headerItem"><a href="#">GRAMMAR</a></li>
-				<li class="headerItem"><a href="#">EDITOR</a></li>
-			</ul> -->
-			<!-- <div class="sampleRateIndicator" id="sampleRateIndicatorLabel">Sample rate: <span class="sampleRateIndicator"
-					id="sampleRateIndicatorValue"></span></div>
-			<div  id="dspLoad" class="dspLoad">Dsp: <span class="dspLoad" id="dspLoadVal"></span></div>
-
-			<div id="audioWorkletIndicator"></div> -->
+		<div class="sidebar-container">
 		</div>
-		<div class="containerMenu">
-		</div>
-		<div class="containerMain">
+		<div class="content-container">
 			<div id="editor1"></div>
 		</div>
-		<div class="analysers">
+		<div class="panel-analysers">
 			<div id="oscilloscope"></div>
 			<div id="spectrogram"></div>
 		</div>
+		<div class="gutter gutter-horizontal"></div>
 		<div class="containerMain2">
-			<div id="tab">
-			</div>
-			<div class="containerTabs">
-				<div id="editor2" class="tab-pane active"></div>
-				<div id="editor3" class="tab-pane "></div>
+			<div id="tabControl">
+				<div id="tab">
+				</div>
+				<div class="containerTabs">
+					<div id="editor2" class="tab-pane active"></div>
+					<div id="editor3" class="tab-pane "></div>
+				</div>
 			</div>
 		</div>
 		<div id="containerFooter" />
