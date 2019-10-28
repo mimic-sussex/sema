@@ -3,32 +3,23 @@
 
   let container;
 
-  let blockWidth = 250;
+  let leftTopBlockWidth = 250;
+  let leftTopBlockOffsetWidth;
   
+  let leftBottomBlockWidth = 250;
+  let leftBottomBlockOffsetWidth;
+  // let dragX;
+  // let isMouseDownOnHorizontalSlider;
+
+  let isMouseDownOnHorizontalSlider;
+  let isMouseDownOnBottomHorizontalSlider
+  let dragX;
+
   let topHeight = 300;
   let topOffsetHeight;
   let dragY;
   let isMouseDownOnVerticalSlider;
   
-
-  function dragMouseDownOnHorizontalSlider(e) {
-		let dragX = e.clientX;
-		hslider.classList.add('resize');
-		hslider.parentNode.classList.add('col-resize');
-		//app.classList.add('col-resize');
-		document.onmousemove = function onMouseMove(e) {
-			blockWidth = 
-			block.style.width = block.offsetWidth + e.clientX - dragX + "px";
-			dragX = e.clientX;
-		}
-		// remove mouse-move listener on mouse-up
-		document.onmouseup = () => {
-			hslider.parentNode.classList.remove('col-resize');
-			hslider.classList.remove('resize');
-			document.onmousemove = document.onmouseup = null;
-		}
-	}
-
 	function onMouseMove(e) {
 		// let top = vslider.previousElementSibling;
     if(isMouseDownOnVerticalSlider){
@@ -36,10 +27,22 @@
       dragY = e.clientY;
       // console.log(topHeight)
     }
+    
+    if(isMouseDownOnHorizontalSlider){
+      leftTopBlockWidth = leftTopBlockOffsetWidth + e.clientX - dragX + "px";
+      dragX = e.clientX;
+      // console.log(topWidth)
+    }
+
+    if(isMouseDownOnBottomHorizontalSlider){
+      leftBottomBlockWidth = leftBottomBlockOffsetWidth + e.clientX - dragX + "px";
+      dragX = e.clientX;
+      // console.log(topWidth)
+    }
 	}
 
 	function onMouseUp () {
-    isMouseDownOnVerticalSlider = false;
+    isMouseDownOnVerticalSlider = isMouseDownOnBottomHorizontalSlider = isMouseDownOnHorizontalSlider = false;
     // console.log("mouseUp", dragY);
 	}  
 
@@ -48,12 +51,18 @@
     dragY = e.clientY;
     // console.log("mouseOnVSlider: ", dragY );
 	}
-	
-  onMount(() => {
-  
-  
-  
-  })
+
+  function dragMouseDownOnHorizontalSlider(e) {
+    isMouseDownOnHorizontalSlider = true;
+    dragX = e.clientX;
+    // console.log("mouseOnVSlider: ", dragY );
+	}
+
+  function dragMouseDownOnBottomHorizontalSlider(e) {
+    isMouseDownOnBottomHorizontalSlider = true;
+    dragX = e.clientX;
+    // console.log("mouseOnVSlider: ", dragY );
+	}
 
   /*
   function dragMouseDownOnVerticalSlider(e) {
@@ -144,9 +153,7 @@
   
   .block {
   	height: 100%;
-  	/* grid-row: 1 / 2;  */
   	width: 50%;
-  	/* 50% would suffice */
   }
   
   .block-1 {
@@ -156,11 +163,8 @@
   .block-2 {
   	background-color: green;
   	flex: 1;
-  	/* adjust automatically  */
   	min-width: 0;
-  	/* allow flexing beyond auto width // */
   	overflow: hidden;
-  	/* hide overflow on small width */
   }
   
   .horizontal-slider {
@@ -170,7 +174,6 @@
   	border: none;
   	cursor: ew-resize;
   	user-select: none;
-  	/* disable selection */
   	text-align: center;
   }
   
@@ -229,7 +232,7 @@
 
 <div class="layout" bind:this={container} on:mousemove={onMouseMove} on:mouseup={onMouseUp}>
 	<div class="top" style="height: {topHeight}" bind:offsetHeight={topOffsetHeight}>
-		<div class="block block-1">
+		<div class="block block-1" style="width: {leftTopBlockWidth}" bind:offsetWidth={leftTopBlockOffsetWidth} >
 			Block 1
 		</div>
 		<div class="horizontal-slider" on:mousedown={dragMouseDownOnHorizontalSlider}>
@@ -241,10 +244,10 @@
 	</div>
 	<div class="vertical-slider" on:mousedown={dragMouseDownOnVerticalSlider}>Slider</div>
 	<div class="bottom">
-		<div class="block block-1">
+		<div class="block block-1" style="width: {leftBottomBlockWidth}" bind:offsetWidth={leftBottomBlockOffsetWidth}>
 			Block 1
 		</div>
-		<div class="bottom-horizontal-slider" on:mousedown={dragMouseDownOnHorizontalSlider}>
+		<div class="bottom-horizontal-slider" on:mousedown={dragMouseDownOnBottomHorizontalSlider}>
 			S<br>l<br>i<br>d<br>e<br>r
 		</div>
 		<div class="block block-2">

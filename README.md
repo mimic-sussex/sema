@@ -6,7 +6,9 @@ https://jsfiddle.net/franciscobernardo/2w1zmqha/141/
 
 This is a little bit more elaborate spike testeing the previous elements and webpack. As it turns out it is a different implementation. The learning outcome is that the between vanilla JS, React and Svelte, we opted for the Svelte. 
 
-Svelte is very lean and refreshing alternative to UI frameworks, has a very low-entry barrier I totally agree with its design principles. 
+Svelte is very lean, has a very low-entry barrier and I totally agree with its design principles. 
+
+Compilers are the new frameworks!
 
 Check [Sema](https://github.com/mimic-sussex/sema) so see the final outcome! 
 
