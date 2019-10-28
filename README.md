@@ -1,13 +1,15 @@
-# svelte app
+# svelte-webpack-css-grid-flex-layout
+Quick spike to check feasibility of Svelte as a UI framework for Sema/  
 
-This is a project template for [Svelte](https://svelte.dev) apps. It lives at https://github.com/sveltejs/template-webpack.
+First spike was in vanilla JS for testing out CSS-grid and flex responsive layout for the Sema playground
+https://jsfiddle.net/franciscobernardo/2w1zmqha/141/
 
-To create a new project based on this template using [degit](https://github.com/Rich-Harris/degit):
+This is a little bit more elaborate spike testeing the previous elements and webpack. As it turns out it is a different implementation. The learning outcome is that the between vanilla JS, React and Svelte, we opted for the Svelte. 
 
-```bash
-npx degit sveltejs/template-webpack svelte-app
-cd svelte-app
-```
+Svelte is very lean and refreshing alternative to UI frameworks, has a very low-entry barrier I totally agree with its design principles. 
+
+Check [Sema](https://github.com/mimic-sussex/sema) so see the final outcome! 
+
 
 *Note that you will need to have [Node.js](https://nodejs.org) installed.*
 
@@ -17,14 +19,14 @@ cd svelte-app
 Install the dependencies...
 
 ```bash
-cd svelte-app
-npm install
+cd svelte-webpack-css-grid-flex-layout
+yarn
 ```
 
 ...then start webpack:
 
 ```bash
-npm run dev
+yarn dev
 ```
 
 Navigate to [localhost:8080](http://localhost:8080). You should see your app running. Edit a component file in `src`, save it, and the page should reload with your changes.
@@ -46,19 +48,6 @@ Then, from within your project folder:
 now
 ```
 
-As an alternative, use the [Now desktop client](https://zeit.co/download) and simply drag the unzipped project folder to the taskbar icon.
 
-### With [surge](https://surge.sh/)
 
-Install `surge` if you haven't already:
 
-```bash
-npm install -g surge
-```
-
-Then, from within your project folder:
-
-```bash
-npm run build
-surge public
-```

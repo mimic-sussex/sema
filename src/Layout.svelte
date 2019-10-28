@@ -29,7 +29,6 @@
 		}
 	}
 
-
 	function onMouseMove(e) {
 		// let top = vslider.previousElementSibling;
     if(isMouseDownOnVerticalSlider){
@@ -42,20 +41,12 @@
 	function onMouseUp () {
     isMouseDownOnVerticalSlider = false;
     // console.log("mouseUp", dragY);
-		// vslider.classList.remove('resize');
-		// svslider.parentNode.classList.remove('row-resize');
-		// document.onmousemove = document.onmouseup = null;
 	}  
 
   function dragMouseDownOnVerticalSlider(e) {
     isMouseDownOnVerticalSlider = true;
     dragY = e.clientY;
     // console.log("mouseOnVSlider: ", dragY );
-		// vslider.classList.add('resize');
-		// vslider.parentNode.classList.add('row-resize');
-
-		// remove mouse-move listener on mouse-up
-
 	}
 	
   onMount(() => {
