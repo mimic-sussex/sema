@@ -7,7 +7,7 @@ https://jsfiddle.net/franciscobernardo/2w1zmqha/141/
 This is a more elaborate spike that turned out with a pretty different implementation. 
 The learning outcome is that the between vanilla JS, Reactjs and Sveltejs, we opted for the latter. Svelte is a very refreshing alternative and I totally agree with its design principles. 
 
-Check Sema so see the final outcome! 
+Check (Sema)[https://github.com/mimic-sussex/sema] so see the final outcome! 
 
 
 
