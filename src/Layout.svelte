@@ -1,7 +1,15 @@
 <script>
- 
+	import { onMount } from 'svelte';
+
+  let container;
+
   let blockWidth = 250;
-  let topWidth = 200;
+  
+  let topHeight = 300;
+  let topOffsetHeight;
+  let dragY;
+  let isMouseDownOnVerticalSlider;
+  
 
   function dragMouseDownOnHorizontalSlider(e) {
 		let dragX = e.clientX;
@@ -9,7 +17,7 @@
 		hslider.parentNode.classList.add('col-resize');
 		//app.classList.add('col-resize');
 		document.onmousemove = function onMouseMove(e) {
-			let block = hslider.previousElementSibling;
+			blockWidth = 
 			block.style.width = block.offsetWidth + e.clientX - dragX + "px";
 			dragX = e.clientX;
 		}
@@ -21,6 +29,42 @@
 		}
 	}
 
+
+	function onMouseMove(e) {
+		// let top = vslider.previousElementSibling;
+    if(isMouseDownOnVerticalSlider){
+      topHeight = topOffsetHeight + e.clientY - dragY + "px";
+      dragY = e.clientY;
+      // console.log(topHeight)
+    }
+	}
+
+	function onMouseUp () {
+    isMouseDownOnVerticalSlider = false;
+    // console.log("mouseUp", dragY);
+		// vslider.classList.remove('resize');
+		// svslider.parentNode.classList.remove('row-resize');
+		// document.onmousemove = document.onmouseup = null;
+	}  
+
+  function dragMouseDownOnVerticalSlider(e) {
+    isMouseDownOnVerticalSlider = true;
+    dragY = e.clientY;
+    // console.log("mouseOnVSlider: ", dragY );
+		// vslider.classList.add('resize');
+		// vslider.parentNode.classList.add('row-resize');
+
+		// remove mouse-move listener on mouse-up
+
+	}
+	
+  onMount(() => {
+  
+  
+  
+  })
+
+  /*
   function dragMouseDownOnVerticalSlider(e) {
 		let dragY = e.clientY;
 		vslider.classList.add('resize');
@@ -38,7 +82,6 @@
 		}
 	}
 
-  /*
   function dragMouseDownOnHorizontalSlider(e) {
 		let dragX = e.clientX;
 		hslider.classList.add('resize');
@@ -193,8 +236,8 @@
 	*/
 </style>
 
-<div class="layout">
-	<div class="top">
+<div class="layout" bind:this={container} on:mousemove={onMouseMove} on:mouseup={onMouseUp}>
+	<div class="top" style="height: {topHeight}" bind:offsetHeight={topOffsetHeight}>
 		<div class="block block-1">
 			Block 1
 		</div>
