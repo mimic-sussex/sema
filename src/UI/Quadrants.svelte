@@ -70,7 +70,7 @@
 
 <style>
  
-  .layout {
+  .quadrants {
     display: flex;
     height: 100%;
     flex-direction: column;
@@ -190,7 +190,7 @@
 	*/
 </style>
 
-<div class="layout" bind:this={container} on:mousemove={onMouseMove} on:mouseup={onMouseUp}>
+<div class="quadrants" bind:this={container} on:mousemove={onMouseMove} on:mouseup={onMouseUp}>
 	<div class="top" style="height: {topHeight}" bind:offsetHeight={topOffsetHeight}>
 		<div class="block block-live-code-editor" style="width: {leftTopBlockWidth}" bind:offsetWidth={leftTopBlockOffsetWidth} >
 			<Editor />
