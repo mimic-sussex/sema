@@ -9,35 +9,34 @@
   .container {
   	height: 100%;
   	display: grid;
-  	grid-template-columns: 100px 1fr;
+  	grid-template-columns: auto 1fr;
   	grid-template-rows: 50% 50%;
   	grid-template-areas:
   		"sidebar layout"
   		"sidebar layout";
   	background-color: purple;
   }
-  .sidebar {
-    background-color: yellow;
+  .sidebar-container {
+    background-color: blue;
+    margin-left: 10px;
     grid-area: sidebar;
     grid-row: 0 / 1;
     height: 100%;
-    width: auto;
+    width: auto; /* width is defined by child */
   }
-  .layout {
+  .layout-container {
     grid-area: layout;
-    grid-row: 0 / 1;
-    /* display: flex; */
+    grid-row: 0 / 2;
     height: 100%;
-    /* flex-direction: column; */
   }
 
 </style>
 
 <div class="container">
-  <div class="sidebar">
+  <div class="sidebar-container">
     <Sidebar />
   </div>
-  <div class="layout">
+  <div class="layout-container">
     <Layout />
   </div>
 </div>

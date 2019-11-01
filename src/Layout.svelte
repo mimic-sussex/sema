@@ -1,5 +1,6 @@
 <script>
-	import { onMount } from 'svelte';
+
+  import Editor from './Editor.svelte';
 
   let container;
 
@@ -15,7 +16,7 @@
   let isMouseDownOnBottomHorizontalSlider
   let dragX;
 
-  let topHeight = 300;
+  let topHeight = 600;
   let topOffsetHeight;
   let dragY;
   let isMouseDownOnVerticalSlider;
@@ -64,61 +65,7 @@
     // console.log("mouseOnVSlider: ", dragY );
 	}
 
-  /*
-  function dragMouseDownOnVerticalSlider(e) {
-		let dragY = e.clientY;
-		vslider.classList.add('resize');
-		// vslider.parentNode.classList.add('row-resize');
-		document.onmousemove = function onMouseMove(e) {
-			let top = vslider.previousElementSibling;
-			top.style.height = top.offsetHeight + e.clientY - dragY + "px";
-			dragY = e.clientY;
-		}
-		// remove mouse-move listener on mouse-up
-		document.onmouseup = () => {
-			vslider.classList.remove('resize');
-			vslider.parentNode.classList.remove('row-resize');
-			document.onmousemove = document.onmouseup = null;
-		}
-	}
 
-  function dragMouseDownOnHorizontalSlider(e) {
-		let dragX = e.clientX;
-		hslider.classList.add('resize');
-		hslider.parentNode.classList.add('col-resize');
-		//app.classList.add('col-resize');
-		document.onmousemove = function onMouseMove(e) {
-			let block = hslider.previousElementSibling;
-			block.style.width = block.offsetWidth + e.clientX - dragX + "px";
-			dragX = e.clientX;
-		}
-		// remove mouse-move listener on mouse-up
-		document.onmouseup = () => {
-			hslider.parentNode.classList.remove('col-resize');
-			hslider.classList.remove('resize');
-			document.onmousemove = document.onmouseup = null;
-		}
-	}
-
-	bhslider.onmousedown = function dragMouseDown(e) {
-		let dragX = e.clientX;
-		bhslider.classList.add('resize');
-		bhslider.parentNode.classList.add('col-resize');
-		document.onmousemove = function onMouseMove(e) {
-			let block = bhslider.previousElementSibling;
-			block.style.width = block.offsetWidth + e.clientX - dragX + "px";
-
-			dragX = e.clientX;
-		}
-		// remove mouse-move listener on mouse-up
-		document.onmouseup = () => {
-			bhslider.parentNode.classList.remove('col-resize');
-			bhslider.classList.remove('resize');
-			document.onmousemove = document.onmouseup = null;
-		}
-	}
-
-  */	 
 </script>
 
 <style>
@@ -132,7 +79,7 @@
   .top {
   	display: flex;
   	flex-direction: row;
-  	grid-row: 1;
+    height: 50%;
   }
 
 	/*
@@ -142,8 +89,7 @@
    */
 
   .bottom {
- 
-  	flex: 1;
+   	flex: 1;
    	min-width: 0; /* adjust automatically  */
   	overflow: hidden; /* allow flexing beyond auto width  */
   	display: flex; /* hide overflow on small width  */
@@ -155,7 +101,20 @@
   	height: 100%;
   	width: 50%;
   }
-  
+
+  .block-live-code-editor {
+  	background-color: lightgray;
+  }
+
+  .block-live-grammar-editor {
+    background-color: gray;
+    flex: 1;
+  	min-width: 0;
+  	overflow: hidden;
+    /* min-width: 0; adjust automatically  */
+  	/* overflow: hidden; */
+  }
+
   .block-1 {
   	background-color: red;
   }
@@ -217,6 +176,7 @@
   	user-select: none;
   	/* disable selection */
   	text-align: center;
+    justify-content: stretch;   
   }
   
   .bottom-horizontal-slider:hover {
@@ -232,8 +192,8 @@
 
 <div class="layout" bind:this={container} on:mousemove={onMouseMove} on:mouseup={onMouseUp}>
 	<div class="top" style="height: {topHeight}" bind:offsetHeight={topOffsetHeight}>
-		<div class="block block-1" style="width: {leftTopBlockWidth}" bind:offsetWidth={leftTopBlockOffsetWidth} >
-			Block 1
+		<div class="block block-live-code-editor" style="width: {leftTopBlockWidth}" bind:offsetWidth={leftTopBlockOffsetWidth} >
+			<Editor />
 		</div>
 		<div class="horizontal-slider" on:mousedown={dragMouseDownOnHorizontalSlider}>
 			S<br>l<br>i<br>d<br>e<br>r
@@ -250,8 +210,8 @@
 		<div class="bottom-horizontal-slider" on:mousedown={dragMouseDownOnBottomHorizontalSlider}>
 			S<br>l<br>i<br>d<br>e<br>r
 		</div>
-		<div class="block block-2">
-			Block 2
-		</div>
+		<div class="block-live-grammar-editor">
+			<Editor />		
+    </div>
 	</div>
 </div>

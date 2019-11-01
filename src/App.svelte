@@ -7,7 +7,8 @@
 
 <style>
   #app {
-  	height: 100%;
+  	/* height: 100%; */
+  	height: 100vh;
   	background: pink;
     overflow-y: hidden; /* hide vertical */
   }

@@ -2,6 +2,7 @@
   import Nav from './Nav.svelte';
 </script>
 
+
 <style>
   
   div {
@@ -20,7 +21,7 @@
 </style>
 
 <div>
-  <h1>Sema</h1>
+  <h1>S(velt)ema</h1>
   <Nav />
 </div>
 
