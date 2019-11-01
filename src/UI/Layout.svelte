@@ -1,6 +1,9 @@
 <script>
   import Quadrants from "./Quadrants.svelte";
   import Dashboard from "./Dashboard.svelte";
+
+  export let layoutTemplate = 'quadrants';
+
 </script>
 
 

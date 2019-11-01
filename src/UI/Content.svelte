@@ -2,6 +2,11 @@
   import Sidebar from './Sidebar.svelte';
   import Layout from './Layout.svelte';
 
+  let template = ""; 
+
+  function handleMessage(event) {
+		console.log(event.detail.layout);
+	}
 
 </script>
 
@@ -34,9 +39,9 @@
 
 <div class="container">
   <div class="sidebar-container">
-    <Sidebar />
+    <Sidebar on:message={handleMessage}/>
   </div>
   <div class="layout-container">
-    <Layout />
+    <Layout layoutTemplate={template} />
   </div>
 </div>

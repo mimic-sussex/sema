@@ -1,9 +1,46 @@
 <script>
 
+	import { createEventDispatcher } from 'svelte';
+
+	const dispatch = createEventDispatcher();
+
+  let selectedLayout = 5;
+
+  let layoutOptions = [
+		{ id: 1, text: `Live` },
+		{ id: 2, text: `Quadrants` },
+		{ id: 3, text: `Vertical` },
+		{ id: 4, text: `Horizontal` },
+		{ id: 5, text: `Dashboard` }
+	];
+
+	function sendLayoutSelect() {
+    // console.log("layout: ", selectedLayout);
+    dispatch('message', {
+			layout: selectedLayout.id
+		});
+	}
+
+ let selectedLanguage = 1;
+
+  let languageOptions = [
+		{ id: 1, text: `Default` },
+		{ id: 2, text: `Bits` },
+		{ id: 3, text: `ixi` },
+		{ id: 4, text: `Maya` },
+	];
+
+	function sendLanguageSelect() {
+    console.log("selectedLanguage: ", selectedLanguage);
+    dispatch('message', {
+			language: selectedLanguage.id
+		});
+	}
+
 </script>
 
 <style>
-
+  
   .sidebar {
     background-color: yellow;
     width: 140px;
@@ -22,25 +59,26 @@
     <div>
       <span>Layout</span>
     </div>
-    <select>
-      <option value="live">Live</option>
-      <option value="quadrants">Quadrants</option>
-      <option value="vertical">Vertical</option>
-      <option value="horizontal">Horizontal</option>
-      <option value="dashboard">Dashboard</option>
-    </select>
+  	<select bind:value={selectedLayout} on:change="{ () => sendLayoutSelect() }">
+  		{#each layoutOptions as layoutOption}
+  			<option value={layoutOption}>
+  				{layoutOption.text}
+  			</option>
+  		{/each}
+  	</select>    
   </div>
   <br/>
   <div class="language-combobox-container">
     <div>
       <span>Language</span>
     </div>
-    <select>
-      <option value="Default">Default</option>
-      <option value="Bits">Bits</option>
-      <option value="ixi">ixi</option>
-      <option value="maya">maya</option>
-    </select>
+  	<select bind:value={selectedLanguage} on:change="{ () => sendLanguageSelect() }">
+  		{#each languageOptions as languageOption}
+  			<option value={languageOption}>
+  				{languageOption.text}
+  			</option>
+  		{/each}
+  	</select>    
   </div>
 
 </div>
