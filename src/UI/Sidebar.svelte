@@ -26,7 +26,7 @@
   let languageOptions = [
 		{ id: 1, text: `Default` },
 		{ id: 2, text: `Bits` },
-		{ id: 3, text: `ixi` },
+		{ id: 3, text: `IXI` },
 		{ id: 4, text: `Maya` },
 	];
 
