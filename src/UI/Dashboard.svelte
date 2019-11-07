@@ -2,6 +2,7 @@
   import Grid from "svelte-grid";
   import gridHelp from "svelte-grid/build/helper";
   import map from "lodash.map";
+  import Editor from './Editor.svelte';
 
   const id = () =>
     "_" +
@@ -83,6 +84,8 @@
 
 <div class="layout-template-container">
   <Grid useTransform {breakpoints} gap={10} {items} bind:items {cols} rowHeight={100} let:item>
-    <div class="content" style="background: {item.static ? '#ccccee' : item.data}" />
+    <div class="content" style="background: {item.static ? '#ccccee' : item.data}" >
+      <Editor />	
+    </div>
   </Grid>
 </div>
