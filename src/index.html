@@ -8,56 +8,77 @@
 </head>
 
 <body>
-	<div class="header">
-		<h1 class="sema-logo-type-header">sema</h1>
-		<!-- <ul class="headerItemList">
-			<li class="headerItem"><a href="#">Home</a></li>
-			<li class="headerItem"><a href="#">About</a></li>
-			<li class="headerItem"><a href="#">TUTORIAL</a></li>
-			<li class="headerItem"><a href="#">GRAMMAR</a></li>
-			<li class="headerItem"><a href="#">EDITOR</a></li>
-		</ul> -->
-		<!-- <div class="sampleRateIndicator" id="sampleRateIndicatorLabel">Sample rate: <span class="sampleRateIndicator"
-			id="sampleRateIndicatorValue"></span></div>
-		<div  id="dspLoad" class="dspLoad">Dsp: <span class="dspLoad" id="dspLoadVal"></span></div>
-		<div id="audioWorkletIndicator"></div> -->
-		<!-- <div class="sema-logo-header-container">
-			<img id="sema-logo-header"></img>
-		</div> -->
-	</div>
-	<div id="layout-container">
-		<div id="overlay">
+	<div class="main-container">
+
+		<div class="header">
+			<span class="sema-logo-type"> sema</span>
+			<!-- <h1 class="sema-logo-type-header">sema</h1> -->
+
+			<!-- <ul class="headerItemList">
+				<li class="headerItem"><a href="#">Home</a></li>
+				<li class="headerItem"><a href="#">About</a></li>
+				<li class="headerItem"><a href="#">TUTORIAL</a></li>
+				<li class="headerItem"><a href="#">GRAMMAR</a></li>
+				<li class="headerItem"><a href="#">EDITOR</a></li>
+			</ul> -->
+			<!-- <div class="sampleRateIndicator" id="sampleRateIndicatorLabel">Sample rate: <span class="sampleRateIndicator"
+				id="sampleRateIndicatorValue"></span></div>
+			<div  id="dspLoad" class="dspLoad">Dsp: <span class="dspLoad" id="dspLoadVal"></span></div>
+			<div id="audioWorkletIndicator"></div> -->
+			<!-- <div class="sema-logo-header-container">
+				<img id="sema-logo-header"></img>
+			</div> -->
+		</div>
+
+		<div class="overlay">
 			<button class="button" id="buttonStartAudio">
-				<div id="logoContainer">
+				<div class="logo-container">
 					<img id="semaLogo"></img>
-					<span class="sema-logo-type">sema</span><br><br>
+					<span class="sema-logo-type">sema</span>
 				</div>
 			</button>
-			<!-- <button class="button" id="buttonStartAudio"><span style="font-size:200%">Sema</span><br><br>Start Audio</button> -->
 		</div>
-		<div class="sidebar-container">
-		</div>
-		<div class="content-container">
-			<div id="editor1"></div>
-		</div>
-		<div class="panel-analysers">
-			<div id="oscilloscope"></div>
-			<div id="spectrogram"></div>
-		</div>
-		<div class="gutter gutter-horizontal"></div>
-		<div class="containerMain2">
-			<div id="tabControl">
-				<div id="tab">
+		
+		<div class="layout-container">
+		
+			<div class="sidebar-container">
+			</div>
+
+			<div class="editor-container">
+
+				<div class="horizontal-panel live-code-panel">
+
+					<div id="editor1"></div>
+
+					<div class="gutter horizontal-gutter"></div>
+
+					<div class="analysers-panel">
+						<div id="oscilloscope"></div>
+						<div id="spectrogram"></div>
+					</div>
+				</div>			
+
+				<div class="gutter vertical-gutter"></div>	
+
+				<div class="containerMain2">
+					<div id="tabControl">
+						<div id="tab">
+						</div>
+						<div class="containerTabs">
+							<div id="editor2" class="tab-pane active"></div>
+							<div id="editor3" class="tab-pane "></div>
+						</div>
+					</div>
 				</div>
-				<div class="containerTabs">
-					<div id="editor2" class="tab-pane active"></div>
-					<div id="editor3" class="tab-pane "></div>
-				</div>
+
+			</div>
+
+			<div class="footer-container" />
+				<div id="footer-buttons-container">
 			</div>
 		</div>
-		<div id="containerFooter" />
-		<div id="containerButtons">
-		</div>
+		
 	</div>
 </body>
+
 </html>

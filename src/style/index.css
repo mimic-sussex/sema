@@ -6,8 +6,8 @@
 
 html {
   box-sizing: border-box;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
-    Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  /* font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"; */
   height: 100%;
   color: var(--black);
   background: #000;
@@ -24,7 +24,7 @@ html {
 }
 
 body {
-
+  weight: 100%;
   
 }
 
@@ -35,22 +35,32 @@ body {
   src: url('../../assets/fonts/Lato/fonts/Lato-Black.woff');
 }
 
-.header {
-  height: 60px;
-  background: #1c2128;
-  box-shadow: 0 0 5px rgba(28,33,40,0);
-  z-index: 100;
-  width: 100vw;
-  color: #ccc;
+.main-container {
+  display: grid;
+  grid-template-rows: auto 1fr;
 }
 
-.sema-logo-type-header {
-  font-family: monospace;
+.header {
+  grid-row: 1;
+  width: 100px;
+  height: 50px;
+  color: #ccc;
+  background: #a4a4a4;
+  box-shadow: 0 0 5px rgba(28,33,40,0);
+  z-index: 100;
+}
+
+.sema-logo-type-header .sema-logo-type {
+  font-family: Times;
   font-weight: normal;
   font-size: 36px;
 }
 
-#sema-logo-header-container {
+.sema-logo-type  {
+  font-size: 48px;
+}
+
+.sema-logo-header-container {
   display: grid;
   float: left;
   width: 45%;
@@ -60,31 +70,29 @@ body {
   height: auto;
 }
 
-
-
-#sema-logo-header{
-  float:left;
-  width: 50px;
+.layout-container{
+  grid-row: 2;
+  position: relative;
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  grid-template-rows: auto auto 50px;
+  grid-template-areas: 
+  "sidebar editor"
+  "sidebar editor"
+  "footer footer";
 }
 
-
-#layout-container {
+/* .layout-container {
   display: grid;
   grid-template-areas:
-    /* 'header header ' */
     'main right'
-    /* 'main' */
     'main2 main2'
     'footer footer';
 
   grid-template-rows:
-    /* Header */
-    /* 5% */
-    /* Main Content */
-    /* 1fr */
+
     45%
     45%
-    /* Footer */
     5%;
 
   grid-template-columns: 
@@ -94,34 +102,18 @@ body {
 
   grid-gap: 2px;
   background-color: #000000;
-  /* background-color: #222222; */
   padding: 0px;
   font-size: 20px;
   width: 99%;
   height: 99%;
-  position: absolute;
-}
-
-/* .container > div {
-  background-color: rgba(255, 255, 255, 0.8);
-  text-align: center;
-  padding: 10px 0;
-  font-size: 30px;
 } */
 
-/* .containerHeader { grid-area: header; background-color: orange;} */
-.containerHeader {
-  grid-area: header;
-  background-color: black;
-}
 
 
-
-#overlay {
+.overlay {
   position: fixed;
   /* Sit on top of the page content */
   display: grid;
-  /* Hidden by default */
   width: 100%;
   /* Full width (cover the whole page) */
   height: 100%;
@@ -132,14 +124,130 @@ body {
   bottom: 0;
   justify-self: center;
   align-content: center;
-  background-color: rgba(0, 0, 0, 0.85);
   /* Black background with opacity */
-  z-index: 4;
+  background-color: rgba(0, 0, 0, 0.85);
   /* Specify a stack order in case you're using a different order for other elements */
-  cursor: auto;
+  z-index: 4;
   /* Add a pointer on hover */
-  visibility: visible;
+  cursor: auto;
+  /* visibility: visible; */
+  visibility: hidden;
 }
+
+
+
+.w3-red,.w3-hover-red:hover{color:#fff!important;background-color:#f44336!important}
+
+
+
+/* .containerMenu { grid-area: menu; background-color: red;} */
+.sidebar-container{
+  display: flex;
+  grid-area: sidebar;
+  grid-row: span 2;
+  background-color: rgb(50, 153, 55);
+}
+
+
+
+.editor-container {
+  grid-area: editor;
+  align-content: stretch;
+  /* background-color: black; */
+  background-color: blue;
+  justify-self: stretch;
+  grid-column: 2 / -1;
+
+  display: inline-block;
+
+}
+
+.live-code-panel {
+  display: flex;
+
+  
+}
+
+.vertical-gutter{
+    content: "";
+    display: block;
+    height: 8px;
+    width: 100%;
+    position: absolute;
+    top: -3px;
+    z-index: 10;
+    cursor: ns-resize;
+    background-color: red;
+}
+
+.gutter {
+  position: relative;
+} 
+
+.horizontal-gutter{
+  cursor: ew-resize;
+  height: 100%;
+  /* float: left; */
+  width: 10px;
+  background-color:#272822;;
+}
+
+.analysers-panel {
+  background-color:#272822;
+  grid-area: editor;
+  /* grid-column: 3; */
+  /* z-index: -2;  */
+  width: auto;
+  height: auto;
+  position:absolute; 
+  bottom: 0;
+}
+
+#oscilloscope #spectrogram {
+  width: 100%;
+  height: 100%;
+}
+
+.containerMain2 {
+  grid-area: editor;
+
+  display: inline-flex;
+  background-color: black;
+  /* background-color: blue; */
+  align-self: auto;
+  align-content: stretch;
+  justify-self: stretch;
+  visibility: hidden; 
+  /* grid-column-start: 1/5;
+  grid-column-end: 3/5; */
+  /* grid-row: 3; */
+
+}
+
+#tabControl {
+  display: inline-flex;
+  align-self: auto;
+  align-content: stretch;
+  justify-self: stretch;
+}
+
+.containerTabs {
+  display: inline-flex;
+  align-self: auto;
+  align-content: stretch;
+  justify-self: stretch;
+}
+
+.footer-container {
+  grid-area: footer;
+  background-color: black;
+}
+
+#footer-buttons-container {
+
+}
+
+
 
 /* Style the tab */
 #tab {
@@ -178,121 +286,6 @@ body {
   border-top: none;
 }
 
-
-.w3-red,.w3-hover-red:hover{color:#fff!important;background-color:#f44336!important}
-
-.layout-container{
-  position: relative;
-  display: grid;
-  grid-template-columns: 210px 1fr;
-  grid-template-areas: "sidebar content";
-}
-
-/* .containerMenu { grid-area: menu; background-color: red;} */
-.sidebar-container{
-  display: flex;
-  grid-area: sidebar;
-  background-color: black;
-}
-
-.content-container {
-  grid-area: content;
-  align-content: stretch;
-  background-color: black;
-  /* background-color: blue; */
-  justify-self: stretch;
-  grid-column-start: 1/3;
-  grid-column-end: 2/3;
-  grid-row: 2;
-  display: inline-block
-
-}
-
-.gutter-vertical{
-    content: "";
-    display: block;
-    height: 8px;
-    width: 100%;
-    position: absolute;
-    top: -3px;
-    z-index: 10;
-
-}
-
-.gutter {
-  background: #2d333b;
-  position: relative;
-} 
-
-.gutter-horizontal{
-  cursor: ew-resize;
-  height: 100%;
-  float: left;
-  height: 1px;
-}
-
-.panel-analysers {
-  background-color:#272822;
-  grid-area: right;
-  /* z-index: -2;  */
-  width: auto;
-  height: auto;
-  position:absolute; 
-  bottom: 0;
-}
-
-#oscilloscope #spectrogram {
-  width: 100%;
-  height: 100%;
-}
-
-.containerMain2 {
-  grid-area: main2;
-  display: inline-flex;
-  background-color: black;
-  /* background-color: blue; */
-  align-self: auto;
-  align-content: stretch;
-  justify-self: stretch;
-  /* grid-column-start: 1/5;
-  grid-column-end: 3/5; */
-  /* grid-row: 3; */
-
-}
-
-#tabControl {
-  display: inline-flex;
-  align-self: auto;
-  align-content: stretch;
-  justify-self: stretch;
-}
-
-.containerTabs {
-  display: inline-flex;
-  align-self: auto;
-  align-content: stretch;
-  justify-self: stretch;
-}
-
-#containerFooter {
-  grid-area: footer;
-  background-color: black;
-}
-
-#containerButtons {
-  grid-area: footer;
-  grid-column-start: 2/5;
-  grid-column-end: 3/5;
-}
-
-
-.containerHeader {
-  display: inline-block;
-  /* overflow: hidden; */
-  /* float:left */
-  margin: 15px 0 15px 20px;
-}
-
 #buttonStartAudio {
   margin:0 auto;
   display:block;
@@ -304,7 +297,7 @@ body {
   cursor: pointer;
 }
 
-#logoContainer {
+.logo-container {
   float: none;
   width: 45%;
   height: 55%;

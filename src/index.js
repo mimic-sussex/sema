@@ -264,7 +264,7 @@ function createControls() {
 
 	const isMac = CodeMirror.keyMap.default === CodeMirror.keyMap.macDefault;
 	const runKeys = isMac ? "Cmd-Enter" : "Ctrl-Enter";
-	const container = document.getElementById("containerButtons");
+	const container = document.getElementById("footer-buttons-container");
 
 	const startAudioButton = document.getElementById("buttonStartAudio");
 	startAudioButton.addEventListener("click", () => start());
@@ -386,7 +386,7 @@ function createTabs(){
 function createNexusUI() {
 
   // window.AudioEngine.initWithAudioContext(NexusUI.context);	
-	let analysers = document.getElementsByClassName("panel-analysers");
+	let analysers = document.getElementsByClassName("analysers-panel");
 	
 	NexusUI.context = window.AudioEngine.audioContext; 
 	oscilloscope = new NexusUI.Oscilloscope("oscilloscope", {
@@ -515,7 +515,7 @@ function evalModelEditorExpressionBlock() {
 }
 
 async function start() {
-	let overlay = document.getElementById("overlay");
+	let overlay = document.getElementsByClassName("overlay");
 	overlay.style.visibility = "hidden";
 
 	await setupAudio();
@@ -599,17 +599,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // NOTE:FB 
 	// Injecting a function in the ctor of the audio engine that is defined in this context and that posts
-	// messages to the ML worker makes this code extremely convoluted and hard to reason about. 
+	// messages to the ML worker makes this code convoluted and hard to reason about. 
 	// Please don't change code that was good, just for a hack sake.
-	window.AudioEngine = new AudioEngine(msg => {
-		if (msg == "giveMeSomeSamples") {
-			// Load Samples
-			if (!window.AudioEngine.samplesLoaded) loadImportedSamples();
-		} else {
-			machineLearningWorker.postMessage(msg);
-		}
-	});
 
+  // let context = new OfflineAudioContext(1, 1, 44100);  // Detect AudioWorklet, OfflineAudioContext doesn't render the audio to the device hardware, generates it ASAP and outputs to AudioBuffer
+	// if(context.audioWorklet && typeof context.audioWorklet.addModule === 'function'){
+			window.AudioEngine = new AudioEngine(msg => {
+			if (msg == "giveMeSomeSamples") {
+				// Load Samples
+				if (!window.AudioEngine.samplesLoaded) loadImportedSamples();
+			} else {
+				machineLearningWorker.postMessage(msg);
+			}
+		});
+	// }
 
 
 	// // document.getElementById("sampleRateIndicatorValue").textContent = window.AudioEngine.sampleRate;
@@ -617,6 +620,8 @@ document.addEventListener("DOMContentLoaded", () => {
 	// window.AudioEngine.onNewDSPLoadValue = (x) => {
 	//   document.getElementById("dspLoadVal").textContent = `${Math.floor(x)}`;
 	// };
+
+
 	window.AudioEngine.onEvalTimestamp = x => {
 		let evalTime = x - evalTS;
 		// console.log(`Eval time: ${evalTime} ms`)
