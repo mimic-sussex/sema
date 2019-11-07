@@ -29,8 +29,8 @@
     "worker-loader": "^2.0.0"
   },
   "scripts": {
-    "p": "cross-env NODE_ENV=production webpack",
-    "d": "cross-env NODE_ENV=development webpack",
-    "s": "webpack-dev-server --content-base public"
+    "prod": "cross-env NODE_ENV=production webpack",
+    "dev": "cross-env NODE_ENV=development webpack",
+    "go": "webpack-dev-server --content-base public"
   }
 }

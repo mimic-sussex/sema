@@ -4,6 +4,8 @@
 
   import compile from '../interpreter/compiler';
   import defaultGrammar from '../interpreter/defaultGrammar.ne';
+  import defaultParser from '../interpreter/defaultParser.js';
+
   import defaultLiveCode from '../interpreter/defaultLiveCode.sem';
   import defaultModel from '../interpreter/defaultLiveCode.sem';
   import mooo from 'moo';
@@ -12,26 +14,38 @@
 
   let compileOutput = compile(defaultGrammar).output;
 
+  // console.log(defaultGrammar);
+  // console.log(compileOutput);
+  // console.log(defaultParser);
+
   let worker = new Worker('../../public/worker.bundle.js');
 
   let p = new Promise((res, rej) => {
-            worker.postMessage({test: defaultLiveCode, source: defaultGrammar})
+            
+            worker.postMessage({test: defaultLiveCode, source: compileOutput})
             
             let timeout = setTimeout(() => {
                 worker.terminate()
                 worker = new Worker('../../public/worker.bundle.js')
                 // rej('Possible infinite loop detected! Check your grammar for infinite recursion.')
             }, 5000);
+
             worker.onmessage = e => {
                 res(e.data);
-                console.log(e.data);
+                // console.log(e.data);
                 clearTimeout(timeout)
             }
         })
-        .then(outputs => console.log(outputs))
-        .catch(e => { console.log(e); });
+        .then(outputs => {
+          console.log('then') 
+          console.log(outputs)
+        })
+        .catch(e => { 
+          console.log('catch') 
+          console.log(e); 
+        });
 
-  // console.log(compileOutput);
+
 
   let defaultState = {
       active: 0,

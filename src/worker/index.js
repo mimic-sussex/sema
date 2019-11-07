@@ -1,7 +1,7 @@
 import nearley from 'nearley';
 import mooo from 'moo';
 
-function getCompiledParserModuleExports(source) {
+function getParserModuleExports(source) {
 	let moo = mooo;
 	let module = { exports: '' };
 	eval(source);
@@ -11,13 +11,25 @@ function getCompiledParserModuleExports(source) {
 onmessage = function({ data }) {
 	let outputs = [];
 
-	const { source, test } = data;
+	const { test, source } = data;
 
 	try {
-		let parser = new nearley.Parser(getCompiledParserModuleExports(source));
-		parser.feed(test);
-		outputs = parser.results;
-		outputs = JSON.parse(JSON.stringify(outputs));
+
+    console.log("Test");
+  	console.log(source);
+  	// console.log(test);
+    let parser = new nearley.Parser(getParserModuleExports(source));
+
+
+    console.log("Parser");
+    console.log(parser);
+    parser.feed(test);
+    outputs = parser.results;
+
+
+    console.log("Results");
+    console.log(outputs);
+    outputs = JSON.parse(JSON.stringify(outputs));
 	} catch (e) {
 		console.log(e);
 	}

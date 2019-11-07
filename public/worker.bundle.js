@@ -1073,7 +1073,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-function getCompiledParserModuleExports(source) {
+function getParserModuleExports(source) {
 	let moo = moo__WEBPACK_IMPORTED_MODULE_1___default.a;
 	let module = { exports: '' };
 	eval(source);
@@ -1083,13 +1083,25 @@ function getCompiledParserModuleExports(source) {
 onmessage = function({ data }) {
 	let outputs = [];
 
-	const { source, test } = data;
+	const { test, source } = data;
 
 	try {
-		let parser = new nearley__WEBPACK_IMPORTED_MODULE_0___default.a.Parser(getCompiledParserModuleExports(source));
-		parser.feed(test);
-		outputs = parser.results;
-		outputs = JSON.parse(JSON.stringify(outputs));
+
+    console.log("Test");
+  	console.log(source);
+  	// console.log(test);
+    let parser = new nearley__WEBPACK_IMPORTED_MODULE_0___default.a.Parser(getParserModuleExports(source));
+
+
+    console.log("Parser");
+    console.log(parser);
+    parser.feed(test);
+    outputs = parser.results;
+
+
+    console.log("Results");
+    console.log(outputs);
+    outputs = JSON.parse(JSON.stringify(outputs));
 	} catch (e) {
 		console.log(e);
 	}
