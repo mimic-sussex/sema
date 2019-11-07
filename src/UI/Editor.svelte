@@ -1,16 +1,20 @@
 <script context="module">
-  const is_browser = typeof window !== "undefined";
-
   import CodeMirror from "svelte-codemirror";
   import "codemirror/lib/codemirror.css";
 
+  const is_browser = typeof window !== "undefined";
   if (is_browser) {
     import("./codeMirrorPlugins");
   }
 
+  export let value = 'sdfg';
+  // export let value = `dfsd`;
+
+
   // let value = encodeURIComponent(`:b:{{1,0.25}imp}\909b;`);
   // let decodedValue = decodeURIComponent(value);
-  export let value = `:b:{{1,0.25}imp}\\909b;`;
+  // export let value = `:b:{{1,0.25}imp}\\909b;`;
+
 
   // let liveCode = `:b:{{1,0.25}imp}\909b; \n \\\ 
   //                 :s:{{1,0.5}imp}\909;   \\\

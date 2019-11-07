@@ -1,1 +1,1116 @@
-!function(t){var e={};function r(n){if(e[n])return e[n].exports;var o=e[n]={i:n,l:!1,exports:{}};return t[n].call(o.exports,o,o.exports,r),o.l=!0,o.exports}r.m=t,r.c=e,r.d=function(t,e,n){r.o(t,e)||Object.defineProperty(t,e,{enumerable:!0,get:n})},r.r=function(t){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(t,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(t,"__esModule",{value:!0})},r.t=function(t,e){if(1&e&&(t=r(t)),8&e)return t;if(4&e&&"object"==typeof t&&t&&t.__esModule)return t;var n=Object.create(null);if(r.r(n),Object.defineProperty(n,"default",{enumerable:!0,value:t}),2&e&&"string"!=typeof t)for(var o in t)r.d(n,o,function(e){return t[e]}.bind(null,o));return n},r.n=function(t){var e=t&&t.__esModule?function(){return t.default}:function(){return t};return r.d(e,"a",e),e},r.o=function(t,e){return Object.prototype.hasOwnProperty.call(t,e)},r.p="",r(r.s=464)}({18:function(t,e){!function(e,r){"object"==typeof t&&t.exports?t.exports=r():e.nearley=r()}(this,function(){function t(e,r,n){return this.id=++t.highestId,this.name=e,this.symbols=r,this.postprocess=n,this}function e(t,e,r,n){this.rule=t,this.dot=e,this.reference=r,this.data=[],this.wantedBy=n,this.isComplete=this.dot===t.symbols.length}function r(t,e){this.grammar=t,this.index=e,this.states=[],this.wants={},this.scannable=[],this.completed={}}function n(t,e){this.rules=t,this.start=e||this.rules[0].name;var r=this.byName={};this.rules.forEach(function(t){r.hasOwnProperty(t.name)||(r[t.name]=[]),r[t.name].push(t)})}function o(){this.reset("")}function i(t,e,i){if(t instanceof n){var s=t;i=e}else s=n.fromCompiled(t,e);for(var a in this.grammar=s,this.options={keepHistory:!1,lexer:s.lexer||new o},i||{})this.options[a]=i[a];this.lexer=this.options.lexer,this.lexerState=void 0;var u=new r(s,0);this.table=[u];u.wants[s.start]=[],u.predict(s.start),u.process(),this.current=0}return t.highestId=0,t.prototype.toString=function(t){function e(t){return t.literal?JSON.stringify(t.literal):t.type?"%"+t.type:t.toString()}var r=void 0===t?this.symbols.map(e).join(" "):this.symbols.slice(0,t).map(e).join(" ")+" ● "+this.symbols.slice(t).map(e).join(" ");return this.name+" → "+r},e.prototype.toString=function(){return"{"+this.rule.toString(this.dot)+"}, from: "+(this.reference||0)},e.prototype.nextState=function(t){var r=new e(this.rule,this.dot+1,this.reference,this.wantedBy);return r.left=this,r.right=t,r.isComplete&&(r.data=r.build()),r},e.prototype.build=function(){var t=[],e=this;do{t.push(e.right.data),e=e.left}while(e.left);return t.reverse(),t},e.prototype.finish=function(){this.rule.postprocess&&(this.data=this.rule.postprocess(this.data,this.reference,i.fail))},r.prototype.process=function(t){for(var e=this.states,r=this.wants,n=this.completed,o=0;o<e.length;o++){var s=e[o];if(s.isComplete){if(s.finish(),s.data!==i.fail){for(var a=s.wantedBy,u=a.length;u--;){var l=a[u];this.complete(l,s)}if(s.reference===this.index){var p=s.rule.name;(this.completed[p]=this.completed[p]||[]).push(s)}}}else{if("string"!=typeof(p=s.rule.symbols[s.dot])){this.scannable.push(s);continue}if(r[p]){if(r[p].push(s),n.hasOwnProperty(p)){var h=n[p];for(u=0;u<h.length;u++){var f=h[u];this.complete(s,f)}}}else r[p]=[s],this.predict(p)}}},r.prototype.predict=function(t){for(var r=this.grammar.byName[t]||[],n=0;n<r.length;n++){var o=r[n],i=this.wants[t],s=new e(o,0,this.index,i);this.states.push(s)}},r.prototype.complete=function(t,e){var r=t.nextState(e);this.states.push(r)},n.fromCompiled=function(e,r){var o=e.Lexer;e.ParserStart&&(r=e.ParserStart,e=e.ParserRules);var i=new n(e=e.map(function(e){return new t(e.name,e.symbols,e.postprocess)}),r);return i.lexer=o,i},o.prototype.reset=function(t,e){this.buffer=t,this.index=0,this.line=e?e.line:1,this.lastLineBreak=e?-e.col:0},o.prototype.next=function(){if(this.index<this.buffer.length){var t=this.buffer[this.index++];return"\n"===t&&(this.line+=1,this.lastLineBreak=this.index),{value:t}}},o.prototype.save=function(){return{line:this.line,col:this.index-this.lastLineBreak}},o.prototype.formatError=function(t,e){var r=this.buffer;if("string"==typeof r){var n=r.indexOf("\n",this.index);-1===n&&(n=r.length);var o=r.substring(this.lastLineBreak,n),i=this.index-this.lastLineBreak;return e+=" at line "+this.line+" col "+i+":\n\n",e+="  "+o+"\n",e+="  "+Array(i).join(" ")+"^"}return e+" at index "+(this.index-1)},i.fail={},i.prototype.feed=function(t){var e,n=this.lexer;for(n.reset(t,this.lexerState);e=n.next();){var i=this.table[this.current];this.options.keepHistory||delete this.table[this.current-1];var s=this.current+1,a=new r(this.grammar,s);this.table.push(a);for(var u=void 0!==e.text?e.text:e.value,l=n.constructor===o?e.value:e,p=i.scannable,h=p.length;h--;){var f=p[h],c=f.rule.symbols[f.dot];if(c.test?c.test(l):c.type?c.type===e.type:c.literal===u){var y=f.nextState({data:l,token:e,isToken:!0,reference:s-1});a.states.push(y)}}if(a.process(),0===a.states.length){var g=new Error(this.reportError(e));throw g.offset=this.current,g.token=e,g}this.options.keepHistory&&(i.lexerState=n.save()),this.current++}return i&&(this.lexerState=n.save()),this.results=this.finish(),this},i.prototype.reportError=function(t){var e=[],r=(t.type?t.type+" token: ":"")+JSON.stringify(void 0!==t.value?t.value:t);e.push(this.lexer.formatError(t,"Syntax error")),e.push("Unexpected "+r+". Instead, I was expecting to see one of the following:\n");var n=this.table.length-2;return this.table[n].states.filter(function(t){var e=t.rule.symbols[t.dot];return e&&"string"!=typeof e}).map(function(t){return this.buildStateStacks(t,[])[0]},this).forEach(function(t){var r=t[0],n=r.rule.symbols[r.dot],o=this.getSymbolDisplay(n);e.push("A "+o+" based on:"),this.displayStateStack(t,e)},this),e.push(""),e.join("\n")},i.prototype.displayStateStack=function(t,e){for(var r,n=0,o=0;o<t.length;o++){var i=t[o],s=i.rule.toString(i.dot);s===r?n++:(n>0&&e.push("    ⬆ ︎"+n+" more lines identical to this"),n=0,e.push("    "+s)),r=s}},i.prototype.getSymbolDisplay=function(t){var e=typeof t;if("string"===e)return t;if("object"===e&&t.literal)return JSON.stringify(t.literal);if("object"===e&&t instanceof RegExp)return"character matching "+t;if("object"===e&&t.type)return t.type+" token";throw new Error("Unknown symbol type: "+t)},i.prototype.buildStateStacks=function(t,e){if(-1!==e.indexOf(t))return[];if(0===t.wantedBy.length)return[[t]];var r=this;return t.wantedBy.reduce(function(n,o){return n.concat(r.buildStateStacks(o,[t].concat(e)).map(function(e){return[t].concat(e)}))},[])},i.prototype.save=function(){var t=this.table[this.current];return t.lexerState=this.lexerState,t},i.prototype.restore=function(t){var e=t.index;this.current=e,this.table[e]=t,this.table.splice(e+1),this.lexerState=t.lexerState,this.results=this.finish()},i.prototype.rewind=function(t){if(!this.options.keepHistory)throw new Error("set option `keepHistory` to enable rewinding");this.restore(this.table[t])},i.prototype.finish=function(){var t=[],e=this.grammar.start;return this.table[this.table.length-1].states.forEach(function(r){r.rule.name===e&&r.dot===r.rule.symbols.length&&0===r.reference&&r.data!==i.fail&&t.push(r)}),t.map(function(t){return t.data})},{Parser:i,Grammar:n,Rule:t}})},464:function(t,e,r){t.exports=r(465)},465:function(module,exports,__webpack_require__){"use strict";var _nearley=__webpack_require__(18),_nearley2=_interopRequireDefault(_nearley),_moo=__webpack_require__(66),_moo2=_interopRequireDefault(_moo);function _interopRequireDefault(t){return t&&t.__esModule?t:{default:t}}function get_exports(source){var moo=_moo2.default,module={exports:""};return eval(source),module.exports}onmessage=function(t){var e=t.data,r=[],n=e.source,o=e.test;try{var i=new _nearley2.default.Parser(get_exports(n));i.feed(o),r=i.results,r=JSON.parse(JSON.stringify(r))}catch(t){console.log(t)}postMessage(r)}},66:function(module,exports,__webpack_require__){var __WEBPACK_AMD_DEFINE_FACTORY__,__WEBPACK_AMD_DEFINE_ARRAY__,__WEBPACK_AMD_DEFINE_RESULT__;__WEBPACK_AMD_DEFINE_ARRAY__=[],void 0===(__WEBPACK_AMD_DEFINE_RESULT__="function"==typeof(__WEBPACK_AMD_DEFINE_FACTORY__=function(){"use strict";var hasOwnProperty=Object.prototype.hasOwnProperty,assign="function"==typeof Object.assign?Object.assign:function(t,e){if(null==t)throw new TypeError("Target cannot be null or undefined");t=Object(t);for(var r=1;r<arguments.length;r++){var n=arguments[r];if(null!=n)for(var o in n)hasOwnProperty.call(n,o)&&(t[o]=n[o])}return t},hasSticky="boolean"==typeof(new RegExp).sticky;function isRegExp(t){return t&&t.constructor===RegExp}function isObject(t){return t&&"object"==typeof t&&t.constructor!==RegExp&&!Array.isArray(t)}function reEscape(t){return t.replace(/[-\/\\^$*+?.()|[\]{}]/g,"\\$&")}function reGroups(t){var e=new RegExp("|"+t);return e.exec("").length-1}function reCapture(t){return"("+t+")"}function reUnion(t){var e=t.map(function(t){return"(?:"+t+")"}).join("|");return"(?:"+e+")"}function regexpOrLiteral(t){if("string"==typeof t)return"(?:"+reEscape(t)+")";if(isRegExp(t)){if(t.ignoreCase)throw new Error("RegExp /i flag not allowed");if(t.global)throw new Error("RegExp /g flag is implied");if(t.sticky)throw new Error("RegExp /y flag is implied");if(t.multiline)throw new Error("RegExp /m flag is implied");return t.source}throw new Error("not a pattern: "+t)}function objectToRules(t){for(var e=Object.getOwnPropertyNames(t),r=[],n=0;n<e.length;n++){var o=e[n],i=t[o],s=Array.isArray(i)?i:[i],a=[];s.forEach(function(t){isObject(t)?(a.length&&r.push(ruleOptions(o,a)),r.push(ruleOptions(o,t)),a=[]):a.push(t)}),a.length&&r.push(ruleOptions(o,a))}return r}function arrayToRules(t){for(var e=[],r=0;r<t.length;r++){var n=t[r];if(!n.name)throw new Error("Rule has no name: "+JSON.stringify(n));e.push(ruleOptions(n.name,n))}return e}function ruleOptions(t,e){("object"!=typeof e||Array.isArray(e)||isRegExp(e))&&(e={match:e});var r=assign({tokenType:t,lineBreaks:!!e.error,pop:!1,next:null,push:null,error:!1,value:null,getType:null},e),n=r.match;return r.match=Array.isArray(n)?n:n?[n]:[],r.match.sort(function(t,e){return isRegExp(t)&&isRegExp(e)?0:isRegExp(e)?-1:isRegExp(t)?1:e.length-t.length}),r.keywords&&(r.getType=keywordTransform(r.keywords)),r}function compileRules(t,e){t=Array.isArray(t)?arrayToRules(t):objectToRules(t);for(var r=null,n=[],o=[],i=0;i<t.length;i++){var s=t[i];if(s.error){if(r)throw new Error("Multiple error rules not allowed: (for token '"+s.tokenType+"')");r=s}if(0!==s.match.length){n.push(s);var a=reUnion(s.match.map(regexpOrLiteral)),u=new RegExp(a);if(u.test(""))throw new Error("RegExp matches empty string: "+u);var l=reGroups(a);if(l>0)throw new Error("RegExp has capture groups: "+u+"\nUse (?: … ) instead");if(!e&&(s.pop||s.push||s.next))throw new Error("State-switching options are not allowed in stateless lexers (for token '"+s.tokenType+"')");if(!s.lineBreaks&&u.test("\n"))throw new Error("Rule should declare lineBreaks: "+u);o.push(reCapture(a))}}var p=hasSticky?"":"|(?:)",h=hasSticky?"ym":"gm",f=new RegExp(reUnion(o)+p,h);return{regexp:f,groups:n,error:r}}function compile(t){var e=compileRules(t);return new Lexer({start:e},"start")}function compileStates(t,e){var r=Object.getOwnPropertyNames(t);e||(e=r[0]);for(var n=Object.create(null),o=0;o<r.length;o++){var i=r[o];n[i]=compileRules(t[i],!0)}for(var o=0;o<r.length;o++)for(var s=n[r[o]].groups,a=0;a<s.length;a++){var u=s[a],l=u&&(u.push||u.next);if(l&&!n[l])throw new Error("Missing state '"+l+"' (in token '"+u.tokenType+"' of state '"+r[o]+"')");if(u&&u.pop&&1!=+u.pop)throw new Error("pop must be 1 (in token '"+u.tokenType+"' of state '"+r[o]+"')")}return new Lexer(n,e)}function keywordTransform(map){for(var reverseMap=Object.create(null),byLength=Object.create(null),types=Object.getOwnPropertyNames(map),i=0;i<types.length;i++){var tokenType=types[i],item=map[tokenType],keywordList=Array.isArray(item)?item:[item];keywordList.forEach(function(t){if((byLength[t.length]=byLength[t.length]||[]).push(t),"string"!=typeof t)throw new Error("keyword must be string (in keyword '"+tokenType+"')");reverseMap[t]=tokenType})}function str(t){return JSON.stringify(t)}var source="";for(var length in source+="(function(value) {\n",source+="switch (value.length) {\n",byLength){var keywords=byLength[length];source+="case "+length+":\n",source+="switch (value) {\n",keywords.forEach(function(t){var e=reverseMap[t];source+="case "+str(t)+": return "+str(e)+"\n"}),source+="}\n"}return source+="}\n",source+="})",eval(source)}var Lexer=function(t,e){this.startState=e,this.states=t,this.buffer="",this.stack=[],this.reset()};function tokenToString(){return this.value}if(Lexer.prototype.reset=function(t,e){return this.buffer=t||"",this.index=0,this.line=e?e.line:1,this.col=e?e.col:1,this.setState(e?e.state:this.startState),this},Lexer.prototype.save=function(){return{line:this.line,col:this.col,state:this.state}},Lexer.prototype.setState=function(t){if(t&&this.state!==t){this.state=t;var e=this.states[t];this.groups=e.groups,this.error=e.error||{lineBreaks:!0,shouldThrow:!0},this.re=e.regexp}},Lexer.prototype.popState=function(){this.setState(this.stack.pop())},Lexer.prototype.pushState=function(t){this.stack.push(this.state),this.setState(t)},Lexer.prototype._eat=hasSticky?function(t){return t.exec(this.buffer)}:function(t){var e=t.exec(this.buffer);return 0===e[0].length?null:e},Lexer.prototype._getGroup=function(t){if(null===t)return-1;for(var e=this.groups.length,r=0;r<e;r++)if(void 0!==t[r+1])return r;throw new Error("oops")},Lexer.prototype.next=function(){var t=this.re,e=this.buffer,r=t.lastIndex=this.index;if(r!==e.length){var n,o,i=this._eat(t),s=this._getGroup(i);-1===s?(n=this.error,o=e.slice(r)):(o=i[0],n=this.groups[s]);var a=0;if(n.lineBreaks){var u=/\n/g,l=1;if("\n"===o)a=1;else for(;u.exec(o);)a++,l=u.lastIndex}var p={type:n.getType&&n.getType(o)||n.tokenType,value:n.value?n.value(o):o,text:o,toString:tokenToString,offset:r,lineBreaks:a,line:this.line,col:this.col},h=o.length;if(this.index+=h,this.line+=a,0!==a?this.col=h-l+1:this.col+=h,n.shouldThrow)throw new Error(this.formatError(p,"invalid syntax"));return n.pop?this.popState():n.push?this.pushState(n.push):n.next&&this.setState(n.next),p}},"undefined"!=typeof Symbol&&Symbol.iterator){var LexerIterator=function(t){this.lexer=t};LexerIterator.prototype.next=function(){var t=this.lexer.next();return{value:t,done:!t}},LexerIterator.prototype[Symbol.iterator]=function(){return this},Lexer.prototype[Symbol.iterator]=function(){return new LexerIterator(this)}}return Lexer.prototype.formatError=function(t,e){var r=t.value,n=t.offset,o=t.lineBreaks?r.indexOf("\n"):r.length,i=Math.max(0,n-t.col+1),s=this.buffer.substring(i,n+o);return e+=" at line "+t.line+" col "+t.col+":\n\n",e+="  "+s+"\n",e+="  "+Array(t.col).join(" ")+"^"},Lexer.prototype.clone=function(){return new Lexer(this.states,this.state)},Lexer.prototype.has=function(t){for(var e in this.states)for(var r=this.states[e].groups,n=0;n<r.length;n++){var o=r[n];if(o.tokenType===t)return!0;if(o.keywords&&hasOwnProperty.call(o.keywords,t))return!0}return!1},{compile:compile,states:compileStates,error:Object.freeze({error:!0})}})?__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports,__WEBPACK_AMD_DEFINE_ARRAY__):__WEBPACK_AMD_DEFINE_FACTORY__)||(module.exports=__WEBPACK_AMD_DEFINE_RESULT__)}});
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "/public/";
+/******/
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ })
+/************************************************************************/
+/******/ ({
+
+/***/ "./node_modules/moo/moo.js":
+/*!*********************************!*\
+  !*** ./node_modules/moo/moo.js ***!
+  \*********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function(root, factory) {
+  if (true) {
+    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__)) /* global define */
+  } else {}
+}(this, function() {
+  'use strict';
+
+  var hasOwnProperty = Object.prototype.hasOwnProperty
+
+  // polyfill assign(), so we support IE9+
+  var assign = typeof Object.assign === 'function' ? Object.assign :
+    // https://tc39.github.io/ecma262/#sec-object.assign
+    function(target, sources) {
+      if (target == null) {
+        throw new TypeError('Target cannot be null or undefined');
+      }
+      target = Object(target)
+
+      for (var i = 1; i < arguments.length; i++) {
+        var source = arguments[i]
+        if (source == null) continue
+
+        for (var key in source) {
+          if (hasOwnProperty.call(source, key)) {
+            target[key] = source[key]
+          }
+        }
+      }
+      return target
+    }
+
+  var hasSticky = typeof new RegExp().sticky === 'boolean'
+
+  /***************************************************************************/
+
+  function isRegExp(o) { return o && o.constructor === RegExp }
+  function isObject(o) { return o && typeof o === 'object' && o.constructor !== RegExp && !Array.isArray(o) }
+
+  function reEscape(s) {
+    return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')
+  }
+  function reGroups(s) {
+    var re = new RegExp('|' + s)
+    return re.exec('').length - 1
+  }
+  function reCapture(s) {
+    return '(' + s + ')'
+  }
+  function reUnion(regexps) {
+    var source =  regexps.map(function(s) {
+      return "(?:" + s + ")"
+    }).join('|')
+    return "(?:" + source + ")"
+  }
+
+  function regexpOrLiteral(obj) {
+    if (typeof obj === 'string') {
+      return '(?:' + reEscape(obj) + ')'
+
+    } else if (isRegExp(obj)) {
+      // TODO: consider /u support
+      if (obj.ignoreCase) { throw new Error('RegExp /i flag not allowed') }
+      if (obj.global) { throw new Error('RegExp /g flag is implied') }
+      if (obj.sticky) { throw new Error('RegExp /y flag is implied') }
+      if (obj.multiline) { throw new Error('RegExp /m flag is implied') }
+      return obj.source
+
+    } else {
+      throw new Error('not a pattern: ' + obj)
+    }
+  }
+
+  function objectToRules(object) {
+    var keys = Object.getOwnPropertyNames(object)
+    var result = []
+    for (var i=0; i<keys.length; i++) {
+      var key = keys[i]
+      var thing = object[key]
+      var rules = Array.isArray(thing) ? thing : [thing]
+      var match = []
+      rules.forEach(function(rule) {
+        if (isObject(rule)) {
+          if (match.length) result.push(ruleOptions(key, match))
+          result.push(ruleOptions(key, rule))
+          match = []
+        } else {
+          match.push(rule)
+        }
+      })
+      if (match.length) result.push(ruleOptions(key, match))
+    }
+    return result
+  }
+
+  function arrayToRules(array) {
+    var result = []
+    for (var i=0; i<array.length; i++) {
+      var obj = array[i]
+      if (!obj.name) {
+        throw new Error('Rule has no name: ' + JSON.stringify(obj))
+      }
+      result.push(ruleOptions(obj.name, obj))
+    }
+    return result
+  }
+
+  function ruleOptions(name, obj) {
+    if (typeof obj !== 'object' || Array.isArray(obj) || isRegExp(obj)) {
+      obj = { match: obj }
+    }
+
+    // nb. error implies lineBreaks
+    var options = assign({
+      tokenType: name,
+      lineBreaks: !!obj.error,
+      pop: false,
+      next: null,
+      push: null,
+      error: false,
+      value: null,
+      getType: null,
+    }, obj)
+
+    // convert to array
+    var match = options.match
+    options.match = Array.isArray(match) ? match : match ? [match] : []
+    options.match.sort(function(a, b) {
+      return isRegExp(a) && isRegExp(b) ? 0
+           : isRegExp(b) ? -1 : isRegExp(a) ? +1 : b.length - a.length
+    })
+    if (options.keywords) {
+      options.getType = keywordTransform(options.keywords)
+    }
+    return options
+  }
+
+  function compileRules(rules, hasStates) {
+    rules = Array.isArray(rules) ? arrayToRules(rules) : objectToRules(rules)
+
+    var errorRule = null
+    var groups = []
+    var parts = []
+    for (var i=0; i<rules.length; i++) {
+      var options = rules[i]
+
+      if (options.error) {
+        if (errorRule) {
+          throw new Error("Multiple error rules not allowed: (for token '" + options.tokenType + "')")
+        }
+        errorRule = options
+      }
+
+      // skip rules with no match
+      if (options.match.length === 0) {
+        continue
+      }
+      groups.push(options)
+
+      // convert to RegExp
+      var pat = reUnion(options.match.map(regexpOrLiteral))
+
+      // validate
+      var regexp = new RegExp(pat)
+      if (regexp.test("")) {
+        throw new Error("RegExp matches empty string: " + regexp)
+      }
+      var groupCount = reGroups(pat)
+      if (groupCount > 0) {
+        throw new Error("RegExp has capture groups: " + regexp + "\nUse (?: … ) instead")
+      }
+      if (!hasStates && (options.pop || options.push || options.next)) {
+        throw new Error("State-switching options are not allowed in stateless lexers (for token '" + options.tokenType + "')")
+      }
+
+      // try and detect rules matching newlines
+      if (!options.lineBreaks && regexp.test('\n')) {
+        throw new Error('Rule should declare lineBreaks: ' + regexp)
+      }
+
+      // store regex
+      parts.push(reCapture(pat))
+    }
+
+    var suffix = hasSticky ? '' : '|(?:)'
+    var flags = hasSticky ? 'ym' : 'gm'
+    var combined = new RegExp(reUnion(parts) + suffix, flags)
+
+    return {regexp: combined, groups: groups, error: errorRule}
+  }
+
+  function compile(rules) {
+    var result = compileRules(rules)
+    return new Lexer({start: result}, 'start')
+  }
+
+  function compileStates(states, start) {
+    var keys = Object.getOwnPropertyNames(states)
+    if (!start) start = keys[0]
+
+    var map = Object.create(null)
+    for (var i=0; i<keys.length; i++) {
+      var key = keys[i]
+      map[key] = compileRules(states[key], true)
+    }
+
+    for (var i=0; i<keys.length; i++) {
+      var groups = map[keys[i]].groups
+      for (var j=0; j<groups.length; j++) {
+        var g = groups[j]
+        var state = g && (g.push || g.next)
+        if (state && !map[state]) {
+          throw new Error("Missing state '" + state + "' (in token '" + g.tokenType + "' of state '" + keys[i] + "')")
+        }
+        if (g && g.pop && +g.pop !== 1) {
+          throw new Error("pop must be 1 (in token '" + g.tokenType + "' of state '" + keys[i] + "')")
+        }
+      }
+    }
+
+    return new Lexer(map, start)
+  }
+
+  function keywordTransform(map) {
+    var reverseMap = Object.create(null)
+    var byLength = Object.create(null)
+    var types = Object.getOwnPropertyNames(map)
+    for (var i=0; i<types.length; i++) {
+      var tokenType = types[i]
+      var item = map[tokenType]
+      var keywordList = Array.isArray(item) ? item : [item]
+      keywordList.forEach(function(keyword) {
+        (byLength[keyword.length] = byLength[keyword.length] || []).push(keyword)
+        if (typeof keyword !== 'string') {
+          throw new Error("keyword must be string (in keyword '" + tokenType + "')")
+        }
+        reverseMap[keyword] = tokenType
+      })
+    }
+
+    // fast string lookup
+    // https://jsperf.com/string-lookups
+    function str(x) { return JSON.stringify(x) }
+    var source = ''
+    source += '(function(value) {\n'
+    source += 'switch (value.length) {\n'
+    for (var length in byLength) {
+      var keywords = byLength[length]
+      source += 'case ' + length + ':\n'
+      source += 'switch (value) {\n'
+      keywords.forEach(function(keyword) {
+        var tokenType = reverseMap[keyword]
+        source += 'case ' + str(keyword) + ': return ' + str(tokenType) + '\n'
+      })
+      source += '}\n'
+    }
+    source += '}\n'
+    source += '})'
+    return eval(source) // getType
+  }
+
+  /***************************************************************************/
+
+  var Lexer = function(states, state) {
+    this.startState = state
+    this.states = states
+    this.buffer = ''
+    this.stack = []
+    this.reset()
+  }
+
+  Lexer.prototype.reset = function(data, info) {
+    this.buffer = data || ''
+    this.index = 0
+    this.line = info ? info.line : 1
+    this.col = info ? info.col : 1
+    this.setState(info ? info.state : this.startState)
+    return this
+  }
+
+  Lexer.prototype.save = function() {
+    return {
+      line: this.line,
+      col: this.col,
+      state: this.state,
+    }
+  }
+
+  Lexer.prototype.setState = function(state) {
+    if (!state || this.state === state) return
+    this.state = state
+    var info = this.states[state]
+    this.groups = info.groups
+    this.error = info.error || {lineBreaks: true, shouldThrow: true}
+    this.re = info.regexp
+  }
+
+  Lexer.prototype.popState = function() {
+    this.setState(this.stack.pop())
+  }
+
+  Lexer.prototype.pushState = function(state) {
+    this.stack.push(this.state)
+    this.setState(state)
+  }
+
+  Lexer.prototype._eat = hasSticky ? function(re) { // assume re is /y
+    return re.exec(this.buffer)
+  } : function(re) { // assume re is /g
+    var match = re.exec(this.buffer)
+    // will always match, since we used the |(?:) trick
+    if (match[0].length === 0) {
+      return null
+    }
+    return match
+  }
+
+  Lexer.prototype._getGroup = function(match) {
+    if (match === null) {
+      return -1
+    }
+
+    var groupCount = this.groups.length
+    for (var i = 0; i < groupCount; i++) {
+      if (match[i + 1] !== undefined) {
+        return i
+      }
+    }
+    throw new Error('oops')
+  }
+
+  function tokenToString() {
+    return this.value
+  }
+
+  Lexer.prototype.next = function() {
+    var re = this.re
+    var buffer = this.buffer
+
+    var index = re.lastIndex = this.index
+    if (index === buffer.length) {
+      return // EOF
+    }
+
+    var match = this._eat(re)
+    var i = this._getGroup(match)
+
+    var group, text
+    if (i === -1) {
+      group = this.error
+
+      // consume rest of buffer
+      text = buffer.slice(index)
+
+    } else {
+      text = match[0]
+      group = this.groups[i]
+    }
+
+    // count line breaks
+    var lineBreaks = 0
+    if (group.lineBreaks) {
+      var matchNL = /\n/g
+      var nl = 1
+      if (text === '\n') {
+        lineBreaks = 1
+      } else {
+        while (matchNL.exec(text)) { lineBreaks++; nl = matchNL.lastIndex }
+      }
+    }
+
+    var token = {
+      type: (group.getType && group.getType(text)) || group.tokenType,
+      value: group.value ? group.value(text) : text,
+      text: text,
+      toString: tokenToString,
+      offset: index,
+      lineBreaks: lineBreaks,
+      line: this.line,
+      col: this.col,
+    }
+    // nb. adding more props to token object will make V8 sad!
+
+    var size = text.length
+    this.index += size
+    this.line += lineBreaks
+    if (lineBreaks !== 0) {
+      this.col = size - nl + 1
+    } else {
+      this.col += size
+    }
+    // throw, if no rule with {error: true}
+    if (group.shouldThrow) {
+      throw new Error(this.formatError(token, "invalid syntax"))
+    }
+
+    if (group.pop) this.popState()
+    else if (group.push) this.pushState(group.push)
+    else if (group.next) this.setState(group.next)
+    return token
+  }
+
+  if (typeof Symbol !== 'undefined' && Symbol.iterator) {
+    var LexerIterator = function(lexer) {
+      this.lexer = lexer
+    }
+
+    LexerIterator.prototype.next = function() {
+      var token = this.lexer.next()
+      return {value: token, done: !token}
+    }
+
+    LexerIterator.prototype[Symbol.iterator] = function() {
+      return this
+    }
+
+    Lexer.prototype[Symbol.iterator] = function() {
+      return new LexerIterator(this)
+    }
+  }
+
+  Lexer.prototype.formatError = function(token, message) {
+    var value = token.value
+    var index = token.offset
+    var eol = token.lineBreaks ? value.indexOf('\n') : value.length
+    var start = Math.max(0, index - token.col + 1)
+    var firstLine = this.buffer.substring(start, index + eol)
+    message += " at line " + token.line + " col " + token.col + ":\n\n"
+    message += "  " + firstLine + "\n"
+    message += "  " + Array(token.col).join(" ") + "^"
+    return message
+  }
+
+  Lexer.prototype.clone = function() {
+    return new Lexer(this.states, this.state)
+  }
+
+  Lexer.prototype.has = function(tokenType) {
+    for (var s in this.states) {
+      var groups = this.states[s].groups
+      for (var i=0; i<groups.length; i++) {
+        var group = groups[i]
+        if (group.tokenType === tokenType) return true
+        if (group.keywords && hasOwnProperty.call(group.keywords, tokenType)) {
+          return true
+        }
+      }
+    }
+    return false
+  }
+
+
+  return {
+    compile: compile,
+    states: compileStates,
+    error: Object.freeze({error: true}),
+  }
+
+}))
+
+
+/***/ }),
+
+/***/ "./node_modules/nearley/lib/nearley.js":
+/*!*********************************************!*\
+  !*** ./node_modules/nearley/lib/nearley.js ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+(function(root, factory) {
+    if ( true && module.exports) {
+        module.exports = factory();
+    } else {
+        root.nearley = factory();
+    }
+}(this, function() {
+
+    function Rule(name, symbols, postprocess) {
+        this.id = ++Rule.highestId;
+        this.name = name;
+        this.symbols = symbols;        // a list of literal | regex class | nonterminal
+        this.postprocess = postprocess;
+        return this;
+    }
+    Rule.highestId = 0;
+
+    Rule.prototype.toString = function(withCursorAt) {
+        function stringifySymbolSequence (e) {
+            return e.literal ? JSON.stringify(e.literal) :
+                   e.type ? '%' + e.type : e.toString();
+        }
+        var symbolSequence = (typeof withCursorAt === "undefined")
+                             ? this.symbols.map(stringifySymbolSequence).join(' ')
+                             : (   this.symbols.slice(0, withCursorAt).map(stringifySymbolSequence).join(' ')
+                                 + " ● "
+                                 + this.symbols.slice(withCursorAt).map(stringifySymbolSequence).join(' ')     );
+        return this.name + " → " + symbolSequence;
+    }
+
+
+    // a State is a rule at a position from a given starting point in the input stream (reference)
+    function State(rule, dot, reference, wantedBy) {
+        this.rule = rule;
+        this.dot = dot;
+        this.reference = reference;
+        this.data = [];
+        this.wantedBy = wantedBy;
+        this.isComplete = this.dot === rule.symbols.length;
+    }
+
+    State.prototype.toString = function() {
+        return "{" + this.rule.toString(this.dot) + "}, from: " + (this.reference || 0);
+    };
+
+    State.prototype.nextState = function(child) {
+        var state = new State(this.rule, this.dot + 1, this.reference, this.wantedBy);
+        state.left = this;
+        state.right = child;
+        if (state.isComplete) {
+            state.data = state.build();
+        }
+        return state;
+    };
+
+    State.prototype.build = function() {
+        var children = [];
+        var node = this;
+        do {
+            children.push(node.right.data);
+            node = node.left;
+        } while (node.left);
+        children.reverse();
+        return children;
+    };
+
+    State.prototype.finish = function() {
+        if (this.rule.postprocess) {
+            this.data = this.rule.postprocess(this.data, this.reference, Parser.fail);
+        }
+    };
+
+
+    function Column(grammar, index) {
+        this.grammar = grammar;
+        this.index = index;
+        this.states = [];
+        this.wants = {}; // states indexed by the non-terminal they expect
+        this.scannable = []; // list of states that expect a token
+        this.completed = {}; // states that are nullable
+    }
+
+
+    Column.prototype.process = function(nextColumn) {
+        var states = this.states;
+        var wants = this.wants;
+        var completed = this.completed;
+
+        for (var w = 0; w < states.length; w++) { // nb. we push() during iteration
+            var state = states[w];
+
+            if (state.isComplete) {
+                state.finish();
+                if (state.data !== Parser.fail) {
+                    // complete
+                    var wantedBy = state.wantedBy;
+                    for (var i = wantedBy.length; i--; ) { // this line is hot
+                        var left = wantedBy[i];
+                        this.complete(left, state);
+                    }
+
+                    // special-case nullables
+                    if (state.reference === this.index) {
+                        // make sure future predictors of this rule get completed.
+                        var exp = state.rule.name;
+                        (this.completed[exp] = this.completed[exp] || []).push(state);
+                    }
+                }
+
+            } else {
+                // queue scannable states
+                var exp = state.rule.symbols[state.dot];
+                if (typeof exp !== 'string') {
+                    this.scannable.push(state);
+                    continue;
+                }
+
+                // predict
+                if (wants[exp]) {
+                    wants[exp].push(state);
+
+                    if (completed.hasOwnProperty(exp)) {
+                        var nulls = completed[exp];
+                        for (var i = 0; i < nulls.length; i++) {
+                            var right = nulls[i];
+                            this.complete(state, right);
+                        }
+                    }
+                } else {
+                    wants[exp] = [state];
+                    this.predict(exp);
+                }
+            }
+        }
+    }
+
+    Column.prototype.predict = function(exp) {
+        var rules = this.grammar.byName[exp] || [];
+
+        for (var i = 0; i < rules.length; i++) {
+            var r = rules[i];
+            var wantedBy = this.wants[exp];
+            var s = new State(r, 0, this.index, wantedBy);
+            this.states.push(s);
+        }
+    }
+
+    Column.prototype.complete = function(left, right) {
+        var copy = left.nextState(right);
+        this.states.push(copy);
+    }
+
+
+    function Grammar(rules, start) {
+        this.rules = rules;
+        this.start = start || this.rules[0].name;
+        var byName = this.byName = {};
+        this.rules.forEach(function(rule) {
+            if (!byName.hasOwnProperty(rule.name)) {
+                byName[rule.name] = [];
+            }
+            byName[rule.name].push(rule);
+        });
+    }
+
+    // So we can allow passing (rules, start) directly to Parser for backwards compatibility
+    Grammar.fromCompiled = function(rules, start) {
+        var lexer = rules.Lexer;
+        if (rules.ParserStart) {
+          start = rules.ParserStart;
+          rules = rules.ParserRules;
+        }
+        var rules = rules.map(function (r) { return (new Rule(r.name, r.symbols, r.postprocess)); });
+        var g = new Grammar(rules, start);
+        g.lexer = lexer; // nb. storing lexer on Grammar is iffy, but unavoidable
+        return g;
+    }
+
+
+    function StreamLexer() {
+      this.reset("");
+    }
+
+    StreamLexer.prototype.reset = function(data, state) {
+        this.buffer = data;
+        this.index = 0;
+        this.line = state ? state.line : 1;
+        this.lastLineBreak = state ? -state.col : 0;
+    }
+
+    StreamLexer.prototype.next = function() {
+        if (this.index < this.buffer.length) {
+            var ch = this.buffer[this.index++];
+            if (ch === '\n') {
+              this.line += 1;
+              this.lastLineBreak = this.index;
+            }
+            return {value: ch};
+        }
+    }
+
+    StreamLexer.prototype.save = function() {
+      return {
+        line: this.line,
+        col: this.index - this.lastLineBreak,
+      }
+    }
+
+    StreamLexer.prototype.formatError = function(token, message) {
+        // nb. this gets called after consuming the offending token,
+        // so the culprit is index-1
+        var buffer = this.buffer;
+        if (typeof buffer === 'string') {
+            var nextLineBreak = buffer.indexOf('\n', this.index);
+            if (nextLineBreak === -1) nextLineBreak = buffer.length;
+            var line = buffer.substring(this.lastLineBreak, nextLineBreak)
+            var col = this.index - this.lastLineBreak;
+            message += " at line " + this.line + " col " + col + ":\n\n";
+            message += "  " + line + "\n"
+            message += "  " + Array(col).join(" ") + "^"
+            return message;
+        } else {
+            return message + " at index " + (this.index - 1);
+        }
+    }
+
+
+    function Parser(rules, start, options) {
+        if (rules instanceof Grammar) {
+            var grammar = rules;
+            var options = start;
+        } else {
+            var grammar = Grammar.fromCompiled(rules, start);
+        }
+        this.grammar = grammar;
+
+        // Read options
+        this.options = {
+            keepHistory: false,
+            lexer: grammar.lexer || new StreamLexer,
+        };
+        for (var key in (options || {})) {
+            this.options[key] = options[key];
+        }
+
+        // Setup lexer
+        this.lexer = this.options.lexer;
+        this.lexerState = undefined;
+
+        // Setup a table
+        var column = new Column(grammar, 0);
+        var table = this.table = [column];
+
+        // I could be expecting anything.
+        column.wants[grammar.start] = [];
+        column.predict(grammar.start);
+        // TODO what if start rule is nullable?
+        column.process();
+        this.current = 0; // token index
+    }
+
+    // create a reserved token for indicating a parse fail
+    Parser.fail = {};
+
+    Parser.prototype.feed = function(chunk) {
+        var lexer = this.lexer;
+        lexer.reset(chunk, this.lexerState);
+
+        var token;
+        while (token = lexer.next()) {
+            // We add new states to table[current+1]
+            var column = this.table[this.current];
+
+            // GC unused states
+            if (!this.options.keepHistory) {
+                delete this.table[this.current - 1];
+            }
+
+            var n = this.current + 1;
+            var nextColumn = new Column(this.grammar, n);
+            this.table.push(nextColumn);
+
+            // Advance all tokens that expect the symbol
+            var literal = token.text !== undefined ? token.text : token.value;
+            var value = lexer.constructor === StreamLexer ? token.value : token;
+            var scannable = column.scannable;
+            for (var w = scannable.length; w--; ) {
+                var state = scannable[w];
+                var expect = state.rule.symbols[state.dot];
+                // Try to consume the token
+                // either regex or literal
+                if (expect.test ? expect.test(value) :
+                    expect.type ? expect.type === token.type
+                                : expect.literal === literal) {
+                    // Add it
+                    var next = state.nextState({data: value, token: token, isToken: true, reference: n - 1});
+                    nextColumn.states.push(next);
+                }
+            }
+
+            // Next, for each of the rules, we either
+            // (a) complete it, and try to see if the reference row expected that
+            //     rule
+            // (b) predict the next nonterminal it expects by adding that
+            //     nonterminal's start state
+            // To prevent duplication, we also keep track of rules we have already
+            // added
+
+            nextColumn.process();
+
+            // If needed, throw an error:
+            if (nextColumn.states.length === 0) {
+                // No states at all! This is not good.
+                var err = new Error(this.reportError(token));
+                err.offset = this.current;
+                err.token = token;
+                throw err;
+            }
+
+            // maybe save lexer state
+            if (this.options.keepHistory) {
+              column.lexerState = lexer.save()
+            }
+
+            this.current++;
+        }
+        if (column) {
+          this.lexerState = lexer.save()
+        }
+
+        // Incrementally keep track of results
+        this.results = this.finish();
+
+        // Allow chaining, for whatever it's worth
+        return this;
+    };
+
+    Parser.prototype.reportError = function(token) {
+        var lines = [];
+        var tokenDisplay = (token.type ? token.type + " token: " : "") + JSON.stringify(token.value !== undefined ? token.value : token);
+        lines.push(this.lexer.formatError(token, "Syntax error"));
+        lines.push('Unexpected ' + tokenDisplay + '. Instead, I was expecting to see one of the following:\n');
+        var lastColumnIndex = this.table.length - 2;
+        var lastColumn = this.table[lastColumnIndex];
+        var expectantStates = lastColumn.states
+            .filter(function(state) {
+                var nextSymbol = state.rule.symbols[state.dot];
+                return nextSymbol && typeof nextSymbol !== "string";
+            });
+        
+        // Display a "state stack" for each expectant state
+        // - which shows you how this state came to be, step by step. 
+        // If there is more than one derivation, we only display the first one.
+        var stateStacks = expectantStates
+            .map(function(state) {
+                var stacks = this.buildStateStacks(state, []);
+                return stacks[0];
+            }, this);
+        // Display each state that is expecting a terminal symbol next.
+        stateStacks.forEach(function(stateStack) {
+            var state = stateStack[0];
+            var nextSymbol = state.rule.symbols[state.dot];
+            var symbolDisplay = this.getSymbolDisplay(nextSymbol);
+            lines.push('A ' + symbolDisplay + ' based on:');
+            this.displayStateStack(stateStack, lines);
+        }, this);
+            
+        lines.push("");
+        return lines.join("\n");
+    };
+
+    Parser.prototype.displayStateStack = function(stateStack, lines) {
+        var lastDisplay;
+        var sameDisplayCount = 0;
+        for (var j = 0; j < stateStack.length; j++) {
+            var state = stateStack[j];
+            var display = state.rule.toString(state.dot);
+            if (display === lastDisplay) {
+                sameDisplayCount++;
+            } else {
+                if (sameDisplayCount > 0) {
+                    lines.push('    ⬆ ︎' + sameDisplayCount + ' more lines identical to this');
+                }
+                sameDisplayCount = 0;
+                lines.push('    ' + display);
+            }
+            lastDisplay = display;
+        }
+    };
+
+    Parser.prototype.getSymbolDisplay = function(symbol) {
+        var type = typeof symbol;
+        if (type === "string") {
+            return symbol;
+        } else if (type === "object" && symbol.literal) {
+            return JSON.stringify(symbol.literal);
+        } else if (type === "object" && symbol instanceof RegExp) {
+            return 'character matching ' + symbol;
+        } else if (type === "object" && symbol.type) {
+            return symbol.type + ' token';
+        } else {
+            throw new Error('Unknown symbol type: ' + symbol);
+        }
+    };
+
+    /*
+    Builds a number of "state stacks". You can think of a state stack as the call stack
+    of the recursive-descent parser which the Nearley parse algorithm simulates.
+    A state stack is represented as an array of state objects. Within a 
+    state stack, the first item of the array will be the starting
+    state, with each successive item in the array going further back into history.
+    
+    This function needs to be given a starting state and an empty array representing
+    the visited states, and it returns an array of state stacks. 
+    
+    */
+    Parser.prototype.buildStateStacks = function(state, visited) {
+        if (visited.indexOf(state) !== -1) {
+            // Found cycle, return empty array (meaning no stacks)
+            // to eliminate this path from the results, because
+            // we don't know how to display it meaningfully
+            return [];
+        }
+        if (state.wantedBy.length === 0) {
+            return [[state]];
+        }
+        var that = this;
+
+        return state.wantedBy.reduce(function(stacks, prevState) {
+            return stacks.concat(that.buildStateStacks(
+                prevState,
+                [state].concat(visited))
+                .map(function(stack) {
+                    return [state].concat(stack);
+                }));
+        }, []);
+    };
+
+    Parser.prototype.save = function() {
+        var column = this.table[this.current];
+        column.lexerState = this.lexerState;
+        return column;
+    };
+
+    Parser.prototype.restore = function(column) {
+        var index = column.index;
+        this.current = index;
+        this.table[index] = column;
+        this.table.splice(index + 1);
+        this.lexerState = column.lexerState;
+
+        // Incrementally keep track of results
+        this.results = this.finish();
+    };
+
+    // nb. deprecated: use save/restore instead!
+    Parser.prototype.rewind = function(index) {
+        if (!this.options.keepHistory) {
+            throw new Error('set option `keepHistory` to enable rewinding')
+        }
+        // nb. recall column (table) indicies fall between token indicies.
+        //        col 0   --   token 0   --   col 1
+        this.restore(this.table[index]);
+    };
+
+    Parser.prototype.finish = function() {
+        // Return the possible parsings
+        var considerations = [];
+        var start = this.grammar.start;
+        var column = this.table[this.table.length - 1]
+        column.states.forEach(function (t) {
+            if (t.rule.name === start
+                    && t.dot === t.rule.symbols.length
+                    && t.reference === 0
+                    && t.data !== Parser.fail) {
+                considerations.push(t);
+            }
+        });
+        return considerations.map(function(c) {return c.data; });
+    };
+
+    return {
+        Parser: Parser,
+        Grammar: Grammar,
+        Rule: Rule,
+    };
+
+}));
+
+
+/***/ }),
+
+/***/ "./src/worker/index.js":
+/*!*****************************!*\
+  !*** ./src/worker/index.js ***!
+  \*****************************/
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var nearley__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! nearley */ "./node_modules/nearley/lib/nearley.js");
+/* harmony import */ var nearley__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(nearley__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var moo__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! moo */ "./node_modules/moo/moo.js");
+/* harmony import */ var moo__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(moo__WEBPACK_IMPORTED_MODULE_1__);
+
+
+
+function getCompiledParserModuleExports(source) {
+	let moo = moo__WEBPACK_IMPORTED_MODULE_1___default.a;
+	let module = { exports: '' };
+	eval(source);
+	return module.exports;
+}
+
+onmessage = function({ data }) {
+	let outputs = [];
+
+	const { source, test } = data;
+
+	try {
+		let parser = new nearley__WEBPACK_IMPORTED_MODULE_0___default.a.Parser(getCompiledParserModuleExports(source));
+		parser.feed(test);
+		outputs = parser.results;
+		outputs = JSON.parse(JSON.stringify(outputs));
+	} catch (e) {
+		console.log(e);
+	}
+
+	postMessage(outputs);
+};
+
+
+/***/ }),
+
+/***/ 1:
+/*!***********************************!*\
+  !*** multi ./src/worker/index.js ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(/*! ./src/worker/index.js */"./src/worker/index.js");
+
+
+/***/ })
+
+/******/ });
+//# sourceMappingURL=worker.bundle.js.map

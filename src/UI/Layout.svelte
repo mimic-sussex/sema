@@ -4,6 +4,8 @@
 
   export let layoutTemplate = 1;
 
+  export let value = `:b:{{1,0.25}imp}\\909b;`;
+
   let dashboardContainerDisplay = "initial";
   let quadrantsContainerDisplay = "initial";
 
@@ -53,6 +55,6 @@
     <Dashboard />
   </div>
   <div class="quadrants-container" style="display:{quadrantsContainerDisplay}">
-    <Quadrants />
+    <Quadrants liveCodeEditorValue={value} grammarEditorValue={value} modelEditorValue={value}  />
   </div>
 </div>

@@ -9,7 +9,7 @@
 import nearley from "nearley";
 import bootstraped from "nearley/lib/nearley-language-bootstrapped";
 
-export default function Compile(structure, opts) {
+export default function compileLowLevel(structure, opts) {
 	var unique = uniquer();
 	if (!opts.alreadycompiled) {
 		opts.alreadycompiled = [];

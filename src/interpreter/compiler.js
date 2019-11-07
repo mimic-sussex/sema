@@ -8,7 +8,7 @@
 
 import nearley from "nearley";
 
-import compile from "./compiler-low-level";
+import compileLowLevel from "./compiler-low-level";
 
 import {
 	ParserRules,
@@ -65,7 +65,9 @@ export default function compile(grammar) {
 			function rangeCallback(name, start, end) {
 				positions[name] = [start, end];
 			}
-			var c = compile(parser.results[0], { rangeCallback: rangeCallback });
+			var c = compileLowLevel(parser.results[0], {
+				rangeCallback: rangeCallback
+			});
 			lint(c, { out: errors });
 
 			output = generate(c, "grammar");

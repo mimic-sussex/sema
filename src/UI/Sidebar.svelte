@@ -4,7 +4,7 @@
 
 	const dispatch = createEventDispatcher();
 
-  let selectedLayout = 5;
+  let selectedLayout = 2;
 
   let layoutOptions = [
 		{ id: 1, text: `Live` },

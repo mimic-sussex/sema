@@ -4,6 +4,8 @@
   import map from "lodash.map";
   import Editor from './Editor.svelte';
 
+  export let value = '';
+
   const id = () =>
     "_" +
     Math.random()
@@ -85,7 +87,7 @@
 <div class="layout-template-container">
   <Grid useTransform {breakpoints} gap={10} {items} bind:items {cols} rowHeight={100} let:item>
     <div class="content" style="background: {item.static ? '#ccccee' : item.data}" >
-      <Editor />	
+      <Editor bind:value={value}/>	
     </div>
   </Grid>
 </div>

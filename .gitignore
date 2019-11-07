@@ -61,6 +61,6 @@ typings/
 .next
 
 .DS_Store
-public/bundle.*
+public/*bundle.*
 package-lock.json
 yarn.lock
