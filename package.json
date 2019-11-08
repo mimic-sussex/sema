@@ -1,6 +1,7 @@
 {
-  "name": "svelte-app",
-  "version": "1.0.0",
+  "name": "S(velt)ema",
+  "version": "0.1.0",
+  "description": "A quick spike to test and understand svelte v3 as UI framework for sema",
   "dependencies": {
     "compression": "^1.7.1",
     "lodash.clonedeep": "^4.5.0",
