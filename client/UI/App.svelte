@@ -2,46 +2,38 @@
   import Header from './Header.svelte';
 	import Content from './Content.svelte';
 
-  import compile from '../interpreter/compiler';
-  import defaultGrammar from '../interpreter/defaultGrammar.ne';
-  import defaultParser from '../interpreter/defaultParser.js';
-
-  import defaultLiveCode from '../interpreter/defaultLiveCode.sem';
-  import defaultModel from '../interpreter/defaultLiveCode.sem';
-  import mooo from 'moo';
-
+  import compile from '../compiler/compiler';
+  import defaultGrammar from '../compiler/defaultGrammar.ne';
+  import defaultLiveCode from '../compiler/defaultLiveCode.sem';
+  import defaultModel from '../compiler/defaultLiveCode.sem';
+  
   export let name;
 
   let compileOutput = compile(defaultGrammar).output;
 
-  // console.log(defaultGrammar);
-  // console.log(compileOutput);
-  // console.log(defaultParser);
-
-  let worker = new Worker('../../public/worker.bundle.js');
-
+  let workerParser = new Worker('../../public/workerParser.bundle.js'); 
+  
   let p = new Promise((res, rej) => {
             
-            worker.postMessage({test: defaultLiveCode, source: compileOutput})
+            workerParser.postMessage({test: defaultLiveCode, source: compileOutput})
             
             let timeout = setTimeout(() => {
-                worker.terminate()
-                worker = new Worker('../../public/worker.bundle.js')
+                workerParser.terminate()
+                workerParser = new Worker('../../public/workerParser.bundle.js')
                 // rej('Possible infinite loop detected! Check your grammar for infinite recursion.')
             }, 5000);
 
-            worker.onmessage = e => {
+            workerParser.onmessage = e => {
                 res(e.data);
-                // console.log(e.data);
                 clearTimeout(timeout)
             }
         })
         .then(outputs => {
-          console.log('then') 
+          console.log('DEBUG:App:workerParserOutputs') 
           console.log(outputs)
         })
         .catch(e => { 
-          console.log('catch') 
+          console.log('DEBUG:App:workerParserOutputs:CATCH') 
           console.log(e); 
         });
 
@@ -76,9 +68,6 @@
               editor_value: defaultModel,
               errors: '',
               tests: ['1 + 1', 'ln(5 + sin(3 + 4*e))']
-
-
-
           }
       ],
       dashboard: [

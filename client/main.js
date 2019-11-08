@@ -1,5 +1,4 @@
 import App from './UI/App.svelte';
-import compile from "./interpreter/compiler";
 const app = new App({
 	target: document.body,
 	props: {

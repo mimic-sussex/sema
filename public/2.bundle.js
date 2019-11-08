@@ -1,9 +1,9 @@
 ((typeof self !== 'undefined' ? self : this)["webpackJsonp"] = (typeof self !== 'undefined' ? self : this)["webpackJsonp"] || []).push([[2],{
 
-/***/ "./src/UI/codeMirrorPlugins.js":
-/*!*************************************!*\
-  !*** ./src/UI/codeMirrorPlugins.js ***!
-  \*************************************/
+/***/ "./client/utils/codeMirrorPlugins.js":
+/*!*******************************************!*\
+  !*** ./client/utils/codeMirrorPlugins.js ***!
+  \*******************************************/
 /*! no exports provided */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 

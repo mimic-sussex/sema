@@ -6,13 +6,9 @@ const prod = mode === 'production';
 var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
-	// entry: {
-	// 	bundle: ['./src/main.js']
-	// },
-	// mode: "development",
 	entry: {
-		client: ["./src/main.js"],
-		worker: ["./src/worker/index.js"]
+		client: ["./client/main.js"],
+		workerParser: ["./workerParser/index.js"]
 	},
 	resolve: {
 		alias: {
@@ -63,7 +59,7 @@ module.exports = {
 			{
 				test: /\.sem$/,
 				use: ["raw-loader"]
-			},
+			}
 		]
 	},
 	mode,

@@ -4,8 +4,13 @@
 
   let selectedLayout = 1; 
 
-  function handleMessage(event) { 
-    selectedLayout = event.detail.layout;
+  function handleMessage(event) {
+    if(event.detail.layout) {
+      selectedLayout = event.detail.layout;
+    }
+    else if(event.detail.language) {
+      console.log('TODO:triggerLanguageChangeWorkflow');
+    }
 	}
 
 </script>

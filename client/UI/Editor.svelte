@@ -1,15 +1,16 @@
 <script context="module">
-  import CodeMirror from "svelte-codemirror";
+  import CodeMirror, { set, update }  from "svelte-codemirror";
   import "codemirror/lib/codemirror.css";
 
   const is_browser = typeof window !== "undefined";
   if (is_browser) {
-    import("./codeMirrorPlugins");
+    import("../utils/codeMirrorPlugins");
   }
 
   export let value = 'sdfg';
   // export let value = `dfsd`;
 
+  let cm;
 
   // let value = encodeURIComponent(`:b:{{1,0.25}imp}\909b;`);
   // let decodedValue = decodeURIComponent(value);
@@ -24,6 +25,13 @@
   //                 :sin:{200}sin; \\\
   //                 :saw:{4}saw; \\\
   //                 {:tri:,:saw:,{:sin:,0.4}mul, :o:, :s:, :b:, :c:}mix`;
+
+  function handleChange(event) {
+    if(event) {
+      console.log('DEBUG:CodeMirrorChange');
+      console.log(event);
+    }
+	}
 
 </script>
 
@@ -75,6 +83,14 @@
 
 </style>
 
+  <!-- export let value = "";
+  export let readonly = false;
+  export let errorLoc = null;
+  export let flex = false;
+  export let lineNumbers = true;
+  export let tab = true; -->
+
 <div class="codemirror-container flex scrollable">
-  <CodeMirror { value } />
+  <!-- <CodeMirror bind:this={cm} bind:value={value} lineNumbers={false} on:message={handleMessage}/> -->
+  <CodeMirror bind:this={cm} lineNumbers={true} on:change={handleChange}/>
 </div>

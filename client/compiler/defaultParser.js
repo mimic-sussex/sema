@@ -3,7 +3,7 @@
 (function () {
 function id(x) { return x[0]; }
 
-const moo = require("moo"); // this 'require' creates a node dependency
+// const moo = require("moo"); // this 'require' creates a node dependency
 
 const lexer = moo.compile({
   separator:    /,/,
