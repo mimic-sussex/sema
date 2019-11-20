@@ -1,5 +1,5 @@
 <script>
-  import { selectedLayout, layoutOptions} from '../store.js';
+  import { selectedLayout, layoutOptions } from '../store.js';
 
   import Quadrants from './layouts/Quadrants.svelte';
   import Dashboard from './layouts/Dashboard.svelte';
@@ -9,6 +9,7 @@
   export let layoutTemplate = 1;
 
   export let value = `:b:{{1,0.25}imp}\\909b;`;
+
 
   let liveContainerDisplay = "initial";
   let dashboardContainerDisplay = "initial";
@@ -43,10 +44,11 @@
   }
 
   const unsubscribe = selectedLayout.subscribe(value => {
-    console.log("Store selectedlayout: ", value.id);
+    // console.log("DEBUG:Layout:selectedlayout: ", value.id);
     changeLayout(value.id);
   })  
 
+  
 
 </script>
 
@@ -67,7 +69,6 @@
 	}
 
 </style>
-
 <!-- <div class="layout-template-container" contenteditable="true" bind:innerHTML={layoutTemplate}> -->
 <div class="layout-template-container scrollable">
   <div class="dashboard-container" style="display:{dashboardContainerDisplay}" >

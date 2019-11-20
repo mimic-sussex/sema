@@ -15,6 +15,10 @@ import defaultModel from './compiler/defaultLiveCode.sem';
 // 	};
 // });
 
+export const liveCodeEditorValue = writable(defaultLiveCode);
+export const grammarEditorValue = writable(defaultGrammar);
+export const modelEditorValue = writable(defaultModel); 
+
 function createSelectedLayout(){
   const { subscribe, set } = writable(2);
 
@@ -26,7 +30,6 @@ function createSelectedLayout(){
 
 // export const selectedLayout = createSelectedLayout(); 
 export const selectedLayout = writable(1); 
-
 
 export const layoutOptions = [
 	{ id: 1, text: `Live` },
@@ -53,12 +56,6 @@ export const layoutsData = writable({
     ],
   }]
 });
-
-export const editor1value = writable(defaultLiveCode);
-
-export const editor2value = writable(defaultGrammar);
-
-export const editor3value = writable(defaultModel); 
 
 
 // export const defaultState = writable({

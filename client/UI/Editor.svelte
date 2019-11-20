@@ -1,6 +1,7 @@
 <script context="module">
   import CodeMirror, { set, update }  from "svelte-codemirror";
   import "codemirror/lib/codemirror.css";
+  import { liveCodeEditorValue, modelEditorValue, grammarEditorValue } from "../store.js";
 
   const is_browser = typeof window !== "undefined";
   if (is_browser) {
@@ -26,12 +27,18 @@
   //                 :saw:{4}saw; \\\
   //                 {:tri:,:saw:,{:sin:,0.4}mul, :o:, :s:, :b:, :c:}mix`;
 
-  function handleChange(event) {
-    if(event) {
-      console.log('DEBUG:CodeMirrorChange');
-      console.log(event);
-    }
-	}
+  // function handleChange(event) {
+  //   if(event) {
+  //     console.log('DEBUG:CodeMirrorChange');
+  //     console.log(event);
+  //   }
+	// }
+
+
+  const unsubscribe = liveCodeEditorValue.subscribe(value => {
+    console.log("DEBUG:Editor:liveCodeEditorValue: ", value);
+    // changeLayout(value.id);
+  })  
 
 </script>
 
@@ -91,6 +98,6 @@
   export let tab = true; -->
 
 <div class="codemirror-container flex scrollable">
-  <!-- <CodeMirror bind:this={cm} bind:value={value} lineNumbers={false} on:message={handleMessage}/> -->
-  <CodeMirror bind:this={cm} lineNumbers={true} on:change={handleChange}/>
+  <!-- <CodeMirror bind:this={cm} bind:value={value} lineNumbers={false} on:message={handleMessage} on:change={handleChange}/> -->
+  <CodeMirror bind:this={cm}  bind:value={$liveCodeEditorValue} lineNumbers={true} />
 </div>
