@@ -57,6 +57,10 @@ module.exports = {
 				use: ["raw-loader"]
 			},
 			{
+				test: /\.tf$/i,
+				loader: ["raw-loader"]
+			},
+			{
 				test: /\.sem$/,
 				use: ["raw-loader"]
 			}

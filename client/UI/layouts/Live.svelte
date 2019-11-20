@@ -1,10 +1,8 @@
 <script>
-
   import Editor from '../Editor.svelte';
 
-  export let liveCodeEditorValue = "asdfasdf";
-  export let grammarEditorValue = "qwerqwer";
-  export let modelEditorValue = "zxcvxcvzxcv";
+  // export let liveCodeEditor; 
+  // export let grammarEditor; 
 
   let container;
 
@@ -69,7 +67,6 @@
     // console.log("mouseOnVSlider: ", dragY );
 	}
 
-
 </script>
 
 <style>
@@ -86,13 +83,6 @@
     height: 100%; /* Live layout stretches height all the way */
   }
 
-	/*
-  .top.col-resize {
-    cursor: col-resize;
-  }
-   */
-
-  
   .block {
   	height: 100%;
   	width: 50%;
@@ -102,10 +92,6 @@
   	background-color: lightgray;
   }
 
-
-
-
-  
   .block-2 {
   	background-color: green;
   	flex: 1;
@@ -123,69 +109,23 @@
   	text-align: center;
   }
   
-	/*
-  .horizontal-slider:hover {
-  	cursor: ew-resize;
-  }
-  
-  .horizontal-slider.col-resize:hover {
-    cursor: col-resize;
-  }
 
- */ 
-  /* .vertical-slider {
-  	line-height: 4px;
-  	width: 100%;
-  	background-color: #dee2e6;
-  	border: none;
-  	cursor: ns-resize;
-  	user-select: none;
-  	text-align: center; // disable selection
-  } */
-  
-	/*
-  .vertical-slider:hover {
-  	cursor: ns-resize;
-  }
-  
-  .vertical-slider.row-resize:hover {
-    cursor: row-resize;
-  }
-
-
-  /* .bottom-horizontal-slider {
-  	line-height: 100%;
-  	width: 4px;
-  	background-color: #dee2e6;
-  	border: none;
-  	cursor: ew-resize;
-  	user-select: none;
-  
-  text-align: center;	// disable selection
-    justify-content: stretch;   
-  } */
-  
-  /* .bottom-horizontal-slider:hover {
-  	cursor: ew-resize;
-  } */
-  
-	/*
-  .bottom-horizontal-slider.col-resize:hover {
-    cursor: col-resize;
-  }
-	*/
 </style>
 
 <div class="quadrants" bind:this={container} on:mousemove={onMouseMove} on:mouseup={onMouseUp}>
 	<div class="top" style="height: {topHeight}" bind:offsetHeight={topOffsetHeight}>
 		<div class="block block-live-code-editor" style="width: {leftTopBlockWidth}" bind:offsetWidth={leftTopBlockOffsetWidth} >
-	    <Editor bind:value={liveCodeEditorValue}/>		
+      <slot name="liveCodeEditor">
+       <em>no content was provided</em>
+      </slot>
 		</div>
 		<div class="horizontal-slider" on:mousedown={dragMouseDownOnHorizontalSlider}>
 			S<br>l<br>i<br>d<br>e<br>r
 		</div>
 		<div class="block block-2">
-			Block 2
+      <slot name="grammarEditor">
+        <em>no content was provided</em>
+      </slot>
 		</div>
 	</div>
 </div>

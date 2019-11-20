@@ -1,11 +1,6 @@
 <script>
 
   import Editor from '../Editor.svelte';
-
-  export let liveCodeEditorValue = "asdfasdf";
-  export let grammarEditorValue = "qwerqwer";
-  export let modelEditorValue = "zxcvxcvzxcv";
-
   let container;
 
   let leftTopBlockWidth = 250;
@@ -197,7 +192,9 @@
 <div class="quadrants" bind:this={container} on:mousemove={onMouseMove} on:mouseup={onMouseUp}>
 	<div class="top" style="height: {topHeight}" bind:offsetHeight={topOffsetHeight}>
 		<div class="block block-live-code-editor" style="width: {leftTopBlockWidth}" bind:offsetWidth={leftTopBlockOffsetWidth} >
-	    <Editor bind:value={liveCodeEditorValue}/>		
+	    <slot name="liveCodeEditor">
+        <em>no content was provided</em>
+      </slot>
 		</div>
 		<div class="horizontal-slider" on:mousedown={dragMouseDownOnHorizontalSlider}>
 			S<br>l<br>i<br>d<br>e<br>r
@@ -209,13 +206,17 @@
 	<div class="vertical-slider" on:mousedown={dragMouseDownOnVerticalSlider}>Slider</div>
 	<div class="bottom">
 		<div class="block block-1" style="width: {leftBottomBlockWidth}" bind:offsetWidth={leftBottomBlockOffsetWidth}>
-	    <Editor bind:value={grammarEditorValue}/>		
+	    <slot name="grammarEditor">
+        <em>no content was provided</em>
+      </slot>	
 		</div>
 		<div class="bottom-horizontal-slider" on:mousedown={dragMouseDownOnBottomHorizontalSlider}>
 			S<br>l<br>i<br>d<br>e<br>r
 		</div>
 		<div class="block-live-grammar-editor">
-			<Editor bind:value={modelEditorValue}/>		
+	    <slot name="modelEditor">
+        <em>no content was provided</em>
+      </slot>	
     </div>
 	</div>
 </div>

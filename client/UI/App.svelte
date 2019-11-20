@@ -9,8 +9,6 @@
   
   import layout from '../store.js';
 
-  export let name;
-
   let compileOutput = compile(defaultGrammar).output;
 
   let workerParser = new Worker('../../public/workerParser.bundle.js'); 

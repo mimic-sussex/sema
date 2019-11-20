@@ -1,4 +1,5 @@
 <script context="module">
+	import { onDestroy } from 'svelte';
   import CodeMirror, { set, update }  from "svelte-codemirror";
   import "codemirror/lib/codemirror.css";
   import { liveCodeEditorValue, modelEditorValue, grammarEditorValue } from "../store.js";
@@ -8,10 +9,9 @@
     import("../utils/codeMirrorPlugins");
   }
 
-  export let value = 'sdfg';
-  // export let value = `dfsd`;
+  // export let codeMirrorValue = 'sdfg';
 
-  let cm;
+  let codeMirror;
 
   // let value = encodeURIComponent(`:b:{{1,0.25}imp}\909b;`);
   // let decodedValue = decodeURIComponent(value);
@@ -37,9 +37,11 @@
 
   const unsubscribe = liveCodeEditorValue.subscribe(value => {
     console.log("DEBUG:Editor:liveCodeEditorValue: ", value);
+
+
     // changeLayout(value.id);
   })  
-
+	// onDestroy(unsubscribe); // Prevent memory leaks by disposing the component
 </script>
 
 <style>
@@ -98,6 +100,7 @@
   export let tab = true; -->
 
 <div class="codemirror-container flex scrollable">
-  <!-- <CodeMirror bind:this={cm} bind:value={value} lineNumbers={false} on:message={handleMessage} on:change={handleChange}/> -->
-  <CodeMirror bind:this={cm}  bind:value={$liveCodeEditorValue} lineNumbers={true} />
+  <!-- <CodeMirror bind:this={codeMirror} bind:value={value} lineNumbers={false} on:message={handleMessage} on:change={handleChange}/> -->
+  <CodeMirror bind:this={codeMirror}  bind:value={$grammarEditorValue} lineNumbers={true} flex={true} />
+  <!-- <CodeMirror bind:this={codeMirror}  bind:value={codeMirrorValue} lineNumbers={true} /> -->
 </div>

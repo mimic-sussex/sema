@@ -1,9 +1,21 @@
 import { writable, readable } from 'svelte/store';
 
-import defaultGrammar from './compiler/defaultGrammar.ne';
-import defaultLiveCode from './compiler/defaultLiveCode.sem';
-import defaultModel from './compiler/defaultLiveCode.sem';
+import default_grammar from './compiler/defaultGrammar.ne';
+import default_liveCode from './compiler/defaultLiveCode.sem';
 
+import hello_world_code_example from "./machineLearning/tfjs/hello-world/hello-world.tf";
+import two_layer_non_linear_code_example from "./machineLearning/tfjs/non-linear/two-layer-non-linear.tf";
+import binary_classification_code_example from "./machineLearning/tfjs/non-linear/binary-classification.tf";
+import echo_state_network_code_example from "./machineLearning/tfjs/echo-state/echo-state-network.tf";
+import lstm_txt_gen_code_example from "./machineLearning/tfjs/rnn/lstm-txt-gen.tf";
+import music_rnn_example from "./machineLearning/magenta/music-rnn.tf";
+
+export const helloWorld = writable(hello_world_code_example);
+export const twoLayerNonLinear = writable(two_layer_non_linear_code_example);
+export const binaryClassification = writable(binary_classification_code_example); 
+export const echoStateNetwork = writable(echo_state_network_code_example); 
+export const lstmTextGen = writable(lstm_txt_gen_code_example); 
+export const musicRNN = writable(music_rnn_example);
 
 // export const mousePosition = readable([0,0], function start(set) {
 //   const interval = setInterval(() => {
@@ -15,9 +27,9 @@ import defaultModel from './compiler/defaultLiveCode.sem';
 // 	};
 // });
 
-export const liveCodeEditorValue = writable(defaultLiveCode);
-export const grammarEditorValue = writable(defaultGrammar);
-export const modelEditorValue = writable(defaultModel); 
+export const liveCodeEditorValue = writable(default_liveCode);
+export const grammarEditorValue = writable(default_grammar);
+export const modelEditorValue = helloWorld;
 
 function createSelectedLayout(){
   const { subscribe, set } = writable(2);
