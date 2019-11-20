@@ -28,7 +28,8 @@
     "nexusui": "^2.0.10",
     "osc": "^2.3.1",
     "osc-js": "^2.0.3",
-    "serialport": "^7.1.5"
+    "serialport": "^7.1.5",
+    "simple-peer": "^9.6.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.4.4",
