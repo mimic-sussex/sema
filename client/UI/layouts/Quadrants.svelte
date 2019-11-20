@@ -115,7 +115,7 @@
   }
 
   .block-1 {
-  	background-color: red;
+  	background-color: rgb(77, 50, 76);
   }
   
   .block-2 {
