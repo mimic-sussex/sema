@@ -115,11 +115,11 @@
   }
 
   .block-1 {
-  	background-color: rgb(77, 50, 76);
+  	background-color: rgb(205, 181, 204);
   }
   
   .block-2 {
-  	background-color: green;
+  	background-color: rgb(204, 242, 204);
   	flex: 1;
   	min-width: 0;
   	overflow: hidden;

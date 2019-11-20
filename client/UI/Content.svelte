@@ -28,7 +28,7 @@
   }
   .sidebar-container {
     background-color: blue;
-    margin-left: 10px;
+    /* margin-left: 10px; */
     grid-area: sidebar;
     grid-row: 0 / 1;
     height: 100%;

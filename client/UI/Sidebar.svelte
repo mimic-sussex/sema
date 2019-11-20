@@ -36,7 +36,7 @@
 <style>
   
   .sidebar {
-    background-color: yellow;
+    background-color: rgb(255, 255, 151);
     width: 140px;
     height: 100%;
   }

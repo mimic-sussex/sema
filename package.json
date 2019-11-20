@@ -35,7 +35,7 @@
     "serve": "^11.0.0",
     "style-loader": "^1.0.0",
     "svelte": "3.15.0",
-    "svelte-codemirror": "^1.2.0",
+    "svelte-codemirror": "",
     "svelte-grid": "^1.10.1",
     "svelte-loader": "2.13.3",
     "webpack": "^4.30.0",

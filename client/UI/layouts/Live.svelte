@@ -93,7 +93,7 @@
   }
 
   .block-2 {
-  	background-color: rgb(112, 98, 125);
+  	background-color: rgb(203, 190, 215);
   	flex: 1;
   	min-width: 0;
   	overflow: hidden;
