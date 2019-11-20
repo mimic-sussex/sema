@@ -1,27 +1,21 @@
 <script>
-
 	import { createEventDispatcher } from 'svelte';
+  import { selectedLayout, layoutOptions} from '../store.js';
 
 	const dispatch = createEventDispatcher();
 
-  let selectedLayout = 2;
+  // let selectedLayout = 2;
 
-  let layoutOptions = [
-		{ id: 1, text: `Live` },
-		{ id: 2, text: `Quadrants` },
-		{ id: 3, text: `Vertical` },
-		{ id: 4, text: `Horizontal` },
-		{ id: 5, text: `Dashboard` }
-	];
+  // let layoutOptions = [
+	// 	{ id: 1, text: `Live` },
+	// 	{ id: 2, text: `Horizontal` },
+	// 	{ id: 3, text: `Vertical` },
+	// 	{ id: 4, text: `Quadrants` },
+	// 	{ id: 5, text: `Dashboard` }
+	// ];
 
-	function sendLayoutSelect() {
-    // console.log("layout: ", selectedLayout);
-    dispatch('message', {
-			layout: selectedLayout.id
-		});
-	}
 
- let selectedLanguage = 1;
+  let selectedLanguage = 1;
 
   let languageOptions = [
 		{ id: 1, text: `Default` },
@@ -59,7 +53,7 @@
     <div>
       <span>Layout</span>
     </div>
-  	<select bind:value={selectedLayout} on:change="{ () => sendLayoutSelect() }">
+  	<select bind:value={$selectedLayout} >
   		{#each layoutOptions as layoutOption}
   			<option value={layoutOption}>
   				{layoutOption.text}

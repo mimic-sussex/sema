@@ -1,7 +1,16 @@
 {
   "name": "S(velt)ema",
+  "author": "Francisco Bernardo",
   "version": "0.1.0",
   "description": "A quick spike to test and understand svelte v3 as UI framework for sema",
+  "scripts": {
+    "prod": "cross-env NODE_ENV=production webpack",
+    "dev": "cross-env NODE_ENV=development webpack",
+    "go": "webpack-dev-server --content-base public",
+    "build:ru": "rollup -c",
+    "dev:ru": "rollup -c -w",
+    "go:sirv": "sirv public"
+  },
   "dependencies": {
     "compression": "^1.7.1",
     "lodash.clonedeep": "^4.5.0",
@@ -17,6 +26,12 @@
     "mini-css-extract-plugin": "^0.6.0",
     "raw-loader": "^3.1.0",
     "rollup": "^1.26.3",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-json": "^4.0.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-svelte": "^5.1.0",
+    "rollup-plugin-terser": "^5.1.1",
+    "rollup-plugin-livereload": "^1.0.0",
     "serve": "^11.0.0",
     "style-loader": "^1.0.0",
     "svelte": "^3.0.0",
@@ -28,10 +43,5 @@
     "webpack-cli": "^3.3.0",
     "webpack-dev-server": "^3.3.1",
     "worker-loader": "^2.0.0"
-  },
-  "scripts": {
-    "prod": "cross-env NODE_ENV=production webpack",
-    "dev": "cross-env NODE_ENV=development webpack",
-    "go": "webpack-dev-server --content-base public"
   }
 }

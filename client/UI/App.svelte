@@ -7,6 +7,8 @@
   import defaultLiveCode from '../compiler/defaultLiveCode.sem';
   import defaultModel from '../compiler/defaultLiveCode.sem';
   
+  import layout from '../store.js';
+
   export let name;
 
   let compileOutput = compile(defaultGrammar).output;
@@ -36,7 +38,6 @@
           console.log('DEBUG:App:workerParserOutputs:CATCH') 
           console.log(e); 
         });
-
 
 
   let defaultState = {

@@ -1,16 +1,16 @@
 <script>
   import Sidebar from './Sidebar.svelte';
   import Layout from './Layout.svelte';
-
-  let selectedLayout = 1; 
+  import { selectedLayout, layoutOptions} from '../store.js';
+  // let selectedLayout = 1; 
 
   function handleMessage(event) {
-    if(event.detail.layout) {
-      selectedLayout = event.detail.layout;
-    }
-    else if(event.detail.language) {
-      console.log('TODO:triggerLanguageChangeWorkflow');
-    }
+    // if(event.detail.layout) {
+    //   $selectedLayout = event.detail.layout;
+    // }
+    // else if(event.detail.language) {
+    //   console.log('TODO:triggerLanguageChangeWorkflow');
+    // }
 	}
 
 </script>

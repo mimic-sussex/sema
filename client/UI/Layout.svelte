@@ -1,11 +1,16 @@
 <script>
-  import Quadrants from "./Quadrants.svelte";
-  import Dashboard from "./Dashboard.svelte";
+  import { selectedLayout, layoutOptions} from '../store.js';
 
+  import Quadrants from './layouts/Quadrants.svelte';
+  import Dashboard from './layouts/Dashboard.svelte';
+  import Live from './layouts/Live.svelte'
+
+ 
   export let layoutTemplate = 1;
 
   export let value = `:b:{{1,0.25}imp}\\909b;`;
 
+  let liveContainerDisplay = "initial";
   let dashboardContainerDisplay = "initial";
   let quadrantsContainerDisplay = "initial";
 
@@ -14,20 +19,34 @@
 
   function changeLayout (layoutIndex) {
     switch (layoutIndex) {
+      case 1:
+        liveContainerDisplay =      "initial";
+        quadrantsContainerDisplay = "none"; 
+        dashboardContainerDisplay = "none"; 
+        break;
       case 2:
-        dashboardContainerDisplay = "none";
+        liveContainerDisplay =      "none";
         quadrantsContainerDisplay = "initial"; 
+        dashboardContainerDisplay = "none"; 
         break;
       case 5:
-        dashboardContainerDisplay = "initial"; 
+        liveContainerDisplay =      "none"; 
         quadrantsContainerDisplay = "none";  
+        dashboardContainerDisplay = "initial";  
         break;
       default:
-        dashboardContainerDisplay = "initial";
+        liveContainerDisplay =      "initial";
         quadrantsContainerDisplay = "initial";  
+        dashboardContainerDisplay = "initial";  
         break;
     }
   }
+
+  const unsubscribe = selectedLayout.subscribe(value => {
+    console.log("Store selectedlayout: ", value.id);
+    changeLayout(value.id);
+  })  
+
 
 </script>
 
@@ -52,9 +71,12 @@
 <!-- <div class="layout-template-container" contenteditable="true" bind:innerHTML={layoutTemplate}> -->
 <div class="layout-template-container scrollable">
   <div class="dashboard-container" style="display:{dashboardContainerDisplay}" >
-    <Dashboard />
+    <Dashboard liveCodeEditorValue={value} grammarEditorValue={value} modelEditorValue={value} />
   </div>
   <div class="quadrants-container" style="display:{quadrantsContainerDisplay}">
     <Quadrants liveCodeEditorValue={value} grammarEditorValue={value} modelEditorValue={value}  />
+  </div>
+  <div class="live-container" style="display:{liveContainerDisplay}">
+    <Live liveCodeEditorValue={value} grammarEditorValue={value} modelEditorValue={value}  />
   </div>
 </div>

@@ -1,6 +1,6 @@
 <script>
 
-  import Editor from './Editor.svelte';
+  import Editor from '../Editor.svelte';
 
   export let liveCodeEditorValue = "asdfasdf";
   export let grammarEditorValue = "qwerqwer";
@@ -23,7 +23,7 @@
   let topHeight = 600;
   let topOffsetHeight;
   let dragY;
-  let isMouseDownOnVerticalSlider;
+  let isMouseDownOnVerticalSlider
   
 	function onMouseMove(e) {
 		// let top = vslider.previousElementSibling;
@@ -83,7 +83,7 @@
   .top {
   	display: flex;
   	flex-direction: row;
-    height: 50%;
+    height: 100%; /* Live layout stretches height all the way */
   }
 
 	/*
@@ -92,14 +92,6 @@
   }
    */
 
-  .bottom {
-   	flex: 1;
-   	min-width: 0; /* adjust automatically  */
-  	overflow: hidden; /* allow flexing beyond auto width  */
-  	display: flex; /* hide overflow on small width  */
-  	flex-direction: row;
-  	grid-row: 2;
-  }
   
   .block {
   	height: 100%;
@@ -110,18 +102,9 @@
   	background-color: lightgray;
   }
 
-  .block-live-grammar-editor {
-    background-color: gray;
-    flex: 1;
-  	min-width: 0;
-  	overflow: hidden;
-    /* min-width: 0; adjust automatically  */
-  	/* overflow: hidden; */
-  }
 
-  .block-1 {
-  	background-color: red;
-  }
+
+
   
   .block-2 {
   	background-color: green;
@@ -150,16 +133,15 @@
   }
 
  */ 
-  .vertical-slider {
+  /* .vertical-slider {
   	line-height: 4px;
   	width: 100%;
   	background-color: #dee2e6;
   	border: none;
   	cursor: ns-resize;
   	user-select: none;
-  	/* // disable selection */
-  	text-align: center;
-  }
+  	text-align: center; // disable selection
+  } */
   
 	/*
   .vertical-slider:hover {
@@ -170,22 +152,22 @@
     cursor: row-resize;
   }
 
- */ 
-  .bottom-horizontal-slider {
+
+  /* .bottom-horizontal-slider {
   	line-height: 100%;
   	width: 4px;
   	background-color: #dee2e6;
   	border: none;
   	cursor: ew-resize;
   	user-select: none;
-  	/* disable selection */
-  	text-align: center;
-    justify-content: stretch;   
-  }
   
-  .bottom-horizontal-slider:hover {
+  text-align: center;	// disable selection
+    justify-content: stretch;   
+  } */
+  
+  /* .bottom-horizontal-slider:hover {
   	cursor: ew-resize;
-  }
+  } */
   
 	/*
   .bottom-horizontal-slider.col-resize:hover {
@@ -205,17 +187,5 @@
 		<div class="block block-2">
 			Block 2
 		</div>
-	</div>
-	<div class="vertical-slider" on:mousedown={dragMouseDownOnVerticalSlider}>Slider</div>
-	<div class="bottom">
-		<div class="block block-1" style="width: {leftBottomBlockWidth}" bind:offsetWidth={leftBottomBlockOffsetWidth}>
-	    <Editor bind:value={grammarEditorValue}/>		
-		</div>
-		<div class="bottom-horizontal-slider" on:mousedown={dragMouseDownOnBottomHorizontalSlider}>
-			S<br>l<br>i<br>d<br>e<br>r
-		</div>
-		<div class="block-live-grammar-editor">
-			<Editor bind:value={modelEditorValue}/>		
-    </div>
 	</div>
 </div>

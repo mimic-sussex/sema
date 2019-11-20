@@ -2,7 +2,7 @@
   import Grid from "svelte-grid";
   import gridHelp from "svelte-grid/build/helper";
   import map from "lodash.map";
-  import Editor from './Editor.svelte';
+  import Editor from '../Editor.svelte';
 
   export let value = '';
 
