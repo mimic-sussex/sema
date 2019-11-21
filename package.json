@@ -1,6 +1,6 @@
 {
   "name": "S(velt)ema",
-  "author": "Francisco Bernardo",
+  "author": "Francisco Bernardo <franxico@gmail.com> (http://frantic0.com)",
   "version": "0.1.0",
   "description": "A quick spike to test and understand svelte v3 as UI framework for sema",
   "scripts": {
@@ -17,7 +17,11 @@
     "lodash.map": "^4.6.0",
     "nearley": "^2.15.1",
     "polka": "^0.5.0",
-    "sirv": "^0.4.0"
+    "sirv": "^0.4.0",
+    "nexusui": "^2.0.10",
+    "svelte-codemirror": "https://github.com/frantic0/svelte-codemirror.git",
+    "svelte-oscilloscope": "https://github.com/frantic0/svelte-oscilloscope.git",
+    "svelte-spectrogram": "https://github.com/frantic0/svelte-spectrogram.git"
   },
   "devDependencies": {
     "cross-env": "^5.2.0",
@@ -35,7 +39,6 @@
     "serve": "^11.0.0",
     "style-loader": "^1.0.0",
     "svelte": "3.15.0",
-    "svelte-codemirror": "",
     "svelte-grid": "^1.10.1",
     "svelte-loader": "2.13.3",
     "webpack": "^4.30.0",

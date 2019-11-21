@@ -46,7 +46,7 @@ export const selectedLayout = writable(1);
 export const layoutOptions = [
 	{ id: 1, text: `Live` },
 	{ id: 2, text: `Horizontal` },
-	{ id: 3, text: `Vertical` },
+	{ id: 3, text: `Tutorial` },
 	{ id: 4, text: `Quadrants` },
 	{ id: 5, text: `Dashboard` }
 ];

@@ -11,15 +11,14 @@
     import("../utils/codeMirrorPlugins");
   }
 
-  import Quadrants from './layouts/Quadrants.svelte';
-  import Tutorial from './layouts/Tutorial.svelte';
-  import Dashboard from './layouts/Dashboard.svelte';
-  import Live from './layouts/Live.svelte';
-  import Editor from './Editor.svelte';
-
   let codeMirror1, codeMirror2;
   let codeMirror3, codeMirror4, codeMirror5;
 
+  import Quadrants from './layouts/Quadrants.svelte';
+  import Dashboard from './layouts/Dashboard.svelte';
+  import Live from './layouts/Live.svelte';
+  import Editor from './Editor.svelte';
+ 
   export let layoutTemplate = 1;
 
   // export let value = `:b:{{1,0.25}imp}\\909b;`;
@@ -28,7 +27,6 @@
   let liveContainerDisplay = "initial";
   let dashboardContainerDisplay = "initial";
   let quadrantsContainerDisplay = "initial";
-  let tutorialContainerDisplay = "initial";
 
 
   $: doubled = changeLayout(layoutTemplate);
@@ -38,32 +36,22 @@
       case 1:
         liveContainerDisplay =      "initial";
         quadrantsContainerDisplay = "none"; 
-        dashboardContainerDisplay = "none";
-        tutorialContainerDisplay = "none";
+        dashboardContainerDisplay = "none"; 
         break;
       case 2:
         liveContainerDisplay =      "none";
         quadrantsContainerDisplay = "initial"; 
         dashboardContainerDisplay = "none"; 
-        tutorialContainerDisplay = "none";
-        break;
-      case 3:
-        liveContainerDisplay =      "none"; 
-        quadrantsContainerDisplay = "none";  
-        dashboardContainerDisplay = "initial";  
-        tutorialContainerDisplay = "none";
         break;
       case 5:
         liveContainerDisplay =      "none"; 
         quadrantsContainerDisplay = "none";  
-        dashboardContainerDisplay = "none";  
-        tutorialContainerDisplay = "initial";
+        dashboardContainerDisplay = "initial";  
         break;
       default:
         liveContainerDisplay =      "initial";
         quadrantsContainerDisplay = "initial";  
         dashboardContainerDisplay = "initial";  
-        tutorialContainerDisplay = "initial";
         break;
     }
   }
@@ -75,7 +63,7 @@
 	// onDestroy(unsubscribe); // Prevent memory leaks by disposing the component
   
   const unsubscribe2 = grammarEditorValue.subscribe(value => {
-    // console.log("DEBUG:Layout:grammarEditorValue: ", value);
+    console.log("DEBUG:Layout:grammarEditorValue: ", value);
     // changeLayout(value.id);
   }) 
 
@@ -90,9 +78,7 @@
 
 
 <style>
-/* [contenteditable] {
-  height: 100vh;
-} */
+
   .layout-template-container {
     height: 100vh;
   }
@@ -148,18 +134,15 @@
 		margin: 0 0 0.5em 0;
 		overflow-y: auto;
 	}
+
 </style>
-
-
 <!-- <div class="layout-template-container" contenteditable="true" bind:innerHTML={layoutTemplate}> -->
 <div class="layout-template-container scrollable">
-
   <div class="dashboard-container" style="display:{dashboardContainerDisplay}" >
     <!-- <Dashboard liveCodeEditorValue={value} grammarEditorValue={value} modelEditorValue={value} /> -->
     <Dashboard>
     </Dashboard> 
   </div>
-
   <div class="quadrants-container" style="display:{quadrantsContainerDisplay}">
     <!-- <Quadrants liveCodeEditorValue={value} grammarEditorValue={value} modelEditorValue={value}  /> -->
     <Quadrants>
@@ -178,27 +161,6 @@
       </div> 
     </Quadrants>
   </div>
-
-  <div class="tutorial-container" style="display:{tutorialContainerDisplay}">
-    <!-- <Quadrants liveCodeEditorValue={value} grammarEditorValue={value} modelEditorValue={value}  /> -->
-    <Tutorial>
-      
-      <div slot="grammarEditor" class="codemirror-container flex scrollable">
-        <CodeMirror bind:this={codeMirror4}  bind:value={$grammarEditorValue} lineNumbers={true} flex={false} on:change={(e) => console.log(e.detail.value)} /> 
-      </div>
-      
-      <div slot="liveCodeEditor" class="codemirror-container flex scrollable">
-        <CodeMirror bind:this={codeMirror3}  bind:value={$liveCodeEditorValue} lineNumbers={true} flex={false} on:change={(e) => console.log(e.detail.value)} /> 
-      </div>
-
-      <div slot="liveCodeCompilerOutput">
-      </div>
-      <div slot="grammarOutput">
-      </div>
-    </Tutorial>
-  </div>
-
-
   <div class="live-container" style="display:{liveContainerDisplay}">
     <Live>
       <div slot="liveCodeEditor" class="codemirror-container flex scrollable">
@@ -209,6 +171,4 @@
       </div>
     </Live>
   </div>
-
-
 </div>
