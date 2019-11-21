@@ -190,20 +190,27 @@
 </style>
 
 <div class="quadrants" bind:this={container} on:mousemove={onMouseMove} on:mouseup={onMouseUp}>
+
 	<div class="top" style="height: {topHeight}" bind:offsetHeight={topOffsetHeight}>
+
 		<div class="block block-live-code-editor" style="width: {leftTopBlockWidth}" bind:offsetWidth={leftTopBlockOffsetWidth} >
 	    <slot name="liveCodeEditor">
         <em>no content was provided</em>
       </slot>
 		</div>
+
 		<div class="horizontal-slider" on:mousedown={dragMouseDownOnHorizontalSlider}>
 			S<br>l<br>i<br>d<br>e<br>r
 		</div>
+
 		<div class="block block-2">
 			Block 2
 		</div>
+
 	</div>
+
 	<div class="vertical-slider" on:mousedown={dragMouseDownOnVerticalSlider}>Slider</div>
+
 	<div class="bottom">
 		<div class="block block-1" style="width: {leftBottomBlockWidth}" bind:offsetWidth={leftBottomBlockOffsetWidth}>
 	    <slot name="grammarEditor">

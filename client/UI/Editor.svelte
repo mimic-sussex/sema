@@ -36,7 +36,7 @@
 
 
   const unsubscribe = liveCodeEditorValue.subscribe(value => {
-    console.log("DEBUG:Editor:liveCodeEditorValue: ", value);
+    // console.log("DEBUG:Editor:liveCodeEditorValue: ", value);
 
 
     // changeLayout(value.id);

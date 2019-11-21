@@ -2,7 +2,9 @@
 	import { onMount, onDestroy } from 'svelte';
   import CodeMirror, { set, update }  from "svelte-codemirror";
   import "codemirror/lib/codemirror.css";
+
   import { liveCodeEditorValue, grammarEditorValue, modelEditorValue } from "../store.js";
+  import { grammarCompiledParser, grammarCompilationErrors } from "../store.js";
   import { selectedLayout, layoutOptions } from '../store.js';
   import { helloWorld } from "../store.js";
   
@@ -11,11 +13,18 @@
     import("../utils/codeMirrorPlugins");
   }
 
+    
+  import * as nearley from 'nearley/lib/nearley.js'
+  import compile from '../compiler/compiler';
+
   import Quadrants from './layouts/Quadrants.svelte';
   import Tutorial from './layouts/Tutorial.svelte';
   import Dashboard from './layouts/Dashboard.svelte';
   import Live from './layouts/Live.svelte';
   import Editor from './Editor.svelte';
+
+
+
 
   let codeMirror1, codeMirror2;
   let codeMirror3, codeMirror4, codeMirror5;
@@ -29,7 +38,6 @@
   let dashboardContainerDisplay = "initial";
   let quadrantsContainerDisplay = "initial";
   let tutorialContainerDisplay = "initial";
-
 
   $: doubled = changeLayout(layoutTemplate);
 
@@ -76,6 +84,17 @@
   
   const unsubscribe2 = grammarEditorValue.subscribe(value => {
     // console.log("DEBUG:Layout:grammarEditorValue: ", value);
+
+  //  grammarCompiledParser 
+
+    // let liveParser = new nearley.Parser(nearley.Grammar.fromCompiled(grammarCompiled));
+      
+    // let c = compile(value)
+
+    // let {errors, output} = c; 
+
+    // console.log("DEBUG:Layout:grammarEditorValue: ", errors);
+
     // changeLayout(value.id);
   }) 
 
@@ -86,13 +105,30 @@
     // codeMirror3.set("", "js");
     // codeMirror5.set("", "js");
 	});
+
+  let log = (e) => { /* console.log(e.detail.value); */ }
+
+  let log2 = (e) => { 
+
+    
+
+    let {errors, output} = compile(e.detail.value);
+    $grammarCompiledParser = output; 
+    $grammarCompilationErrors = errors; 
+
+
+    console.log("DEBUG:Layout:grammarEditorValue: ", errors);
+    // console.log(e.detail.value);
+    // console.log("DEBUG:Layout:grammarEditorValue: ", compile(value).output);
+    // console.log("DEBUG:Layout:grammarEditorValue: ", compile(e.detail.value).output);
+    // console.log("DEBUG:Layout:grammarEditorValue: ", compile(e.detail.value).errors);
+  }
+
 </script>
 
 
 <style>
-/* [contenteditable] {
-  height: 100vh;
-} */
+
   .layout-template-container {
     height: 100vh;
   }
@@ -168,32 +204,34 @@
         <Spectrogram></Spectrogram> -->
       </div>
       <div slot="liveCodeEditor" class="codemirror-container flex scrollable">
-        <CodeMirror bind:this={codeMirror3}  bind:value={$liveCodeEditorValue} lineNumbers={true} flex={false} on:change={(e) => console.log(e.detail.value)} /> 
+        <CodeMirror bind:this={codeMirror3}  bind:value={$liveCodeEditorValue} lineNumbers={true} flex={false} on:change={log} /> 
       </div>
       <div slot="grammarEditor" class="codemirror-container flex scrollable">
-        <CodeMirror bind:this={codeMirror4}  bind:value={$grammarEditorValue} lineNumbers={true} flex={false} on:change={(e) => console.log(e.detail.value)} /> 
+        <CodeMirror bind:this={codeMirror4}  bind:value={$grammarEditorValue} lineNumbers={true} flex={false} on:change={log} /> 
       </div> 
       <div slot="modelEditor" class="codemirror-container flex scrollable">
-        <CodeMirror bind:this={codeMirror5}  bind:value={$modelEditorValue} lineNumbers={true} flex={false} on:change={(e) => console.log(e.detail.value)} /> 
+        <CodeMirror bind:this={codeMirror5}  bind:value={$modelEditorValue} lineNumbers={true} flex={false} on:change={log} /> 
       </div> 
     </Quadrants>
   </div>
 
   <div class="tutorial-container" style="display:{tutorialContainerDisplay}">
-    <!-- <Quadrants liveCodeEditorValue={value} grammarEditorValue={value} modelEditorValue={value}  /> -->
+    
     <Tutorial>
-      
       <div slot="grammarEditor" class="codemirror-container flex scrollable">
-        <CodeMirror bind:this={codeMirror4}  bind:value={$grammarEditorValue} lineNumbers={true} flex={false} on:change={(e) => console.log(e.detail.value)} /> 
+        <CodeMirror bind:this={codeMirror4}  bind:value={$grammarEditorValue} lineNumbers={true} flex={false} on:change={log2} /> 
       </div>
       
       <div slot="liveCodeEditor" class="codemirror-container flex scrollable">
-        <CodeMirror bind:this={codeMirror3}  bind:value={$liveCodeEditorValue} lineNumbers={true} flex={false} on:change={(e) => console.log(e.detail.value)} /> 
+        <CodeMirror bind:this={codeMirror3}  bind:value={$liveCodeEditorValue} lineNumbers={true} flex={false} on:change={log} /> 
       </div>
 
       <div slot="liveCodeCompilerOutput">
       </div>
       <div slot="grammarOutput">
+        <h5>Grammar compilation errors:</h5>
+        <span style="white-space: pre-wrap">{ $grammarCompilationErrors } </span>
+        
       </div>
     </Tutorial>
   </div>
@@ -202,10 +240,10 @@
   <div class="live-container" style="display:{liveContainerDisplay}">
     <Live>
       <div slot="liveCodeEditor" class="codemirror-container flex scrollable">
-        <CodeMirror bind:this={codeMirror1}  bind:value={$liveCodeEditorValue} lineNumbers={true} flex={false} on:change={(e) => console.log(e.detail.value)} /> 
+        <CodeMirror bind:this={codeMirror1}  bind:value={$liveCodeEditorValue} lineNumbers={true} flex={false} on:change={log} /> 
       </div>
       <div slot="grammarEditor" class="codemirror-container flex scrollable">
-        <CodeMirror bind:this={codeMirror2}  bind:value={$grammarEditorValue} lineNumbers={true} flex={false} on:change={(e) => console.log(e.detail.value)} /> 
+        <CodeMirror bind:this={codeMirror2}  bind:value={$grammarEditorValue} lineNumbers={true} flex={false} on:change={log} /> 
       </div>
     </Live>
   </div>

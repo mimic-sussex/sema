@@ -1,7 +1,10 @@
 import { writable, readable } from 'svelte/store';
+import compile from "./compiler/compiler";
+
 
 import default_grammar from './compiler/defaultGrammar.ne';
 import default_liveCode from './compiler/defaultLiveCode.sem';
+// import default_parser from "./compiler/defaultParser.js";
 
 import hello_world_code_example from "./machineLearning/tfjs/hello-world/hello-world.tf";
 import two_layer_non_linear_code_example from "./machineLearning/tfjs/non-linear/two-layer-non-linear.tf";
@@ -17,19 +20,18 @@ export const echoStateNetwork = writable(echo_state_network_code_example);
 export const lstmTextGen = writable(lstm_txt_gen_code_example); 
 export const musicRNN = writable(music_rnn_example);
 
-// export const mousePosition = readable([0,0], function start(set) {
-//   const interval = setInterval(() => {
-//     set([]])
-//   }, 1000);
 
-//   return function stop() {
-// 		clearInterval(interval);
-// 	};
-// });
+export const grammarEditorValue = writable(default_grammar);
+
+export const grammarCompiledParser = writable(compile(default_grammar).output);
+
+export const grammarCompilationErrors = writable("");
 
 export const liveCodeEditorValue = writable(default_liveCode);
-export const grammarEditorValue = writable(default_grammar);
+
 export const modelEditorValue = helloWorld;
+
+
 
 function createSelectedLayout(){
   const { subscribe, set } = writable(2);
@@ -68,6 +70,16 @@ export const layoutsData = writable({
     ],
   }]
 });
+
+// export const mousePosition = readable([0,0], function start(set) {
+//   const interval = setInterval(() => {
+//     set([]])
+//   }, 1000);
+
+//   return function stop() {
+// 		clearInterval(interval);
+// 	};
+// });
 
 
 // export const defaultState = writable({

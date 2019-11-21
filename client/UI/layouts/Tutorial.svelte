@@ -74,8 +74,6 @@
   }
 
   .right {
-  	/* display: flex; hide overflow on small width  */
-  	/* flex-direction: column; */
    	flex: 1;
    	min-width: 0; /* adjust automatically  */
   	overflow: hidden; /* allow flexing beyond auto width  */
@@ -83,14 +81,14 @@
 
   .block-live-code-editor {
   	background-color: lightgray;
-    
+    height: 66%;
   }
 
   .block-live-grammar-editor {
     background-color: gray;
     flex: 1;
   	min-width: 0;
-    height: 50%;
+    height: 66%;
   	/* overflow: hidden; */
     /* min-width: 0; adjust automatically  */
   	/* overflow: hidden; */

@@ -15,25 +15,25 @@
   
   let p = new Promise( (res, rej) => {
                                         workerParser.postMessage({test: defaultLiveCode, source: compileOutput})
-                                        
+
                                         let timeout = setTimeout(() => {
                                             workerParser.terminate()
                                             workerParser = new Worker('../../public/workerParser.bundle.js')
                                             // rej('Possible infinite loop detected! Check your grammar for infinite recursion.')
                                         }, 5000);
-                            
+
                                         workerParser.onmessage = e => {
                                             res(e.data);
                                             clearTimeout(timeout)
                                         }
         })
         .then(outputs => {
-          console.log('DEBUG:App:workerParserOutputs') 
-          console.log(outputs)
+          // console.log('DEBUG:App:workerParserOutputs') 
+          // console.log(outputs)
         })
         .catch(e => { 
-          console.log('DEBUG:App:workerParserOutputs:CATCH') 
-          console.log(e); 
+          // console.log('DEBUG:App:workerParserOutputs:CATCH') 
+          // console.log(e); 
         });
 
 

@@ -1,9 +1,12 @@
 import * as nearley from 'nearley/lib/nearley.js';
 import * as compiled from './defaultParser.js';
- 
+
+ import { grammarCompiled, parser } from "../store.js";
+
+
 import IRToJavascript from '../IR/IR.js';
 
-let parser = new nearley.Parser(nearley.Grammar.fromCompiled(compiled));
+// let parser = new nearley.Parser(nearley.Grammar.fromCompiled(grammarCompiled));
 
 let parserStartPoint = parser.save();
 console.log('Nearley parser loaded')
