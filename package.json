@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "description": "A quick spike to test and understand svelte v3 as UI framework for sema",
   "scripts": {
-    "prod": "cross-env NODE_ENV=production webpack",
+    "build": "cross-env NODE_ENV=production webpack",
     "dev": "cross-env NODE_ENV=development webpack",
     "go": "webpack-dev-server --content-base public",
     "build:ru": "rollup -c",
@@ -16,12 +16,9 @@
     "lodash.clonedeep": "^4.5.0",
     "lodash.map": "^4.6.0",
     "nearley": "^2.15.1",
-    "polka": "^0.5.0",
-    "sirv": "^0.4.0",
     "nexusui": "^2.0.10",
-    "svelte-codemirror": "https://github.com/frantic0/svelte-codemirror.git",
-    "svelte-oscilloscope": "https://github.com/frantic0/svelte-oscilloscope.git",
-    "svelte-spectrogram": "https://github.com/frantic0/svelte-spectrogram.git"
+    "polka": "^0.5.0",
+    "sirv": "^0.4.0"
   },
   "devDependencies": {
     "cross-env": "^5.2.0",
@@ -39,8 +36,12 @@
     "serve": "^11.0.0",
     "style-loader": "^1.0.0",
     "svelte": "3.15.0",
-    "svelte-grid": "^1.10.1",
+    "svelte-codemirror": "https://github.com/frantic0/svelte-codemirror.git",
+    "svelte-grid": "^1.10.5",
+    "svelte-inspect": "^0.1.2",
     "svelte-loader": "2.13.3",
+    "svelte-oscilloscope": "https://github.com/frantic0/svelte-oscilloscope.git",
+    "svelte-spectrogram": "https://github.com/frantic0/svelte-spectrogram.git",
     "webpack": "^4.30.0",
     "webpack-bundle-analyzer": "^3.6.0",
     "webpack-cli": "^3.3.0",

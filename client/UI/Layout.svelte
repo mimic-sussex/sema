@@ -2,17 +2,23 @@
 	import { onMount, onDestroy } from 'svelte';
   import CodeMirror, { set, update }  from "svelte-codemirror";
   import "codemirror/lib/codemirror.css";
+	import Inspect from 'svelte-inspect';
 
-  import { liveCodeEditorValue, grammarEditorValue, modelEditorValue } from "../store.js";
-  import { grammarCompiledParser, grammarCompilationErrors } from "../store.js";
-  import { selectedLayout, layoutOptions } from '../store.js';
-  import { helloWorld } from "../store.js";
+  import {  grammarEditorValue, 
+            modelEditorValue, 
+            grammarCompiledParser, 
+            grammarCompilationErrors, 
+            liveCodeEditorValue,
+            liveCodeAbstractSyntaxTree,
+            selectedLayout, 
+            layoutOptions,
+            helloWorld
+  } from "../store.js";
   
   const is_browser = typeof window !== "undefined";
   if (is_browser) {
     import("../utils/codeMirrorPlugins");
   }
-
     
   import * as nearley from 'nearley/lib/nearley.js'
   import compile from '../compiler/compiler';
@@ -106,23 +112,50 @@
     // codeMirror5.set("", "js");
 	});
 
-  let log = (e) => { /* console.log(e.detail.value); */ }
+  let log = (e) => { console.log(e.detail.value); }
+  
+  let nil = (e) => { }
 
-  let log2 = (e) => { 
+  let workerParser = new Worker('../../public/workerParser.bundle.js');
 
-    
+  let parseLiveCode = (e) => { 
 
+    let workerParserAsync = new Promise( (res, rej) => {
+      workerParser.postMessage({test: $liveCodeEditorValue, source: $grammarCompiledParser});
+      let timeout = setTimeout(() => {
+          workerParser.terminate()
+          workerParser = new Worker('../../public/workerParser.bundle.js')
+          // rej('Possible infinite loop detected! Check your grammar for infinite recursion.')
+      }, 5000);
+         workerParser.onmessage = e => {
+          res(e.data);
+          clearTimeout(timeout)
+      }
+    })
+    .then(outputs => {
+      $liveCodeAbstractSyntaxTree = outputs;
+      // console.log('DEBUG:App:workerParserOutputs') 
+    })
+    .catch(e => { 
+      // console.log('DEBUG:App:workerParserOutputs:CATCH') 
+      // console.log(e); 
+    });
+  }
+
+  let compileGrammarOnChange = (e) => { 
     let {errors, output} = compile(e.detail.value);
     $grammarCompiledParser = output; 
-    $grammarCompilationErrors = errors; 
-
-
-    console.log("DEBUG:Layout:grammarEditorValue: ", errors);
-    // console.log(e.detail.value);
-    // console.log("DEBUG:Layout:grammarEditorValue: ", compile(value).output);
-    // console.log("DEBUG:Layout:grammarEditorValue: ", compile(e.detail.value).output);
-    // console.log("DEBUG:Layout:grammarEditorValue: ", compile(e.detail.value).errors);
+    $grammarCompilationErrors = errors;
+    parseLiveCode(); 
   }
+
+  let parseLiveCodeOnChange = (e) => {
+    if($grammarCompiledParser){
+      $liveCodeEditorValue = e.detail.value;
+      parseLiveCode(); 
+    }
+  }
+
 
 </script>
 
@@ -204,13 +237,13 @@
         <Spectrogram></Spectrogram> -->
       </div>
       <div slot="liveCodeEditor" class="codemirror-container flex scrollable">
-        <CodeMirror bind:this={codeMirror3}  bind:value={$liveCodeEditorValue} lineNumbers={true} flex={false} on:change={log} /> 
+        <CodeMirror bind:this={codeMirror3}  bind:value={$liveCodeEditorValue} lineNumbers={true} flex={false} on:change={nil} /> 
       </div>
       <div slot="grammarEditor" class="codemirror-container flex scrollable">
-        <CodeMirror bind:this={codeMirror4}  bind:value={$grammarEditorValue} lineNumbers={true} flex={false} on:change={log} /> 
+        <CodeMirror bind:this={codeMirror4}  bind:value={$grammarEditorValue} lineNumbers={true} flex={false} on:change={nil} /> 
       </div> 
       <div slot="modelEditor" class="codemirror-container flex scrollable">
-        <CodeMirror bind:this={codeMirror5}  bind:value={$modelEditorValue} lineNumbers={true} flex={false} on:change={log} /> 
+        <CodeMirror bind:this={codeMirror5}  bind:value={$modelEditorValue} lineNumbers={true} flex={false} on:change={nil} /> 
       </div> 
     </Quadrants>
   </div>
@@ -219,20 +252,53 @@
     
     <Tutorial>
       <div slot="grammarEditor" class="codemirror-container flex scrollable">
-        <CodeMirror bind:this={codeMirror4}  bind:value={$grammarEditorValue} lineNumbers={true} flex={false} on:change={log2} /> 
+        <CodeMirror bind:this={codeMirror4}  bind:value={$grammarEditorValue} lineNumbers={true} flex={false} on:change={compileGrammarOnChange} /> 
       </div>
       
       <div slot="liveCodeEditor" class="codemirror-container flex scrollable">
-        <CodeMirror bind:this={codeMirror3}  bind:value={$liveCodeEditorValue} lineNumbers={true} flex={false} on:change={log} /> 
+        <CodeMirror bind:this={codeMirror3}  bind:value={$liveCodeEditorValue} lineNumbers={true} flex={false} on:change={parseLiveCodeOnChange} /> 
       </div>
 
       <div slot="liveCodeCompilerOutput">
+      {#if $grammarCompilationErrors !== ""}
+        <div style="overflow-y: scroll; height:auto;">
+          <strong style="color:red; margin:15px 0 15px 5px">Go work on your grammar!</strong>
+        </div>
+      {:else if $liveCodeAbstractSyntaxTree && $liveCodeAbstractSyntaxTree.length}
+        <div style="overflow-y: scroll; height:auto;">
+          <strong style="color:green; margin:15px 0 15px 5px">Abstract Syntax Tree:</strong>
+          <br>
+          <div style="margin-left:5px">
+          <!-- <div style="overflow-y: scroll; height:auto;"> -->
+            <Inspect.Value value={$liveCodeAbstractSyntaxTree[0]['@lang']} depth={1} />
+          </div>  
+        </div>
+      {:else}
+        <div style="overflow-y: scroll; height:auto;">
+          <strong style="color: red; margin:15px 0 10px 5px">SyntaxError: Invalid or unexpected token!</strong>
+        </div> 
+      {/if}
       </div>
+
+
       <div slot="grammarOutput">
-        <h5>Grammar compilation errors:</h5>
-        <span style="white-space: pre-wrap">{ $grammarCompilationErrors } </span>
-        
+      {#if $grammarCompilationErrors !== ""}
+        <div style="overflow-y: scroll; height:auto;">
+          <strong style="color:red; margin:15px 0 15px 5px">Grammar compilation errors:</strong>
+          <br>
+          <div style="margin-left:5px">
+          <!-- <div style="overflow-y: scroll; height:auto;"> -->
+            <span style="white-space: pre-wrap">{ $grammarCompilationErrors } </span>
+          </div>  
+        </div>
+      {:else}
+        <div style="overflow-y: scroll; height:auto;">
+          <strong style="color: green; margin:15px 0 10px 5px">Grammar validated and parser generated!</strong>
+        </div> 
+      {/if}
       </div>
+
+
     </Tutorial>
   </div>
 
@@ -240,10 +306,10 @@
   <div class="live-container" style="display:{liveContainerDisplay}">
     <Live>
       <div slot="liveCodeEditor" class="codemirror-container flex scrollable">
-        <CodeMirror bind:this={codeMirror1}  bind:value={$liveCodeEditorValue} lineNumbers={true} flex={false} on:change={log} /> 
+        <CodeMirror bind:this={codeMirror1}  bind:value={$liveCodeEditorValue} lineNumbers={true} flex={false} on:change={nil} /> 
       </div>
       <div slot="grammarEditor" class="codemirror-container flex scrollable">
-        <CodeMirror bind:this={codeMirror2}  bind:value={$grammarEditorValue} lineNumbers={true} flex={false} on:change={log} /> 
+        <CodeMirror bind:this={codeMirror2}  bind:value={$grammarEditorValue} lineNumbers={true} flex={false} on:change={nil} /> 
       </div>
     </Live>
   </div>

@@ -1,6 +1,5 @@
+# Lexer [or tokenizer] definition with language lexemes [or tokens]
 @{%
-  // const moo = require("moo"); # NOTE: 'require' creates a node .js dependency, comment for  browser version 
-
   const lexer = moo.compile({
     separator:    /,/,
     paramEnd:     /}/,
@@ -17,17 +16,22 @@
 %}
 
 
-
 # Pass your lexer object using the @lexer option
 @lexer lexer
 
-main -> _ Statement _                                         {% d => ({ "@lang" : d[1] })  %}
+
+# Grammar definition in the Extended Backus Naur Form (EBNF)
+main -> _ Statement _                                         
+{% d => ({ "@lang" : d[1] })  %}
 
 Statement ->
-      Expression _ %semicolon _ Statement            {% d => [{ "@spawn": d[0] }].concat(d[4]) %}
-      |
-      Expression                                      {% d => [{"@sigOut": { "@spawn": d[0] }}] %}
-      # | %hash . "\n"                                          {% d => ({ "@comment": d[3] }) %}
+  Expression _ %semicolon _ Statement            
+  {% d => [{ "@spawn": d[0] }].concat(d[4]) %}
+  |
+  Expression                                      
+  {% d => [{"@sigOut": { "@spawn": d[0] }}] %}
+  # | %hash . "\n"                                          
+  {% d => ({ "@comment": d[3] }) %}
 
 Expression ->
   ParameterList _ %funcName

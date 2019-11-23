@@ -13,7 +13,7 @@
 
   let workerParser = new Worker('../../public/workerParser.bundle.js'); 
   
-  let p = new Promise( (res, rej) => {
+  let workerParserAsync = new Promise( (res, rej) => {
                                         workerParser.postMessage({test: defaultLiveCode, source: compileOutput})
 
                                         let timeout = setTimeout(() => {

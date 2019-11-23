@@ -103,7 +103,7 @@
   }
 
   .block-1 {
-  	background-color: rgb(205, 181, 204);
+  	background-color: rgb(199, 180, 199);
   }
   
   .block-2 {

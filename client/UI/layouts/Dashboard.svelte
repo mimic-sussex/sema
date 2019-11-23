@@ -66,6 +66,10 @@
   margin: 0;
 }
 
+:global(.svlt-grid-resizer) {
+  z-index: 1500;
+}
+
 :global(.svlt-grid-resizer::after) {
   border-color: white !important;
 }
@@ -87,7 +91,7 @@
 <div class="layout-template-container">
   <Grid useTransform {breakpoints} gap={10} {items} bind:items {cols} rowHeight={100} let:item>
     <div class="content" style="background: {item.static ? '#ccccee' : item.data}" >
-      <Editor bind:value={value}/>	
+      <Editor bind:value={value}/>
     </div>
   </Grid>
 </div>

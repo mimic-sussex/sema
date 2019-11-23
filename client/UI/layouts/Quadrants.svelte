@@ -103,6 +103,7 @@
 
   .block-live-code-editor {
   	background-color: lightgray;
+    width: 66%;
   }
 
   .block-live-grammar-editor {
@@ -193,7 +194,7 @@
 
 	<div class="top" style="height: {topHeight}" bind:offsetHeight={topOffsetHeight}>
 
-		<div class="block block-live-code-editor" style="width: {leftTopBlockWidth}" bind:offsetWidth={leftTopBlockOffsetWidth} >
+		<div class="block-live-code-editor" style="width: {leftTopBlockWidth}" bind:offsetWidth={leftTopBlockOffsetWidth} >
 	    <slot name="liveCodeEditor">
         <em>no content was provided</em>
       </slot>
