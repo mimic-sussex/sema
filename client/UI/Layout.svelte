@@ -51,10 +51,10 @@
   function changeLayout (layoutIndex) {
     switch (layoutIndex) {
       case 1:
-        liveContainerDisplay =      "initial";
-        quadrantsContainerDisplay = "none"; 
-        dashboardContainerDisplay = "none";
-        tutorialContainerDisplay = "none";
+        liveContainerDisplay =      "none"; 
+        quadrantsContainerDisplay = "none";  
+        dashboardContainerDisplay = "none";  
+        tutorialContainerDisplay = "initial";
         break;
       case 2:
         liveContainerDisplay =      "none";
@@ -68,11 +68,11 @@
         dashboardContainerDisplay = "initial";  
         tutorialContainerDisplay = "none";
         break;
-      case 5:
-        liveContainerDisplay =      "none"; 
-        quadrantsContainerDisplay = "none";  
-        dashboardContainerDisplay = "none";  
-        tutorialContainerDisplay = "initial";
+      case 4:
+        liveContainerDisplay =      "initial";
+        quadrantsContainerDisplay = "none"; 
+        dashboardContainerDisplay = "none";
+        tutorialContainerDisplay = "none";
         break;
       default:
         liveContainerDisplay =      "initial";
@@ -164,6 +164,7 @@
     let {errors, output} = compile(e.detail.value);
     $grammarCompiledParser = output; 
     $grammarCompilationErrors = errors;
+
     if($grammarCompiledParser && $liveCodeEditorValue){
       $liveCodeEditorValue = e.detail.value;
       parseLiveCode(); 
@@ -251,31 +252,6 @@
 <!-- <div class="layout-template-container" contenteditable="true" bind:innerHTML={layoutTemplate}> -->
 <div class="layout-template-container scrollable">
 
-  <div class="dashboard-container" style="display:{dashboardContainerDisplay}" >
-    <!-- <Dashboard liveCodeEditorValue={value} grammarEditorValue={value} modelEditorValue={value} /> -->
-    <Dashboard>
-    </Dashboard> 
-  </div>
-
-  <div class="quadrants-container" style="display:{quadrantsContainerDisplay}">
-    <!-- <Quadrants liveCodeEditorValue={value} grammarEditorValue={value} modelEditorValue={value}  /> -->
-    <Quadrants>
-      <div slot="viz">
-        <!-- <Oscilloscope></Oscilloscope>
-        <Spectrogram></Spectrogram> -->
-      </div>
-      <div slot="liveCodeEditor" class="codemirror-container flex scrollable">
-        <CodeMirror bind:this={codeMirror3}  bind:value={$liveCodeEditorValue} lineNumbers={true} flex={false} on:change={nil} /> 
-      </div>
-      <div slot="grammarEditor" class="codemirror-container flex scrollable">
-        <CodeMirror bind:this={codeMirror4}  bind:value={$grammarEditorValue} lineNumbers={true} flex={false} on:change={nil} /> 
-      </div> 
-      <div slot="modelEditor" class="codemirror-container flex scrollable">
-        <CodeMirror bind:this={codeMirror5}  bind:value={$modelEditorValue} lineNumbers={true} flex={false} on:change={nil} /> 
-      </div> 
-    </Quadrants>
-  </div>
-
   <div class="tutorial-container" style="display:{tutorialContainerDisplay}">
     
     <Tutorial>
@@ -334,6 +310,33 @@
 
     </Tutorial>
   </div>
+
+  <div class="dashboard-container" style="display:{dashboardContainerDisplay}" >
+    <!-- <Dashboard liveCodeEditorValue={value} grammarEditorValue={value} modelEditorValue={value} /> -->
+    <Dashboard>
+    </Dashboard> 
+  </div>
+
+  <div class="quadrants-container" style="display:{quadrantsContainerDisplay}">
+    <!-- <Quadrants liveCodeEditorValue={value} grammarEditorValue={value} modelEditorValue={value}  /> -->
+    <Quadrants>
+      <div slot="viz">
+        <!-- <Oscilloscope></Oscilloscope>
+        <Spectrogram></Spectrogram> -->
+      </div>
+      <div slot="liveCodeEditor" class="codemirror-container flex scrollable">
+        <CodeMirror bind:this={codeMirror3}  bind:value={$liveCodeEditorValue} lineNumbers={true} flex={false} on:change={nil} /> 
+      </div>
+      <div slot="grammarEditor" class="codemirror-container flex scrollable">
+        <CodeMirror bind:this={codeMirror4}  bind:value={$grammarEditorValue} lineNumbers={true} flex={false} on:change={nil} /> 
+      </div> 
+      <div slot="modelEditor" class="codemirror-container flex scrollable">
+        <CodeMirror bind:this={codeMirror5}  bind:value={$modelEditorValue} lineNumbers={true} flex={false} on:change={nil} /> 
+      </div> 
+    </Quadrants>
+  </div>
+
+
 
 
   <div class="live-container" style="display:{liveContainerDisplay}">

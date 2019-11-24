@@ -4,17 +4,6 @@
 
 	const dispatch = createEventDispatcher();
 
-  // let selectedLayout = 2;
-
-  // let layoutOptions = [
-	// 	{ id: 1, text: `Live` },
-	// 	{ id: 2, text: `Horizontal` },
-	// 	{ id: 3, text: `Vertical` },
-	// 	{ id: 4, text: `Quadrants` },
-	// 	{ id: 5, text: `Dashboard` }
-	// ];
-
-
   let selectedLanguage = 1;
 
   let languageOptions = [

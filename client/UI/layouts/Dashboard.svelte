@@ -22,12 +22,13 @@
 
   function generateLayout(col) {
     return map(new Array(20), function(item, i) {
+      const x = Math.ceil(Math.random() * 3) + 2;
       const y = Math.ceil(Math.random() * 4) + 1;
       return {
         ...gridHelp.item({
           x: (i * 2) % col,
           y: Math.floor(i / 6) * y,
-          w: 2,
+          w: x,
           h: y,
           id: id(),
         }),
@@ -89,7 +90,7 @@
 </style>
 
 <div class="layout-template-container">
-  <Grid useTransform {breakpoints} gap={10} {items} bind:items {cols} rowHeight={100} let:item>
+  <Grid useTransform {breakpoints} gap={1} {items} bind:items {cols} rowHeight={100} let:item>
     <div class="content" style="background: {item.static ? '#ccccee' : item.data}" >
       <Editor bind:value={value}/>
     </div>

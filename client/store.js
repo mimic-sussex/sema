@@ -50,11 +50,9 @@ function createSelectedLayout(){
 export const selectedLayout = writable(1); 
 
 export const layoutOptions = [
-	{ id: 1, text: `Live` },
-	{ id: 2, text: `Horizontal` },
-	{ id: 3, text: `Tutorial` },
-	{ id: 4, text: `Quadrants` },
-	{ id: 5, text: `Dashboard` }
+	{ id: 1, text: `Tutorial` },
+	{ id: 2, text: `Live` },
+	{ id: 3, text: `Dashboard` }
 ];
 
 export const layoutsData = writable({
