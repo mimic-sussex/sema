@@ -27,6 +27,8 @@ export const grammarCompiledParser = writable(compile(default_grammar).output);
 
 export const grammarCompilationErrors = writable("");
 
+export const liveCodeParseErrors = writable("");
+
 export const liveCodeAbstractSyntaxTree = writable("");
 
 export const liveCodeEditorValue = writable(default_liveCode);

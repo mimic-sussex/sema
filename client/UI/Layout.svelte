@@ -10,6 +10,7 @@
             grammarCompilationErrors, 
             liveCodeEditorValue,
             liveCodeAbstractSyntaxTree,
+            liveCodeParseErrors,
             selectedLayout, 
             layoutOptions,
             helloWorld
@@ -116,44 +117,71 @@
   
   let nil = (e) => { }
 
-  let workerParser = new Worker('../../workerParser.js');
+  // let workerParser = new Worker('../../workerParser.js');
 
   let parseLiveCode = (e) => { 
+  
+    if(window.Worker){
 
-    let workerParserAsync = new Promise( (res, rej) => {
-      workerParser.postMessage({test: $liveCodeEditorValue, source: $grammarCompiledParser});
-      let timeout = setTimeout(() => {
-          workerParser.terminate()
-          workerParser = new Worker('../../workerParser.js')
-          // rej('Possible infinite loop detected! Check your grammar for infinite recursion.')
-      }, 5000);
-         workerParser.onmessage = e => {
-          res(e.data);
-          clearTimeout(timeout)
-      }
-    })
-    .then(outputs => {
-      $liveCodeAbstractSyntaxTree = outputs;
-      // console.log('DEBUG:App:workerParserOutputs') 
-    })
-    .catch(e => { 
-      // console.log('DEBUG:App:workerParserOutputs:CATCH') 
-      // console.log(e); 
-    });
+      let workerParser = new Worker('../../workerParser.js');
+
+      let workerParserAsync = new Promise( (res, rej) => {
+
+        workerParser.postMessage({liveCodeSource: $liveCodeEditorValue, parserSource: $grammarCompiledParser});
+
+        let timeout = setTimeout(() => {
+            workerParser.terminate()
+            workerParser = new Worker('../../workerParser.js')
+            // rej('Possible infinite loop detected! Check your grammar for infinite recursion.')
+        }, 5000);
+
+        workerParser.onmessage = e => {
+          if(e.data.message !== undefined){
+            // console.log('DEBUG:Layout:workerParserAsync:onmessage')
+            // console.log(e); 
+            $liveCodeParseErrors = e.data.message; 
+          }
+          else if(e.data !== undefined && e.data.length != 0){
+            res(e.data);
+          }
+          clearTimeout(timeout);
+        }
+
+      })
+      .then(outputs => {
+        $liveCodeAbstractSyntaxTree = outputs;
+        $liveCodeParseErrors = "";
+        console.log('DEBUG:Layout:workerParserAsync') 
+      })
+      .catch(e => { 
+        console.log('DEBUG:Layout:workerParserAsync:catch') 
+        console.log(e); 
+      });
+    }
   }
 
   let compileGrammarOnChange = (e) => { 
     let {errors, output} = compile(e.detail.value);
     $grammarCompiledParser = output; 
     $grammarCompilationErrors = errors;
-    parseLiveCode(); 
+    if($grammarCompiledParser && $liveCodeEditorValue){
+      $liveCodeEditorValue = e.detail.value;
+      parseLiveCode(); 
+    }
+
+    console.log('DEBUG:Layout:compileGrammarOnChange');
+    console.log(e); 
   }
+
 
   let parseLiveCodeOnChange = (e) => {
     if($grammarCompiledParser){
       $liveCodeEditorValue = e.detail.value;
       parseLiveCode(); 
     }
+    
+    console.log('DEBUG:Layout:parseLiveCodeOnChange');
+    console.log(e); 
   }
 
 
@@ -264,7 +292,7 @@
         <div style="overflow-y: scroll; height:auto;">
           <strong style="color:red; margin:15px 0 15px 5px">Go work on your grammar!</strong>
         </div>
-      {:else if $liveCodeAbstractSyntaxTree && $liveCodeAbstractSyntaxTree.length}
+      {:else if $liveCodeAbstractSyntaxTree && $liveCodeAbstractSyntaxTree.length && $liveCodeParseErrors === ""}
         <div style="overflow-y: scroll; height:auto;">
           <strong style="color:green; margin:15px 0 15px 5px">Abstract Syntax Tree:</strong>
           <br>
@@ -276,6 +304,11 @@
       {:else}
         <div style="overflow-y: scroll; height:auto;">
           <strong style="color: red; margin:15px 0 10px 5px">SyntaxError: Invalid or unexpected token!</strong>
+          <br>
+          <div style="margin-left:5px">
+          <!-- <div style="overflow-y: scroll; height:auto;"> -->
+            <span style="white-space: pre-wrap">{ $liveCodeParseErrors } </span>
+          </div>
         </div> 
       {/if}
       </div>

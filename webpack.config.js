@@ -30,19 +30,17 @@ module.exports = {
 		// publicPath: "/public/",
 		globalObject: `(typeof self !== 'undefined' ? self : this)`
 	},
-	// output: {
-	// 	path: path.join(__dirname, "public"),
-	// 	filename: "[name].bundle.js",
-	// 	publicPath: "/public/",
-	// 	globalObject: `(typeof self !== 'undefined' ? self : this)`
-	// },
-	// output: {
-	// 	path: __dirname + '/public',
-	// 	filename: '[name].js',
-	// 	chunkFilename: '[name].[id].js'
-	// },
 	module: {
 		rules: [
+			{
+				test: /\.worker\.js$/,
+				use: {
+					loader: "worker-loader",
+					options: {
+						name: "workerParser.js"
+					}
+				}
+			},
 			{
 				test: /\.svelte$/,
 				use: {
@@ -90,9 +88,7 @@ module.exports = {
 		// new webpack.HotModuleReplacementPlugin(),
 		// new webpack.NoEmitOnErrorsPlugin(),
 		new MiniCssExtractPlugin({
-			// filename: "[name].css",
 			filename: "[name].css"
-			// chunkFilename: "[name].[id].css"
 		})
 	],
 	devtool: prod ? false : "source-map",
