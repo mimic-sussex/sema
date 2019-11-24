@@ -6,33 +6,22 @@
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack",
     "dev": "cross-env NODE_ENV=development webpack",
-    "go": "webpack-dev-server --content-base public",
-    "build:ru": "rollup -c",
-    "dev:ru": "rollup -c -w",
-    "go:sirv": "sirv public"
+    "go": "webpack-dev-server --content-base public"
   },
   "dependencies": {
-    "compression": "^1.7.1",
     "lodash.clonedeep": "^4.5.0",
     "lodash.map": "^4.6.0",
     "nearley": "^2.15.1",
-    "nexusui": "^2.0.10",
-    "polka": "^0.5.0",
-    "sirv": "^0.4.0"
+    "nexusui": "^2.0.10"
   },
   "devDependencies": {
     "cross-env": "^5.2.0",
     "css-loader": "^3.2.0",
-    "lodash.map": "^4.6.0",
+    "html-webpack-link-type-plugin": "^1.0.3",
+    "html-webpack-plugin": "^3.2.0",
     "mini-css-extract-plugin": "^0.6.0",
     "raw-loader": "^3.1.0",
     "rollup": "^1.26.3",
-    "rollup-plugin-commonjs": "^10.1.0",
-    "rollup-plugin-json": "^4.0.0",
-    "rollup-plugin-livereload": "^1.0.0",
-    "rollup-plugin-node-resolve": "^5.2.0",
-    "rollup-plugin-svelte": "^5.1.0",
-    "rollup-plugin-terser": "^5.1.1",
     "serve": "^11.0.0",
     "style-loader": "^1.0.0",
     "svelte": "3.15.0",

@@ -11,30 +11,30 @@
 
   let compileOutput = compile(defaultGrammar).output;
 
-  let workerParser = new Worker('../../public/workerParser.bundle.js'); 
+  // let workerParser = new Worker('../../public/workerParser.bundle.js'); 
   
-  let workerParserAsync = new Promise( (res, rej) => {
-                                        workerParser.postMessage({test: defaultLiveCode, source: compileOutput})
+  // let workerParserAsync = new Promise( (res, rej) => {
+  //                                       workerParser.postMessage({test: defaultLiveCode, source: compileOutput})
 
-                                        let timeout = setTimeout(() => {
-                                            workerParser.terminate()
-                                            workerParser = new Worker('../../public/workerParser.bundle.js')
-                                            // rej('Possible infinite loop detected! Check your grammar for infinite recursion.')
-                                        }, 5000);
+  //                                       let timeout = setTimeout(() => {
+  //                                           workerParser.terminate()
+  //                                           workerParser = new Worker('../../public/workerParser.bundle.js')
+  //                                           // rej('Possible infinite loop detected! Check your grammar for infinite recursion.')
+  //                                       }, 5000);
 
-                                        workerParser.onmessage = e => {
-                                            res(e.data);
-                                            clearTimeout(timeout)
-                                        }
-        })
-        .then(outputs => {
-          // console.log('DEBUG:App:workerParserOutputs') 
-          // console.log(outputs)
-        })
-        .catch(e => { 
-          // console.log('DEBUG:App:workerParserOutputs:CATCH') 
-          // console.log(e); 
-        });
+  //                                       workerParser.onmessage = e => {
+  //                                           res(e.data);
+  //                                           clearTimeout(timeout)
+  //                                       }
+  //       })
+  //       .then(outputs => {
+  //         // console.log('DEBUG:App:workerParserOutputs') 
+  //         // console.log(outputs)
+  //       })
+  //       .catch(e => { 
+  //         // console.log('DEBUG:App:workerParserOutputs:CATCH') 
+  //         // console.log(e); 
+  //       });
 
 
   let defaultState = {

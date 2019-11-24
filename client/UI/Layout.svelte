@@ -116,7 +116,7 @@
   
   let nil = (e) => { }
 
-  let workerParser = new Worker('../../public/workerParser.bundle.js');
+  let workerParser = new Worker('../../workerParser.js');
 
   let parseLiveCode = (e) => { 
 
@@ -124,7 +124,7 @@
       workerParser.postMessage({test: $liveCodeEditorValue, source: $grammarCompiledParser});
       let timeout = setTimeout(() => {
           workerParser.terminate()
-          workerParser = new Worker('../../public/workerParser.bundle.js')
+          workerParser = new Worker('../../workerParser.js')
           // rej('Possible infinite loop detected! Check your grammar for infinite recursion.')
       }, 5000);
          workerParser.onmessage = e => {
