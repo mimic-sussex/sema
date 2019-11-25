@@ -20,6 +20,7 @@ export const echoStateNetwork = writable(echo_state_network_code_example);
 export const lstmTextGen = writable(lstm_txt_gen_code_example); 
 export const musicRNN = writable(music_rnn_example);
 
+export const splashScreenClicked = writable(false);
 
 export const grammarEditorValue = writable(default_grammar);
 

@@ -1,6 +1,7 @@
 import Module from "./maximilian.wasmmodule.js"; //NOTE:FB We need this import here for webpack to emit maximilian.wasmmodule.js
 import CustomProcessor from "./maxi-processor";
 import { loadSampleToArray } from "./maximilian.util";
+
 /**
  * The CustomAudioNode is a class that extends AudioWorkletNode
  * to hold an Custom Audio Worklet Processor and connect to Web Audio graph
@@ -30,7 +31,9 @@ class AudioEngine {
 	/**
 	 * @constructor
 	 */
-	constructor(msgHandler) {
+	// constructor(msgHandler) {
+	constructor() {    	// NOTE:FB Untangling the previous msgHandler hack from the audio engine
+    
 		// NOTE:FB AudioContext needs lazy loading to counteract the Chrome warning
 		// Audio Engine first play() call, triggered by user, prevents the warning
 		// by setting this.audioContext = new AudioContext();
@@ -45,7 +48,10 @@ class AudioEngine {
 
 		this.analysers = [];
 
-		this.msgHandler = msgHandler;
+
+		// this.msgHandler = msgHandler;    	// NOTE:FB Untangling the previous msgHandler hack from the audio engine
+
+
 		this.onNewDSPLoadValue = x => {};
 
 		this.loadTestIntervals = [];
@@ -79,6 +85,7 @@ class AudioEngine {
 	 * @connectMediaStreamSourceInput
 	 */
 	async connectMediaStream() {
+
 		const constraints = (window.constraints = {
 			audio: true,
 			video: false
@@ -93,11 +100,7 @@ class AudioEngine {
 		}
 
 		function onAudioInputFail(error) {
-			console.log(
-				"DEBUG:AudioEngine: Audio Input fail: ",
-				error.message,
-				error.name
-			);
+			console.log("DEBUG:AudioEngine:AudioInputFail: ", error.message, error.name);
 		}
 
 		navigator.mediaDevices
@@ -173,7 +176,7 @@ class AudioEngine {
 			let evalts = window.performance.now();
 			this.onEvalTimestamp(evalts);
 		} else if (data == "giveMeSomeSamples") {
-			this.msgHandler("giveMeSomeSamples");
+			// this.msgHandler("giveMeSomeSamples");    	// NOTE:FB Untangling the previous msgHandler hack from the audio engine
 		} else {
 			this.msgHandler(data);
 		}

@@ -64,6 +64,15 @@ module.exports = {
 				]
 			},
 			{
+				//IMAGE LOADER
+				test: /\.(jpe?g|png|gif|svg)$/i,
+				loader: "file-loader",
+				options: {
+					name: "[name].[ext]",
+					outputPath: "img"
+				}
+			},
+			{
 				test: /\.ne$/,
 				use: ["raw-loader"]
 			},
@@ -123,11 +132,11 @@ module.exports = {
 		new LinkTypePlugin({
 			"**/*.css": "text/css"
 		}),
-		// new webpack.HotModuleReplacementPlugin(),
-		// new webpack.NoEmitOnErrorsPlugin(),
 		new MiniCssExtractPlugin({
 			filename: "[name].css"
 		})
+		// new webpack.HotModuleReplacementPlugin(),
+		// new webpack.NoEmitOnErrorsPlugin(),
 	],
 	devtool: prod ? false : "source-map",
 	node: {
