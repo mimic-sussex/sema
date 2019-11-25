@@ -74,6 +74,44 @@ module.exports = {
 			{
 				test: /\.sem$/,
 				use: ["raw-loader"]
+			},
+			{
+				// Issue pointed out by Surma on the following gist – https://gist.github.com/surma/b2705b6cca29357ebea1c9e6e15684cc
+				// Emscripten JS files define a global. With `exports-loader` we can
+				// load these files correctly (provided the global’s name is the same
+				// as the file name).
+				test: /maxi-processor.js/,
+				// loader: 'exports-loader',
+				// loader: 'worklet-loader',
+				loader: "file-loader", // files should NOT get processed, only emitted
+				options: {
+					name: "maxi-processor.js"
+				}
+			},
+			{
+				//WASM LOADER
+				// Issue pointed out by Surma on the following gist – https://gist.github.com/surma/b2705b6cca29357ebea1c9e6e15684cc
+				// wasm files should not be processed but just be emitted
+				// and we want to have their public URL.
+				test: /maximilian.wasmmodule.js$/,
+				type: "javascript/auto",
+				// loader: 'wasm-loader', // WASM files get processed [NOT what we want]
+				loader: "file-loader", // WASM files are only emitted to the final dist, NOT processed
+				options: {
+					// mimetype: 'application/wasm',
+					name: "maximilian.wasmmodule.js"
+				}
+			},
+			{
+				//AUDIO SAMPLE LOADER
+				test: /\.(mp3|wav)$/,
+				use: {
+					loader: "file-loader",
+					options: {
+						name: "[name].[ext]",
+						outputPath: "samples"
+					}
+				}
 			}
 		]
 	},
