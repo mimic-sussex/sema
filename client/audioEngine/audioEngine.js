@@ -32,8 +32,9 @@ class AudioEngine {
 	 * @constructor
 	 */
 	// constructor(msgHandler) {
-	constructor() {    	// NOTE:FB Untangling the previous msgHandler hack from the audio engine
-    
+	constructor() {
+		// NOTE:FB Untangling the previous msgHandler hack from the audio engine
+
 		// NOTE:FB AudioContext needs lazy loading to counteract the Chrome warning
 		// Audio Engine first play() call, triggered by user, prevents the warning
 		// by setting this.audioContext = new AudioContext();
@@ -48,9 +49,7 @@ class AudioEngine {
 
 		this.analysers = [];
 
-
 		// this.msgHandler = msgHandler;    	// NOTE:FB Untangling the previous msgHandler hack from the audio engine
-
 
 		this.onNewDSPLoadValue = x => {};
 
@@ -85,7 +84,6 @@ class AudioEngine {
 	 * @connectMediaStreamSourceInput
 	 */
 	async connectMediaStream() {
-
 		const constraints = (window.constraints = {
 			audio: true,
 			video: false
@@ -100,7 +98,11 @@ class AudioEngine {
 		}
 
 		function onAudioInputFail(error) {
-			console.log("DEBUG:AudioEngine:AudioInputFail: ", error.message, error.name);
+			console.log(
+				"DEBUG:AudioEngine:AudioInputFail: ",
+				error.message,
+				error.name
+			);
 		}
 
 		navigator.mediaDevices
@@ -119,26 +121,31 @@ class AudioEngine {
 					this.audioContext,
 					this.audioWorkletProcessorName
 				);
-				
+
 				// All possible error event handlers subscribed
 				this.audioWorkletNode.onprocessorerror = event => {
 					// Errors from the processor
-					console.log(`MaxiProcessor Error detected`);
+					console.log(
+						`DEBUG:AudioEngine:loadWorkletProcessorCode: MaxiProcessor Error detected`
+					);
 				};
 				this.audioWorkletNode.port.onmessageerror = event => {
 					//  error from the processor port
-					console.log(`Error message from port: ` + event.data);
+					console.log(
+						`DEBUG:AudioEngine:loadWorkletProcessorCode: Error message from port: ` +
+							event.data
+					);
 				};
 
 				// State changes in the audio worklet processor
 				this.audioWorkletNode.onprocessorstatechange = event => {
 					console.log(
-						`MaxiProcessor state change detected: ` +
+						`DEBUG:AudioEngine:loadWorkletProcessorCode: MaxiProcessor state change detected: ` +
 							audioWorkletNode.processorState
 					);
 				};
 
-				// Worklet Processor message handler 
+				// Worklet Processor message handler
 				this.audioWorkletNode.port.onmessage = event => {
 					this.messageHandler(event.data);
 				};
@@ -149,7 +156,7 @@ class AudioEngine {
 				return true;
 			} catch (err) {
 				console.log(
-					"AudioWorklet not supported in this browser: ",
+					"DEBUG:AudioEngine:loadWorkletProcessorCode: AudioWorklet not supported in this browser: ",
 					err.message
 				);
 				return false;
@@ -159,28 +166,39 @@ class AudioEngine {
 		}
 	}
 
-
+	/**
+	 * Handles events
+	 * @play
+	 */
 	messageHandler(data) {
-		if (data == "dspStart") {
-			this.ts = window.performance.now();
-		}
-		if (data == "dspEnd") {
-			this.ts = window.performance.now() - this.ts;
-			this.dspTime = this.dspTime * 0.9 + this.ts * 0.1; //time for 128 sample buffer
-			this.onNewDSPLoadValue((this.dspTime / 2.90249433106576) * 100);
-		}
-		if (data == "evalEnd") {
-			let evalts = window.performance.now();
-			this.onEvalTimestamp(evalts);
-		} else if (data == "evalEnd") {
-			let evalts = window.performance.now();
-			this.onEvalTimestamp(evalts);
-		} else if (data == "giveMeSomeSamples") {
-			// this.msgHandler("giveMeSomeSamples");    	// NOTE:FB Untangling the previous msgHandler hack from the audio engine
-		} else {
-			this.msgHandler(data);
-		}
-	}
+
+
+  }
+
+	// NOTE:FB Test code should be segregated from production code into its own fixture.
+	// Otherwise, it becomes bloated, difficult to read and reason about.
+
+	// messageHandler(data) {
+	// 	if (data == "dspStart") {
+	// 		this.ts = window.performance.now();
+	// 	}
+	// 	if (data == "dspEnd") {
+	// 		this.ts = window.performance.now() - this.ts;
+	// 		this.dspTime = this.dspTime * 0.9 + this.ts * 0.1; //time for 128 sample buffer
+	// 		this.onNewDSPLoadValue((this.dspTime / 2.90249433106576) * 100);
+	// 	}
+	// 	if (data == "evalEnd") {
+	// 		let evalts = window.performance.now();
+	// 		this.onEvalTimestamp(evalts);
+	// 	} else if (data == "evalEnd") {
+	// 		let evalts = window.performance.now();
+	// 		this.onEvalTimestamp(evalts);
+	// 	} else if (data == "giveMeSomeSamples") {
+	// 		// this.msgHandler("giveMeSomeSamples");    	// NOTE:FB Untangling the previous msgHandler hack from the audio engine
+	// 	} else {
+	// 		this.msgHandler(data);
+	// 	}
+	// }
 
 	loadSample(objectName, url) {
 		if (this.audioContext !== undefined) {
@@ -263,54 +281,54 @@ class AudioEngine {
 		} else return false;
 	}
 
-	evalSequence() {
-		if (this.audioWorkletNode !== undefined) {
-			let sequence;
-			if (arguments.length == 0) {
-				sequence = this.sequences[
-					Math.floor(Math.random() * this.sequences.length)
-				]; // Choose random entry
-				this.audioWorkletNode.port.postMessage({
-					sequence: `${sequence}`
-				}); // Send JSON object with eval prop for evaluation in processor
-			} else {
-				sequence = arguments[0];
-				this.audioWorkletNode.port.postMessage({
-					sequence: `${sequence}`
-				}); // Send JSON object with eval prop for evaluation in processor
-			}
-			return true;
-			// DEBUG:
-			// console.log("Change Sequence: " + sequence);
-		}
-		return false;
-	}
+	// evalSequence() {
+	// 	if (this.audioWorkletNode !== undefined) {
+	// 		let sequence;
+	// 		if (arguments.length == 0) {
+	// 			sequence = this.sequences[
+	// 				Math.floor(Math.random() * this.sequences.length)
+	// 			]; // Choose random entry
+	// 			this.audioWorkletNode.port.postMessage({
+	// 				sequence: `${sequence}`
+	// 			}); // Send JSON object with eval prop for evaluation in processor
+	// 		} else {
+	// 			sequence = arguments[0];
+	// 			this.audioWorkletNode.port.postMessage({
+	// 				sequence: `${sequence}`
+	// 			}); // Send JSON object with eval prop for evaluation in processor
+	// 		}
+	// 		return true;
+	// 		// DEBUG:
+	// 		// console.log("Change Sequence: " + sequence);
+	// 	}
+	// 	return false;
+	// }
 
-	evalSynth(userDefinedFunction) {
+	evalDSP(dspFunction) {
 		if (this.audioWorkletNode !== undefined) {
 			this.audioWorkletNode.port.postMessage({
-				// eval: `() => { return ${userDefinedFunction} }`
 				eval: 1,
-				setup: userDefinedFunction.setup,
-				loop: userDefinedFunction.loop
+				setup: dspFunction.setup,
+				loop: dspFunction.loop
 			});
 			// console.log("eval sent: " + userDefinedFunction); //DEBUG
 			return true;
-		} else return false;
+		} else 
+      return false;
 	}
 
-	loadTest() {
-		if (audioContext.state === "suspended") this.playAudio();
-		this.loadTestIntervals.push(
-			setInterval("changeSynth()", this.SYNTH_CHANGE_MS)
-		);
-	}
+	// loadTest() {
+	// 	if (audioContext.state === "suspended") this.playAudio();
+	// 	this.loadTestIntervals.push(
+	// 		setInterval("changeSynth()", this.SYNTH_CHANGE_MS)
+	// 	);
+	// }
 
-	stopLoadTest() {
-		this.loadTestIntervals.forEach(interval => {
-			clearInterval(interval);
-		});
-	}
+	// stopLoadTest() {
+	// 	this.loadTestIntervals.forEach(interval => {
+	// 		clearInterval(interval);
+	// 	});
+	// }
 }
 
 export { AudioEngine };

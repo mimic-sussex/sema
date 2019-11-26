@@ -1,7 +1,16 @@
+<script context="module">
+  const is_browser = typeof window !== "undefined";
+
+  import CodeMirror, { set, update } from "svelte-codemirror";
+  import "codemirror/lib/codemirror.css";
+
+  if (is_browser) {
+    import("../utils/codeMirrorPlugins");
+  }
+</script>
+
 <script>
 	import { onMount, onDestroy } from 'svelte';
-  import CodeMirror, { set, update }  from "svelte-codemirror";
-  import "codemirror/lib/codemirror.css";
 	import Inspect from 'svelte-inspect';
 
   import {  grammarEditorValue, 
@@ -16,11 +25,6 @@
             helloWorld
   } from "../store.js";
   
-  const is_browser = typeof window !== "undefined";
-  if (is_browser) {
-    import("../utils/codeMirrorPlugins");
-  }
-    
   import * as nearley from 'nearley/lib/nearley.js'
   import compile from '../compiler/compiler';
 
@@ -31,12 +35,20 @@
   import Editor from './Editor.svelte';
 
 
-
+  let cmdEnter = () => console.log("cmd-Enter");
+  let cmdPeriod = () => console.log("cmd-.");
+  let ctrlEnter = () => console.log("ctrl-.");
 
   let codeMirror1, codeMirror2;
+
   let codeMirror3, codeMirror4, codeMirror5;
 
+  let codeMirror6, codeMirror7;
+
   export let layoutTemplate = 1;
+
+
+
 
   // export let value = `:b:{{1,0.25}imp}\\909b;`;
 
@@ -91,47 +103,42 @@
   
   const unsubscribe2 = grammarEditorValue.subscribe(value => {
     // console.log("DEBUG:Layout:grammarEditorValue: ", value);
-
-  //  grammarCompiledParser 
-
+    //  grammarCompiledParser 
     // let liveParser = new nearley.Parser(nearley.Grammar.fromCompiled(grammarCompiled));
-      
     // let c = compile(value)
-
     // let {errors, output} = c; 
-
     // console.log("DEBUG:Layout:grammarEditorValue: ", errors);
-
     // changeLayout(value.id);
   }) 
 
   onMount(async () => {
-    // codeMirror2.set("", "ebnf");
-    // codeMirror4.set("", "ebnf");
-    // codeMirror1.set("", "js");
-    // codeMirror3.set("", "js");
-    // codeMirror5.set("", "js");
+    codeMirror1.set($grammarEditorValue, "ebnf");
+    codeMirror2.set($liveCodeEditorValue, "svelte");
+    codeMirror3.set($liveCodeEditorValue, "svelte");
+    codeMirror4.set($grammarEditorValue, "ebnf");
+    codeMirror5.set($modelEditorValue, "js"); 
+    // codeMirror6.set($grammarEditorValue, "ebnf");
+    // codeMirror7.set($modelEditorValue, "js"); 
 	});
 
   let log = (e) => { console.log(e.detail.value); }
   
   let nil = (e) => { }
 
-  // let workerParser = new Worker('../../workerParser.js');
-
+  
   let parseLiveCode = (e) => { 
   
     if(window.Worker){
 
-      let workerParser = new Worker('../../workerParser.js');
+      let workerParser = new Worker('../../parser.worker.js');
 
       let workerParserAsync = new Promise( (res, rej) => {
 
-        workerParser.postMessage({liveCodeSource: $liveCodeEditorValue, parserSource: $grammarCompiledParser});
+        workerParser.postMessage({liveCodeSource: $liveCodeEditorValue, parserSource: $grammarCompiledParser, type:'parse'});
 
         let timeout = setTimeout(() => {
             workerParser.terminate()
-            workerParser = new Worker('../../workerParser.js')
+            workerParser = new Worker('../../parser.worker.js')
             // rej('Possible infinite loop detected! Check your grammar for infinite recursion.')
         }, 5000);
 
@@ -151,7 +158,7 @@
       .then(outputs => {
         $liveCodeAbstractSyntaxTree = outputs;
         $liveCodeParseErrors = "";
-        console.log('DEBUG:Layout:workerParserAsync') 
+        // console.log('DEBUG:Layout:workerParserAsync'); 
       })
       .catch(e => { 
         console.log('DEBUG:Layout:workerParserAsync:catch') 
@@ -170,8 +177,8 @@
       parseLiveCode(); 
     }
 
-    console.log('DEBUG:Layout:compileGrammarOnChange');
-    console.log(e); 
+    // console.log('DEBUG:Layout:compileGrammarOnChange');
+    // console.log(e); 
   }
 
 
@@ -181,8 +188,8 @@
       parseLiveCode(); 
     }
     
-    console.log('DEBUG:Layout:parseLiveCodeOnChange');
-    console.log(e); 
+    // console.log('DEBUG:Layout:parseLiveCodeOnChange');
+    // console.log(e); 
   }
 
 
@@ -256,11 +263,11 @@
     
     <Tutorial>
       <div slot="grammarEditor" class="codemirror-container flex scrollable">
-        <CodeMirror bind:this={codeMirror4}  bind:value={$grammarEditorValue} lineNumbers={true} flex={false} on:change={compileGrammarOnChange} /> 
+        <CodeMirror bind:this={codeMirror1}  bind:value={$grammarEditorValue} tab={false} lineNumbers={true}  on:change={compileGrammarOnChange}  /> 
       </div>
       
       <div slot="liveCodeEditor" class="codemirror-container flex scrollable">
-        <CodeMirror bind:this={codeMirror3}  bind:value={$liveCodeEditorValue} lineNumbers={true} flex={false} on:change={parseLiveCodeOnChange} /> 
+        <CodeMirror bind:this={codeMirror2}  bind:value={$liveCodeEditorValue} tab={false} lineNumbers={true} on:change={parseLiveCodeOnChange} cmdEnter={cmdEnter} ctrlEnter={ctrlEnter} cmdPeriod={cmdPeriod}/> 
       </div>
 
       <div slot="liveCodeCompilerOutput">
@@ -325,13 +332,13 @@
         <Spectrogram></Spectrogram> -->
       </div>
       <div slot="liveCodeEditor" class="codemirror-container flex scrollable">
-        <CodeMirror bind:this={codeMirror3}  bind:value={$liveCodeEditorValue} lineNumbers={true} flex={false} on:change={nil} /> 
+        <CodeMirror bind:this={codeMirror3}  bind:value={$liveCodeEditorValue} lineNumbers={true} on:change={nil} /> 
       </div>
       <div slot="grammarEditor" class="codemirror-container flex scrollable">
-        <CodeMirror bind:this={codeMirror4}  bind:value={$grammarEditorValue} lineNumbers={true} flex={false} on:change={nil} /> 
+        <CodeMirror bind:this={codeMirror4}  bind:value={$grammarEditorValue} lineNumbers={true} on:change={nil} /> 
       </div> 
       <div slot="modelEditor" class="codemirror-container flex scrollable">
-        <CodeMirror bind:this={codeMirror5}  bind:value={$modelEditorValue} lineNumbers={true} flex={false} on:change={nil} /> 
+        <CodeMirror bind:this={codeMirror5}  bind:value={$modelEditorValue} lineNumbers={true}  on:change={nil} /> 
       </div> 
     </Quadrants>
   </div>
@@ -342,10 +349,10 @@
   <div class="live-container" style="display:{liveContainerDisplay}">
     <Live>
       <div slot="liveCodeEditor" class="codemirror-container flex scrollable">
-        <CodeMirror bind:this={codeMirror1}  bind:value={$liveCodeEditorValue} lineNumbers={true} flex={false} on:change={nil} /> 
+        <CodeMirror bind:this={codeMirror6}  bind:value={$liveCodeEditorValue} lineNumbers={true}  on:change={nil} /> 
       </div>
       <div slot="grammarEditor" class="codemirror-container flex scrollable">
-        <CodeMirror bind:this={codeMirror2}  bind:value={$grammarEditorValue} lineNumbers={true} flex={false} on:change={nil} /> 
+        <CodeMirror bind:this={codeMirror7}  bind:value={$grammarEditorValue} lineNumbers={true}  on:change={nil} /> 
       </div>
     </Live>
   </div>

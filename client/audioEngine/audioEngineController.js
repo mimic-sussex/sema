@@ -1,4 +1,3 @@
-
 import { AudioEngine } from "./audioEngine.js";
 import { loadImportedSamples } from "./sampleLoader.js";
 
@@ -6,12 +5,9 @@ let createAudioEngine = () => {
 	window.AudioEngine = new AudioEngine();
 };
 
-
 async function setupAudio() {
 	if (window.AudioEngine !== undefined) {
-		
 		await window.AudioEngine.init(); // Start AudioContext and connect WAAPI graph elements, asynchronously
-
     loadImportedSamples();
 	}
 }
@@ -28,6 +24,11 @@ function stopAudio() {
   }
 }
 
+function evalDSP(dspFunction) {
+	if (window.AudioEngine !== undefined) {
+		window.AudioEngine.evalDSP(dspFunction);
+	}
+}
 
-export { createAudioEngine, setupAudio, playAudio, stopAudio };
+export { createAudioEngine, setupAudio, playAudio, stopAudio, evalDSP };
 

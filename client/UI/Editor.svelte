@@ -101,6 +101,6 @@
 
 <div class="codemirror-container flex scrollable">
   <!-- <CodeMirror bind:this={codeMirror} bind:value={value} lineNumbers={false} on:message={handleMessage} on:change={handleChange}/> -->
-  <CodeMirror bind:this={codeMirror}  bind:value={$grammarEditorValue} lineNumbers={true} flex={true} />
+  <!-- <CodeMirror bind:this={codeMirror}  bind:value={$grammarEditorValue} lineNumbers={true} flex={true} /> -->
   <!-- <CodeMirror bind:this={codeMirror}  bind:value={codeMirrorValue} lineNumbers={true} /> -->
 </div>

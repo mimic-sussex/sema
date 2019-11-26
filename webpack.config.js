@@ -14,7 +14,7 @@ module.exports = {
 	// },
 	entry: {
 		bundle: ["./client/main.js"],
-		workerParser: ["./workerParser/index.js"]
+		parser: ["./workers/parser.worker.js"]
 	},
 	resolve: {
 		alias: {
@@ -37,7 +37,7 @@ module.exports = {
 				use: {
 					loader: "worker-loader",
 					options: {
-						name: "workerParser.js"
+						name: "[name].js"
 					}
 				}
 			},

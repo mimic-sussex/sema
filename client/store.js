@@ -4,7 +4,6 @@ import compile from "./compiler/compiler";
 
 import default_grammar from './compiler/defaultGrammar.ne';
 import default_liveCode from './compiler/defaultLiveCode.sem';
-// import default_parser from "./compiler/defaultParser.js";
 
 import hello_world_code_example from "./machineLearning/tfjs/hello-world/hello-world.tf";
 import two_layer_non_linear_code_example from "./machineLearning/tfjs/non-linear/two-layer-non-linear.tf";

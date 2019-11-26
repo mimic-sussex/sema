@@ -16,8 +16,9 @@ onmessage = function(message) {
   if (
 		message.data !== undefined &&
 		message.data.length != 0 &&
-		message.data.type !== "webpackWarnings" &&
-		message.data.type !== "webpackClose"
+    message.data.type === 'parse'
+		// message.data.type !== "webpackWarnings" &&
+		// message.data.type !== "webpackClose"
 	) {
 		try {
 			let parserOutputs = [];

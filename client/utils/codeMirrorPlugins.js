@@ -14,3 +14,4 @@ import 'codemirror/theme/oceanic-next.css';
 import 'codemirror/addon/edit/matchbrackets.js';
 import 'codemirror/keymap/vim.js';
 import 'codemirror/lib/codemirror.css';
+import './theme.css';
