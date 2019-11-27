@@ -9,6 +9,9 @@ import tfWorker from "worker-loader!./machineLearning/tfjs.worker.js";
 
 import oscIO from "./interfaces/oscInterface.js";
 import fileSaver from "filesaver/src/Filesaver.js";
+import {
+  kuramotoNetClock
+} from "./interfaces/clockInterface.js"
 
 import {
   AudioEngine
@@ -57,6 +60,7 @@ var SimplePeer = require('simple-peer');
 var peer; //create this later
 
 let audio;
+let kuraClock;
 
 let editor1, editor2;
 let oscilloscope, spectrogram;
@@ -351,10 +355,10 @@ function createControls() {
 }
 
 
-window.netClock= {
-	addPeer: (offer) => {
-		peer.signal(offer);
-	}
+window.netClock = {
+  addPeer: (offer) => {
+    peer.signal(offer);
+  }
 };
 
 function createNexusUI() {
@@ -540,9 +544,10 @@ async function start() {
   let overlay = document.getElementById("overlay");
   overlay.style.visibility = "hidden";
 
-  await setupAudio();
-  // Create Osciloscope and spectrogram
-  createNexusUI();
+  await setupAudio(()=>{
+    // Create Osciloscope and spectrogram
+    createNexusUI();
+  });
 }
 
 
@@ -551,17 +556,28 @@ async function start() {
   Audio engine wrappers
  *
  */
-async function setupAudio() {
+async function setupAudio(onFinished) {
+  // Start Audio Context and connect WAAPI graph elements
   if (window.AudioEngine !== undefined) {
-    // Start Audio Context and connect WAAPI graph elements
-    await window.AudioEngine.init();
+    //check for net clock information
+    if (kuraClock.connected()) {
+      kuraClock.queryPeers(async (numPeers) => {
+        console.log("Clock Peers: " + numPeers)
+        await window.AudioEngine.init(numPeers);
+        onFinished();
+      });
+    } else {
+      await window.AudioEngine.init(0);
+      onFinished();
+    }
 
   }
 }
 
+
 function playAudio() {
   if (window.AudioEngine !== undefined) {
-    window.AudioEngine.play();
+    window.AudioEngine.play(0);
 
     // createNexusUI();
   }
@@ -619,6 +635,9 @@ const loadImportedSamples = () => {
  */
 document.addEventListener("DOMContentLoaded", () => {
 
+  kuraClock = new kuramotoNetClock();
+
+
   // NOTE:FB
   // Injecting a function in the ctor of the audio engine that is defined in this context and that posts
   // messages to the ML worker makes this code extremely convoluted and hard to reason about.
@@ -628,7 +647,12 @@ document.addEventListener("DOMContentLoaded", () => {
       // Load Samples
       if (!window.AudioEngine.samplesLoaded) loadImportedSamples();
     } else {
-      machineLearningWorker.postMessage(msg);
+      if ("c" in msg) {
+        //todo:  make other messages adopt a proper routing/command format
+        kuraClock.broadcastPhase(msg.p);
+      }else{
+        machineLearningWorker.postMessage(msg);
+      }
     }
   });
 

@@ -10,47 +10,47 @@ const oscMap = {
 
 const jsFuncMap = {
 	saw: {
-		setup: (o, p) => `${o} = new Module.maxiOsc(); 
+		setup: (o, p) => `${o} = new Module.maxiOsc();
                       ${o}.phaseReset(${p.length > 1 ? p[1].loop : 0.0});`,
 		loop:  (o, p) => `${o}.saw(${p[0].loop})`
 	},
 	sin: {
-		setup: (o, p) => `${o} = new Module.maxiOsc(); 
+		setup: (o, p) => `${o} = new Module.maxiOsc();
                       ${o}.phaseReset(${p.length > 1 ? p[1].loop : 0.0});`,
 		loop:  (o, p) => `${o}.sinewave(${p[0].loop})`
 	},
 	tri: {
-		setup: (o, p) => `${o} = new Module.maxiOsc(); 
+		setup: (o, p) => `${o} = new Module.maxiOsc();
                       ${o}.phaseReset(${p.length > 1 ? p[1].loop : 0.0});`,
 		loop:  (o, p) => `${o}.triangle(${p[0].loop})`
 	},
 	pha: {
-		setup: (o, p) => `${o} = new Module.maxiOsc(); 
+		setup: (o, p) => `${o} = new Module.maxiOsc();
                       ${o}.phaseReset(${p.length > 1 ? p[1].loop : 0.0});`,
 		loop:  (o, p) => `${o}.phasor(${p[0].loop})`
 	},
 	ph2: {
-		setup: (o, p) => `${o} = new Module.maxiOsc(); 
+		setup: (o, p) => `${o} = new Module.maxiOsc();
                       ${o}.phaseReset(${p.length > 3 ? p[3].loop : 0.0});`,
 		loop:  (o, p) => `${o}.phasor(${p[0].loop},${p[1].loop},${p[2].loop})`
 	},
 	sqr: {
-		setup: (o, p) => `${o} = new Module.maxiOsc(); 
+		setup: (o, p) => `${o} = new Module.maxiOsc();
                       ${o}.phaseReset(${p.length > 1 ? p[1].loop : 0.0});`,
 		loop:  (o, p) => `${o}.square(${p[0].loop})`
 	},
 	pul: {
-		setup: (o, p) => `${o} = new Module.maxiOsc(); 
+		setup: (o, p) => `${o} = new Module.maxiOsc();
                       ${o}.phaseReset(${p.length > 2 ? p[2].loop : 0.0});`,
 		loop:  (o, p) => `${o}.pulse(${p[0].loop},${p[1].loop})`
 	},
 	imp: {
-		setup: (o, p) => `${o} = new Module.maxiOsc(); 
+		setup: (o, p) => `${o} = new Module.maxiOsc();
                       ${o}.phaseReset(${p.length > 1 ? p[1].loop : 0.0});`,
 		loop:  (o, p) => `${o}.impulse(${p[0].loop})`
 	},
 	sawn: {
-		setup: (o, p) => `${o} = new Module.maxiOsc(); 
+		setup: (o, p) => `${o} = new Module.maxiOsc();
                       ${o}.phaseReset(${p.length > 1 ? p[1].loop : 0.0});`,
 		loop:  (o, p) => `${o}.sawn(${p[0].loop})`
 	},
@@ -66,8 +66,8 @@ const jsFuncMap = {
 		setup: (o, p) => "",
 		loop:  (o, p) => `(${p[0].loop} < ${p[1].loop}) ? 1 : 0`
 	},
-	mod: { 
-    setup: (o, p) => "", 
+	mod: {
+    setup: (o, p) => "",
     loop:  (o, p) => `(${p[0].loop} % ${p[1].loop})` },
 	add: {
 		setup: (o, p) => "",
@@ -91,7 +91,7 @@ const jsFuncMap = {
 	},
 	abs: {
 		setup: (o, p) => "",
-		loop:  (o, p) => `Module.maxiMath.abs(${p[0].loop})` 
+		loop:  (o, p) => `Module.maxiMath.abs(${p[0].loop})`
 	},
 	env: {
 		setup: (o, p) => `${o} = new Module.maxiEnv();
@@ -103,9 +103,9 @@ const jsFuncMap = {
 	},
 	sum: {
 		setup: (o, p) => "",
-		loop:  (o, p) => { 
+		loop:  (o, p) => {
       let s = `(${p[0].loop}`;
-			for (let i = 1; i < p.length; i++) 
+			for (let i = 1; i < p.length; i++)
         s += `+${p[i].loop}`;
 			return s + ")";	}
 	},
@@ -113,7 +113,7 @@ const jsFuncMap = {
 		setup: (o, p) => "",
 		loop:  (o, p) => {
 			let s = `((${p[0].loop}`;
-			for (let i = 1; i < p.length; i++) 
+			for (let i = 1; i < p.length; i++)
         s += `+${p[i].loop}`;
 			return s + `)/${p.length})`;
 		}
@@ -122,7 +122,7 @@ const jsFuncMap = {
 		setup: (o, p) => "",
 		loop:  (o, p) => {
 			let s = `(${p[0].loop}`;
-			for (let i = 1; i < p.length; i++) 
+			for (let i = 1; i < p.length; i++)
         s += `*${p[i].loop}`;
 			return s + ")";
 		}
@@ -221,7 +221,76 @@ const jsFuncMap = {
                       ${o}stretch = new Module.maxiStretch();
                       ${o}stretch.setSample(${o});`,
 		loop:  (o, p) => `(${o}.isReady() ? ${o}stretch.play(${p[0].loop},${p[1].loop},${p[2].loop},${p[3].loop},0.0) : 0.0)`
-	}
+	},
+  bitToSig: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `Module.maxiBits.toSignal(${p[0].loop})`
+	},
+  bitNeg: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `Module.maxiBits.neg(${p[0].loop})`
+	},
+  bitInc: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `Module.maxiBits.inc(${p[0].loop})`
+	},
+  bitDec: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `Module.maxiBits.dec(${p[0].loop})`
+	},
+  bitAnd: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `Module.maxiBits.land(${p[0].loop},${p[1].loop})`
+	},
+  bitOr: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `Module.maxiBits.lor(${p[0].loop},${p[1].loop})`
+	},
+  bitXor: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `Module.maxiBits.lxor(${p[0].loop},${p[1].loop})`
+	},
+  bitShl: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `Module.maxiBits.shl(${p[0].loop},${p[1].loop})`
+	},
+  bitShr: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `Module.maxiBits.shr(${p[0].loop},${p[1].loop})`
+	},
+  bitAt: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `Module.maxiBits.at(${p[0].loop},${p[1].loop})`
+	},
+  bitAdd: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `Module.maxiBits.add(${p[0].loop},${p[1].loop})`
+	},
+  bitSub: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `Module.maxiBits.sub(${p[0].loop},${p[1].loop})`
+	},
+  bitMul: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `Module.maxiBits.mul(${p[0].loop},${p[1].loop})`
+	},
+  bitDiv: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `Module.maxiBits.div(${p[0].loop},${p[1].loop})`
+	},
+  bitr: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `Module.maxiBits.at(${p[0].loop},${p[1].loop},${p[2].loop})`
+	},
+  btime: {
+		setup: (o, p) =>`${o} = Module.maxiBits.sig(0); ${o}_tplus = () => {${o} = Module.maxiBits.inc(${o}); return ${o}};`,
+		loop:  (o, p) => `${o}_tplus()`
+	},
+  clk: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `clock`
+	},
+
 };
 
 class IRToJavascript {
@@ -354,7 +423,7 @@ class IRToJavascript {
     let vars = {};
     let code = IRToJavascript.traverseTree(tree, IRToJavascript.emptyCode(), 0, vars);
     code.setup = `() => {let q=this.newq(); ${code.setup}; return q;}`;
-    code.loop = `(q, inputs, mem) => {${code.loop} return q.sigOut;}`
+    code.loop = `(q, inputs, mem, clock) => {${code.loop} return q.sigOut;}`
     console.log(code.loop);
     // console.log(code.paramMarkers);
     return code;

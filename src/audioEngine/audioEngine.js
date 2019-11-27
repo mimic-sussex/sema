@@ -116,7 +116,7 @@ class AudioEngine {
 					this.audioContext,
 					this.audioWorkletProcessorName
 				);
-				
+
 				// All possible error event handlers subscribed
 				this.audioWorkletNode.onprocessorerror = event => {
 					// Errors from the processor
@@ -135,7 +135,7 @@ class AudioEngine {
 					);
 				};
 
-				// Worklet Processor message handler 
+				// Worklet Processor message handler
 				this.audioWorkletNode.port.onmessage = event => {
 					this.messageHandler(event.data);
 				};
@@ -175,7 +175,7 @@ class AudioEngine {
 		} else if (data == "giveMeSomeSamples") {
 			this.msgHandler("giveMeSomeSamples");
 		} else {
-			this.msgHandler(data);
+			 this.msgHandler(data);
 		}
 	}
 
@@ -194,7 +194,7 @@ class AudioEngine {
 	 * Initialises audio context and sets worklet processor code
 	 * @play
 	 */
-	async init() {
+	async init(numPeers) {
 		if (this.audioContext === undefined) {
 			this.audioContext = new AudioContext();
 			await this.loadWorkletProcessorCode();

@@ -113,6 +113,8 @@ class MaxiProcessor extends AudioWorkletProcessor {
     this.closed = new Module.maxiSample();
     this.open = new Module.maxiSample();
 
+    this.netClock = new Module.maxiAsyncKuramotoOscillator(2);
+
     // this.sequence = "k k s o c k";
     this.sequence = "ksc o o ";
     // this.sequence = "m";
@@ -220,7 +222,9 @@ class MaxiProcessor extends AudioWorkletProcessor {
       }
     };
     this.port.postMessage("giveMeSomeSamples");
+    this.clockPhaseSharingInterval=0;
   }
+
 
   /**
    * @process
@@ -239,10 +243,20 @@ class MaxiProcessor extends AudioWorkletProcessor {
       let output = outputs[outputId];
       let channelCount = output.length;
 
+
       for (let i = 0; i < output[0].length; ++i) {
+        //net clocks
+        let clockPhasor = this.netClock.play(0.5, 10);
+        if (this.clockPhaseSharingInterval++ == 44100) {
+          this.clockPhaseSharingInterval=0;
+          let phase = this.netClock.getPhase(0);
+          console.log(`phase: ${phase}`);
+          this.port.postMessage({p:phase,c:"phase"});
+        }
+
         //xfade between old and new algorhythms
-        let sig0 = this.signals[0](this._q[0], inputs[0][0][i], this._mems[0]);
-        let sig1 = this.signals[1](this._q[1], inputs[0][0][i], this._mems[1]);
+        let sig0 = this.signals[0](this._q[0], inputs[0][0][i], this._mems[0], clockPhasor);
+        let sig1 = this.signals[1](this._q[1], inputs[0][0][i], this._mems[1], clockPhasor);
         let xf = this.xfadeControl.play(i == 0 ? 1 : 0);
         let w = Module.maxiXFade.xfade(sig0, sig1, xf);
         //mono->stereo
