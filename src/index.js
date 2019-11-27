@@ -56,8 +56,8 @@ import {
   createSecretKey
 } from "crypto";
 
-var SimplePeer = require('simple-peer');
-var peer; //create this later
+// var SimplePeer = require('simple-peer');
+// var peer; //create this later
 
 let audio;
 let kuraClock;
@@ -271,62 +271,62 @@ function createControls() {
     saveData(blob, `liveCode.sema`);
   });
 
-  const waitPeerButton = document.createElement("button");
-  waitPeerButton.textContent = `Wait for Peers`;
-  container.appendChild(waitPeerButton);
-  waitPeerButton.addEventListener("click", () => {
-    peer = new SimplePeer({
-      trickle: false
-    });
-
-    peer.on('error', err => console.log('error', err))
-
-    peer.on('signal', data => {
-      console.log('SIGNAL', JSON.stringify(data))
-    })
-
-    peer.on('connect', () => {
-      console.log('CONNECT')
-      peer.send('whatever' + Math.random())
-    })
-
-    peer.on('data', data => {
-      console.log('data: ' + data)
-    })
-
-  });
-
-  const initPeerButton = document.createElement("button");
-  initPeerButton.textContent = `Initiate Peers`;
-  container.appendChild(initPeerButton);
-  initPeerButton.addEventListener("click", () => {
-    peer = new SimplePeer({
-      initiator: true,
-      trickle: false
-    });
-
-    peer.on('error', err => console.log('error', err))
-
-    peer.on('signal', data => {
-      console.log('SIGNAL', JSON.stringify(data))
-    })
-
-    peer.on('connect', () => {
-      console.log('CONNECT')
-      peer.send('whatever' + Math.random())
-    })
-
-    peer.on('data', data => {
-      console.log('data: ' + data)
-    })
-  });
-
-  const sigPeerButton = document.createElement("button");
-  sigPeerButton.textContent = `Signal Peers`;
-  container.appendChild(sigPeerButton);
-  sigPeerButton.addEventListener("click", () => {
-    peer.send("hello")
-  });
+  // const waitPeerButton = document.createElement("button");
+  // waitPeerButton.textContent = `Wait for Peers`;
+  // container.appendChild(waitPeerButton);
+  // waitPeerButton.addEventListener("click", () => {
+  //   peer = new SimplePeer({
+  //     trickle: false
+  //   });
+  //
+  //   peer.on('error', err => console.log('error', err))
+  //
+  //   peer.on('signal', data => {
+  //     console.log('SIGNAL', JSON.stringify(data))
+  //   })
+  //
+  //   peer.on('connect', () => {
+  //     console.log('CONNECT')
+  //     peer.send('whatever' + Math.random())
+  //   })
+  //
+  //   peer.on('data', data => {
+  //     console.log('data: ' + data)
+  //   })
+  //
+  // });
+  //
+  // const initPeerButton = document.createElement("button");
+  // initPeerButton.textContent = `Initiate Peers`;
+  // container.appendChild(initPeerButton);
+  // initPeerButton.addEventListener("click", () => {
+  //   peer = new SimplePeer({
+  //     initiator: true,
+  //     trickle: false
+  //   });
+  //
+  //   peer.on('error', err => console.log('error', err))
+  //
+  //   peer.on('signal', data => {
+  //     console.log('SIGNAL', JSON.stringify(data))
+  //   })
+  //
+  //   peer.on('connect', () => {
+  //     console.log('CONNECT')
+  //     peer.send('whatever' + Math.random())
+  //   })
+  //
+  //   peer.on('data', data => {
+  //     console.log('data: ' + data)
+  //   })
+  // });
+  //
+  // const sigPeerButton = document.createElement("button");
+  // sigPeerButton.textContent = `Signal Peers`;
+  // container.appendChild(sigPeerButton);
+  // sigPeerButton.addEventListener("click", () => {
+  //   peer.send("hello")
+  // });
 
 
   createModelSelector();
@@ -355,12 +355,12 @@ function createControls() {
 }
 
 
-window.netClock = {
-  addPeer: (offer) => {
-    peer.signal(offer);
-  }
-};
-
+// window.netClock = {
+//   addPeer: (offer) => {
+//     peer.signal(offer);
+//   }
+// };
+//
 function createNexusUI() {
 
   // window.AudioEngine.initWithAudioContext(NexusUI.context);
@@ -635,7 +635,9 @@ const loadImportedSamples = () => {
  */
 document.addEventListener("DOMContentLoaded", () => {
 
-  kuraClock = new kuramotoNetClock();
+  kuraClock = new kuramotoNetClock((phase, idx) => {
+      console.log(phase + ", " + idx);
+  });
 
 
   // NOTE:FB

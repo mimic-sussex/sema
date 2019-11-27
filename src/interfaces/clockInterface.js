@@ -1,5 +1,5 @@
 export class kuramotoNetClock {
-  constructor() {
+  constructor(onPhaseUpdate) {
     this.isConnected = false;
     this.id = -1;
 
@@ -10,9 +10,9 @@ export class kuramotoNetClock {
       this.clock.isConnected = true;
       this.clock.socket.send("hello from sema");
       //get an id number
-      this.clock.socket.send(JSON.stringify({
-        "c": "i"
-      }));
+      // this.clock.socket.send(JSON.stringify({
+      //   "c": "i"
+      // }));
     }.bind({
       clock: this
     }));
@@ -30,14 +30,18 @@ export class kuramotoNetClock {
       try {
         let response = JSON.parse(event.data);
         switch (response.r) {
-          case "i":
-            this.clock.id = response.n;
-            console.log("Clock id: " + this.clock.id)
-            //have an id, now start pinging
-            this.clock.ping(this.clock);
-            break;
+          // case "i":
+          //   this.clock.id = response.n;
+          //   console.log("Clock id: " + this.clock.id)
+          //   //have an id, now start pinging
+          //   this.clock.ping(this.clock);
+          //   break;
           case "p":
             this.clock.peerQueryResponseFunction(response.n);
+            break;
+          case "o":
+            console.log("received phase data")
+            onPhaseUpdate(response.v, response.i);
             break;
         }
       } catch (e) {
@@ -60,22 +64,22 @@ export class kuramotoNetClock {
     return this.isConnected;
   }
 
-  ping() {
-    //ping every second
-    if (this.isConnected) {
-      this.socket.send(JSON.stringify({
-        "c": "h",
-        "i": this.id
-      }));
-      console.log("ping");
-      setTimeout(this.ping.bind({
-        isConnected: this.isConnected,
-        ping: this.ping,
-        socket: this.socket,
-        id: this.id
-      }), 1000);
-    }
-  }
+  // ping() {
+  //   //ping every second
+  //   if (this.isConnected) {
+  //     this.socket.send(JSON.stringify({
+  //       "c": "h",
+  //       "i": this.id
+  //     }));
+  //     console.log("ping");
+  //     setTimeout(this.ping.bind({
+  //       isConnected: this.isConnected,
+  //       ping: this.ping,
+  //       socket: this.socket,
+  //       id: this.id
+  //     }), 1000);
+  //   }
+  // }
 
   broadcastPhase(phase) {
     if (this.isConnected) {
