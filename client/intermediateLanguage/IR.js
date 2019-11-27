@@ -291,8 +291,8 @@ class IRToJavascript {
         return ccode;
       },
       '@setvar': (ccode, el) => {
-        // console.log("memset");
-        // console.log(vars);
+        console.log("DEBUG:traverseTree:@setvar");
+        console.log(vars);
         let memIdx = vars[el['@varname']];
         if (memIdx == undefined) {
           memIdx = Object.keys(vars).length;
@@ -342,7 +342,8 @@ class IRToJavascript {
       })
     } else {
       Object.keys(t).map((k) => {
-        // console.log(k);
+        console.log("DEBUG:traverseTree:@objectAttribMap");
+        console.log(k);
         code = attribMap[k](code, t[k]);
       });
     }
