@@ -308,6 +308,11 @@ class AudioEngine {
 			clearInterval(interval);
 		});
 	}
+
+  sendClockPhase(phase, idx) {
+    this.audioWorkletNode.port.postMessage({phase:phase, i:idx});
+  }
+
 }
 
 export { AudioEngine };
