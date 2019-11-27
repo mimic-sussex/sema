@@ -1,0 +1,17 @@
+import 'codemirror/mode/javascript/javascript.js';
+// import 'codemirror/mode/shell/shell.js';
+import 'codemirror/mode/handlebars/handlebars.js';
+import 'codemirror/mode/htmlmixed/htmlmixed.js';
+import 'codemirror/mode/xml/xml.js';
+import 'codemirror/mode/css/css.js';
+import 'codemirror/addon/edit/closebrackets.js';
+import 'codemirror/addon/edit/closetag.js';
+import 'codemirror/mode/javascript/javascript';
+import 'codemirror/mode/ebnf/ebnf';
+import 'codemirror/theme/idea.css';
+import 'codemirror/theme/monokai.css';
+import 'codemirror/theme/oceanic-next.css';
+import 'codemirror/addon/edit/matchbrackets.js';
+import 'codemirror/keymap/vim.js';
+import 'codemirror/lib/codemirror.css';
+import './theme.css';
