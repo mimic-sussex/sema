@@ -636,7 +636,7 @@ const loadImportedSamples = () => {
 document.addEventListener("DOMContentLoaded", () => {
 
   kuraClock = new kuramotoNetClock((phase, idx) => {
-      console.log(phase + ", " + idx);
+      // console.log(phase + ", " + idx);
       if (window.AudioEngine !== undefined) {
         window.AudioEngine.sendClockPhase(phase, idx);
       }
