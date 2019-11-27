@@ -7,7 +7,7 @@
 [![Build Status](https://travis-ci.com/mimic-sussex/sema.svg?branch=master)](https://travis-ci.com/mimic-sussex/sema)
 <br />
 
-Sema is a playground where you can rapid prototype live coding mini-languages for signal synthesis, machine learning and machine listening. 
+Sema is a playground where you can rapidly prototype live coding mini-languages for signal synthesis, machine learning and machine listening. 
 
 Sema aims to provide an online integrated environment for designing both abstract high-level languages and more powerful low-level languages.
 
