@@ -249,7 +249,8 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
       for (let i = 0; i < output[0].length; ++i) {
         //net clocks
-        let clockPhasor = this.netClock.play(0.5, 15) / (2 * PI);
+        this.netClock.play(0.5, 15) / (2 * Math.PI);
+        let clockPhasor = this.netClock.getPhase(0);
         if (this.clockPhaseSharingInterval++ == 400) {
           this.clockPhaseSharingInterval=0;
           let phase = this.netClock.getPhase(0);
