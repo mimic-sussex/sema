@@ -231,8 +231,7 @@
       })      
       .then(outputs => {
         $dspCode = outputs;
-
-        // evalDSP($dspCode);
+        evalDSP($dspCode);
         
         // $liveCodeParseErrors = "";
         console.log('DEBUG:Layout:translateILtoDSPasync');
@@ -246,17 +245,16 @@
   }
 
   let cmdEnter = () => {
-
-    console.log('DEBUG:Layout:cmdEnter:catch') 
+    console.log('DEBUG:Layout:cmdEnter') 
     console.log($liveCodeAbstractSyntaxTree);     
     if($grammarCompiledParser && $liveCodeEditorValue && $liveCodeAbstractSyntaxTree){
       translateILtoDSPasync();
     }
   }
   
-  
-  let cmdPeriod = () => console.log("cmd-.");
-  let ctrlEnter = () => console.log("ctrl-.");
+  let cmdPeriod = () => playAudio();
+
+  let ctrlEnter = () => console.log("ctrl-enter");
 
 </script>
 

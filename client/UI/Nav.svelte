@@ -18,7 +18,7 @@
     <li>Tutorials</li>
     <li>API</li>
     <li>
-      <a href='https://forum.toplap.org/c/communities' target="_blank">
+      <a href='https://forum.toplap.org/c/communities/sema' target="_blank">
         <svg class="icon svelte-5yec39" width="25" height="20"><use xlink:href="#community"></use>
           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
         </svg>

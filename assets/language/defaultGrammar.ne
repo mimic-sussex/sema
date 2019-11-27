@@ -25,33 +25,33 @@ const lexer = moo.compile({
 
 # Grammar definition in the Extended Backus Naur Form (EBNF)
 main -> _ Statement _                                         
-{% d => ( { "@lang" : d[1] } )  %}
+{% d => ( { '@lang' : d[1] } )  %}
 
 Statement ->
   Expression _ %semicolon _ Statement            
-  {% d => [ { "@spawn": d[0] } ].concat(d[4]) %}
+  {% d => [ { '@spawn': d[0] } ].concat(d[4]) %}
   |
   Expression                                      
-  {% d => [ { "@sigOut": { "@spawn": d[0] }} ] %}
+  {% d => [ { '@sigOut': { '@spawn': d[0] }} ] %}
   # |
-  # %hash . "\n"                                          
-  {% d => ( { "@comment": d[3] } ) %}
+  # %hash . '\n'                                          
+  {% d => ( { '@comment': d[3] } ) %}
 
 Expression ->
   ParameterList _ %funcName
-  {% d => sema.synth( d[2].value, d[0]["@params"] ) %}
+  {% d => sema.synth( d[2].value, d[0]['@params'] ) %}
   |
   ParameterList _ %sample
-  {% d => sema.synth( "sampler", d[0]["@params"].concat( [ sema.str( d[2].value ) ] ) ) %}
+  {% d => sema.synth( 'sampler', d[0]['@params'].concat( [ sema.str( d[2].value ) ] ) ) %}
   |
   ParameterList _ %stretch
-  {% d => sema.synth( "stretch", d[0]["@params"].concat( [ sema.str( d[2].value ) ] ) ) %}
+  {% d => sema.synth( 'stretch', d[0]['@params'].concat( [ sema.str( d[2].value ) ] ) ) %}
   |
   %oscAddress
-  {% d => sema.synth( "oscin", [ sema.str( d[0].value ), sema.num(-1) ] ) %}
+  {% d => sema.synth( 'oscin', [ sema.str( d[0].value ), sema.num(-1) ] ) %}
   |
   ParameterList _ %oscAddress
-  {% d => sema.synth( "oscin", [ sema.str( d[2].value ), d[0]["@params"][0] ] ) %}
+  {% d => sema.synth( 'oscin', [ sema.str( d[2].value ), d[0]['@params'][0] ] ) %}
   |
   %variable _ Expression
   {% d => sema.setvar( d[0], d[2] ) %}
@@ -60,7 +60,7 @@ Expression ->
 
 ParameterList ->
   %paramBegin Params %paramEnd
-  {% d => ( { "paramBegin": d[0], "@params": d[1], "paramEnd": d[2] } ) %}
+  {% d => ( { 'paramBegin': d[0], '@params': d[1], 'paramEnd': d[2] } ) %}
 
 
 Params ->
@@ -72,7 +72,7 @@ Params ->
 
 ParamElement ->
   %number                                                     
-  {% d => ( { "@num": d[0] } ) %}
+  {% d => ( { '@num': d[0] } ) %}
   |
   Expression                                                  
   {% id %}
@@ -81,7 +81,7 @@ ParamElement ->
   {% d => sema.getvar( d[0] ) %}
   |
   %paramBegin Params  %paramEnd                               
-  {% d => ( { "@list": d[1] } )%}
+  {% d => ( { '@list': d[1] } )%}
 
 # Whitespace
 

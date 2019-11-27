@@ -21,7 +21,7 @@
 </style>
 
 <div>
-  <h1>S(velt)ema</h1>
+  <h1>sema</h1>
   <Nav />
 </div>
 

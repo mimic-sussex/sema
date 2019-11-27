@@ -30,12 +30,12 @@ let lazyLoadSample = (sampleName, sample) => {
 	.then(sample =>
 		window.AudioEngine.loadSample(sampleName, `samples/${sampleName}`)
 	)
-	.catch(err => console.error(`ERROR:Main:lazyLoadImage: ` + err));
+	.catch(err => console.error(`DEBUG:SampleLoader:lazyLoadSample: ` + err));
 };
 
 let loadImportedSamples = () => {
 	let samplesNames = getSamplesNames();
-	// console.log("DEBUG:sampleLoader:getSamplesNames: " + samplesNames);
+	console.log("DEBUG:sampleLoader:getSamplesNames: " + samplesNames);
 	samplesNames.forEach(sampleName => {
 		lazyLoadSample(sampleName);
 	});

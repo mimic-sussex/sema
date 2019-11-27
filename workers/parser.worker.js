@@ -1,10 +1,12 @@
 import nearley from 'nearley';
 import mooo from 'moo';
-import cloneDeep from "lodash.cloneDeep";
+import semaa from '../client/intermediateLanguage/sema';
+// import cloneDeep from "lodash.cloneDeep";
 
 
 function getParserModuleExports(source) {
-	let moo = mooo;
+  let moo = mooo;
+  let sema = semaa;
 	let module = { exports: '' };
 	eval(source);
 	return module.exports;
@@ -28,12 +30,10 @@ onmessage = function(message) {
 			let parserOutputs = [];
 			const { liveCodeSource, parserSource } = message.data;
 			let parser = new nearley.Parser(getParserModuleExports(parserSource));
-		
-    	// console.log("DEBUG:workerParser:onmessage:parser");
-			// console.log(parser);			
-    
+			
       parser.feed(liveCodeSource);
 			parserOutputs = JSON.parse(JSON.stringify(parser.results));
+      
       // parserOutputs = cloneDeep(parser.results);
 			// parserOutputs = parser.results;
 			
