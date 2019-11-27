@@ -177,6 +177,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
         return this.translateFloat32ArrayToBuffer(this.sampleBuffers[bufferName]);
     };
 
+    this.kuraPhase = -1;
     this.port.onmessage = event => { // message port async handler
       if ('address' in event.data) {
         //this must be an OSC message
@@ -196,7 +197,8 @@ class MaxiProcessor extends AudioWorkletProcessor {
       }else if ('phase' in event.data) {
         // console.log(event.data);
         // this.netClock.setPhase(event.data.phase, event.data.i);
-        this.netClock.setPhase(event.data.phase, 1);
+        // this.netClock.setPhase(event.data.phase, 1);
+        this.kuraPhase = event.data.phase;
       } else if ('eval' in event.data) { // check if new code is being sent for evaluation?
         try {
           console.log("[DEBUG]:MaxiProcessor:Process: ");
@@ -250,7 +252,11 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
       for (let i = 0; i < output[0].length; ++i) {
         //net clocks
-        this.netClock.play(0.5, 30);
+        if (this.kuraPhase != -1) {
+          this.netClock.setPhase(this.kuraPhase, 1);
+          this.kuraPhase = -1;
+        }
+        this.netClock.play(0.5, 190);
         let clockPhasor = this.netClock.getPhase(0) / (2 * Math.PI);
         if (this.clockPhaseSharingInterval++ == 400) {
           this.clockPhaseSharingInterval=0;
