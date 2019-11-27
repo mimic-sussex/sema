@@ -310,7 +310,9 @@ class AudioEngine {
 	}
 
   sendClockPhase(phase, idx) {
-    this.audioWorkletNode.port.postMessage({phase:phase, i:idx});
+    if (this.audioWorkletNode !== undefined) {
+      this.audioWorkletNode.port.postMessage({phase:phase, i:idx});
+    }
   }
 
 }

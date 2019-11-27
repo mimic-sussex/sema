@@ -40,7 +40,7 @@ export class kuramotoNetClock {
             this.clock.peerQueryResponseFunction(response.n);
             break;
           case "o":
-            // console.log("received phase data")
+            console.log("received phase: " + response.v);
             onPhaseUpdate(response.v, response.i);
             break;
         }
@@ -83,6 +83,7 @@ export class kuramotoNetClock {
 
   broadcastPhase(phase) {
     if (this.isConnected) {
+      // console.log(phase);
       this.socket.send(JSON.stringify({
         "c": "o",
         "p": phase,

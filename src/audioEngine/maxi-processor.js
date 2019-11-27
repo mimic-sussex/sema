@@ -194,8 +194,9 @@ class MaxiProcessor extends AudioWorkletProcessor {
         let sampleKey = event.data.sample.substr(0,event.data.sample.length - 4)
         this.sampleBuffers[sampleKey] = event.data.buffer;
       }else if ('phase' in event.data) {
-        // console.log(event.data);
-        this.netClock.setPhase(event.data.phase, event.data.i);
+        console.log(event.data);
+        // this.netClock.setPhase(event.data.phase, event.data.i);
+        this.netClock.setPhase(event.data.phase, 1);
       } else if ('eval' in event.data) { // check if new code is being sent for evaluation?
         try {
           console.log("[DEBUG]:MaxiProcessor:Process: ");
@@ -251,7 +252,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
         //net clocks
         this.netClock.play(0.5, 15);
         let clockPhasor = this.netClock.getPhase(0) / (2 * Math.PI);
-        if (this.clockPhaseSharingInterval++ == 400) {
+        if (this.clockPhaseSharingInterval++ == 4000) {
           this.clockPhaseSharingInterval=0;
           let phase = this.netClock.getPhase(0);
           // console.log(`phase: ${phase}`);
