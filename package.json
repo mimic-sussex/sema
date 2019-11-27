@@ -1,12 +1,14 @@
 {
   "name": "sema",
-  "author": "Francisco Bernardo <f.bernardo@sussex.ac.uk> (http://frantic0.com)",
+  "author": 
+  "Francisco Bernardo <f.bernardo@sussex.ac.uk> (http://frantic0.com)",
   "version": "0.2.0",
   "description": "sema, a live coding language design playground",
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack",
     "dev": "cross-env NODE_ENV=development webpack",
-    "go": "webpack-dev-server --content-base public"
+    "go": "webpack-dev-server --content-base public",
+    "test": "cross-env NODE_ENV=development webpack"
   },
   "dependencies": {
     "lodash.clonedeep": "^4.5.0",
