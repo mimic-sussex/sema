@@ -87,7 +87,7 @@ export class kuramotoNetClock {
       this.socket.send(JSON.stringify({
         "c": "o",
         "p": phase,
-        "i": this.id
+        // "i": this.id
       }));
     }
   }
