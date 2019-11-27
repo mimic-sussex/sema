@@ -40,7 +40,7 @@ export class kuramotoNetClock {
             this.clock.peerQueryResponseFunction(response.n);
             break;
           case "o":
-            console.log("received phase: " + response.v);
+            // console.log("received phase: " + response.v);
             onPhaseUpdate(response.v, response.i);
             break;
         }
