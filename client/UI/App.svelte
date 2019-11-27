@@ -3,32 +3,16 @@
 
   import Header from './Header.svelte';
 	import Content from './Content.svelte';
-	import SplashScreen from './SplashScreen.svelte';
+	
+  import SplashScreen from './SplashScreen.svelte';
+  import { splashScreenClicked } from '../store.js';
 
-  import compile from '../compiler/compiler';
-  import defaultGrammar from '../compiler/defaultGrammar.ne';
-  import defaultLiveCode from '../compiler/defaultLiveCode.sem';
-  import defaultModel from '../compiler/defaultLiveCode.sem';
-  import { 
-    createAudioEngine,
-    setupAudio,
-    playAudio,
-    stopAudio
-  } from '../audioEngine/audioEngineController.js';
-
-  import {
-    layout,
-    splashScreenClicked 
-  } from '../store.js';
+  import { createAudioEngine, setupAudio } from '../audioEngine/audioEngineController.js';
 
   createAudioEngine();
   
-
-
-  const unsubscribe = splashScreenClicked.subscribe(value => {
-		if(value === 'hidden'){
-      setupAudio();
-    }
+  const unsubscribe = splashScreenClicked.subscribe( value => {
+		if(value === 'hidden') setupAudio();
 	});
   onDestroy(unsubscribe);
 

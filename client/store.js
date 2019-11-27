@@ -1,9 +1,8 @@
 import { writable, readable } from 'svelte/store';
 import compile from "./compiler/compiler";
 
-
-import default_grammar from './compiler/defaultGrammar.ne';
-import default_liveCode from './compiler/defaultLiveCode.sem';
+import default_grammar from '../assets/language/defaultGrammar.ne';
+import default_liveCode from "../assets/language/defaultLiveCode.sem";
 
 import hello_world_code_example from "./machineLearning/tfjs/hello-world/hello-world.tf";
 import two_layer_non_linear_code_example from "./machineLearning/tfjs/non-linear/two-layer-non-linear.tf";
@@ -27,11 +26,15 @@ export const grammarCompiledParser = writable(compile(default_grammar).output);
 
 export const grammarCompilationErrors = writable("");
 
+export const liveCodeEditorValue = writable(default_liveCode);
+
+export const liveCodeParseResults = writable("");
+
 export const liveCodeParseErrors = writable("");
 
 export const liveCodeAbstractSyntaxTree = writable("");
 
-export const liveCodeEditorValue = writable(default_liveCode);
+export const dspCode = writable("");
 
 export const modelEditorValue = helloWorld;
 

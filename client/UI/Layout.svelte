@@ -18,12 +18,21 @@
             grammarCompiledParser, 
             grammarCompilationErrors, 
             liveCodeEditorValue,
-            liveCodeAbstractSyntaxTree,
+            liveCodeParseResults,
             liveCodeParseErrors,
+            liveCodeAbstractSyntaxTree,
+            dspCode,
             selectedLayout, 
             layoutOptions,
             helloWorld
   } from "../store.js";
+
+  import { 
+    playAudio,
+    stopAudio,
+    evalDSP
+  } from '../audioEngine/audioEngineController.js';
+
   
   import * as nearley from 'nearley/lib/nearley.js'
   import compile from '../compiler/compiler';
@@ -35,23 +44,13 @@
   import Editor from './Editor.svelte';
 
 
-  let cmdEnter = () => console.log("cmd-Enter");
-  let cmdPeriod = () => console.log("cmd-.");
-  let ctrlEnter = () => console.log("ctrl-.");
+  let codeMirror1, codeMirror2; // Live layout [Hidden]
 
-  let codeMirror1, codeMirror2;
-
-  let codeMirror3, codeMirror4, codeMirror5;
+  let codeMirror3, codeMirror4, codeMirror5; // []
 
   let codeMirror6, codeMirror7;
 
   export let layoutTemplate = 1;
-
-
-
-
-  // export let value = `:b:{{1,0.25}imp}\\909b;`;
-
 
   let liveContainerDisplay = "initial";
   let dashboardContainerDisplay = "initial";
@@ -126,25 +125,25 @@
   let nil = (e) => { }
 
   
-  let parseLiveCode = (e) => { 
+  let parseLiveCode = e => { 
   
     if(window.Worker){
 
-      let workerParser = new Worker('../../parser.worker.js');
+      let parserWorker = new Worker('../../parser.worker.js');
 
-      let workerParserAsync = new Promise( (res, rej) => {
+      let parserWorkerAsync = new Promise( (res, rej) => {
 
-        workerParser.postMessage({liveCodeSource: $liveCodeEditorValue, parserSource: $grammarCompiledParser, type:'parse'});
+        parserWorker.postMessage({liveCodeSource: $liveCodeEditorValue, parserSource: $grammarCompiledParser, type:'parse'});
 
         let timeout = setTimeout(() => {
-            workerParser.terminate()
-            workerParser = new Worker('../../parser.worker.js')
+            parserWorker.terminate()
+            parserWorker = new Worker('../../parser.worker.js')
             // rej('Possible infinite loop detected! Check your grammar for infinite recursion.')
         }, 5000);
 
-        workerParser.onmessage = e => {
+        parserWorker.onmessage = e => {
           if(e.data.message !== undefined){
-            // console.log('DEBUG:Layout:workerParserAsync:onmessage')
+            // console.log('DEBUG:Layout:parserWorkerAsync:onmessage')
             // console.log(e); 
             $liveCodeParseErrors = e.data.message; 
           }
@@ -156,18 +155,26 @@
 
       })
       .then(outputs => {
-        $liveCodeAbstractSyntaxTree = outputs;
+
+        const {parserOutputs, parserResults} = outputs;
+        
+        // $liveCodeParseResults = outputs;
+        $liveCodeParseResults = parserResults;
+
+        $liveCodeAbstractSyntaxTree = parserOutputs;
+        // $liveCodeAbstractSyntaxTree = JSON.parse(JSON.stringify(parserOutputs));
         $liveCodeParseErrors = "";
-        // console.log('DEBUG:Layout:workerParserAsync'); 
+        // console.log('DEBUG:Layout:parserWorkerAsync'); 
       })
       .catch(e => { 
-        console.log('DEBUG:Layout:workerParserAsync:catch') 
+        console.log('DEBUG:Layout:parserWorkerAsync:catch') 
         console.log(e); 
       });
     }
   }
 
-  let compileGrammarOnChange = (e) => { 
+
+  let compileGrammarOnChange = e => { 
     let {errors, output} = compile(e.detail.value);
     $grammarCompiledParser = output; 
     $grammarCompilationErrors = errors;
@@ -182,7 +189,7 @@
   }
 
 
-  let parseLiveCodeOnChange = (e) => {
+  let parseLiveCodeOnChange = e => {
     if($grammarCompiledParser){
       $liveCodeEditorValue = e.detail.value;
       parseLiveCode(); 
@@ -192,6 +199,64 @@
     // console.log(e); 
   }
 
+ 
+
+  let translateILtoDSPasync = e => {  // [NOTE:FB] Note the 'async'
+
+    if(window.Worker){
+
+      let iLWorker = new Worker('../../il.worker.js');
+      let iLWorkerAsync = new Promise( (res, rej) => {
+
+        iLWorker.postMessage({ liveCodeAbstractSyntaxTree: $liveCodeParseResults, type:'ASTtoDSP'});    
+      
+        let timeout = setTimeout(() => {
+            iLWorker.terminate()
+            iLWorker = new Worker('../../il.worker.js')
+            // rej('Possible infinite loop detected or worse! Check bugs in ILtoTree.')
+        }, 5000);
+
+        iLWorker.onmessage = e => {
+          if(e.data !== undefined){
+            // console.log('DEBUG:Layout:translateILtoDSP:onmessage')
+            // console.log(e); 
+            // $dspCode = e.data.message;
+            res(e.data); 
+          }
+          else if(e.data !== undefined && e.data.length != 0){
+            res(e.data);
+          }
+          clearTimeout(timeout);
+        }
+      })      
+      .then(outputs => {
+        $dspCode = outputs;
+
+        // evalDSP($dspCode);
+        
+        // $liveCodeParseErrors = "";
+        console.log('DEBUG:Layout:translateILtoDSPasync');
+        console.log($dspCode);  
+      })
+      .catch(e => { 
+        console.log('DEBUG:Layout:translateILtoDSPasync:catch') 
+        console.log(e); 
+      });      
+    }    
+  }
+
+  let cmdEnter = () => {
+
+    console.log('DEBUG:Layout:cmdEnter:catch') 
+    console.log($liveCodeAbstractSyntaxTree);     
+    if($grammarCompiledParser && $liveCodeEditorValue && $liveCodeAbstractSyntaxTree){
+      translateILtoDSPasync();
+    }
+  }
+  
+  
+  let cmdPeriod = () => console.log("cmd-.");
+  let ctrlEnter = () => console.log("ctrl-.");
 
 </script>
 

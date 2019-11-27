@@ -8,13 +8,11 @@ const LinkTypePlugin = require("html-webpack-link-type-plugin").HtmlWebpackLinkT
 var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
-	// entry: {
-	// 	client: ["./client/main.js"],
-	// 	workerParser: ["./workerParser/index.js"]
-	// },
 	entry: {
 		bundle: ["./client/main.js"],
-		parser: ["./workers/parser.worker.js"]
+		parser: ["./workers/parser.worker.js"],
+		ml: ["./workers/ml.worker.js"],
+		il: ["./workers/il.worker.js"]
 	},
 	resolve: {
 		alias: {
