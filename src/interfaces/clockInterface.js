@@ -3,16 +3,16 @@ export class kuramotoNetClock {
     this.isConnected = false;
     this.id = -1;
 
-    this.socket = new WebSocket('ws://localhost:8089');
+    try {
+      this.socket = new WebSocket('ws://localhost:8089');
+    } catch (e) {
+      console.log("No sema_ticks, running without netclock.")
+    }
 
     this.socket.addEventListener('open', function(event) {
       console.log("Kura Clock websocket open");
       this.clock.isConnected = true;
       this.clock.socket.send("hello from sema");
-      //get an id number
-      // this.clock.socket.send(JSON.stringify({
-      //   "c": "i"
-      // }));
     }.bind({
       clock: this
     }));
@@ -54,10 +54,14 @@ export class kuramotoNetClock {
   };
 
   queryPeers(responseFunction) {
-    this.peerQueryResponseFunction = responseFunction;
-    this.socket.send(JSON.stringify({
-      "c": "q"
-    }));
+    if (this.isConnected) {
+      this.peerQueryResponseFunction = responseFunction;
+      this.socket.send(JSON.stringify({
+        "c": "q"
+      }));
+    }else{
+      responseFunction(1);
+    }
   }
 
   connected() {

@@ -286,9 +286,17 @@ const jsFuncMap = {
 		setup: (o, p) =>`${o} = Module.maxiBits.sig(0); ${o}_tplus = () => {${o} = Module.maxiBits.inc(${o}); return ${o}};`,
 		loop:  (o, p) => `${o}_tplus()`
 	},
-  clk: {
+  clp: {
 		setup: (o, p) => "",
-		loop:  (o, p) => `clock`
+		loop:  (o, p) => `this.clockPhase(${p[0].loop},${p.length > 1 ? p[1].loop : 0})`
+	},
+  clt: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `this.clockTrig(${p[0].loop},${p.length > 1 ? p[1].loop : 0})`
+	},
+  clfreq: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `this.setClockFreq(${p[0].loop})`
 	},
 
 };

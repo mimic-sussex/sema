@@ -228,7 +228,18 @@ class MaxiProcessor extends AudioWorkletProcessor {
       }
     };
     this.port.postMessage("giveMeSomeSamples");
-    this.clockPhaseSharingInterval=0;
+    this.clockFreq = 0.8;
+    this.clockPhaseSharingInterval=0; //counter for emiting clock phase over the network
+    this.clockPhase = (multiples, phase) => {
+        return (((this.clockPhasor * multiples) % 1.0) + phase) % 1.0;
+    };
+    this.clockTrig = (multiples, phase) => {
+        return (this.clockPhase(multiples, phase) - (1.0/this.sampleRate * multiples)) <= 0 ? 1 : -1;
+    };
+    this.setClockFreq = (freq) => {
+      this.clockFreq = freq;
+      return 0;
+    };
   }
 
 
@@ -256,9 +267,10 @@ class MaxiProcessor extends AudioWorkletProcessor {
           this.netClock.setPhase(this.kuraPhase, 1);
           this.kuraPhase = -1;
         }
-        this.netClock.play(0.5, 190);
-        let clockPhasor = this.netClock.getPhase(0) / (2 * Math.PI);
-        if (this.clockPhaseSharingInterval++ == 400) {
+        this.netClock.play(this.clockFreq, 100);
+        this.clockPhasor = this.netClock.getPhase(0) / (2 * Math.PI);
+        //share the clock if networked
+        if (this.netClock.size() > 1 && this.clockPhaseSharingInterval++ == 2000) {
           this.clockPhaseSharingInterval=0;
           let phase = this.netClock.getPhase(0);
           // console.log(`phase: ${phase}`);
@@ -266,8 +278,8 @@ class MaxiProcessor extends AudioWorkletProcessor {
         }
 
         //xfade between old and new algorhythms
-        let sig0 = this.signals[0](this._q[0], inputs[0][0][i], this._mems[0], clockPhasor);
-        let sig1 = this.signals[1](this._q[1], inputs[0][0][i], this._mems[1], clockPhasor);
+        let sig0 = this.signals[0](this._q[0], inputs[0][0][i], this._mems[0], this.clockPhasor);
+        let sig1 = this.signals[1](this._q[1], inputs[0][0][i], this._mems[1], this.clockPhasor);
         let xf = this.xfadeControl.play(i == 0 ? 1 : 0);
         let w = Module.maxiXFade.xfade(sig0, sig1, xf);
         //mono->stereo
