@@ -87,7 +87,7 @@ export class kuramotoNetClock {
 
   broadcastPhase(phase) {
     if (this.isConnected) {
-      console.log(phase);
+      // console.log(phase);
       this.socket.send(JSON.stringify({
         "c": "o",
         "p": phase,
