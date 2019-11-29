@@ -172,11 +172,13 @@ class AudioEngine {
 	 */
 	messageHandler(data) {
 
-    const { p, c } = data;
-    console.log('DEBGUG:AudioEngine:messageHandler:');
-    console.log(data); 
-    this.sendPeersMyClockPhase(p);
-
+    if(data != undefined && data.p != undefined)
+    {
+      const { p, c } = data;
+      this.sendPeersMyClockPhase(p);
+      console.log("DEBGUG:AudioEngine:messageHandler:");
+			console.log(data); 
+    }
 
     // { p: phase, c: "phase" } = data;
 
