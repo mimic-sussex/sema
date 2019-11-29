@@ -12,9 +12,9 @@ let createAudioEngine = () => {
 
 	kuraClock = new kuramotoNetClock((phase, idx) => {
 			console.log(phase + ", " + idx);
-			// if (window.AudioEngine !== undefined) {
-			// 	window.AudioEngine.sendClockPhase(phase, idx);
-			// }
+			if (window.AudioEngine !== undefined) {
+				window.AudioEngine.sendClockPhase(phase, idx);
+			}
 	});
 };
 
@@ -33,7 +33,7 @@ async function setupAudio() {
 				initAudio(numPeers);
       });
     } else {
-			initAudio(numPeers);
+			initAudio(1);
     }
 	}
 }
@@ -55,5 +55,12 @@ function evalDSP(dspFunction) {
 		window.AudioEngine.evalDSP(dspFunction);
 	}
 }
+
+function sendClockPhase(phase, idx) {
+	if (window.AudioEngine !== undefined) {
+		window.AudioEngine.sendClockPhase(phase, idx);
+	}
+}
+
 
 export { createAudioEngine, setupAudio, playAudio, stopAudio, evalDSP };

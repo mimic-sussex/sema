@@ -317,6 +317,13 @@ class AudioEngine {
       return false;
 	}
 
+  sendClockPhase(phase, idx) {
+  	if (this.audioWorkletNode !== undefined) {
+  		this.audioWorkletNode.port.postMessage({phase:phase, i:idx});
+  	}
+  }
+
+
 	// loadTest() {
 	// 	if (audioContext.state === "suspended") this.playAudio();
 	// 	this.loadTestIntervals.push(
