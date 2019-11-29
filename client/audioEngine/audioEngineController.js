@@ -16,7 +16,15 @@ let createAudioEngine = () => {
 				window.AudioEngine.sendClockPhase(phase, idx);
 			}
 	});
+
+  window.AudioEngine.sendPeersMyClockPhase = (e) => {
+  	kuraClock.broadcastPhase(e);
+	};
+
 };
+
+
+
 
 async function initAudio(numPeers) {
 	await window.AudioEngine.init(numPeers); // Start AudioContext and connect WAAPI graph elements, asynchronously
@@ -24,8 +32,6 @@ async function initAudio(numPeers) {
 }
 
 async function setupAudio() {
-
-
 	if (window.AudioEngine !== undefined) {
 		if (kuraClock.connected()) {
       kuraClock.queryPeers(async (numPeers) => {

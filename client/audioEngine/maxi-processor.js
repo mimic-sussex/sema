@@ -152,6 +152,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
     this.sampleBuffers={};
 
     this.transducers = {};
+    
     this.registerTransducer = (name, rate) => {
       let trans = new PostMsgTransducer(this.port, this.sampleRate, rate, name);
       this.transducers[name] = trans;
@@ -268,7 +269,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
           this.clockPhaseSharingInterval=0;
           let phase = this.netClock.getPhase(0);
           // console.log(`phase: ${phase}`);
-          this.port.postMessage({p:phase,c:"phase"});
+          this.port.postMessage({ p: phase, c: "phase" });
         }
 
 
