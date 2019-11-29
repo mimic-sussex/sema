@@ -18,6 +18,8 @@ let createAudioEngine = () => {
 	});
 
   window.AudioEngine.sendPeersMyClockPhase = (e) => {
+    console.log("DEBUG:AudioEngineController:messageHandler:");
+		console.log(e); 
   	kuraClock.broadcastPhase(e);
 	};
 
