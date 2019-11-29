@@ -24,18 +24,18 @@ const lexer = moo.compile({
 @lexer lexer
 
 # Grammar definition in the Extended Backus Naur Form (EBNF)
-main -> _ Statement _                                         
+main -> _ Statement _
 {% d => ( { '@lang' : d[1] } )  %}
 
 Statement ->
-  Expression _ %semicolon _ Statement            
+  Expression _ %semicolon _ Statement
   {% d => [ { '@spawn': d[0] } ].concat(d[4]) %}
   |
-  Expression                                      
+  Expression
   {% d => [ { '@sigOut': { '@spawn': d[0] }} ] %}
   # |
-  # %hash . '\n'                                          
-  {% d => ( { '@comment': d[3] } ) %}
+  # %hash . '\n'
+  #{% d => ( { '@comment': d[3] } ) %}
 
 Expression ->
   ParameterList _ %funcName
@@ -64,32 +64,32 @@ ParameterList ->
 
 
 Params ->
-  ParamElement                                                   
+  ParamElement
   {% d => ( [ d[0] ] ) %}
   |
-  ParamElement _ %separator _ Params                             
+  ParamElement _ %separator _ Params
   {% d => [ d[0] ].concat(d[4]) %}
 
 ParamElement ->
-  %number                                                     
+  %number
   {% d => ( { '@num': d[0] } ) %}
   |
-  Expression                                                  
+  Expression
   {% id %}
   |
-  %variable                                                   
+  %variable
   {% d => sema.getvar( d[0] ) %}
   |
-  %paramBegin Params  %paramEnd                               
+  %paramBegin Params  %paramEnd
   {% d => ( { '@list': d[1] } )%}
 
 # Whitespace
 
-_  -> wschar:*                                                
+_  -> wschar:*
 {% function(d) {return null;} %}
 
-__ -> wschar:+                                                
+__ -> wschar:+
 {% function(d) {return null;} %}
 
-wschar -> %ws                                                 
+wschar -> %ws
 {% id %}

@@ -12,7 +12,7 @@ onmessage = m => {
 
       console.log("DEBUG:il.worker:onmessage:treeToCode");
 			let dspCode = IRToJavascript.treeToCode(
-				m.data.liveCodeAbstractSyntaxTree
+				m.data.liveCodeAbstractSyntaxTree[0] //take the first grammer in case the grammar was ambiguous
 			);
 
       console.log("DEBUG:il.worker:onmessage:dspCode");
