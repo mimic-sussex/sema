@@ -172,6 +172,12 @@ class AudioEngine {
 	 */
 	messageHandler(data) {
 
+    const { p, c } = data;
+    this.sendPeersMyClockPhase(p);
+
+
+    // { p: phase, c: "phase" } = data;
+
 
   }
 
@@ -218,6 +224,7 @@ class AudioEngine {
 	async init(numPeers) {
 		if (this.audioContext === undefined) {
 			this.audioContext = new AudioContext();
+
 			await this.loadWorkletProcessorCode();
 			this.connectMediaStream();
 			// TODO:FB Remove this to somewhere where it makes sense
