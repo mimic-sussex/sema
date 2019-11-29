@@ -165,6 +165,9 @@ class MaxiProcessor extends AudioWorkletProcessor {
         return this.translateFloat32ArrayToBuffer(this.sampleBuffers[bufferName]);
     };
 
+    this.netClock = new Module.maxiAsyncKuramotoOscillator(2);
+    this.kuraPhase = -1;
+
     this.port.onmessage = event => { // message port async handler
       if ('address' in event.data) {
         //this must be an OSC message
@@ -181,8 +184,10 @@ class MaxiProcessor extends AudioWorkletProcessor {
         // console.log(event.data);
         let sampleKey = event.data.sample.substr(0,event.data.sample.length - 4)
         this.sampleBuffers[sampleKey] = event.data.buffer;
+      }else if ('phase' in event.data) {
+        this.kuraPhase = event.data.phase;
       } else if ('eval' in event.data) { // check if new code is being sent for evaluation?
-        
+
         try {
           console.log("[DEBUG]:MaxiProcessor:Process: ");
           console.log(event.data);
@@ -191,7 +196,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
           let setupFunction = eval(event.data['setup']);
           let loopFunction = eval(event.data['loop']);
           // let loopFunction = new Function(`return ${event.data['loop']}`);
-          
+
 
 
           this.currentSignalFunction = 1 - this.currentSignalFunction;
@@ -200,8 +205,8 @@ class MaxiProcessor extends AudioWorkletProcessor {
           // this._q[this.currentSignalFunction] = setupFunction()();
           this.signals[this.currentSignalFunction] = loopFunction;
           // this.signals[this.currentSignalFunction] = loopFunction();
-          
-          
+
+
           let xfadeBegin = Module.maxiMap.linlin(1.0 - this.currentSignalFunction, 0, 1, -1, 1);
           let xfadeEnd = Module.maxiMap.linlin(this.currentSignalFunction, 0, 1, -1, 1);
           this.xfadeControl.prepare(xfadeBegin, xfadeEnd, 5); // short xfade across signals
@@ -217,6 +222,20 @@ class MaxiProcessor extends AudioWorkletProcessor {
       }
     };
     this.port.postMessage("giveMeSomeSamples");
+
+    this.clockFreq = 0.8;
+    this.clockPhaseSharingInterval=0; //counter for emiting clock phase over the network
+    this.clockPhase = (multiples, phase) => {
+        return (((this.clockPhasor * multiples) % 1.0) + phase) % 1.0;
+    };
+    this.clockTrig = (multiples, phase) => {
+        return (this.clockPhase(multiples, phase) - (1.0/this.sampleRate * multiples)) <= 0 ? 1 : -1;
+    };
+    this.setClockFreq = (freq) => {
+      this.clockFreq = freq;
+      return 0;
+    };
+
   }
 
   /**
@@ -237,6 +256,22 @@ class MaxiProcessor extends AudioWorkletProcessor {
       let channelCount = output.length;
 
       for (let i = 0; i < output[0].length; ++i) {
+        //net clocks
+        if (this.kuraPhase != -1) {
+          this.netClock.setPhase(this.kuraPhase, 1);
+          this.kuraPhase = -1;
+        }
+        this.netClock.play(this.clockFreq, 100);
+        this.clockPhasor = this.netClock.getPhase(0) / (2 * Math.PI);
+        //share the clock if networked
+        if (this.netClock.size() > 1 && this.clockPhaseSharingInterval++ == 2000) {
+          this.clockPhaseSharingInterval=0;
+          let phase = this.netClock.getPhase(0);
+          // console.log(`phase: ${phase}`);
+          this.port.postMessage({p:phase,c:"phase"});
+        }
+
+
         //xfade between old and new algorhythms
         let sig0 = this.signals[0](this._q[0], inputs[0][0][i], this._mems[0]);
         let sig1 = this.signals[1](this._q[1], inputs[0][0][i], this._mems[1]);

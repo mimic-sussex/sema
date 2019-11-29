@@ -215,7 +215,7 @@ class AudioEngine {
 	 * Initialises audio context and sets worklet processor code
 	 * @play
 	 */
-	async init() {
+	async init(numPeers) {
 		if (this.audioContext === undefined) {
 			this.audioContext = new AudioContext();
 			await this.loadWorkletProcessorCode();
@@ -313,7 +313,7 @@ class AudioEngine {
 			});
 			// console.log("eval sent: " + userDefinedFunction); //DEBUG
 			return true;
-		} else 
+		} else
       return false;
 	}
 
