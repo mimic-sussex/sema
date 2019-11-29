@@ -223,7 +223,179 @@ const jsFuncMap = {
                       ${o}stretch = new Module.maxiStretch();
                       ${o}stretch.setSample(${o});`,
 		loop:  (o, p) => `(${o}.isReady() ? ${o}stretch.play(${p[0].loop},${p[1].loop},${p[2].loop},${p[3].loop},0.0) : 0.0)`
-	}
+	},
+  blin: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `Module.maxiMap.linlin(${p[0].loop}, -1, 1, ${p[1].loop}, ${p[2].loop})`
+	},
+	ulin: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `Module.maxiMap.linlin(${p[0].loop}, 0, 1, ${p[1].loop}, ${p[2].loop})`
+	},
+	bexp: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `Module.maxiMap.linexp(${p[0].loop}, -1, 1, ${p[1].loop}, ${p[2].loop})`
+	},
+	uexp: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `Module.maxiMap.linexp(${p[0].loop}, 0.0000001, 1, ${p[1].loop}, ${p[2].loop})`
+	},
+	linlin: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `Module.maxiMap.linlin(${p[0].loop}, ${p[1].loop}, ${p[2].loop}),${p[3].loop}, ${p[4].loop})`
+	},
+	linexp: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `Module.maxiMap.linexp(${p[0].loop}, ${p[1].loop}, ${p[2].loop}), ${p[3].loop}, ${p[4].loop})`
+	},
+	dist: {
+		setup: (o, p) => `${o} = new Module.maxiDistortion()`,
+		loop:  (o, p) => `${o}.atanDist(${p[0].loop},${p[1].loop})`
+	},
+	flange: {
+		setup: (o, p) => `${o} = new Module.maxiFlanger()`,
+		loop:  (o, p) => `${o}.flange(${p[0].loop},${p[1].loop},${p[2].loop},${p[3].loop},${p[4].loop})`
+	},
+	chor: {
+		setup: (o, p) => `${o} = new Module.maxiChorus()`,
+		loop:  (o, p) => `${o}.chorus(${p[0].loop},${p[1].loop},${p[2].loop},${p[3].loop},${p[4].loop})`
+	},
+	dl: {
+		setup: (o, p) => `${o} = new Module.maxiDelayline()`,
+		loop:  (o, p) => `${o}.dl(${p[0].loop},${p[1].loop},${p[2].loop})`
+	},
+	lpf: {
+		setup: (o, p) => `${o} = new Module.maxiFilter()`,
+		loop:  (o, p) => `${o}.lopass(${p[0].loop},${p[1].loop})`
+	},
+	hpf: {
+		setup: (o, p) => `${o} = new Module.maxiFilter()`,
+		loop:  (o, p) => `${o}.hipass(${p[0].loop},${p[1].loop})`
+	},
+	lpz: {
+		setup: (o, p) => `${o} = new Module.maxiFilter()`,
+		loop:  (o, p) => `${o}.lores(${p[0].loop},${p[1].loop},${p[2].loop})`
+	},
+	hpz: {
+		setup: (o, p) => `${o} = new Module.maxiFilter()`,
+		loop:  (o, p) => `${o}.hires(${p[0].loop},${p[1].loop},${p[2].loop})`
+	},
+	toJS: {
+		setup: (o, p) => `${o} = this.registerTransducer('${o}', ${p[0].loop})`,
+		loop:  (o, p) => `${o}.send(${p[1].loop}, ${p[2].loop})`
+	},
+	fromJS: {
+		setup: (o, p) => `${o} = this.registerTransducer('${o}', ${p[0].loop})`,
+		loop:  (o, p) => `${o}.receive(${p[1].loop})`
+	},
+	// 'adc': {"setup":(o,p)=>"", "loop":(o,p)=>`inputs[${p[0].loop}]`},
+	adc: { setup: (o, p) => "", loop: (o, p) => `inputs` },
+	sampler: {
+		setup: (o, p) => `${o} = new Module.maxiSample();
+                      ${o}.setSample(this.getSampleBuffer(${p[1].loop}));`,
+		loop:  (o, p) => `(${o}.isReady() ? ${o}.playOnZX(${p[0].loop}) : 0.0)`
+	},
+	loop: {
+		setup: (o, p) => `${o} = new Module.maxiSample();
+                      ${o}.setSample(this.getSampleBuffer(${p[1].loop}));`,
+		loop:  (o, p) => `(${o}.isReady() ? ${o}.play(${p[0].loop}) : 0.0)`
+	},
+	oscin: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `this.OSCTransducer(${p[0].loop},${p[1].loop})`
+	},
+	oscout: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `this.OSCTransducer(${p[0].loop},${p[1].loop})`
+	},
+	sah: {
+		setup: (o, p) => `${o} = new Module.maxiSampleAndHold();`,
+		loop:  (o, p) => `${o}.sah(${p[0].loop},${p[1].loop})`
+	},
+	stretch: {
+		setup: (o, p) => `${o} = new Module.maxiSample();
+                      ${o}.setSample(this.getSampleBuffer(${p[4].loop}));
+                      ${o}stretch = new Module.maxiStretch();
+                      ${o}stretch.setSample(${o});`,
+		loop:  (o, p) => `(${o}.isReady() ? ${o}stretch.play(${p[0].loop},${p[1].loop},${p[2].loop},${p[3].loop},0.0) : 0.0)`
+	},
+  bitToSig: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `Module.maxiBits.toSignal(${p[0].loop})`
+	},
+  bitNeg: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `Module.maxiBits.neg(${p[0].loop})`
+	},
+  bitInc: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `Module.maxiBits.inc(${p[0].loop})`
+	},
+  bitDec: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `Module.maxiBits.dec(${p[0].loop})`
+	},
+  bitAnd: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `Module.maxiBits.land(${p[0].loop},${p[1].loop})`
+	},
+  bitOr: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `Module.maxiBits.lor(${p[0].loop},${p[1].loop})`
+	},
+  bitXor: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `Module.maxiBits.lxor(${p[0].loop},${p[1].loop})`
+	},
+  bitShl: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `Module.maxiBits.shl(${p[0].loop},${p[1].loop})`
+	},
+  bitShr: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `Module.maxiBits.shr(${p[0].loop},${p[1].loop})`
+	},
+  bitAt: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `Module.maxiBits.at(${p[0].loop},${p[1].loop})`
+	},
+  bitAdd: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `Module.maxiBits.add(${p[0].loop},${p[1].loop})`
+	},
+  bitSub: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `Module.maxiBits.sub(${p[0].loop},${p[1].loop})`
+	},
+  bitMul: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `Module.maxiBits.mul(${p[0].loop},${p[1].loop})`
+	},
+  bitDiv: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `Module.maxiBits.div(${p[0].loop},${p[1].loop})`
+	},
+  bitr: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `Module.maxiBits.at(${p[0].loop},${p[1].loop},${p[2].loop})`
+	},
+  btime: {
+		setup: (o, p) =>`${o} = Module.maxiBits.sig(0); ${o}_tplus = () => {${o} = Module.maxiBits.inc(${o}); return ${o}};`,
+		loop:  (o, p) => `${o}_tplus()`
+	},
+  clp: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `this.clockPhase(${p[0].loop},${p.length > 1 ? p[1].loop : 0})`
+	},
+  clt: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `this.clockTrig(${p[0].loop},${p.length > 1 ? p[1].loop : 0})`
+	},
+  clfreq: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `this.setClockFreq(${p[0].loop})`
+	},
+  
 };
 
 class IRToJavascript {
