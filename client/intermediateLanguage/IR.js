@@ -242,8 +242,9 @@ class IRToJavascript {
   }
 
   static traverseTree(t, code, level, vars) {
-    // console.log(`DEBUG:IR:traverseTree: level: ${level}`);
-    // console.log(vars);
+    console.log(`DEBUG:IR:traverseTree:level: ${level}`);
+    console.log(`DEBUG:IR:traverseTree:vars:`);
+    console.log(vars);
     let attribMap = {
       '@lang': (ccode, el) => {
         let statements = [];
@@ -345,12 +346,14 @@ class IRToJavascript {
     if (Array.isArray(t)) {
       t.map((el) => {
         Object.keys(el).map((k) => {
+          console.log("DEBUG:traverseTree:@ARRAYAttribMap");
+          console.log(k);
           code = attribMap[k](code, el[k]);
         });
       })
     } else {
       Object.keys(t).map((k) => {
-        console.log("DEBUG:traverseTree:@objectAttribMap");
+        console.log("DEBUG:traverseTree:@OBJECTAttribMap");
         console.log(k);
         code = attribMap[k](code, t[k]);
       });
@@ -364,6 +367,7 @@ class IRToJavascript {
     let code = IRToJavascript.traverseTree(tree, IRToJavascript.emptyCode(), 0, vars);
     code.setup = `() => {let q=this.newq(); ${code.setup}; return q;}`;
     code.loop = `(q, inputs, mem) => {${code.loop} return q.sigOut;}`
+    console.log("DEBUG:treeToCode");
     console.log(code.loop);
     // console.log(code.paramMarkers);
     return code;
