@@ -1,3 +1,5 @@
+
+
 var objectID = 0;
 
 const oscMap = {
@@ -10,47 +12,47 @@ const oscMap = {
 
 const jsFuncMap = {
 	saw: {
-		setup: (o, p) => `${o} = new Module.maxiOsc(); 
+		setup: (o, p) => `${o} = new Module.maxiOsc();
                       ${o}.phaseReset(${p.length > 1 ? p[1].loop : 0.0});`,
 		loop:  (o, p) => `${o}.saw(${p[0].loop})`
 	},
 	sin: {
-		setup: (o, p) => `${o} = new Module.maxiOsc(); 
+		setup: (o, p) => `${o} = new Module.maxiOsc();
                       ${o}.phaseReset(${p.length > 1 ? p[1].loop : 0.0});`,
 		loop:  (o, p) => `${o}.sinewave(${p[0].loop})`
 	},
 	tri: {
-		setup: (o, p) => `${o} = new Module.maxiOsc(); 
+		setup: (o, p) => `${o} = new Module.maxiOsc();
                       ${o}.phaseReset(${p.length > 1 ? p[1].loop : 0.0});`,
 		loop:  (o, p) => `${o}.triangle(${p[0].loop})`
 	},
 	pha: {
-		setup: (o, p) => `${o} = new Module.maxiOsc(); 
+		setup: (o, p) => `${o} = new Module.maxiOsc();
                       ${o}.phaseReset(${p.length > 1 ? p[1].loop : 0.0});`,
 		loop:  (o, p) => `${o}.phasor(${p[0].loop})`
 	},
 	ph2: {
-		setup: (o, p) => `${o} = new Module.maxiOsc(); 
+		setup: (o, p) => `${o} = new Module.maxiOsc();
                       ${o}.phaseReset(${p.length > 3 ? p[3].loop : 0.0});`,
 		loop:  (o, p) => `${o}.phasor(${p[0].loop},${p[1].loop},${p[2].loop})`
 	},
 	sqr: {
-		setup: (o, p) => `${o} = new Module.maxiOsc(); 
+		setup: (o, p) => `${o} = new Module.maxiOsc();
                       ${o}.phaseReset(${p.length > 1 ? p[1].loop : 0.0});`,
 		loop:  (o, p) => `${o}.square(${p[0].loop})`
 	},
 	pul: {
-		setup: (o, p) => `${o} = new Module.maxiOsc(); 
+		setup: (o, p) => `${o} = new Module.maxiOsc();
                       ${o}.phaseReset(${p.length > 2 ? p[2].loop : 0.0});`,
 		loop:  (o, p) => `${o}.pulse(${p[0].loop},${p[1].loop})`
 	},
 	imp: {
-		setup: (o, p) => `${o} = new Module.maxiOsc(); 
+		setup: (o, p) => `${o} = new Module.maxiOsc();
                       ${o}.phaseReset(${p.length > 1 ? p[1].loop : 0.0});`,
 		loop:  (o, p) => `${o}.impulse(${p[0].loop})`
 	},
 	sawn: {
-		setup: (o, p) => `${o} = new Module.maxiOsc(); 
+		setup: (o, p) => `${o} = new Module.maxiOsc();
                       ${o}.phaseReset(${p.length > 1 ? p[1].loop : 0.0});`,
 		loop:  (o, p) => `${o}.sawn(${p[0].loop})`
 	},
@@ -66,8 +68,8 @@ const jsFuncMap = {
 		setup: (o, p) => "",
 		loop:  (o, p) => `(${p[0].loop} < ${p[1].loop}) ? 1 : 0`
 	},
-	mod: { 
-    setup: (o, p) => "", 
+	mod: {
+    setup: (o, p) => "",
     loop:  (o, p) => `(${p[0].loop} % ${p[1].loop})` },
 	add: {
 		setup: (o, p) => "",
@@ -91,7 +93,7 @@ const jsFuncMap = {
 	},
 	abs: {
 		setup: (o, p) => "",
-		loop:  (o, p) => `Module.maxiMath.abs(${p[0].loop})` 
+		loop:  (o, p) => `Module.maxiMath.abs(${p[0].loop})`
 	},
 	env: {
 		setup: (o, p) => `${o} = new Module.maxiEnv();
@@ -103,9 +105,9 @@ const jsFuncMap = {
 	},
 	sum: {
 		setup: (o, p) => "",
-		loop:  (o, p) => { 
+		loop:  (o, p) => {
       let s = `(${p[0].loop}`;
-			for (let i = 1; i < p.length; i++) 
+			for (let i = 1; i < p.length; i++)
         s += `+${p[i].loop}`;
 			return s + ")";	}
 	},
@@ -113,7 +115,7 @@ const jsFuncMap = {
 		setup: (o, p) => "",
 		loop:  (o, p) => {
 			let s = `((${p[0].loop}`;
-			for (let i = 1; i < p.length; i++) 
+			for (let i = 1; i < p.length; i++)
         s += `+${p[i].loop}`;
 			return s + `)/${p.length})`;
 		}
@@ -122,7 +124,7 @@ const jsFuncMap = {
 		setup: (o, p) => "",
 		loop:  (o, p) => {
 			let s = `(${p[0].loop}`;
-			for (let i = 1; i < p.length; i++) 
+			for (let i = 1; i < p.length; i++)
         s += `*${p[i].loop}`;
 			return s + ")";
 		}
@@ -292,11 +294,17 @@ class IRToJavascript {
       },
       '@setvar': (ccode, el) => {
         console.log("DEBUG:traverseTree:@setvar");
-        console.log(vars);
-        let memIdx = vars[el['@varname']];
+        // console.log(vars);
+        // console.log(el['@varname']);
+        let variableName = el['@varname'].value;
+        console.log(variableName);
+        let memIdx = vars[variableName];
+        console.log(memIdx);
         if (memIdx == undefined) {
+          // console.log("var not found");
           memIdx = Object.keys(vars).length;
-          vars[el['@varname']] = memIdx;
+          vars[variableName] = memIdx;
+          console.log(memIdx);
         }
         let varValueCode = IRToJavascript.traverseTree(el['@varvalue'], IRToJavascript.emptyCode(), level+1, vars);
         ccode.setup += varValueCode.setup;
