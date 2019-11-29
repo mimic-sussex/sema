@@ -1,14 +1,40 @@
 import { AudioEngine } from "./audioEngine.js";
 import { loadImportedSamples } from "./sampleLoader.js";
 
+import {
+	kuramotoNetClock
+} from "../interfaces/clockInterface.js";
+
+let kuraClock;
+
 let createAudioEngine = () => {
 	window.AudioEngine = new AudioEngine();
+
+	kuraClock = new kuramotoNetClock((phase, idx) => {
+			console.log(phase + ", " + idx);
+			// if (window.AudioEngine !== undefined) {
+			// 	window.AudioEngine.sendClockPhase(phase, idx);
+			// }
+	});
 };
 
+async function initAudio(numPeers) {
+	await window.AudioEngine.init(numPeers); // Start AudioContext and connect WAAPI graph elements, asynchronously
+	loadImportedSamples();
+}
+
 async function setupAudio() {
+
+
 	if (window.AudioEngine !== undefined) {
-		await window.AudioEngine.init(); // Start AudioContext and connect WAAPI graph elements, asynchronously
-    loadImportedSamples();
+		if (kuraClock.connected()) {
+      kuraClock.queryPeers(async (numPeers) => {
+        console.log("Clock Peers: " + numPeers)
+				initAudio(numPeers);
+      });
+    } else {
+			initAudio(numPeers);
+    }
 	}
 }
 
@@ -31,4 +57,3 @@ function evalDSP(dspFunction) {
 }
 
 export { createAudioEngine, setupAudio, playAudio, stopAudio, evalDSP };
-
