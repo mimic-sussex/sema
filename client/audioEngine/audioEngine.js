@@ -171,7 +171,7 @@ class AudioEngine {
 	 * @play
 	 */
 	messageHandler(data) {
-
+    console.log(data);
     const { p, c } = data;
     this.sendPeersMyClockPhase(p);
 

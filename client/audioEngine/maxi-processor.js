@@ -152,7 +152,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
     this.sampleBuffers={};
 
     this.transducers = {};
-    
+
     this.registerTransducer = (name, rate) => {
       let trans = new PostMsgTransducer(this.port, this.sampleRate, rate, name);
       this.transducers[name] = trans;
@@ -212,7 +212,6 @@ class MaxiProcessor extends AudioWorkletProcessor {
           let xfadeEnd = Module.maxiMap.linlin(this.currentSignalFunction, 0, 1, -1, 1);
           this.xfadeControl.prepare(xfadeBegin, xfadeEnd, 5); // short xfade across signals
           this.xfadeControl.triggerEnable(true); //no clock yet, so enable the trigger straight away
-          this.port.postMessage("evalEnd")
         } catch (err) {
           if (err instanceof TypeError) {
             console.log("TypeError in worklet evaluation: " + err.name + " – " + err.message);
@@ -268,7 +267,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
         if (this.netClock.size() > 1 && this.clockPhaseSharingInterval++ == 2000) {
           this.clockPhaseSharingInterval=0;
           let phase = this.netClock.getPhase(0);
-          // console.log(`phase: ${phase}`);
+          console.log(`phase: ${phase}`);
           this.port.postMessage({ p: phase, c: "phase" });
         }
 
