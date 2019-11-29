@@ -175,10 +175,14 @@
 
 
   let compileGrammarOnChange = e => { 
+    
+    window.localStorage.grammarEditorValue = e.detail.value; 
+
     let {errors, output} = compile(e.detail.value);
     $grammarCompiledParser = output; 
     $grammarCompilationErrors = errors;
-
+    
+    
     if($grammarCompiledParser && $liveCodeEditorValue){
       $liveCodeEditorValue = e.detail.value;
       parseLiveCode(); 
@@ -192,6 +196,8 @@
   let parseLiveCodeOnChange = e => {
     if($grammarCompiledParser){
       $liveCodeEditorValue = e.detail.value;
+      window.localStorage.liveCodeEditorValue = e.detail.value;
+      e.detail.value
       parseLiveCode(); 
     }
     

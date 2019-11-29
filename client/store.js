@@ -20,13 +20,30 @@ export const musicRNN = writable(music_rnn_example);
 
 export const splashScreenClicked = writable(false);
 
-export const grammarEditorValue = writable(default_grammar);
+
+
+let initGrammarEditorValue = () => {
+  let ret;
+  let temp = window.localStorage.grammarEditorValue;
+  ( temp && temp !== "") ? ret = temp: ret = default_grammar;
+  return ret;
+
+} 
+
+let initLiveCodeEditorValue = () =>  { 
+    let ret;
+		let temp = window.localStorage.liveCodeEditorValue;
+		temp && temp !== "" ? (ret = temp) : (ret = default_liveCode);
+		return ret;
+}
+ 
+export const grammarEditorValue = writable(initGrammarEditorValue());
 
 export const grammarCompiledParser = writable(compile(default_grammar).output);
 
 export const grammarCompilationErrors = writable("");
 
-export const liveCodeEditorValue = writable(default_liveCode);
+export const liveCodeEditorValue = writable(initLiveCodeEditorValue());
 
 export const liveCodeParseResults = writable("");
 

@@ -152,6 +152,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
     this.sampleBuffers={};
 
     this.transducers = {};
+    
     this.registerTransducer = (name, rate) => {
       let trans = new PostMsgTransducer(this.port, this.sampleRate, rate, name);
       this.transducers[name] = trans;
