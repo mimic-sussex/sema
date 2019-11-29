@@ -12,7 +12,7 @@ onmessage = m => {
 
       console.log("DEBUG:il.worker:onmessage:treeToCode");
 			let dspCode = IRToJavascript.treeToCode(
-				m.data.liveCodeAbstractSyntaxTree[0]
+				m.data.liveCodeAbstractSyntaxTree
 			);
 
       console.log("DEBUG:il.worker:onmessage:dspCode");
