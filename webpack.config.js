@@ -63,11 +63,11 @@ module.exports = {
 			},
 			{
 				//IMAGE LOADER
-				test: /\.(jpe?g|png|gif|svg)$/i,
+				test: /\.(jpe?g|png|gif|svg)$/,
 				loader: "file-loader",
 				options: {
 					name: "[name].[ext]",
-					outputPath: "/img"
+					// outputPath: "img/"i
 				}
 			},
 			{
