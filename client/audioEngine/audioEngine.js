@@ -176,8 +176,8 @@ class AudioEngine {
     {
       const { p, c } = data;
       this.sendPeersMyClockPhase(p);
-      console.log("DEBGUG:AudioEngine:messageHandler:");
-			console.log(data);
+      // console.log("DEBGUG:AudioEngine:messageHandler:");
+			// console.log(data);
     }
 
 

@@ -267,7 +267,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
         if (this.netClock.size() > 1 && this.clockPhaseSharingInterval++ == 2000) {
           this.clockPhaseSharingInterval=0;
           let phase = this.netClock.getPhase(0);
-          console.log(`phase: ${phase}`);
+          // console.log(`phase: ${phase}`);
           this.port.postMessage({ p: phase, c: "phase" });
         }
 
@@ -277,6 +277,8 @@ class MaxiProcessor extends AudioWorkletProcessor {
         let sig1 = this.signals[1](this._q[1], inputs[0][0][i], this._mems[1]);
         let xf = this.xfadeControl.play(i == 0 ? 1 : 0);
         let w = Module.maxiXFade.xfade(sig0, sig1, xf);
+
+        
         //mono->stereo
         for (let channel = 0; channel < channelCount; channel++) {
           output[channel][i] = w;

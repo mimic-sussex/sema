@@ -194,17 +194,17 @@ const jsFuncMap = {
 		loop:  (o, p) => `${o}.receive(${p[1].loop})`
 	},
 	// 'adc': {"setup":(o,p)=>"", "loop":(o,p)=>`inputs[${p[0].loop}]`},
-	adc: { setup: (o, p) => "", loop: (o, p) => `inputs` },
-	sampler: {
-		setup: (o, p) => `${o} = new Module.maxiSample();
-                      ${o}.setSample(this.getSampleBuffer(${p[1].loop}));`,
-		loop:  (o, p) => `(${o}.isReady() ? ${o}.playOnZX(${p[0].loop}) : 0.0)`
-	},
-	loop: {
-		setup: (o, p) => `${o} = new Module.maxiSample();
-                      ${o}.setSample(this.getSampleBuffer(${p[1].loop}));`,
-		loop:  (o, p) => `(${o}.isReady() ? ${o}.play(${p[0].loop}) : 0.0)`
-	},
+	// adc: { setup: (o, p) => "", loop: (o, p) => `inputs` },
+	// sampler: {
+	// 	setup: (o, p) => `${o} = new Module.maxiSample();
+  //                     ${o}.setSample(this.getSampleBuffer(${p[1].loop}));`,
+	// 	loop:  (o, p) => `(${o}.isReady() ? ${o}.playOnZX(${p[0].loop}) : 0.0)`
+	// },
+	// loop: {
+	// 	setup: (o, p) => `${o} = new Module.maxiSample();
+  //                     ${o}.setSample(this.getSampleBuffer(${p[1].loop}));`,
+	// 	loop:  (o, p) => `(${o}.isReady() ? ${o}.play(${p[0].loop}) : 0.0)`
+	// },
 	oscin: {
 		setup: (o, p) => "",
 		loop:  (o, p) => `this.OSCTransducer(${p[0].loop},${p[1].loop})`
@@ -395,7 +395,7 @@ const jsFuncMap = {
 		setup: (o, p) => "",
 		loop:  (o, p) => `this.setClockFreq(${p[0].loop})`
 	},
-  
+
 };
 
 class IRToJavascript {
@@ -414,15 +414,15 @@ class IRToJavascript {
   }
 
   static traverseTree(t, code, level, vars) {
-    console.log(`DEBUG:IR:traverseTree:level: ${level}`);
-    console.log(`DEBUG:IR:traverseTree:vars:`);
-    console.log(vars);
+    // console.log(`DEBUG:IR:traverseTree:level: ${level}`);
+    // console.log(`DEBUG:IR:traverseTree:vars:`);
+    // console.log(vars);
     let attribMap = {
       '@lang': (ccode, el) => {
         let statements = [];
         el.map((langEl) => {
           let statementCode = IRToJavascript.traverseTree(langEl, IRToJavascript.emptyCode(), level, vars);
-          console.log("@lang: " + statementCode.loop);
+          // console.log("@lang: " + statementCode.loop);
           ccode.setup += statementCode.setup;
           ccode.loop += statementCode.loop;
           // ccode.paramMarkers
@@ -455,7 +455,7 @@ class IRToJavascript {
           // console.log(params);
           allParams[p] = params;
         }
-        console.log(allParams);
+        // console.log(allParams);
         let setupCode = "";
         for (let param in allParams) {
           setupCode += allParams[param].setup;
@@ -466,18 +466,18 @@ class IRToJavascript {
         return ccode;
       },
       '@setvar': (ccode, el) => {
-        console.log("DEBUG:traverseTree:@setvar");
+        // console.log("DEBUG:traverseTree:@setvar");
         // console.log(vars);
         // console.log(el['@varname']);
         let variableName = el['@varname'].value;
-        console.log(variableName);
+        // console.log(variableName);
         let memIdx = vars[variableName];
-        console.log(memIdx);
+        // console.log(memIdx);
         if (memIdx == undefined) {
           // console.log("var not found");
           memIdx = Object.keys(vars).length;
           vars[variableName] = memIdx;
-          console.log(memIdx);
+          // console.log(memIdx);
         }
         let varValueCode = IRToJavascript.traverseTree(el['@varvalue'], IRToJavascript.emptyCode(), level+1, vars);
         ccode.setup += varValueCode.setup;
@@ -518,15 +518,15 @@ class IRToJavascript {
     if (Array.isArray(t)) {
       t.map((el) => {
         Object.keys(el).map((k) => {
-          console.log("DEBUG:traverseTree:@ARRAYAttribMap");
-          console.log(k);
+          // console.log("DEBUG:traverseTree:@ARRAYAttribMap");
+          // console.log(k);
           code = attribMap[k](code, el[k]);
         });
       })
     } else {
       Object.keys(t).map((k) => {
-        console.log("DEBUG:traverseTree:@OBJECTAttribMap");
-        console.log(k);
+        // console.log("DEBUG:traverseTree:@OBJECTAttribMap");
+        // console.log(k);
         code = attribMap[k](code, t[k]);
       });
     }
@@ -539,7 +539,7 @@ class IRToJavascript {
     let code = IRToJavascript.traverseTree(tree, IRToJavascript.emptyCode(), 0, vars);
     code.setup = `() => {let q=this.newq(); ${code.setup}; return q;}`;
     code.loop = `(q, inputs, mem) => {${code.loop} return q.sigOut;}`
-    console.log("DEBUG:treeToCode");
+    // console.log("DEBUG:treeToCode");
     console.log(code.loop);
     // console.log(code.paramMarkers);
     return code;
