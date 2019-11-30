@@ -1,6 +1,8 @@
 
 # **Sema Intermediate Representation**
 
+The following are the **types** of our intermediate Sema language
+
 # @lang
 This is the top level node of the tree, and contains an array of branches
 
@@ -101,6 +103,22 @@ Parameters:
 An white noise generator
 Parameters:
  1. Amplitude
+
+## Sampling
+### sampler
+Creates a sampler with a signal input, the sample plays when the input has a positive zero crossing
+ 1. Input signal
+ 2. Sample name
+### loop
+Creates a sampler that plays in a continuous loop
+ 1. Speed
+ 2. Sample name
+### sah
+Sample and hold
+1. Input signal
+2. Hold time (ms)
+
+
 
 ## Math Operations
 ### gt
@@ -250,20 +268,6 @@ Resonant lowpass filter
  1. Input signal
  2. Filter frequency (Hz)
  3. Resonance
-
-## Sampling
-### sampler
-Creates a sampler with a signal input, the sample plays when the input has a positive zero crossing
- 1. Input signal
- 2. Sample name
-### loop
-Creates a sampler that plays in a continuous loop
- 1. Speed
- 2. Sample name
-### sah
-Sample and hold
-1. Input signal
-2. Hold time (ms)
 
 ## Networking
 
