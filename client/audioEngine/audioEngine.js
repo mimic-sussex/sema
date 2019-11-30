@@ -320,7 +320,8 @@ class AudioEngine {
 				setup: dspFunction.setup,
 				loop: dspFunction.loop
 			});
-			// console.log("eval sent: " + userDefinedFunction); //DEBUG
+			console.log("DEBUG:evalDSP:");
+			console.log(dspFunction);
 			return true;
 		} else
       return false;
