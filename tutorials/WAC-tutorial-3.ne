@@ -1,10 +1,10 @@
 # Lexer [or tokenizer] definition with language lexemes [or tokens]
 @{%
 const lexer = moo.compile({
-  saw:      /serra/,
+  saw:       /serra/,
   click:     /click/, // match the string 'click'
   ws:        {match: /\s+/, lineBreaks: true}, // match whitespace
-	number:       /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?(?:[eE][-+]?[0-9]+)?\b/
+	number:    /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?(?:[eE][-+]?[0-9]+)?\b/
 });
 %}
 
@@ -16,27 +16,26 @@ main -> _ Statement _
 {% d => ( { "@lang" : d[1] }) %}
 
 Statement -> %click 
-  {% d =>  [{
-   "@sigOut": {
-     '@spawn': {
-       '@sigp': {
-         '@params': [{
-             '@num': {
-               value: 1
-             }
-           },
-           {
-             '@string': 'click'
-           }
-         ],
-         '@func': {
-           value: 'loop'
-         }
-       }
-     }
-   }
- }]
-  %}
+{% d => [{
+  "@sigOut": {
+    '@spawn': {
+      '@sigp': {
+        '@params': [{
+            '@num': {
+              value: 1
+            }
+          },
+          {
+            '@string': 'click'
+          }
+        ],
+        '@func': {
+          value: 'loop'
+        }
+      }
+    }
+  }]
+%}
 
 Statement -> %saw
   {% d =>  [{

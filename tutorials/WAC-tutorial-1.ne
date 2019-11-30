@@ -11,27 +11,26 @@ main -> _ Statement _
 {% d => ( { "@lang" : d[1] }) %}
 
 Statement -> %click 
-  {% d =>  [{
-   "@sigOut": {
-     '@spawn': {
-       '@sigp': {
-         '@params': [{
-             '@num': {
-               value: 1
-             }
-           },
-           {
-             '@string': 'click'
-           }
-         ],
-         '@func': {
-           value: 'loop'
-         }
-       }
-     }
-   }
- }]
-  %}
+{% d =>  [{
+  "@sigOut": {
+    '@spawn': {
+      '@sigp': {
+        '@params': [{
+            '@num': {
+              value: 1
+            }
+          },
+          {
+            '@string': 'click'
+          }
+        ],
+        '@func': {
+          value: 'loop'
+        }
+      }
+    }
+  }]
+%}
 
 
 _  -> wschar:*    {% function(d) {return null;} %} # 0 or more whitespace characters
