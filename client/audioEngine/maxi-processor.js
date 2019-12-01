@@ -174,7 +174,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
         return this.translateFloat32ArrayToBuffer(this.sampleBuffers[bufferName]);
     };
 
-    this.netClock = new Module.maxiAsyncKuramotoOscillator(2);
+    this.netClock = new Module.maxiAsyncKuramotoOscillator(3);  //TODO: this should be the same as numpeers
     this.kuraPhase = -1;
 
     this.port.onmessage = event => { // message port async handler

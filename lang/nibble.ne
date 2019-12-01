@@ -12,8 +12,9 @@ const lexer = moo.compile({
   integer:       /[0-9]+/,
   semicolon:    /;/,
 	time: /[t]/,
+	clock: /[c]/,
   comment:      /\#[^\n]:*/,
-  ws:           {match: /\s+/, lineBreaks: true}, 
+  ws:           {match: /\s+/, lineBreaks: true},
 });
 
 function binop(operation, op1,op2) {
@@ -119,23 +120,23 @@ Statement ->
       Expression                                      {% d => [{"@sigOut": { "@spawn": bitToSig(d[0]) }}] %}
 
 Expression ->
-#|
+
 Expression _ %operator _ Term
 {%d => binop(d[2],d[0],d[4])%}
 | Term _ %operator _ Term
 {%d => binop(d[2],d[0],d[4])%}
 
 Term ->
- Number {%id%}
+%paramBegin _ Expression _ %paramEnd {%d=>d[2]%}
+| Number {%id%}
 | %time {% d => timeOp() %}
-|%paramBegin _ Expression _ %paramEnd
-{%d=>d[2]%}
+
 
 
 Number -> %integer  {% (d) => ({"@num":d[0]}) %}
 | BinaryNumber {% id %}
 
-BinaryNumber -> %binarynumber {% id %}
+BinaryNumber -> %binarynumber {% (d) => ({"@num":{'value':parseInt(d[0].value.substr(1),2)}}) %}
 | %binarynumber _ %binRangeBegin _ %integer _ %binRangeEnd
 
 # Whitespace
