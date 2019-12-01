@@ -73,7 +73,7 @@ function binop(operation, op1,op2) {
            op1,op2
          ],
            '@func': {
-             value: 'bitShl'
+             value: 'bitShr'
            }
          }
        };
@@ -92,6 +92,15 @@ function timeOp() {
   };
 }
 
+function clockOp() {
+	return  { '@sigp':
+  {'@params': [],
+    '@func': {
+      value: 'bitclock'
+    }
+  }
+  };
+}
 
 function bitToSig(d) {
   return  { '@sigp':
@@ -103,6 +112,9 @@ function bitToSig(d) {
   };
 }
 
+function binStrToNum(d) {
+	return {"@num":{'value':parseInt(d.value.substr(1),2)}}
+}
 
 
 %}
@@ -130,13 +142,16 @@ Term ->
 %paramBegin _ Expression _ %paramEnd {%d=>d[2]%}
 | Number {%id%}
 | %time {% d => timeOp() %}
+| %clock {% d=> clockOp() %}
 
 
 
 Number -> %integer  {% (d) => ({"@num":d[0]}) %}
 | BinaryNumber {% id %}
 
-BinaryNumber -> %binarynumber {% (d) => ({"@num":{'value':parseInt(d[0].value.substr(1),2)}}) %}
+BinaryNumber -> %binarynumber
+{% (d) => binStrToNum(d[0])%}
+
 | %binarynumber _ %binRangeBegin _ %integer _ %binRangeEnd
 
 # Whitespace
