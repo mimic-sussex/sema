@@ -118,6 +118,8 @@
     codeMirror5.set($modelEditorValue, "js"); 
     // codeMirror6.set($grammarEditorValue, "ebnf");
     // codeMirror7.set($modelEditorValue, "js"); 
+
+    changeLayout(1);
 	});
 
   let log = (e) => { console.log(e.detail.value); }
