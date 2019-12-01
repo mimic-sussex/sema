@@ -112,14 +112,14 @@
 
   onMount(async () => {
     codeMirror1.set($grammarEditorValue, "ebnf");
-    codeMirror2.set($liveCodeEditorValue, "svelte");
-    codeMirror3.set($liveCodeEditorValue, "svelte");
+    codeMirror2.set($liveCodeEditorValue, "sema");
+    codeMirror3.set($liveCodeEditorValue, "sema");
     codeMirror4.set($grammarEditorValue, "ebnf");
     codeMirror5.set($modelEditorValue, "js"); 
     // codeMirror6.set($grammarEditorValue, "ebnf");
     // codeMirror7.set($modelEditorValue, "js"); 
 
-    changeLayout(1);
+    changeLayout(1); // [NOTE:FB] Need this call to trigger a re-render to clean up pre-loaded panels
 	});
 
   let log = (e) => { console.log(e.detail.value); }
@@ -145,7 +145,7 @@
 
         parserWorker.onmessage = e => {
           if(e.data.message !== undefined){
-            // console.log('DEBUG:Layout:parserWorkerAsync:onmessage')
+            // console.log('DEBUG:Layout:parseLiveCode:onmessage')
             // console.log(e); 
             $liveCodeParseErrors = e.data.message; 
           }
@@ -158,19 +158,26 @@
       })
       .then(outputs => {
 
+        console.log('DEBUG:Layout:parseLiveCode:then')
+        console.log(outputs); 
         const {parserOutputs, parserResults} = outputs;
         
         // $liveCodeParseResults = outputs;
         $liveCodeParseResults = parserResults;
 
         $liveCodeAbstractSyntaxTree = parserOutputs;
+
+
         // $liveCodeAbstractSyntaxTree = JSON.parse(JSON.stringify(parserOutputs));
+
         $liveCodeParseErrors = "";
         // console.log('DEBUG:Layout:parserWorkerAsync'); 
       })
       .catch(e => { 
-        console.log('DEBUG:Layout:parserWorkerAsync:catch') 
-        console.log(e); 
+        // console.log('DEBUG:Layout:parserWorkerAsync:catch') 
+        // console.log(e); 
+
+
       });
     }
   }
@@ -183,11 +190,19 @@
     let {errors, output} = compile(e.detail.value);
     $grammarCompiledParser = output; 
     $grammarCompilationErrors = errors;
+
+    console.log('DEBUG:Layout:compileGrammarOnChange');
+    console.log($grammarCompiledParser); 
+    console.log($grammarCompiledParser);   
     
-    
-    if($grammarCompiledParser && $liveCodeEditorValue){
+    if($grammarCompiledParser && ( $liveCodeEditorValue && $liveCodeEditorValue !== "") ){
       $liveCodeEditorValue = e.detail.value;
-      parseLiveCode(); 
+      
+      console.log('DEBUG:Layout:compileGrammarOnChange');
+      console.log($liveCodeEditorValue); 
+      
+      parseLiveCode();
+ 
     }
 
     // console.log('DEBUG:Layout:compileGrammarOnChange');
@@ -299,7 +314,25 @@
     background: transparent;
     font: 400 14px/1.7 var(--font-mono);
     color: var(--base);
+    /* color: antiquewhite; */
   }
+
+
+  .codemirror-container-live-code {
+    height: 100%;
+    background: transparent;
+    font: 400 14px/1.7 var(--font-mono);
+    /* color: var(--base); */
+    color: antiquewhite;
+    font-family: monospace;
+  }
+
+
+  .codemirror-cursor :global(.CodeMirror-cursor) {
+  border-left: 2px solid rgb(255, 136, 0);
+  border-right: none;
+  width: 0;
+}
 
   .codemirror-container.flex :global(.CodeMirror) {
     height: auto;
@@ -329,6 +362,11 @@
 		margin: 0 0 0.5em 0;
 		overflow-y: auto;
 	}
+
+
+
+
+  
 </style>
 
 
@@ -342,11 +380,11 @@
         <CodeMirror bind:this={codeMirror1}  bind:value={$grammarEditorValue} tab={true} lineNumbers={true}  on:change={compileGrammarOnChange}  /> 
       </div>
       
-      <div slot="liveCodeEditor" class="codemirror-container flex scrollable">
+      <div slot="liveCodeEditor" class="codemirror-container flex scrollable codemirror-container-live-code codemirror-cursor">
         <CodeMirror bind:this={codeMirror2}  bind:value={$liveCodeEditorValue} tab={true} lineNumbers={true} on:change={parseLiveCodeOnChange} cmdEnter={cmdEnter} ctrlEnter={ctrlEnter} cmdPeriod={cmdPeriod}/> 
       </div>
 
-      <div slot="liveCodeCompilerOutput">
+      <div slot="liveCodeCompilerOutput" class="codemirror-container flex scrollable">
       {#if $grammarCompilationErrors !== ""}
         <div style="overflow-y: scroll; height:auto;">
           <strong style="color:red; margin:15px 0 15px 5px">Go work on your grammar!</strong>
@@ -357,7 +395,7 @@
           <br>
           <div style="margin-left:5px">
           <!-- <div style="overflow-y: scroll; height:auto;"> -->
-            <Inspect.Value value={$liveCodeAbstractSyntaxTree[0]['@lang']} depth={1} />
+            <Inspect.Value value={ $liveCodeAbstractSyntaxTree[0]['@lang'] } depth={7} />
           </div>  
         </div>
       {:else}
@@ -373,7 +411,7 @@
       </div>
 
 
-      <div slot="grammarOutput">
+      <div slot="grammarOutput" class="codemirror-container flex scrollable">
       {#if $grammarCompilationErrors !== ""}
         <div style="overflow-y: scroll; height:auto;">
           <strong style="color:red; margin:15px 0 15px 5px">Grammar compilation errors:</strong>

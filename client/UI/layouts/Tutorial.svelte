@@ -80,12 +80,12 @@
   }
 
   .block-live-code-editor {
-  	background-color: lightgray;
+  	background-color: rgb(39, 39, 39);
     height: 66%;
   }
 
   .block-live-grammar-editor {
-    background-color: gray;
+    background-color: rgb(253, 253, 253);
     flex: 1;
   	min-width: 0;
     height: 66%;
@@ -140,7 +140,14 @@
   .vertical-slider:hover {
   	cursor: ns-resize;
   }
-  
+
+  /* .scrollable {
+		flex: 1 1 auto;
+		border-top: 1px solid #eee;
+		margin: 0 0 0.5em 0;
+		overflow-y: auto;
+	}
+   */
 </style>
 
 <div class="quadrants" bind:this={container} on:mousemove={onMouseMove} on:mouseup={onMouseUp}>
