@@ -25,24 +25,36 @@
 <style>
   
   .sidebar {
-    background-color: rgb(255, 255, 151);
+    background-color: rgb(3, 3, 3);
     width: 140px;
     height: 100%;
   }
 
+  .controls {
+    margin-left: 10px;
+  }
+
+  .combobox{
+    margin-top: 4px;
+  }
+
+  .whiteText {
+    color: whitesmoke;
+  }
 </style>
 
 
 <div class="sidebar">
   <div>
-    <span>Sidebar</span>
+    <!-- <span>Sidebar</span> -->
+    <span></span>
   </div>
   <br/>
-  <div class="layout-combobox-container">
+  <div class="layout-combobox-container controls">
     <div>
-      <span>Layout</span>
+      <span class="whiteText">Layout</span>
     </div>
-  	<select bind:value={$selectedLayout} >
+  	<select class="combobox" bind:value={$selectedLayout} >
   		{#each layoutOptions as layoutOption}
   			<option value={layoutOption}>
   				{layoutOption.text}
@@ -51,11 +63,11 @@
   	</select>    
   </div>
   <br/>
-  <div class="language-combobox-container">
+  <div class="language-combobox-container controls">
     <div>
-      <span>Language</span>
+      <span class="whiteText">Language</span>
     </div>
-  	<select bind:value={selectedLanguage} on:change="{ () => sendLanguageSelect() }">
+  	<select class="combobox" bind:value={selectedLanguage} on:change="{ () => sendLanguageSelect() }">
   		{#each languageOptions as languageOption}
   			<option value={languageOption}>
   				{languageOption.text}

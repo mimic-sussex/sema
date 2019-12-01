@@ -26,7 +26,7 @@
   #app {
   	/* height: 100%; */
   	height: 100vh;
-  	background: pink;
+  	background: rgb(0, 0, 0);
     overflow-y: hidden; /* hide vertical */
   }
 </style>

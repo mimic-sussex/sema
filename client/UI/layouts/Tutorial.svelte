@@ -103,11 +103,11 @@
   }
 
   .block-1 {
-  	background-color: rgb(199, 180, 199);
+  	background-color: rgb(179, 179, 179);
   }
   
   .block-2 {
-  	background-color: rgb(204, 242, 204);
+  	background-color: rgb(226, 226, 226);
   }
   
   .horizontal-slider {
@@ -127,7 +127,8 @@
   
 
   .vertical-slider {
-  	line-height: 4px;
+  	line-height: 10px;
+    height: 4px;
   	width: 100%;
   	background-color: #dee2e6;
   	border: none;
@@ -160,7 +161,7 @@
       </slot>
     </div> 
 
-    <div class="vertical-slider" on:mousedown={dragMouseDownOnVerticalSlider}>Slider</div>	
+    <div class="vertical-slider" on:mousedown={dragMouseDownOnVerticalSlider}>  </div>	
 
  		<div class="block block-1">
   	  <slot name="liveCodeCompilerOutput">
@@ -171,7 +172,7 @@
    </div>
 
 		<div class="horizontal-slider" on:mousedown={dragMouseDownOnHorizontalSlider}>
-			S<br>l<br>i<br>d<br>e<br>r
+			<!-- S<br>l<br>i<br>d<br>e<br>r -->
 		</div>
 
 		<div class="right">
@@ -182,7 +183,7 @@
         </slot>
       </div>
 
-      <div class="vertical-slider" on:mousedown={dragMouseDownOnRightVerticalSlider}>Slider</div>
+      <div class="vertical-slider" on:mousedown={dragMouseDownOnRightVerticalSlider}>  </div>
 
       <div class="block block-2">
   	    <slot name="grammarOutput">

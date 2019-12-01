@@ -201,7 +201,7 @@
 		</div>
 
 		<div class="horizontal-slider" on:mousedown={dragMouseDownOnHorizontalSlider}>
-			S<br>l<br>i<br>d<br>e<br>r
+			<!-- S<br>l<br>i<br>d<br>e<br>r -->
 		</div>
 
 		<div class="block block-2">
@@ -219,7 +219,7 @@
       </slot>	
 		</div>
 		<div class="bottom-horizontal-slider" on:mousedown={dragMouseDownOnBottomHorizontalSlider}>
-			S<br>l<br>i<br>d<br>e<br>r
+			<!-- S<br>l<br>i<br>d<br>e<br>r -->
 		</div>
 		<div class="block-live-grammar-editor">
 	    <slot name="modelEditor">

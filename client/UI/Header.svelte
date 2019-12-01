@@ -16,6 +16,7 @@
     margin-top: 5px;
 		margin-left: 10px;
     margin-bottom: 0px;
+    color: whitesmoke;
 	}
 
 </style>
