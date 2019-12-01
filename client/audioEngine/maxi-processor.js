@@ -231,7 +231,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
     };
     this.port.postMessage("giveMeSomeSamples");
 
-    this.clockFreq = 0.8;
+    this.clockFreq = 0.1;
     this.clockPhaseSharingInterval=0; //counter for emiting clock phase over the network
     this.clockPhase = (multiples, phase) => {
         return (((this.clockPhasor * multiples) % 1.0) + phase) % 1.0;
