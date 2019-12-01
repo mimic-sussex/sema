@@ -176,11 +176,11 @@ Mean of all parameters $\frac{\sum(x_1, x_2 ... x_n)}{n}$
 ### env
 ADSR envelope generator
 Parameters:
- 1. Input signal
- 2. Attack
- 3. Decay
- 4. Sustain
- 5. Release
+ 1. Trigger
+ 2. Attack  (ms)
+ 3. Decay   (ms)
+ 4. Sustain (0-1)
+ 5. Release (ms)
 
 ## Mapping
 ### blin
