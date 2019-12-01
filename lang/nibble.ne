@@ -13,7 +13,7 @@ const lexer = moo.compile({
   semicolon:    /;/,
 	time: /[t]/,
   comment:      /\#[^\n]:*/,
-  ws:           {match: /\s+/, lineBreaks: true},
+  ws:           {match: /\s+/, lineBreaks: true}, 
 });
 
 function binop(operation, op1,op2) {
