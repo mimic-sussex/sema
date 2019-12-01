@@ -1,6 +1,4 @@
 @{%
-const moo = require("moo"); // this 'require' creates a node dependency
-
 
 const lexer = moo.compile({
   separator:    /,/,
@@ -8,7 +6,8 @@ const lexer = moo.compile({
    paramBegin:   /\[/,
    binRangeBegin:   /{/,
    binRangeEnd:   /}/,
-  operator:     /\\|\*|\+|\-|>>|<<|<|>|~|\^|&|\|/,
+  variable:     /:[a-zA-Z0-9]+:/,
+  operator:     /\/|\*|\+|\-|>>|<<|<|>|~|\^|&|\|/,
   binarynumber:       /b[0-1]+/,
   integer:       /[0-9]+/,
   semicolon:    /;/,
@@ -17,38 +16,38 @@ const lexer = moo.compile({
   ws:           {match: /\s+/, lineBreaks: true},
 });
 
-function binop(d) {
+function binop(operation, op1,op2) {
   var res;
-  switch(d[2].value) {
+  switch(operation.value) {
     case '+':
-     res = { '@sigp':{ '@params': [d[0], d[4]],
+     res = { '@sigp':{ '@params': [op1,op2],
            '@func': {value: 'bitAdd'}}};
      break;
     case '-':
-     res = { '@sigp':{ '@params': [d[0], d[4]],
+     res = { '@sigp':{ '@params': [op1,op2],
            '@func': {value: 'bitSub'}}};
      break;
     case '*':
-     res = { '@sigp':{ '@params': [d[0], d[4]],
+     res = { '@sigp':{ '@params': [op1,op2],
            '@func': {value: 'bitMul'}}};
      break;
     case '\\':
-     res = { '@sigp':{ '@params': [d[0], d[4]],
+     res = { '@sigp':{ '@params': [op1,op2],
            '@func': {value: 'bitDiv'}}};
      break;
     case '^':
-     res = { '@sigp':{ '@params': [d[0], d[4]],
+     res = { '@sigp':{ '@params': [op1,op2],
            '@func': {value: 'bitXor'}}};
      break;
 
     case '&':
-     res = { '@sigp':{ '@params': [d[0], d[4]],
+     res = { '@sigp':{ '@params': [op1,op2],
            '@func': {value: 'bitAnd'}}};
      break;
     case '|':
      res = { '@sigp':
          { '@params': [
-           d[0], d[4]
+           op1,op2
          ],
            '@func': {
              value: 'bitOr'
@@ -59,7 +58,7 @@ function binop(d) {
     case '<<':
      res = { '@sigp':
          { '@params': [
-           d[0], d[4]
+           op1,op2
          ],
            '@func': {
              value: 'bitShl'
@@ -70,7 +69,7 @@ function binop(d) {
     case '>>':
      res = { '@sigp':
          { '@params': [
-           d[0], d[4]
+           op1,op2
          ],
            '@func': {
              value: 'bitShl'
@@ -119,15 +118,19 @@ Statement ->
       |
       Expression                                      {% d => [{"@sigOut": { "@spawn": bitToSig(d[0]) }}] %}
 
-Expression ->  Term _ %operator _ Term
-{%
-d => binop(d)
-%}
+Expression ->
+#|
+Expression _ %operator _ Term
+{%d => binop(d[2],d[0],d[4])%}
+| Term _ %operator _ Term
+{%d => binop(d[2],d[0],d[4])%}
 
-Term -> %paramBegin Expression %paramEnd {%id%}
-| Expression {%id%}
-| Number {%id%}
+Term ->
+ Number {%id%}
 | %time {% d => timeOp() %}
+|%paramBegin _ Expression _ %paramEnd
+{%d=>d[2]%}
+
 
 Number -> %integer  {% (d) => ({"@num":d[0]}) %}
 | BinaryNumber {% id %}
