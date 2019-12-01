@@ -391,10 +391,10 @@ const jsFuncMap = {
 		setup: (o, p) => "",
 		loop:  (o, p) => `this.clockTrig(${p[0].loop},${p.length > 1 ? p[1].loop : 0})`
 	},
-  clfreq: {
-		setup: (o, p) => "",
-		loop:  (o, p) => `this.setClockFreq(${p[0].loop})`
-	},
+  // clfreq: {
+	// 	setup: (o, p) => "",
+	// 	loop:  (o, p) => `this.setClockFreq(${p[0].loop})`
+	// },
   onzx: {
 		setup: (o, p) => `${o} = new Module.maxiTrigger();`,
 		loop:  (o, p) => `${o}.onZX(${p[0].loop})`
@@ -410,6 +410,10 @@ const jsFuncMap = {
   index: {
 		setup: (o, p) => `${o} = new Module.maxiIndex();`,
 		loop:  (o, p) => `${o}.pull(${p[0].loop},${p[1].loop},${p[2].loop})`
+  },
+  bitclock: {
+    setup: (o, p) => "",
+		loop:  (o, p) => `this.bitclock`
   }
 
 };
