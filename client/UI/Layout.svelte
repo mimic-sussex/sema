@@ -194,6 +194,8 @@
 
 
   let parseLiveCodeOnChange = e => {
+    console.log('DEBUG:Layout:parseLiveCodeOnChange');
+    console.log($liveCodeEditorValue); 
     if($grammarCompiledParser){
       $liveCodeEditorValue = e.detail.value;
       window.localStorage.liveCodeEditorValue = e.detail.value;
@@ -201,8 +203,7 @@
       parseLiveCode(); 
     }
     
-    // console.log('DEBUG:Layout:parseLiveCodeOnChange');
-    // console.log(e); 
+
   }
 
  
@@ -267,6 +268,9 @@
 
 <style>
 
+
+
+
   .layout-template-container {
     height: 100vh;
   }
@@ -285,6 +289,7 @@
     border: none;
     line-height: 1.5;
     overflow: hidden;
+    font-family: monospace;
   }
 
   .codemirror-container :global(.CodeMirror) {
@@ -332,11 +337,11 @@
     
     <Tutorial>
       <div slot="grammarEditor" class="codemirror-container flex scrollable">
-        <CodeMirror bind:this={codeMirror1}  bind:value={$grammarEditorValue} tab={false} lineNumbers={true}  on:change={compileGrammarOnChange}  /> 
+        <CodeMirror bind:this={codeMirror1}  bind:value={$grammarEditorValue} tab={true} lineNumbers={true}  on:change={compileGrammarOnChange}  /> 
       </div>
       
       <div slot="liveCodeEditor" class="codemirror-container flex scrollable">
-        <CodeMirror bind:this={codeMirror2}  bind:value={$liveCodeEditorValue} tab={false} lineNumbers={true} on:change={parseLiveCodeOnChange} cmdEnter={cmdEnter} ctrlEnter={ctrlEnter} cmdPeriod={cmdPeriod}/> 
+        <CodeMirror bind:this={codeMirror2}  bind:value={$liveCodeEditorValue} tab={true} lineNumbers={true} on:change={parseLiveCodeOnChange} cmdEnter={cmdEnter} ctrlEnter={ctrlEnter} cmdPeriod={cmdPeriod}/> 
       </div>
 
       <div slot="liveCodeCompilerOutput">
