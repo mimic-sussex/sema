@@ -93,6 +93,14 @@ class MaxiProcessor extends AudioWorkletProcessor {
    */
   constructor() {
     super();
+
+    let q1 = Module.maxiBits.sig(63);
+    // for(let i=0; i < 123; i++) q1 = Module.maxiBits.inc(q1);
+    let q2 = Module.maxiBits.sig(255);
+    let q3 = Module.maxiBits.land(q1,q2);
+    let q4 = Module.maxiBits.shl(q3, 22);
+    console.log("res: " + q4);
+
     this.sampleRate = 44100;
 
     this.DAC = [0];
@@ -236,6 +244,10 @@ class MaxiProcessor extends AudioWorkletProcessor {
       return 0;
     };
 
+    this.bitTime = Module.maxiBits.sig(0);
+    this.getBitTime = () => {return this.bitTime;};
+    this.dt = 0;
+
   }
 
   /**
@@ -256,6 +268,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
       let channelCount = output.length;
 
       for (let i = 0; i < output[0].length; ++i) {
+        this.bitTime = Module.maxiBits.inc(this.bitTime);
         //net clocks
         if (this.kuraPhase != -1) {
           this.netClock.setPhase(this.kuraPhase, 1);
@@ -278,13 +291,20 @@ class MaxiProcessor extends AudioWorkletProcessor {
         let xf = this.xfadeControl.play(i == 0 ? 1 : 0);
         let w = Module.maxiXFade.xfade(sig0, sig1, xf);
 
-        
+
         //mono->stereo
         for (let channel = 0; channel < channelCount; channel++) {
           output[channel][i] = w;
         }
+        // this.bitsaw = Module.maxiBits.lor(this.getBitTime(), 511);
+        // this.xx = Module.maxiBits.toSignal(Module.maxiBits.shl(this.bitsaw,22));
 
       }
+
+
+      // if (this.dt++ % 30 == 0) {
+        // console.log(this.xx);
+      // }
 
       //remove old algo and data?
       if (this.xfadeControl.isLineComplete()) {

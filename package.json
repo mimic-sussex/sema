@@ -12,7 +12,7 @@
   "dependencies": {
     "lodash.clonedeep": "^4.5.0",
     "lodash.map": "^4.6.0",
-    "nearley": "^2.15.1",
+    "nearley": "^2.19.0",
     "nexusui": "^2.0.10"
   },
   "devDependencies": {
