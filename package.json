@@ -1,12 +1,11 @@
 {
   "name": "sema",
-  "author": 
-  "Francisco Bernardo <f.bernardo@sussex.ac.uk> (http://frantic0.com)",
+  "author": "Francisco Bernardo <f.bernardo@sussex.ac.uk> (http://frantic0.com)",
   "version": "0.2.0",
   "description": "sema, a live coding language design playground",
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack",
-    "dev": "cross-env NODE_ENV=development webpack",
+    "dev": "cross-env NODE_ENV=development webpack --verbose",
     "go": "webpack-dev-server --content-base public",
     "test": "cross-env NODE_ENV=development webpack"
   },
@@ -17,6 +16,7 @@
     "nexusui": "^2.0.10"
   },
   "devDependencies": {
+    "clean-webpack-plugin": "^3.0.0",
     "cross-env": "^5.2.0",
     "css-loader": "^3.2.0",
     "file-loader": "^5.0.1",

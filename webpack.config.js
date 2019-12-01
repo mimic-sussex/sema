@@ -5,6 +5,7 @@ const mode = process.env.NODE_ENV || 'development';
 const prod = mode === 'production';
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const LinkTypePlugin = require("html-webpack-link-type-plugin").HtmlWebpackLinkTypePlugin;
+const CleanWebpackPlugin = require("clean-webpack-plugin");
 var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
@@ -62,15 +63,6 @@ module.exports = {
 				]
 			},
 			{
-				//IMAGE LOADER
-				test: /\.(jpe?g|png|gif|svg)$/,
-				loader: "file-loader",
-				options: {
-					name: "[name].[ext]",
-					// outputPath: "img/"i
-				}
-			},
-			{
 				test: /\.ne$/,
 				use: ["raw-loader"]
 			},
@@ -110,6 +102,17 @@ module.exports = {
 				}
 			},
 			{
+				//IMAGE LOADER
+				test: /\.(jpe?g|png|gif|svg)$/i,
+				use: {
+					loader: "file-loader",
+					options: {
+						name: "[name].[ext]",
+						outputPath: "img"
+					}
+				}
+			},
+			{
 				//AUDIO SAMPLE LOADER
 				test: /\.(mp3|wav)$/,
 				use: {
@@ -132,11 +135,28 @@ module.exports = {
 		}),
 		new MiniCssExtractPlugin({
 			filename: "[name].css"
-		})
+		}),
+		new webpack.ProgressPlugin()
+		// new CleanWebpackPlugin()
+		// new CleanWebpackPlugin({
+		//   dry: false,
+		//   verbose: true,
+		//   cleanStaleWebpackAssets: true,
+		//   protectWebpackAssets: true,
+		// })
 		// new webpack.HotModuleReplacementPlugin(),
 		// new webpack.NoEmitOnErrorsPlugin(),
 	],
 	devtool: prod ? false : "source-map",
+	// Issue pointed out by Surma on the following gist – https://gist.github.com/surma/b2705b6cca29357ebea1c9e6e15684cc
+	// This is necessary due to the fact that emscripten puts both Node and web
+	// code into one file. The node part uses Node’s `fs` module to load the wasm
+	// file.
+	// Issue: https://github.com/kripken/emscripten/issues/6542.
+	// browser: {
+	//   "fs": false
+	// },
+	// There is a further correction on the thread, which is congruent with what I had before
 	node: {
 		fs: "empty"
 	}
