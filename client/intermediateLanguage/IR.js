@@ -395,6 +395,22 @@ const jsFuncMap = {
 		setup: (o, p) => "",
 		loop:  (o, p) => `this.setClockFreq(${p[0].loop})`
 	},
+  onzx: {
+		setup: (o, p) => `${o} = new Module.maxiTrigger();`,
+		loop:  (o, p) => `${o}.onZX(${p[0].loop})`
+	},
+  onchange: {
+		setup: (o, p) => `${o} = new Module.maxiTrigger();`,
+		loop:  (o, p) => `${o}.onChanged(${p[0].loop},${p[1].loop})`
+	},
+  count: {
+		setup: (o, p) => `${o} = new Module.maxiCounter();`,
+		loop:  (o, p) => `${o}.count(${p[0].loop},${p[1].loop})`
+	},
+  index: {
+		setup: (o, p) => `${o} = new Module.maxiIndex();`,
+		loop:  (o, p) => `${o}.pull(${p[0].loop},${p[1].loop},${p[2].loop})`
+  }
 
 };
 
