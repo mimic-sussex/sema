@@ -33,6 +33,7 @@
     evalDSP
   } from '../audioEngine/audioEngineController.js';
 
+  import IRToJavascript from "../intermediateLanguage/IR.js";
   
   import * as nearley from 'nearley/lib/nearley.js'
   import compile from '../compiler/compiler';
@@ -158,13 +159,14 @@
       })
       .then(outputs => {
 
-        console.log('DEBUG:Layout:parseLiveCode:then')
-        console.log(outputs); 
+        // console.log('DEBUG:Layout:parseLiveCode:then')
+        // console.log(outputs); 
         const {parserOutputs, parserResults} = outputs;
         
         // $liveCodeParseResults = outputs;
         $liveCodeParseResults = parserResults;
 
+        // console.log(outputs); 
         $liveCodeAbstractSyntaxTree = parserOutputs;
 
 
@@ -184,25 +186,37 @@
 
 
   let compileGrammarOnChange = e => { 
-    
-    window.localStorage.grammarEditorValue = e.detail.value; 
 
-    let {errors, output} = compile(e.detail.value);
-    $grammarCompiledParser = output; 
-    $grammarCompilationErrors = errors;
+    let grammarEditorValue = null; 
 
-    console.log('DEBUG:Layout:compileGrammarOnChange');
-    console.log($grammarCompiledParser); 
-    console.log($grammarCompiledParser);   
-    
-    if($grammarCompiledParser && ( $liveCodeEditorValue && $liveCodeEditorValue !== "") ){
-      $liveCodeEditorValue = e.detail.value;
-      
-      console.log('DEBUG:Layout:compileGrammarOnChange');
-      console.log($liveCodeEditorValue); 
-      
-      parseLiveCode();
- 
+    if(e !== undefined && e.detail !== undefined && e.detail.value !== undefined)
+      grammarEditorValue = e.detail.value; 
+    else 
+      grammarEditorValue = $grammarEditorValue; 
+
+    try {
+      window.localStorage.grammarEditorValue = grammarEditorValue;
+
+      let {errors, output} = compile(grammarEditorValue);
+      $grammarCompiledParser = output; 
+      $grammarCompilationErrors = errors;
+
+      // console.log('DEBUG:Layout:compileGrammarOnChange');
+      // console.log($grammarCompiledParser); 
+
+      if($grammarCompiledParser && ( $liveCodeEditorValue && $liveCodeEditorValue !== "") ){
+        $liveCodeEditorValue = e.detail.value;
+
+        // console.log('DEBUG:Layout:compileGrammarOnChange');
+        // console.log($liveCodeEditorValue); 
+
+        parseLiveCode();
+  
+      }
+    }
+    catch (e) {
+
+
     }
 
     // console.log('DEBUG:Layout:compileGrammarOnChange');
@@ -211,8 +225,8 @@
 
 
   let parseLiveCodeOnChange = e => {
-    console.log('DEBUG:Layout:parseLiveCodeOnChange');
-    console.log($liveCodeEditorValue); 
+    // console.log('DEBUG:Layout:parseLiveCodeOnChange');
+    // console.log($liveCodeEditorValue); 
     if($grammarCompiledParser){
       $liveCodeEditorValue = e.detail.value;
       window.localStorage.liveCodeEditorValue = e.detail.value;
@@ -223,8 +237,13 @@
 
   }
 
+  let translateILtoDSP = e => {
+    
+    $dspCode = IRToJavascript.treeToCode($liveCodeParseResults);
+    
+    evalDSP($dspCode); 
+  }
  
-
   let translateILtoDSPasync = e => {  // [NOTE:FB] Note the 'async'
 
     if(window.Worker){
@@ -258,35 +277,55 @@
         evalDSP($dspCode);
         
         // $liveCodeParseErrors = "";
-        console.log('DEBUG:Layout:translateILtoDSPasync');
+        // console.log('DEBUG:Layout:translateILtoDSPasync');
         console.log($dspCode);  
       })
       .catch(e => { 
-        console.log('DEBUG:Layout:translateILtoDSPasync:catch') 
-        console.log(e); 
+        // console.log('DEBUG:Layout:translateILtoDSPasync:catch') 
+        // console.log(e); 
       });      
     }    
   }
 
   let cmdEnter = () => {
-    console.log('DEBUG:Layout:cmdEnter') 
-    console.log($liveCodeAbstractSyntaxTree);     
+
+    // console.log('DEBUG:Layout:cmdEnter') 
+    // console.log($liveCodeAbstractSyntaxTree);     
+
     if($grammarCompiledParser && $liveCodeEditorValue && $liveCodeAbstractSyntaxTree){
-      translateILtoDSPasync();
+      
+      // translateILtoDSPasync();
+      
+      translateILtoDSP();
     }
   }
-  
+
+  let ctrlEnter  = () => {
+
+    // console.log('DEBUG:Layout:cmdEnter') 
+    // console.log($liveCodeAbstractSyntaxTree);     
+
+    if($grammarCompiledParser && $liveCodeEditorValue && $liveCodeAbstractSyntaxTree){
+      
+      translateILtoDSPasync();
+      
+      // translateILtoDSP();
+    }
+  }
+
+
+
+
+
   let cmdPeriod = () => playAudio();
 
-  let ctrlEnter = () => console.log("ctrl-enter");
+
+
 
 </script>
 
 
 <style>
-
-
-
 
   .layout-template-container {
     height: 100vh;
@@ -329,10 +368,27 @@
 
 
   .codemirror-cursor :global(.CodeMirror-cursor) {
-  border-left: 2px solid rgb(255, 136, 0);
-  border-right: none;
-  width: 0;
-}
+    border-left: 2px solid rgb(255, 136, 0);
+    border-right: none;
+    width: 0;
+  }
+
+  /* .codemirror-linenumber :global(.CodeMirror-linenumbers) {
+    width: 15px;
+  } */
+
+  .codemirror-linenumber :global(.CodeMirror-linenumber) {
+    left: 2px; width: 21px;
+    width: 15px;
+  }
+
+  .codemirror-gutter :global(.CodeMirror-gutters) {
+    width: 20px;
+  }
+  
+  /* .CodeMirror-linenumbers :global(.Codemirror-linenumber){
+
+  } */
 
   .codemirror-container.flex :global(.CodeMirror) {
     height: auto;
@@ -358,7 +414,7 @@
 
 	.scrollable {
 		flex: 1 1 auto;
-		border-top: 1px solid #eee;
+		/* border-top: 1px solid #eee; */
 		margin: 0 0 0.5em 0;
 		overflow-y: auto;
 	}
@@ -376,11 +432,11 @@
   <div class="tutorial-container" style="display:{tutorialContainerDisplay}">
     
     <Tutorial>
-      <div slot="grammarEditor" class="codemirror-container flex scrollable">
+      <div slot="grammarEditor" class="codemirror-container flex scrollable codemirror-gutter codemirror-linenumber ">
         <CodeMirror bind:this={codeMirror1}  bind:value={$grammarEditorValue} tab={true} lineNumbers={true}  on:change={compileGrammarOnChange}  /> 
       </div>
       
-      <div slot="liveCodeEditor" class="codemirror-container flex scrollable codemirror-container-live-code codemirror-cursor">
+      <div slot="liveCodeEditor" class="codemirror-container flex scrollable codemirror-container-live-code codemirror-cursor codemirror-linenumber codemirror-gutter">
         <CodeMirror bind:this={codeMirror2}  bind:value={$liveCodeEditorValue} tab={true} lineNumbers={true} on:change={parseLiveCodeOnChange} cmdEnter={cmdEnter} ctrlEnter={ctrlEnter} cmdPeriod={cmdPeriod}/> 
       </div>
 
@@ -389,7 +445,7 @@
         <div style="overflow-y: scroll; height:auto;">
           <strong style="color:red; margin:15px 0 15px 5px">Go work on your grammar!</strong>
         </div>
-      {:else if $liveCodeAbstractSyntaxTree && $liveCodeAbstractSyntaxTree.length && $liveCodeParseErrors === ""}
+      {:else if $liveCodeAbstractSyntaxTree && $liveCodeAbstractSyntaxTree.length && !$liveCodeParseErrors}
         <div style="overflow-y: scroll; height:auto;">
           <strong style="color:green; margin:15px 0 15px 5px">Abstract Syntax Tree:</strong>
           <br>
