@@ -379,10 +379,16 @@ const jsFuncMap = {
 		setup: (o, p) => "",
 		loop:  (o, p) => `Module.maxiBits.at(${p[0].loop},${p[1].loop},${p[2].loop})`
 	},
+  bitnoise: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `Module.maxiBits.noise()`
+	},
   btime: {
 		setup: (o, p) =>``,
 		loop:  (o, p) => `this.bitTime`
 	},
+
+
   clp: {
 		setup: (o, p) => "",
 		loop:  (o, p) => `this.clockPhase(${p[0].loop},${p.length > 1 ? p[1].loop : 0})`

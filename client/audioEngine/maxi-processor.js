@@ -85,8 +85,13 @@ class MaxiProcessor extends AudioWorkletProcessor {
     }, {
       name: 'gainSeq',
       defaultValue: 6.5
+    },
+    {
+      name: 'numClockPeers',
+      defaultValue: 1
     }];
   }
+
 
   /**
    * @constructor
@@ -113,6 +118,8 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
     this.oldClock = 0;
     this.phase = 0;
+
+    this.numPeers = 1;
 
     // this.maxiAudio = new Module.maxiAudio();
     this.clock = new Module.maxiOsc();
@@ -174,7 +181,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
         return this.translateFloat32ArrayToBuffer(this.sampleBuffers[bufferName]);
     };
 
-    this.netClock = new Module.maxiAsyncKuramotoOscillator(2);  //TODO: this should be the same as numpeers
+    this.netClock = new Module.maxiAsyncKuramotoOscillator(3);  //TODO: this should be the same as numpeers
     this.kuraPhase = -1;
     this.kuraPhaseIdx = 1;
 

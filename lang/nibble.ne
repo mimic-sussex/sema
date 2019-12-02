@@ -1,13 +1,5 @@
 @{%
 
-/*
-some nibble examples
-
-//this evolves continually
-t  * [t|[t<<1^98&4|[t<<29]] >> b1] << [c>>8] * [[c *1>> 4 & 11] & [c *1 >> 4 | 1]]
-
-*/
-
 const lexer = moo.compile({
   separator:    /,/,
    paramEnd:     /\]/,
@@ -21,6 +13,7 @@ const lexer = moo.compile({
   semicolon:    /;/,
 	time: /[t]/,
 	clock: /[c]/,
+	noise: /[n]/,
   comment:      /\#[^\n]:*/,
   ws:           {match: /\s+/, lineBreaks: true},
 });
@@ -109,6 +102,15 @@ function clockOp() {
   }
   };
 }
+function noiseOp() {
+	return  { '@sigp':
+  {'@params': [],
+    '@func': {
+      value: 'bitnoise'
+    }
+  }
+  };
+}
 
 function bitToSig(d) {
   return  { '@sigp':
@@ -151,6 +153,7 @@ Term ->
 | Number {%id%}
 | %time {% d => timeOp() %}
 | %clock {% d=> clockOp() %}
+| %noise {% d=> noiseOp() %}
 
 
 
