@@ -17,7 +17,7 @@ let createAudioEngine = () => {
   window.AudioEngine = new AudioEngine();
 
   kuraClock = new kuramotoNetClock((phase, idx) => {
-    console.log(phase + ", " + idx);
+    // console.log("phase: " + phase + ", " + idx);
     if (window.AudioEngine !== undefined) {
       window.AudioEngine.sendClockPhase(phase, idx);
     }
