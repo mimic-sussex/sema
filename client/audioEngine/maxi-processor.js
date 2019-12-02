@@ -93,6 +93,14 @@ class MaxiProcessor extends AudioWorkletProcessor {
    */
   constructor() {
     super();
+
+    let q1 = Module.maxiBits.sig(63);
+    // for(let i=0; i < 123; i++) q1 = Module.maxiBits.inc(q1);
+    // let q2 = Module.maxiBits.sig(255);
+    // let q3 = Module.maxiBits.land(q1,q2);
+    // let q4 = Module.maxiBits.shl(q3, 22);
+    console.log("res: " + q1);
+
     this.sampleRate = 44100;
 
     this.DAC = [0];
@@ -166,8 +174,9 @@ class MaxiProcessor extends AudioWorkletProcessor {
         return this.translateFloat32ArrayToBuffer(this.sampleBuffers[bufferName]);
     };
 
-    this.netClock = new Module.maxiAsyncKuramotoOscillator(2);
+    this.netClock = new Module.maxiAsyncKuramotoOscillator(3);  //TODO: this should be the same as numpeers
     this.kuraPhase = -1;
+    this.kuraPhaseIdx = 1;
 
     this.port.onmessage = event => { // message port async handler
       if ('address' in event.data) {
@@ -187,6 +196,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
         this.sampleBuffers[sampleKey] = event.data.buffer;
       }else if ('phase' in event.data) {
         this.kuraPhase = event.data.phase;
+        this.kuraPhaseIdx = event.data.i;
       } else if ('eval' in event.data) { // check if new code is being sent for evaluation?
 
         try {
@@ -223,7 +233,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
     };
     this.port.postMessage("giveMeSomeSamples");
 
-    this.clockFreq = 0.8;
+    this.clockFreq = 0.1;
     this.clockPhaseSharingInterval=0; //counter for emiting clock phase over the network
     this.clockPhase = (multiples, phase) => {
         return (((this.clockPhasor * multiples) % 1.0) + phase) % 1.0;
@@ -235,6 +245,10 @@ class MaxiProcessor extends AudioWorkletProcessor {
       this.clockFreq = freq;
       return 0;
     };
+
+    this.bitTime = Module.maxiBits.sig(0);  //this needs to be decoupled from the audio engine? or not... maybe a 'permenant block' with each grammar?
+    this.dt = 0;
+
 
   }
 
@@ -256,9 +270,10 @@ class MaxiProcessor extends AudioWorkletProcessor {
       let channelCount = output.length;
 
       for (let i = 0; i < output[0].length; ++i) {
+        this.bitTime = Module.maxiBits.inc(this.bitTime);
         //net clocks
         if (this.kuraPhase != -1) {
-          this.netClock.setPhase(this.kuraPhase, 1);
+          this.netClock.setPhase(this.kuraPhase, this.kuraPhaseIdx);
           this.kuraPhase = -1;
         }
         this.netClock.play(this.clockFreq, 100);
@@ -271,6 +286,9 @@ class MaxiProcessor extends AudioWorkletProcessor {
           this.port.postMessage({ p: phase, c: "phase" });
         }
 
+        this.bitclock = Module.maxiBits.sig(Math.floor(this.clockPhase(1,0) * 4096));
+
+
 
         //xfade between old and new algorhythms
         let sig0 = this.signals[0](this._q[0], inputs[0][0][i], this._mems[0]);
@@ -278,13 +296,18 @@ class MaxiProcessor extends AudioWorkletProcessor {
         let xf = this.xfadeControl.play(i == 0 ? 1 : 0);
         let w = Module.maxiXFade.xfade(sig0, sig1, xf);
 
-        
+
         //mono->stereo
         for (let channel = 0; channel < channelCount; channel++) {
           output[channel][i] = w;
         }
 
       }
+
+
+      // if (this.dt++ % 30 == 0) {
+      //   console.log(this.bitclock);
+      // }
 
       //remove old algo and data?
       if (this.xfadeControl.isLineComplete()) {

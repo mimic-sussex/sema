@@ -13,28 +13,32 @@
 	import { onMount, onDestroy } from 'svelte';
 	import Inspect from 'svelte-inspect';
 
-  import {  grammarEditorValue, 
-            modelEditorValue, 
-            grammarCompiledParser, 
-            grammarCompilationErrors, 
+  import {  grammarEditorValue,
+            modelEditorValue,
+            grammarCompiledParser,
+            grammarCompilationErrors,
             liveCodeEditorValue,
             liveCodeParseResults,
             liveCodeParseErrors,
             liveCodeAbstractSyntaxTree,
             dspCode,
-            selectedLayout, 
+            selectedLayout,
             layoutOptions,
             helloWorld
   } from "../store.js";
 
-  import { 
+  import {
     playAudio,
     stopAudio,
     evalDSP
   } from '../audioEngine/audioEngineController.js';
 
+<<<<<<< HEAD
   import IRToJavascript from "../intermediateLanguage/IR.js";
   
+=======
+
+>>>>>>> 0e129d98efaf5bf9a890edad7eebbdb3f740b6a4
   import * as nearley from 'nearley/lib/nearley.js'
   import compile from '../compiler/compiler';
 
@@ -63,33 +67,33 @@
   function changeLayout (layoutIndex) {
     switch (layoutIndex) {
       case 1:
-        liveContainerDisplay =      "none"; 
-        quadrantsContainerDisplay = "none";  
-        dashboardContainerDisplay = "none";  
+        liveContainerDisplay =      "none";
+        quadrantsContainerDisplay = "none";
+        dashboardContainerDisplay = "none";
         tutorialContainerDisplay = "initial";
         break;
       case 2:
         liveContainerDisplay =      "none";
-        quadrantsContainerDisplay = "initial"; 
-        dashboardContainerDisplay = "none"; 
+        quadrantsContainerDisplay = "initial";
+        dashboardContainerDisplay = "none";
         tutorialContainerDisplay = "none";
         break;
       case 3:
-        liveContainerDisplay =      "none"; 
-        quadrantsContainerDisplay = "none";  
-        dashboardContainerDisplay = "initial";  
+        liveContainerDisplay =      "none";
+        quadrantsContainerDisplay = "none";
+        dashboardContainerDisplay = "initial";
         tutorialContainerDisplay = "none";
         break;
       case 4:
         liveContainerDisplay =      "initial";
-        quadrantsContainerDisplay = "none"; 
+        quadrantsContainerDisplay = "none";
         dashboardContainerDisplay = "none";
         tutorialContainerDisplay = "none";
         break;
       default:
         liveContainerDisplay =      "initial";
-        quadrantsContainerDisplay = "initial";  
-        dashboardContainerDisplay = "initial";  
+        quadrantsContainerDisplay = "initial";
+        dashboardContainerDisplay = "initial";
         tutorialContainerDisplay = "initial";
         break;
     }
@@ -98,38 +102,38 @@
   const unsubscribe = selectedLayout.subscribe(value => {
     // console.log("DEBUG:Layout:selectedlayout: ", value.id);
     changeLayout(value.id);
-  })  
+  })
 	// onDestroy(unsubscribe); // Prevent memory leaks by disposing the component
-  
+
   const unsubscribe2 = grammarEditorValue.subscribe(value => {
     // console.log("DEBUG:Layout:grammarEditorValue: ", value);
-    //  grammarCompiledParser 
+    //  grammarCompiledParser
     // let liveParser = new nearley.Parser(nearley.Grammar.fromCompiled(grammarCompiled));
     // let c = compile(value)
-    // let {errors, output} = c; 
+    // let {errors, output} = c;
     // console.log("DEBUG:Layout:grammarEditorValue: ", errors);
     // changeLayout(value.id);
-  }) 
+  })
 
   onMount(async () => {
     codeMirror1.set($grammarEditorValue, "ebnf");
     codeMirror2.set($liveCodeEditorValue, "sema");
     codeMirror3.set($liveCodeEditorValue, "sema");
     codeMirror4.set($grammarEditorValue, "ebnf");
-    codeMirror5.set($modelEditorValue, "js"); 
+    codeMirror5.set($modelEditorValue, "js");
     // codeMirror6.set($grammarEditorValue, "ebnf");
-    // codeMirror7.set($modelEditorValue, "js"); 
+    // codeMirror7.set($modelEditorValue, "js");
 
     changeLayout(1); // [NOTE:FB] Need this call to trigger a re-render to clean up pre-loaded panels
 	});
 
   let log = (e) => { console.log(e.detail.value); }
-  
+
   let nil = (e) => { }
 
-  
-  let parseLiveCode = e => { 
-  
+
+  let parseLiveCode = e => {
+
     if(window.Worker){
 
       let parserWorker = new Worker('../../parser.worker.js');
@@ -147,8 +151,8 @@
         parserWorker.onmessage = e => {
           if(e.data.message !== undefined){
             // console.log('DEBUG:Layout:parseLiveCode:onmessage')
-            // console.log(e); 
-            $liveCodeParseErrors = e.data.message; 
+            // console.log(e);
+            $liveCodeParseErrors = e.data.message;
           }
           else if(e.data !== undefined && e.data.length != 0){
             res(e.data);
@@ -159,25 +163,35 @@
       })
       .then(outputs => {
 
+<<<<<<< HEAD
         // console.log('DEBUG:Layout:parseLiveCode:then')
         // console.log(outputs); 
+=======
+        console.log('DEBUG:Layout:parseLiveCode:then')
+        console.log(outputs);
+>>>>>>> 0e129d98efaf5bf9a890edad7eebbdb3f740b6a4
         const {parserOutputs, parserResults} = outputs;
-        
+
         // $liveCodeParseResults = outputs;
         $liveCodeParseResults = parserResults;
 
+<<<<<<< HEAD
         // console.log(outputs); 
+=======
+        //console.log(parserResults);
+
+>>>>>>> 0e129d98efaf5bf9a890edad7eebbdb3f740b6a4
         $liveCodeAbstractSyntaxTree = parserOutputs;
 
 
         // $liveCodeAbstractSyntaxTree = JSON.parse(JSON.stringify(parserOutputs));
 
         $liveCodeParseErrors = "";
-        // console.log('DEBUG:Layout:parserWorkerAsync'); 
+        // console.log('DEBUG:Layout:parserWorkerAsync');
       })
-      .catch(e => { 
-        // console.log('DEBUG:Layout:parserWorkerAsync:catch') 
-        // console.log(e); 
+      .catch(e => {
+        // console.log('DEBUG:Layout:parserWorkerAsync:catch')
+        // console.log(e);
 
 
       });
@@ -185,6 +199,7 @@
   }
 
 
+<<<<<<< HEAD
   let compileGrammarOnChange = e => { 
 
     let grammarEditorValue = null; 
@@ -217,26 +232,54 @@
     catch (e) {
 
 
+=======
+  let compileGrammarOnChange = e => {
+
+    window.localStorage.grammarEditorValue = e.detail.value;
+
+    let {errors, output} = compile(e.detail.value);
+    $grammarCompiledParser = output;
+    $grammarCompilationErrors = errors;
+
+    console.log('DEBUG:Layout:compileGrammarOnChange');
+    console.log($grammarCompiledParser);
+    console.log($grammarCompiledParser);
+
+    if($grammarCompiledParser && ( $liveCodeEditorValue && $liveCodeEditorValue !== "") ){
+      $liveCodeEditorValue = e.detail.value;
+
+      console.log('DEBUG:Layout:compileGrammarOnChange');
+      console.log($liveCodeEditorValue);
+
+      parseLiveCode();
+
+>>>>>>> 0e129d98efaf5bf9a890edad7eebbdb3f740b6a4
     }
 
     // console.log('DEBUG:Layout:compileGrammarOnChange');
-    // console.log(e); 
+    // console.log(e);
   }
 
 
   let parseLiveCodeOnChange = e => {
+<<<<<<< HEAD
     // console.log('DEBUG:Layout:parseLiveCodeOnChange');
     // console.log($liveCodeEditorValue); 
+=======
+    console.log('DEBUG:Layout:parseLiveCodeOnChange');
+    console.log($liveCodeEditorValue);
+>>>>>>> 0e129d98efaf5bf9a890edad7eebbdb3f740b6a4
     if($grammarCompiledParser){
       $liveCodeEditorValue = e.detail.value;
       window.localStorage.liveCodeEditorValue = e.detail.value;
       e.detail.value
-      parseLiveCode(); 
+      parseLiveCode();
     }
-    
+
 
   }
 
+<<<<<<< HEAD
   let translateILtoDSP = e => {
     
     $dspCode = IRToJavascript.treeToCode($liveCodeParseResults);
@@ -244,6 +287,10 @@
     evalDSP($dspCode); 
   }
  
+=======
+
+
+>>>>>>> 0e129d98efaf5bf9a890edad7eebbdb3f740b6a4
   let translateILtoDSPasync = e => {  // [NOTE:FB] Note the 'async'
 
     if(window.Worker){
@@ -251,8 +298,8 @@
       let iLWorker = new Worker('../../il.worker.js');
       let iLWorkerAsync = new Promise( (res, rej) => {
 
-        iLWorker.postMessage({ liveCodeAbstractSyntaxTree: $liveCodeParseResults, type:'ASTtoDSP'});    
-      
+        iLWorker.postMessage({ liveCodeAbstractSyntaxTree: $liveCodeParseResults, type:'ASTtoDSP'});
+
         let timeout = setTimeout(() => {
             iLWorker.terminate()
             iLWorker = new Worker('../../il.worker.js')
@@ -262,49 +309,34 @@
         iLWorker.onmessage = e => {
           if(e.data !== undefined){
             // console.log('DEBUG:Layout:translateILtoDSP:onmessage')
-            // console.log(e); 
+            // console.log(e);
             // $dspCode = e.data.message;
-            res(e.data); 
+            res(e.data);
           }
           else if(e.data !== undefined && e.data.length != 0){
             res(e.data);
           }
           clearTimeout(timeout);
         }
-      })      
+      })
       .then(outputs => {
         $dspCode = outputs;
         evalDSP($dspCode);
-        
+
         // $liveCodeParseErrors = "";
-        // console.log('DEBUG:Layout:translateILtoDSPasync');
-        console.log($dspCode);  
+        console.log('DEBUG:Layout:translateILtoDSPasync');
+        console.log($dspCode);
       })
-      .catch(e => { 
-        // console.log('DEBUG:Layout:translateILtoDSPasync:catch') 
-        // console.log(e); 
-      });      
-    }    
-  }
-
-  let cmdEnter = () => {
-
-    // console.log('DEBUG:Layout:cmdEnter') 
-    // console.log($liveCodeAbstractSyntaxTree);     
-
-    if($grammarCompiledParser && $liveCodeEditorValue && $liveCodeAbstractSyntaxTree){
-      
-      // translateILtoDSPasync();
-      
-      translateILtoDSP();
+      .catch(e => {
+        console.log('DEBUG:Layout:translateILtoDSPasync:catch')
+        console.log(e);
+      });
     }
   }
 
-  let ctrlEnter  = () => {
-
-    // console.log('DEBUG:Layout:cmdEnter') 
-    // console.log($liveCodeAbstractSyntaxTree);     
-
+  let cmdEnter = () => {
+    console.log('DEBUG:Layout:cmdEnter')
+    console.log($liveCodeAbstractSyntaxTree);
     if($grammarCompiledParser && $liveCodeEditorValue && $liveCodeAbstractSyntaxTree){
       
       translateILtoDSPasync();
@@ -422,7 +454,7 @@
 
 
 
-  
+
 </style>
 
 
@@ -430,14 +462,23 @@
 <div class="layout-template-container scrollable">
 
   <div class="tutorial-container" style="display:{tutorialContainerDisplay}">
-    
+
     <Tutorial>
+<<<<<<< HEAD
       <div slot="grammarEditor" class="codemirror-container flex scrollable codemirror-gutter codemirror-linenumber ">
         <CodeMirror bind:this={codeMirror1}  bind:value={$grammarEditorValue} tab={true} lineNumbers={true}  on:change={compileGrammarOnChange}  /> 
       </div>
       
       <div slot="liveCodeEditor" class="codemirror-container flex scrollable codemirror-container-live-code codemirror-cursor codemirror-linenumber codemirror-gutter">
         <CodeMirror bind:this={codeMirror2}  bind:value={$liveCodeEditorValue} tab={true} lineNumbers={true} on:change={parseLiveCodeOnChange} cmdEnter={cmdEnter} ctrlEnter={ctrlEnter} cmdPeriod={cmdPeriod}/> 
+=======
+      <div slot="grammarEditor" class="codemirror-container flex scrollable">
+        <CodeMirror bind:this={codeMirror1}  bind:value={$grammarEditorValue} tab={true} lineNumbers={true}  on:change={compileGrammarOnChange}  />
+      </div>
+
+      <div slot="liveCodeEditor" class="codemirror-container flex scrollable codemirror-container-live-code codemirror-cursor">
+        <CodeMirror bind:this={codeMirror2}  bind:value={$liveCodeEditorValue} tab={true} lineNumbers={true} on:change={parseLiveCodeOnChange} cmdEnter={cmdEnter} ctrlEnter={ctrlEnter} cmdPeriod={cmdPeriod}/>
+>>>>>>> 0e129d98efaf5bf9a890edad7eebbdb3f740b6a4
       </div>
 
       <div slot="liveCodeCompilerOutput" class="codemirror-container flex scrollable">
@@ -452,7 +493,7 @@
           <div style="margin-left:5px">
           <!-- <div style="overflow-y: scroll; height:auto;"> -->
             <Inspect.Value value={ $liveCodeAbstractSyntaxTree[0]['@lang'] } depth={7} />
-          </div>  
+          </div>
         </div>
       {:else}
         <div style="overflow-y: scroll; height:auto;">
@@ -462,7 +503,7 @@
           <!-- <div style="overflow-y: scroll; height:auto;"> -->
             <span style="white-space: pre-wrap">{ $liveCodeParseErrors } </span>
           </div>
-        </div> 
+        </div>
       {/if}
       </div>
 
@@ -475,12 +516,12 @@
           <div style="margin-left:5px">
           <!-- <div style="overflow-y: scroll; height:auto;"> -->
             <span style="white-space: pre-wrap">{ $grammarCompilationErrors } </span>
-          </div>  
+          </div>
         </div>
       {:else}
         <div style="overflow-y: scroll; height:auto;">
           <strong style="color: green; margin:15px 0 10px 5px">Grammar validated and parser generated!</strong>
-        </div> 
+        </div>
       {/if}
       </div>
 
@@ -491,7 +532,7 @@
   <div class="dashboard-container" style="display:{dashboardContainerDisplay}" >
     <!-- <Dashboard liveCodeEditorValue={value} grammarEditorValue={value} modelEditorValue={value} /> -->
     <Dashboard>
-    </Dashboard> 
+    </Dashboard>
   </div>
 
   <div class="quadrants-container" style="display:{quadrantsContainerDisplay}">
@@ -502,14 +543,14 @@
         <Spectrogram></Spectrogram> -->
       </div>
       <div slot="liveCodeEditor" class="codemirror-container flex scrollable">
-        <CodeMirror bind:this={codeMirror3}  bind:value={$liveCodeEditorValue} lineNumbers={true} on:change={nil} /> 
+        <CodeMirror bind:this={codeMirror3}  bind:value={$liveCodeEditorValue} lineNumbers={true} on:change={nil} />
       </div>
       <div slot="grammarEditor" class="codemirror-container flex scrollable">
-        <CodeMirror bind:this={codeMirror4}  bind:value={$grammarEditorValue} lineNumbers={true} on:change={nil} /> 
-      </div> 
+        <CodeMirror bind:this={codeMirror4}  bind:value={$grammarEditorValue} lineNumbers={true} on:change={nil} />
+      </div>
       <div slot="modelEditor" class="codemirror-container flex scrollable">
-        <CodeMirror bind:this={codeMirror5}  bind:value={$modelEditorValue} lineNumbers={true}  on:change={nil} /> 
-      </div> 
+        <CodeMirror bind:this={codeMirror5}  bind:value={$modelEditorValue} lineNumbers={true}  on:change={nil} />
+      </div>
     </Quadrants>
   </div>
 
@@ -519,10 +560,10 @@
   <div class="live-container" style="display:{liveContainerDisplay}">
     <Live>
       <div slot="liveCodeEditor" class="codemirror-container flex scrollable">
-        <CodeMirror bind:this={codeMirror6}  bind:value={$liveCodeEditorValue} lineNumbers={true}  on:change={nil} /> 
+        <CodeMirror bind:this={codeMirror6}  bind:value={$liveCodeEditorValue} lineNumbers={true}  on:change={nil} />
       </div>
       <div slot="grammarEditor" class="codemirror-container flex scrollable">
-        <CodeMirror bind:this={codeMirror7}  bind:value={$grammarEditorValue} lineNumbers={true}  on:change={nil} /> 
+        <CodeMirror bind:this={codeMirror7}  bind:value={$grammarEditorValue} lineNumbers={true}  on:change={nil} />
       </div>
     </Live>
   </div>
