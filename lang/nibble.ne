@@ -1,5 +1,13 @@
 @{%
 
+/*
+some nibble examples
+
+//this evolves continually
+t  * [t|[t<<1^98&4|[t<<29]] >> b1] << [c>>8] * [[c *1>> 4 & 11] & [c *1 >> 4 | 1]]
+
+*/
+
 const lexer = moo.compile({
   separator:    /,/,
    paramEnd:     /\]/,
