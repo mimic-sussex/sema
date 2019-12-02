@@ -174,7 +174,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
         return this.translateFloat32ArrayToBuffer(this.sampleBuffers[bufferName]);
     };
 
-    this.netClock = new Module.maxiAsyncKuramotoOscillator(3);  //TODO: this should be the same as numpeers
+    this.netClock = new Module.maxiAsyncKuramotoOscillator(2);  //TODO: this should be the same as numpeers
     this.kuraPhase = -1;
     this.kuraPhaseIdx = 1;
 
@@ -195,8 +195,11 @@ class MaxiProcessor extends AudioWorkletProcessor {
         let sampleKey = event.data.sample.substr(0,event.data.sample.length - 4)
         this.sampleBuffers[sampleKey] = event.data.buffer;
       }else if ('phase' in event.data) {
-        this.kuraPhase = event.data.phase;
-        this.kuraPhaseIdx = event.data.i;
+        console.log(this.kuraPhaseIdx);
+        this.netClock.setPhase(event.data.phase, event.data.i);
+
+        // this.kuraPhase = event.data.phase;
+        // this.kuraPhaseIdx = event.data.i;
       } else if ('eval' in event.data) { // check if new code is being sent for evaluation?
 
         try {
@@ -233,7 +236,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
     };
     this.port.postMessage("giveMeSomeSamples");
 
-    this.clockFreq = 0.1;
+    this.clockFreq = 0.8;
     this.clockPhaseSharingInterval=0; //counter for emiting clock phase over the network
     this.clockPhase = (multiples, phase) => {
         return (((this.clockPhasor * multiples) % 1.0) + phase) % 1.0;
@@ -272,10 +275,12 @@ class MaxiProcessor extends AudioWorkletProcessor {
       for (let i = 0; i < output[0].length; ++i) {
         this.bitTime = Module.maxiBits.inc(this.bitTime);
         //net clocks
-        if (this.kuraPhase != -1) {
-          this.netClock.setPhase(this.kuraPhase, this.kuraPhaseIdx);
-          this.kuraPhase = -1;
-        }
+        // if (this.kuraPhase != -1) {
+        //   // this.netClock.setPhase(this.kuraPhase, this.kuraPhaseIdx);
+        //   console.log(this.kuraPhaseIdx);
+        //   this.netClock.setPhase(this.kuraPhase, 1);
+        //   this.kuraPhase = -1;
+        // }
         this.netClock.play(this.clockFreq, 100);
         this.clockPhasor = this.netClock.getPhase(0) / (2 * Math.PI);
         //share the clock if networked
@@ -286,7 +291,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
           this.port.postMessage({ p: phase, c: "phase" });
         }
 
-        this.bitclock = Module.maxiBits.sig(Math.floor(this.clockPhase(1,0) * 4096));
+        this.bitclock = Module.maxiBits.sig(Math.floor(this.clockPhase(1,0) * 256));
 
 
 
