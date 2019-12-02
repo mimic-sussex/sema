@@ -103,7 +103,8 @@ module.exports = {
 			},
 			{
 				//IMAGE LOADER
-				test: /\.(jpe?g|png|gif|svg)$/i,
+				test: /\.(jpe?g|png|gif|svg|ico)$/i,
+        // include: './assets/img/',
 				use: {
 					loader: "file-loader",
 					options: {

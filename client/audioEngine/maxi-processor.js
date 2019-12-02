@@ -203,8 +203,8 @@ class MaxiProcessor extends AudioWorkletProcessor {
       } else if ('eval' in event.data) { // check if new code is being sent for evaluation?
 
         try {
-          console.log("[DEBUG]:MaxiProcessor:Process: ");
-          console.log(event.data);
+          // console.log("[DEBUG]:MaxiProcessor:Process: ");
+          // console.log(event.data);
 
           // let setupFunction = new Function(`return ${event.data['setup']}`);
           let setupFunction = eval(event.data['setup']);
