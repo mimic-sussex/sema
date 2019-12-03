@@ -44,7 +44,9 @@ t  * [c|[c<<4^191&4|[t<<92]] ->seq3 >> b1010] << [c>>5] * [[c*3>> 3 & 11] & [c *
 
 seq1|seq2 & 1023 << 24 | [seq1 * seq3] * [t&seq3]
 
----
+--- simple sequencing using and
+
+[c & b1010000 > 0] -> \909b
 
 */
 
