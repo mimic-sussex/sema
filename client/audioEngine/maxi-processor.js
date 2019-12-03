@@ -338,12 +338,12 @@ class MaxiProcessor extends AudioWorkletProcessor {
       let oldIdx = 1.0 - this.currentSignalFunction;
       if (this.xfadeControl.isLineComplete() && this._cleanup[oldIdx] == 0) {
         this.signals[oldIdx] = this.silence;
-        console.log(this._q[oldIdx]);
+        // console.log(this._q[oldIdx]);
         for(let obj in this._q[oldIdx]) {
-          console.log(this._q[oldIdx][obj]);
+          // console.log(this._q[oldIdx][obj]);
           // console.log(this._q[oldIdx][obj].delete);
           if (this._q[oldIdx][obj].delete != undefined) {
-            console.log(this._q[oldIdx][obj].delete);
+            // console.log(this._q[oldIdx][obj].delete);
             this._q[oldIdx][obj].delete();
           }
         }

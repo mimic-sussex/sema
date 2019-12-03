@@ -375,6 +375,26 @@ const jsFuncMap = {
 		setup: (o, p) => "",
 		loop:  (o, p) => `Module.maxiBits.mul(${p[0].loop},${p[1].loop})`
 	},
+  bitEq: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `Module.maxiBits.eq(${p[0].loop},${p[1].loop})`
+	},
+  bitGt: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `Module.maxiBits.gt(${p[0].loop},${p[1].loop})`
+	},
+  bitGte: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `Module.maxiBits.gte(${p[0].loop},${p[1].loop})`
+	},
+  bitLte: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `Module.maxiBits.lte(${p[0].loop},${p[1].loop})`
+	},
+  bitLt: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `Module.maxiBits.lt(${p[0].loop},${p[1].loop})`
+	},
   setup: (o, p) => "",
   bitDiv: {
 		loop:  (o, p) => `Module.maxiBits.div(${p[0].loop},${p[1].loop})`

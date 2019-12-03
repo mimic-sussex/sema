@@ -56,7 +56,6 @@ const lexer = moo.compile({
   binRangeEnd:   /}/,
   binarynumber:       /b[0-1\_]+/,
 	assignOperator: /->/,
-  operator:     /\/|\*|\+|\-|>>|<<|<|>|~|\^|&|\|/,
   integer:       /[0-9]+/,
   semicolon:    /;/,
 	time: /[t]/,
@@ -64,6 +63,7 @@ const lexer = moo.compile({
 	noise: /[n]/,
   variable:     /[a-zA-Z][a-zA-Z0-9]*/,
   sampleName:     /\\[a-zA-Z0-9]*/,
+  operator:     /\/|\||\*|\+|\-|>>|<<|<|>|~|\^|&|\\|=|>=|<=/,
   comment:      /\#[^\n]:*/,
   ws:           {match: /\s+/, lineBreaks: true},
 });
@@ -71,6 +71,26 @@ const lexer = moo.compile({
 function binop(operation, op1,op2) {
   var res;
   switch(operation.value) {
+    case '=':
+     res = { '@sigp':{ '@params': [op1,op2],
+           '@func': {value: 'bitEq'}}};
+     break;
+    case '>':
+     res = { '@sigp':{ '@params': [op1,op2],
+           '@func': {value: 'bitGt'}}};
+     break;
+    case '>=':
+     res = { '@sigp':{ '@params': [op1,op2],
+           '@func': {value: 'bitGte'}}};
+     break;
+    case '<':
+     res = { '@sigp':{ '@params': [op1,op2],
+           '@func': {value: 'bitLt'}}};
+     break;
+    case '<=':
+     res = { '@sigp':{ '@params': [op1,op2],
+           '@func': {value: 'bitLte'}}};
+     break;
     case '+':
      res = { '@sigp':{ '@params': [op1,op2],
            '@func': {value: 'bitAdd'}}};
