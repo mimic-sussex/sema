@@ -36,6 +36,16 @@ t & [c*4] << 22 ^ [[n ^ [c&4]]>>2];
 -- sequencing
 t & 255 << 22 * b1101_0111{[c>>4]}
 
+-- variables
+
+t  * [c|[c<<3^91&4|[t<<929]] >> b1010] << [c>>3] * [[c*4>> 5 & 13] ^ [c *7 >> 19  | 1 ]] -> seq1;
+
+t  * [c|[c<<4^191&4|[t<<92]] ->seq3 >> b1010] << [c>>5] * [[c*3>> 3 & 11] & [c *7 >> 19  | 1 ]] -> seq2;
+
+seq1|seq2 & 1023 << 24 | [seq1 * seq3] * [t&seq3]
+
+---
+
 */
 
 const lexer = moo.compile({
@@ -53,6 +63,7 @@ const lexer = moo.compile({
 	clock: /[c]/,
 	noise: /[n]/,
   variable:     /[a-zA-Z][a-zA-Z0-9]*/,
+  sampleName:     /\\[a-zA-Z0-9]*/,
   comment:      /\#[^\n]:*/,
   ws:           {match: /\s+/, lineBreaks: true},
 });
@@ -136,6 +147,15 @@ function assignvar(op1,op2) {
   return res;
 }
 
+function str(val) {
+	return { "@string": val };
+}
+
+
+function sampler(trig,sampleName) {
+  var samplerTree = {'@sigp': { "@params": [bitToTrigSig(trig), str(sampleName)], "@func": { value: 'sampler' } } };
+  return bitFromSig(samplerTree);
+}
 
 function timeOp() {
 	return  { '@sigp':
@@ -171,6 +191,24 @@ function bitToSig(d) {
   {'@params': [d],
     '@func': {
       value: 'bitToSig'
+    }
+  }
+  };
+}
+function bitToTrigSig(d) {
+  return  { '@sigp':
+  {'@params': [d],
+    '@func': {
+      value: 'bitToTrigSig'
+    }
+  }
+  };
+}
+function bitFromSig(d) {
+  return  { '@sigp':
+  {'@params': [d],
+    '@func': {
+      value: 'bitFromSig'
     }
   }
   };
@@ -213,6 +251,9 @@ Expression _ %operator _ Term
 |
 Expression _ %assignOperator _ %variable
 {%d => assignvar(d[0],d[4])%}
+|
+Expression _ %assignOperator _ %sampleName
+{%d => sampler(d[0],d[4].value)%}
 #| Term _ %operator _ Term
 #{%d => binop(d[2],d[0],d[4])%}
 | Term {%id%}
