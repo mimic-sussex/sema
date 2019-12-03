@@ -135,6 +135,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
     this.newmem = () => {return new Float64Array(512)};
     this._q = [this.newq(),this.newq()];
     this._mems =[this.newmem(), this.newmem()];
+    this._cleanup = [0,0];
 
     this.setvar = (q, name, val) => {
       q.vars[name] = val;
@@ -165,6 +166,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
     this.incoming = {};
 
     this.sampleBuffers={};
+    this.sampleVectorBuffers = {};
 
     this.transducers = {};
 
@@ -178,7 +180,8 @@ class MaxiProcessor extends AudioWorkletProcessor {
     this.getSampleBuffer = (bufferName) => {
       // console.log(this.sampleBuffers);
       // console.log(bufferName);
-        return this.translateFloat32ArrayToBuffer(this.sampleBuffers[bufferName]);
+        // return this.translateFloat32ArrayToBuffer(this.sampleBuffers[bufferName]);
+        return this.sampleVectorBuffers[bufferName];
     };
 
     this.netClock = new Module.maxiAsyncKuramotoOscillator(3);  //TODO: this should be the same as numpeers
@@ -201,6 +204,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
         // console.log(event.data);
         let sampleKey = event.data.sample.substr(0,event.data.sample.length - 4)
         this.sampleBuffers[sampleKey] = event.data.buffer;
+        this.sampleVectorBuffers[sampleKey] = this.translateFloat32ArrayToBuffer(event.data.buffer);
       }else if ('phase' in event.data) {
         // console.log(this.kuraPhaseIdx);
         this.netClock.setPhase(event.data.phase, event.data.i);
@@ -226,6 +230,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
           this._mems[this.currentSignalFunction] = this.newmem();
           // this._q[this.currentSignalFunction] = setupFunction()();
           this.signals[this.currentSignalFunction] = loopFunction;
+          this._cleanup[this.currentSignalFunction] = 0;
           // this.signals[this.currentSignalFunction] = loopFunction();
 
 
@@ -330,10 +335,21 @@ class MaxiProcessor extends AudioWorkletProcessor {
       // }
 
       //remove old algo and data?
-      if (this.xfadeControl.isLineComplete()) {
-        let oldIdx = 1.0 - this.currentSignalFunction;
+      let oldIdx = 1.0 - this.currentSignalFunction;
+      if (this.xfadeControl.isLineComplete() && this._cleanup[oldIdx] == 0) {
         this.signals[oldIdx] = this.silence;
+        console.log(this._q[oldIdx]);
+        for(let obj in this._q[oldIdx]) {
+          console.log(this._q[oldIdx][obj]);
+          // console.log(this._q[oldIdx][obj].delete);
+          if (this._q[oldIdx][obj].delete != undefined) {
+            console.log(this._q[oldIdx][obj].delete);
+            this._q[oldIdx][obj].delete();
+          }
+        }
         this._q[oldIdx] = this.newq();
+        this._cleanup[oldIdx] = 1;
+        let test = new Module.maxiOsc();
       }
 
       // this.port.postMessage("dspEnd");
