@@ -323,6 +323,10 @@ const jsFuncMap = {
 		setup: (o, p) => "",
 		loop:  (o, p) => `Module.maxiBits.toSignal(${p[0].loop})`
 	},
+  bitToTrigSig: {
+  		setup: (o, p) => "",
+  		loop:  (o, p) => `Module.maxiBits.toTrigSignal(${p[0].loop})`
+  	},
   bitNeg: {
 		setup: (o, p) => "",
 		loop:  (o, p) => `Module.maxiBits.neg(${p[0].loop})`
@@ -387,8 +391,10 @@ const jsFuncMap = {
 		setup: (o, p) =>``,
 		loop:  (o, p) => `this.bitTime`
 	},
-
-
+  bitFromSig: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `Module.maxiBits.fromSignal(${p[0].loop})`
+	},
   clp: {
 		setup: (o, p) => "",
 		loop:  (o, p) => `this.clockPhase(${p[0].loop},${p.length > 1 ? p[1].loop : 0})`

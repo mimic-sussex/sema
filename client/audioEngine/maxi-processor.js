@@ -104,7 +104,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
     // let q2 = Module.maxiBits.sig(255);
     // let q3 = Module.maxiBits.land(q1,q2);
     // let q4 = Module.maxiBits.shl(q3, 22);
-    console.log("res: " + q1);
+    // console.log("res: " + q1);
 
     this.sampleRate = 44100;
 
@@ -202,20 +202,21 @@ class MaxiProcessor extends AudioWorkletProcessor {
         let sampleKey = event.data.sample.substr(0,event.data.sample.length - 4)
         this.sampleBuffers[sampleKey] = event.data.buffer;
       }else if ('phase' in event.data) {
-        console.log(this.kuraPhaseIdx);
+        // console.log(this.kuraPhaseIdx);
         this.netClock.setPhase(event.data.phase, event.data.i);
-
         // this.kuraPhase = event.data.phase;
         // this.kuraPhaseIdx = event.data.i;
       } else if ('eval' in event.data) { // check if new code is being sent for evaluation?
 
+        let setupFunction;
+        let loopFunction;
         try {
           // console.log("[DEBUG]:MaxiProcessor:Process: ");
           // console.log(event.data);
 
           // let setupFunction = new Function(`return ${event.data['setup']}`);
-          let setupFunction = eval(event.data['setup']);
-          let loopFunction = eval(event.data['loop']);
+          setupFunction = eval(event.data['setup']);
+          loopFunction = eval(event.data['loop']);
           // let loopFunction = new Function(`return ${event.data['loop']}`);
 
 
@@ -237,6 +238,8 @@ class MaxiProcessor extends AudioWorkletProcessor {
             console.log("TypeError in worklet evaluation: " + err.name + " – " + err.message);
           } else {
             console.log("Error in worklet evaluation: " + err.name + " – " + err.message);
+            console.log(setupFunction);
+            console.log(loopFunction);
           }
         }
       }
@@ -285,12 +288,15 @@ class MaxiProcessor extends AudioWorkletProcessor {
         // if (this.kuraPhase != -1) {
         //   // this.netClock.setPhase(this.kuraPhase, this.kuraPhaseIdx);
         //   console.log(this.kuraPhaseIdx);
-        //   this.netClock.setPhase(this.kuraPhase, 1);
+        //testing
+        // this.netClock.setPhase(this.netClock.getPhase(0), 1);
+        // this.netClock.setPhase(this.netClock.getPhase(0), 2);
         //   this.kuraPhase = -1;
         // }
         this.netClock.play(this.clockFreq, 100);
         this.clockPhasor = this.netClock.getPhase(0) / (2 * Math.PI);
         //share the clock if networked
+        // if (this.clockPhaseSharingInterval++ == 2000) {
         if (this.netClock.size() > 1 && this.clockPhaseSharingInterval++ == 2000) {
           this.clockPhaseSharingInterval=0;
           let phase = this.netClock.getPhase(0);
@@ -299,8 +305,6 @@ class MaxiProcessor extends AudioWorkletProcessor {
         }
 
         this.bitclock = Module.maxiBits.sig(Math.floor(this.clockPhase(1,0) * 256));
-
-
 
         //xfade between old and new algorhythms
         let sig0 = this.signals[0](this._q[0], inputs[0][0][i], this._mems[0]);
@@ -313,6 +317,10 @@ class MaxiProcessor extends AudioWorkletProcessor {
         for (let channel = 0; channel < channelCount; channel++) {
           output[channel][i] = w;
         }
+
+        //todo: deleteme
+        // Module.maxiBits.toSignal(Module.maxiBits.fromSignal(-1));
+        Module.maxiBits.fromSignal(-0.5);
 
       }
 
