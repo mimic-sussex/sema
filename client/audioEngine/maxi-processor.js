@@ -338,18 +338,18 @@ class MaxiProcessor extends AudioWorkletProcessor {
       let oldIdx = 1.0 - this.currentSignalFunction;
       if (this.xfadeControl.isLineComplete() && this._cleanup[oldIdx] == 0) {
         this.signals[oldIdx] = this.silence;
-        // console.log(this._q[oldIdx]);
+        //clean up object heap - we must do this because emscripten objects need manual memory management
         for(let obj in this._q[oldIdx]) {
-          // console.log(this._q[oldIdx][obj]);
-          // console.log(this._q[oldIdx][obj].delete);
+          //if there a delete() function
           if (this._q[oldIdx][obj].delete != undefined) {
-            // console.log(this._q[oldIdx][obj].delete);
+            //delete the emscripten object manually
             this._q[oldIdx][obj].delete();
           }
         }
+        //create a blank new heap for the next livecode evaluation
         this._q[oldIdx] = this.newq();
+        //signal that the cleanup is complete
         this._cleanup[oldIdx] = 1;
-        let test = new Module.maxiOsc();
       }
 
       // this.port.postMessage("dspEnd");
