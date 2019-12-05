@@ -225,9 +225,12 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
 
 
+          let oldSignalFunction = this.currentSignalFunction;
           this.currentSignalFunction = 1 - this.currentSignalFunction;
           this._q[this.currentSignalFunction] = setupFunction();
-          this._mems[this.currentSignalFunction] = this.newmem();
+          //allow feedback between evals
+          this._mems[this.currentSignalFunction] = this._mems[oldSignalFunction];
+//          this._mems[this.currentSignalFunction] = this.newmem();
           // this._q[this.currentSignalFunction] = setupFunction()();
           this.signals[this.currentSignalFunction] = loopFunction;
           this._cleanup[this.currentSignalFunction] = 0;
@@ -236,7 +239,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
           let xfadeBegin = Module.maxiMap.linlin(1.0 - this.currentSignalFunction, 0, 1, -1, 1);
           let xfadeEnd = Module.maxiMap.linlin(this.currentSignalFunction, 0, 1, -1, 1);
-          this.xfadeControl.prepare(xfadeBegin, xfadeEnd, 5); // short xfade across signals
+          this.xfadeControl.prepare(xfadeBegin, xfadeEnd, 18); // short xfade across signals
           this.xfadeControl.triggerEnable(true); //no clock yet, so enable the trigger straight away
         } catch (err) {
           if (err instanceof TypeError) {
@@ -309,7 +312,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
           this.port.postMessage({ p: phase, c: "phase" });
         }
 
-        this.bitclock = Module.maxiBits.sig(Math.floor(this.clockPhase(1,0) * 256));
+        this.bitclock = Module.maxiBits.sig(Math.floor(this.clockPhase(1,0) * 1023.999999999));
 
         //xfade between old and new algorhythms
         let sig0 = this.signals[0](this._q[0], inputs[0][0][i], this._mems[0]);
@@ -350,6 +353,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
         this._q[oldIdx] = this.newq();
         //signal that the cleanup is complete
         this._cleanup[oldIdx] = 1;
+
       }
 
       // this.port.postMessage("dspEnd");
