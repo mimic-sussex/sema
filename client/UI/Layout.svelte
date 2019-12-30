@@ -44,6 +44,9 @@
   import Live from './layouts/Live.svelte';
   import Editor from './Editor.svelte';
 
+  import ParserWorker from "worker-loader!../../workers/parser.worker.js";
+  import ILWorker from "worker-loader!../../workers/il.worker.js"
+
 
   let codeMirror1, codeMirror2; // Live layout [Hidden]
 
@@ -132,7 +135,9 @@
 
     if(window.Worker){
 
-      let parserWorker = new Worker('../../parser.worker.js');
+      // let parserWorker = new Worker('../../parser.worker.js');
+      let parserWorker = new ParserWorker();
+      // let parserWorker = new Worker('./parser.worker.js', { type: 'module' });
 
       let parserWorkerAsync = new Promise( (res, rej) => {
 
@@ -140,7 +145,9 @@
 
         let timeout = setTimeout(() => {
             parserWorker.terminate()
-            parserWorker = new Worker('../../parser.worker.js')
+            // parserWorker = new Worker('../../parser.worker.js');
+            parserWorker = new ParserWorker();
+            // parserWorker = new Worker('./parser.worker.js', { type: 'module' });
             // rej('Possible infinite loop detected! Check your grammar for infinite recursion.')
         }, 5000);
 
@@ -248,14 +255,17 @@
 
     if(window.Worker){
 
-      let iLWorker = new Worker('../../il.worker.js');
+      // let iLWorker = new Worker('../../il.worker.js');
+      let iLWorker = new ILWorker();
       let iLWorkerAsync = new Promise( (res, rej) => {
 
         iLWorker.postMessage({ liveCodeAbstractSyntaxTree: $liveCodeParseResults, type:'ASTtoDSP'});
 
         let timeout = setTimeout(() => {
-            iLWorker.terminate()
-            iLWorker = new Worker('../../il.worker.js')
+            iLWorker.terminate();
+            // iLWorker = new Worker('../../il.worker.js');
+            // iLWorker = new Worker('./il.worker.js', { type: 'module' });
+            iLWorker = new ILWorker();
             // rej('Possible infinite loop detected or worse! Check bugs in ILtoTree.')
         }, 5000);
 
@@ -421,11 +431,22 @@
 
     <Tutorial>
       <div slot="grammarEditor" class="codemirror-container flex scrollable codemirror-gutter codemirror-linenumber ">
-        <CodeMirror bind:this={codeMirror1}  bind:value={$grammarEditorValue} tab={true} lineNumbers={true}  on:change={compileGrammarOnChange}  /> 
+        <CodeMirror bind:this={codeMirror1}  
+                    bind:value={$grammarEditorValue} 
+                    tab={true} 
+                    lineNumbers={true}  
+                    on:change={compileGrammarOnChange}  /> 
       </div>
       
       <div slot="liveCodeEditor" class="codemirror-container flex scrollable codemirror-container-live-code codemirror-cursor codemirror-linenumber codemirror-gutter">
-        <CodeMirror bind:this={codeMirror2}  bind:value={$liveCodeEditorValue} tab={true} lineNumbers={true} on:change={parseLiveCodeOnChange} cmdEnter={cmdEnter} ctrlEnter={ctrlEnter} cmdPeriod={cmdPeriod}/> 
+        <CodeMirror bind:this={codeMirror2}  
+                    bind:value={$liveCodeEditorValue} 
+                    tab={true} 
+                    lineNumbers={true} 
+                    on:change={parseLiveCodeOnChange} 
+                    cmdEnter={cmdEnter} 
+                    ctrlEnter={ctrlEnter} 
+                    cmdPeriod={cmdPeriod} /> 
       </div>
 
       <div slot="liveCodeCompilerOutput" class="codemirror-container flex scrollable">

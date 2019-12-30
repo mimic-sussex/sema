@@ -1,19 +1,21 @@
-var webpack = require('webpack');
+const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const path = require('path');
 const mode = process.env.NODE_ENV || 'development';
 const prod = mode === 'production';
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const LinkTypePlugin = require("html-webpack-link-type-plugin").HtmlWebpackLinkTypePlugin;
+const WorkerPlugin = require("worker-plugin");
 const CleanWebpackPlugin = require("clean-webpack-plugin");
-var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+
 
 module.exports = {
 	entry: {
-		bundle: ["./client/main.js"],
-		parser: ["./workers/parser.worker.js"],
-		ml: ["./workers/ml.worker.js"],
-		il: ["./workers/il.worker.js"]
+		bundle: ["./client/main.js"]
+		// parser: ["./workers/parser.worker.js"],
+		// ml: ["./workers/ml.worker.js"],
+		// il: ["./workers/il.worker.js"]
 	},
 	resolve: {
 		alias: {
@@ -31,14 +33,43 @@ module.exports = {
 	},
 	module: {
 		rules: [
+			// {
+			// 	test: /il\.worker\.js$/,
+			// 	use: {
+			// 		loader: "worker-loader",
+			// 		options: {
+			// 			name: "[name].js"
+			// 		}
+			// 	}
+			// },
+			// {
+			// 	test: /parser\.worker\.js$/,
+			// 	use: {
+			// 		loader: "worker-loader",
+			// 		options: {
+			// 			name: "[name].js"
+			// 		}
+			// 	}
+			// },
+			// {
+			// 	test: /\.worker\.js$/,
+			// 	use: {
+			// 		loader: "worker-loader",
+			// 		options: {
+			// 			name: "[name].js"
+			// 		}
+			// 	}
+			// },
 			{
-				test: /\.worker\.js$/,
-				use: {
-					loader: "worker-loader",
-					options: {
-						name: "[name].js"
-					}
-				}
+				test: /\.js$/,
+				exclude: [
+					path.resolve(__dirname, "workers/il.worker.js"),
+					path.resolve(__dirname, "workers/parser.worker.js"),
+					path.resolve(__dirname, "workers/ml.worker.js")
+					// "./workers/ml.worker.js",
+					// "./workers/il.worker.js",
+					// "./workers/parser.worker.js"
+				]
 			},
 			{
 				test: /\.svelte$/,
@@ -104,7 +135,7 @@ module.exports = {
 			{
 				//IMAGE LOADER
 				test: /\.(jpe?g|png|gif|svg|ico)$/i,
-        // include: './assets/img/',
+				// include: './assets/img/',
 				use: {
 					loader: "file-loader",
 					options: {
@@ -129,7 +160,8 @@ module.exports = {
 	mode,
 	plugins: [
 		new HtmlWebpackPlugin({
-			template: "index.html"
+			template: "index.html",
+			excludeChunks: ["worker"]
 		}),
 		new LinkTypePlugin({
 			"**/*.css": "text/css"
@@ -137,6 +169,7 @@ module.exports = {
 		new MiniCssExtractPlugin({
 			filename: "[name].css"
 		}),
+		new WorkerPlugin(),
 		new webpack.ProgressPlugin()
 		// new CleanWebpackPlugin()
 		// new CleanWebpackPlugin({
