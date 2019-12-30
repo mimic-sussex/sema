@@ -420,6 +420,10 @@ const jsFuncMap = {
 		setup: (o, p) => "",
 		loop:  (o, p) => `Module.maxiBits.toSignal(${p[0].loop})`
 	},
+  bitToTrigSig: {
+  		setup: (o, p) => "",
+  		loop:  (o, p) => `Module.maxiBits.toTrigSignal(${p[0].loop})`
+  	},
   bitNeg: {
 		setup: (o, p) => "",
 		loop:  (o, p) => `Module.maxiBits.neg(${p[0].loop})`
@@ -468,17 +472,45 @@ const jsFuncMap = {
 		setup: (o, p) => "",
 		loop:  (o, p) => `Module.maxiBits.mul(${p[0].loop},${p[1].loop})`
 	},
-  bitDiv: {
+  bitEq: {
 		setup: (o, p) => "",
+		loop:  (o, p) => `Module.maxiBits.eq(${p[0].loop},${p[1].loop})`
+	},
+  bitGt: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `Module.maxiBits.gt(${p[0].loop},${p[1].loop})`
+	},
+  bitGte: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `Module.maxiBits.gte(${p[0].loop},${p[1].loop})`
+	},
+  bitLte: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `Module.maxiBits.lte(${p[0].loop},${p[1].loop})`
+	},
+  bitLt: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `Module.maxiBits.lt(${p[0].loop},${p[1].loop})`
+	},
+  setup: (o, p) => "",
+  bitDiv: {
 		loop:  (o, p) => `Module.maxiBits.div(${p[0].loop},${p[1].loop})`
 	},
   bitr: {
 		setup: (o, p) => "",
 		loop:  (o, p) => `Module.maxiBits.at(${p[0].loop},${p[1].loop},${p[2].loop})`
 	},
+  bitnoise: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `Module.maxiBits.noise()`
+	},
   btime: {
-		setup: (o, p) =>`${o} = Module.maxiBits.sig(0); ${o}_tplus = () => {${o} = Module.maxiBits.inc(${o}); return ${o}};`,
-		loop:  (o, p) => `${o}_tplus()`
+		setup: (o, p) =>``,
+		loop:  (o, p) => `this.bitTime`
+	},
+  bitFromSig: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `Module.maxiBits.fromSignal(${p[0].loop})`
 	},
   clp: {
 		setup: (o, p) => "",
@@ -488,10 +520,10 @@ const jsFuncMap = {
 		setup: (o, p) => "",
 		loop:  (o, p) => `this.clockTrig(${p[0].loop},${p.length > 1 ? p[1].loop : 0})`
 	},
-  clfreq: {
-		setup: (o, p) => "",
-		loop:  (o, p) => `this.setClockFreq(${p[0].loop})`
-	},
+  // clfreq: {
+	// 	setup: (o, p) => "",
+	// 	loop:  (o, p) => `this.setClockFreq(${p[0].loop})`
+	// },
   onzx: {
 		setup: (o, p) => `${o} = new Module.maxiTrigger();`,
 		loop:  (o, p) => `${o}.onZX(${p[0].loop})`
@@ -507,6 +539,10 @@ const jsFuncMap = {
   index: {
 		setup: (o, p) => `${o} = new Module.maxiIndex();`,
 		loop:  (o, p) => `${o}.pull(${p[0].loop},${p[1].loop},${p[2].loop})`
+  },
+  bitclock: {
+    setup: (o, p) => "",
+		loop:  (o, p) => `this.bitclock`
   }
 
 };
@@ -707,4 +743,4 @@ onmessage = m => {
 /***/ })
 
 /******/ });
-//# sourceMappingURL=il.worker.js.map
+//# sourceMappingURL=7bbb2c92fd6a80b8ae3c.worker.js.map

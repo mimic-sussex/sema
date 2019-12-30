@@ -1121,7 +1121,7 @@ function getParserModuleExports(source) {
 	return module.exports;
 }
 
-const clone = (a) =>  JSON.parse(JSON.stringify(a)) 
+const clone = (a) => JSON.parse(JSON.stringify(a)) 
 
 /*
  * [NOTE:FB] Can you believe this bug?! Data is a global variable from Webpack and its making this worker run dry!!
@@ -1166,4 +1166,4 @@ onmessage = function(message) {
 /***/ })
 
 /******/ });
-//# sourceMappingURL=parser.worker.js.map
+//# sourceMappingURL=e9fd2423c9a863bb75f1.worker.js.map
