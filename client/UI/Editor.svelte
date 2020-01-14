@@ -18,8 +18,7 @@
 
   let codeMirror;
 
-  // let value = encodeURIComponent(`:b:{{1,0.25}imp}\909b;`);
-  // let decodedValue = decodeURIComponent(value);
+  // let value = encodeURIComponent(`:b:{{1,0.25}imp}\909b;`);  // let decodedValue = decodeURIComponent(value);
   // export let value = `:b:{{1,0.25}imp}\\909b;`;
 
 

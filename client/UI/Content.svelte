@@ -24,7 +24,7 @@
   	grid-template-areas:
   		"sidebar layout"
   		"sidebar layout";
-  	background-color: purple;
+  	background-color: lightblue;
   }
   .sidebar-container {
     background-color: blue;

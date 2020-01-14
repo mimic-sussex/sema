@@ -43,6 +43,10 @@ var sema = {
 `);
 
 onmessage = m => {
+
+  console.log('DEBUG:ml.worker:onmessage');
+  console.log(m); 
+
 	if ("eval" in m.data) {
 		let evalRes = geval(m.data.eval);
 		if (evalRes != undefined) console.log(evalRes);

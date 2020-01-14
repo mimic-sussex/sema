@@ -72,7 +72,8 @@ export const selectedLayout = writable(1);
 export const layoutOptions = [
 	{ id: 1, text: `Tutorial` },
 	{ id: 2, text: `Live` },
-	{ id: 3, text: `Dashboard` }
+	{ id: 3, text: `Dashboard` },
+	{ id: 4, text: `Model` }
 ];
 
 export const layoutsData = writable({

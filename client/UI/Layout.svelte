@@ -43,6 +43,8 @@
   import Dashboard from './layouts/Dashboard.svelte';
   import Live from './layouts/SplitHorizontal.svelte';
   import Editor from './Editor.svelte';
+  import Model from './layouts/ModelEditor.svelte';
+
 
   import ParserWorker from "worker-loader!../../workers/parser.worker.js";
   import ILWorker from "worker-loader!../../workers/il.worker.js"
@@ -121,9 +123,9 @@
     codeMirror4.set($grammarEditorValue, "ebnf");
     codeMirror5.set($modelEditorValue, "js");
     // codeMirror6.set($grammarEditorValue, "ebnf");
-    // codeMirror7.set($modelEditorValue, "js");
+    codeMirror6.set($modelEditorValue, "js");
 
-    changeLayout(1); // [NOTE:FB] Need this call to clean up pre-loaded panels and trigger a re-render
+    changeLayout(4); // [NOTE:FB] Need this call to clean up pre-loaded panels and trigger a re-render
 	});
 
   let log = (e) => { console.log(e.detail.value); }
@@ -522,15 +524,20 @@
     </Quadrants>
   </div>
 
-  <div class="live-container" style="display:{liveContainerDisplay}">
+  <!-- <div class="live-container" style="display:{liveContainerDisplay}">
     <Live>
       <div slot="liveCodeEditor" class="codemirror-container flex scrollable">
-        <CodeMirror bind:this={codeMirror6}  bind:value={$liveCodeEditorValue} lineNumbers={true}  on:change={nil} />
+        <CodeMirror bind:this={codeMirror6}  bind:value={$modelEditorValue} lineNumbers={true}  on:change={nil} />
       </div>
       <div slot="grammarEditor" class="codemirror-container flex scrollable">
         <CodeMirror bind:this={codeMirror7}  bind:value={$grammarEditorValue} lineNumbers={true}  on:change={nil} />
       </div>
     </Live>
+  </div> -->
+
+  <div class="live-container" style="display:{liveContainerDisplay}">
+    <Model>
+    </Model>
   </div>
 
 </div>
