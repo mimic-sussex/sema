@@ -1,16 +1,18 @@
 @{%
+
 const lexer = moo.compile({
   click:     /click/, // match the string 'click'
   ws:        {match: /\s+/, lineBreaks: true}, // match whitespace
 });
 %}
 
+
 @lexer lexer
 
-main -> _ Statement _ 
+main -> _ Statement _
 {% d => ( { "@lang" : d[1] }) %}
 
-Statement -> %click 
+Statement -> %click
 {% d =>  [{
   "@sigOut": {
     '@spawn': {
@@ -29,7 +31,8 @@ Statement -> %click
         }
       }
     }
-  }]
+  }
+}]
 %}
 
 
@@ -37,3 +40,4 @@ _  -> wschar:*    {% function(d) {return null;} %} # 0 or more whitespace charac
 __ -> wschar:+    {% function(d) {return null;} %} # 1 or more whitespace characters
 
 wschar -> %ws     {% id %}
+ 
