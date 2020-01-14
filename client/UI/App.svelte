@@ -9,11 +9,7 @@
 
   import { createAudioEngine, setupAudio } from '../audioEngine/audioEngineController.js';
 
-
   createAudioEngine();
-
-
-
 
   const unsubscribe = splashScreenClicked.subscribe( value => {
 		if(value === 'hidden') setupAudio();

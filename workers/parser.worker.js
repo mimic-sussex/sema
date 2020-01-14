@@ -12,7 +12,7 @@ function getParserModuleExports(source) {
 	return module.exports;
 }
 
-const clone = (a) =>  JSON.parse(JSON.stringify(a)) 
+const clone = (a) => JSON.parse(JSON.stringify(a)) 
 
 /*
  * [NOTE:FB] Can you believe this bug?! Data is a global variable from Webpack and its making this worker run dry!!
