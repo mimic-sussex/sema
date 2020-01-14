@@ -13,8 +13,7 @@
 	import { onMount, onDestroy } from 'svelte';
 	import Inspect from 'svelte-inspect';
 
-  import {  grammarEditorValue,
-            modelEditorValue,
+  import {  modelEditorValue,
             grammarCompiledParser,
             grammarCompilationErrors,
             liveCodeEditorValue,
@@ -34,75 +33,11 @@
   } from '../audioEngine/audioEngineController.js';
 
   import IRToJavascript from "../intermediateLanguage/IR.js";
-  
-  import * as nearley from 'nearley/lib/nearley.js'
-  import compile from '../compiler/compiler';
 
-  import Quadrants from './layouts/Quadrants.svelte';
-  import Tutorial from './layouts/Tutorial.svelte';
-  import Dashboard from './layouts/Dashboard.svelte';
-  import Live from './layouts/Live.svelte';
-  import Editor from './Editor.svelte';
+  import ModelWorker from "worker-loader!../../workers/ml.worker.js";
 
-  import ParserWorker from "worker-loader!../../workers/parser.worker.js";
-  import ILWorker from "worker-loader!../../workers/il.worker.js"
+  let codeMirror;
 
-
-  let codeMirror1, codeMirror2; // Live layout [Hidden]
-
-  let codeMirror3, codeMirror4, codeMirror5; // []
-
-  let codeMirror6, codeMirror7;
-
-  export let layoutTemplate = 1;
-
-  let liveContainerDisplay = "initial";
-  let dashboardContainerDisplay = "initial";
-  let quadrantsContainerDisplay = "initial";
-  let tutorialContainerDisplay = "initial";
-
-  $: doubled = changeLayout(layoutTemplate);
-
-  function changeLayout (layoutIndex) {
-    switch (layoutIndex) {
-      case 1:
-        liveContainerDisplay =      "none";
-        quadrantsContainerDisplay = "none";
-        dashboardContainerDisplay = "none";
-        tutorialContainerDisplay = "initial";
-        break;
-      case 2:
-        liveContainerDisplay =      "none";
-        quadrantsContainerDisplay = "initial";
-        dashboardContainerDisplay = "none";
-        tutorialContainerDisplay = "none";
-        break;
-      case 3:
-        liveContainerDisplay =      "none";
-        quadrantsContainerDisplay = "none";
-        dashboardContainerDisplay = "initial";
-        tutorialContainerDisplay = "none";
-        break;
-      case 4:
-        liveContainerDisplay =      "initial";
-        quadrantsContainerDisplay = "none";
-        dashboardContainerDisplay = "none";
-        tutorialContainerDisplay = "none";
-        break;
-      default:
-        liveContainerDisplay =      "initial";
-        quadrantsContainerDisplay = "initial";
-        dashboardContainerDisplay = "initial";
-        tutorialContainerDisplay = "initial";
-        break;
-    }
-  }
-
-  const unsubscribe = selectedLayout.subscribe(value => {
-    // console.log("DEBUG:Layout:selectedlayout: ", value.id);
-    changeLayout(value.id);
-  })
-	// onDestroy(unsubscribe); // Prevent memory leaks by disposing the component
 
   const unsubscribe2 = grammarEditorValue.subscribe(value => {
     // console.log("DEBUG:Layout:grammarEditorValue: ", value);
@@ -115,13 +50,8 @@
   })
 
   onMount(async () => {
-    codeMirror1.set($grammarEditorValue, "ebnf");
-    codeMirror2.set($liveCodeEditorValue, "sema");
-    codeMirror3.set($liveCodeEditorValue, "sema");
-    codeMirror4.set($grammarEditorValue, "ebnf");
-    codeMirror5.set($modelEditorValue, "js");
-    // codeMirror6.set($grammarEditorValue, "ebnf");
-    // codeMirror7.set($modelEditorValue, "js");
+
+    codeMirror.set($modelEditorValue, "js");
 
     changeLayout(1); // [NOTE:FB] Need this call to clean up pre-loaded panels and trigger a re-render
 	});
@@ -240,8 +170,6 @@
       e.detail.value
       parseLiveCode();
     }
-
-
   }
 
   let translateILtoDSP = e => {
@@ -427,110 +355,10 @@
 <!-- <div class="layout-template-container" contenteditable="true" bind:innerHTML={layoutTemplate}> -->
 <div class="layout-template-container scrollable">
 
-  <div class="tutorial-container" style="display:{tutorialContainerDisplay}">
-
-    <Tutorial>
-      <div slot="grammarEditor" class="codemirror-container flex scrollable codemirror-gutter codemirror-linenumber">
-        <CodeMirror bind:this={codeMirror1}  
-                    bind:value={$grammarEditorValue} 
-                    tab={true} 
-                    lineNumbers={true}  
-                    on:change={compileGrammarOnChange}  /> 
-      </div>
-      
-      <div slot="liveCodeEditor" class="codemirror-container flex scrollable codemirror-container-live-code codemirror-cursor codemirror-linenumber codemirror-gutter">
-        <CodeMirror bind:this={codeMirror2}  
-                    bind:value={$liveCodeEditorValue} 
-                    tab={true} 
-                    lineNumbers={true} 
-                    on:change={parseLiveCodeOnChange} 
-                    cmdEnter={cmdEnter} 
-                    ctrlEnter={ctrlEnter} 
-                    cmdPeriod={cmdPeriod} /> 
-      </div>
-
-      <div slot="liveCodeCompilerOutput" class="codemirror-container flex scrollable">
-      {#if $grammarCompilationErrors !== ""}
-        <div style="overflow-y: scroll; height:auto;">
-          <strong style="color:red; margin:15px 0 15px 5px">Go work on your grammar!</strong>
-        </div>
-      {:else if $liveCodeAbstractSyntaxTree && $liveCodeAbstractSyntaxTree.length && !$liveCodeParseErrors}
-        <div style="overflow-y: scroll; height:auto;">
-          <strong style="color:green; margin:15px 0 15px 5px">Abstract Syntax Tree:</strong>
-          <br>
-          <div style="margin-left:5px">
-          <!-- <div style="overflow-y: scroll; height:auto;"> -->
-            <Inspect.Value value={ $liveCodeAbstractSyntaxTree[0]['@lang'] } depth={7} />
-          </div>
-        </div>
-      {:else}
-        <div style="overflow-y: scroll; height:auto;">
-          <strong style="color: red; margin:15px 0 10px 5px">SyntaxError: Invalid or unexpected token!</strong>
-          <br>
-          <div style="margin-left:5px">
-          <!-- <div style="overflow-y: scroll; height:auto;"> -->
-            <span style="white-space: pre-wrap">{ $liveCodeParseErrors } </span>
-          </div>
-        </div>
-      {/if}
-      </div>
-
-
-      <div slot="grammarOutput" class="codemirror-container flex scrollable">
-      {#if $grammarCompilationErrors !== ""}
-        <div style="overflow-y: scroll; height:auto;">
-          <strong style="color:red; margin:15px 0 15px 5px">Grammar compilation errors:</strong>
-          <br>
-          <div style="margin-left:5px">
-          <!-- <div style="overflow-y: scroll; height:auto;"> -->
-            <span style="white-space: pre-wrap">{ $grammarCompilationErrors } </span>
-          </div>
-        </div>
-      {:else}
-        <div style="overflow-y: scroll; height:auto;">
-          <strong style="color: green; margin:15px 0 10px 5px">Grammar validated and parser generated!</strong>
-        </div>
-      {/if}
-      </div>
-
-
-    </Tutorial>
-  </div>
-
-  <div class="dashboard-container" style="display:{dashboardContainerDisplay}" >
-    <!-- <Dashboard liveCodeEditorValue={value} grammarEditorValue={value} modelEditorValue={value} /> -->
-    <Dashboard>
-    </Dashboard>
-  </div>
-
-  <div class="quadrants-container" style="display:{quadrantsContainerDisplay}">
-    <!-- <Quadrants liveCodeEditorValue={value} grammarEditorValue={value} modelEditorValue={value}  /> -->
-    <Quadrants>
-      <div slot="viz">
-        <!-- <Oscilloscope></Oscilloscope>
-        <Spectrogram></Spectrogram> -->
-      </div>
-      <div slot="liveCodeEditor" class="codemirror-container flex scrollable codemirror-gutter codemirror-linenumber">
-        <CodeMirror bind:this={codeMirror3}  bind:value={$liveCodeEditorValue} lineNumbers={true} on:change={nil} />
-      </div>
-      <div slot="grammarEditor" class="codemirror-container flex scrollable codemirror-gutter codemirror-linenumber">
-        <CodeMirror bind:this={codeMirror4}  bind:value={$grammarEditorValue} lineNumbers={true} on:change={nil} />
-      </div>
-      <div slot="modelEditor" class="codemirror-container flex scrollable codemirror-gutter codemirror-linenumber">
-        <CodeMirror bind:this={codeMirror5}  bind:value={$modelEditorValue} lineNumbers={true}  on:change={nil} />
-      </div>
-    </Quadrants>
-  </div>
-
   <div class="live-container" style="display:{liveContainerDisplay}">
-    <Live>
-      <div slot="liveCodeEditor" class="codemirror-container flex scrollable">
-        <CodeMirror bind:this={codeMirror6}  bind:value={$liveCodeEditorValue} lineNumbers={true}  on:change={nil} />
-      </div>
-      <div slot="grammarEditor" class="codemirror-container flex scrollable">
-        <CodeMirror bind:this={codeMirror7}  bind:value={$grammarEditorValue} lineNumbers={true}  on:change={nil} />
-      </div>
-    </Live>
+    <div slot="liveCodeEditor" class="codemirror-container flex scrollable">
+      <CodeMirror bind:this={codeMirror}  bind:value={$liveCodeEditorValue} lineNumbers={true}  on:change={nil} />
+    </div>
   </div>
 
 </div>

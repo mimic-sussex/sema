@@ -38,10 +38,10 @@
   import * as nearley from 'nearley/lib/nearley.js'
   import compile from '../compiler/compiler';
 
-  import Quadrants from './layouts/Quadrants.svelte';
-  import Tutorial from './layouts/Tutorial.svelte';
+  import Quadrants from './layouts/QuadrantsVertical.svelte';
+  import Tutorial from './layouts/QuadrantsHorizontal.svelte';
   import Dashboard from './layouts/Dashboard.svelte';
-  import Live from './layouts/Live.svelte';
+  import Live from './layouts/SplitHorizontal.svelte';
   import Editor from './Editor.svelte';
 
   import ParserWorker from "worker-loader!../../workers/parser.worker.js";
@@ -430,7 +430,7 @@
   <div class="tutorial-container" style="display:{tutorialContainerDisplay}">
 
     <Tutorial>
-      <div slot="grammarEditor" class="codemirror-container flex scrollable codemirror-gutter codemirror-linenumber ">
+      <div slot="grammarEditor" class="codemirror-container flex scrollable codemirror-gutter codemirror-linenumber">
         <CodeMirror bind:this={codeMirror1}  
                     bind:value={$grammarEditorValue} 
                     tab={true} 
@@ -510,13 +510,13 @@
         <!-- <Oscilloscope></Oscilloscope>
         <Spectrogram></Spectrogram> -->
       </div>
-      <div slot="liveCodeEditor" class="codemirror-container flex scrollable">
+      <div slot="liveCodeEditor" class="codemirror-container flex scrollable codemirror-gutter codemirror-linenumber">
         <CodeMirror bind:this={codeMirror3}  bind:value={$liveCodeEditorValue} lineNumbers={true} on:change={nil} />
       </div>
-      <div slot="grammarEditor" class="codemirror-container flex scrollable">
+      <div slot="grammarEditor" class="codemirror-container flex scrollable codemirror-gutter codemirror-linenumber">
         <CodeMirror bind:this={codeMirror4}  bind:value={$grammarEditorValue} lineNumbers={true} on:change={nil} />
       </div>
-      <div slot="modelEditor" class="codemirror-container flex scrollable">
+      <div slot="modelEditor" class="codemirror-container flex scrollable codemirror-gutter codemirror-linenumber">
         <CodeMirror bind:this={codeMirror5}  bind:value={$modelEditorValue} lineNumbers={true}  on:change={nil} />
       </div>
     </Quadrants>

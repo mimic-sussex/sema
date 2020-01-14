@@ -2,7 +2,12 @@
 	import { onDestroy } from 'svelte';
   import CodeMirror, { set, update }  from "svelte-codemirror";
   import "codemirror/lib/codemirror.css";
-  import { liveCodeEditorValue, modelEditorValue, grammarEditorValue } from "../store.js";
+ 
+  import { 
+    liveCodeEditorValue, 
+    modelEditorValue, 
+    grammarEditorValue 
+  } from "../store.js";
 
   const is_browser = typeof window !== "undefined";
   if (is_browser) {
