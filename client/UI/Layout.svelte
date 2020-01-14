@@ -123,7 +123,7 @@
     // codeMirror6.set($grammarEditorValue, "ebnf");
     // codeMirror7.set($modelEditorValue, "js");
 
-    changeLayout(1); // [NOTE:FB] Need this call to trigger a re-render to clean up pre-loaded panels
+    changeLayout(1); // [NOTE:FB] Need this call to clean up pre-loaded panels and trigger a re-render
 	});
 
   let log = (e) => { console.log(e.detail.value); }
@@ -522,9 +522,6 @@
     </Quadrants>
   </div>
 
-
-
-
   <div class="live-container" style="display:{liveContainerDisplay}">
     <Live>
       <div slot="liveCodeEditor" class="codemirror-container flex scrollable">
@@ -535,6 +532,5 @@
       </div>
     </Live>
   </div>
-
 
 </div>
