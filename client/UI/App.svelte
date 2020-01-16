@@ -11,8 +11,8 @@
 
   createAudioEngine();
 
-  const unsubscribe = splashScreenClicked.subscribe( value => {
-		if(value === 'hidden') setupAudio();
+  const unsubscribe = splashScreenClicked.subscribe( value => { 
+    if(value === 'hidden') setupAudio();
 	});
   onDestroy(unsubscribe);
 

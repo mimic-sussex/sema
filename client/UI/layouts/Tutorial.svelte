@@ -42,7 +42,7 @@
   import Tutorial from './layouts/Tutorial.svelte';
   import Dashboard from './layouts/Dashboard.svelte';
   import Live from './layouts/Live.svelte';
-  import Editor from './Editor.svelte';
+  import Editor from '../editors/Editor.svelte';
 
   import ParserWorker from "worker-loader!../../workers/parser.worker.js";
   import ILWorker from "worker-loader!../../workers/il.worker.js"

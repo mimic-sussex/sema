@@ -42,9 +42,8 @@
   import Tutorial from './layouts/QuadrantsHorizontal.svelte';
   import Dashboard from './layouts/Dashboard.svelte';
   import Live from './layouts/SplitHorizontal.svelte';
-  import Editor from './Editor.svelte';
-  import Model from './layouts/ModelEditor.svelte';
-
+  // import Model from './editors/ModelEditor.svelte';
+  import Model from './editors/LiveCodeEditor.svelte';
 
   import ParserWorker from "worker-loader!../../workers/parser.worker.js";
   import ILWorker from "worker-loader!../../workers/il.worker.js"
@@ -117,15 +116,15 @@
   })
 
   onMount(async () => {
-    codeMirror1.set($grammarEditorValue, "ebnf");
-    codeMirror2.set($liveCodeEditorValue, "sema");
-    codeMirror3.set($liveCodeEditorValue, "sema");
-    codeMirror4.set($grammarEditorValue, "ebnf");
-    codeMirror5.set($modelEditorValue, "js");
-    // codeMirror6.set($grammarEditorValue, "ebnf");
-    codeMirror6.set($modelEditorValue, "js");
+    // codeMirror1.set($grammarEditorValue, "ebnf");
+    // codeMirror2.set($liveCodeEditorValue, "sema");
+    // codeMirror3.set($liveCodeEditorValue, "sema");
+    // codeMirror4.set($grammarEditorValue, "ebnf");
+    // codeMirror5.set($modelEditorValue, "js");
+    // // codeMirror6.set($grammarEditorValue, "ebnf");
+    // codeMirror6.set($modelEditorValue, "js");
 
-    changeLayout(4); // [NOTE:FB] Need this call to clean up pre-loaded panels and trigger a re-render
+    // changeLayout(4); // [NOTE:FB] Need this call to clean up pre-loaded panels and trigger a re-render
 	});
 
   let log = (e) => { console.log(e.detail.value); }
@@ -214,7 +213,8 @@
       // console.log($grammarCompiledParser); 
 
       if($grammarCompiledParser && ( $liveCodeEditorValue && $liveCodeEditorValue !== "") ){
-        $liveCodeEditorValue = e.detail.value;
+        // DEBUG
+        // $liveCodeEditorValue = e.detail.value;
 
         // console.log('DEBUG:Layout:compileGrammarOnChange');
         // console.log($liveCodeEditorValue); 
@@ -237,8 +237,9 @@
     // console.log('DEBUG:Layout:parseLiveCodeOnChange');
     // console.log($liveCodeEditorValue); 
     if($grammarCompiledParser){
-      $liveCodeEditorValue = e.detail.value;
-      window.localStorage.liveCodeEditorValue = e.detail.value;
+      //DEBUG
+      // $liveCodeEditorValue = e.detail.value;
+      // window.localStorage.liveCodeEditorValue = e.detail.value;
       e.detail.value
       parseLiveCode();
     }

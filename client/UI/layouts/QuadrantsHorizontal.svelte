@@ -1,6 +1,6 @@
 <script>
 
-  import Editor from '../Editor.svelte';
+  import Editor from '../editors/Editor.svelte';
   let container;
 
   let leftWidth = 250;

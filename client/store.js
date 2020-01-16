@@ -25,15 +25,14 @@ export const splashScreenClicked = writable(false);
 let initGrammarEditorValue = () => {
   let ret;
   let temp = window.localStorage.grammarEditorValue;
-  ( temp && temp !== "") ? ret = temp: ret = default_grammar;
+  (temp && temp !== "") ? ret = temp: ret = default_grammar;
   return ret;
-
 } 
 
 let initLiveCodeEditorValue = () =>  { 
     let ret;
 		let temp = window.localStorage.liveCodeEditorValue;
-		temp && temp !== "" ? (ret = temp) : (ret = default_liveCode);
+   	(temp && temp !== "") ? ret = temp : ret = default_liveCode;
 		return ret;
 }
  

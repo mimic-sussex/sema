@@ -7,11 +7,11 @@
     liveCodeEditorValue, 
     modelEditorValue, 
     grammarEditorValue 
-  } from "../store.js";
+  } from "../../store.js";
 
   const is_browser = typeof window !== "undefined";
   if (is_browser) {
-    import("../utils/codeMirrorPlugins");
+    import("../../utils/codeMirrorPlugins");
   }
 
   // export let codeMirrorValue = 'sdfg';

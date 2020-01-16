@@ -1,5 +1,5 @@
 <script>
-  import Editor from '../Editor.svelte';
+  import Editor from '../editors/Editor.svelte';
 
   // export let liveCodeEditor; 
   // export let grammarEditor; 

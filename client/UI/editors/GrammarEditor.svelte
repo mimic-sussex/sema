@@ -11,46 +11,38 @@
 
 <script>
 	import { onMount, onDestroy } from 'svelte';
-	import Inspect from 'svelte-inspect';
 
   import {  
-    modelEditorValue
+    grammarEditorValue
   } from "../../store.js";
 
   import ModelWorker from "worker-loader!../../../workers/ml.worker.js";
 
   let codeMirror;
-
+  let modelWorker; 
+  
   onMount(async () => {
-
-    codeMirror.set($modelEditorValue, "js");
-
-    // changeLayout(1); // [NOTE:FB] Need this call to clean up pre-loaded panels and trigger a re-render
+    codeMirror.set($grammarEditorValue, "js");
+    modelWorker = new ModelWorker();  // Create one worker per widget lifetime
 	});
 
-
+  onDestroy(async () => {
+    modelWorker.terminate();
+	});
+  
 
   let log = (e) => { console.log(e.detail.value); }
 
   let nil = (e) => { }
 
-
   let evalModelCode = e => {
 
     if(window.Worker){
-
-      let modelWorker = new ModelWorker();
-
       let modelWorkerAsync = new Promise( (res, rej) => {
 
         modelWorker.postMessage({
           eval: e
         });
-
-        let timeout = setTimeout(() => {
-            modelWorker.terminate()
-            modelWorker = new ModelWorker();
-        }, 5000);
 
         modelWorker.onmessage = m => {
           if(m.data.message !== undefined){
@@ -63,7 +55,6 @@
           }
           clearTimeout(timeout);
         }
-
       })
       .then(outputs => {
 
@@ -81,6 +72,8 @@
     console.log("DEBUG:ModelEditor:evalModelEditorExpression: " + code);
 
     evalModelCode(code);
+
+    // window.localStorage.setItem("modelEditor+ID", editor.getValue()); 
   }
 
   function evalModelEditorExpressionBlock() {
@@ -89,10 +82,7 @@
 
     evalModelCode(code);
 
-    // machineLearningWorker.postMessage({
-    //   eval: code
-    // });
-    // window.localStorage.setItem("editor2", editor2.getValue());
+    // window.localStorage.setItem("modelEditor+ID", editor.getValue());
   }
 
 </script>
@@ -154,7 +144,7 @@
   <!-- <div class="live-container" style="display:{liveContainerDisplay}"> -->
     <!-- <div slot="liveCodeEditor" class="codemirror-container flex scrollable"></div> -->
       <CodeMirror bind:this={codeMirror}  
-                  bind:value={$modelEditorValue} 
+                  bind:value={$grammarEditorValue} 
                   tab={true} 
                   lineNumbers={true} 
                   on:change={nil} 

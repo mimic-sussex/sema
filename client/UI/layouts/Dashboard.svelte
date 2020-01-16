@@ -2,7 +2,10 @@
   import Grid from "svelte-grid";
   import gridHelp from "svelte-grid/build/helper";
   import map from "lodash.map";
-  import Editor from '../Editor.svelte';
+  import Editor from '../editors/Editor.svelte';
+  import ModelEditor from '../editors/ModelEditor.svelte';
+  import GrammarEditor from '../editors/GrammarEditor.svelte';
+  import LiveCodeEditor from '../editors/LiveCodeEditor.svelte';
 
   export let value = '';
 
@@ -11,6 +14,10 @@
     Math.random()
       .toString(36)
       .substr(2, 9);
+
+  const types = ['live', 'model', 'grammar']; //, 'widget', 'liveCompileOutput', 'grammarCompileOutput' ];
+
+  const itype = () => types[Math.floor(Math.random() * types.length)];
 
   const random = (min, max) => Math.random() * (max - min) + min;
 
@@ -21,16 +28,19 @@
   let items = [];
 
   function generateLayout(col) {
-    return map(new Array(20), function(item, i) {
+    return map(new Array(5), function(item, i) {
       const x = Math.ceil(Math.random() * 3) + 2;
       const y = Math.ceil(Math.random() * 4) + 1;
+      const iid = id();
       return {
         ...gridHelp.item({
           x: (i * 2) % col,
           y: Math.floor(i / 6) * y,
           w: x,
           h: y,
-          id: id(),
+          id: iid,
+          name: iid,
+          type: itype()
         }),
         ...{ data: randomHexColorCode() },
       };
@@ -92,7 +102,15 @@
 <div class="layout-template-container">
   <Grid useTransform {breakpoints} gap={1} {items} bind:items {cols} rowHeight={100} let:item>
     <div class="content" style="background: {item.static ? '#ccccee' : item.data}" >
+      {#if item.type === 'model' }
+      <ModelEditor bind:value={value}/>
+      {:else if item.type === 'grammar' }
+      <GrammarEditor bind:value={value}/>
+      {:else if item.type === 'live' }
+      <LiveCodeEditor bind:value={value}/>
+      {:else}
       <Editor bind:value={value}/>
+      {/if}
     </div>
   </Grid>
 </div>
