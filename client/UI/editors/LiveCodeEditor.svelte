@@ -13,76 +13,139 @@
 	import { onMount, onDestroy } from 'svelte';
 
   import {  
-    liveCodeEditorValue
+    grammarCompiledParser,
+    liveCodeEditorValue,
+    liveCodeParseErrors,
+    liveCodeParseResults, 
+    liveCodeAbstractSyntaxTree
   } from "../../store.js";
 
-  import ModelWorker from "worker-loader!../../../workers/ml.worker.js";
+  import ParserWorker from "worker-loader!../../../workers/parser.worker.js";
 
   let codeMirror;
-  let modelWorker; 
+  let parserWorker; 
   
   onMount(async () => {
     codeMirror.set($liveCodeEditorValue, "js");
-    modelWorker = new ModelWorker();  // Create one worker per widget lifetime
+    parserWorker = new ParserWorker();  // Create one worker per widget lifetime
 	});
 
   onDestroy(async () => {
-    modelWorker.terminate();
+    parserWorker.terminate();
 	});
-  
 
   let log = (e) => { console.log(e.detail.value); }
 
   let nil = (e) => { }
 
-  let evalModelCode = e => {
+  let evalLiveCode = e => {
 
     if(window.Worker){
-      let modelWorkerAsync = new Promise( (res, rej) => {
+      let parserWorkerAsync = new Promise( (res, rej) => {
 
-        modelWorker.postMessage({
-          eval: e
+        parserWorker.postMessage({
+          liveCodeSource: $liveCodeEditorValue, 
+          parserSource: $grammarCompiledParser, 
+          type:'parse'
         });
 
-        modelWorker.onmessage = m => {
+        parserWorker.onmessage = m => {
           if(m.data.message !== undefined){
-            // console.log('DEBUG:ModelEditor:evalModelCode:onmessage')
+            // console.log('DEBUG:LiveCodeEditor:evalLiveCode:onmessage')
             // console.log(e);
             console.log(m.data.message);
+            $liveCodeParseErrors = e.data.message;
           }
           else if(m.data !== undefined && m.data.length != 0){
             res(m.data);
           }
-          clearTimeout(timeout);
+          // clearTimeout(timeout);
         }
       })
       .then(outputs => {
-
+        console.log('DEBUG:Layout:parseLiveCode:then')
+        console.log(outputs); 
+        const {parserOutputs, parserResults} = outputs;
+        $liveCodeParseResults = parserResults;
+        $liveCodeAbstractSyntaxTree = parserOutputs;
+        // $liveCodeAbstractSyntaxTree = JSON.parse(JSON.stringify(parserOutputs));
+        $liveCodeParseErrors = "";
       })
       .catch(e => {
-        // console.log('DEBUG:ModelEditor:parserWorkerAsync:catch')
-        // console.log(e);
+        console.log('DEBUG:parserEditor:parserWorkerAsync:catch')
+        console.log(e);
       });
     }
   }
 
+  function evalLiveCodeEditorValue() {
+    let code = codeMirror.getBlock();
+    console.log("DEBUG:parserEditor:evalparserEditorExpressionBlock: " + code);
 
-  function evalModelEditorExpression(){
-    let code = codeMirror.getSelection();
-    console.log("DEBUG:ModelEditor:evalModelEditorExpression: " + code);
+    evalLiveCode(code);
 
-    evalModelCode(code);
-
-    // window.localStorage.setItem("modelEditor+ID", editor.getValue()); 
+    // window.localStorage.setItem("parserEditor+ID", editor.getValue());
   }
 
-  function evalModelEditorExpressionBlock() {
-    let code = codeMirror.getBlock();
-    console.log("DEBUG:ModelEditor:evalModelEditorExpressionBlock: " + code);
 
-    evalModelCode(code);
+  let parseLiveCode = e => {
 
-    // window.localStorage.setItem("modelEditor+ID", editor.getValue());
+    if(window.Worker){
+
+      // let parserWorker = new Worker('../../parser.worker.js');
+      let parserWorker = new ParserWorker();
+      // let parserWorker = new Worker('./parser.worker.js', { type: 'module' });
+
+      let parserWorkerAsync = new Promise( (res, rej) => {
+
+        parserWorker.postMessage({ liveCodeSource: $liveCodeEditorValue, parserSource: $grammarCompiledParser, type:'parse'});
+
+        let timeout = setTimeout(() => {
+            parserWorker.terminate()
+            // parserWorker = new Worker('../../parser.worker.js');
+            parserWorker = new ParserWorker();
+            // parserWorker = new Worker('./parser.worker.js', { type: 'module' });
+            // rej('Possible infinite loop detected! Check your grammar for infinite recursion.')
+        }, 5000);
+
+        parserWorker.onmessage = e => {
+          if(e.data.message !== undefined){
+            // console.log('DEBUG:Layout:parseLiveCode:onmessage')
+            // console.log(e);
+            $liveCodeParseErrors = e.data.message;
+          }
+          else if(e.data !== undefined && e.data.length != 0){
+            res(e.data);
+          }
+          clearTimeout(timeout);
+        }
+
+      })
+      .then(outputs => {
+
+        // console.log('DEBUG:Layout:parseLiveCode:then')
+        // console.log(outputs); 
+        const {parserOutputs, parserResults} = outputs;
+
+        // $liveCodeParseResults = outputs;
+        $liveCodeParseResults = parserResults;
+
+        // console.log(outputs); 
+        $liveCodeAbstractSyntaxTree = parserOutputs;
+
+
+        // $liveCodeAbstractSyntaxTree = JSON.parse(JSON.stringify(parserOutputs));
+
+        $liveCodeParseErrors = "";
+        // console.log('DEBUG:Layout:parserWorkerAsync');
+      })
+      .catch(e => {
+        // console.log('DEBUG:Layout:parserWorkerAsync:catch')
+        // console.log(e);
+
+
+      });
+    }
   }
 
 </script>
@@ -148,9 +211,9 @@
                   tab={true} 
                   lineNumbers={true} 
                   on:change={nil} 
-                  cmdEnter={evalModelEditorExpressionBlock}
-                  shiftEnter={evalModelEditorExpression}  
-                  /> 
+                  cmdEnter={evalLiveCodeEditorValue}
+                  />
+                  <!-- shiftEnter={evalModelEditorExpression}    -->
     <!-- </div> -->
   <!-- </div> -->
 </div>

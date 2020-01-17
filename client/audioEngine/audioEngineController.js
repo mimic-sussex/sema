@@ -34,8 +34,6 @@ let createAudioEngine = () => {
 };
 
 
-
-
 async function initAudio(numPeers) {
   await window.AudioEngine.init(numPeers); // Start AudioContext and connect WAAPI graph elements, asynchronously
   loadImportedSamples();

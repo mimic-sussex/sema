@@ -228,8 +228,10 @@ class AudioEngine {
 			this.audioContext = new AudioContext();
 
 			await this.loadWorkletProcessorCode();
-			this.connectMediaStream();
-			// TODO:FB Remove this to somewhere where it makes sense
+
+			// this.connectMediaStream();
+			
+      // TODO:FB Remove this to somewhere where it makes sense
 			this.oscThru = msg => {
 				this.audioWorkletNode.port.postMessage(msg);
 			};

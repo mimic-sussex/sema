@@ -75,6 +75,10 @@ export const layoutOptions = [
 	{ id: 4, text: `Model` }
 ];
 
+
+export const dashboardItems = writable([]);
+
+
 export const layoutsData = writable({
   selectedLayout: 1,
   layouts: [{  

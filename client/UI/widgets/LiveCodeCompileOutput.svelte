@@ -13,13 +13,8 @@
 	import { onMount, onDestroy } from 'svelte';
 
   import {  
-    grammarEditorValue,
-    grammarCompiledParser, 
-    grammarCompilationErrors
+    modelEditorValue
   } from "../../store.js";
-
-  import * as nearley from 'nearley/lib/nearley.js'
-  import compile from '../../compiler/compiler';
 
   import ModelWorker from "worker-loader!../../../workers/ml.worker.js";
 
@@ -27,12 +22,12 @@
   let modelWorker; 
   
   onMount(async () => {
-    codeMirror.set($grammarEditorValue, "js");
-    // modelWorker = new ModelWorker();  // Create one worker per widget lifetime
+    codeMirror.set($modelEditorValue, "js");
+    modelWorker = new ModelWorker();  // Create one worker per widget lifetime
 	});
 
   onDestroy(async () => {
-    // modelWorker.terminate();
+    modelWorker.terminate();
 	});
   
 
@@ -69,46 +64,6 @@
         // console.log(e);
       });
     }
-  }
-
-  let compileGrammarOnChange = e => { 
-
-    let grammarEditorValue = null; 
-
-    if(e !== undefined && e.detail !== undefined && e.detail.value !== undefined)
-      grammarEditorValue = e.detail.value; 
-    else 
-      grammarEditorValue = $grammarEditorValue; 
-
-    try {
-      window.localStorage.grammarEditorValue = grammarEditorValue;
-
-      let {errors, output} = compile(grammarEditorValue);
-      $grammarCompiledParser = output; 
-      $grammarCompilationErrors = errors;
-
-      console.log('DEBUG:Layout:compileGrammarOnChange');
-      // console.log($grammarCompiledParser); 
-      // console.log($grammarEditorValue);
-      console.log($grammarEditorValue); 
-      // if($grammarCompiledParser && ( $liveCodeEditorValue && $liveCodeEditorValue !== "") ){
-      //   // DEBUG
-      //   // $liveCodeEditorValue = e.detail.value;
-
-      //   // console.log('DEBUG:Layout:compileGrammarOnChange');
-      //   // console.log($liveCodeEditorValue); 
-
-      //   // parseLiveCode();
-  
-      // }
-    }
-    catch (e) {
-
-
-    }
-
-    // console.log('DEBUG:Layout:compileGrammarOnChange');
-    // console.log(e);
   }
 
 
@@ -184,26 +139,30 @@
 
 </style>
 
-<!-- <div class="layout-template-container" contenteditable="true" bind:innerHTML={layoutTemplate}> -->
-<div class="codemirror-container layout-template-container scrollable">
-  <!-- <div class="live-container" style="display:{liveContainerDisplay}"> -->
-  <!-- <div slot="liveCodeEditor" class="codemirror-container flex scrollable"></div> -->
-  <!-- <div slot="grammarEditor" class="codemirror-container flex scrollable codemirror-gutter codemirror-linenumber"> -->
-      <CodeMirror bind:this={codeMirror}  
-                    bind:value={$grammarEditorValue} 
-                    tab={true} 
-                    lineNumbers={true}  
-                    on:change={compileGrammarOnChange}  /> 
-      
-      <!-- <CodeMirror bind:this={codeMirror}  
-                  bind:value={$grammarEditorValue} 
-                  tab={true} 
-                  lineNumbers={true} 
-                  on:change={nil} 
-                  cmdEnter={evalModelEditorExpressionBlock}
-                  shiftEnter={evalModelEditorExpression}  
-                  />  -->
-    <!-- </div> -->
-  <!-- </div> -->
+
+<div id="liveCodeCompilerOutput" class="codemirror-container flex scrollable">
+{#if $grammarCompilationErrors !== ""}
+  <div style="overflow-y: scroll; height:auto;">
+    <strong style="color:red; margin:15px 0 15px 5px">Go work on your grammar!</strong>
+  </div>
+{:else if $liveCodeAbstractSyntaxTree && $liveCodeAbstractSyntaxTree.length && !$liveCodeParseErrors}
+  <div style="overflow-y: scroll; height:auto;">
+    <strong style="color:green; margin:15px 0 15px 5px">Abstract Syntax Tree:</strong>
+    <br>
+    <div style="margin-left:5px">
+    <!-- <div style="overflow-y: scroll; height:auto;"> -->
+      <Inspect.Value value={ $liveCodeAbstractSyntaxTree[0]['@lang'] } depth={7} />
+    </div>
+  </div>
+{:else}
+  <div style="overflow-y: scroll; height:auto;">
+    <strong style="color: red; margin:15px 0 10px 5px">SyntaxError: Invalid or unexpected token!</strong>
+    <br>
+    <div style="margin-left:5px">
+    <!-- <div style="overflow-y: scroll; height:auto;"> -->
+      <span style="white-space: pre-wrap">{ $liveCodeParseErrors } </span>
+    </div>
+  </div>
+{/if}
 </div>
  

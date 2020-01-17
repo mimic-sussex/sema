@@ -12,14 +12,20 @@
 <script>
 	import { onMount, onDestroy } from 'svelte';
 
-  import {  
+  import { 
     grammarEditorValue,
-    grammarCompiledParser, 
-    grammarCompilationErrors
+    modelEditorValue,
+    grammarCompiledParser,
+    grammarCompilationErrors,
+    liveCodeEditorValue,
+    liveCodeParseResults,
+    liveCodeParseErrors,
+    liveCodeAbstractSyntaxTree,
+    dspCode,
+    selectedLayout,
+    layoutOptions,
+    helloWorld
   } from "../../store.js";
-
-  import * as nearley from 'nearley/lib/nearley.js'
-  import compile from '../../compiler/compiler';
 
   import ModelWorker from "worker-loader!../../../workers/ml.worker.js";
 
@@ -27,12 +33,12 @@
   let modelWorker; 
   
   onMount(async () => {
-    codeMirror.set($grammarEditorValue, "js");
-    // modelWorker = new ModelWorker();  // Create one worker per widget lifetime
+    codeMirror.set($modelEditorValue, "js");
+    modelWorker = new ModelWorker();  // Create one worker per widget lifetime
 	});
 
   onDestroy(async () => {
-    // modelWorker.terminate();
+    modelWorker.terminate();
 	});
   
 
@@ -69,46 +75,6 @@
         // console.log(e);
       });
     }
-  }
-
-  let compileGrammarOnChange = e => { 
-
-    let grammarEditorValue = null; 
-
-    if(e !== undefined && e.detail !== undefined && e.detail.value !== undefined)
-      grammarEditorValue = e.detail.value; 
-    else 
-      grammarEditorValue = $grammarEditorValue; 
-
-    try {
-      window.localStorage.grammarEditorValue = grammarEditorValue;
-
-      let {errors, output} = compile(grammarEditorValue);
-      $grammarCompiledParser = output; 
-      $grammarCompilationErrors = errors;
-
-      console.log('DEBUG:Layout:compileGrammarOnChange');
-      // console.log($grammarCompiledParser); 
-      // console.log($grammarEditorValue);
-      console.log($grammarEditorValue); 
-      // if($grammarCompiledParser && ( $liveCodeEditorValue && $liveCodeEditorValue !== "") ){
-      //   // DEBUG
-      //   // $liveCodeEditorValue = e.detail.value;
-
-      //   // console.log('DEBUG:Layout:compileGrammarOnChange');
-      //   // console.log($liveCodeEditorValue); 
-
-      //   // parseLiveCode();
-  
-      // }
-    }
-    catch (e) {
-
-
-    }
-
-    // console.log('DEBUG:Layout:compileGrammarOnChange');
-    // console.log(e);
   }
 
 
@@ -187,22 +153,15 @@
 <!-- <div class="layout-template-container" contenteditable="true" bind:innerHTML={layoutTemplate}> -->
 <div class="codemirror-container layout-template-container scrollable">
   <!-- <div class="live-container" style="display:{liveContainerDisplay}"> -->
-  <!-- <div slot="liveCodeEditor" class="codemirror-container flex scrollable"></div> -->
-  <!-- <div slot="grammarEditor" class="codemirror-container flex scrollable codemirror-gutter codemirror-linenumber"> -->
+    <!-- <div slot="liveCodeEditor" class="codemirror-container flex scrollable"></div> -->
       <CodeMirror bind:this={codeMirror}  
-                    bind:value={$grammarEditorValue} 
-                    tab={true} 
-                    lineNumbers={true}  
-                    on:change={compileGrammarOnChange}  /> 
-      
-      <!-- <CodeMirror bind:this={codeMirror}  
-                  bind:value={$grammarEditorValue} 
+                  bind:value={$modelEditorValue} 
                   tab={true} 
                   lineNumbers={true} 
                   on:change={nil} 
                   cmdEnter={evalModelEditorExpressionBlock}
                   shiftEnter={evalModelEditorExpression}  
-                  />  -->
+                  /> 
     <!-- </div> -->
   <!-- </div> -->
 </div>

@@ -6,6 +6,11 @@
   import ModelEditor from '../editors/ModelEditor.svelte';
   import GrammarEditor from '../editors/GrammarEditor.svelte';
   import LiveCodeEditor from '../editors/LiveCodeEditor.svelte';
+  
+  import {
+    dashboardItems
+  } from "../../store.js"
+
 
   export let value = '';
 
@@ -25,7 +30,9 @@
     let n = (Math.random() * 0xfffff * 1000000).toString(16);
     return "#" + n.slice(0, 6);
   };
-  let items = [];
+  // let items = [];
+  // let dashboardItems = [];
+
 
   function generateLayout(col) {
     return map(new Array(5), function(item, i) {
@@ -47,60 +54,88 @@
     });
   }
 
+  let layoutOriginal = [
+    gridHelp.item({ x: 0, y: 0, w: 7, h: 3, id: id(), name:'default', type:'live', data: '#AA8000' }), 
+    gridHelp.item({ x: 7, y: 0, w: 8, h: 7, id: id(), name:'default', type:'grammar', data: '#00FFFF' }),
+    gridHelp.item({ x: 0, y: 3, w: 7, h: 4, id: id(), name:'hello world', type:'model', data: '#008080' })
+  ];
+  
+  let layout;
+  let items = []; 
+  if (typeof window !== "undefined") {
+    if (!localStorage.getItem("layout")) {
+      localStorage.setItem("layout", JSON.stringify(layoutOriginal));
+      items = layoutOriginal; 
+    } else {
+      items = JSON.parse(localStorage.getItem("layout"));
+    }
+  }
+  
+  // let items = layout;
+  console.log(items);
+  const onAdjust = () => {
+    localStorage.setItem("layout", JSON.stringify(items));
+  };
+  
+  const reset = () => {
+    items = layoutOriginal;
+    localStorage.setItem("layout", JSON.stringify(layoutOriginal));
+  };
+
   var cols = 15;
 
-  items = generateLayout(cols);
-  items = gridHelp.resizeItems(items, cols);
+  // items = generateLayout(cols);
+  $dashboardItems = gridHelp.resizeItems(items, cols);
 
   let breakpoints = [[1000, 10], [700, 5], [500, 3], [400, 1]];
 </script>
 
 
 <style>
-.layout-template-container {
-  height: 100vh;
-}
+  .layout-template-container {
+    height: 100vh;
+  }
 
-.content {
-  width: 100%;
-  height: 100%;
-  border-radius: 6px;
-  border-bottom-right-radius: 3px;
-}
+  .content {
+    width: 100%;
+    height: 100%;
+    border-radius: 6px;
+    border-bottom-right-radius: 3px;
+  }
 
-:global(*) {
-  user-select: none;
-}
+  :global(*) {
+    user-select: none;
+  }
 
-:global(body) {
-  overflow: scroll;
-  margin: 0;
-}
+  :global(body) {
+    overflow: scroll;
+    margin: 0;
+  }
 
-:global(.svlt-grid-resizer) {
-  z-index: 1500;
-}
+  :global(.svlt-grid-resizer) {
+    z-index: 1500;
+  }
 
-:global(.svlt-grid-resizer::after) {
-  border-color: white !important;
-}
+  :global(.svlt-grid-resizer::after) {
+    border-color: white !important;
+  }
 
-:global(.svlt-grid-transition > .svlt-grid-item) {
-  transition: transform 0.2s;
-}
+  :global(.svlt-grid-transition > .svlt-grid-item) {
+    transition: transform 0.2s;
+  }
 
-:global(.svlt-grid-shadow) {
-  background: pink;
-  border-radius: 6px;
-  border-bottom-right-radius: 3px;
-   /*transition: top 0.2s, left 0.2s;*/
-  transition: transform 0.2s;
-}
+  :global(.svlt-grid-shadow) {
+    background: pink;
+    border-radius: 6px;
+    border-bottom-right-radius: 3px;
+    /*transition: top 0.2s, left 0.2s;*/
+    transition: transform 0.2s;
+  }
 
 </style>
 
 <div class="layout-template-container">
-  <Grid useTransform {breakpoints} gap={1} {items} bind:items {cols} rowHeight={100} let:item>
+  <Grid useTransform {breakpoints} on:adjust={onAdjust} gap={1} {$dashboardItems} bind:items {cols} rowHeight={100} let:item>
     <div class="content" style="background: {item.static ? '#ccccee' : item.data}" >
       {#if item.type === 'model' }
       <ModelEditor bind:value={value}/>
