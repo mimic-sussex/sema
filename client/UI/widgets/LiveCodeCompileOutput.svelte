@@ -11,23 +11,20 @@
 
 <script>
 	import { onMount, onDestroy } from 'svelte';
+	import Inspect from 'svelte-inspect';
 
-  import {  
-    modelEditorValue
+  import { 
+    grammarCompilationErrors, 
+    liveCodeParseErrors,
+    liveCodeAbstractSyntaxTree  
   } from "../../store.js";
-
-  import ModelWorker from "worker-loader!../../../workers/ml.worker.js";
-
-  let codeMirror;
-  let modelWorker; 
   
   onMount(async () => {
-    codeMirror.set($modelEditorValue, "js");
-    modelWorker = new ModelWorker();  // Create one worker per widget lifetime
+    
 	});
 
   onDestroy(async () => {
-    modelWorker.terminate();
+
 	});
   
 
@@ -35,64 +32,11 @@
 
   let nil = (e) => { }
 
-  let evalModelCode = e => {
-
-    if(window.Worker){
-      let modelWorkerAsync = new Promise( (res, rej) => {
-
-        modelWorker.postMessage({
-          eval: e
-        });
-
-        modelWorker.onmessage = m => {
-          if(m.data.message !== undefined){
-            // console.log('DEBUG:ModelEditor:evalModelCode:onmessage')
-            // console.log(e);
-            console.log(m.data.message);
-          }
-          else if(m.data !== undefined && m.data.length != 0){
-            res(m.data);
-          }
-          clearTimeout(timeout);
-        }
-      })
-      .then(outputs => {
-
-      })
-      .catch(e => {
-        // console.log('DEBUG:ModelEditor:parserWorkerAsync:catch')
-        // console.log(e);
-      });
-    }
-  }
-
-
-  function evalModelEditorExpression(){
-    let code = codeMirror.getSelection();
-    console.log("DEBUG:ModelEditor:evalModelEditorExpression: " + code);
-
-    evalModelCode(code);
-
-    // window.localStorage.setItem("modelEditor+ID", editor.getValue()); 
-  }
-
-  function evalModelEditorExpressionBlock() {
-    let code = codeMirror.getBlock();
-    console.log("DEBUG:ModelEditor:evalModelEditorExpressionBlock: " + code);
-
-    evalModelCode(code);
-
-    // window.localStorage.setItem("modelEditor+ID", editor.getValue());
-  }
 
 </script>
 
 
 <style>
-
-  .layout-template-container {
-    height: 100vh;
-  }
 
 	.scrollable {
 		flex: 1 1 auto;
@@ -165,4 +109,3 @@
   </div>
 {/if}
 </div>
- 

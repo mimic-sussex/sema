@@ -52,14 +52,12 @@
         parserWorker.onmessage = m => {
           if(m.data.message !== undefined){
             // console.log('DEBUG:LiveCodeEditor:evalLiveCode:onmessage')
-            // console.log(e);
             console.log(m.data.message);
             $liveCodeParseErrors = e.data.message;
           }
           else if(m.data !== undefined && m.data.length != 0){
             res(m.data);
           }
-          // clearTimeout(timeout);
         }
       })
       .then(outputs => {
@@ -67,8 +65,7 @@
         console.log(outputs); 
         const {parserOutputs, parserResults} = outputs;
         $liveCodeParseResults = parserResults;
-        $liveCodeAbstractSyntaxTree = parserOutputs;
-        // $liveCodeAbstractSyntaxTree = JSON.parse(JSON.stringify(parserOutputs));
+        $liveCodeAbstractSyntaxTree = parserOutputs;  //Deep clone created in the worker for AST visualization
         $liveCodeParseErrors = "";
       })
       .catch(e => {
@@ -79,74 +76,14 @@
   }
 
   function evalLiveCodeEditorValue() {
+    // console.log("DEBUG:parserEditor:evalLiveCodeEditorValue: " + code);
     let code = codeMirror.getBlock();
-    console.log("DEBUG:parserEditor:evalparserEditorExpressionBlock: " + code);
-
-    evalLiveCode(code);
+    if(code) evalLiveCode(code);
 
     // window.localStorage.setItem("parserEditor+ID", editor.getValue());
   }
 
 
-  let parseLiveCode = e => {
-
-    if(window.Worker){
-
-      // let parserWorker = new Worker('../../parser.worker.js');
-      let parserWorker = new ParserWorker();
-      // let parserWorker = new Worker('./parser.worker.js', { type: 'module' });
-
-      let parserWorkerAsync = new Promise( (res, rej) => {
-
-        parserWorker.postMessage({ liveCodeSource: $liveCodeEditorValue, parserSource: $grammarCompiledParser, type:'parse'});
-
-        let timeout = setTimeout(() => {
-            parserWorker.terminate()
-            // parserWorker = new Worker('../../parser.worker.js');
-            parserWorker = new ParserWorker();
-            // parserWorker = new Worker('./parser.worker.js', { type: 'module' });
-            // rej('Possible infinite loop detected! Check your grammar for infinite recursion.')
-        }, 5000);
-
-        parserWorker.onmessage = e => {
-          if(e.data.message !== undefined){
-            // console.log('DEBUG:Layout:parseLiveCode:onmessage')
-            // console.log(e);
-            $liveCodeParseErrors = e.data.message;
-          }
-          else if(e.data !== undefined && e.data.length != 0){
-            res(e.data);
-          }
-          clearTimeout(timeout);
-        }
-
-      })
-      .then(outputs => {
-
-        // console.log('DEBUG:Layout:parseLiveCode:then')
-        // console.log(outputs); 
-        const {parserOutputs, parserResults} = outputs;
-
-        // $liveCodeParseResults = outputs;
-        $liveCodeParseResults = parserResults;
-
-        // console.log(outputs); 
-        $liveCodeAbstractSyntaxTree = parserOutputs;
-
-
-        // $liveCodeAbstractSyntaxTree = JSON.parse(JSON.stringify(parserOutputs));
-
-        $liveCodeParseErrors = "";
-        // console.log('DEBUG:Layout:parserWorkerAsync');
-      })
-      .catch(e => {
-        // console.log('DEBUG:Layout:parserWorkerAsync:catch')
-        // console.log(e);
-
-
-      });
-    }
-  }
 
 </script>
 
@@ -202,19 +139,13 @@
 
 </style>
 
-<!-- <div class="layout-template-container" contenteditable="true" bind:innerHTML={layoutTemplate}> -->
 <div class="codemirror-container layout-template-container scrollable">
-  <!-- <div class="live-container" style="display:{liveContainerDisplay}"> -->
-    <!-- <div slot="liveCodeEditor" class="codemirror-container flex scrollable"></div> -->
-      <CodeMirror bind:this={codeMirror}  
-                  bind:value={$liveCodeEditorValue} 
-                  tab={true} 
-                  lineNumbers={true} 
-                  on:change={nil} 
-                  cmdEnter={evalLiveCodeEditorValue}
-                  />
-                  <!-- shiftEnter={evalModelEditorExpression}    -->
-    <!-- </div> -->
-  <!-- </div> -->
+  <CodeMirror bind:this={codeMirror}  
+              bind:value={$liveCodeEditorValue} 
+              tab={true} 
+              lineNumbers={true} 
+              on:change={nil} 
+              cmdEnter={evalLiveCodeEditorValue}
+              />
 </div>
  

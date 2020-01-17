@@ -11,34 +11,18 @@
 
 <script>
 	import { onMount, onDestroy } from 'svelte';
+	import Inspect from 'svelte-inspect';
 
   import { 
-    grammarEditorValue,
-    modelEditorValue,
-    grammarCompiledParser,
-    grammarCompilationErrors,
-    liveCodeEditorValue,
-    liveCodeParseResults,
-    liveCodeParseErrors,
-    liveCodeAbstractSyntaxTree,
-    dspCode,
-    selectedLayout,
-    layoutOptions,
-    helloWorld
+    grammarCompilationErrors
   } from "../../store.js";
-
-  import ModelWorker from "worker-loader!../../../workers/ml.worker.js";
-
-  let codeMirror;
-  let modelWorker; 
   
   onMount(async () => {
-    codeMirror.set($modelEditorValue, "js");
-    modelWorker = new ModelWorker();  // Create one worker per widget lifetime
+    
 	});
 
   onDestroy(async () => {
-    modelWorker.terminate();
+
 	});
   
 
@@ -46,64 +30,11 @@
 
   let nil = (e) => { }
 
-  let evalModelCode = e => {
-
-    if(window.Worker){
-      let modelWorkerAsync = new Promise( (res, rej) => {
-
-        modelWorker.postMessage({
-          eval: e
-        });
-
-        modelWorker.onmessage = m => {
-          if(m.data.message !== undefined){
-            // console.log('DEBUG:ModelEditor:evalModelCode:onmessage')
-            // console.log(e);
-            console.log(m.data.message);
-          }
-          else if(m.data !== undefined && m.data.length != 0){
-            res(m.data);
-          }
-          clearTimeout(timeout);
-        }
-      })
-      .then(outputs => {
-
-      })
-      .catch(e => {
-        // console.log('DEBUG:ModelEditor:parserWorkerAsync:catch')
-        // console.log(e);
-      });
-    }
-  }
-
-
-  function evalModelEditorExpression(){
-    let code = codeMirror.getSelection();
-    console.log("DEBUG:ModelEditor:evalModelEditorExpression: " + code);
-
-    evalModelCode(code);
-
-    // window.localStorage.setItem("modelEditor+ID", editor.getValue()); 
-  }
-
-  function evalModelEditorExpressionBlock() {
-    let code = codeMirror.getBlock();
-    console.log("DEBUG:ModelEditor:evalModelEditorExpressionBlock: " + code);
-
-    evalModelCode(code);
-
-    // window.localStorage.setItem("modelEditor+ID", editor.getValue());
-  }
 
 </script>
 
 
 <style>
-
-  .layout-template-container {
-    height: 100vh;
-  }
 
 	.scrollable {
 		flex: 1 1 auto;
@@ -150,19 +81,19 @@
 
 </style>
 
-<!-- <div class="layout-template-container" contenteditable="true" bind:innerHTML={layoutTemplate}> -->
-<div class="codemirror-container layout-template-container scrollable">
-  <!-- <div class="live-container" style="display:{liveContainerDisplay}"> -->
-    <!-- <div slot="liveCodeEditor" class="codemirror-container flex scrollable"></div> -->
-      <CodeMirror bind:this={codeMirror}  
-                  bind:value={$modelEditorValue} 
-                  tab={true} 
-                  lineNumbers={true} 
-                  on:change={nil} 
-                  cmdEnter={evalModelEditorExpressionBlock}
-                  shiftEnter={evalModelEditorExpression}  
-                  /> 
-    <!-- </div> -->
-  <!-- </div> -->
+<div id="grammarOutput" class="codemirror-container flex scrollable">
+  {#if $grammarCompilationErrors !== ""}
+  <div style="overflow-y: scroll; height:auto;">
+    <strong style="color:red; margin:15px 0 15px 5px">Grammar compilation errors:</strong>
+    <br>
+    <div style="margin-left:5px">
+    <!-- <div style="overflow-y: scroll; height:auto;"> -->
+      <span style="white-space: pre-wrap">{ $grammarCompilationErrors } </span>
+    </div>
+  </div>
+  {:else}
+  <div style="overflow-y: scroll; height:auto;">
+    <strong style="color: green; margin:15px 0 10px 5px">Grammar validated and parser generated!</strong>
+  </div>
+  {/if}
 </div>
- 

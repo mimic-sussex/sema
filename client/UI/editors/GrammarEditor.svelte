@@ -27,7 +27,7 @@
   let modelWorker; 
   
   onMount(async () => {
-    codeMirror.set($grammarEditorValue, "js");
+    codeMirror.set($grammarEditorValue, "ebnf");
     // modelWorker = new ModelWorker();  // Create one worker per widget lifetime
 	});
 
@@ -88,9 +88,10 @@
       $grammarCompilationErrors = errors;
 
       console.log('DEBUG:Layout:compileGrammarOnChange');
-      // console.log($grammarCompiledParser); 
+      
       // console.log($grammarEditorValue);
-      console.log($grammarEditorValue); 
+      console.log($grammarCompiledParser);
+      console.log($grammarCompilationErrors); 
       // if($grammarCompiledParser && ( $liveCodeEditorValue && $liveCodeEditorValue !== "") ){
       //   // DEBUG
       //   // $liveCodeEditorValue = e.detail.value;
@@ -106,29 +107,9 @@
 
 
     }
-
-    // console.log('DEBUG:Layout:compileGrammarOnChange');
-    // console.log(e);
   }
 
 
-  function evalModelEditorExpression(){
-    let code = codeMirror.getSelection();
-    console.log("DEBUG:ModelEditor:evalModelEditorExpression: " + code);
-
-    evalModelCode(code);
-
-    // window.localStorage.setItem("modelEditor+ID", editor.getValue()); 
-  }
-
-  function evalModelEditorExpressionBlock() {
-    let code = codeMirror.getBlock();
-    console.log("DEBUG:ModelEditor:evalModelEditorExpressionBlock: " + code);
-
-    evalModelCode(code);
-
-    // window.localStorage.setItem("modelEditor+ID", editor.getValue());
-  }
 
 </script>
 
@@ -186,24 +167,10 @@
 
 <!-- <div class="layout-template-container" contenteditable="true" bind:innerHTML={layoutTemplate}> -->
 <div class="codemirror-container layout-template-container scrollable">
-  <!-- <div class="live-container" style="display:{liveContainerDisplay}"> -->
-  <!-- <div slot="liveCodeEditor" class="codemirror-container flex scrollable"></div> -->
-  <!-- <div slot="grammarEditor" class="codemirror-container flex scrollable codemirror-gutter codemirror-linenumber"> -->
-      <CodeMirror bind:this={codeMirror}  
-                    bind:value={$grammarEditorValue} 
-                    tab={true} 
-                    lineNumbers={true}  
-                    on:change={compileGrammarOnChange}  /> 
-      
-      <!-- <CodeMirror bind:this={codeMirror}  
-                  bind:value={$grammarEditorValue} 
-                  tab={true} 
-                  lineNumbers={true} 
-                  on:change={nil} 
-                  cmdEnter={evalModelEditorExpressionBlock}
-                  shiftEnter={evalModelEditorExpression}  
-                  />  -->
-    <!-- </div> -->
-  <!-- </div> -->
+  <CodeMirror bind:this={codeMirror}  
+              bind:value={$grammarEditorValue} 
+              tab={true} 
+              lineNumbers={true}  
+              on:change={compileGrammarOnChange}  /> 
 </div>
  
