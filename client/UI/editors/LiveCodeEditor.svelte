@@ -38,52 +38,71 @@
 
   let nil = (e) => { }
 
-  let evalLiveCode = e => {
-
+  let parseLiveCode = e => {
+    console.log('Debug');
+    console.log(e);
     if(window.Worker){
       let parserWorkerAsync = new Promise( (res, rej) => {
-
-        parserWorker.postMessage({
-          liveCodeSource: $liveCodeEditorValue, 
+        
+        parserWorker.postMessage({ // Post code to worker for parsing 
+          liveCodeSource: e, 
           parserSource: $grammarCompiledParser, 
           type:'parse'
         });
 
-        parserWorker.onmessage = m => {
-          if(m.data.message !== undefined){
-            // console.log('DEBUG:LiveCodeEditor:evalLiveCode:onmessage')
-            console.log(m.data.message);
-            $liveCodeParseErrors = e.data.message;
-          }
-          else if(m.data !== undefined && m.data.length != 0){
+        parserWorker.onmessage = m => {  // Receive code from worker, pass it to then
+          // console.log('DEBUG:LiveCodeEditor:parseLiveCode:onmessage');
+          // console.log(m);
+          if(m.data !== undefined){
             res(m.data);
           }
         }
+
       })
       .then(outputs => {
-        console.log('DEBUG:Layout:parseLiveCode:then')
+        console.log('DEBUG:LiveCodeEditor:parseLiveCode:then')
         console.log(outputs); 
-        const {parserOutputs, parserResults} = outputs;
-        $liveCodeParseResults = parserResults;
-        $liveCodeAbstractSyntaxTree = parserOutputs;  //Deep clone created in the worker for AST visualization
-        $liveCodeParseErrors = "";
+        const { parserOutputs, parserResults } = outputs;
+        if( parserOutputs !== undefined && parserResults !== undefined){
+          $liveCodeParseErrors = "";
+          $liveCodeParseResults = parserResults;
+          $liveCodeAbstractSyntaxTree = parserOutputs;  //Deep clone created in the worker for AST visualization
+        }
+        else {
+          $liveCodeParseErrors = outputs;
+          $liveCodeAbstractSyntaxTree = $liveCodeParseResults = null;
+        }
       })
       .catch(e => {
-        console.log('DEBUG:parserEditor:parserWorkerAsync:catch')
+        console.log('DEBUG:parserEditor:parseLiveCode:catch')
         console.log(e);
+        $liveCodeParseErrors = e;
       });
     }
+  }
+
+  let parseLiveCodeOnChange = e => { 
+
+    let liveCodeEditorValue = null; 
+
+    if(e !== undefined && e.detail !== undefined && e.detail.value !== undefined)
+      window.localStorage.liveCodeEditorValue = liveCodeEditorValue = e.detail.value; 
+    else 
+      liveCodeEditorValue = $liveCodeEditorValue; 
+
+    if(liveCodeEditorValue) 
+      parseLiveCode(liveCodeEditorValue);
+
+    // window.localStorage.setItem("parserEditor+ID", editor.getValue());
   }
 
   function evalLiveCodeEditorValue() {
     // console.log("DEBUG:parserEditor:evalLiveCodeEditorValue: " + code);
     let code = codeMirror.getBlock();
-    if(code) evalLiveCode(code);
+    if(code) parseLiveCode(code);
 
     // window.localStorage.setItem("parserEditor+ID", editor.getValue());
   }
-
-
 
 </script>
 
@@ -144,7 +163,7 @@
               bind:value={$liveCodeEditorValue} 
               tab={true} 
               lineNumbers={true} 
-              on:change={nil} 
+              on:change={parseLiveCodeOnChange} 
               cmdEnter={evalLiveCodeEditorValue}
               />
 </div>

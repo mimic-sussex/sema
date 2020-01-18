@@ -46,8 +46,8 @@ onmessage = function(message) {
 			});
 		
     } catch (e) {
-			// console.log("DEBUG:workerParser:onmessage:catch");
-			// console.log(e);
+			console.log("DEBUG:workerParser:onmessage:catch");
+			console.log(e);
       postMessage(e); // [NOTE:FB] This is sending parse errors caught with exception to the client for visibility! Do not remove! 
 		}
 	}

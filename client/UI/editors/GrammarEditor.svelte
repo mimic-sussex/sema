@@ -82,26 +82,13 @@
 
     try {
       window.localStorage.grammarEditorValue = grammarEditorValue;
-
       let {errors, output} = compile(grammarEditorValue);
       $grammarCompiledParser = output; 
       $grammarCompilationErrors = errors;
 
-      console.log('DEBUG:Layout:compileGrammarOnChange');
-      
-      // console.log($grammarEditorValue);
+      console.log('DEBUG:GrammarEditor:compileGrammarOnChange');
       console.log($grammarCompiledParser);
       console.log($grammarCompilationErrors); 
-      // if($grammarCompiledParser && ( $liveCodeEditorValue && $liveCodeEditorValue !== "") ){
-      //   // DEBUG
-      //   // $liveCodeEditorValue = e.detail.value;
-
-      //   // console.log('DEBUG:Layout:compileGrammarOnChange');
-      //   // console.log($liveCodeEditorValue); 
-
-      //   // parseLiveCode();
-  
-      // }
     }
     catch (e) {
 

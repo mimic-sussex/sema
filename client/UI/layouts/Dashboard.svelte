@@ -6,7 +6,7 @@
   import ModelEditor from '../editors/ModelEditor.svelte';
   import GrammarEditor from '../editors/GrammarEditor.svelte';
   import LiveCodeEditor from '../editors/LiveCodeEditor.svelte';
-  import LiveCodeCompileOutput from '../widgets/LiveCodeCompileOutput.svelte';
+  import LiveCodeParseOutput from '../widgets/LiveCodeParseOutput.svelte';
   import GrammarCompileOutput from '../widgets/GrammarCompileOutput.svelte';
   
   import {
@@ -22,7 +22,7 @@
       .toString(36)
       .substr(2, 9);
 
-  const types = ['live', 'model', 'grammar', 'liveCodeCompileOutput', 'grammarCompileOutput' ];
+  const types = ['live', 'model', 'grammar', 'liveCodeParseOutput', 'grammarCompileOutput' ];
 
   const itype = () => types[Math.floor(Math.random() * types.length)];
 
@@ -60,7 +60,7 @@
     gridHelp.item({ x: 0, y: 0, w: 7, h: 3, id: id(), name:'default', type:'live', data: '#AA8000' }), 
     gridHelp.item({ x: 7, y: 0, w: 8, h: 7, id: id(), name:'default', type:'grammar', data: '#00FFFF' }),
     gridHelp.item({ x: 0, y: 3, w: 7, h: 4, id: id(), name:'hello world', type:'model', data: '#008080' }),
-    gridHelp.item({ x: 0, y: 7, w: 4, h: 4, id: id(), name:'hello world', type:'liveCodeCompileOutput', data: '#F0AA80' }),
+    gridHelp.item({ x: 0, y: 7, w: 4, h: 4, id: id(), name:'hello world', type:'liveCodeParseOutput', data: '#F0AA80' }),
     gridHelp.item({ x: 0, y: 11, w: 4, h: 4, id: id(), name:'hello world', type:'grammarCompileOutput', data: '#F0AA80' })
   ];
   
@@ -148,7 +148,7 @@
       {:else if item.type === 'live' }
       <LiveCodeEditor bind:value={value}/>
       {:else if item.type === 'liveCodeCompileOutput' }
-      <LiveCodeCompileOutput/>
+      <LiveCodeParseOutput/>
       {:else if item.type === 'grammarCompileOutput' }
       <GrammarCompileOutput/>
       {:else}
