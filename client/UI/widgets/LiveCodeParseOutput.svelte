@@ -85,28 +85,29 @@
 
 
 <div id="liveCodeCompilerOutput" class="codemirror-container flex scrollable">
-{#if $liveCodeParseErrors !=='' }
+  {#if $grammarCompilationErrors != ""}
   <div style="overflow-y: scroll; height:auto;">
-    <strong style="color: red; margin:15px 0 10px 5px">SyntaxError: Invalid or unexpected token!</strong>
+    <strong style="color:red; margin:15px 0 15px 5px">Go work on your grammar!</strong>
+  </div>
+  {:else if $liveCodeParseErrors !=='' }
+  <div style="overflow-y: scroll; height:auto;">
+    <strong style="color: red; margin:15px 0 10px 5px">Live Code Syntax Error</strong>
     <br>
     <div style="margin-left:5px">
     <!-- <div style="overflow-y: scroll; height:auto;"> -->
       <span style="white-space: pre-wrap">{ $liveCodeParseErrors } </span>
     </div>
   </div>
-{:else if $grammarCompilationErrors !== ""}
-  <div style="overflow-y: scroll; height:auto;">
-    <strong style="color:red; margin:15px 0 15px 5px">Go work on your grammar!</strong>
-  </div>
-{:else if $liveCodeAbstractSyntaxTree && $liveCodeAbstractSyntaxTree.length && !$liveCodeParseErrors}
+  {:else}
   <div style="overflow-y: scroll; height:auto;">
     <strong style="color:green; margin:15px 0 15px 5px">Abstract Syntax Tree:</strong>
     <br>
     <div style="margin-left:5px">
     <!-- <div style="overflow-y: scroll; height:auto;"> -->
-      <Inspect.Value value={ $liveCodeAbstractSyntaxTree[0]['@lang'] } depth={7} />
+      <Inspect.Value value={ $liveCodeAbstractSyntaxTree } depth={7} />
+      <!-- Expression below causes error when AST is empty -->
+      <!-- <Inspect.Value value={ $liveCodeAbstractSyntaxTree[0]['@lang'] } depth={7} /> -->
     </div>
   </div>
-
-{/if}
+  {/if}
 </div>

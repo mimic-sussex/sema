@@ -51,8 +51,8 @@
         });
 
         parserWorker.onmessage = m => {  // Receive code from worker, pass it to then
-          // console.log('DEBUG:LiveCodeEditor:parseLiveCode:onmessage');
-          // console.log(m);
+          console.log('DEBUG:LiveCodeEditor:parseLiveCode:onmessage');
+          console.log(m);
           if(m.data !== undefined){
             res(m.data);
           }
@@ -60,22 +60,24 @@
 
       })
       .then(outputs => {
-        console.log('DEBUG:LiveCodeEditor:parseLiveCode:then')
-        console.log(outputs); 
+        // console.log('DEBUG:LiveCodeEditor:parseLiveCode:then1');
+        // console.log(outputs); 
         const { parserOutputs, parserResults } = outputs;
-        if( parserOutputs !== undefined && parserResults !== undefined){
-          $liveCodeParseErrors = "";
+        if( parserOutputs && parserResults ){
           $liveCodeParseResults = parserResults;
           $liveCodeAbstractSyntaxTree = parserOutputs;  //Deep clone created in the worker for AST visualization
+          $liveCodeParseErrors = "";
         }
         else {
+          // console.log('DEBUG:LiveCodeEditor:parseLiveCode:then2');
+          // console.log(outputs);  
           $liveCodeParseErrors = outputs;
-          $liveCodeAbstractSyntaxTree = $liveCodeParseResults = null;
+          $liveCodeAbstractSyntaxTree = $liveCodeParseResults = '';
         }
       })
       .catch(e => {
-        console.log('DEBUG:parserEditor:parseLiveCode:catch')
-        console.log(e);
+        // console.log('DEBUG:parserEditor:parseLiveCode:catch')
+        // console.log(e);
         $liveCodeParseErrors = e;
       });
     }

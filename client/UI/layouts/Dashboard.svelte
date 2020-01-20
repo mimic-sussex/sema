@@ -10,7 +10,9 @@
   import GrammarCompileOutput from '../widgets/GrammarCompileOutput.svelte';
   
   import {
-    dashboardItems
+    dashboardItems,
+    selectedItem,
+    selectedItemControls
   } from "../../store.js"
 
 
@@ -23,7 +25,6 @@
       .substr(2, 9);
 
   const types = ['live', 'model', 'grammar', 'liveCodeParseOutput', 'grammarCompileOutput' ];
-
   const itype = () => types[Math.floor(Math.random() * types.length)];
 
   const random = (min, max) => Math.random() * (max - min) + min;
@@ -32,9 +33,6 @@
     let n = (Math.random() * 0xfffff * 1000000).toString(16);
     return "#" + n.slice(0, 6);
   };
-  // let items = [];
-  // let dashboardItems = [];
-
 
   function generateLayout(col) {
     return map(new Array(5), function(item, i) {
@@ -147,7 +145,7 @@
       <GrammarEditor bind:value={value}/>
       {:else if item.type === 'live' }
       <LiveCodeEditor bind:value={value}/>
-      {:else if item.type === 'liveCodeCompileOutput' }
+      {:else if item.type === 'liveCodeParseOutput' }
       <LiveCodeParseOutput/>
       {:else if item.type === 'grammarCompileOutput' }
       <GrammarCompileOutput/>

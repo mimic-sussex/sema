@@ -58,25 +58,6 @@ class AudioEngine {
 
 		this.dspTime = 0;
 
-		this.sequences = [`kc kc k scos`, `kc kc k`, `kc sss kccs skckos`];
-
-		// DEBUG:
-		// this.synthDefs = [
-		//   `this.mySine.sawn(60) * this.myOtherSine.sinewave(0.4)`,
-		//   `this.mySine.sawn(60)`,
-		//   `this.myOtherSine.sinewave(400)`,
-		//   `this.mySine.sinewave(440) + this.myOtherSine.sinewave(441)`,
-		//   `this.mySine.sinewave(440) * this.myOtherSine.sinewave(1)`,
-		//   `this.mySine.sinewave(440 + (this.myOtherSine.sinewave(1) * 100))`,
-		//   `this.mySine.sinewave(this.myOtherSine.sinewave(30) * 440)`,
-		//   `this.mySine.sinewave(this.myOtherSine.sinewave(this.myLastSine.sinewave(0.1) * 30) * 440)`,
-		//   `new Module.maxiOsc()`,
-		//   `new Module.maxiOsc().sinewave(400)`, // Interesting case of failure, it seems we can't instantiate because of EM heap limits
-		// ];
-
-		this.oscThru = msg => {
-			//       console.log("DEBUG:AudioEngine:OscThru: " + msg);
-		};
 	}
 
 	/**
@@ -292,29 +273,6 @@ class AudioEngine {
 		} else return false;
 	}
 
-	// evalSequence() {
-	// 	if (this.audioWorkletNode !== undefined) {
-	// 		let sequence;
-	// 		if (arguments.length == 0) {
-	// 			sequence = this.sequences[
-	// 				Math.floor(Math.random() * this.sequences.length)
-	// 			]; // Choose random entry
-	// 			this.audioWorkletNode.port.postMessage({
-	// 				sequence: `${sequence}`
-	// 			}); // Send JSON object with eval prop for evaluation in processor
-	// 		} else {
-	// 			sequence = arguments[0];
-	// 			this.audioWorkletNode.port.postMessage({
-	// 				sequence: `${sequence}`
-	// 			}); // Send JSON object with eval prop for evaluation in processor
-	// 		}
-	// 		return true;
-	// 		// DEBUG:
-	// 		// console.log("Change Sequence: " + sequence);
-	// 	}
-	// 	return false;
-	// }
-
 	evalDSP(dspFunction) {
 		if (this.audioWorkletNode !== undefined) {
 			this.audioWorkletNode.port.postMessage({
@@ -322,7 +280,7 @@ class AudioEngine {
 				setup: dspFunction.setup,
 				loop: dspFunction.loop
 			});
-			// console.log("DEBUG:evalDSP:");
+			// console.log("DEBUG:AudioEngine:evalDSP:");
 			// console.log(dspFunction);
 			return true;
 		} else
@@ -331,23 +289,10 @@ class AudioEngine {
 
   sendClockPhase(phase, idx) {
   	if (this.audioWorkletNode !== undefined) {
-  		this.audioWorkletNode.port.postMessage({phase:phase, i:idx});
+  		this.audioWorkletNode.port.postMessage({ phase: phase, i: idx });
   	}
   }
 
-
-	// loadTest() {
-	// 	if (audioContext.state === "suspended") this.playAudio();
-	// 	this.loadTestIntervals.push(
-	// 		setInterval("changeSynth()", this.SYNTH_CHANGE_MS)
-	// 	);
-	// }
-
-	// stopLoadTest() {
-	// 	this.loadTestIntervals.forEach(interval => {
-	// 		clearInterval(interval);
-	// 	});
-	// }
 }
 
 export { AudioEngine };

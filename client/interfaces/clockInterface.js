@@ -53,6 +53,9 @@ export class kuramotoNetClock {
 
   };
 
+  /*
+  * What does 'c' and 'q' mean
+  */
   queryPeers(responseFunction) {
     if (this.isConnected) {
       this.peerQueryResponseFunction = responseFunction;
@@ -85,6 +88,10 @@ export class kuramotoNetClock {
   //   }
   // }
 
+
+  /*
+  * What does 'o' mean
+  */
   broadcastPhase(phase) {
     if (this.isConnected) {
       // console.log(phase);

@@ -11,6 +11,8 @@ import echo_state_network_code_example from "./machineLearning/tfjs/echo-state/e
 import lstm_txt_gen_code_example from "./machineLearning/tfjs/rnn/lstm-txt-gen.tf";
 import music_rnn_example from "./machineLearning/magenta/music-rnn.tf";
 
+// TFJS model JS code to load into Sidebar selector
+
 export const helloWorld = writable(hello_world_code_example);
 export const twoLayerNonLinear = writable(two_layer_non_linear_code_example);
 export const binaryClassification = writable(binary_classification_code_example); 
@@ -18,9 +20,12 @@ export const echoStateNetwork = writable(echo_state_network_code_example);
 export const lstmTextGen = writable(lstm_txt_gen_code_example); 
 export const musicRNN = writable(music_rnn_example);
 
+// SplashScreen visibility
+
 export const splashScreenClicked = writable(false);
 
 
+// Grammar and LiveCode Editors previous sessions' Values, store in LocalStorage
 
 let initGrammarEditorValue = () => {
   let ret;
@@ -35,7 +40,10 @@ let initLiveCodeEditorValue = () =>  {
    	(temp && temp !== "") ? ret = temp : ret = default_liveCode;
 		return ret;
 }
- 
+
+
+// Grammar and LiveCode Editors CURRENT session's Values and dependencies, reactive
+
 export const grammarEditorValue = writable(initGrammarEditorValue());
 
 export const grammarCompiledParser = writable(compile(default_grammar).output);
@@ -51,6 +59,9 @@ export const liveCodeParseErrors = writable("");
 export const liveCodeAbstractSyntaxTree = writable("");
 
 export const dspCode = writable("");
+
+
+// TFJS Model editor value, and IO channels' values
 
 export const modelEditorValue = helloWorld;
 
@@ -77,7 +88,8 @@ export const layoutOptions = [
 
 
 export const dashboardItems = writable([]);
-
+export const selectedItem = writable({});
+export const selectedItemControls = writable([]);
 
 export const layoutsData = writable({
   selectedLayout: 1,

@@ -124,7 +124,7 @@
     // // codeMirror6.set($grammarEditorValue, "ebnf");
     // codeMirror6.set($modelEditorValue, "js");
 
-    // changeLayout(4); // [NOTE:FB] Need this call to clean up pre-loaded panels and trigger a re-render
+    changeLayout(3); // [NOTE:FB] Need this call to clean up pre-loaded panels and trigger a re-render
 	});
 
   let log = (e) => { console.log(e.detail.value); }
