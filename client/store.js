@@ -76,8 +76,9 @@ function createSelectedLayout(){
   };
 } 
 
-// export const selectedLayout = createSelectedLayout(); 
+// Sidebar layout selection export const selectedLayout = createSelectedLayout(); 
 export const selectedLayout = writable(1); 
+
 
 export const layoutOptions = [
 	{ id: 1, text: `Tutorial` },
@@ -90,24 +91,6 @@ export const layoutOptions = [
 export const dashboardItems = writable([]);
 export const selectedItem = writable({});
 export const selectedItemControls = writable([]);
-
-export const layoutsData = writable({
-  selectedLayout: 1,
-  layouts: [{  
-    quadrants: {
-      topHeight: 600,
-      leftTopWidth: 250,
-      leftBottomWidth: 250
-    }
-  },
-  {
-    dashboard: [
-      { x: 0, y: 0, w: 2, h: 2, id: '1' },
-      { x: 0, w: 3, h: 2, id: '2', static: true },
-      { x: 5, y: 0, w: 3, h: 3, id: '3' }
-    ],
-  }]
-});
 
 // export const mousePosition = readable([0,0], function start(set) {
 //   const interval = setInterval(() => {
