@@ -81,7 +81,6 @@ Note that the pulse starts at -1, so higher pulse widths give shorter envelopes 
 
 # audio input
 
-NOT WORKING YET
 
 `{0}adc`
 
