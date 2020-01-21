@@ -206,8 +206,7 @@ class AudioEngine {
 	 */
 	async init(numPeers) {
 		if (this.audioContext === undefined) {
-			this.audioContext = new AudioContext();
-
+			this.audioContext = new AudioContext({latencyHint: "playback", sample: 44100});
 			await this.loadWorkletProcessorCode();
 
 			// this.connectMediaStream();
