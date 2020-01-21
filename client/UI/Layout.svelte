@@ -116,15 +116,15 @@
   })
 
   onMount(async () => {
-    // codeMirror1.set($grammarEditorValue, "ebnf");
-    // codeMirror2.set($liveCodeEditorValue, "sema");
-    // codeMirror3.set($liveCodeEditorValue, "sema");
-    // codeMirror4.set($grammarEditorValue, "ebnf");
-    // codeMirror5.set($modelEditorValue, "js");
+    codeMirror1.set($grammarEditorValue, "ebnf");
+    codeMirror2.set($liveCodeEditorValue, "sema");
+    codeMirror3.set($liveCodeEditorValue, "sema");
+    codeMirror4.set($grammarEditorValue, "ebnf");
+    codeMirror5.set($modelEditorValue, "js");
     // // codeMirror6.set($grammarEditorValue, "ebnf");
     // codeMirror6.set($modelEditorValue, "js");
 
-    changeLayout(3); // [NOTE:FB] Need this call to clean up pre-loaded panels and trigger a re-render
+    changeLayout(1); // [NOTE:FB] Need this call to clean up pre-loaded panels and trigger a re-render
 	});
 
   let log = (e) => { console.log(e.detail.value); }
@@ -238,7 +238,7 @@
     // console.log($liveCodeEditorValue); 
     if($grammarCompiledParser){
       //DEBUG
-      // $liveCodeEditorValue = e.detail.value;
+      $liveCodeEditorValue = e.detail.value;
       // window.localStorage.liveCodeEditorValue = e.detail.value;
       e.detail.value
       parseLiveCode();
@@ -290,8 +290,8 @@
         evalDSP($dspCode);
 
         // $liveCodeParseErrors = "";
-        // console.log('DEBUG:Layout:translateILtoDSPasync');
-        // console.log($dspCode);
+        console.log('DEBUG:Layout:translateILtoDSPasync');
+        console.log($dspCode);
       })
       .catch(e => {
         // console.log('DEBUG:Layout:translateILtoDSPasync:catch')

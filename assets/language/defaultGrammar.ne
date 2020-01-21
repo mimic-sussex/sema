@@ -4,18 +4,18 @@
 @{%
 
 const lexer = moo.compile({
-  separator:       /,/,
-  paramEnd:      /}/,
-  paramBegin:   /{/,
-  variable:          /:[a-zA-Z0-9]+:/,
-  sample:           { match: /\\[a-zA-Z0-9]+/, lineBreaks: true, value: x => x.slice(1, x.length)},
-  stretch:           { match: /\@[a-zA-Z0-9]+/, lineBreaks: true, value: x => x.slice(1, x.length)},
-  oscAddress:   /(?:\/[a-zA-Z0-9]+)+/,
-  number:          /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?(?:[eE][-+]?[0-9]+)?\b/,
+  separator:      /,/,
+  paramEnd:       /}/,
+  paramBegin:     /{/,
+  variable:       /:[a-zA-Z0-9]+:/,
+  sample:         { match: /\\[a-zA-Z0-9]+/, lineBreaks: true, value: x => x.slice(1, x.length)},
+  stretch:        { match: /\@[a-zA-Z0-9]+/, lineBreaks: true, value: x => x.slice(1, x.length)},
+  oscAddress:     /(?:\/[a-zA-Z0-9]+)+/,
+  number:         /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?(?:[eE][-+]?[0-9]+)?\b/,
   semicolon:      /;/,
-  funcName:      /[a-zA-Z][a-zA-Z0-9]*/,
-  comment:       /#[^\n]*/,
-  ws:                   { match: /\s+/, lineBreaks: true},
+  funcName:       /[a-zA-Z][a-zA-Z0-9]*/,
+  comment:        /#[^\n]*/,
+  ws:             { match: /\s+/, lineBreaks: true},
 });
 
 %}

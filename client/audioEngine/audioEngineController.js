@@ -62,6 +62,8 @@ function stopAudio() {
 
 function evalDSP(dspFunction) {
   if (window.AudioEngine !== undefined) {
+    console.log("DEBUG:AudioEngineController:eval:");
+    console.log(dspFunction);
     window.AudioEngine.evalDSP(dspFunction);
   }
 }
