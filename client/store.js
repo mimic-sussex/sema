@@ -4,6 +4,33 @@ import compile from "./compiler/compiler";
 import default_grammar from '../assets/language/defaultGrammar.ne';
 import default_liveCode from "../assets/language/defaultLiveCode.sem";
 
+// Load tutorials from .ne files  
+import tutorial_1_grammar from "../tutorials/tutorial1.ne";
+import tutorial_2_grammar from "../tutorials/tutorial2.ne";
+import tutorial_3_grammar from "../tutorials/tutorial3.ne";
+import tutorial_4_grammar from "../tutorials/tutorial4.ne";
+
+// Store for tutorial options in Sidebar component
+export const tutorialOptions = [
+	{ id: 1, text: `Tutorial 1`, content: tutorial_1_grammar },
+	{ id: 2, text: `Tutorial 2`, content: tutorial_2_grammar },
+	{ id: 3, text: `Tutorial 3`, content: tutorial_3_grammar },
+	{ id: 4, text: `Tutorial 4`, content: tutorial_4_grammar },
+	{ id: 5, text: `Tutorial 5`, content: default_grammar }
+];
+
+// Store for SELECTED tutorial options in Sidebar component
+export const selectedTutorial = writable(tutorialOptions[4]);
+
+// Store for SELECTED tutorial GRAMMAR in Grammar Editor
+export const selectedTutorialGrammar = writable(tutorialOptions[4].content);
+
+
+
+
+
+// Load TFJS code from tf files 
+
 import hello_world_code_example from "./machineLearning/tfjs/hello-world/hello-world.tf";
 import two_layer_non_linear_code_example from "./machineLearning/tfjs/non-linear/two-layer-non-linear.tf";
 import binary_classification_code_example from "./machineLearning/tfjs/non-linear/binary-classification.tf";
@@ -11,7 +38,7 @@ import echo_state_network_code_example from "./machineLearning/tfjs/echo-state/e
 import lstm_txt_gen_code_example from "./machineLearning/tfjs/rnn/lstm-txt-gen.tf";
 import music_rnn_example from "./machineLearning/magenta/music-rnn.tf";
 
-// TFJS model JS code to load into Sidebar selector
+// Create stores for TFJS models to load into Sidebar selector
 
 export const helloWorld = writable(hello_world_code_example);
 export const twoLayerNonLinear = writable(two_layer_non_linear_code_example);

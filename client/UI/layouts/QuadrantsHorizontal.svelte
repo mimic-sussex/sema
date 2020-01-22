@@ -1,6 +1,19 @@
 <script>
-
   import Editor from '../editors/Editor.svelte';
+  import ModelEditor from '../editors/ModelEditor.svelte';
+  import GrammarEditor from '../editors/GrammarEditor.svelte';
+  import LiveCodeEditor from '../editors/LiveCodeEditor.svelte';
+  import LiveCodeParseOutput from '../widgets/LiveCodeParseOutput.svelte';
+  import GrammarCompileOutput from '../widgets/GrammarCompileOutput.svelte';
+
+
+  import {
+    tutorialOptions,
+    selectedTutorial,
+    selectedTutorialGrammar
+  } from "../../store.js"
+
+ 
   let container;
 
   let leftWidth = 250;
@@ -19,6 +32,7 @@
   let dragX;
   let dragY;
 
+  //#region Mouse events (mouse down and drag on sliders)
 	function onMouseMove(e) {
 
     if(isMouseDownOnVerticalSlider){
@@ -55,6 +69,17 @@
     isMouseDownOnRightVerticalSlider = true;
     dragY = e.clientY;
 	}
+  //#endregion
+
+  const unsubscribe = selectedTutorial.subscribe(value => {
+    console.log("DEBUG:QuadrantsHorizontal:selectedTutorial: ", value.id);
+    console.log($selectedTutorialGrammar);
+    $selectedTutorialGrammar = tutorialOptions[value.id-1].content;
+   
+  })
+	// onDestroy(unsubscribe); // Prevent memory leaks by disposing the componen
+
+
 
 </script>
 
@@ -109,7 +134,6 @@
   .block-2 {
   	background-color: rgb(226, 226, 226);
   }
-  
   .horizontal-slider {
   	line-height: 100%;
   	width: 4px;
@@ -119,13 +143,9 @@
   	user-select: none;
   	text-align: center;
   }
- 
-
   .horizontal-slider:hover {
   	cursor: ew-resize;
   }
-  
-
   .vertical-slider {
   	line-height: 10px;
     height: 4px;

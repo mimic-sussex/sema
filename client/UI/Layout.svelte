@@ -24,7 +24,8 @@
             dspCode,
             selectedLayout,
             layoutOptions,
-            helloWorld
+            helloWorld,
+            selectedTutorialGrammar
   } from "../store.js";
 
   import {
@@ -50,10 +51,11 @@
 
 
   let codeMirror1, codeMirror2; // Live layout [Hidden]
-
   let codeMirror3, codeMirror4, codeMirror5; // []
-
   let codeMirror6, codeMirror7;
+
+
+  let unsubcribeSelectedTutorialGrammarUpdates; 
 
   export let layoutTemplate = 1;
 
@@ -99,11 +101,13 @@
     }
   }
 
+
   const unsubscribe = selectedLayout.subscribe(value => {
     // console.log("DEBUG:Layout:selectedlayout: ", value.id);
     changeLayout(value.id);
   })
-	// onDestroy(unsubscribe); // Prevent memory leaks by disposing the component
+	onDestroy(unsubscribe); // Prevent memory leaks by disposing the component
+  
 
   const unsubscribe2 = grammarEditorValue.subscribe(value => {
     // console.log("DEBUG:Layout:grammarEditorValue: ", value);
@@ -116,6 +120,7 @@
   })
 
   onMount(async () => {
+    // codeMirror1.set($grammarEditorValue, "ebnf");
     codeMirror1.set($grammarEditorValue, "ebnf");
     codeMirror2.set($liveCodeEditorValue, "sema");
     codeMirror3.set($liveCodeEditorValue, "sema");
@@ -124,8 +129,17 @@
     // // codeMirror6.set($grammarEditorValue, "ebnf");
     // codeMirror6.set($modelEditorValue, "js");
 
-    changeLayout(1); // [NOTE:FB] Need this call to clean up pre-loaded panels and trigger a re-render
+    unsubcribeSelectedTutorialGrammarUpdates = selectedTutorialGrammar.subscribe(value => {
+      codeMirror1.update($selectedTutorialGrammar); // Prevent memory leaks by disposing the component
+      compileGrammarOnChange();
+    });
+    onDestroy(unsubcribeSelectedTutorialGrammarUpdates); // Prevent memory leaks by disposing the component 
+    
+    changeLayout(1); // We need this call to trigger a re-render for cleaning up pre-loaded panels
 	});
+
+
+
 
   let log = (e) => { console.log(e.detail.value); }
 

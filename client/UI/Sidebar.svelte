@@ -1,6 +1,6 @@
 <script>
 	import { createEventDispatcher } from 'svelte';
-  import { selectedLayout, layoutOptions} from '../store.js';
+  import { selectedLayout, layoutOptions, selectedTutorial, tutorialOptions } from '../store.js';
 
 	const dispatch = createEventDispatcher();
 
@@ -52,12 +52,12 @@
   <br/>
   <div class="layout-combobox-container controls">
     <div>
-      <span class="whiteText">Layout</span>
+      <span class="whiteText">Tutorials</span>
     </div>
-  	<select class="combobox" bind:value={$selectedLayout} >
-  		{#each layoutOptions as layoutOption}
-  			<option value={layoutOption}>
-  				{layoutOption.text}
+  	<select class="combobox" bind:value={$selectedTutorial} >
+  		{#each tutorialOptions as tutorialOption}
+  			<option value={tutorialOption}>
+  				{tutorialOption.text}
   			</option>
   		{/each}
   	</select>    
