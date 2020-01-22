@@ -26,7 +26,7 @@ Sema implements a set of core design principles:
 Sema requires the following dependencies to be installed:
 
  - [Chrome browser](https://www.google.com/chrome/) or any Chromium-based browser (e.g. Brave, Microsoft Edge, Opera)
- - [Node.js](https://nodejs.org/en/download/) version 10.13 or higher
+ - [Node.js](https://nodejs.org/en/download/) version v11.10.0 or higher
  - [NPM cli](https://docs.npmjs.com/cli/npm) OR [Yarn](https://yarnpkg.com/en/)
  
 
