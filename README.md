@@ -42,7 +42,7 @@ npm run dev
 npm run go
 ```
 
-If you decide to go with Yarn (our prefered package manager), to install it: 
+If you decide to go with Yarn (our preferred package manager), to install it: 
 ```
 npm install -g yarn
 ```
