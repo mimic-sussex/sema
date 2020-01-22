@@ -26,28 +26,35 @@ Sema implements a set of core design principles:
 Sema requires the following dependencies to be installed:
 
  - [Chrome browser](https://www.google.com/chrome/) or any Chromium-based browser (e.g. Brave, Microsoft Edge, Opera)
- - [Node.js](https://nodejs.org/en/download/) version 8.9 or higher
- - [Yarn](https://yarnpkg.com/en/) OR [NPM cli](https://docs.npmjs.com/cli/npm)
+ - [Node.js](https://nodejs.org/en/download/) version 10.13 or higher
+ - [NPM cli](https://docs.npmjs.com/cli/npm) OR [Yarn](https://yarnpkg.com/en/)
  
 
 ## How to build and run the Sema playground on your machine 
 
-If you decide to go with Yarn (our prefered package manager), use:
-```sh
-cd sema
-yarn
-yarn build
-yarn dev
-```
 
-If you decide to go with NPM instead, use:
+If you decide to use NPM, use:
 
 ```sh
 cd sema
 npm install
-npm run build
 npm run dev
+npm run go
 ```
+
+If you decide to go with Yarn (our prefered package manager), to install it: 
+```
+npm install -g yarn
+```
+
+To use Yarn:
+```sh
+cd sema
+yarn
+yarn dev
+yarn go
+```
+
 
 ## Documentation
 
