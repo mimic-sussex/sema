@@ -1,3 +1,4 @@
+# Lexer [or tokenizer] definition with language lexemes [or tokens]
 
 # b0101 >> 10
 @{%

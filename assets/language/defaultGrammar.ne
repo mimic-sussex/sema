@@ -1,8 +1,5 @@
-
-
 # Lexer [or tokenizer] definition with language lexemes [or tokens]
 @{%
-
 const lexer = moo.compile({
   separator:      /,/,
   paramEnd:       /}/,
@@ -10,8 +7,7 @@ const lexer = moo.compile({
   variable:       /:[a-zA-Z0-9]+:/,
   sample:         { match: /\\[a-zA-Z0-9]+/, lineBreaks: true, value: x => x.slice(1, x.length)},
   stretch:        { match: /\@[a-zA-Z0-9]+/, lineBreaks: true, value: x => x.slice(1, x.length)},
-  oscAddress:     /(?:\/[a-zA-Z0-9]+)+/,
-  number:         /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?(?:[eE][-+]?[0-9]+)?\b/,
+  number:         /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?\b/,
   semicolon:      /;/,
   funcName:       /[a-zA-Z][a-zA-Z0-9]*/,
   comment:        /#[^\n]*/,
@@ -46,12 +42,6 @@ Expression ->
   |
   ParameterList _ %stretch
   {% d => sema.synth( 'stretch', d[0]['@params'].concat( [ sema.str( d[2].value ) ] ) ) %}
-  |
-  %oscAddress
-  {% d => sema.synth( 'oscin', [ sema.str( d[0].value ), sema.num(-1) ] ) %}
-  |
-  ParameterList _ %oscAddress
-  {% d => sema.synth( 'oscin', [ sema.str( d[2].value ), d[0]['@params'][0] ] ) %}
   |
   %variable _ Expression
   {% d => sema.setvar( d[0], d[2] ) %}

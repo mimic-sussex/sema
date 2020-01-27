@@ -1,14 +1,27 @@
 import { writable, readable } from 'svelte/store';
+
 import compile from "./compiler/compiler";
 
 import default_grammar from '../assets/language/defaultGrammar.ne';
+import gabber_grammar from "../assets/language/gabber.ne";
+import nibble_grammar from "../assets/language/nibble.ne";
+
 import default_liveCode from "../assets/language/defaultLiveCode.sem";
+import gabber_liveCode from "../assets/language/gabber.sem";
+import nibble_liveCode from "../assets/language/nibble.sem";
+
 
 // Load tutorials from .ne files  
 import tutorial_1_grammar from "../tutorials/tutorial1.ne";
 import tutorial_2_grammar from "../tutorials/tutorial2.ne";
 import tutorial_3_grammar from "../tutorials/tutorial3.ne";
 import tutorial_4_grammar from "../tutorials/tutorial4.ne";
+
+
+// Stores for the two main layouts
+export const playgroundActive = writable(true);
+export const tutorialsActive = writable(false);
+
 
 // Store for tutorial options in Sidebar component
 export const tutorialOptions = [
@@ -24,9 +37,6 @@ export const selectedTutorial = writable(tutorialOptions[4]);
 
 // Store for SELECTED tutorial GRAMMAR in Grammar Editor
 export const selectedTutorialGrammar = writable(tutorialOptions[4].content);
-
-
-
 
 
 // Load TFJS code from tf files 
@@ -46,6 +56,29 @@ export const binaryClassification = writable(binary_classification_code_example)
 export const echoStateNetwork = writable(echo_state_network_code_example); 
 export const lstmTextGen = writable(lstm_txt_gen_code_example); 
 export const musicRNN = writable(music_rnn_example);
+
+export const cm_theme_cobalt = writable("");
+export const cm_theme_icecoder = writable("");
+export const cm_theme_shadowfox = writable("");
+
+
+
+// Store for TFJS model options in Sidebar component
+export const modelOptions = [
+	{ id: 1, text: `hello-world`, content: helloWorld },
+	{ id: 2, text: `two-layer-non-linear`, content: twoLayerNonLinear },
+	{ id: 3, text: `binary-classification`, content: binaryClassification },
+	{ id: 4, text: `echo-state-network`, content: echoStateNetwork },
+	{ id: 5, text: `lstm-text-gen`, content: lstmTextGen }
+];
+
+export const selectedModel = writable(modelOptions[1]);
+
+// TFJS Model editor value, and IO channels' values
+
+export const modelEditorValue = helloWorld;
+
+
 
 // SplashScreen visibility
 
@@ -69,7 +102,7 @@ let initLiveCodeEditorValue = () =>  {
 }
 
 
-// Grammar and LiveCode Editors CURRENT session's Values and dependencies, reactive
+// Grammar and LiveCode Editors CURRENT TUTORIAL session's Values and dependencies, reactive
 
 export const grammarEditorValue = writable(initGrammarEditorValue());
 
@@ -88,11 +121,23 @@ export const liveCodeAbstractSyntaxTree = writable("");
 export const dspCode = writable("");
 
 
-// TFJS Model editor value, and IO channels' values
 
-export const modelEditorValue = helloWorld;
+// Dashboard Store for Live Code Editor options in Sidebar component
+export const sidebarLiveCodeOptions = [
+	{ id: 1, text: `default`, content: default_liveCode },
+	{ id: 2, text: `nibble`, content: nibble_liveCode },
+	{ id: 3, text: `gabber`, content: gabber_liveCode },
+];
 
+// Dashboard Store for Grammar Editor options in Sidebar component
+export const sidebarGrammarOptions = [
+	{ id: 1, text: `default`, content: default_grammar },
+	{ id: 2, text: `nibble`, content: nibble_grammar },
+	{ id: 3, text: `gabber`, content: gabber_grammar },
+];
 
+ 
+ 
 
 function createSelectedLayout(){
   const { subscribe, set } = writable(2);
@@ -104,7 +149,7 @@ function createSelectedLayout(){
 } 
 
 // Sidebar layout selection export const selectedLayout = createSelectedLayout(); 
-export const selectedLayout = writable(1); 
+export const selectedLayout = writable(3); 
 
 
 export const layoutOptions = [
@@ -118,6 +163,15 @@ export const layoutOptions = [
 export const dashboardItems = writable([]);
 export const selectedItem = writable({});
 export const selectedItemControls = writable([]);
+
+// Dashboard Store for Grammar Editor options in Sidebar component
+export const editorThemes = [
+	{ id: 1, text: `cobalt`, content: cm_theme_cobalt },
+	{ id: 2, text: `icecoder`, content: cm_theme_icecoder },
+	{ id: 3, text: `shadowfox`, content: cm_theme_shadowfox },
+];
+
+
 
 // export const mousePosition = readable([0,0], function start(set) {
 //   const interval = setInterval(() => {

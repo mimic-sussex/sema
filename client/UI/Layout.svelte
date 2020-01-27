@@ -22,6 +22,7 @@
             liveCodeParseErrors,
             liveCodeAbstractSyntaxTree,
             dspCode,
+            playgroundActive,
             selectedLayout,
             layoutOptions,
             helloWorld,
@@ -57,7 +58,7 @@
 
   let unsubcribeSelectedTutorialGrammarUpdates; 
 
-  export let layoutTemplate = 1;
+  export let layoutTemplate = 3;
 
   let liveContainerDisplay = "initial";
   let dashboardContainerDisplay = "initial";
@@ -102,6 +103,17 @@
   }
 
 
+
+  const unsubscribePlaygroundActive = playgroundActive.subscribe(value => {
+    // console.log("DEBUG:Layout:selectedlayout: ", value.id);
+    if(value)
+      changeLayout(3);
+    else
+      changeLayout(1);
+  })
+	onDestroy(unsubscribePlaygroundActive); // Prevent memory leaks by disposing the component
+
+
   const unsubscribe = selectedLayout.subscribe(value => {
     // console.log("DEBUG:Layout:selectedlayout: ", value.id);
     changeLayout(value.id);
@@ -130,12 +142,12 @@
     // codeMirror6.set($modelEditorValue, "js");
 
     unsubcribeSelectedTutorialGrammarUpdates = selectedTutorialGrammar.subscribe(value => {
-      codeMirror1.update($selectedTutorialGrammar); // Prevent memory leaks by disposing the component
+      codeMirror1.update($selectedTutorialGrammar); 
       compileGrammarOnChange();
     });
     onDestroy(unsubcribeSelectedTutorialGrammarUpdates); // Prevent memory leaks by disposing the component 
     
-    changeLayout(1); // We need this call to trigger a re-render for cleaning up pre-loaded panels
+    changeLayout(3); // We need this call to trigger a re-render for cleaning up pre-loaded panels
 	});
 
 

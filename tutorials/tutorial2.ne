@@ -1,11 +1,12 @@
+# Lexer [or tokenizer] definition with language lexemes [or tokens]
 @{%
 const lexer = moo.compile({
-  click:      /click/,
-  convol1:    /convol1/,
-  heart:      /heart/,
-  separator:  />/,
-  number:     /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?(?:[eE][-+]?[0-9]+)?\b/,
-  ws:         {match: /\s+/, lineBreaks: true},
+  click:      /click/,    // match the string 'click'
+  convol1:    /convol1/,  // match the string 'convol1'
+  heart:      /heart/,    // match the string 'heart'
+  separator:  />/,        // match the string '>'        
+  number:     /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?\b/, // match decimal number 
+  ws:         {match: /\s+/, lineBreaks: true}, // match white space
 });
 %}
 

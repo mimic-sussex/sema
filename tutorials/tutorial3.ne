@@ -4,7 +4,7 @@ const lexer = moo.compile({
   saw:       /serra/,
   click:     /click/, // match the string 'click'
   ws:        {match: /\s+/, lineBreaks: true}, // match whitespace
-	number:    /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?(?:[eE][-+]?[0-9]+)?\b/
+	number:    /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?\b/
 });
 %}
 
