@@ -86,9 +86,9 @@
       $grammarCompiledParser = output; 
       $grammarCompilationErrors = errors;
 
-      console.log('DEBUG:GrammarEditor:compileGrammarOnChange');
-      console.log($grammarCompiledParser);
-      console.log($grammarCompilationErrors); 
+      // console.log('DEBUG:GrammarEditor:compileGrammarOnChange');
+      // console.log($grammarCompiledParser);
+      // console.log($grammarCompilationErrors); 
     }
     catch (e) {
 

@@ -16,6 +16,12 @@
   } from "../../store.js"
 
 
+  export function addNewLiveCodeEditor(){
+
+    
+    
+  }
+
   export let value = '';
 
   const id = () =>
@@ -63,7 +69,9 @@
   ];
   
   let layout;
-  let items = []; 
+
+  let items = [];
+
   if (typeof window !== "undefined") {
     if (!localStorage.getItem("layout")) {
       localStorage.setItem("layout", JSON.stringify(layoutOriginal));
@@ -74,7 +82,10 @@
   }
   
   // let items = layout;
-  console.log(items);
+  // console.log('DEBUG:Dashboard:items:');
+  // console.log(items);
+
+
   const onAdjust = () => {
     localStorage.setItem("layout", JSON.stringify(items));
   };
@@ -83,6 +94,30 @@
     items = layoutOriginal;
     localStorage.setItem("layout", JSON.stringify(layoutOriginal));
   };
+
+  export const addItem = (itemType) => {
+    const i = 2;
+    const col = 2;
+    const x = Math.ceil(Math.random() * 3) + 2;
+    const y = Math.ceil(Math.random() * 4) + 1;
+    const iid = id();
+    items = [
+      ...items, 
+      { ...gridHelp.item({
+              x: (i * 2) % col,
+              y: Math.floor(i / 6) * y,
+              w: x,
+              h: y,
+              id: iid,
+              name: iid,
+              type: itype()
+            }),
+        ...{ data: randomHexColorCode() }
+      }
+    ]
+     
+    $dashboardItems = gridHelp.resizeItems(items, cols);
+  }
 
   var cols = 15;
 

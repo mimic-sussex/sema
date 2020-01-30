@@ -65,6 +65,7 @@ export const cm_theme_shadowfox = writable("");
 
 // Store for TFJS model options in Sidebar component
 export const modelOptions = [
+	{ id: 0, text: `Add Model Editor`, content: "" },
 	{ id: 1, text: `hello-world`, content: helloWorld },
 	{ id: 2, text: `two-layer-non-linear`, content: twoLayerNonLinear },
 	{ id: 3, text: `binary-classification`, content: binaryClassification },
@@ -124,6 +125,7 @@ export const dspCode = writable("");
 
 // Dashboard Store for Live Code Editor options in Sidebar component
 export const sidebarLiveCodeOptions = [
+	{ id: 0, text: `Add LiveCode Editor: `, content: "" },
 	{ id: 1, text: `default`, content: default_liveCode },
 	{ id: 2, text: `nibble`, content: nibble_liveCode },
 	{ id: 3, text: `gabber`, content: gabber_liveCode },
@@ -131,13 +133,12 @@ export const sidebarLiveCodeOptions = [
 
 // Dashboard Store for Grammar Editor options in Sidebar component
 export const sidebarGrammarOptions = [
+	{ id: 1, text: `Add Grammar Editor: `, content: "" },
 	{ id: 1, text: `default`, content: default_grammar },
 	{ id: 2, text: `nibble`, content: nibble_grammar },
 	{ id: 3, text: `gabber`, content: gabber_grammar },
 ];
-
- 
- 
+  
 
 function createSelectedLayout(){
   const { subscribe, set } = writable(2);
@@ -166,6 +167,7 @@ export const selectedItemControls = writable([]);
 
 // Dashboard Store for Grammar Editor options in Sidebar component
 export const editorThemes = [
+	{ id: 0, text: `Change Theme`, content: "" },
 	{ id: 1, text: `cobalt`, content: cm_theme_cobalt },
 	{ id: 2, text: `icecoder`, content: cm_theme_icecoder },
 	{ id: 3, text: `shadowfox`, content: cm_theme_shadowfox },

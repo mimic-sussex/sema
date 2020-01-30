@@ -1,6 +1,4 @@
 <script>
-	import { createEventDispatcher } from 'svelte';
-
   import { 
     tutorialsActive,
     playgroundActive,
@@ -15,6 +13,8 @@
     tutorialOptions
   }  from '../store.js';
 
+	import { createEventDispatcher } from 'svelte';
+
 	const dispatch = createEventDispatcher();
 
   let selectedLanguage = 1;
@@ -26,6 +26,9 @@
 		{ id: 4, text: `Maya` },
 	];
 
+  // let selectModel;
+  let selectedValue;
+
 	function sendLanguageSelect() {
     console.log("selectedLanguage: ", selectedLanguage);
     dispatch('message', {
@@ -33,19 +36,27 @@
 		});
 	}
 
+  function onChangeAddLiveCode(e){    
+    console.log("addLiveCode: ", selectedValue.id );
+    dispatch("addLiveCode", selectedValue.id);
+    selectedValue = sidebarLiveCodeOptions[0];
+  }
+
+
 </script>
 
 <style>
   
   .sidebar {
     background-color: rgb(3, 3, 3);
-    width: 160px;
+    /* width: 160px; */
     height: 100%;
   }
 
   .controls {
-    margin-top: 20px;
+    margin-bottom: 20px;
     margin-left: 10px;
+    margin-right: 20px;
   }
 
 
@@ -125,10 +136,10 @@
   {:else if $playgroundActive }
 
     <div class="layout-combobox-container controls">
-      <div>
+      <!-- <div>
         <span class="whiteText">Add Live Code </span>
-      </div>
-      <select class="combobox" bind:value={$selectedModel} >
+      </div> -->
+      <select class="combobox" bind:this={$selectedModel} bind:value={selectedValue} on:change={ onChangeAddLiveCode } >
         {#each sidebarLiveCodeOptions as modelOption}
           <option value={modelOption}>
             {modelOption.text}
@@ -138,10 +149,10 @@
     </div>
 
     <div class="layout-combobox-container controls">
-      <div>
+      <!-- <div>
         <span class="whiteText">Add Grammar Editor</span>
-      </div>
-      <select class="combobox" bind:value={$selectedTutorial} >
+      </div> -->
+      <select class="combobox" bind:this={$selectedModel} on:change={ () => dispatch('addGrammar') } >
         {#each sidebarGrammarOptions as modelOption}
           <option value={modelOption}>
             {modelOption.text}
@@ -152,10 +163,11 @@
 
 
     <div class="layout-combobox-container controls">
-      <div>
+      <!-- <div>
         <span class="whiteText">Add Model Editor</span>
-      </div>
-      <select class="combobox" bind:value={$selectedTutorial} >
+      </div> -->
+      <!-- <select class="combobox" bind:value={$selectedTutorial} > -->
+      <select class="combobox" bind:value={selectedValue} on:change={ () => dispatch('addModel') } >
         {#each modelOptions as modelOption}
           <option value={modelOption}>
             {modelOption.text}
@@ -174,9 +186,9 @@
       </div>
 
       <div class="layout-combobox-container">
-        <div>
+        <!-- <div>
           <span class="whiteText">Select Theme</span>
-        </div>
+        </div> -->
         <!-- <select class="combobox" bind:value={$selectedTutorial} > -->
         <select class="combobox" >
           {#each editorThemes as modelOption}

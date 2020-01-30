@@ -35,6 +35,8 @@
     evalDSP
   } from '../audioEngine/audioEngineController.js';
 
+  
+
   import IRToJavascript from "../intermediateLanguage/IR.js";
   
   import * as nearley from 'nearley/lib/nearley.js'
@@ -55,8 +57,16 @@
   let codeMirror3, codeMirror4, codeMirror5; // []
   let codeMirror6, codeMirror7;
 
+  
 
   let unsubcribeSelectedTutorialGrammarUpdates; 
+
+  let dashboard;
+
+  export function addNewLiveCodeEditor(){
+
+    dashboard.addItem();
+  }
 
   export let layoutTemplate = 3;
 
@@ -68,6 +78,7 @@
   $: doubled = changeLayout(layoutTemplate);
 
   function changeLayout (layoutIndex) {
+
     switch (layoutIndex) {
       case 1:
         liveContainerDisplay =      "none";
@@ -100,6 +111,8 @@
         tutorialContainerDisplay = "initial";
         break;
     }
+
+
   }
 
 
@@ -316,8 +329,8 @@
         evalDSP($dspCode);
 
         // $liveCodeParseErrors = "";
-        console.log('DEBUG:Layout:translateILtoDSPasync');
-        console.log($dspCode);
+        // console.log('DEBUG:Layout:translateILtoDSPasync');
+        // console.log($dspCode);
       })
       .catch(e => {
         // console.log('DEBUG:Layout:translateILtoDSPasync:catch')
@@ -528,7 +541,7 @@
 
   <div class="dashboard-container" style="display:{dashboardContainerDisplay}" >
     <!-- <Dashboard liveCodeEditorValue={value} grammarEditorValue={value} modelEditorValue={value} /> -->
-    <Dashboard>
+    <Dashboard bind:this={dashboard}>
     </Dashboard>
   </div>
 

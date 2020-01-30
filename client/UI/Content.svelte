@@ -4,15 +4,36 @@
   import { selectedLayout, layoutOptions} from '../store.js';
   // let selectedLayout = 1; 
 
+  let layout;
+
   function handleMessage(event) {
     // if(event.detail.layout) {
     //   $selectedLayout = event.detail.layout;
     // }
     // else if(event.detail.language) {
-    //   console.log('TODO:triggerLanguageChangeWorkflow');
+      console.log('TODO:handleMessage');
     // }
 	}
 
+  function handleAddLiveCode(event) {
+    // if(event.detail.layout) {
+    //   $selectedLayout = event.detail.layout;
+    // }
+    // else if(event.detail.language) {
+      console.log('TODO:handleAddLiveCode');
+      console.log(event.detail);
+      layout.addNewLiveCodeEditor();
+    // }
+	}
+
+  function handleAddGrammar(event) {
+    // if(event.detail.layout) {
+    //   $selectedLayout = event.detail.layout;
+    // }
+    // else if(event.detail.language) {
+      console.log('TODO:handleAddGrammar');
+    // }
+	}
 </script>
 
 <style>
@@ -44,9 +65,12 @@
 
 <div class="container">
   <div class="sidebar-container">
-    <Sidebar on:message={handleMessage}/>
+    <Sidebar on:message={handleMessage} 
+             on:addLiveCode={handleAddLiveCode}
+             on:addGrammar={handleAddGrammar}
+    />
   </div>
   <div class="layout-container">
-    <Layout layoutTemplate={selectedLayout} />
+    <Layout bind:this={layout} layoutTemplate={selectedLayout} />
   </div>
 </div>

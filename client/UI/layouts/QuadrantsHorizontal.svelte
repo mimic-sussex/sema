@@ -72,8 +72,8 @@
   //#endregion
 
   const unsubscribe = selectedTutorial.subscribe(value => {
-    console.log("DEBUG:QuadrantsHorizontal:selectedTutorial: ", value.id);
-    console.log($selectedTutorialGrammar);
+    // console.log("DEBUG:QuadrantsHorizontal:selectedTutorial: ", value.id);
+    // console.log($selectedTutorialGrammar);
     $selectedTutorialGrammar = tutorialOptions[value.id-1].content;
    
   })

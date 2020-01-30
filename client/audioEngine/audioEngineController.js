@@ -1,16 +1,28 @@
 
 import { AudioEngine } from "./audioEngine.js";
 import { loadImportedSamples } from "./sampleLoader.js";
+// import { PubSub } from "../messaging/pubSub.js";
 import { kuramotoNetClock } from "../interfaces/clockInterface.js";
 
-import { 
-   
-} from "../store.js";
-
 let kuraClock;
+let subscriptionToken;
+
+
+const testSubscriber1 = (data) => {
+  console.log("DEBUG:AudioEngine:Controller:testSubscriber1:");
+  console.log(data);
+};
+
+
 
 let createAudioEngine = () => {
+
   window.AudioEngine = new AudioEngine();
+
+  const subscriptionToken = window.messaging.subscribe("evalDSP", evalDSP);
+
+	// const testSubscription1 = window.messaging.subscribe("evalDSP", testSubscriber1);
+
 
   kuraClock = new kuramotoNetClock((phase, idx) => {
     // console.log("phase: " + phase + ", " + idx);

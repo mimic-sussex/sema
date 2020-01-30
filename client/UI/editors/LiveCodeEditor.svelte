@@ -11,27 +11,39 @@
 
 <script>
 	import { onMount, onDestroy } from 'svelte';
-
   import {  
     grammarCompiledParser,
     liveCodeEditorValue,
     liveCodeParseErrors,
     liveCodeParseResults, 
-    liveCodeAbstractSyntaxTree
+    liveCodeAbstractSyntaxTree,
+    dspCode
   } from "../../store.js";
+
+  import { 
+    playAudio,
+    stopAudio,
+    evalDSP
+  } from '../../audioEngine/audioEngineController.js'
+
+  import { PubSub } from '../../messaging/pubSub.js';
+  import IRToJavascript from "../../intermediateLanguage/IR.js";
 
   import ParserWorker from "worker-loader!../../../workers/parser.worker.js";
 
   let codeMirror;
   let parserWorker; 
-  
+  // let messaging = new PubSub();   
+
   onMount(async () => {
     codeMirror.set($liveCodeEditorValue, "js");
+  
     parserWorker = new ParserWorker();  // Create one worker per widget lifetime
 	});
 
   onDestroy(async () => {
     parserWorker.terminate();
+    parserWorker = null; // cannot delete in strict mode 
 	});
 
   let log = (e) => { console.log(e.detail.value); }
@@ -39,8 +51,8 @@
   let nil = (e) => { }
 
   let parseLiveCode = e => {
-    console.log('Debug');
-    console.log(e);
+    // console.log('DEBUG:LiveCodeEditor:parseLiveCode:');
+    // console.log(e);
     if(window.Worker){
       let parserWorkerAsync = new Promise( (res, rej) => {
         
@@ -51,8 +63,8 @@
         });
 
         parserWorker.onmessage = m => {  // Receive code from worker, pass it to then
-          console.log('DEBUG:LiveCodeEditor:parseLiveCode:onmessage');
-          console.log(m);
+          // console.log('DEBUG:LiveCodeEditor:parseLiveCode:onmessage');
+          // console.log(m);
           if(m.data !== undefined){
             res(m.data);
           }
@@ -83,6 +95,8 @@
     }
   }
 
+
+
   let parseLiveCodeOnChange = e => { 
 
     let liveCodeEditorValue = null; 
@@ -98,12 +112,79 @@
     // window.localStorage.setItem("parserEditor+ID", editor.getValue());
   }
 
-  function evalLiveCodeEditorValue() {
-    // console.log("DEBUG:parserEditor:evalLiveCodeEditorValue: " + code);
-    let code = codeMirror.getBlock();
-    if(code) parseLiveCode(code);
+  let translateILtoDSPasync = e => { // [NOTE:FB] Note the 'async'
 
-    // window.localStorage.setItem("parserEditor+ID", editor.getValue());
+    if(window.Worker){
+
+      // let iLWorker = new Worker('../../il.worker.js');
+      let iLWorker = new ILWorker();
+      let iLWorkerAsync = new Promise( (res, rej) => {
+
+        iLWorker.postMessage({ liveCodeAbstractSyntaxTree: $liveCodeParseResults, type:'ASTtoDSP'});
+
+        let timeout = setTimeout(() => {
+            iLWorker.terminate();
+            // iLWorker = new Worker('../../il.worker.js');
+            // iLWorker = new Worker('./il.worker.js', { type: 'module' });
+            iLWorker = new ILWorker();
+            // rej('Possible infinite loop detected or worse! Check bugs in ILtoTree.')
+        }, 5000);
+
+        iLWorker.onmessage = e => {
+          if(e.data !== undefined){
+            // console.log('DEBUG:Layout:translateILtoDSP:onmessage')
+            // console.log(e);
+            // $dspCode = e.data.message;
+            res(e.data);
+          }
+          else if(e.data !== undefined && e.data.length != 0){
+            res(e.data);
+          }
+          clearTimeout(timeout);
+        }
+      })
+      .then(outputs => {
+        $dspCode = outputs;
+        evalDSP($dspCode);
+
+        // $liveCodeParseErrors = "";
+        console.log('DEBUG:Layout:translateILtoDSPasync');
+        console.log($dspCode);
+      })
+      .catch(e => {
+        // console.log('DEBUG:Layout:translateILtoDSPasync:catch')
+        // console.log(e);
+      });
+    }
+  }
+
+  let translateILtoDSP = e => {
+    
+    let dsp = IRToJavascript.treeToCode($liveCodeParseResults);
+
+    // console.log('DEBUG:LiveCodeEditor:evalLiveCodeOnEditorCommand:')
+    // console.log(dspCode);
+
+    window.messaging.publish("evalDSP", dsp); 
+
+    // evalDSP($dspCode); 
+  }
+
+  const evalLiveCodeOnEditorCommand = () => {
+    // console.log('DEBUG:LiveCodeEditor:evalLiveCodeOnEditorCommand:')
+    // console.log($liveCodeAbstractSyntaxTree);
+
+    let code = codeMirror.getBlock();
+    if(code) 
+      parseLiveCode(code);
+
+    if($grammarCompiledParser && $liveCodeEditorValue && $liveCodeAbstractSyntaxTree){
+      translateILtoDSP();
+    }
+  }
+
+  const stopAudioOnEditorCommand = () => {
+    stopAudio();
   }
 
 </script>
@@ -166,7 +247,8 @@
               tab={true} 
               lineNumbers={true} 
               on:change={parseLiveCodeOnChange} 
-              cmdEnter={evalLiveCodeEditorValue}
+              cmdEnter={evalLiveCodeOnEditorCommand}
+              cmdPeriod={stopAudioOnEditorCommand}
               />
 </div>
  
