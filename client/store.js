@@ -64,16 +64,32 @@ export const cm_theme_shadowfox = writable("");
 
 
 // Store for TFJS model options in Sidebar component
-export const modelOptions = [
-	{ id: 0, text: `Add Model Editor`, content: "" },
-	{ id: 1, text: `hello-world`, content: helloWorld },
-	{ id: 2, text: `two-layer-non-linear`, content: twoLayerNonLinear },
-	{ id: 3, text: `binary-classification`, content: binaryClassification },
-	{ id: 4, text: `echo-state-network`, content: echoStateNetwork },
-	{ id: 5, text: `lstm-text-gen`, content: lstmTextGen }
+export const sidebarModelOptions = [
+	{ id: 0, text: `Add Model Editor...`, content: "" },
+	{ id: 1, text: `hello-world`, content: hello_world_code_example },
+	{
+		id: 2,
+		text: `two-layer-non-linear`,
+		content: two_layer_non_linear_code_example
+	},
+	{
+		id: 3,
+		text: `binary-classification`,
+		content: binary_classification_code_example
+	},
+	{
+		id: 4,
+		text: `echo-state-network`,
+		content: echo_state_network_code_example
+	},
+	{
+		id: 5,
+		text: `lstm-text-gen`,
+		content: lstm_txt_gen_code_example
+	}
 ];
 
-export const selectedModel = writable(modelOptions[1]);
+export const selectedModel = writable(sidebarModelOptions[1]);
 
 // TFJS Model editor value, and IO channels' values
 
@@ -125,7 +141,7 @@ export const dspCode = writable("");
 
 // Dashboard Store for Live Code Editor options in Sidebar component
 export const sidebarLiveCodeOptions = [
-	{ id: 0, text: `Add LiveCode Editor: `, content: "" },
+	{ id: 0, text: `Add LiveCode Editor...`, content: "" },
 	{ id: 1, text: `default`, content: default_liveCode },
 	{ id: 2, text: `nibble`, content: nibble_liveCode },
 	{ id: 3, text: `gabber`, content: gabber_liveCode },
@@ -133,7 +149,7 @@ export const sidebarLiveCodeOptions = [
 
 // Dashboard Store for Grammar Editor options in Sidebar component
 export const sidebarGrammarOptions = [
-	{ id: 1, text: `Add Grammar Editor: `, content: "" },
+	{ id: 1, text: `Add Grammar Editor...`, content: "" },
 	{ id: 1, text: `default`, content: default_grammar },
 	{ id: 2, text: `nibble`, content: nibble_grammar },
 	{ id: 3, text: `gabber`, content: gabber_grammar },
@@ -160,14 +176,19 @@ export const layoutOptions = [
 	{ id: 4, text: `Model` }
 ];
 
-
+// Dashboard layout in items list
 export const dashboardItems = writable([]);
+
+// Dashboard layout SELECTED item which receives focus and has item controls loaded
 export const selectedItem = writable({});
+
+// Dashboard layout SELECTED item which receives focus and has item controls loaded
 export const selectedItemControls = writable([]);
+
 
 // Dashboard Store for Grammar Editor options in Sidebar component
 export const editorThemes = [
-	{ id: 0, text: `Change Theme`, content: "" },
+	{ id: 0, text: `Change Theme...`, content: "" },
 	{ id: 1, text: `cobalt`, content: cm_theme_cobalt },
 	{ id: 2, text: `icecoder`, content: cm_theme_icecoder },
 	{ id: 3, text: `shadowfox`, content: cm_theme_shadowfox },
@@ -183,61 +204,4 @@ export const editorThemes = [
 //   return function stop() {
 // 		clearInterval(interval);
 // 	};
-// });
-
-
-// export const defaultState = writable({
-// 	active: 0,
-// 	compiled_grammar: compile(defaultGrammar).output,
-// 	quadrants: [
-// 		{
-// 			name: 'Default Language',
-// 			editor_value: defaultLiveCode,
-// 			errors: '',
-// 			tests: [
-// 				'Charles sleeps while thinking about snakes.',
-// 				'A typical Reddit user sleeps with a hammer.',
-// 				'This test does not match :('
-// 			]
-// 		},
-// 		{
-// 			osciloscope: '',
-// 			spectrogram: ''
-// 		},
-// 		{
-// 			name: 'Default Grammar',
-// 			editor_value: defaultGrammar,
-// 			errors: '',
-// 			tests: ['1 + 1', 'ln(5 + sin(3 + 4*e))']
-// 		},
-// 		{
-// 			name: 'Default Model',
-// 			editor_value: defaultModel,
-// 			errors: '',
-// 			tests: ['1 + 1', 'ln(5 + sin(3 + 4*e))']
-// 		}
-// 	],
-// 	dashboard: [
-// 		{
-// 			name: 'Default Language',
-// 			editor_value: defaultGrammar,
-// 			errors: '',
-// 			tests: [
-// 				'Charles sleeps while thinking about snakes.',
-// 				'A typical Reddit user sleeps with a hammer.',
-// 				'This test does not match :('
-// 			]
-// 		},
-// 		{
-// 			osciloscope: '',
-// 			spectrogram: ''
-// 		},
-// 		{
-// 			name: 'Default Grammar',
-// 			editor_value: defaultGrammar,
-// 			errors: '',
-// 			tests: ['1 + 1', 'ln(5 + sin(3 + 4*e))']
-// 		},
-// 		{}
-// 	]
 // });

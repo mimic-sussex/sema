@@ -15,25 +15,12 @@
     // }
 	}
 
-  function handleAddLiveCode(event) {
-    // if(event.detail.layout) {
-    //   $selectedLayout = event.detail.layout;
-    // }
-    // else if(event.detail.language) {
-      console.log('TODO:handleAddLiveCode');
-      console.log(event.detail);
-      layout.addNewLiveCodeEditor();
-    // }
+  function handleAdd(event) {
+    console.log('DEBUG:Content:handleAdd:');
+    console.log(event.detail);
+    layout.addToDashboard(event.detail);
 	}
 
-  function handleAddGrammar(event) {
-    // if(event.detail.layout) {
-    //   $selectedLayout = event.detail.layout;
-    // }
-    // else if(event.detail.language) {
-      console.log('TODO:handleAddGrammar');
-    // }
-	}
 </script>
 
 <style>
@@ -66,8 +53,7 @@
 <div class="container">
   <div class="sidebar-container">
     <Sidebar on:message={handleMessage} 
-             on:addLiveCode={handleAddLiveCode}
-             on:addGrammar={handleAddGrammar}
+             on:add={handleAdd}
     />
   </div>
   <div class="layout-container">

@@ -64,9 +64,15 @@
   let dashboard;
 
   export function addNewLiveCodeEditor(){
-
+ 
     dashboard.addItem();
   }
+
+  export function addToDashboard(item){
+    let { type, id, value } = item;
+    dashboard.addItem(type, id, value);
+  }
+
 
   export let layoutTemplate = 3;
 

@@ -43,6 +43,7 @@
     font-size: 200%;
     font-family:monospace;
     cursor: pointer;
+    border-radius: .4em;
   }
 
   .logo-container {
