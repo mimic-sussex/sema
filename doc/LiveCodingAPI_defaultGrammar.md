@@ -211,9 +211,11 @@ Multiply signals:
 
 10 times per second (argument 1) with identifier 0 (argument 2). The third argument is signal to send (in this case the output of `{1}sin`.
 
+In the live code editor:
+
 `{10,0,{1}sin}toJS`
 
-In js (lower window):
+In the model/js editor:
 
 ```
 input = (id,x) => {console.log([id,x])};
@@ -222,9 +224,11 @@ input = (id,x) => {console.log([id,x])};
 
 ### Receive data from model:
 
+In the live code editor:
+
 `{{10,1}fromJS}saw`
 
-In js (lower window):
+In the model/js editor:
 
 ```
 y=100;
