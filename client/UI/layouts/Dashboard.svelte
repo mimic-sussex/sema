@@ -221,7 +221,7 @@
 </style>
 
 <div class="layout-template-container">
-  <Grid {items}
+  <Grid {$dashboardItems}
         useTransform {breakpoints} 
         rowHeight={100} 
         gap={1} 

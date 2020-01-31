@@ -95,8 +95,6 @@
     }
   }
 
-
-
   let parseLiveCodeOnChange = e => { 
 
     let liveCodeEditorValue = null; 

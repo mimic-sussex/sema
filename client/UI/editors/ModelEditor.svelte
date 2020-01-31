@@ -30,7 +30,6 @@
     modelWorker.terminate();
 	});
   
-
   let log = (e) => { console.log(e.detail.value); }
 
   let nil = (e) => { }
@@ -66,13 +65,11 @@
     }
   }
 
-
   function evalModelEditorExpression(){
     let code = codeMirror.getSelection();
     console.log("DEBUG:ModelEditor:evalModelEditorExpression: " + code);
 
     evalModelCode(code);
-
     // window.localStorage.setItem("modelEditor+ID", editor.getValue()); 
   }
 
@@ -81,7 +78,6 @@
     console.log("DEBUG:ModelEditor:evalModelEditorExpressionBlock: " + code);
 
     evalModelCode(code);
-
     // window.localStorage.setItem("modelEditor+ID", editor.getValue());
   }
 
