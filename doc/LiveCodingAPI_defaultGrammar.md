@@ -206,7 +206,10 @@ Multiply signals:
 
 # communication to the model (lower editor window)
 
-Send data ten times per second (argument 1) with ID 0 (argument 2). The third argument is what to send (in this case the output of `{1}sin`.
+
+### Send data to model: 
+
+10 times per second (argument 1) with identifier 0 (argument 2). The third argument is signal to send (in this case the output of `{1}sin`.
 
 `{10,0,{1}sin}toJS`
 
@@ -217,7 +220,7 @@ input = (id,x) => {console.log([id,x])};
 
 ```
 
-Receive data from model:
+### Receive data from model:
 
 `{{10,1}fromJS}saw`
 
