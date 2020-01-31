@@ -374,15 +374,10 @@
 <style>
 
   .layout-template-container {
-    height: 100vh;
+    /* height: 100vh; */
+    	height: 100%;
+      overflow: hidden;
   }
-
-	.scrollable {
-		flex: 1 1 auto;
-		/* border-top: 1px solid #eee; */
-		margin: 0 0 0.5em 0;
-		overflow-y: auto;
-	}
 
   .codemirror-container {
     position: relative;
@@ -464,10 +459,6 @@
 		margin: 0 0 0.5em 0;
 		overflow-y: auto;
 	}
-
-
-
-
 
 </style>
 

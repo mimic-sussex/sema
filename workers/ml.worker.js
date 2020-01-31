@@ -48,16 +48,21 @@ onmessage = m => {
   console.log(m); 
 
 	if ("eval" in m.data) {
+    console.log("DEBUG:ml.worker:onmessage:eval");
 		let evalRes = geval(m.data.eval);
-		if (evalRes != undefined) console.log(evalRes);
-		else console.log("0");
+		if (evalRes != undefined) {
+      console.log('DEBUG:ml.worker:onmessage:eval'); 
+      console.log(evalRes);
+    }
+		else 
+    console.log("0");
 	} else if ("val" in m.data) {
-		//    console.log("val");
+    console.log("DEBUG:ml.worker:onmessage:val");
 		let val = m.data.val;
-		// console.log(val);
+		console.log(val);
 		val = JSON.parse(`[${val}]`);
-		//    console.log(val);
-		// console.log(loadResponders);
+		console.log(val);
+		console.log(loadResponders);
 		loadResponders[m.data.name](val);
 		delete loadResponders[m.data.name];
 	} else {

@@ -16,8 +16,8 @@
 	}
 
   function handleAdd(event) {
-    console.log('DEBUG:Content:handleAdd:');
-    console.log(event.detail);
+    // console.log('DEBUG:Content:handleAdd:');
+    // console.log(event.detail);
     layout.addToDashboard(event.detail);
 	}
 
@@ -33,6 +33,8 @@
   		"sidebar layout"
   		"sidebar layout";
   	background-color: lightblue;
+ 
+    overflow: hidden;
   }
   .sidebar-container {
     background-color: blue;
@@ -46,6 +48,7 @@
     grid-area: layout;
     grid-row: 0 / 2;
     height: 100%;
+    overflow: hidden;
   }
 
 </style>

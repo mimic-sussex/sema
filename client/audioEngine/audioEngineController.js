@@ -23,7 +23,7 @@ let createAudioEngine = () => {
 
 	// const testSubscription1 = window.messaging.subscribe("evalDSP", testSubscriber1);
 
-
+  // TODO Moved this to audio Engine
   kuraClock = new kuramotoNetClock((phase, idx) => {
     // console.log("phase: " + phase + ", " + idx);
     if (window.AudioEngine !== undefined) {
@@ -31,20 +31,20 @@ let createAudioEngine = () => {
     }
   });
 
-  window.AudioEngine.sendPeersMyClockPhase = (e) => {
-    if (e != undefined) {
-      kuraClock.broadcastPhase(e);
-      // console.log("DEBUG:AudioEngineController:sendPeersMyClockPhase:");
-      // console.log(e);
-    }
-  };
+  // window.AudioEngine.sendPeersMyClockPhase = (e) => {
+  //   if (e != undefined) {
+  //     kuraClock.broadcastPhase(e);
+  //     // console.log("DEBUG:AudioEngineController:sendPeersMyClockPhase:");
+  //     // console.log(e);
+  //   }
+  // };
 
 };
 
-
+// TODO Init Audio 
 async function initAudio(numPeers) {
   await window.AudioEngine.init(numPeers); // Start AudioContext and connect WAAPI graph elements, asynchronously
-  loadImportedSamples();
+  // loadImportedSamples();
 }
 
 async function setupAudio() {

@@ -1,6 +1,7 @@
 import Module from "./maximilian.wasmmodule.js"; //NOTE:FB We need this import here for webpack to emit maximilian.wasmmodule.js
 import CustomProcessor from "./maxi-processor";
 import { loadSampleToArray } from "./maximilian.util";
+import { kuramotoNetClock } from "../interfaces/clockInterface.js";
 
 /**
  * The CustomAudioNode is a class that extends AudioWorkletNode
@@ -39,25 +40,19 @@ class AudioEngine {
 		// Audio Engine first play() call, triggered by user, prevents the warning
 		// by setting this.audioContext = new AudioContext();
 		this.audioContext;
-		// this.sampleRate; // = this.audioContext.sampleRate;
-		// this.processorCount = 0;
 		this.audioWorkletProcessorName = "maxi-processor";
 		this.audioWorkletUrl = "maxi-processor.js";
 		this.audioWorkletNode;
-
 		this.samplesLoaded = false;
-
-		this.analysers = [];
 
 		// this.msgHandler = msgHandler;    	// NOTE:FB Untangling the previous msgHandler hack from the audio engine
 
 		this.onNewDSPLoadValue = x => {};
 
-		this.loadTestIntervals = [];
-		const SYNTH_CHANGE_MS = 50;
-
-		this.dspTime = 0;
-
+		this.kuraClock = new kuramotoNetClock((phase, idx) => {
+			// console.log( `DEBUG:AudioEngine:sendPeersMyClockPhase:phase:${phase}:id:${idx}`);
+			this.audioWorkletNode.port.postMessage({ phase: phase, i: idx });
+		});
 	}
 
 	/**
@@ -128,7 +123,7 @@ class AudioEngine {
 
 				// Worklet Processor message handler
 				this.audioWorkletNode.port.onmessage = event => {
-					this.messageHandler(event.data);
+					this.processorOnMessageHandler(event);
 				};
 
 				// Connect the worklet node to the audio graph
@@ -148,21 +143,20 @@ class AudioEngine {
 	}
 
 	/**
-	 * Handles events
+	 * Handler of audio worklet processor events
 	 * @play
 	 */
-	messageHandler(data) {
-
-    if(data != undefined && data.p != undefined)
-    {
-      const { p, c } = data;
-      this.sendPeersMyClockPhase(p);
-      // console.log("DEBGUG:AudioEngine:messageHandler:");
-			// console.log(data);
-    }
-
-
-  }
+	processorOnMessageHandler(event) {
+		if (event != undefined && event.data != undefined) {
+			if (event.data === "giveMeSomeSamples") {
+				console.log("DEBGUG:AudioEngine:processorMessageHandler:");
+				console.log(event);
+			}
+			if (event.data.p != undefined) {
+				this.kuraClock.broadcastPhase(event.data.p);
+			}
+		}
+	}
 
 	// NOTE:FB Test code should be segregated from production code into its own fixture.
 	// Otherwise, it becomes bloated, difficult to read and reason about.
@@ -189,6 +183,15 @@ class AudioEngine {
 	// 	}
 	// }
 
+	getSamplesNames() {
+		const r = require.context("../../assets/samples", false, /\.wav$/);
+
+		// return an array list of filenames (with extension)
+		const importAll = r => r.keys().map(file => file.match(/[^\/]+$/)[0]);
+
+		return importAll(r);
+	}
+
 	loadSample(objectName, url) {
 		if (this.audioContext !== undefined) {
 			loadSampleToArray(
@@ -200,21 +203,38 @@ class AudioEngine {
 		} else throw "Audio Context is not initialised!";
 	}
 
+	lazyLoadSample(sampleName, sample) {
+		import(/* webpackMode: "lazy" */ `../../assets/samples/${sampleName}`)
+		.then(sample => window.AudioEngine.loadSample(sampleName, `samples/${sampleName}`) )
+		.catch(err => console.error(`DEBUG:AudioEngine:lazyLoadSample: ` + err) );
+	}
+
+	loadImportedSamples(){
+		let samplesNames = this.getSamplesNames();
+		console.log("DEBUG:AudioEngine:getSamplesNames: " + samplesNames);
+		samplesNames.forEach(sampleName => { this.lazyLoadSample(sampleName); });
+	}
+
 	/**
 	 * Initialises audio context and sets worklet processor code
 	 * @play
 	 */
 	async init(numPeers) {
 		if (this.audioContext === undefined) {
-			this.audioContext = new AudioContext({latencyHint: "playback", sample: 44100});
-			await this.loadWorkletProcessorCode();
+			this.audioContext = new AudioContext({
+				latencyHint: "playback",
+				sample: 44100
+			});
 
+			await this.loadWorkletProcessorCode();
+      
+      this.loadImportedSamples();
 			// this.connectMediaStream();
-			
-      // TODO:FB Remove this to somewhere where it makes sense
-			this.oscThru = msg => {
-				this.audioWorkletNode.port.postMessage(msg);
-			};
+
+			// TODO:FB Remove this to somewhere where it makes sense
+			// this.oscThru = msg => {
+			// 	this.audioWorkletNode.port.postMessage(msg);
+			// };
 		}
 	}
 
@@ -282,16 +302,14 @@ class AudioEngine {
 			// console.log("DEBUG:AudioEngine:evalDSP:");
 			// console.log(dspFunction);
 			return true;
-		} else
-      return false;
+		} else return false;
 	}
 
-  sendClockPhase(phase, idx) {
-  	if (this.audioWorkletNode !== undefined) {
-  		this.audioWorkletNode.port.postMessage({ phase: phase, i: idx });
-  	}
-  }
-
+	sendClockPhase(phase, idx) {
+		if (this.audioWorkletNode !== undefined) {
+			this.audioWorkletNode.port.postMessage({ phase: phase, i: idx });
+		}
+	}
 }
 
 export { AudioEngine };

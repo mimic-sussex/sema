@@ -1,4 +1,4 @@
-//js
+//js – Linear model for regression (tfjs)
 
 //create the model 
 var model = tf.sequential();
@@ -14,13 +14,14 @@ model.fit(xs, ys, { epochs: 50 }).then(result => {console.log(`Model trained`); 
 
 //defining the callback for testing the model on new data 
 var test = (x) => { return model.predict(tf.tensor2d([x], [1, 1])).dataSync()[0]; }
-
 __________
+
 //route the test data into the model
 var w = 0;
-input = (id,x) => {console.log(">toModel:   "+[id,x]); w=x};
+input = (id,x) => { console.log(">toModel: "+[id,x]); w=x};
 __________
+
 //route the model predictions back to the live coding environment 
-output = (x) => {p = test(w);console.log(">fromModel: "+p); return p;}
+output = (x) => { p = test(w); console.log(">fromModel: "+p); return p;}
 
 

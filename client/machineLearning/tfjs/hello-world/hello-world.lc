@@ -1,3 +1,3 @@
-{10,0,{{{50}sin}abs,10}mul}toModel;
-
-{{10,1}fromModel}saw
+:out:{10,0,{{{50}sin}abs,10}mul}toJS;
+:in:{10,1}fromJS;
+{:in:}saw

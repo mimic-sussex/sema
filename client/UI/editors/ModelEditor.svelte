@@ -23,11 +23,12 @@
   
   onMount(async () => {
     codeMirror.set($modelEditorValue, "js");
-    modelWorker = new ModelWorker();  // Create one worker per widget lifetime
+    modelWorker = new ModelWorker();  // Creates one ModelWorker per ModelEditor lifetime
 	});
 
   onDestroy(async () => {
     modelWorker.terminate();
+    modelWorker = null; // make sure it is deleted by GC
 	});
   
   let log = (e) => { console.log(e.detail.value); }
