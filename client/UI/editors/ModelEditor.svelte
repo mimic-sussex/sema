@@ -16,10 +16,13 @@
     modelEditorValue
   } from "../../store.js";
 
+  import { PubSub } from '../../messaging/pubSub.js';
+
   import ModelWorker from "worker-loader!../../../workers/ml.worker.js";
 
   let codeMirror;
   let modelWorker; 
+  let messaging = new PubSub();  
   
   onMount(async () => {
     codeMirror.set($modelEditorValue, "js");

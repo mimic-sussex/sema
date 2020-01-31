@@ -1,12 +1,17 @@
+/**
+ * PubSub is a singleton class that implements the Pub/Sub or Observer pattern
+ * for decoupled communication
+ * @class PubSub
+ */
 class PubSub {
+	/**
+	 * @constructor
+	 */
+	constructor() {
+		if (PubSub.instance) return PubSub.instance; // Singleton pattern
+		PubSub.instance = this;
 
-	constructor() { 
-		
-    if (PubSub.instance) return PubSub.instance; // Singleton pattern
-   
-    PubSub.instance = this;
-
-    this.topics = {
+		this.topics = {
 			any: [] //  default topic 'any' keeps subscribers' callbacks
 		};
 		this.subId = -1;

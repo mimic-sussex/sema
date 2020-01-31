@@ -1,7 +1,6 @@
 
 import { AudioEngine } from "./audioEngine.js";
-import { loadImportedSamples } from "./sampleLoader.js";
-// import { PubSub } from "../messaging/pubSub.js";
+import { PubSub } from "../messaging/pubSub.js";
 import { kuramotoNetClock } from "../interfaces/clockInterface.js";
 
 let kuraClock;
@@ -17,19 +16,22 @@ const testSubscriber1 = (data) => {
 
 let createAudioEngine = () => {
 
-  window.AudioEngine = new AudioEngine();
+  // window.AudioEngine = new AudioEngine();
+  
+  // let messaging = new PubSub();
 
-  const subscriptionToken = window.messaging.subscribe("evalDSP", evalDSP);
+  // const subscriptionToken = messaging.subscribe("evalDSP", e => console.log(e));
+
 
 	// const testSubscription1 = window.messaging.subscribe("evalDSP", testSubscriber1);
 
   // TODO Moved this to audio Engine
-  kuraClock = new kuramotoNetClock((phase, idx) => {
-    // console.log("phase: " + phase + ", " + idx);
-    if (window.AudioEngine !== undefined) {
-      window.AudioEngine.sendClockPhase(phase, idx);
-    }
-  });
+  // kuraClock = new kuramotoNetClock((phase, idx) => {
+  //   // console.log("phase: " + phase + ", " + idx);
+  //   if (window.AudioEngine !== undefined) {
+  //     window.AudioEngine.sendClockPhase(phase, idx);
+  //   }
+  // });
 
   // window.AudioEngine.sendPeersMyClockPhase = (e) => {
   //   if (e != undefined) {
@@ -42,20 +44,20 @@ let createAudioEngine = () => {
 };
 
 // TODO Init Audio 
-async function initAudio(numPeers) {
-  await window.AudioEngine.init(numPeers); // Start AudioContext and connect WAAPI graph elements, asynchronously
-  // loadImportedSamples();
-}
+// async function initAudio(numPeers) {
+//   await window.AudioEngine.init(numPeers); // Start AudioContext and connect WAAPI graph elements, asynchronously
+//   // loadImportedSamples();
+// }
 
 async function setupAudio() {
   if (window.AudioEngine !== undefined) {
     if (kuraClock.connected()) {
       kuraClock.queryPeers(async (numPeers) => {
         console.log("Clock Peers: " + numPeers)
-        initAudio(numPeers);
+        await window.AudioEngine.init(numPeers);
       });
     } else {
-      initAudio(1);
+      await window.AudioEngine.init(1);
     }
   }
 }

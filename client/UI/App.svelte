@@ -7,12 +7,15 @@
   import SplashScreen from './SplashScreen.svelte';
   import { splashScreenClicked } from '../store.js';
 
-  import { setupAudio } from '../audioEngine/audioEngineController.js';
+  // import { setupAudio } from '../audioEngine/audioEngineController.js';
+  import { AudioEngine } from '../audioEngine/audioEngine.js';
 
   // createAudioEngine();
 
+  let audioEngine = new AudioEngine();
+
   const unsubscribe = splashScreenClicked.subscribe( value => { 
-    if(value === 'hidden') setupAudio();
+    if(value === 'hidden') audioEngine.init(1);
 	});
   onDestroy(unsubscribe);
 

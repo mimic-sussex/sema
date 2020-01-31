@@ -27,17 +27,18 @@
   } from '../../audioEngine/audioEngineController.js'
 
   import { PubSub } from '../../messaging/pubSub.js';
+
   import IRToJavascript from "../../intermediateLanguage/IR.js";
 
   import ParserWorker from "worker-loader!../../../workers/parser.worker.js";
 
   let codeMirror;
   let parserWorker; 
-  // let messaging = new PubSub();   
+  let messaging = new PubSub();   
 
   onMount(async () => {
     codeMirror.set($liveCodeEditorValue, "js");
-  
+    
     parserWorker = new ParserWorker();  // Create one worker per widget lifetime
 	});
 
@@ -50,7 +51,8 @@
 
   let nil = (e) => { }
 
-  let parseLiveCode = e => {
+
+  let parseLiveCodeAsync = e => {
     // console.log('DEBUG:LiveCodeEditor:parseLiveCode:');
     // console.log(e);
     if(window.Worker){
@@ -104,8 +106,7 @@
     else 
       liveCodeEditorValue = $liveCodeEditorValue; 
 
-    if(liveCodeEditorValue) 
-      parseLiveCode(liveCodeEditorValue);
+    if(liveCodeEditorValue) parseLiveCodeAsync(liveCodeEditorValue);
 
     // window.localStorage.setItem("parserEditor+ID", editor.getValue());
   }
@@ -143,46 +144,41 @@
       })
       .then(outputs => {
         $dspCode = outputs;
-        evalDSP($dspCode);
+        // evalDSP($dspCode);
 
         // $liveCodeParseErrors = "";
         console.log('DEBUG:Layout:translateILtoDSPasync');
         console.log($dspCode);
       })
       .catch(e => {
-        // console.log('DEBUG:Layout:translateILtoDSPasync:catch')
-        // console.log(e);
+        console.log('DEBUG:Layout:translateILtoDSPasync:catch')
+        console.log(e);
       });
     }
   }
 
-  let translateILtoDSP = e => {
-    
-    let dsp = IRToJavascript.treeToCode($liveCodeParseResults);
-
-    // console.log('DEBUG:LiveCodeEditor:evalLiveCodeOnEditorCommand:')
-    // console.log(dspCode);
-
-    window.messaging.publish("evalDSP", dsp); 
-
-    // evalDSP($dspCode); 
-  }
-
   const evalLiveCodeOnEditorCommand = () => {
-    // console.log('DEBUG:LiveCodeEditor:evalLiveCodeOnEditorCommand:')
-    // console.log($liveCodeAbstractSyntaxTree);
 
-    let code = codeMirror.getBlock();
-    if(code) 
-      parseLiveCode(code);
+    try {
+      parseLiveCodeAsync(codeMirror.getBlock()); // Code block parsed by parser.worker 
+      // Parse results are kept in stores for feeding svelte components      
+      if($grammarCompiledParser && $liveCodeEditorValue && $liveCodeAbstractSyntaxTree){
 
-    if($grammarCompiledParser && $liveCodeEditorValue && $liveCodeAbstractSyntaxTree){
-      translateILtoDSP();
-    }
+        // Tree traversal in the main tree. TODO defer to worker thread
+        let dspCode = IRToJavascript.treeToCode($liveCodeParseResults); 
+
+        // publish eval message with code to audio engine 
+        messaging.publish("eval-dsp", dspCode); 
+      }  
+    } catch (error) {
+      console.log('DEBUG:LiveCodeEditor:evalLiveCodeOnEditorCommand:')
+      console.log($liveCodeAbstractSyntaxTree);
+    }   
   }
 
   const stopAudioOnEditorCommand = () => {
-    stopAudio();
+    // publish eval message with code to audio engine 
+    messaging.publish("stop-audio"); 
   }
 
 </script>

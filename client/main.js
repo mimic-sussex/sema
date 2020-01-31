@@ -10,8 +10,10 @@ const app = new App({
 	}
 });
 
-window.messaging = new PubSub();
-createAudioEngine();
+// window.messaging = new PubSub();
+
+// createAudioEngine();
+
 window.app = app;
 
 export default app;
