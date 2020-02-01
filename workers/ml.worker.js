@@ -48,7 +48,6 @@ onmessage = m => {
   console.log(m); 
 
 	if ("eval" in m.data) {
-    console.log("DEBUG:ml.worker:onmessage:eval");
 		let evalRes = geval(m.data.eval);
 		if (evalRes != undefined) {
       console.log('DEBUG:ml.worker:onmessage:eval'); 
@@ -67,7 +66,7 @@ onmessage = m => {
 		delete loadResponders[m.data.name];
 	} else {
 		//     console.log(m.data.rq);
-		if (m.data.rq == "send") {
+		if (m.data.type === "model-input-data") {
 			input(m.data.id, m.data.value);
 		} else {
 			//receive request

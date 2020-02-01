@@ -22,10 +22,13 @@
 
   let codeMirror;
   let modelWorker; 
-  let messaging = new PubSub();  
   
+  let messaging = new PubSub();  
+  let token;
+
   onMount(async () => {
     codeMirror.set($modelEditorValue, "js");
+    token = messaging.subscribe("model-input-data", e => postToModel(e) );
     modelWorker = new ModelWorker();  // Creates one ModelWorker per ModelEditor lifetime
 	});
 
@@ -38,14 +41,21 @@
 
   let nil = (e) => { }
 
-  let evalModelCode = e => {
+
+  let postToModel = e => {
+    console.log(`DEBUG:ModelEditor:postToModel:${e}`);
+    console.log(e)
+    modelWorker.postMessage(e);
+
+  }
+
+  let evalModelCodeAsync = modelCode => {
 
     if(window.Worker){
       let modelWorkerAsync = new Promise( (res, rej) => {
 
-        modelWorker.postMessage({
-          eval: e
-        });
+        // posts model code received from editor to worker
+        modelWorker.postMessage({ eval: modelCode });
 
         modelWorker.onmessage = m => {
           if(m.data.message !== undefined){
@@ -56,7 +66,7 @@
           else if(m.data !== undefined && m.data.length != 0){
             res(m.data);
           }
-          clearTimeout(timeout);
+          // clearTimeout(timeout);
         }
       })
       .then(outputs => {
@@ -73,7 +83,7 @@
     let code = codeMirror.getSelection();
     console.log("DEBUG:ModelEditor:evalModelEditorExpression: " + code);
 
-    evalModelCode(code);
+    evalModelCodeAsync(code);
     // window.localStorage.setItem("modelEditor+ID", editor.getValue()); 
   }
 
@@ -81,7 +91,7 @@
     let code = codeMirror.getBlock();
     console.log("DEBUG:ModelEditor:evalModelEditorExpressionBlock: " + code);
 
-    evalModelCode(code);
+    evalModelCodeAsync(code);
     // window.localStorage.setItem("modelEditor+ID", editor.getValue());
   }
 
