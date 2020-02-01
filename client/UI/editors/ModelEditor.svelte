@@ -24,50 +24,89 @@
   let modelWorker; 
   
   let messaging = new PubSub();  
-  let token;
+  let subscriptionTokenMID;
+  let subscriptionTokenMODR;
 
   onMount(async () => {
     codeMirror.set($modelEditorValue, "js");
-    token = messaging.subscribe("model-input-data", e => postToModel(e) );
+    subscriptionTokenMID = messaging.subscribe("model-input-data", e => postToModel(e) );
+    subscriptionTokenMODR = messaging.subscribe("model-output-data-request", e => postToModel(e) );
     modelWorker = new ModelWorker();  // Creates one ModelWorker per ModelEditor lifetime
+    modelWorker.onmessage = e =>  onModelWorkerMessageHandler(e);
 	});
 
   onDestroy(async () => {
     modelWorker.terminate();
     modelWorker = null; // make sure it is deleted by GC
+    messaging.unsubscribe(subscriptionTokenMID);
+    messaging.unsubscribe(subscriptionTokenMODR);
+    messaging = null;
 	});
   
-  let log = (e) => { console.log(e.detail.value); }
+  let log = e => console.log(e.detail.value);
 
   let nil = (e) => { }
 
-
   let postToModel = e => {
-    console.log(`DEBUG:ModelEditor:postToModel:${e}`);
-    console.log(e)
+    // console.log(`DEBUG:ModelEditor:postToModel:${e}`);
+    // console.log(e)
     modelWorker.postMessage(e);
-
   }
 
-  let evalModelCodeAsync = modelCode => {
+  let postFromModel = e => {
+    // console.log(`DEBUG:ModelEditor:postFromModel:${e}`);
+    // console.log(e)
+  }
 
-    if(window.Worker){
-      let modelWorkerAsync = new Promise( (res, rej) => {
-
-        // posts model code received from editor to worker
-        modelWorker.postMessage({ eval: modelCode });
-
-        modelWorker.onmessage = m => {
-          if(m.data.message !== undefined){
-            // console.log('DEBUG:ModelEditor:evalModelCode:onmessage')
-            // console.log(e);
-            console.log(m.data.message);
-          }
-          else if(m.data !== undefined && m.data.length != 0){
-            res(m.data);
-          }
-          // clearTimeout(timeout);
+  const onModelWorkerMessageHandler = m => {
+    
+    // console.log('DEBUG:ModelEditor:onModelWorkerMessageHandler:')
+    // console.log(m);
+    
+    if(m.data.func !== undefined){
+      let responders = {
+        data: data => {
+          // Publish data to audio engine
+          messaging.publish("model-output-data", data)
+        },
+        save: data => {
+          console.log("save");
+          window.localStorage.setItem(data.name, data.val);
+        },
+        load: data => {
+          console.log("load");
+          let msg = {
+            name: data.name,
+            val: window.localStorage.getItem(data.name)
+          };
+          modelWorker.postMessage(msg);
+        },
+        download: data => {
+          console.log("download");
+          let downloadData = window.localStorage.getItem(data.name);
+          let blob = new Blob([downloadData], {
+            type: "text/plain;charset=utf-8"
+          });
+          saveData(blob, `${data.name}.data`);
+        },
+        sendcode: data => {
+          console.log(data);
         }
+      };
+      responders[m.data.func](m.data);
+    }
+    else if(m.data !== undefined && m.data.length != 0){
+      res(m.data);
+    }
+    // clearTimeout(timeout);
+  }
+
+  let postToModelAsync = modelCodel => {
+    if(window.Worker){
+      let modelWorkerAsync = new Promise((res, rej) => {
+        // posts model code received from editor to worker
+        console.log('DEBUG:ModelEditor:postToModelAsync:catch')
+        
       })
       .then(outputs => {
 
@@ -80,18 +119,18 @@
   }
 
   function evalModelEditorExpression(){
-    let code = codeMirror.getSelection();
-    console.log("DEBUG:ModelEditor:evalModelEditorExpression: " + code);
-
-    evalModelCodeAsync(code);
+    let modelCode = codeMirror.getSelection();
+    modelWorker.postMessage({ eval: modelCode });
+    // console.log("DEBUG:ModelEditor:evalModelEditorExpression: " + code);
+    // postToModelAsync(code);
     // window.localStorage.setItem("modelEditor+ID", editor.getValue()); 
   }
 
   function evalModelEditorExpressionBlock() {
-    let code = codeMirror.getBlock();
-    console.log("DEBUG:ModelEditor:evalModelEditorExpressionBlock: " + code);
-
-    evalModelCodeAsync(code);
+    let modelCode = codeMirror.getBlock();
+    modelWorker.postMessage({ eval: modelCode });
+    // console.log("DEBUG:ModelEditor:evalModelEditorExpressionBlock: " + code);
+    // postToModelAsync(code);
     // window.localStorage.setItem("modelEditor+ID", editor.getValue());
   }
 

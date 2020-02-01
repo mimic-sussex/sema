@@ -44,38 +44,35 @@ var sema = {
 
 onmessage = m => {
 
-  console.log('DEBUG:ml.worker:onmessage');
-  console.log(m); 
+  // console.log('DEBUG:ml.worker:onmessage');
+  // console.log(m); 
 
-	if ("eval" in m.data) {
+	if (m.data.eval !== undefined) {
 		let evalRes = geval(m.data.eval);
 		if (evalRes != undefined) {
-      console.log('DEBUG:ml.worker:onmessage:eval'); 
       console.log(evalRes);
     }
-		else 
-    console.log("0");
-	} else if ("val" in m.data) {
-    console.log("DEBUG:ml.worker:onmessage:val");
+		else console.log("0");
+	} 
+  else if ("val" in m.data) {
+    // console.log("DEBUG:ml.worker:onmessage:val");
 		let val = m.data.val;
-		console.log(val);
+		// console.log(val);
 		val = JSON.parse(`[${val}]`);
-		console.log(val);
-		console.log(loadResponders);
+		// console.log(val);
+		// console.log(loadResponders);
 		loadResponders[m.data.name](val);
 		delete loadResponders[m.data.name];
-	} else {
-		//     console.log(m.data.rq);
-		if (m.data.type === "model-input-data") {
-			input(m.data.id, m.data.value);
-		} else {
-			//receive request
-			postMessage({
-				func: "data",
-				worker: "testmodel",
-				val: output(m.data.value),
-				tname: m.data.tname
-			});
-		}
+	} 
+  else if (m.data.type === "model-input-data") {
+    input(m.data.id, m.data.value);
+  }
+  else if(m.data.type === "model-output-data-request"){
+		postMessage({
+			func: "data",
+			worker: "testmodel",
+			value: output(m.data.value),
+			tranducerName: m.data.transducerName
+		});
 	}
 };
