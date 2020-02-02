@@ -49,7 +49,7 @@
 </script>
 
 <style>
-  .codemirror-container {
+  /* .codemirror-container {
     position: relative;
     width: 100%;
     height: 100%;
@@ -85,7 +85,7 @@
 
   .codemirror-container :global(.error-line) {
     background-color: rgba(200, 0, 0, 0.05);
-  }
+  } */
 
 	.scrollable {
 		flex: 1 1 auto;

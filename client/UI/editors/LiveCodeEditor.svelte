@@ -2,7 +2,7 @@
   const is_browser = typeof window !== "undefined";
 
   import CodeMirror, { set, update } from "svelte-codemirror";
-  import "codemirror/lib/codemirror.css";
+  // import "codemirror/lib/codemirror.css";
 
   if (is_browser) {
     import("../../utils/codeMirrorPlugins");
@@ -37,7 +37,7 @@
   let messaging = new PubSub();   
 
   onMount(async () => {
-    codeMirror.set($liveCodeEditorValue, "js");
+    codeMirror.set($liveCodeEditorValue, "js", 'monokai');
     
     parserWorker = new ParserWorker();  // Create one worker per widget lifetime
 	});
@@ -207,14 +207,10 @@
     font-family: monospace;
   }
 
-  .codemirror-container :global(.CodeMirror) {
-    height: 100%;
-    background: transparent;
-    font: 400 14px/1.7 var(--font-mono);
-    color: var(--base);
-    /* color: antiquewhite; */
-  }
 
+  .variable :global(span.cm-variable) {
+    color: antiquewhite;
+  }
 
 
   .codemirror-container :global(.error-loc) {
@@ -235,7 +231,7 @@
 
 </style>
 
-<div class="codemirror-container layout-template-container scrollable">
+<div class="codemirror-container variable layout-template-container scrollable">
   <CodeMirror bind:this={codeMirror}  
               bind:value={$liveCodeEditorValue} 
               tab={true} 

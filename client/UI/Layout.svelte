@@ -29,13 +29,13 @@
             selectedTutorialGrammar
   } from "../store.js";
 
-  import {
-    playAudio,
-    stopAudio,
-    evalDSP
-  } from '../audioEngine/audioEngineController.js';
+  // import {
+  //   playAudio,
+  //   stopAudio,
+  //   evalDSP
+  // } from '../audioEngine/audioEngineController.js';
 
-  
+  import { PubSub } from '../messaging/pubSub.js'
 
   import IRToJavascript from "../intermediateLanguage/IR.js";
   
@@ -57,7 +57,7 @@
   let codeMirror3, codeMirror4, codeMirror5; // []
   let codeMirror6, codeMirror7;
 
-  
+  let messaging = new PubSub();   
 
   let unsubcribeSelectedTutorialGrammarUpdates; 
 
@@ -123,14 +123,6 @@
 
 
 
-  const unsubscribePlaygroundActive = playgroundActive.subscribe(value => {
-    // console.log("DEBUG:Layout:selectedlayout: ", value.id);
-    if(value)
-      changeLayout(3);
-    else
-      changeLayout(1);
-  })
-	onDestroy(unsubscribePlaygroundActive); // Prevent memory leaks by disposing the component
 
 
   const unsubscribe = selectedLayout.subscribe(value => {
@@ -154,19 +146,34 @@
     // codeMirror1.set($grammarEditorValue, "ebnf");
     codeMirror1.set($grammarEditorValue, "ebnf");
     codeMirror2.set($liveCodeEditorValue, "sema");
-    codeMirror3.set($liveCodeEditorValue, "sema");
-    codeMirror4.set($grammarEditorValue, "ebnf");
+    // codeMirror3.set($liveCodeEditorValue, "sema");
+    // codeMirror4.set($grammarEditorValue, "ebnf");
     codeMirror5.set($modelEditorValue, "js");
     // // codeMirror6.set($grammarEditorValue, "ebnf");
     // codeMirror6.set($modelEditorValue, "js");
 
-    unsubcribeSelectedTutorialGrammarUpdates = selectedTutorialGrammar.subscribe(value => {
+    const unsubcribeSelectedTutorialGrammarUpdates = selectedTutorialGrammar.subscribe(value => {
       codeMirror1.update($selectedTutorialGrammar); 
       compileGrammarOnChange();
     });
     onDestroy(unsubcribeSelectedTutorialGrammarUpdates); // Prevent memory leaks by disposing the component 
-    
-    changeLayout(3); // We need this call to trigger a re-render for cleaning up pre-loaded panels
+
+    const unsubscribePlaygroundActive = playgroundActive.subscribe(value => {
+      console.log("DEBUG:Layout:selectedlayout: ", value);
+      if(value){
+        codeMirror1.update($selectedTutorialGrammar); 
+        codeMirror2.update($liveCodeEditorValue);
+        changeLayout(3);
+      }
+      else {
+ 
+        changeLayout(1); 
+      }
+    });
+    onDestroy(unsubscribePlaygroundActive); // Prevent memory leaks by disposing the component
+
+
+    // changeLayout(3); // We need this call to trigger a re-render for cleaning up pre-loaded panels
 	});
 
 
@@ -295,8 +302,8 @@
   let translateILtoDSP = e => {
     
     $dspCode = IRToJavascript.treeToCode($liveCodeParseResults);
-    
-    evalDSP($dspCode); 
+    messaging.publish("eval-dsp", $dspCode); 
+    // evalDSP($dspCode); 
   }
  
   let translateILtoDSPasync = e => {  // [NOTE:FB] Note the 'async'
@@ -332,8 +339,8 @@
       })
       .then(outputs => {
         $dspCode = outputs;
-        evalDSP($dspCode);
-
+        // evalDSP($dspCode);
+        messaging.publish("eval-dsp", $dspCode); 
         // $liveCodeParseErrors = "";
         // console.log('DEBUG:Layout:translateILtoDSPasync');
         // console.log($dspCode);
@@ -346,8 +353,8 @@
   }
 
   let cmdEnter = () => {
-    // console.log('DEBUG:Layout:cmdEnter')
-    // console.log($liveCodeAbstractSyntaxTree);
+    console.log('DEBUG:Layout:cmdEnter')
+    console.log($liveCodeAbstractSyntaxTree);
     if($grammarCompiledParser && $liveCodeEditorValue && $liveCodeAbstractSyntaxTree){
       
       translateILtoDSPasync();
@@ -361,9 +368,7 @@
     translateILtoDSP();
   }
 
-
-
-  let cmdPeriod = () => playAudio();
+  let cmdPeriod = () =>  messaging.publish("stop-audio"); 
 
 
 

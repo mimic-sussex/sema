@@ -62,11 +62,13 @@
   }
 
   let layoutOriginal = [
-    gridHelp.item({ x: 0, y: 0, w: 7, h: 3, id: id(), name:'default', type:'live', lineNumbers: true, hasFocus: false, theme: "monokai",  data: '#AA8000' }), 
-    gridHelp.item({ x: 7, y: 0, w: 8, h: 7, id: id(), name:'default', type:'grammar', lineNumbers: false, hasFocus: false, theme: "cobalt", data: '#00FFFF' }),
-    gridHelp.item({ x: 0, y: 3, w: 7, h: 4, id: id(), name:'hello world', type:'model', lineNumbers: true, hasFocus: false, theme: "icecoder", data: '#008080' }),
-    gridHelp.item({ x: 0, y: 7, w: 4, h: 4, id: id(), name:'hello world', type:'liveCodeParseOutput', lineNumbers: false, hasFocus: false, theme: "shadowfox", data: '#F0AA80' }),
-    gridHelp.item({ x: 0, y: 11, w: 4, h: 4, id: id(), name:'hello world', type:'grammarCompileOutput', lineNumbers: true, hasFocus: false, theme: "monokai", data: '#F0AA80' })
+    gridHelp.item({ x: 0, y: 0, w: 7, h: 3, id: id(), name:'default', type:'live', lineNumbers: true, hasFocus: false, theme: "monokai",  data: '#151515' }), 
+    gridHelp.item({ x: 7, y: 0, w: 3, h: 7, id: id(), name:'hello world', type:'liveCodeParseOutput', lineNumbers: false, hasFocus: false, theme: "shadowfox", data: '#F0AA80' }),
+    gridHelp.item({ x: 10, y: 0, w: 8, h: 2, id: id(), name:'hello world', type:'grammarCompileOutput', lineNumbers: true, hasFocus: false, theme: "monokai", data: '#F0AA80' }),
+    gridHelp.item({ x: 10, y: 2, w: 5, h: 5, id: id(), name:'default', type:'grammar', lineNumbers: false, hasFocus: false, theme: "cobalt", data: '#AAAAAA' }),
+    gridHelp.item({ x: 0, y: 4, w: 7, h: 4, id: id(), name:'hello world', type:'model', lineNumbers: true, hasFocus: false, theme: "icecoder", data: '#008080' })
+
+    
   ];
   
   let layout;
@@ -185,6 +187,7 @@
     height: 100%;
     border-radius: 6px;
     border-bottom-right-radius: 3px;
+    
   }
 
   :global(*) {
@@ -225,6 +228,7 @@
     z-index: 1500;
   }
 
+
 </style>
 
 <div class="layout-template-container">
@@ -235,10 +239,10 @@
         bind:items {cols} 
         let:item      
         on:adjust={onAdjust}>
-    <div class="content" style="background: {item.static ? '#ccccee' : item.data}" >
+    <div class="content" style="background: {item.static ? '#ccccee' : item.data}" on:mousedown={ () => console.log('mouse Down')} >
       <span on:click={ remove.bind(null, item) } class='close'>✕</span>
         {#if item.type === 'model' }
-        <ModelEditor bind:value={value}/>
+        <ModelEditor bind:value={value} />
         {:else if item.type === 'grammar' }
         <!-- <GrammarEditor bind:value={value}/> -->
         <GrammarEditor bind:value={value}/>

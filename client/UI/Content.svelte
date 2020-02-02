@@ -32,7 +32,7 @@
   	grid-template-areas:
   		"sidebar layout"
   		"sidebar layout";
-  	background-color: lightblue;
+  	background-color: #6f7262;
  
     overflow: hidden;
   }

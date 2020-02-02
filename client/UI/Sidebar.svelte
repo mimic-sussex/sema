@@ -112,7 +112,7 @@
     display: block;
     font-size: 14px;
     font-family: sans-serif;
-    font-weight: 700;
+    /* font-weight: 700; */
     color: #444;
     line-height: 1.3;
     padding: .5em .5em .5em .6em;

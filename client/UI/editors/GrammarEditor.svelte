@@ -128,8 +128,7 @@
     height: 100%;
     background: transparent;
     font: 400 14px/1.7 var(--font-mono);
-    color: var(--base);
-    /* color: antiquewhite; */
+    /* color: var(--base); */
   }
 
 
