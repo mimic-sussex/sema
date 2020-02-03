@@ -63,6 +63,75 @@ export const cm_theme_shadowfox = writable("");
 
 
 
+
+// SplashScreen visibility
+
+export const splashScreenClicked = writable(false);
+
+
+// Grammar and LiveCode Editors previous sessions' Values, store in LocalStorage
+
+let initGrammarEditorValue = () => {
+  let ret;
+  let temp = window.localStorage.grammarEditorValue;
+  (temp && temp !== "") ? ret = temp: ret = default_grammar;
+  return ret;
+} 
+
+let initLiveCodeEditorValue = () =>  { 
+    let ret;
+		let temp = window.localStorage.liveCodeEditorValue;
+   	(temp && temp !== "") ? ret = temp : ret = default_liveCode;
+		return ret;
+}
+
+let initModelEditorValue = () => {
+	let ret;
+	let temp = window.localStorage.modelEditorValue;
+	temp && temp !== "" ? (ret = temp) : (ret = hello_world_code_example);
+	return ret;
+};
+
+
+// Grammar and LiveCode Editors CURRENT TUTORIAL session's Values and dependencies, reactive
+
+export const grammarEditorValue = writable(initGrammarEditorValue());
+
+export const grammarCompiledParser = writable(compile(default_grammar).output);
+
+export const grammarCompilationErrors = writable("");
+
+export const liveCodeEditorValue = writable(initLiveCodeEditorValue());
+
+export const liveCodeParseResults = writable("");
+
+export const liveCodeParseErrors = writable("");
+
+export const liveCodeAbstractSyntaxTree = writable("");
+
+export const dspCode = writable("");
+
+// TFJS Model editor value, and IO channels' values
+
+export const modelEditorValue = writable(initModelEditorValue());
+
+// Dashboard Store for Live Code Editor options in Sidebar component
+export const sidebarLiveCodeOptions = [
+	{ id: 0, text: `Add LiveCode Editor...`, content: "" },
+	{ id: 1, text: `default`, content: default_liveCode },
+	{ id: 2, text: `nibble`, content: nibble_liveCode },
+	{ id: 3, text: `gabber`, content: gabber_liveCode },
+];
+
+// Dashboard Store for Grammar Editor options in Sidebar component
+export const sidebarGrammarOptions = [
+	{ id: 1, text: `Add Grammar Editor...`, content: "" },
+	{ id: 1, text: `default`, content: default_grammar },
+	{ id: 2, text: `nibble`, content: nibble_grammar },
+	{ id: 3, text: `gabber`, content: gabber_grammar },
+];
+
+
 // Store for TFJS model options in Sidebar component
 export const sidebarModelOptions = [
 	{ id: 0, text: `Add Model Editor...`, content: "" },
@@ -91,70 +160,9 @@ export const sidebarModelOptions = [
 
 export const selectedModel = writable(sidebarModelOptions[1]);
 
-// TFJS Model editor value, and IO channels' values
-
-export const modelEditorValue = helloWorld;
 
 
 
-// SplashScreen visibility
-
-export const splashScreenClicked = writable(false);
-
-
-// Grammar and LiveCode Editors previous sessions' Values, store in LocalStorage
-
-let initGrammarEditorValue = () => {
-  let ret;
-  let temp = window.localStorage.grammarEditorValue;
-  (temp && temp !== "") ? ret = temp: ret = default_grammar;
-  return ret;
-} 
-
-let initLiveCodeEditorValue = () =>  { 
-    let ret;
-		let temp = window.localStorage.liveCodeEditorValue;
-   	(temp && temp !== "") ? ret = temp : ret = default_liveCode;
-		return ret;
-}
-
-
-// Grammar and LiveCode Editors CURRENT TUTORIAL session's Values and dependencies, reactive
-
-export const grammarEditorValue = writable(initGrammarEditorValue());
-
-export const grammarCompiledParser = writable(compile(default_grammar).output);
-
-export const grammarCompilationErrors = writable("");
-
-export const liveCodeEditorValue = writable(initLiveCodeEditorValue());
-
-export const liveCodeParseResults = writable("");
-
-export const liveCodeParseErrors = writable("");
-
-export const liveCodeAbstractSyntaxTree = writable("");
-
-export const dspCode = writable("");
-
-
-
-// Dashboard Store for Live Code Editor options in Sidebar component
-export const sidebarLiveCodeOptions = [
-	{ id: 0, text: `Add LiveCode Editor...`, content: "" },
-	{ id: 1, text: `default`, content: default_liveCode },
-	{ id: 2, text: `nibble`, content: nibble_liveCode },
-	{ id: 3, text: `gabber`, content: gabber_liveCode },
-];
-
-// Dashboard Store for Grammar Editor options in Sidebar component
-export const sidebarGrammarOptions = [
-	{ id: 1, text: `Add Grammar Editor...`, content: "" },
-	{ id: 1, text: `default`, content: default_grammar },
-	{ id: 2, text: `nibble`, content: nibble_grammar },
-	{ id: 3, text: `gabber`, content: gabber_grammar },
-];
-  
 
 function createSelectedLayout(){
   const { subscribe, set } = writable(2);

@@ -1,7 +1,7 @@
 <script context="module">
   const is_browser = typeof window !== "undefined";
 
-  import CodeMirror, { set, update } from "svelte-codemirror";
+  import CodeMirror, { set, update, getValue } from "svelte-codemirror";
   import "codemirror/lib/codemirror.css";
 
   if (is_browser) {
@@ -122,16 +122,14 @@
     let modelCode = codeMirror.getSelection();
     modelWorker.postMessage({ eval: modelCode });
     // console.log("DEBUG:ModelEditor:evalModelEditorExpression: " + code);
-    // postToModelAsync(code);
-    // window.localStorage.setItem("modelEditor+ID", editor.getValue()); 
+    window.localStorage.setItem("modelEditorValue", codeMirror.getValue()); 
   }
 
   function evalModelEditorExpressionBlock() {
     let modelCode = codeMirror.getBlock();
     modelWorker.postMessage({ eval: modelCode });
     // console.log("DEBUG:ModelEditor:evalModelEditorExpressionBlock: " + code);
-    // postToModelAsync(code);
-    // window.localStorage.setItem("modelEditor+ID", editor.getValue());
+    window.localStorage.setItem("modelEditorValue", codeMirror.getValue());
   }
 
 </script>
