@@ -1,0 +1,9 @@
+!c! <2>clt;
+!c1! <1, 0.5>clt;
+!c2! <4, 0.5>clt;
+!a! <!c1!>\spark;
+!a2! <<!c2!>\stretch,<0.05>sin>mul;
+!e! <!c!,2,21,112,1112>env;	
+!b! <<<<<122, <<5>saw>abs>mul>tri, <<12>sin>abs>lpf,!e!>mul,<1>sin>mul;
+!c! <<<<<<2444, <1>clp>mul, <<12>tri>abs>mul>tri, <<113>sin>abs>hpf,!e!>mul,<0.5>sin>mul;
+<!a!,!a2!,!b!,!c!>mix

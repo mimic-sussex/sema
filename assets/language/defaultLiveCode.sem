@@ -5,4 +5,4 @@
 :tri:{40}tri; 
 :sin:{45}sin; 
 :saw:{4}saw; 
-{:tri:,:saw:,{:sin:,0.4}mul, :o:, :s:, :b:, :c:}sum
+{:tri:, :saw:, {:sin:,0.4}mul, :b:, :o:, :c:, :s:}sum
