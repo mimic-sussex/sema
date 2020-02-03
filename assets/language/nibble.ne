@@ -1,3 +1,4 @@
+
 @{%
 /*
 Documentation:
@@ -57,15 +58,15 @@ const lexer = moo.compile({
   binRangeBegin:   /{/,
   binRangeEnd:   /}/,
   binarynumber:       /b[0-1\_]+/,
-	assignOperator: /->/,
+    assignOperator: /->/,
   integer:       /[0-9]+/,
   semicolon:    /;/,
   variable:     /[a-zA-Z][a-zA-Z0-9]+/,
-	time: /[t]/,
-	clock: /[c]/,
-	noise: /[n]/,
+    time: /[t]/,
+    clock: /[c]/,
+    noise: /[n]/,
   sampleName:     /\\[a-zA-Z0-9]*/,
-  operator:     /\/|\||\*|\+|\-|>>|<<|<|>|~|\^|&|=|>=|<=/,
+  operator: /\/|\||\*|\+|\-|>>|<<|<|>|~|\^|&|=|>=|<=/,
   comment:      /\#[^\n]:*/,
   ws:           {match: /\s+/, lineBreaks: true},
 });
@@ -156,21 +157,21 @@ function binop(operation, op1,op2) {
 }
 
 function setvar(name, branch) {
-	return { "@setvar": { "@varname": name, "@varvalue": branch } };
+    return { "@setvar": { "@varname": name, "@varvalue": branch } };
 }
 
 function getvar(name) {
-	return { "@getvar": name };
+    return { "@getvar": name };
 }
 
 function assignvar(op1,op2) {
   var res;
-	res = setvar(op2, op1)
+    res = setvar(op2, op1)
   return res;
 }
 
 function str(val) {
-	return { "@string": val };
+    return { "@string": val };
 }
 
 
@@ -180,7 +181,7 @@ function sampler(trig,sampleName) {
 }
 
 function timeOp() {
-	return  { '@sigp':
+    return  { '@sigp':
   {'@params': [],
     '@func': {
       value: 'btime'
@@ -190,7 +191,7 @@ function timeOp() {
 }
 
 function clockOp() {
-	return  { '@sigp':
+    return  { '@sigp':
   {'@params': [],
     '@func': {
       value: 'bitclock'
@@ -199,7 +200,7 @@ function clockOp() {
   };
 }
 function noiseOp() {
-	return  { '@sigp':
+    return  { '@sigp':
   {'@params': [],
     '@func': {
       value: 'bitnoise'
@@ -237,7 +238,7 @@ function bitFromSig(d) {
 }
 
 function binStrToNum(d) {
-	return {"@num":{'value':parseInt(d.value.replace('_','').substr(1),2)}}
+    return {"@num":{'value':parseInt(d.value.replace('_','').substr(1),2)}}
 }
 
 function binElement(d, idx) {
