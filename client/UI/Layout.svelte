@@ -393,7 +393,6 @@
     overflow: hidden;
     font-family: monospace;
   }
-
   /* .codemirror-container :global(.CodeMirror) {
     height: 100%;
     background: transparent;
@@ -457,6 +456,12 @@
   .codemirror-container :global(.error-line) {
     background-color: rgba(200, 0, 0, 0.05);
   } */
+
+  .scrollable {
+		flex: 1 1 auto;
+		margin: 0 0 0.5em 0;
+		overflow-y: auto;
+	}
 
 </style>
 

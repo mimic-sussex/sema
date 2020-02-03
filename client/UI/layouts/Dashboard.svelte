@@ -230,14 +230,13 @@
 
  	.scrollable {
 		flex: 1 1 auto;
-		/* border-top: 1px solid #eee; */
 		margin: 0 0 0.5em 0;
 		overflow-y: auto;
-	} 
+	}
 
 </style>
 
-<div class="layout-template-container scrollable">
+<div class="layout-template-container">
   <Grid {$dashboardItems}
         useTransform {breakpoints} 
         rowHeight={100} 
@@ -245,7 +244,7 @@
         bind:items {cols} 
         let:item      
         on:adjust={onAdjust}>
-    <div class="content" style="background: {item.static ? '#ccccee' : item.data}" on:mousedown={ () => console.log('mouse Down')} >
+    <div class="content" style="background: {item.static ? '#ccccee' : item.data}" on:mousedown={ e => event.stopPropagation() } >
       <span on:click={ remove.bind(null, item) } class='close'>✕</span>
         {#if item.type === 'model' }
         <ModelEditor bind:value={value} />
@@ -254,11 +253,11 @@
         <GrammarEditor bind:value={value}/>
         {:else if item.type === 'live' }
         <!-- <LiveCodeEditor bind:value={value}/> -->
-        <LiveCodeEditor bind:value={value}/>
+        <LiveCodeEditor bind:value={value} />
         {:else if item.type === 'liveCodeParseOutput' }
-        <LiveCodeParseOutput/>
+        <LiveCodeParseOutput class='scrollable'/>
         {:else if item.type === 'grammarCompileOutput' }
-        <GrammarCompileOutput/>
+        <GrammarCompileOutput class='scrollable'/>
         {:else}
         <Editor bind:value={value}/>
         {/if}
