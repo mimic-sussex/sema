@@ -162,8 +162,8 @@
     max-width: 100%; 
     box-sizing: border-box;
     margin: 0;
-    border: 1px solid #aaa;
-    box-shadow: 0 1px 0 1px rgba(214, 214, 214, 0.04);
+    border: 1px solid #555;
+    box-shadow: 0 1px 0 0px rgba(4, 4, 4, 0.04);
     border-radius: .4em;
     -moz-appearance: none;
     -webkit-appearance: none;

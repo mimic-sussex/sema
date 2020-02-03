@@ -228,6 +228,15 @@
     z-index: 1500;
   }
 
+  .move {
+    font-size: 1.2em; 
+    position: absolute;
+    padding: 1px 5px;
+    cursor: move;
+    z-index: 1500;
+    color: lightgray;
+  }
+
  	.scrollable {
 		flex: 1 1 auto;
 		margin: 0 0 0.5em 0;
@@ -244,7 +253,8 @@
         bind:items {cols} 
         let:item      
         on:adjust={onAdjust}>
-    <div class="content" style="background: {item.static ? '#ccccee' : item.data}" on:mousedown={ e => event.stopPropagation() } >
+    <span class='move'>+</span>
+    <div class="content" style="background: {item.static ? '#ccccee' : item.data}" on:mousedown={ e => e.stopPropagation() } >
       <span on:click={ remove.bind(null, item) } class='close'>✕</span>
         {#if item.type === 'model' }
         <ModelEditor bind:value={value} />
