@@ -365,29 +365,29 @@
   }
 
 
-  .codemirror-cursor :global(.CodeMirror-cursor) {
+  /* .codemirror-cursor :global(.CodeMirror-cursor) {
     border-left: 2px solid rgb(255, 136, 0);
     border-right: none;
     width: 0;
-  }
+  } */
 
   /* .codemirror-linenumber :global(.CodeMirror-linenumbers) {
     width: 15px;
   } */
-
+/* 
   .codemirror-linenumber :global(.CodeMirror-linenumber) {
     left: 2px; width: 21px;
     width: 15px;
-  }
-
+  } */
+/* 
   .codemirror-gutter :global(.CodeMirror-gutters) {
     width: 20px;
-  }
+  } */
   
   /* .CodeMirror-linenumbers :global(.Codemirror-linenumber){
 
   } */
-
+/* 
   .codemirror-container.flex :global(.CodeMirror) {
     height: auto;
   }
@@ -408,14 +408,9 @@
 
   .codemirror-container :global(.error-line) {
     background-color: rgba(200, 0, 0, 0.05);
-  }
+  } */
 
-	.scrollable {
-		flex: 1 1 auto;
-		/* border-top: 1px solid #eee; */
-		margin: 0 0 0.5em 0;
-		overflow-y: auto;
-	}
+
 
 
 

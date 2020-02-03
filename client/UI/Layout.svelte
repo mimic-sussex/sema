@@ -394,13 +394,13 @@
     font-family: monospace;
   }
 
-  .codemirror-container :global(.CodeMirror) {
+  /* .codemirror-container :global(.CodeMirror) {
     height: 100%;
     background: transparent;
     font: 400 14px/1.7 var(--font-mono);
     color: var(--base);
-    /* color: antiquewhite; */
-  }
+    
+  } */
 
 
   .codemirror-container-live-code {
@@ -412,39 +412,39 @@
     font-family: monospace;
   }
 
-
+/* 
   .codemirror-cursor :global(.CodeMirror-cursor) {
     border-left: 2px solid rgb(255, 136, 0);
     border-right: none;
     width: 0;
-  }
+  } */
 
   /* .codemirror-linenumber :global(.CodeMirror-linenumbers) {
     width: 15px;
   } */
 
-  .codemirror-linenumber :global(.CodeMirror-linenumber) {
+  /* .codemirror-linenumber :global(.CodeMirror-linenumber) {
     left: 2px; width: 21px;
     width: 15px;
-  }
-
+  } */
+/* 
   .codemirror-gutter :global(.CodeMirror-gutters) {
     width: 20px;
-  }
+  } */
   
   /* .CodeMirror-linenumbers :global(.Codemirror-linenumber){
 
   } */
 
-  .codemirror-container.flex :global(.CodeMirror) {
+  /* .codemirror-container.flex :global(.CodeMirror) {
     height: auto;
-  }
+  } */
 
-  .codemirror-container.flex :global(.CodeMirror-lines) {
+  /* .codemirror-container.flex :global(.CodeMirror-lines) {
     padding: 0;
-  }
+  } */
 
-  .codemirror-container :global(.CodeMirror-gutters) {
+  /* .codemirror-container :global(.CodeMirror-gutters) {
     padding: 0 16px 0 8px;
     border: none;
   }
@@ -456,14 +456,7 @@
 
   .codemirror-container :global(.error-line) {
     background-color: rgba(200, 0, 0, 0.05);
-  }
-
-	.scrollable {
-		flex: 1 1 auto;
-		/* border-top: 1px solid #eee; */
-		margin: 0 0 0.5em 0;
-		overflow-y: auto;
-	}
+  } */
 
 </style>
 

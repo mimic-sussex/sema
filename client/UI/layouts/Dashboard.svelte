@@ -66,7 +66,7 @@
     gridHelp.item({ x: 7, y: 0, w: 3, h: 7, id: id(), name:'hello world', type:'liveCodeParseOutput', lineNumbers: false, hasFocus: false, theme: "shadowfox", data: '#F0AA80' }),
     gridHelp.item({ x: 10, y: 0, w: 8, h: 2, id: id(), name:'hello world', type:'grammarCompileOutput', lineNumbers: true, hasFocus: false, theme: "monokai", data: '#F0AA80' }),
     gridHelp.item({ x: 10, y: 2, w: 5, h: 5, id: id(), name:'default', type:'grammar', lineNumbers: false, hasFocus: false, theme: "cobalt", data: '#AAAAAA' }),
-    gridHelp.item({ x: 0, y: 4, w: 7, h: 4, id: id(), name:'hello world', type:'model', lineNumbers: true, hasFocus: false, theme: "icecoder", data: '#008080' })
+    gridHelp.item({ x: 0, y: 4, w: 7, h: 4, id: id(), name:'hello world', type:'model', lineNumbers: true, hasFocus: false, theme: "icecoder", data: '#f0f0f0' })
 
     
   ];
@@ -228,10 +228,16 @@
     z-index: 1500;
   }
 
+ 	.scrollable {
+		flex: 1 1 auto;
+		/* border-top: 1px solid #eee; */
+		margin: 0 0 0.5em 0;
+		overflow-y: auto;
+	} 
 
 </style>
 
-<div class="layout-template-container">
+<div class="layout-template-container scrollable">
   <Grid {$dashboardItems}
         useTransform {breakpoints} 
         rowHeight={100} 

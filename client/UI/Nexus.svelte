@@ -98,7 +98,7 @@
     line-height: 1.5;
     overflow: hidden;
   }
-
+/* 
   .codemirror-container :global(.CodeMirror) {
     height: 100%;
     background: transparent;
@@ -133,7 +133,7 @@
 		border-top: 1px solid #eee;
 		margin: 0 0 0.5em 0;
 		overflow-y: auto;
-	}
+	} */
 
 </style>
 <!-- <div class="layout-template-container" contenteditable="true" bind:innerHTML={layoutTemplate}> -->

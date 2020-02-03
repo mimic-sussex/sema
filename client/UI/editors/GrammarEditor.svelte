@@ -119,7 +119,7 @@
     width: 100%;
     height: 100%;
     border: none;
-    line-height: 1.5;
+    line-height: 1.4;
     overflow: hidden;
     font-family: monospace;
   }
@@ -128,26 +128,21 @@
     height: 100%;
     background: transparent;
     font: 400 14px/1.7 var(--font-mono);
-    /* color: var(--base); */
+
   }
 
 
 
-  .codemirror-container :global(.error-loc) {
+  /* .codemirror-container :global(.error-loc) {
     position: relative;
     border-bottom: 2px solid #da106e;
-  }
+  } */
 
-  .codemirror-container :global(.error-line) {
+  /* .codemirror-container :global(.error-line) {
     background-color: rgba(200, 0, 0, 0.05);
-  }
+  } */
 
-	.scrollable {
-		flex: 1 1 auto;
-		/* border-top: 1px solid #eee; */
-		margin: 0 0 0.5em 0;
-		overflow-y: auto;
-	}
+
 
 </style>
 

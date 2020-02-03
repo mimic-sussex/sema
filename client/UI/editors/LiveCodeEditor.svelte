@@ -2,7 +2,7 @@
   const is_browser = typeof window !== "undefined";
 
   import CodeMirror, { set, update } from "svelte-codemirror";
-  // import "codemirror/lib/codemirror.css";
+  import "codemirror/lib/codemirror.css";
 
   if (is_browser) {
     import("../../utils/codeMirrorPlugins");
@@ -202,17 +202,21 @@
     width: 100%;
     height: 100%;
     border: none;
-    line-height: 1.5;
+    line-height: 1.4;
     overflow: hidden;
     font-family: monospace;
+    color:white;
   }
 
 
-  .variable :global(span.cm-variable) {
-    color: antiquewhite;
+  .codemirror-container :global(.CodeMirror) {
+    height: 100%;
+    background: transparent;
+    font: 400 14px/1.7 var(--font-mono);
+    color: var(--base);
   }
 
-
+/* 
   .codemirror-container :global(.error-loc) {
     position: relative;
     border-bottom: 2px solid #da106e;
@@ -220,18 +224,12 @@
 
   .codemirror-container :global(.error-line) {
     background-color: rgba(200, 0, 0, 0.05);
-  }
+  } */
 
-	.scrollable {
-		flex: 1 1 auto;
-		/* border-top: 1px solid #eee; */
-		margin: 0 0 0.5em 0;
-		overflow-y: auto;
-	}
 
 </style>
 
-<div class="codemirror-container variable layout-template-container scrollable">
+<div class="codemirror-container layout-template-container scrollable">
   <CodeMirror bind:this={codeMirror}  
               bind:value={$liveCodeEditorValue} 
               tab={true} 

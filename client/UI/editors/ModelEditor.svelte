@@ -155,7 +155,7 @@
     width: 100%;
     height: 100%;
     border: none;
-    line-height: 1.5;
+    line-height: 1.4;
     overflow: hidden;
     font-family: monospace;
   }

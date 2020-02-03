@@ -87,12 +87,12 @@
     background-color: rgba(200, 0, 0, 0.05);
   } */
 
-	.scrollable {
+	/* .scrollable {
 		flex: 1 1 auto;
 		border-top: 1px solid #eee;
 		margin: 0 0 0.5em 0;
 		overflow-y: auto;
-	}
+	} */
 
 </style>
 

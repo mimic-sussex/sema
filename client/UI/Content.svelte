@@ -32,8 +32,8 @@
   	grid-template-areas:
   		"sidebar layout"
   		"sidebar layout";
-  	background-color: #6f7262;
- 
+  	/* background-color: #6f7262; */
+	  background-color: #212121; 
     overflow: hidden;
   }
   .sidebar-container {
