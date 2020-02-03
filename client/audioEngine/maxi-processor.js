@@ -206,6 +206,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
         this.sampleVectorBuffers[sampleKey] = this.translateFloat32ArrayToBuffer(event.data.buffer);
       }else if ('phase' in event.data) {
         // console.log(this.kuraPhaseIdx);
+        console.log(event);
         this.netClock.setPhase(event.data.phase, event.data.i);
         // this.kuraPhase = event.data.phase;
         // this.kuraPhaseIdx = event.data.i;
@@ -307,8 +308,8 @@ class MaxiProcessor extends AudioWorkletProcessor {
         if (this.netClock.size() > 1 && this.clockPhaseSharingInterval++ == 2000) {
           this.clockPhaseSharingInterval=0;
           let phase = this.netClock.getPhase(0);
-          // console.log(`phase: ${phase}`);
-          this.port.postMessage({ p: phase, c: "phase" });
+          console.log(`DEBUG:MaxiProcessor:phase: ${phase}`);
+          this.port.postMessage({ phase: phase, c: "phase" });
         }
 
         this.bitclock = Module.maxiBits.sig(Math.floor(this.clockPhase(1,0) * 1023.999999999));
