@@ -36,20 +36,45 @@
 
 <style>
 
+  .codemirror-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border: none;
+
+    line-height: 1.4;
+    overflow: hidden;
+    font-family: monospace;
+  }
+
 	.scrollable {
 		flex: 1 1 auto;
 		/* border-top: 1px solid #eee; */
 		margin: 0 0 0.5em 0;
-		overflow-y: hidden;
+		overflow-y: auto;
 	}
 
+  .headline {
+    overflow-y: scroll; height:auto; margin-top:6px 
+  }
+
+  .error-state {
+    color:red; 
+    margin:15px 0px 15px 25px;
+  }
+
+  .correct-state {
+    color:green; 
+    margin:15px 0px 15px 25px;
+
+  }
 
 </style>
 
 <div id="grammarOutput" class="codemirror-container flex scrollable">
   {#if $grammarCompilationErrors !== ""}
-  <div style="overflow-y: scroll; height:auto;">
-    <strong style="color:red; margin:15px 0 15px 5px">Grammar compilation errors:</strong>
+  <div class="headline">
+    <strong class="error-state">Grammar compilation errors:</strong>
     <br>
     <div style="margin-left:5px">
     <!-- <div style="overflow-y: scroll; height:auto;"> -->
@@ -57,8 +82,8 @@
     </div>
   </div>
   {:else}
-  <div style="overflow-y: scroll; height:auto;">
-    <strong style="color: green; margin:15px 0 10px 5px">Grammar validated and parser generated!</strong>
+  <div class="headline">
+    <strong class="correct-state">Grammar validated and parser generated!</strong>
   </div>
   {/if}
 </div>

@@ -63,12 +63,10 @@
 
   let layoutOriginal = [
     gridHelp.item({ x: 0, y: 0, w: 7, h: 3, id: id(), name:'default', type:'live', lineNumbers: true, hasFocus: false, theme: "monokai",  data: '#151515' }), 
-    gridHelp.item({ x: 7, y: 0, w: 3, h: 7, id: id(), name:'hello world', type:'liveCodeParseOutput', lineNumbers: false, hasFocus: false, theme: "shadowfox", data: '#F0AA80' }),
-    gridHelp.item({ x: 10, y: 0, w: 8, h: 2, id: id(), name:'hello world', type:'grammarCompileOutput', lineNumbers: true, hasFocus: false, theme: "monokai", data: '#F0AA80' }),
+    gridHelp.item({ x: 7, y: 0, w: 3, h: 7, id: id(), name:'hello world', type:'liveCodeParseOutput', lineNumbers: false, hasFocus: false, theme: "shadowfox", data: '#ebdeff' }),
+    gridHelp.item({ x: 10, y: 0, w: 8, h: 2, id: id(), name:'hello world', type:'grammarCompileOutput', lineNumbers: true, hasFocus: false, theme: "monokai", data: '#c9caff' }),
     gridHelp.item({ x: 10, y: 2, w: 5, h: 5, id: id(), name:'default', type:'grammar', lineNumbers: false, hasFocus: false, theme: "cobalt", data: '#AAAAAA' }),
     gridHelp.item({ x: 0, y: 4, w: 7, h: 4, id: id(), name:'hello world', type:'model', lineNumbers: true, hasFocus: false, theme: "icecoder", data: '#f0f0f0' })
-
-    
   ];
   
   let layout;

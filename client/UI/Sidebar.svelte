@@ -79,6 +79,7 @@
 
   .combobox{
     margin-top: 4px;
+
   }
 
   .whiteText {
@@ -106,55 +107,17 @@
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    font-size: 12px;
   }
 
 
-.button {
-	color: #fff;
-	text-decoration: none;
-	margin-right: 10px;
-	
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	border-radius: 5px;
-	
-	-webkit-box-shadow: 0 1px 0px rgba(255,255,255,0.1) inset, 0 0px 1px rgba(0,0,0,0.7);
-	-moz-box-shadow: 0 1px 0px rgba(255,255,255,0.1) inset, 0 0px 1px rgba(0,0,0,0.7);
-	box-shadow: 0 1px 0px rgba(255,255,255,0.1) inset, 0 0px 1px rgba(0,0,0,0.7);
-	
-	background: rgba(0,0,0,0.1); /* #191919 */
-	border: 1px solid #141414;
-	padding: 10px 25px;
-}
-.button:active, .button:focus {
-	box-shadow: 0 0 0 transparent inset;
-}
-
-.tag {
-	color: #fff;
-	text-decoration: none;
-	margin-right: 10px;
-	
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	border-radius: 5px;
-	
-	-webkit-box-shadow: 0 -1px 0px rgba(255,255,255,0.1) inset;
-	-moz-box-shadow: 0 -1px 0px rgba(255,255,255,0.1) inset;
-	box-shadow: 0 -1px 0px rgba(255,255,255,0.1) inset;
-	
-	background: rgba(0,0,0,0.2); /* #161616 */
-	padding: 10px 25px;
-}
-.tag:hover {
-	background: rgba(0,0,0,0.4); /* #101010 */
-}
 
   .combobox-dark {
     display: block;
-    font-size: 14px;
+    font-size: 12px;
     font-family: sans-serif;
-    /* font-weight: 700; */
+    font-weight: 400;
+    cursor: pointer;
     color: #fff;
     line-height: 1.3;
     padding: .5em .5em .5em .6em;
@@ -178,9 +141,9 @@
 
   .combobox {
     display: block;
-    font-size: 14px;
+    font-size: 12px;
     font-family: sans-serif;
-    /* font-weight: 700; */
+    font-weight: 400;
     color: #444;
     line-height: 1.3;
     padding: .5em .5em .5em .6em;
