@@ -3,7 +3,7 @@
   "author": "Francisco Bernardo <f.bernardo@sussex.ac.uk> (http://frantic0.com)",
   "contributors": [
     "Chris Kiefer <c.kiefer@sussex.ac.uk> (http://luuma.net)",
-    "Thor Magnusson <t.magnusson@sussex.ac.uk> (http://www.ixi-audio.net)" 
+    "Thor Magnusson <t.magnusson@sussex.ac.uk> (http://www.ixi-audio.net)"
   ],
   "version": "0.2.0",
   "description": "sema, a live coding language design and performance playground",

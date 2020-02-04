@@ -12,7 +12,7 @@
 <script>
 	import { onMount, onDestroy } from 'svelte';
 
-  import {  
+  import {
     modelEditorValue
   } from "../../store.js";
 
@@ -21,9 +21,9 @@
   import ModelWorker from "worker-loader!../../../workers/ml.worker.js";
 
   let codeMirror;
-  let modelWorker; 
-  
-  let messaging = new PubSub();  
+  let modelWorker;
+
+  let messaging = new PubSub();
   let subscriptionTokenMID;
   let subscriptionTokenMODR;
 
@@ -42,7 +42,7 @@
     messaging.unsubscribe(subscriptionTokenMODR);
     messaging = null;
 	});
-  
+
   let log = e => console.log(e.detail.value);
 
   let nil = (e) => { }
@@ -59,10 +59,10 @@
   }
 
   const onModelWorkerMessageHandler = m => {
-    
+
     // console.log('DEBUG:ModelEditor:onModelWorkerMessageHandler:')
     // console.log(m);
-    
+
     if(m.data.func !== undefined){
       let responders = {
         data: data => {
@@ -106,7 +106,7 @@
       let modelWorkerAsync = new Promise((res, rej) => {
         // posts model code received from editor to worker
         console.log('DEBUG:ModelEditor:postToModelAsync:catch')
-        
+
       })
       .then(outputs => {
 
@@ -121,8 +121,8 @@
   function evalModelEditorExpression(){
     let modelCode = codeMirror.getSelection();
     modelWorker.postMessage({ eval: modelCode });
-    // console.log("DEBUG:ModelEditor:evalModelEditorExpression: " + code);
-    window.localStorage.setItem("modelEditorValue", codeMirror.getValue()); 
+    //console.log("DEBUG:ModelEditor:evalModelEditorExpression: " + code);
+    window.localStorage.setItem("modelEditorValue", codeMirror.getValue());
   }
 
   function evalModelEditorExpressionBlock() {
@@ -171,7 +171,7 @@
     position: relative;
     border-bottom: 2px solid #da106e;
   } */
-/* 
+/*
   .codemirror-container :global(.error-line) {
     background-color: rgba(200, 0, 0, 0.05);
   } */
@@ -183,15 +183,15 @@
 <div class="codemirror-container layout-template-container scrollable">
   <!-- <div class="live-container" style="display:{liveContainerDisplay}"> -->
     <!-- <div slot="liveCodeEditor" class="codemirror-container flex scrollable"></div> -->
-      <CodeMirror bind:this={codeMirror}  
-                  bind:value={$modelEditorValue} 
-                  tab={true} 
-                  lineNumbers={true} 
-                  on:change={nil} 
+      <CodeMirror bind:this={codeMirror}
+                  bind:value={$modelEditorValue}
+                  tab={true}
+                  lineNumbers={true}
+                  on:change={nil}
+                  ctrlEnter={evalModelEditorExpressionBlock}
                   cmdEnter={evalModelEditorExpressionBlock}
-                  shiftEnter={evalModelEditorExpression}  
-                  /> 
+                  shiftEnter={evalModelEditorExpression}
+                  />
     <!-- </div> -->
   <!-- </div> -->
 </div>
- 

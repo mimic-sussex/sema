@@ -1,3 +1,13 @@
+////////////////////DEPRECATED
+////////////////////DEPRECATED
+////////////////////DEPRECATED
+////////////////////DEPRECATED
+////////////////////DEPRECATED
+////////////////////DEPRECATED
+////////////////////DEPRECATED
+////////////////////DEPRECATED
+////////////////////DEPRECATED
+
 import * as nearley from 'nearley/lib/nearley.js';
 import * as compiled from './defaultParser.js';
 
@@ -15,7 +25,7 @@ var ts = 0;
 
 onmessage = (m) => {
    // console.log(m.data);
- 
+
   if (m.data !== undefined) {
     try {
       parser.feed(m.data);
@@ -25,7 +35,7 @@ onmessage = (m) => {
       });
       // console.log(JSON.stringify(parser.results));
 
-      let jscode = IRToJavascript.treeToCode(parser.results); // Get the Abstract Syntax Tree from the parser results and synthesize Javascript 
+      let jscode = IRToJavascript.treeToCode(parser.results); // Get the Abstract Syntax Tree from the parser results and synthesize Javascript
       jscode.paramMarkers = JSON.stringify(jscode.paramMarkers);
       // console.log(jscode);
       postMessage(jscode);
