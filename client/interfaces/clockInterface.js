@@ -1,7 +1,11 @@
+import { PubSub } from "../messaging/pubSub.js";
+
 export class kuramotoNetClock {
   constructor(onPhaseUpdate) {
     this.isConnected = false;
     this.id = -1;
+    this.messaging = new PubSub();
+
 
     try {
       this.socket = new WebSocket('ws://localhost:8089');
@@ -41,7 +45,8 @@ export class kuramotoNetClock {
             break;
           case "o":
             // console.log("received phase: " + response.v);
-            onPhaseUpdate(response.v, response.i);
+            // onPhaseUpdate(response.v, response.i);
+            this.messaging("clock-phase", { phase: response.v, i: response.i } );
             break;
         }
       } catch (e) {

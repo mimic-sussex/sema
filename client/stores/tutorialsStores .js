@@ -25,7 +25,7 @@ export const tutorialsActive = writable(false);
 
 // Store for tutorial options in Sidebar component
 export const tutorialOptions = [
-	// { id: 0, text: `Select Tutorial`, content: "" },
+	{ id: 0, text: `Select Tutorial`, content: "" },
 	{ id: 1, text: `Tutorial 1`, content: tutorial_1_grammar },
 	{ id: 2, text: `Tutorial 2`, content: tutorial_2_grammar },
 	{ id: 3, text: `Tutorial 3`, content: tutorial_3_grammar },
@@ -34,10 +34,10 @@ export const tutorialOptions = [
 ];
 
 // Store for SELECTED tutorial options in Sidebar component
-export const selectedTutorial = writable(tutorialOptions[4]);
+export const selectedTutorial = writable(tutorialOptions[1]);
 
 // Store for SELECTED tutorial GRAMMAR in Grammar Editor
-export const selectedTutorialGrammar = writable(tutorialOptions[4].content);
+export const selectedTutorialGrammar = writable(tutorialOptions[1].content);
 
 
 // Load TFJS code from tf files 

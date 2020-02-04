@@ -65,7 +65,8 @@ module.exports = {
 				exclude: [
 					path.resolve(__dirname, "workers/il.worker.js"),
 					path.resolve(__dirname, "workers/parser.worker.js"),
-					path.resolve(__dirname, "workers/ml.worker.js")
+					path.resolve(__dirname, "workers/ml.worker.js"),
+					path.resolve(__dirname, "workers/tfjs.min.js")
 					// "./workers/ml.worker.js",
 					// "./workers/il.worker.js",
 					// "./workers/parser.worker.js"
@@ -119,6 +120,19 @@ module.exports = {
 				}
 			},
 			{
+				// Issue pointed out by Surma on the following gist – https://gist.github.com/surma/b2705b6cca29357ebea1c9e6e15684cc
+				// Emscripten JS files define a global. With `exports-loader` we can
+				// load these files correctly (provided the global’s name is the same
+				// as the file name).
+				test: /tfjs.js/,
+				// loader: 'exports-loader',
+				// loader: 'worklet-loader',
+				loader: "file-loader", // files should NOT get processed, only emitted
+				options: {
+					name: "maxi-processor.js"
+				}
+			},
+			{
 				//WASM LOADER
 				// Issue pointed out by Surma on the following gist – https://gist.github.com/surma/b2705b6cca29357ebea1c9e6e15684cc
 				// wasm files should not be processed but just be emitted
@@ -160,9 +174,10 @@ module.exports = {
 	mode,
 	plugins: [
 		new HtmlWebpackPlugin({
-      noscriptHeader: "To run Sema, please enable Javascript in the browser configuration",
+			noscriptHeader:
+				"To run Sema, please enable Javascript in the browser configuration",
 			template: "index.html",
-      filename: './public/index.html', //relative to root of the application
+			filename: "./public/index.html", //relative to root of the application
 			excludeChunks: ["worker"]
 		}),
 		new LinkTypePlugin({

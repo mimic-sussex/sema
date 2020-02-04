@@ -214,16 +214,11 @@
 
 <div class="sidebar">
   {#if $tutorialsActive }
-    <div>
-      <!-- <span>Sidebar</span> -->
-      <span></span>
-    </div>
-    <br/>
     <div class="layout-combobox-container controls">
-      <div>
+      <!-- <div>
         <span class="whiteText">Tutorials</span>
-      </div>
-      <select class="combobox" bind:value={$selectedTutorial} >
+      </div> -->
+      <select class="combobox-dark" bind:value={$selectedTutorial} >
         {#each tutorialOptions as tutorialOption}
           <option value={tutorialOption}>
             {tutorialOption.text}
@@ -232,7 +227,7 @@
       </select>    
     </div>
     <br/>
-    <div class="language-combobox-container controls">
+    <!-- <div class="language-combobox-container controls">
       <div>
         <span class="whiteText">Language</span>
       </div>
@@ -243,7 +238,7 @@
           </option>
         {/each}
       </select>    
-    </div>
+    </div> -->
 
   {:else if $playgroundActive }
 
@@ -294,14 +289,14 @@
     <div>
       <button class="button-dark controls"
               on:click={() => dispatchAdd('grammarCompileOutput', selectedModelOption)}> 
-        Grammar Compile Out
+        + Grammar Compile Out
       </button>
     </div>
 
     <div>
       <button class="button-dark controls"
               on:click={() => dispatchAdd('liveCodeParseOutput', selectedModelOption)}> 
-        Live Code Parse Out
+        + Live Code Parse Out
       </button>
     </div>
     

@@ -238,11 +238,11 @@
     color: lightgray;
   }
 
- 	.scrollable {
+ 	/* .scrollable {
 		flex: 1 1 auto;
 		margin: 0 0 0.5em 0;
 		overflow-y: auto;
-	}
+	} */
 
 </style>
 
