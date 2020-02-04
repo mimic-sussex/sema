@@ -47,8 +47,8 @@ onmessage = function(message) {
 		
     } catch (e) {
 			// console.log("DEBUG:workerParser:onmessage:catch");
-			// console.log(e);
-      postMessage(e); // This sends parse errors caught with exception to the client for visibility! Do not remove! 
+			// console.dir(e.message);
+      postMessage(e.message); // This sends parse errors caught with exception to the client for visibility! Do not remove! 
 		}
 	}
 };

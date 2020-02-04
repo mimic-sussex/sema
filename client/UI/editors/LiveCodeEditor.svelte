@@ -20,11 +20,11 @@
     dspCode
   } from "../../store.js";
 
-  import { 
-    playAudio,
-    stopAudio,
-    evalDSP
-  } from '../../audioEngine/audioEngineController.js'
+  // import { 
+  //   playAudio,
+  //   stopAudio,
+  //   evalDSP
+  // } from '../../audioEngine/audioEngineController.js'
 
   import { PubSub } from '../../messaging/pubSub.js';
 
@@ -84,7 +84,7 @@
         }
         else {
           // console.log('DEBUG:LiveCodeEditor:parseLiveCode:then2');
-          // console.log(outputs);  
+          // console.dir(outputs);  
           $liveCodeParseErrors = outputs;
           $liveCodeAbstractSyntaxTree = $liveCodeParseResults = '';
         }

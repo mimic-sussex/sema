@@ -1,7 +1,8 @@
 "use strict";
 importScripts("https://cdn.jsdelivr.net/npm/@tensorflow/tfjs");
+// importScripts("https://cdn.jsdelivr.net/npm/@tensorflow/tfjs");
 importScripts("http://mlweb.loria.fr/lalolib.js");
-import "./magenta/magentamusic.js"; 
+// import "./magenta/magentamusic.js"; 
 
 
 // let a = tf.tensor([100]);

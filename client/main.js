@@ -1,6 +1,6 @@
 import App from './UI/App.svelte';
 
-import { createAudioEngine } from './audioEngine/audioEngineController.js';
+// import { createAudioEngine } from './audioEngine/audioEngineController.js';
 import { PubSub } from './messaging/pubSub';
 
 const app = new App({

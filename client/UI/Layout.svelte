@@ -28,6 +28,7 @@
             helloWorld,
             selectedTutorialGrammar
   } from "../store.js";
+  // } from "../stores/tutorialsStores.js";
 
   // import {
   //   playAudio,
@@ -166,7 +167,7 @@
         changeLayout(3);
       }
       else {
- 
+        console.log("DEBUG:Layout:selectedlayout: ")
         changeLayout(1); 
       }
     });
@@ -393,13 +394,13 @@
     overflow: hidden;
     font-family: monospace;
   }
-  /* .codemirror-container :global(.CodeMirror) {
+  .codemirror-container :global(.CodeMirror) {
     height: 100%;
     background: transparent;
     font: 400 14px/1.7 var(--font-mono);
     color: var(--base);
     
-  } */
+  }
 
 
   .codemirror-container-live-code {

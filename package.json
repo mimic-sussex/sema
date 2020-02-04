@@ -3,7 +3,7 @@
   "author": "Francisco Bernardo <f.bernardo@sussex.ac.uk> (http://frantic0.com)",
   "contributors": [
     "Chris Kiefer <c.kiefer@sussex.ac.uk> (http://luuma.net)",
-    "Thor Magnusson <t.magnusson@sussex.ac.uk> (http://www.ixi-audio.net)" 
+    "Thor Magnusson <t.magnusson@sussex.ac.uk> (http://www.ixi-audio.net)"
   ],
   "version": "0.2.0",
   "description": "sema, a live coding language design and performance playground",
@@ -14,6 +14,7 @@
     "test": "cross-env NODE_ENV=development webpack"
   },
   "dependencies": {
+    "@tensorflow/tfjs": "^1.5.2",
     "lodash.clonedeep": "^4.5.0",
     "lodash.map": "^4.6.0",
     "nearley": "^2.19.0",

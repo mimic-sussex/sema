@@ -49,13 +49,15 @@ class AudioEngine {
 		this.messaging.subscribe("stop-audio", e => this.stop());
 		this.messaging.subscribe("load-sample", (name, url) => this.loadSample(name, url));
 		this.messaging.subscribe("model-output-data", e => this.onMessagingEventHandler(e));
+		this.messaging.subscribe("clock-phase", e => this.onMessagingEventHandler(e));
 		// this.messaging.subscribe("osc", e => console.log(`DEBUG:AudioEngine:OSC: ${e}`));
 
-		this.kuraClock = new kuramotoNetClock((phase, idx) => {
+    this.kuraClock = new kuramotoNetClock();
+    // this.kuraClock = new kuramotoNetClock((phase, idx) => {
 			// console.log( `DEBUG:AudioEngine:sendPeersMyClockPhase:phase:${phase}:id:${idx}`);
       // This requires an initialised audio worklet
-			this.audioWorkletNode.port.postMessage({ phase: phase, i: idx });
-		});
+		// 	this.audioWorkletNode.port.postMessage({ phase: phase, i: idx });
+		// });
 	}
 
 	/**
@@ -139,31 +141,34 @@ class AudioEngine {
 	 */
 	async init(numClockPeers) {
 		if (this.audioContext === undefined) {
-			this.audioContext = new AudioContext({
+			
+      this.audioContext = new AudioContext({
 				// create audio context with optimally configured latency
 				latencyHint: "playback",
 				sample: 44100
 			});
 
-			if (this.kuraClock.connected()) {
-				this.kuraClock.queryPeers(async numClockPeers => {
-					console.log(`DEBUG:AudioEngine:init:numClockPeers: ${numClockPeers}`);
-					await this.loadWorkletProcessorCode();
-					this.connectMediaStream();
-					this.loadImportedSamples();
-				});
-			} else {
-				await this.loadWorkletProcessorCode();
-				this.connectMediaStream();
-				this.loadImportedSamples();
-			}
+      await this.loadWorkletProcessorCode();
+      this.connectMediaStream();
+      this.loadImportedSamples();
 
-			// TODO:FB Remove this to somewhere where it makes sense
-			// this.oscThru = msg => {
-			// 	this.audioWorkletNode.port.postMessage(msg);
-			// };
-		}
-	}
+      // No need to inject the callback here, messaging is built in KuraClock 
+      // this.kuraClock = new kuramotoNetClock((phase, idx) => {
+      //   // console.log( `DEBUG:AudioEngine:sendPeersMyClockPhase:phase:${phase}:id:${idx}`);
+      //   // This requires an initialised audio worklet
+      //   this.audioWorkletNode.port.postMessage({ phase: phase, i: idx });
+      // });
+				
+
+      if (this.kuraClock.connected()) {
+        this.kuraClock.queryPeers(async numClockPeers => {
+          console.log(`DEBUG:AudioEngine:init:numClockPeers: ${numClockPeers}`);
+        });
+      }
+	  }
+  }
+
+
 
 	/**
 	 * Initialises audio context and sets worklet processor code
