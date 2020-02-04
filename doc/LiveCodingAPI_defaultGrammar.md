@@ -100,6 +100,19 @@ With some rhythm:
 
 `{{{1}sqr,{5}saw}add}\909open`
 
+# sample slicing
+
+`{{1}imp,0.5}|kernel`
+
+This sample player can be used for slicing up breaks etc. When there's a zero crossing in the first parameter, the sample position is set to the second parameter; otherwise the sample just loops.  Put a '|' before the sample name to use this player.
+
+`{{2}imp,{{0.3}pha,0.1,0.9}ulin}|kernel`
+
+Set the position with a phasor - change the impulse and phasor speeds to vary the patterns.
+
+{{32}imp,{0.1}pha}|kernel
+
+This is kind of like timestretching
 
 # filters
 
