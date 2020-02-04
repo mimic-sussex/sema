@@ -295,10 +295,15 @@ const jsFuncMap = {
                       ${o}.setSample(this.getSampleBuffer(${p[1].loop}));`,
 		loop:  (o, p) => `(${o}.isReady() ? ${o}.playOnZX(${p[0].loop}) : 0.0)`
 	},
-	loop: {
+  loop: {
 		setup: (o, p) => `${o} = new Module.maxiSample();
                       ${o}.setSample(this.getSampleBuffer(${p[1].loop}));`,
 		loop:  (o, p) => `(${o}.isReady() ? ${o}.play(${p[0].loop}) : 0.0)`
+	},
+  slice: {
+		setup: (o, p) => `${o} = new Module.maxiSample();
+                      ${o}.setSample(this.getSampleBuffer(${p[2].loop}));`,
+		loop:  (o, p) => `(${o}.isReady() ? ${o}.loopSetPosOnZX(${p[0].loop},${p[1].loop}) : 0.0)`
 	},
 	oscin: {
 		setup: (o, p) => "",

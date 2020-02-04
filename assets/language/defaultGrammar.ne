@@ -6,6 +6,7 @@ const lexer = moo.compile({
   paramBegin:     /{/,
   variable:       /:[a-zA-Z0-9]+:/,
   sample:         { match: /\\[a-zA-Z0-9]+/, lineBreaks: true, value: x => x.slice(1, x.length)},
+  slice:         { match: /\|[a-zA-Z0-9]+/, lineBreaks: true, value: x => x.slice(1, x.length)},
   stretch:        { match: /\@[a-zA-Z0-9]+/, lineBreaks: true, value: x => x.slice(1, x.length)},
   number:         /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?\b/,
   semicolon:      /;/,
@@ -39,6 +40,9 @@ Expression ->
   |
   ParameterList _ %sample
   {% d => sema.synth( 'sampler', d[0]['@params'].concat( [ sema.str( d[2].value ) ] ) ) %}
+  |
+  ParameterList _ %slice
+  {% d => sema.synth( 'slice', d[0]['@params'].concat( [ sema.str( d[2].value ) ] ) ) %}
   |
   ParameterList _ %stretch
   {% d => sema.synth( 'stretch', d[0]['@params'].concat( [ sema.str( d[2].value ) ] ) ) %}

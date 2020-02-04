@@ -26,7 +26,7 @@ export class kuramotoNetClock {
 
     this.peerQueryResponseFunction = null;
     this.socket.addEventListener('message', function(event) {
-      // console.log('Message from server ', event.data);
+      console.log('Message from server ', event.data);
       try {
         let response = JSON.parse(event.data);
         switch (response.r) {

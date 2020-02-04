@@ -308,7 +308,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
         if (this.netClock.size() > 1 && this.clockPhaseSharingInterval++ == 2000) {
           this.clockPhaseSharingInterval=0;
           let phase = this.netClock.getPhase(0);
-          console.log(`DEBUG:MaxiProcessor:phase: ${phase}`);
+          // console.log(`DEBUG:MaxiProcessor:phase: ${phase}`);
           this.port.postMessage({ phase: phase, c: "phase" });
         }
 
