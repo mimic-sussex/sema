@@ -77,11 +77,11 @@
   $dashboardItems = gridHelp.resizeItems(items, cols);
 
   if (typeof window !== "undefined") {
-    if (!localStorage.getItem("layout")) {
-      localStorage.setItem("layout", JSON.stringify(layoutOriginal));
+    if (!window.localStorage.getItem("layout")) {
+      window.localStorage.setItem("layout", JSON.stringify(layoutOriginal));
       items = layoutOriginal; 
     } else {
-      items = JSON.parse(localStorage.getItem("layout"));
+      items = JSON.parse(window.localStorage.getItem("layout"));
     }
   }
   
@@ -91,12 +91,12 @@
 
 
   const onAdjust = () => {
-    localStorage.setItem("layout", JSON.stringify(items));
+    window.localStorage.setItem("layout", JSON.stringify(items));
   };
   
   const reset = () => {
     items = layoutOriginal;
-    localStorage.setItem("layout", JSON.stringify(layoutOriginal));
+    window.localStorage.setItem("layout", JSON.stringify(layoutOriginal));
   };
 
   export const addItem = (itemType, itemId, itemValue) => {
@@ -139,7 +139,8 @@
             }),
         ...{ data: randomHexColorCode() }
       };
-    items = gridHelp.appendItem(newItem, items, cols); 
+    items = gridHelp.appendItem(newItem, items, cols);
+    window.localStorage.setItem("layout", JSON.stringify(items)); 
     // $dashboardItems = gridHelp.resizeItems(items, cols);
   }
 
@@ -150,6 +151,7 @@
     // console.log(event);
 
     items = items.filter(value => value.id !== item.id);
+    window.localStorage.setItem("layout", JSON.stringify(items));
     $dashboardItems = gridHelp.resizeItems(items, cols);
     // if (adjustAfterRemove) {
     //   items = gridHelp.resizeItems(items, cols);

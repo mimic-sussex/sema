@@ -53,6 +53,7 @@ class AudioEngine {
 
 		this.kuraClock = new kuramotoNetClock((phase, idx) => {
 			// console.log( `DEBUG:AudioEngine:sendPeersMyClockPhase:phase:${phase}:id:${idx}`);
+      // This requires an initialised audio worklet
 			this.audioWorkletNode.port.postMessage({ phase: phase, i: idx });
 		});
 	}
