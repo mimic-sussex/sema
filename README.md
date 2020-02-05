@@ -49,6 +49,8 @@ npm run build
 npm run dev
 ```
 
+Now Sema is running at `http://localhost:8080/`!
+
 ## Documentation
 
 [Livecoding with the default grammar](doc/LiveCodingAPI_defaultGrammar.md)
