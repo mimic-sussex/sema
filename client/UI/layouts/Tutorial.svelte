@@ -441,7 +441,8 @@
                     on:change={parseLiveCodeOnChange} 
                     cmdEnter={cmdEnter} 
                     ctrlEnter={ctrlEnter} 
-                    cmdPeriod={cmdPeriod} /> 
+                    cmdPeriod={cmdPeriod}
+                    ctrlPeriod={ctrlPeriod} /> 
       </div>
 
       <div slot="liveCodeCompilerOutput" class="codemirror-container flex scrollable">

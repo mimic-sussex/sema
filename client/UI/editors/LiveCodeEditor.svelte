@@ -234,10 +234,11 @@
               bind:value={$liveCodeEditorValue} 
               tab={true} 
               lineNumbers={true} 
-              on:change={parseLiveCodeOnChange} 
+              on:change={parseLiveCodeOnChange}
               ctrlEnter={evalLiveCodeOnEditorCommand}
               cmdEnter={evalLiveCodeOnEditorCommand}
               cmdPeriod={stopAudioOnEditorCommand}
+              ctrlPeriod={stopAudioOnEditorCommand}
               />
 </div>
  
