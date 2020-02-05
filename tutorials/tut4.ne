@@ -1,9 +1,5 @@
 
 @{%
-var semaIR = require('./semaIR.js');
-console.log(semaIR);
-
-const moo = require("moo"); // this 'require' creates a node dependency
 
 const lexer = moo.compile({
   click:         /click/,
@@ -25,7 +21,7 @@ main -> _ Statement _                                         {% d => ({ "@lang"
 
 Statement ->
   SampleName %separator %number
-  {% d => [{"@sigOut": { "@spawn": semaIR.synth('loop',[semaIR.num(d[2].value),semaIR.str(d[0])]) }}] %}
+  {% d => [{"@sigOut": { "@spawn": sema.synth('loop',[sema.num(d[2].value),sema.str(d[0])]) }}] %}
 
 SampleName -> (%click | %convol1 | %heart) {% d => d[0][0].value %}
 
