@@ -29,6 +29,7 @@ export class kuramotoNetClock {
     }));
 
     this.peerQueryResponseFunction = null;
+
     this.socket.addEventListener('message', function(event) {
       console.log('Message from server ', event.data);
       try {
@@ -46,7 +47,7 @@ export class kuramotoNetClock {
           case "o":
             // console.log("received phase: " + response.v);
             // onPhaseUpdate(response.v, response.i);
-            this.messaging("clock-phase", { phase: response.v, i: response.i } );
+            this.clock.messaging("clock-phase", { phase: response.v, i: response.i } );
             break;
         }
       } catch (e) {
@@ -59,11 +60,13 @@ export class kuramotoNetClock {
   };
 
   /*
-  * What does 'c' and 'q' mean
+  * What does 'command' and 'query' mean
   */
   queryPeers(responseFunction) {
     if (this.isConnected) {
+
       this.peerQueryResponseFunction = responseFunction;
+      
       this.socket.send(JSON.stringify({
         "c": "q"
       }));
