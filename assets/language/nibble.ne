@@ -49,6 +49,19 @@ seq1|seq2 & 1023 << 24 | [seq1 * seq3] * [t&seq3]
 
 [c & b1010000 > 0] -> \909b
 
+---
+
+sequencing with modulus counter
+
+t * [t>>12%9] << 23 * b10100010{t>>12%8} * [t>>12|[t&12336]]
+
+--- mixing up samples, gabba
+
+[c & b1000010100101 >0] -> \909b ->a1;
+[c * 2 & b1000100101>0] -> \kernel ->a2;
+[c>>4 & b1000101>0] -> \heart ->a3;
+a1^a2 ^ [a3 * t{17}]
+
 */
 
 const lexer = moo.compile({
@@ -66,7 +79,7 @@ const lexer = moo.compile({
     clock: /[c]/,
     noise: /[n]/,
   sampleName:     /\\[a-zA-Z0-9]*/,
-  operator: /\/|\||\*|\+|\-|>>|<<|<|>|~|\^|&|=|>=|<=/,
+  operator: /\/|\||\*|\+|\-|>>|<<|<|>|~|\^|&|%|=|>=|<=/,
   comment:      /\#[^\n]:*/,
   ws:           {match: /\s+/, lineBreaks: true},
 });
@@ -148,6 +161,17 @@ function binop(operation, op1,op2) {
          ],
            '@func': {
              value: 'bitShr'
+           }
+         }
+       };
+     break;
+    case "%":
+     res = { '@sigp':
+         { '@params': [
+           op1,op2
+         ],
+           '@func': {
+             value: 'mod'
            }
          }
        };
