@@ -39,7 +39,6 @@ If you decide to use NPM, use:
 cd sema
 npm install
 npm run dev
-npm run go
 ```
 
 If you decide to go with Yarn (our preferred package manager), to install it: 
@@ -52,7 +51,6 @@ To use Yarn:
 cd sema
 yarn
 yarn dev
-yarn go
 ```
 
 
