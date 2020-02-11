@@ -11,16 +11,18 @@
 
 <script>
 	import { onMount, onDestroy } from 'svelte';
-  import {  
+  import {
     grammarCompiledParser,
     liveCodeEditorValue,
     liveCodeParseErrors,
-    liveCodeParseResults, 
+    liveCodeParseResults,
     liveCodeAbstractSyntaxTree,
     dspCode
   } from "../../store.js";
 
-  // import { 
+  import {addToHistory} from "../../utils/history.js";
+
+  // import {
   //   playAudio,
   //   stopAudio,
   //   evalDSP
@@ -33,18 +35,18 @@
   import ParserWorker from "worker-loader!../../../workers/parser.worker.js";
 
   let codeMirror;
-  let parserWorker; 
-  let messaging = new PubSub();   
+  let parserWorker;
+  let messaging = new PubSub();
 
   onMount(async () => {
     codeMirror.set($liveCodeEditorValue, "js", 'monokai');
-    
+
     parserWorker = new ParserWorker();  // Create one worker per widget lifetime
 	});
 
   onDestroy(async () => {
     parserWorker.terminate();
-    parserWorker = null; // cannot delete in strict mode 
+    parserWorker = null; // cannot delete in strict mode
 	});
 
   let log = (e) => { console.log(e.detail.value); }
@@ -53,14 +55,15 @@
 
 
   let parseLiveCodeAsync = e => {
-    // console.log('DEBUG:LiveCodeEditor:parseLiveCode:');
-    // console.log(e);
+    console.log('DEBUG:LiveCodeEditor:parseLiveCode:');
+    console.log(e);
+    addToHistory("lchist_", e);
     if(window.Worker){
       let parserWorkerAsync = new Promise( (res, rej) => {
-        
-        parserWorker.postMessage({ // Post code to worker for parsing 
-          liveCodeSource: e, 
-          parserSource: $grammarCompiledParser, 
+
+        parserWorker.postMessage({ // Post code to worker for parsing
+          liveCodeSource: e,
+          parserSource: $grammarCompiledParser,
           type:'parse'
         });
 
@@ -75,7 +78,7 @@
       })
       .then(outputs => {
         // console.log('DEBUG:LiveCodeEditor:parseLiveCode:then1');
-        // console.log(outputs); 
+        // console.log(outputs);
         const { parserOutputs, parserResults } = outputs;
         if( parserOutputs && parserResults ){
           $liveCodeParseResults = parserResults;
@@ -84,7 +87,7 @@
         }
         else {
           // console.log('DEBUG:LiveCodeEditor:parseLiveCode:then2');
-          // console.dir(outputs);  
+          // console.dir(outputs);
           $liveCodeParseErrors = outputs;
           $liveCodeAbstractSyntaxTree = $liveCodeParseResults = '';
         }
@@ -97,14 +100,14 @@
     }
   }
 
-  let parseLiveCodeOnChange = e => { 
+  let parseLiveCodeOnChange = e => {
 
-    let liveCodeEditorValue = null; 
+    let liveCodeEditorValue = null;
 
     if(e !== undefined && e.detail !== undefined && e.detail.value !== undefined)
-      window.localStorage.liveCodeEditorValue = liveCodeEditorValue = e.detail.value; 
-    else 
-      liveCodeEditorValue = $liveCodeEditorValue; 
+      window.localStorage.liveCodeEditorValue = liveCodeEditorValue = e.detail.value;
+    else
+      liveCodeEditorValue = $liveCodeEditorValue;
 
     if(liveCodeEditorValue) parseLiveCodeAsync(liveCodeEditorValue);
 
@@ -160,25 +163,25 @@
   const evalLiveCodeOnEditorCommand = () => {
 
     try {
-      parseLiveCodeAsync(codeMirror.getBlock()); // Code block parsed by parser.worker 
-      // Parse results are kept in stores for feeding svelte components      
+      parseLiveCodeAsync(codeMirror.getBlock()); // Code block parsed by parser.worker
+      // Parse results are kept in stores for feeding svelte components
       if($grammarCompiledParser && $liveCodeEditorValue && $liveCodeAbstractSyntaxTree){
 
         // Tree traversal in the main tree. TODO defer to worker thread
-        let dspCode = IRToJavascript.treeToCode($liveCodeParseResults); 
+        let dspCode = IRToJavascript.treeToCode($liveCodeParseResults);
 
-        // publish eval message with code to audio engine 
-        messaging.publish("eval-dsp", dspCode); 
-      }  
+        // publish eval message with code to audio engine
+        messaging.publish("eval-dsp", dspCode);
+      }
     } catch (error) {
       console.log('DEBUG:LiveCodeEditor:evalLiveCodeOnEditorCommand:')
       console.log($liveCodeAbstractSyntaxTree);
-    }   
+    }
   }
 
   const stopAudioOnEditorCommand = () => {
-    // publish eval message with code to audio engine 
-    messaging.publish("stop-audio"); 
+    // publish eval message with code to audio engine
+    messaging.publish("stop-audio");
   }
 
 </script>
@@ -216,7 +219,7 @@
     color: var(--base);
   }
 
-/* 
+/*
   .codemirror-container :global(.error-loc) {
     position: relative;
     border-bottom: 2px solid #da106e;
@@ -230,14 +233,13 @@
 </style>
 
 <div class="codemirror-container layout-template-container scrollable">
-  <CodeMirror bind:this={codeMirror}  
-              bind:value={$liveCodeEditorValue} 
-              tab={true} 
-              lineNumbers={true} 
-              on:change={parseLiveCodeOnChange} 
+  <CodeMirror bind:this={codeMirror}
+              bind:value={$liveCodeEditorValue}
+              tab={true}
+              lineNumbers={true}
+              on:change={parseLiveCodeOnChange}
               ctrlEnter={evalLiveCodeOnEditorCommand}
               cmdEnter={evalLiveCodeOnEditorCommand}
               cmdPeriod={stopAudioOnEditorCommand}
               />
 </div>
- 
