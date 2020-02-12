@@ -7,7 +7,7 @@
 
   function handlePClick() {
 		$playgroundActive = true;
-    $tutorialsActive = !$playgroundActive;  
+    $tutorialsActive = !$playgroundActive;
 	}
 
   function handleTClick() {

@@ -61,12 +61,18 @@ module.exports = {
 			// 	}
 			// },
 			{
+				test: /workers\/libs\/lalolib\.js/,
+				use: {
+					loader: "file-loader",
+				}
+			},
+			{
 				test: /\.js$/,
 				exclude: [
 					path.resolve(__dirname, "workers/il.worker.js"),
 					path.resolve(__dirname, "workers/parser.worker.js"),
 					path.resolve(__dirname, "workers/ml.worker.js"),
-					path.resolve(__dirname, "workers/tfjs.min.js")
+					path.resolve(__dirname, "workers/tfjs.min.js"),
 					// "./workers/ml.worker.js",
 					// "./workers/il.worker.js",
 					// "./workers/parser.worker.js"

@@ -11,7 +11,7 @@ import gabber_liveCode from "../assets/language/gabber.sem";
 import nibble_liveCode from "../assets/language/nibble.sem";
 
 
-// Load tutorials from .ne files  
+// Load tutorials from .ne files
 import tutorial_1_grammar from "../tutorials/tutorial1.ne";
 import tutorial_2_grammar from "../tutorials/tutorial2.ne";
 import tutorial_3_grammar from "../tutorials/tutorial3.ne";
@@ -28,21 +28,22 @@ export const tutorialOptions = [
 	// { id: 0, text: `Select Tutorial`, content: "" },
 	{ id: 1, text: `Tutorial 1`, content: tutorial_1_grammar },
 	{ id: 2, text: `Tutorial 2`, content: tutorial_2_grammar },
-	{ id: 3, text: `Tutorial 3`, content: tutorial_3_grammar },
 	{ id: 4, text: `Tutorial 4`, content: tutorial_4_grammar },
-	{ id: 5, text: `Tutorial 5`, content: tutorial_5_grammar },
-	{ id: 6, text: `Tutorial 6`, content: tutorial_6_grammar },
+	{ id: 3, text: `Tutorial 3`, content: tutorial_3_grammar },
+	// i commented these out because they were causing an error
+	// { id: 5, text: `Tutorial 5`, content: tutorial_5_grammar },
+	// { id: 6, text: `Tutorial 6`, content: tutorial_6_grammar },
 	{ id: 7, text: `Tutorial 7`, content: default_grammar }
 ];
 
 // Store for SELECTED tutorial options in Sidebar component
-export const selectedTutorial = writable(tutorialOptions[4]);
+export const selectedTutorial = writable(tutorialOptions[0]);
 
 // Store for SELECTED tutorial GRAMMAR in Grammar Editor
-export const selectedTutorialGrammar = writable(tutorialOptions[4].content);
+export const selectedTutorialGrammar = writable(tutorialOptions[0].content);
 
 
-// Load TFJS code from tf files 
+// Load TFJS code from tf files
 
 import hello_world_code_example from "./machineLearning/tfjs/hello-world/hello-world.tf";
 import two_layer_non_linear_code_example from "./machineLearning/tfjs/non-linear/two-layer-non-linear.tf";
@@ -55,9 +56,9 @@ import music_rnn_example from "./machineLearning/magenta/music-rnn.tf";
 
 export const helloWorld = writable(hello_world_code_example);
 export const twoLayerNonLinear = writable(two_layer_non_linear_code_example);
-export const binaryClassification = writable(binary_classification_code_example); 
-export const echoStateNetwork = writable(echo_state_network_code_example); 
-export const lstmTextGen = writable(lstm_txt_gen_code_example); 
+export const binaryClassification = writable(binary_classification_code_example);
+export const echoStateNetwork = writable(echo_state_network_code_example);
+export const lstmTextGen = writable(lstm_txt_gen_code_example);
 export const musicRNN = writable(music_rnn_example);
 
 export const cm_theme_cobalt = writable("");
@@ -79,9 +80,9 @@ let initGrammarEditorValue = () => {
   let temp = window.localStorage.grammarEditorValue;
   (temp && temp !== "") ? ret = temp: ret = default_grammar;
   return ret;
-} 
+}
 
-let initLiveCodeEditorValue = () =>  { 
+let initLiveCodeEditorValue = () =>  {
     let ret;
 		let temp = window.localStorage.liveCodeEditorValue;
    	(temp && temp !== "") ? ret = temp : ret = default_liveCode;
@@ -174,10 +175,10 @@ function createSelectedLayout(){
     subscribe,
     reset: (n) => set(n)
   };
-} 
+}
 
-// Sidebar layout selection export const selectedLayout = createSelectedLayout(); 
-export const selectedLayout = writable(3); 
+// Sidebar layout selection export const selectedLayout = createSelectedLayout();
+export const selectedLayout = writable(3);
 
 
 export const layoutOptions = [
