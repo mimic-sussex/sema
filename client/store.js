@@ -16,6 +16,8 @@ import tutorial_1_grammar from "../tutorials/tutorial1.ne";
 import tutorial_2_grammar from "../tutorials/tutorial2.ne";
 import tutorial_3_grammar from "../tutorials/tutorial3.ne";
 import tutorial_4_grammar from "../tutorials/tutorial4.ne";
+import tutorial_5_grammar from "../tutorials/tutorial5.ne";
+import tutorial_6_grammar from "../tutorials/tutorial6.ne";
 
 
 // Stores for the two main layouts
