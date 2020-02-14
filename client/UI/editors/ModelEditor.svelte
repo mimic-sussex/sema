@@ -20,6 +20,8 @@
 
   import ModelWorker from "worker-loader!../../../workers/ml.worker.js";
 
+  import {addToHistory} from "../../utils/history.js";
+
   let codeMirror;
   let modelWorker;
 
@@ -118,11 +120,13 @@
     }
   }
 
+
   function evalModelEditorExpression(){
     let modelCode = codeMirror.getSelection();
     modelWorker.postMessage({ eval: modelCode });
     //console.log("DEBUG:ModelEditor:evalModelEditorExpression: " + code);
     window.localStorage.setItem("modelEditorValue", codeMirror.getValue());
+    addToHistory("modelhist_",modelCode);
   }
 
   function evalModelEditorExpressionBlock() {
@@ -130,6 +134,7 @@
     modelWorker.postMessage({ eval: modelCode });
     // console.log("DEBUG:ModelEditor:evalModelEditorExpressionBlock: " + code);
     window.localStorage.setItem("modelEditorValue", codeMirror.getValue());
+    addToHistory("modelhist_",modelCode);
   }
 
 </script>

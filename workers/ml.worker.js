@@ -1,7 +1,8 @@
 "use strict";
-// import * as tf from "@tensorflow/tfjs";  // Can not use it this way, only through import scripts 
+// import * as tf from "@tensorflow/tfjs";  // Can not use it this way, only through import scripts
 importScripts("https://cdn.jsdelivr.net/npm/@tensorflow/tfjs");
-importScripts("http://mlweb.loria.fr/lalolib.js");
+// importScripts("http://mlweb.loria.fr/lalolib.js");
+importScripts("lalolib.js");
 // import "./magenta/magentamusic.js";
 
 // let a = tf.tensor([100]);
@@ -46,7 +47,7 @@ var sema = {
 onmessage = m => {
 
   // console.log('DEBUG:ml.worker:onmessage');
-  // console.log(m); 
+  // console.log(m);
 
 	if (m.data.eval !== undefined) {
 		let evalRes = geval(m.data.eval);
@@ -54,7 +55,7 @@ onmessage = m => {
       console.log(evalRes);
     }
 		else console.log("0");
-	} 
+	}
   else if ("val" in m.data) {
     // console.log("DEBUG:ml.worker:onmessage:val");
 		let val = m.data.val;
@@ -64,7 +65,7 @@ onmessage = m => {
 		// console.log(loadResponders);
 		loadResponders[m.data.name](val);
 		delete loadResponders[m.data.name];
-	} 
+	}
   else if (m.data.type === "model-input-data") {
     input(m.data.id, m.data.value);
   }
