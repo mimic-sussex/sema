@@ -18,9 +18,9 @@ class PostMsgTransducer {
     this.name=name;
   }
 
-  // incoming(msg) {
-  //   this.val = msg.val;
-  // }
+  incoming(msg) {
+    this.val = msg.value;
+  }
 
   send(id, sendMsg) {
     if (this.sendCounter >= this.sendPeriod) {
@@ -28,7 +28,6 @@ class PostMsgTransducer {
         rq: "send",
         value: sendMsg,
         id: id
-
       });
       this.sendCounter -= this.sendPeriod;
     } else {
@@ -40,9 +39,9 @@ class PostMsgTransducer {
   receive(sendMsg) {
     if (this.sendCounter >= this.sendPeriod) {
       this.port.postMessage({
-        rq: "recv",
+        rq: "receive",
         value: sendMsg,
-        tname: this.name
+        transducerName: this.name
       });
       this.sendCounter -= this.sendPeriod;
     } else {
@@ -195,9 +194,9 @@ class MaxiProcessor extends AudioWorkletProcessor {
         //console.log(this.OSCMessages);
       } else if ('worker' in event.data) { //from a worker
         //this must be an OSC message
-        if (this.transducers[event.data.tname]) {
+        if (this.transducers[event.data.transducerName]) {
           // console.log(this.transducers[event.data.tname]);
-          this.transducers[event.data.tname].incoming(event.data);
+          this.transducers[event.data.transducerName].incoming(event.data);
         }
       } else if ('sample' in event.data) { //from a worker
         // console.log("sample received");
@@ -207,6 +206,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
         this.sampleVectorBuffers[sampleKey] = this.translateFloat32ArrayToBuffer(event.data.buffer);
       }else if ('phase' in event.data) {
         // console.log(this.kuraPhaseIdx);
+        console.log(event);
         this.netClock.setPhase(event.data.phase, event.data.i);
         // this.kuraPhase = event.data.phase;
         // this.kuraPhaseIdx = event.data.i;
@@ -308,8 +308,8 @@ class MaxiProcessor extends AudioWorkletProcessor {
         if (this.netClock.size() > 1 && this.clockPhaseSharingInterval++ == 2000) {
           this.clockPhaseSharingInterval=0;
           let phase = this.netClock.getPhase(0);
-          // console.log(`phase: ${phase}`);
-          this.port.postMessage({ p: phase, c: "phase" });
+          // console.log(`DEBUG:MaxiProcessor:phase: ${phase}`);
+          this.port.postMessage({ phase: phase, c: "phase" });
         }
 
         this.bitclock = Module.maxiBits.sig(Math.floor(this.clockPhase(1,0) * 1023.999999999));
