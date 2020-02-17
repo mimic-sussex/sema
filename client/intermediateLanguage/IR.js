@@ -448,6 +448,13 @@ const jsFuncMap = {
 		setup: (o, p) => `${o} = new Module.maxiIndex();`,
 		loop:  (o, p) => `${o}.pull(${p[0].loop},${p[1].loop},${p[2].loop})`
   },
+  svf: {
+    //set cutoff and resonance only when params change to save CPU
+		setup: (o, p) => `${o} = new Module.maxiSVF(); ${o}_p1 = new Module.maxiTrigger(); ${o}_p2 = new Module.maxiTrigger();`,
+		loop:  (o, p) => `(()=>{${o}_cutoff = ${p[1].loop}; if (${o}_p1.onChanged(${o}_cutoff, 1e-5)) {${o}.setCutoff(${o}_cutoff)};
+                            ${o}_res = ${p[2].loop}; if (${o}_p2.onChanged(${o}_res, 1e-5)) {${o}.setResonance(${o}_res)};
+                        return ${o}.play(${p[0].loop},${p[3].loop},${p[4].loop},${p[5].loop},${p[6].loop})})()`
+  },
   bitclock: {
     setup: (o, p) => "",
 		loop:  (o, p) => `this.bitclock`
@@ -596,8 +603,8 @@ class IRToJavascript {
     let code = IRToJavascript.traverseTree(tree, IRToJavascript.emptyCode(), 0, vars);
     code.setup = `() => {let q=this.newq(); ${code.setup}; return q;}`;
     code.loop = `(q, inputs, mem) => {${code.loop} return q.sigOut;}`
-    // console.log("DEBUG:treeToCode");
-    // console.log(code.loop);
+    console.log("DEBUG:treeToCode");
+    console.log(code.loop);
     // console.log(code.paramMarkers);
     return code;
   }

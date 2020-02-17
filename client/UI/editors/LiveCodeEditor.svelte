@@ -55,8 +55,8 @@
 
 
   let parseLiveCodeAsync = e => {
-    console.log('DEBUG:LiveCodeEditor:parseLiveCode:');
-    console.log(e);
+    // console.log('DEBUG:LiveCodeEditor:parseLiveCode:');
+    // console.log(e);
     addToHistory("lchist_", e);
     if(window.Worker){
       let parserWorkerAsync = new Promise( (res, rej) => {

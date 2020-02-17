@@ -1,5 +1,22 @@
+
 # Lexer [or tokenizer] definition with language lexemes [or tokens]
 @{%
+
+/*
+Examples:
+
+Saw wave:
+
+{100}saw
+
+State variable filter
+
+:speed:{{1}pha,100,500}uexp;
+{{100}saw,:speed:, 5, 0,1,0,0}svf
+
+*/
+
+
 const lexer = moo.compile({
   separator:      /,/,
   paramEnd:       /}/,
