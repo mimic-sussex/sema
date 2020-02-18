@@ -64,6 +64,36 @@ class PostMsgTransducer {
   // }
 }
 
+class pvshift {
+  constructor() {
+    this.fft = new Module.maxiFFT();
+		this.fft.setup(1024,512,1024);
+		this.ifft = new Module.maxiIFFT();
+		this.ifft.setup(1024,512,1024);
+		this.mags = new Module.VectorFloat();
+		this.phases = new Module.VectorFloat();
+		this.mags.resize(512,0);
+		this.phases.resize(512,0);
+  }
+
+  play(sig, shift) {
+    if (this.fft.process(sig, Module.maxiFFTModes.WITH_POLAR_CONVERSION)) {
+      this.mags = this.fft.getMagnitudes();
+      this.phases = this.fft.getPhases();
+      //shift bins up
+      for(let i=511; i > 0; i--) {
+        if (i > shift) {
+          this.mags.set(i, this.mags.get(i-shift));
+        }else{
+          this.mags.set(i,0);
+        }
+      }
+      // console.log(mags.get(10));
+    }
+    sig = this.ifft.process(this.mags, this.phases, Module.maxiIFFTModes.SPECTRUM);
+    return sig;
+  }
+}
 
 
 /**

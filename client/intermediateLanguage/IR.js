@@ -458,7 +458,11 @@ const jsFuncMap = {
   bitclock: {
     setup: (o, p) => "",
 		loop:  (o, p) => `this.bitclock`
-  }
+  },
+  pvshift: {
+		setup: (o, p) => `${o} = new pvshift();`,
+		loop:  (o, p) => `${o}.play(${p[0].loop},${p[1].loop})`
+	}
 
 };
 
