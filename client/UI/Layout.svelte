@@ -50,8 +50,8 @@
   import Model from './editors/ModelEditor.svelte';
   // import Model from './editors/LiveCodeEditor.svelte';
 
-  import ParserWorker from "worker-loader!../../workers/parser.worker.js";
-  import ILWorker from "worker-loader!../../workers/il.worker.js"
+  import ParserWorker from "worker-loader!../workers/parser.worker.js";
+  import ILWorker from "worker-loader!../workers/il.worker.js"
 
 
   let codeMirror1, codeMirror2; // Live layout [Hidden]

@@ -32,7 +32,7 @@
 
   import IRToJavascript from "../../intermediateLanguage/IR.js";
 
-  import ParserWorker from "worker-loader!../../../workers/parser.worker.js";
+  import ParserWorker from "worker-loader!../../workers/parser.worker.js";
 
   let codeMirror;
   let parserWorker;

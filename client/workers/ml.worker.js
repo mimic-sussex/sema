@@ -2,7 +2,7 @@
 // import * as tf from "@tensorflow/tfjs";  // Can not use it this way, only through import scripts
 importScripts("https://cdn.jsdelivr.net/npm/@tensorflow/tfjs");
 // importScripts("http://mlweb.loria.fr/lalolib.js");
-importScripts("lalolib.js");
+importScripts("./lalolib.js");
 // import "./magenta/magentamusic.js";
 
 // let a = tf.tensor([100]);

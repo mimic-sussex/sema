@@ -1,6 +1,6 @@
 import nearley from 'nearley';
 import mooo from 'moo';
-import semaa from '../client/intermediateLanguage/sema';
+import semaa from '../intermediateLanguage/sema';
 // import cloneDeep from "lodash.cloneDeep";
 
 

@@ -63,7 +63,7 @@ module.exports = {
 			{
 				test: /workers\/libs\/lalolib\.js/,
 				use: {
-					loader: "file-loader",
+					loader: "file-loader"
 				}
 			},
 			{
@@ -72,7 +72,7 @@ module.exports = {
 					path.resolve(__dirname, "workers/il.worker.js"),
 					path.resolve(__dirname, "workers/parser.worker.js"),
 					path.resolve(__dirname, "workers/ml.worker.js"),
-					path.resolve(__dirname, "workers/tfjs.min.js"),
+					path.resolve(__dirname, "workers/tfjs.min.js")
 					// "./workers/ml.worker.js",
 					// "./workers/il.worker.js",
 					// "./workers/parser.worker.js"
@@ -123,6 +123,19 @@ module.exports = {
 				loader: "file-loader", // files should NOT get processed, only emitted
 				options: {
 					name: "maxi-processor.js"
+				}
+			},
+			{
+				// Issue pointed out by Surma on the following gist – https://gist.github.com/surma/b2705b6cca29357ebea1c9e6e15684cc
+				// Emscripten JS files define a global. With `exports-loader` we can
+				// load these files correctly (provided the global’s name is the same
+				// as the file name).
+				test: /lalolib.js/,
+				// loader: 'exports-loader',
+				// loader: 'worklet-loader',
+				loader: "file-loader", // files should NOT get processed, only emitted
+				options: {
+					name: "lalolib.js"
 				}
 			},
 			{

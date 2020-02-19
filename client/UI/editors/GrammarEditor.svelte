@@ -21,7 +21,7 @@
   import * as nearley from 'nearley/lib/nearley.js'
   import compile from '../../compiler/compiler';
 
-  import ModelWorker from "worker-loader!../../../workers/ml.worker.js";
+  import ModelWorker from "worker-loader!../../workers/ml.worker.js";
 
   let codeMirror;
   let modelWorker; 

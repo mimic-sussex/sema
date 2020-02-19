@@ -1,4 +1,4 @@
-import IRToJavascript from "../client/intermediateLanguage/IR.js";
+import IRToJavascript from "../intermediateLanguage/IR.js";
 
 
 onmessage = m => {

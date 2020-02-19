@@ -18,9 +18,9 @@
 
   import { PubSub } from '../../messaging/pubSub.js';
 
-  import ModelWorker from "worker-loader!../../../workers/ml.worker.js";
+  import ModelWorker from "worker-loader!../../workers/ml.worker.js";
 
-  import {addToHistory} from "../../utils/history.js";
+  import { addToHistory } from "../../utils/history.js";
 
   let codeMirror;
   let modelWorker;
