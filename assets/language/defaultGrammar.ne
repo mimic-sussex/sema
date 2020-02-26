@@ -33,6 +33,8 @@ const lexer = moo.compile({
   separator:      /,/,
   paramEnd:       /}/,
   paramBegin:     /{/,
+  listEnd:       /\>/,
+  listBegin:     /\</,
   variable:       /:[a-zA-Z0-9]+:/,
   sample:         { match: /\\[a-zA-Z0-9]+/, lineBreaks: true, value: x => x.slice(1, x.length)},
   slice:         { match: /\|[a-zA-Z0-9]+/, lineBreaks: true, value: x => x.slice(1, x.length)},
@@ -103,7 +105,7 @@ ParamElement ->
   %variable
   {% d => sema.getvar( d[0] ) %}
   |
-  %paramBegin Params  %paramEnd
+  %listBegin Params  %listEnd
   {% d => ( { '@list': d[1] } )%}
 
 # Whitespace
