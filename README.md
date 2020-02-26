@@ -56,6 +56,12 @@ yarn dev
 yarn go
 ```
 
+## Linux Users
+
+Sema uses audio worklets. Their performance seems very sensitive to CPU power scaling. If you are experiencing sound quality issues, try setting the CPU governor to *performance* mode. e.g on Ubuntu,
+
+```cpupower frequency-set --governor performance```
+
 
 ## Documentation
 
