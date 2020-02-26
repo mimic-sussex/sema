@@ -9,10 +9,22 @@ Saw wave:
 
 {100}saw
 
-State variable filter
+State variable filter:
 
 :speed:{{1}pha,100,500}uexp;
 {{100}saw,:speed:, 5, 0,1,0,0}svf
+
+Sequencing with idx and lists:
+
+:x:{{10}imp,{4}pha,<200,400,600,1000>}idx;
+{:x:}saw
+
+Lists with variable elements:
+:x:{{10}imp,{4}pha,<200,400,600,{{{0.1}sin}abs,100}mul>}idx;
+{:x:}saw
+
+:x:{{10}imp,{0.4}pha,<{{{0.15}sin}abs,300}mul,{{{0.1}sin}abs,100}mul>}idx;
+{:x:}sawn
 
 */
 
