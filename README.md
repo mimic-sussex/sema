@@ -1,7 +1,7 @@
 
 
 # Sema – Live Code Language Design Playground #
-![version](https://img.shields.io/badge/version-0.3-red)
+![version](https://img.shields.io/badge/version-0.4-red)
 [![stability-experimental](https://img.shields.io/badge/stability-experimental-orange.svg)](https://github.com/emersion/stability-badges#experimental)
 [![Build Status](https://travis-ci.com/mimic-sussex/sema.svg?branch=master)](https://travis-ci.com/mimic-sussex/sema)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/mimic-sussex/sema/blob/master/LICENSE)
@@ -58,7 +58,7 @@ yarn go
 
 ## Linux Users
 
-Sema uses audio worklets. Their performance seems very sensitive to CPU power scaling. If you are experiencing sound quality issues, try setting the CPU governor to *performance* mode. e.g on Ubuntu,
+Sema uses Web Audio API Audio Worklets. Their performance seems very sensitive to CPU power scaling. If you are experiencing sound quality issues, try setting the CPU governor to *performance* mode. e.g on Ubuntu,
 
 ```cpupower frequency-set --governor performance```
 
