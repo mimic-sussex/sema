@@ -100,10 +100,8 @@
           console.log(data);
         },
         pbcopy: data => {
-          console.log(data.msg);
           let copyField=document.getElementById("hiddenCopyField");
           copyField.value = data.msg;
-          console.log(copyField);
           copyField.select();
           document.execCommand("Copy");
         }
