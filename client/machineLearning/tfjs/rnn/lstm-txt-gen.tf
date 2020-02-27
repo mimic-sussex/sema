@@ -1,6 +1,6 @@
-//js
+//js - Long-short-term-memory (LSTM) model for text generation (tfjs)
 
-//hyperparameters of long-short-term-memory (LSTM) model 
+// Hyperparameters of LSTM model 
 var lstmLayerSizes;
 var learningRate; 
 var numEpochs; 

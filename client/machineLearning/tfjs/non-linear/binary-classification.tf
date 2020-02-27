@@ -1,4 +1,4 @@
-//js
+//js - Three-layer model for binary classification (tfjs)
 var model = tf.sequential();
 model.add(tf.layers.dense({ 
   inputShape: [1], 

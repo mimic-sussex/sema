@@ -1,4 +1,4 @@
-
+//js - Echo state network (tfjs)
 var esn = {};
 esn.N = 10;
 esn.NOut = 1;
