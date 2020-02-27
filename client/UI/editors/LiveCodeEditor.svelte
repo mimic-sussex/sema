@@ -34,12 +34,14 @@
 
   import ParserWorker from "worker-loader!../../workers/parser.worker.js";
 
+  export let value = "";
+
   let codeMirror;
   let parserWorker;
   let messaging = new PubSub();
 
   onMount(async () => {
-    codeMirror.set($liveCodeEditorValue, "js", 'monokai');
+    codeMirror.set(value, "js", 'monokai');
 
     parserWorker = new ParserWorker();  // Create one worker per widget lifetime
 	});
@@ -233,8 +235,10 @@
 </style>
 
 <div class="codemirror-container layout-template-container scrollable">
+
+ <!-- bind:value={$liveCodeEditorValue} -->
   <CodeMirror bind:this={codeMirror}
-              bind:value={$liveCodeEditorValue}
+              bind:value={value}             
               tab={true}
               lineNumbers={true}
               on:change={parseLiveCodeOnChange}

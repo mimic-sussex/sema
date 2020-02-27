@@ -14,7 +14,6 @@
     "test": "cross-env NODE_ENV=development webpack"
   },
   "dependencies": {
-    "@tensorflow/tfjs": "^1.5.2",
     "lodash.clonedeep": "^4.5.0",
     "lodash.map": "^4.6.0",
     "nearley": "^2.19.0",

@@ -13,12 +13,9 @@
     editorThemes
   }  from '../store.js';
 
-  import { PubSub } from "../messaging/pubSub.js";
-
 	import { createEventDispatcher } from 'svelte';
-	const dispatch = createEventDispatcher();
 
-  const messaging = new PubSub();
+	const dispatch = createEventDispatcher();
 
   let selectedLanguage = 1;
 
@@ -43,16 +40,9 @@
 	}
 
   function dispatchAdd(type, selected){
-    console.log(`DEBUG:Sidebar:dispatchAdd: /add/${type}/${selected.id}`);
-    // console.log(selected.content);
-
-		this.messaging.publish("add-live-code-editor", {
-			type: "model-input-data",
-			id: event.data.id,
-			value: event.data.value
-		});
-
-    // dispatch("add", { type: type, id: selected.id, value: selected.content} );
+    console.log(`DEBUG:SidebarPlayground:dispatchAdd: /add/${type}/${selected.id}`);
+    console.log(selected.content);
+    dispatch("add", { type: type, id: selected.id, value: selected.content} );
 
     switch (type) {
       case 'live':
@@ -223,12 +213,13 @@
 
 
 <div class="sidebar">
-  {#if $tutorialsActive }
-    <div class="layout-combobox-container controls">
+
+  <!-- {#if $tutorialsActive }
+    <div class="layout-combobox-container controls"> -->
       <!-- <div>
         <span class="whiteText">Tutorials</span>
       </div> -->
-      <select class="combobox-dark" bind:value={$selectedTutorial} >
+      <!-- <select class="combobox-dark" bind:value={$selectedTutorial} >
         {#each tutorialOptions as tutorialOption}
           <option value={tutorialOption}>
             {tutorialOption.text}
@@ -236,7 +227,7 @@
         {/each}
       </select>    
     </div>
-    <br/>
+    <br/> -->
     <!-- <div class="language-combobox-container controls">
       <div>
         <span class="whiteText">Language</span>
@@ -250,7 +241,7 @@
       </select>    
     </div> -->
 
-  {:else if $playgroundActive }
+  <!-- {:else if $playgroundActive } -->
 
     <!-- Live Code Combobox Selector -->
     <div class="layout-combobox-container controls">
@@ -335,5 +326,5 @@
 
     </div>
 
-  {/if}
+  <!-- {/if} -->
 </div>

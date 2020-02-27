@@ -8,13 +8,15 @@
   import LiveCodeEditor from '../editors/LiveCodeEditor.svelte';
   import LiveCodeParseOutput from '../widgets/LiveCodeParseOutput.svelte';
   import GrammarCompileOutput from '../widgets/GrammarCompileOutput.svelte';
-  
+  import { PubSub } from "../../messaging/pubSub.js"; 
+ 
   import {
     dashboardItems,
     selectedItem,
     selectedItemControls
   } from "../../store.js"
-
+ 
+  const messaging = new PubSub();
 
   export let value = '';
 
@@ -255,20 +257,24 @@
         let:item      
         on:adjust={onAdjust}>
     <span class='move'>+</span>
-    <div class="content" style="background: {item.static ? '#ccccee' : item.data}" on:mousedown={ e => e.stopPropagation() } >
+    <div class="content" style="background: { item.static ? '#ccccee' : item.data}" on:mousedown={ e => e.stopPropagation() } >
       <span on:click={ remove.bind(null, item) } class='close'>✕</span>
         {#if item.type === 'model' }
-        <ModelEditor bind:value={value} />
+        <!-- <ModelEditor bind:value={value} /> -->
+        <ModelEditor value={item.value} />
+
         {:else if item.type === 'grammar' }
-        <!-- <GrammarEditor bind:value={value}/> -->
-        <GrammarEditor bind:value={value}/>
+        <GrammarEditor value={item.value} />
+        
         {:else if item.type === 'live' }
-        <!-- <LiveCodeEditor bind:value={value}/> -->
-        <LiveCodeEditor bind:value={value} />
+        <LiveCodeEditor value={item.value} />
+       
         {:else if item.type === 'liveCodeParseOutput' }
         <LiveCodeParseOutput class='scrollable'/>
+       
         {:else if item.type === 'grammarCompileOutput' }
         <GrammarCompileOutput class='scrollable'/>
+       
         {:else}
         <Editor bind:value={value}/>
         {/if}

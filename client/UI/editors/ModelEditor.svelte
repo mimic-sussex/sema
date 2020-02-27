@@ -21,16 +21,21 @@
   import ModelWorker from "worker-loader!../../workers/ml.worker.js";
 
   import { addToHistory } from "../../utils/history.js";
+  import "../../machineLearning/lalolib.js";
 
+
+  export let value = "";
+  
   let codeMirror;
   let modelWorker;
 
+    
   let messaging = new PubSub();
   let subscriptionTokenMID;
   let subscriptionTokenMODR;
 
   onMount(async () => {
-    codeMirror.set($modelEditorValue, "js");
+    codeMirror.set(value, "js");
     subscriptionTokenMID = messaging.subscribe("model-input-data", e => postToModel(e) );
     subscriptionTokenMODR = messaging.subscribe("model-output-data-request", e => postToModel(e) );
     modelWorker = new ModelWorker();  // Creates one ModelWorker per ModelEditor lifetime
@@ -186,17 +191,15 @@
 
 <!-- <div class="layout-template-container" contenteditable="true" bind:innerHTML={layoutTemplate}> -->
 <div class="codemirror-container layout-template-container scrollable">
-  <!-- <div class="live-container" style="display:{liveContainerDisplay}"> -->
-    <!-- <div slot="liveCodeEditor" class="codemirror-container flex scrollable"></div> -->
-      <CodeMirror bind:this={codeMirror}
-                  bind:value={$modelEditorValue}
-                  tab={true}
-                  lineNumbers={true}
-                  on:change={nil}
-                  ctrlEnter={evalModelEditorExpressionBlock}
-                  cmdEnter={evalModelEditorExpressionBlock}
-                  shiftEnter={evalModelEditorExpression}
-                  />
+  <CodeMirror bind:this={codeMirror}
+              bind:value={value}
+              tab={true}
+              lineNumbers={true}
+              on:change={nil}
+              ctrlEnter={evalModelEditorExpressionBlock}
+              cmdEnter={evalModelEditorExpressionBlock}
+              shiftEnter={evalModelEditorExpression}
+              />
     <!-- </div> -->
   <!-- </div> -->
 </div>

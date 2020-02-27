@@ -1,5 +1,5 @@
 <script>
-  import Sidebar from './Sidebar.svelte';
+  import SidebarPlayground from './SidebarPlayground.svelte';
   import Layout from './Layout.svelte';
   import { selectedLayout, layoutOptions} from '../store.js';
   // let selectedLayout = 1; 
@@ -55,7 +55,7 @@
 
 <div class="container">
   <div class="sidebar-container">
-    <Sidebar on:message={handleMessage} 
+    <SidebarPlayground on:message={handleMessage} 
              on:add={handleAdd}
     />
   </div>

@@ -25,9 +25,10 @@
 
   let codeMirror;
   let modelWorker; 
-  
+  export let value;
+
   onMount(async () => {
-    codeMirror.set($grammarEditorValue, "ebnf");
+    codeMirror.set(value, "ebnf");
     // modelWorker = new ModelWorker();  // Create one worker per widget lifetime
 	});
 
@@ -149,7 +150,7 @@
 <!-- <div class="layout-template-container" contenteditable="true" bind:innerHTML={layoutTemplate}> -->
 <div class="codemirror-container layout-template-container scrollable">
   <CodeMirror bind:this={codeMirror}  
-              bind:value={$grammarEditorValue} 
+              bind:value={value} 
               tab={true} 
               lineNumbers={true}  
               on:change={compileGrammarOnChange}  /> 

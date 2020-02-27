@@ -65,11 +65,11 @@
   let dashboard;
 
   export function addNewLiveCodeEditor(){
- 
     dashboard.addItem();
   }
 
   export function addToDashboard(item){
+    console.log('zxcv');
     let { type, id, value } = item;
     dashboard.addItem(type, id, value);
   }
