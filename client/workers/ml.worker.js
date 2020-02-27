@@ -39,8 +39,13 @@ var sema = {
       "func": "sendcode",
       "code": code,
     });
+  },
+  pbcopy: (msg) => {
+    postMessage({
+      "func": "pbcopy",
+      "msg": msg,
+    });
   }
-
 };
 `);
 
