@@ -16,6 +16,10 @@ State variable filter:
 
 Sequencing with idx and lists:
 
+ - grabbing a single fixed element
+:x:{{10}imp,0,<200,400,600,1000>}idx;
+{:x:}saw
+
 :x:{{10}imp,{4}pha,<200,400,600,1000>}idx;
 {:x:}saw
 
