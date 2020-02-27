@@ -1,7 +1,3 @@
-# build directory
-dist/
-dist/*
-
 # Logs
 logs
 *.log
@@ -35,8 +31,6 @@ bower_components
 
 # Compiled binary addons (https://nodejs.org/api/addons.html)
 build/Release
-build/*
-
 
 # Dependency directories
 node_modules/
@@ -62,7 +56,7 @@ typings/
 
 # Package manager lock files
 yarn.lock
-package-lock.json
+
 
 # dotenv environment variables file
 .env
@@ -70,5 +64,11 @@ package-lock.json
 # next.js build output
 .next
 
+.vscode
 .vscode/*
 .vscode/
+.DS_Store
+public/*bundle.*
+package-lock.json
+yarn.lock
+public/
