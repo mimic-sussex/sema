@@ -93,6 +93,14 @@
         },
         sendcode: data => {
           console.log(data);
+        },
+        pbcopy: data => {
+          console.log(data.msg);
+          let copyField=document.getElementById("hiddenCopyField");
+          copyField.value = data.msg;
+          console.log(copyField);
+          copyField.select();
+          document.execCommand("Copy");
         }
       };
       responders[m.data.func](m.data);
@@ -187,7 +195,7 @@
 <!-- <div class="layout-template-container" contenteditable="true" bind:innerHTML={layoutTemplate}> -->
 <div class="codemirror-container layout-template-container scrollable">
   <!-- <div class="live-container" style="display:{liveContainerDisplay}"> -->
-    <!-- <div slot="liveCodeEditor" class="codemirror-container flex scrollable"></div> -->
+    <!-- <div slot="liveCodsendcodesendcodeeEditor" class="codemirror-container flex scrollable"></div> -->
       <CodeMirror bind:this={codeMirror}
                   bind:value={$modelEditorValue}
                   tab={true}
@@ -200,3 +208,4 @@
     <!-- </div> -->
   <!-- </div> -->
 </div>
+<input aria-hidden="true" id="hiddenCopyField" style="position: absolute; left: -999em;" value="">
