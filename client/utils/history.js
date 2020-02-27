@@ -20,5 +20,12 @@ function addToHistory(historyName, item) {
   window.localStorage[historyName+nowstr] = JSON.stringify({"t":nowdate,"code":item});
 }
 
+function exportHistory() {
+
+}
+
+function clearHistory() {
+  
+}
 
 module.exports = {addToHistory};

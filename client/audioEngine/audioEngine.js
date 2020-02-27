@@ -141,7 +141,7 @@ class AudioEngine {
 	 */
 	async init(numClockPeers) {
 		if (this.audioContext === undefined) {
-			
+
       this.audioContext = new AudioContext({
 				// create audio context with optimally configured latency
 				latencyHint: "playback",
@@ -152,13 +152,13 @@ class AudioEngine {
       this.connectMediaStream();
       this.loadImportedSamples();
 
-      // No need to inject the callback here, messaging is built in KuraClock 
+      // No need to inject the callback here, messaging is built in KuraClock
       // this.kuraClock = new kuramotoNetClock((phase, idx) => {
       //   // console.log( `DEBUG:AudioEngine:sendPeersMyClockPhase:phase:${phase}:id:${idx}`);
       //   // This requires an initialised audio worklet
       //   this.audioWorkletNode.port.postMessage({ phase: phase, i: idx });
       // });
-				
+
 
       if (this.kuraClock.connected()) {
         this.kuraClock.queryPeers(async numClockPeers => {

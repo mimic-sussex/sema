@@ -428,10 +428,14 @@ const jsFuncMap = {
 		setup: (o, p) => "",
 		loop:  (o, p) => `this.clockTrig(${p[0].loop},${p.length > 1 ? p[1].loop : 0})`
 	},
-  // clfreq: {
-	// 	setup: (o, p) => "",
-	// 	loop:  (o, p) => `this.setClockFreq(${p[0].loop})`
-	// },
+  clfreq: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `this.setClockFreq(${p[0].loop})`
+	},
+  clbpm: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `this.setClockFreq(60/${p[0].loop})`
+	},
   onzx: {
 		setup: (o, p) => `${o} = new Module.maxiTrigger();`,
 		loop:  (o, p) => `${o}.onZX(${p[0].loop})`
@@ -444,15 +448,25 @@ const jsFuncMap = {
 		setup: (o, p) => `${o} = new Module.maxiCounter();`,
 		loop:  (o, p) => `${o}.count(${p[0].loop},${p[1].loop})`
 	},
-  index: {
+  idx: {
 		setup: (o, p) => `${o} = new Module.maxiIndex();`,
 		loop:  (o, p) => `${o}.pull(${p[0].loop},${p[1].loop},${p[2].loop})`
+  },
+  svf: {
+    //set cutoff and resonance only when params change to save CPU
+		setup: (o, p) => `${o} = new Module.maxiSVF(); ${o}_p1 = new Module.maxiTrigger(); ${o}_p2 = new Module.maxiTrigger();`,
+		loop:  (o, p) => `(()=>{${o}_cutoff = ${p[1].loop}; if (${o}_p1.onChanged(${o}_cutoff, 1e-5)) {${o}.setCutoff(${o}_cutoff)};
+                            ${o}_res = ${p[2].loop}; if (${o}_p2.onChanged(${o}_res, 1e-5)) {${o}.setResonance(${o}_res)};
+                        return ${o}.play(${p[0].loop},${p[3].loop},${p[4].loop},${p[5].loop},${p[6].loop})})()`
   },
   bitclock: {
     setup: (o, p) => "",
 		loop:  (o, p) => `this.bitclock`
-  }
-
+  },
+  pvshift: {
+		setup: (o, p) => `${o} = new pvshift();`,
+		loop:  (o, p) => `${o}.play(${p[0].loop},${p[1].loop})`
+	},
 };
 
 class IRToJavascript {
@@ -570,6 +584,35 @@ class IRToJavascript {
         // }
         return ccode;
       },
+      '@list': (ccode, el) => {
+        //a list can be static and/or dynamic
+        //create a vector for the list
+        let objName = "q.l" + IRToJavascript.getNextID();
+        ccode.setup += `${objName} = new Module.VectorDouble();`;
+        ccode.setup += `${objName}.resize(${el.length},0);`;
+
+        //in the loop, we create a function that returns the list. It might also update dynamic elements of the list
+        ccode.loop += `(()=>{`;
+        let extraSetupCode = "";
+
+        for(let i_list=0; i_list < el.length; i_list++) {
+          //if the element is a static number, set this element once in the setup code
+          let element =  IRToJavascript.traverseTree(el[i_list], IRToJavascript.emptyCode(), level, vars);
+          if(Object.keys(el[i_list])[0] == '@num') {
+              ccode.setup += `${objName}.set(${i_list}, ${element.loop});`;
+          }else{
+              //if the element not a number, set this element each update before returning the list
+              extraSetupCode += element.setup;
+              ccode.loop += `${objName}.set(${i_list}, ${element.loop});`;
+          }
+        }
+
+        ccode.loop += `return ${objName}})()`;
+        ccode.setup += extraSetupCode;
+        // ccode.loop+=`${objName}`;
+        console.log(ccode);
+        return ccode;
+      }
     }
 
     if (Array.isArray(t)) {
@@ -593,11 +636,13 @@ class IRToJavascript {
   static treeToCode(tree) {
     // console.log(tree);
     let vars = {};
+    console.log("1");
     let code = IRToJavascript.traverseTree(tree, IRToJavascript.emptyCode(), 0, vars);
+    console.log("2");
     code.setup = `() => {let q=this.newq(); ${code.setup}; return q;}`;
     code.loop = `(q, inputs, mem) => {${code.loop} return q.sigOut;}`
-    // console.log("DEBUG:treeToCode");
-    // console.log(code.loop);
+    console.log("DEBUG:treeToCode");
+    console.log(code.loop);
     // console.log(code.paramMarkers);
     return code;
   }

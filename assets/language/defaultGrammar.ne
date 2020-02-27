@@ -1,9 +1,44 @@
+
 # Lexer [or tokenizer] definition with language lexemes [or tokens]
 @{%
+
+/*
+Examples:
+
+Saw wave:
+
+{100}saw
+
+State variable filter:
+
+:speed:{{1}pha,100,500}uexp;
+{{100}saw,:speed:, 5, 0,1,0,0}svf
+
+Sequencing with idx and lists:
+
+ - grabbing a single fixed element
+:x:{{10}imp,0,<200,400,600,1000>}idx;
+{:x:}saw
+
+:x:{{10}imp,{4}pha,<200,400,600,1000>}idx;
+{:x:}saw
+
+Lists with variable elements:
+:x:{{10}imp,{4}pha,<200,400,600,{{{0.1}sin}abs,100}mul>}idx;
+{:x:}saw
+
+:x:{{10}imp,{0.4}pha,<{{{0.15}sin}abs,300}mul,{{{0.1}sin}abs,100}mul>}idx;
+{:x:}sawn
+
+*/
+
+
 const lexer = moo.compile({
   separator:      /,/,
   paramEnd:       /}/,
   paramBegin:     /{/,
+  listEnd:       /\>/,
+  listBegin:     /\</,
   variable:       /:[a-zA-Z0-9]+:/,
   sample:         { match: /\\[a-zA-Z0-9]+/, lineBreaks: true, value: x => x.slice(1, x.length)},
   slice:         { match: /\|[a-zA-Z0-9]+/, lineBreaks: true, value: x => x.slice(1, x.length)},
@@ -74,7 +109,7 @@ ParamElement ->
   %variable
   {% d => sema.getvar( d[0] ) %}
   |
-  %paramBegin Params  %paramEnd
+  %listBegin Params  %listEnd
   {% d => ( { '@list': d[1] } )%}
 
 # Whitespace
