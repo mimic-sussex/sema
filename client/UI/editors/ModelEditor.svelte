@@ -131,7 +131,7 @@
     modelWorker.postMessage({ eval: modelCode });
     //console.log("DEBUG:ModelEditor:evalModelEditorExpression: " + code);
     window.localStorage.setItem("modelEditorValue", codeMirror.getValue());
-    addToHistory("modelhist_",modelCode);
+    addToHistory("model-history-", modelCode);
   }
 
   function evalModelEditorExpressionBlock() {
@@ -139,7 +139,7 @@
     modelWorker.postMessage({ eval: modelCode });
     // console.log("DEBUG:ModelEditor:evalModelEditorExpressionBlock: " + code);
     window.localStorage.setItem("modelEditorValue", codeMirror.getValue());
-    addToHistory("modelhist_",modelCode);
+    addToHistory("model-history", modelCode);
   }
 
 </script>

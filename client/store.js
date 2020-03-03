@@ -32,9 +32,8 @@ export const tutorialOptions = [
 	{ id: 2, text: `Tutorial 2`, content: tutorial_2_grammar },
 	{ id: 4, text: `Tutorial 4`, content: tutorial_4_grammar },
 	{ id: 3, text: `Tutorial 3`, content: tutorial_3_grammar },
-	// i commented these out because they were causing an error
-	// { id: 5, text: `Tutorial 5`, content: tutorial_5_grammar },
-	// { id: 6, text: `Tutorial 6`, content: tutorial_6_grammar },
+	{ id: 5, text: `Tutorial 5`, content: tutorial_5_grammar },
+	{ id: 6, text: `Tutorial 6`, content: tutorial_6_grammar },
 	{ id: 7, text: `Tutorial 7`, content: default_grammar }
 ];
 

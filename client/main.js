@@ -1,7 +1,6 @@
 import App from './UI/App.svelte';
 
-// import { createAudioEngine } from './audioEngine/audioEngineController.js';
-import { PubSub } from './messaging/pubSub';
+import { exportHistory, clearHistory } from "./utils/history.js";
 
 const app = new App({
 	target: document.body,
@@ -10,9 +9,9 @@ const app = new App({
 	}
 });
 
-// window.messaging = new PubSub();
 
-// createAudioEngine();
+// exportHistory();
+// clearHistory();
 
 window.app = app;
 
