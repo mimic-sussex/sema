@@ -10,7 +10,7 @@ Loading back into the code is asynchronous, so the data is assigned in the funct
 
 ```
 mydata = "";
-sema.loadF32Array(fn, 
+sema.loadF32Array(fn,
     (v)=>{
         if ( v[0] != null ){
             mydata = v;  
@@ -18,6 +18,12 @@ sema.loadF32Array(fn,
         console.log(fn);
     }
   )
+```
+
+# copy text to the clipboard
+
+```
+sema.pbcopy("some text to copy to the clipboard")
 ```
 
 # record data from osc to a variable
@@ -39,4 +45,3 @@ input = (id,x) => {
     if (record) b[idx++] = x;
 }
 ```
-
