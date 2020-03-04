@@ -210,7 +210,7 @@
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("# Lexer [or tokenizer] definition with language lexemes [or tokens]\n@{%\nconst lexer = moo.compile({\n  separator:      /,/,\n  paramEnd:       /}/,\n  paramBegin:     /{/,\n  variable:       /:[a-zA-Z0-9]+:/,\n  sample:         { match: /\\\\[a-zA-Z0-9]+/, lineBreaks: true, value: x => x.slice(1, x.length)},\n  slice:         { match: /\\|[a-zA-Z0-9]+/, lineBreaks: true, value: x => x.slice(1, x.length)},\n  stretch:        { match: /\\@[a-zA-Z0-9]+/, lineBreaks: true, value: x => x.slice(1, x.length)},\n  number:         /-?(?:[0-9]|[1-9][0-9]+)(?:\\.[0-9]+)?\\b/,\n  semicolon:      /;/,\n  funcName:       /[a-zA-Z][a-zA-Z0-9]*/,\n  comment:        /#[^\\n]*/,\n  ws:             { match: /\\s+/, lineBreaks: true},\n});\n\n%}\n\n# Pass your lexer object using the @lexer option\n@lexer lexer\n\n# Grammar definition in the Extended Backus Naur Form (EBNF)\nmain -> _ Statement _\n{% d => ( { '@lang' : d[1] } )  %}\n\nStatement ->\n  Expression _ %semicolon _ Statement\n  {% d => [ { '@spawn': d[0] } ].concat(d[4]) %}\n  |\n  Expression\n  {% d => [ { '@sigOut': { '@spawn': d[0] }} ] %}\n  # |\n  # %hash . '\\n'\n  #{% d => ( { '@comment': d[3] } ) %}\n\nExpression ->\n  ParameterList _ %funcName\n  {% d => sema.synth( d[2].value, d[0]['@params'] ) %}\n  |\n  ParameterList _ %sample\n  {% d => sema.synth( 'sampler', d[0]['@params'].concat( [ sema.str( d[2].value ) ] ) ) %}\n  |\n  ParameterList _ %slice\n  {% d => sema.synth( 'slice', d[0]['@params'].concat( [ sema.str( d[2].value ) ] ) ) %}\n  |\n  ParameterList _ %stretch\n  {% d => sema.synth( 'stretch', d[0]['@params'].concat( [ sema.str( d[2].value ) ] ) ) %}\n  |\n  %variable _ Expression\n  {% d => sema.setvar( d[0], d[2] ) %}\n  |\n  %comment {% id %}\n\nParameterList ->\n  %paramBegin Params %paramEnd\n  {% d => ( { 'paramBegin': d[0], '@params': d[1], 'paramEnd': d[2] } ) %}\n\n\nParams ->\n  ParamElement\n  {% d => ( [ d[0] ] ) %}\n  |\n  ParamElement _ %separator _ Params\n  {% d => [ d[0] ].concat(d[4]) %}\n\nParamElement ->\n  %number\n  {% d => ( { '@num': d[0] } ) %}\n  |\n  Expression\n  {% id %}\n  |\n  %variable\n  {% d => sema.getvar( d[0] ) %}\n  |\n  %paramBegin Params  %paramEnd\n  {% d => ( { '@list': d[1] } )%}\n\n# Whitespace\n\n_  -> wschar:*\n{% function(d) {return null;} %}\n\n__ -> wschar:+\n{% function(d) {return null;} %}\n\nwschar -> %ws\n{% id %}\n");
+/* harmony default export */ __webpack_exports__["default"] = ("\n# Lexer [or tokenizer] definition with language lexemes [or tokens]\n@{%\n\n/*\nExamples:\n\nSaw wave:\n\n{100}saw\n\nState variable filter:\n\n:speed:{{1}pha,100,500}uexp;\n{{100}saw,:speed:, 5, 0,1,0,0}svf\n\nSequencing with idx and lists:\n\n - grabbing a single fixed element\n:x:{{10}imp,0,<200,400,600,1000>}idx;\n{:x:}saw\n\n:x:{{10}imp,{4}pha,<200,400,600,1000>}idx;\n{:x:}saw\n\nLists with variable elements:\n:x:{{10}imp,{4}pha,<200,400,600,{{{0.1}sin}abs,100}mul>}idx;\n{:x:}saw\n\n:x:{{10}imp,{0.4}pha,<{{{0.15}sin}abs,300}mul,{{{0.1}sin}abs,100}mul>}idx;\n{:x:}sawn\n\n*/\n\n\nconst lexer = moo.compile({\n  separator:      /,/,\n  paramEnd:       /}/,\n  paramBegin:     /{/,\n  listEnd:       /\\>/,\n  listBegin:     /\\</,\n  variable:       /:[a-zA-Z0-9]+:/,\n  sample:         { match: /\\\\[a-zA-Z0-9]+/, lineBreaks: true, value: x => x.slice(1, x.length)},\n  slice:         { match: /\\|[a-zA-Z0-9]+/, lineBreaks: true, value: x => x.slice(1, x.length)},\n  stretch:        { match: /\\@[a-zA-Z0-9]+/, lineBreaks: true, value: x => x.slice(1, x.length)},\n  number:         /-?(?:[0-9]|[1-9][0-9]+)(?:\\.[0-9]+)?\\b/,\n  semicolon:      /;/,\n  funcName:       /[a-zA-Z][a-zA-Z0-9]*/,\n  comment:        /#[^\\n]*/,\n  ws:             { match: /\\s+/, lineBreaks: true},\n});\n\n%}\n\n# Pass your lexer object using the @lexer option\n@lexer lexer\n\n# Grammar definition in the Extended Backus Naur Form (EBNF)\nmain -> _ Statement _\n{% d => ( { '@lang' : d[1] } )  %}\n\nStatement ->\n  Expression _ %semicolon _ Statement\n  {% d => [ { '@spawn': d[0] } ].concat(d[4]) %}\n  |\n  Expression\n  {% d => [ { '@sigOut': { '@spawn': d[0] }} ] %}\n  # |\n  # %hash . '\\n'\n  #{% d => ( { '@comment': d[3] } ) %}\n\nExpression ->\n  ParameterList _ %funcName\n  {% d => sema.synth( d[2].value, d[0]['@params'] ) %}\n  |\n  ParameterList _ %sample\n  {% d => sema.synth( 'sampler', d[0]['@params'].concat( [ sema.str( d[2].value ) ] ) ) %}\n  |\n  ParameterList _ %slice\n  {% d => sema.synth( 'slice', d[0]['@params'].concat( [ sema.str( d[2].value ) ] ) ) %}\n  |\n  ParameterList _ %stretch\n  {% d => sema.synth( 'stretch', d[0]['@params'].concat( [ sema.str( d[2].value ) ] ) ) %}\n  |\n  %variable _ Expression\n  {% d => sema.setvar( d[0], d[2] ) %}\n  |\n  %comment {% id %}\n\nParameterList ->\n  %paramBegin Params %paramEnd\n  {% d => ( { 'paramBegin': d[0], '@params': d[1], 'paramEnd': d[2] } ) %}\n\n\nParams ->\n  ParamElement\n  {% d => ( [ d[0] ] ) %}\n  |\n  ParamElement _ %separator _ Params\n  {% d => [ d[0] ].concat(d[4]) %}\n\nParamElement ->\n  %number\n  {% d => ( { '@num': d[0] } ) %}\n  |\n  Expression\n  {% id %}\n  |\n  %variable\n  {% d => sema.getvar( d[0] ) %}\n  |\n  %listBegin Params  %listEnd\n  {% d => ( { '@list': d[1] } )%}\n\n# Whitespace\n\n_  -> wschar:*\n{% function(d) {return null;} %}\n\n__ -> wschar:+\n{% function(d) {return null;} %}\n\nwschar -> %ws\n{% id %}\n");
 
 /***/ }),
 
@@ -249,7 +249,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("@{%\n/*\nDocumentation:\n\n\n*/\n\nconst lexer = moo.compile({\n  separator:    /,/,\n  paramEnd:     /\\]/,\n  paramBegin:   /\\[/,\n  binRangeBegin:   /{/,\n  binRangeEnd:   /}/,\n  binarynumber:       /b[0-1\\_]+/,\n\tassignOperator: /->/,\n  integer:       /[0-9]+/,\n  semicolon:    /;/,\n  variable:     /[a-zA-Z][a-zA-Z0-9]+/,\n\ttime: /[t]/,\n\tclock: /[c]/,\n\tnoise: /[n]/,\n  sampleName:     /\\\\[a-zA-Z0-9]*/,\n  operator:     /\\/|\\||\\*|\\+|\\-|>>|<<|<|>|~|\\^|&|=|>=|<=/,\n  comment:      /\\#[^\\n]:*/,\n  ws:           {match: /\\s+/, lineBreaks: true},\n});\n\nfunction binop(operation, op1,op2) {\n  var res;\n  switch(operation.value) {\n    case '=':\n     res = { '@sigp':{ '@params': [op1,op2],\n           '@func': {value: 'bitEq'}}};\n     break;\n    case '>':\n     res = { '@sigp':{ '@params': [op1,op2],\n           '@func': {value: 'bitGt'}}};\n     break;\n    case '>=':\n     res = { '@sigp':{ '@params': [op1,op2],\n           '@func': {value: 'bitGte'}}};\n     break;\n    case '<':\n     res = { '@sigp':{ '@params': [op1,op2],\n           '@func': {value: 'bitLt'}}};\n     break;\n    case '<=':\n     res = { '@sigp':{ '@params': [op1,op2],\n           '@func': {value: 'bitLte'}}};\n     break;\n    case '+':\n     res = { '@sigp':{ '@params': [op1,op2],\n           '@func': {value: 'bitAdd'}}};\n     break;\n    case '-':\n     res = { '@sigp':{ '@params': [op1,op2],\n           '@func': {value: 'bitSub'}}};\n     break;\n    case '*':\n     res = { '@sigp':{ '@params': [op1,op2],\n           '@func': {value: 'bitMul'}}};\n     break;\n    case '\\\\':\n     res = { '@sigp':{ '@params': [op1,op2],\n           '@func': {value: 'bitDiv'}}};\n     break;\n    case '^':\n     res = { '@sigp':{ '@params': [op1,op2],\n           '@func': {value: 'bitXor'}}};\n     break;\n\n    case '&':\n     res = { '@sigp':{ '@params': [op1,op2],\n           '@func': {value: 'bitAnd'}}};\n     break;\n    case '|':\n     res = { '@sigp':\n         { '@params': [\n           op1,op2\n         ],\n           '@func': {\n             value: 'bitOr'\n           }\n         }\n       };\n     break;\n    case '<<':\n     res = { '@sigp':\n         { '@params': [\n           op1,op2\n         ],\n           '@func': {\n             value: 'bitShl'\n           }\n         }\n       };\n     break;\n    case '>>':\n     res = { '@sigp':\n         { '@params': [\n           op1,op2\n         ],\n           '@func': {\n             value: 'bitShr'\n           }\n         }\n       };\n     break;\n  };\n  return res;\n}\n\nfunction setvar(name, branch) {\n\treturn { \"@setvar\": { \"@varname\": name, \"@varvalue\": branch } };\n}\n\nfunction getvar(name) {\n\treturn { \"@getvar\": name };\n}\n\nfunction assignvar(op1,op2) {\n  var res;\n\tres = setvar(op2, op1)\n  return res;\n}\n\nfunction str(val) {\n\treturn { \"@string\": val };\n}\n\n\nfunction sampler(trig,sampleName) {\n  var samplerTree = {'@sigp': { \"@params\": [bitToTrigSig(trig), str(sampleName)], \"@func\": { value: 'sampler' } } };\n  return bitFromSig(samplerTree);\n}\n\nfunction timeOp() {\n\treturn  { '@sigp':\n  {'@params': [],\n    '@func': {\n      value: 'btime'\n    }\n  }\n  };\n}\n\nfunction clockOp() {\n\treturn  { '@sigp':\n  {'@params': [],\n    '@func': {\n      value: 'bitclock'\n    }\n  }\n  };\n}\nfunction noiseOp() {\n\treturn  { '@sigp':\n  {'@params': [],\n    '@func': {\n      value: 'bitnoise'\n    }\n  }\n  };\n}\n\nfunction bitToSig(d) {\n  return  { '@sigp':\n  {'@params': [d],\n    '@func': {\n      value: 'bitToSig'\n    }\n  }\n  };\n}\nfunction bitToTrigSig(d) {\n  return  { '@sigp':\n  {'@params': [d],\n    '@func': {\n      value: 'bitToTrigSig'\n    }\n  }\n  };\n}\nfunction bitFromSig(d) {\n  return  { '@sigp':\n  {'@params': [d],\n    '@func': {\n      value: 'bitFromSig'\n    }\n  }\n  };\n}\n\nfunction binStrToNum(d) {\n\treturn {\"@num\":{'value':parseInt(d.value.replace('_','').substr(1),2)}}\n}\n\nfunction binElement(d, idx) {\n  return  { '@sigp':\n  {'@params': [d,idx],\n    '@func': {\n      value: 'bitAt'\n    }\n  }\n  };\n\n}\n\n\n%}\n\n\n\n# Pass your lexer object using the @lexer option\n@lexer lexer\n\nmain -> _ Statement _                                         {% d => ({ \"@lang\" : d[1] })  %}\n\nStatement ->\n      Expression _ %semicolon _ Statement            {% d => [{ \"@spawn\": d[0] }].concat(d[4]) %}\n      |\n      Expression                                      {% d => [{\"@sigOut\": { \"@spawn\": bitToSig(d[0]) }}] %}\n\nExpression ->\n\nExpression _ %operator _ Term\n{%d => binop(d[2],d[0],d[4])%}\n|\nExpression _ %assignOperator _ %variable\n{%d => assignvar(d[0],d[4])%}\n|\nExpression _ %assignOperator _ %sampleName\n{%d => sampler(d[0],d[4].value)%}\n#| Term _ %operator _ Term\n#{%d => binop(d[2],d[0],d[4])%}\n| Term {%id%}\n\nTerm ->\nNumericElement {%id%}\n|\nNumericElement _ %binRangeBegin _ Expression _ %binRangeEnd\n{% (d) => binElement(d[0],d[4])%}\n\n\n\nNumericElement -> %paramBegin _ Expression _ %paramEnd {%d=>d[2]%}\n| Number {%id%}\n| %time {% d => timeOp() %}\n| %clock {% d=> clockOp() %}\n| %noise {% d=> noiseOp() %}\n| %variable {% d => getvar(d[0])%}\n\n\n\nNumber ->\nIntOrBin {%id%}\n\nIntOrBin ->\n%integer  {% (d) => ({\"@num\":d[0]}) %}\n| BinaryNumber {% id %}\n\nBinaryNumber -> %binarynumber\n{% (d) => binStrToNum(d[0])%}\n\n# Whitespace\n\n_  -> wschar:*                                                {% function(d) {return null;} %}\n__ -> wschar:+                                                {% function(d) {return null;} %}\n\nwschar -> %ws                                                 {% id %}\n");
+/* harmony default export */ __webpack_exports__["default"] = (":c:ph2[0.4,200,800];\n:b:sah[200+:c:,250];\n:f:env[pul[4,0.9],5,50,0.8,150];\n:a:saw[:b:*2]*:f:;\n:d:mix[lpz[:a:,:b:*2,10],lpz[:a:,:b:/3,20]];\n\n:bass:sin[100]*env[pul[1,0.9],5,50,0.8,300];\n\nmix[:d:*2,:bass:*0.25]");
 
 /***/ }),
 
@@ -275,7 +275,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("@{%\n/*\nDocumentation:\n\nworks with unsigned 32 bit values\n\nNamed variables:\n\nt = time\nc = clock\nn = noise\n\nOperators:\n\nPrecedence: left to right, expect when using square brackets []\n\nOutput: is converted from uint32 to double between -1 and 1: output = ((binary value / 2^32) - 0.5) * 2\n\nExamples:\n\nt * [c*1>>4] & 1023 * [c>>4&1] ^ [t>>1] << 22;\n\n\nt * 1 &  1023 << [30 - [c>>3]] * [t & 18 <<1] * [t >>20] * [c >> 4 ^ 1];\n\nn * [[c>>5 & 1] & [c>>4 & 1]];\n\n\nt  * [t|[t<<1^908&4|[t<<929]] >> b1] << [c>>3] * [[c*1>> 3 & 11] & [c *4 >> 8 | 1]];\n\n--evolving pattern\nt  * [c|[c<<3^91&4|[t<<929]] >> b1010] << [c>>3] * [[c*1>> 3 & 11] & [c *7 >> 19  | 1 ]]\n\nt & [c*4] << 22 ^ [[n ^ [c&4]]>>2];\n\n-- sequencing\nt & 255 << 22 * b1101_0111{[c>>4]}\n\n-- variables\n\nt  * [c|[c<<3^91&4|[t<<929]] >> b1010] << [c>>3] * [[c*4>> 5 & 13] ^ [c *7 >> 19  | 1 ]] -> seq1;\n\nt  * [c|[c<<4^191&4|[t<<92]] ->seq3 >> b1010] << [c>>5] * [[c*3>> 3 & 11] & [c *7 >> 19  | 1 ]] -> seq2;\n\nseq1|seq2 & 1023 << 24 | [seq1 * seq3] * [t&seq3]\n\n--- simple sequencing using and\n\n[c & b1010000 > 0] -> \\909b\n\n*/\n\nconst lexer = moo.compile({\n  separator:    /,/,\n  paramEnd:     /\\]/,\n  paramBegin:   /\\[/,\n  binRangeBegin:   /{/,\n  binRangeEnd:   /}/,\n  binarynumber:       /b[0-1\\_]+/,\n\tassignOperator: /->/,\n  integer:       /[0-9]+/,\n  semicolon:    /;/,\n  variable:     /[a-zA-Z][a-zA-Z0-9]+/,\n\ttime: /[t]/,\n\tclock: /[c]/,\n\tnoise: /[n]/,\n  sampleName:     /\\\\[a-zA-Z0-9]*/,\n  operator:     /\\/|\\||\\*|\\+|\\-|>>|<<|<|>|~|\\^|&|=|>=|<=/,\n  comment:      /\\#[^\\n]:*/,\n  ws:           {match: /\\s+/, lineBreaks: true},\n});\n\nfunction binop(operation, op1,op2) {\n  var res;\n  switch(operation.value) {\n    case '=':\n     res = { '@sigp':{ '@params': [op1,op2],\n           '@func': {value: 'bitEq'}}};\n     break;\n    case '>':\n     res = { '@sigp':{ '@params': [op1,op2],\n           '@func': {value: 'bitGt'}}};\n     break;\n    case '>=':\n     res = { '@sigp':{ '@params': [op1,op2],\n           '@func': {value: 'bitGte'}}};\n     break;\n    case '<':\n     res = { '@sigp':{ '@params': [op1,op2],\n           '@func': {value: 'bitLt'}}};\n     break;\n    case '<=':\n     res = { '@sigp':{ '@params': [op1,op2],\n           '@func': {value: 'bitLte'}}};\n     break;\n    case '+':\n     res = { '@sigp':{ '@params': [op1,op2],\n           '@func': {value: 'bitAdd'}}};\n     break;\n    case '-':\n     res = { '@sigp':{ '@params': [op1,op2],\n           '@func': {value: 'bitSub'}}};\n     break;\n    case '*':\n     res = { '@sigp':{ '@params': [op1,op2],\n           '@func': {value: 'bitMul'}}};\n     break;\n    case '\\\\':\n     res = { '@sigp':{ '@params': [op1,op2],\n           '@func': {value: 'bitDiv'}}};\n     break;\n    case '^':\n     res = { '@sigp':{ '@params': [op1,op2],\n           '@func': {value: 'bitXor'}}};\n     break;\n\n    case '&':\n     res = { '@sigp':{ '@params': [op1,op2],\n           '@func': {value: 'bitAnd'}}};\n     break;\n    case '|':\n     res = { '@sigp':\n         { '@params': [\n           op1,op2\n         ],\n           '@func': {\n             value: 'bitOr'\n           }\n         }\n       };\n     break;\n    case '<<':\n     res = { '@sigp':\n         { '@params': [\n           op1,op2\n         ],\n           '@func': {\n             value: 'bitShl'\n           }\n         }\n       };\n     break;\n    case '>>':\n     res = { '@sigp':\n         { '@params': [\n           op1,op2\n         ],\n           '@func': {\n             value: 'bitShr'\n           }\n         }\n       };\n     break;\n  };\n  return res;\n}\n\nfunction setvar(name, branch) {\n\treturn { \"@setvar\": { \"@varname\": name, \"@varvalue\": branch } };\n}\n\nfunction getvar(name) {\n\treturn { \"@getvar\": name };\n}\n\nfunction assignvar(op1,op2) {\n  var res;\n\tres = setvar(op2, op1)\n  return res;\n}\n\nfunction str(val) {\n\treturn { \"@string\": val };\n}\n\n\nfunction sampler(trig,sampleName) {\n  var samplerTree = {'@sigp': { \"@params\": [bitToTrigSig(trig), str(sampleName)], \"@func\": { value: 'sampler' } } };\n  return bitFromSig(samplerTree);\n}\n\nfunction timeOp() {\n\treturn  { '@sigp':\n  {'@params': [],\n    '@func': {\n      value: 'btime'\n    }\n  }\n  };\n}\n\nfunction clockOp() {\n\treturn  { '@sigp':\n  {'@params': [],\n    '@func': {\n      value: 'bitclock'\n    }\n  }\n  };\n}\nfunction noiseOp() {\n\treturn  { '@sigp':\n  {'@params': [],\n    '@func': {\n      value: 'bitnoise'\n    }\n  }\n  };\n}\n\nfunction bitToSig(d) {\n  return  { '@sigp':\n  {'@params': [d],\n    '@func': {\n      value: 'bitToSig'\n    }\n  }\n  };\n}\nfunction bitToTrigSig(d) {\n  return  { '@sigp':\n  {'@params': [d],\n    '@func': {\n      value: 'bitToTrigSig'\n    }\n  }\n  };\n}\nfunction bitFromSig(d) {\n  return  { '@sigp':\n  {'@params': [d],\n    '@func': {\n      value: 'bitFromSig'\n    }\n  }\n  };\n}\n\nfunction binStrToNum(d) {\n\treturn {\"@num\":{'value':parseInt(d.value.replace('_','').substr(1),2)}}\n}\n\nfunction binElement(d, idx) {\n  return  { '@sigp':\n  {'@params': [d,idx],\n    '@func': {\n      value: 'bitAt'\n    }\n  }\n  };\n\n}\n\n\n%}\n\n\n\n# Pass your lexer object using the @lexer option\n@lexer lexer\n\nmain -> _ Statement _                                         {% d => ({ \"@lang\" : d[1] })  %}\n\nStatement ->\n      Expression _ %semicolon _ Statement            {% d => [{ \"@spawn\": d[0] }].concat(d[4]) %}\n      |\n      Expression                                      {% d => [{\"@sigOut\": { \"@spawn\": bitToSig(d[0]) }}] %}\n\nExpression ->\n\nExpression _ %operator _ Term\n{%d => binop(d[2],d[0],d[4])%}\n|\nExpression _ %assignOperator _ %variable\n{%d => assignvar(d[0],d[4])%}\n|\nExpression _ %assignOperator _ %sampleName\n{%d => sampler(d[0],d[4].value)%}\n#| Term _ %operator _ Term\n#{%d => binop(d[2],d[0],d[4])%}\n| Term {%id%}\n\nTerm ->\nNumericElement {%id%}\n|\nNumericElement _ %binRangeBegin _ Expression _ %binRangeEnd\n{% (d) => binElement(d[0],d[4])%}\n\n\n\nNumericElement -> %paramBegin _ Expression _ %paramEnd {%d=>d[2]%}\n| Number {%id%}\n| %time {% d => timeOp() %}\n| %clock {% d=> clockOp() %}\n| %noise {% d=> noiseOp() %}\n| %variable {% d => getvar(d[0])%}\n\n\n\nNumber ->\nIntOrBin {%id%}\n\nIntOrBin ->\n%integer  {% (d) => ({\"@num\":d[0]}) %}\n| BinaryNumber {% id %}\n\nBinaryNumber -> %binarynumber\n{% (d) => binStrToNum(d[0])%}\n\n# Whitespace\n\n_  -> wschar:*                                                {% function(d) {return null;} %}\n__ -> wschar:+                                                {% function(d) {return null;} %}\n\nwschar -> %ws                                                 {% id %}\n");
+/* harmony default export */ __webpack_exports__["default"] = ("\n\nt * [c*1>>4] & 1023 * [c>>4&1] ^ [t>>1] << 22;\n\n\nt * 1 &  1023 << [30 - [c>>3]] * [t & 18 <<1] * [t >>20] * [c >> 4 ^ 1];\n\nn * [[c>>5 & 1] & [c>>4 & 1]];\n\n\nt  * [t|[t<<1^908&4|[t<<929]] >> b1] << [c>>3] * [[c*1>> 3 & 11] & [c *4 >> 8 | 1]];\n\nt  * [c|[c<<3^91&4|[t<<929]] >> b1010] << [c>>3] * [[c*1>> 3 & 11] & [c *7 >> 19  | 1 ]];\n\nt & [c*4] << 22 ^ [[n ^ [c&4]]>>2];\n\nt & 255 << 22 * b1101_0111{[c>>4]};\n\n\nt  * [c|[c<<3^91&4|[t<<929]] >> b1010] << [c>>3] * [[c*4>> 5 & 13] ^ [c *7 >> 19  | 1 ]] -> seq1;\n\nt  * [c|[c<<4^191&4|[t<<92]] ->seq3 >> b1010] << [c>>5] * [[c*3>> 3 & 11] & [c *7 >> 19  | 1 ]] -> seq2;\n\nseq1|seq2 & 1023 << 24 | [seq1 * seq3] * [t&seq3];\n\n[c & b1010000 > 0] -> \\909b\n\n");
 
 /***/ }),
 
@@ -2854,7 +2854,7 @@ function create_grammarEditor_slot_1(ctx) {
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["create_component"])(codemirror.$$.fragment);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(div, "slot", "grammarEditor");
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(div, "class", "codemirror-container flex scrollable codemirror-gutter codemirror-linenumber svelte-1btauq3");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div, file, 475, 6, 12981);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div, file, 475, 6, 13004);
 		},
 		m: function mount(target, anchor) {
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["insert_dev"])(target, div, anchor);
@@ -2932,7 +2932,7 @@ function create_liveCodeEditor_slot_1(ctx) {
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["create_component"])(codemirror.$$.fragment);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(div, "slot", "liveCodeEditor");
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(div, "class", "codemirror-container flex scrollable codemirror-container-live-code codemirror-cursor codemirror-linenumber codemirror-gutter svelte-1btauq3");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div, file, 483, 6, 13352);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div, file, 483, 6, 13375);
 		},
 		m: function mount(target, anchor) {
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["insert_dev"])(target, div, anchor);
@@ -3001,15 +3001,15 @@ function create_else_block_1(ctx) {
 			t3 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["text"])(ctx.$liveCodeParseErrors);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(strong, "color", "red");
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(strong, "margin", "15px 0 10px 5px");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(strong, file, 510, 10, 14760);
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(br, file, 511, 10, 14872);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(strong, file, 510, 10, 14783);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(br, file, 511, 10, 14895);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(span, "white-space", "pre-wrap");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(span, file, 514, 12, 14995);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(span, file, 514, 12, 15018);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(div0, "margin-left", "5px");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div0, file, 512, 10, 14887);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div0, file, 512, 10, 14910);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(div1, "overflow-y", "scroll");
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(div1, "height", "auto");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div1, file, 509, 8, 14703);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div1, file, 509, 8, 14726);
 		},
 		m: function mount(target, anchor) {
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["insert_dev"])(target, div1, anchor);
@@ -3072,13 +3072,13 @@ function create_if_block_2(ctx) {
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["create_component"])(inspect_value.$$.fragment);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(strong, "color", "green");
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(strong, "margin", "15px 0 15px 5px");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(strong, file, 501, 10, 14355);
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(br, file, 502, 10, 14448);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(strong, file, 501, 10, 14378);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(br, file, 502, 10, 14471);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(div0, "margin-left", "5px");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div0, file, 503, 10, 14463);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div0, file, 503, 10, 14486);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(div1, "overflow-y", "scroll");
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(div1, "height", "auto");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div1, file, 500, 8, 14298);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div1, file, 500, 8, 14321);
 		},
 		m: function mount(target, anchor) {
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["insert_dev"])(target, div1, anchor);
@@ -3133,10 +3133,10 @@ function create_if_block_1(ctx) {
 			strong.textContent = "Go work on your grammar!";
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(strong, "color", "red");
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(strong, "margin", "15px 0 15px 5px");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(strong, file, 497, 10, 14083);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(strong, file, 497, 10, 14106);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(div, "overflow-y", "scroll");
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(div, "height", "auto");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div, file, 496, 8, 14026);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div, file, 496, 8, 14049);
 		},
 		m: function mount(target, anchor) {
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["insert_dev"])(target, div, anchor);
@@ -3185,7 +3185,7 @@ function create_liveCodeCompilerOutput_slot(ctx) {
 			if_block.c();
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(div, "slot", "liveCodeCompilerOutput");
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(div, "class", "codemirror-container flex scrollable svelte-1btauq3");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div, file, 494, 6, 13892);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div, file, 494, 6, 13915);
 		},
 		m: function mount(target, anchor) {
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["insert_dev"])(target, div, anchor);
@@ -3255,10 +3255,10 @@ function create_else_block(ctx) {
 			strong.textContent = "Grammar validated and parser generated!";
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(strong, "color", "green");
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(strong, "margin", "15px 0 10px 5px");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(strong, file, 533, 10, 15716);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(strong, file, 533, 10, 15739);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(div, "overflow-y", "scroll");
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(div, "height", "auto");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div, file, 532, 8, 15659);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div, file, 532, 8, 15682);
 		},
 		m: function mount(target, anchor) {
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["insert_dev"])(target, div, anchor);
@@ -3305,15 +3305,15 @@ function create_if_block(ctx) {
 			t3 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["text"])(ctx.$grammarCompilationErrors);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(strong, "color", "red");
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(strong, "margin", "15px 0 15px 5px");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(strong, file, 524, 10, 15311);
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(br, file, 525, 10, 15408);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(strong, file, 524, 10, 15334);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(br, file, 525, 10, 15431);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(span, "white-space", "pre-wrap");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(span, file, 528, 12, 15531);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(span, file, 528, 12, 15554);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(div0, "margin-left", "5px");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div0, file, 526, 10, 15423);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div0, file, 526, 10, 15446);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(div1, "overflow-y", "scroll");
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(div1, "height", "auto");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div1, file, 523, 8, 15254);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div1, file, 523, 8, 15277);
 		},
 		m: function mount(target, anchor) {
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["insert_dev"])(target, div1, anchor);
@@ -3362,7 +3362,7 @@ function create_grammarOutput_slot(ctx) {
 			if_block.c();
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(div, "slot", "grammarOutput");
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(div, "class", "codemirror-container flex scrollable svelte-1btauq3");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div, file, 521, 6, 15129);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div, file, 521, 6, 15152);
 		},
 		m: function mount(target, anchor) {
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["insert_dev"])(target, div, anchor);
@@ -3460,7 +3460,7 @@ function create_viz_slot(ctx) {
 		c: function create() {
 			div = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["element"])("div");
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(div, "slot", "viz");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div, file, 551, 6, 16349);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div, file, 551, 6, 16372);
 		},
 		m: function mount(target, anchor) {
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["insert_dev"])(target, div, anchor);
@@ -3508,7 +3508,7 @@ function create_liveCodeEditor_slot(ctx) {
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["create_component"])(codemirror.$$.fragment);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(div, "slot", "liveCodeEditor");
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(div, "class", "codemirror-container flex scrollable codemirror-gutter codemirror-linenumber svelte-1btauq3");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div, file, 555, 6, 16468);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div, file, 555, 6, 16491);
 		},
 		m: function mount(target, anchor) {
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["insert_dev"])(target, div, anchor);
@@ -3580,7 +3580,7 @@ function create_grammarEditor_slot(ctx) {
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["create_component"])(codemirror.$$.fragment);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(div, "slot", "grammarEditor");
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(div, "class", "codemirror-container flex scrollable codemirror-gutter codemirror-linenumber svelte-1btauq3");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div, file, 558, 6, 16717);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div, file, 558, 6, 16740);
 		},
 		m: function mount(target, anchor) {
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["insert_dev"])(target, div, anchor);
@@ -3652,7 +3652,7 @@ function create_modelEditor_slot(ctx) {
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["create_component"])(codemirror.$$.fragment);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(div, "slot", "modelEditor");
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(div, "class", "codemirror-container flex scrollable codemirror-gutter codemirror-linenumber svelte-1btauq3");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div, file, 561, 6, 16964);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div, file, 561, 6, 16987);
 		},
 		m: function mount(target, anchor) {
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["insert_dev"])(target, div, anchor);
@@ -3822,18 +3822,18 @@ function create_fragment(ctx) {
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["create_component"])(model.$$.fragment);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(div0, "class", "tutorial-container");
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(div0, "display", ctx.tutorialContainerDisplay);
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div0, file, 472, 2, 12883);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div0, file, 472, 2, 12906);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(div1, "class", "dashboard-container");
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(div1, "display", ctx.dashboardContainerDisplay);
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div1, file, 542, 2, 15888);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div1, file, 542, 2, 15911);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(div2, "class", "quadrants-container");
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(div2, "display", ctx.quadrantsContainerDisplay);
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div2, file, 548, 2, 16141);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div2, file, 548, 2, 16164);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(div3, "class", "live-container");
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(div3, "display", ctx.liveContainerDisplay);
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div3, file, 578, 2, 17758);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div3, file, 578, 2, 17781);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(div4, "class", "layout-template-container scrollable svelte-1btauq3");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div4, file, 470, 0, 12829);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div4, file, 470, 0, 12852);
 		},
 		l: function claim(nodes) {
 			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -3987,6 +3987,7 @@ function instance($$self, $$props, $$invalidate) {
 	}
 
 	function addToDashboard(item) {
+		console.log("zxcv");
 		let { type, id, value } = item;
 		dashboard.addItem(type, id, value);
 	}
@@ -4795,10 +4796,12 @@ module.exports = exported;
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var svelte_internal__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! svelte/internal */ "./node_modules/svelte/internal/index.mjs");
 /* harmony import */ var _store_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../store.js */ "./client/store.js");
-/* harmony import */ var svelte__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! svelte */ "./node_modules/svelte/index.mjs");
-/* harmony import */ var _Users_francisco_Documents_dev_MIMIC_sema_client_UI_Sidebar_svelte_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./client/UI/Sidebar.svelte.css */ "./client/UI/Sidebar.svelte.css");
-/* harmony import */ var _Users_francisco_Documents_dev_MIMIC_sema_client_UI_Sidebar_svelte_css__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_Users_francisco_Documents_dev_MIMIC_sema_client_UI_Sidebar_svelte_css__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _messaging_pubSub_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../messaging/pubSub.js */ "./client/messaging/pubSub.js");
+/* harmony import */ var svelte__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! svelte */ "./node_modules/svelte/index.mjs");
+/* harmony import */ var _Users_francisco_Documents_dev_MIMIC_sema_client_UI_Sidebar_svelte_css__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./client/UI/Sidebar.svelte.css */ "./client/UI/Sidebar.svelte.css");
+/* harmony import */ var _Users_francisco_Documents_dev_MIMIC_sema_client_UI_Sidebar_svelte_css__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_Users_francisco_Documents_dev_MIMIC_sema_client_UI_Sidebar_svelte_css__WEBPACK_IMPORTED_MODULE_4__);
 /* client/UI/Sidebar.svelte generated by Svelte v3.15.0 */
+
 
 
 
@@ -4836,7 +4839,7 @@ function get_each_context(ctx, list, i) {
 	return child_ctx;
 }
 
-// (243:31) 
+// (253:31) 
 function create_if_block_1(ctx) {
 	let div0;
 	let select0;
@@ -4943,40 +4946,40 @@ function create_if_block_1(ctx) {
 
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(select0, "class", "combobox-dark svelte-ihcy74");
 			if (ctx.selectedLiveCodeOption === void 0) Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_render_callback"])(() => ctx.select0_change_handler.call(select0));
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(select0, file, 249, 6, 7292);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(select0, file, 259, 6, 7518);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(div0, "class", "layout-combobox-container controls svelte-ihcy74");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div0, file, 245, 4, 7149);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div0, file, 255, 4, 7375);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(select1, "class", "combobox-dark svelte-ihcy74");
 			if (ctx.selectedGrammarOption === void 0) Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_render_callback"])(() => ctx.select1_change_handler.call(select1));
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(select1, file, 263, 6, 7793);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(select1, file, 273, 6, 8019);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(div1, "class", "layout-combobox-container controls svelte-ihcy74");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div1, file, 262, 4, 7738);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div1, file, 272, 4, 7964);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(select2, "class", "combobox-dark svelte-ihcy74");
 			if (ctx.selectedModelOption === void 0) Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_render_callback"])(() => ctx.select2_change_handler.call(select2));
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(select2, file, 277, 6, 8320);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(select2, file, 287, 6, 8546);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(div2, "class", "layout-combobox-container controls svelte-ihcy74");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div2, file, 275, 4, 8192);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div2, file, 285, 4, 8418);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(button0, "class", "button-dark controls svelte-ihcy74");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(button0, file, 289, 6, 8679);
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div3, file, 288, 4, 8667);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(button0, file, 299, 6, 8905);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div3, file, 298, 4, 8893);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(button1, "class", "button-dark controls svelte-ihcy74");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(button1, file, 296, 6, 8880);
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div4, file, 295, 4, 8868);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(button1, file, 306, 6, 9106);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div4, file, 305, 4, 9094);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(input, "type", "checkbox");
 			input.checked = "checked";
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(input, "class", "checkbox-input svelte-ihcy74");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(input, file, 306, 10, 9173);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(input, file, 316, 10, 9399);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(span, "class", "checkbox-span svelte-ihcy74");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(span, file, 307, 10, 9248);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(span, file, 317, 10, 9474);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(label, "class", "checkbox-container svelte-ihcy74");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(label, file, 305, 8, 9116);
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div5, file, 304, 6, 9102);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(label, file, 315, 8, 9342);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div5, file, 314, 6, 9328);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(select3, "class", "combobox-dark svelte-ihcy74");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(select3, file, 316, 8, 9537);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(select3, file, 326, 8, 9763);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(div6, "class", "layout-combobox-container");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div6, file, 311, 6, 9322);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div6, file, 321, 6, 9548);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(div7, "class", "controls svelte-ihcy74");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div7, file, 302, 4, 9072);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div7, file, 312, 4, 9298);
 
 			dispose = [
 				Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["listen_dev"])(select0, "change", ctx.select0_change_handler),
@@ -5169,14 +5172,14 @@ function create_if_block_1(ctx) {
 		block,
 		id: create_if_block_1.name,
 		type: "if",
-		source: "(243:31) ",
+		source: "(253:31) ",
 		ctx
 	});
 
 	return block;
 }
 
-// (216:2) {#if $tutorialsActive }
+// (226:2) {#if $tutorialsActive }
 function create_if_block(ctx) {
 	let div;
 	let select;
@@ -5203,10 +5206,10 @@ function create_if_block(ctx) {
 			br = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["element"])("br");
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(select, "class", "combobox-dark svelte-ihcy74");
 			if (ctx.$selectedTutorial === void 0) Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_render_callback"])(() => ctx.select_change_handler.call(select));
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(select, file, 220, 6, 6369);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(select, file, 230, 6, 6595);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(div, "class", "layout-combobox-container controls svelte-ihcy74");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div, file, 216, 4, 6231);
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(br, file, 228, 4, 6629);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div, file, 226, 4, 6457);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(br, file, 238, 4, 6855);
 			dispose = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["listen_dev"])(select, "change", ctx.select_change_handler);
 		},
 		m: function mount(target, anchor) {
@@ -5262,14 +5265,14 @@ function create_if_block(ctx) {
 		block,
 		id: create_if_block.name,
 		type: "if",
-		source: "(216:2) {#if $tutorialsActive }",
+		source: "(226:2) {#if $tutorialsActive }",
 		ctx
 	});
 
 	return block;
 }
 
-// (254:8) {#each sidebarLiveCodeOptions as liveCodeOption}
+// (264:8) {#each sidebarLiveCodeOptions as liveCodeOption}
 function create_each_block_4(ctx) {
 	let option;
 	let t0_value = ctx.liveCodeOption.text + "";
@@ -5284,7 +5287,7 @@ function create_each_block_4(ctx) {
 			t1 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["space"])();
 			option.__value = option_value_value = ctx.liveCodeOption;
 			option.value = option.__value;
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(option, file, 254, 10, 7561);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(option, file, 264, 10, 7787);
 		},
 		m: function mount(target, anchor) {
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["insert_dev"])(target, option, anchor);
@@ -5301,14 +5304,14 @@ function create_each_block_4(ctx) {
 		block,
 		id: create_each_block_4.name,
 		type: "each",
-		source: "(254:8) {#each sidebarLiveCodeOptions as liveCodeOption}",
+		source: "(264:8) {#each sidebarLiveCodeOptions as liveCodeOption}",
 		ctx
 	});
 
 	return block;
 }
 
-// (267:8) {#each sidebarGrammarOptions as grammarOption}
+// (277:8) {#each sidebarGrammarOptions as grammarOption}
 function create_each_block_3(ctx) {
 	let option;
 	let t0_value = ctx.grammarOption.text + "";
@@ -5323,7 +5326,7 @@ function create_each_block_3(ctx) {
 			t1 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["space"])();
 			option.__value = option_value_value = ctx.grammarOption;
 			option.value = option.__value;
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(option, file, 267, 10, 8019);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(option, file, 277, 10, 8245);
 		},
 		m: function mount(target, anchor) {
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["insert_dev"])(target, option, anchor);
@@ -5340,14 +5343,14 @@ function create_each_block_3(ctx) {
 		block,
 		id: create_each_block_3.name,
 		type: "each",
-		source: "(267:8) {#each sidebarGrammarOptions as grammarOption}",
+		source: "(277:8) {#each sidebarGrammarOptions as grammarOption}",
 		ctx
 	});
 
 	return block;
 }
 
-// (281:8) {#each sidebarModelOptions as modelOption}
+// (291:8) {#each sidebarModelOptions as modelOption}
 function create_each_block_2(ctx) {
 	let option;
 	let t0_value = ctx.modelOption.text + "";
@@ -5362,7 +5365,7 @@ function create_each_block_2(ctx) {
 			t1 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["space"])();
 			option.__value = option_value_value = ctx.modelOption;
 			option.value = option.__value;
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(option, file, 281, 10, 8535);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(option, file, 291, 10, 8761);
 		},
 		m: function mount(target, anchor) {
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["insert_dev"])(target, option, anchor);
@@ -5379,14 +5382,14 @@ function create_each_block_2(ctx) {
 		block,
 		id: create_each_block_2.name,
 		type: "each",
-		source: "(281:8) {#each sidebarModelOptions as modelOption}",
+		source: "(291:8) {#each sidebarModelOptions as modelOption}",
 		ctx
 	});
 
 	return block;
 }
 
-// (318:10) {#each editorThemes as modelOption}
+// (328:10) {#each editorThemes as modelOption}
 function create_each_block_1(ctx) {
 	let option;
 	let t0_value = ctx.modelOption.text + "";
@@ -5401,7 +5404,7 @@ function create_each_block_1(ctx) {
 			t1 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["space"])();
 			option.__value = option_value_value = ctx.modelOption;
 			option.value = option.__value;
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(option, file, 318, 12, 9627);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(option, file, 328, 12, 9853);
 		},
 		m: function mount(target, anchor) {
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["insert_dev"])(target, option, anchor);
@@ -5418,14 +5421,14 @@ function create_each_block_1(ctx) {
 		block,
 		id: create_each_block_1.name,
 		type: "each",
-		source: "(318:10) {#each editorThemes as modelOption}",
+		source: "(328:10) {#each editorThemes as modelOption}",
 		ctx
 	});
 
 	return block;
 }
 
-// (222:8) {#each tutorialOptions as tutorialOption}
+// (232:8) {#each tutorialOptions as tutorialOption}
 function create_each_block(ctx) {
 	let option;
 	let t0_value = ctx.tutorialOption.text + "";
@@ -5440,7 +5443,7 @@ function create_each_block(ctx) {
 			t1 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["space"])();
 			option.__value = option_value_value = ctx.tutorialOption;
 			option.value = option.__value;
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(option, file, 222, 10, 6492);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(option, file, 232, 10, 6718);
 		},
 		m: function mount(target, anchor) {
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["insert_dev"])(target, option, anchor);
@@ -5457,7 +5460,7 @@ function create_each_block(ctx) {
 		block,
 		id: create_each_block.name,
 		type: "each",
-		source: "(222:8) {#each tutorialOptions as tutorialOption}",
+		source: "(232:8) {#each tutorialOptions as tutorialOption}",
 		ctx
 	});
 
@@ -5480,7 +5483,7 @@ function create_fragment(ctx) {
 			div = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["element"])("div");
 			if (if_block) if_block.c();
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(div, "class", "sidebar svelte-ihcy74");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div, file, 214, 0, 6179);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div, file, 224, 0, 6405);
 		},
 		l: function claim(nodes) {
 			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -5539,7 +5542,8 @@ function instance($$self, $$props, $$invalidate) {
 	Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["component_subscribe"])($$self, _store_js__WEBPACK_IMPORTED_MODULE_1__["playgroundActive"], $$value => $$invalidate("$playgroundActive", $playgroundActive = $$value));
 	Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["validate_store"])(_store_js__WEBPACK_IMPORTED_MODULE_1__["selectedModel"], "selectedModel");
 	Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["component_subscribe"])($$self, _store_js__WEBPACK_IMPORTED_MODULE_1__["selectedModel"], $$value => $$invalidate("$selectedModel", $selectedModel = $$value));
-	const dispatch = Object(svelte__WEBPACK_IMPORTED_MODULE_2__["createEventDispatcher"])();
+	const dispatch = Object(svelte__WEBPACK_IMPORTED_MODULE_3__["createEventDispatcher"])();
+	const messaging = new _messaging_pubSub_js__WEBPACK_IMPORTED_MODULE_2__["PubSub"]();
 
 	let languageOptions = [
 		{ id: 1, text: `Default` },
@@ -5558,12 +5562,12 @@ function instance($$self, $$props, $$invalidate) {
 	}
 
 	function dispatchAdd(type, selected) {
-		console.log(selected.content);
+		console.log(`DEBUG:Sidebar:dispatchAdd: /add/${type}/${selected.id}`);
 
-		dispatch("add", {
-			type,
-			id: selected.id,
-			value: selected.content
+		this.messaging.publish("add-live-code-editor", {
+			type: "model-input-data",
+			id: event.data.id,
+			value: event.data.value
 		});
 
 		switch (type) {
@@ -6011,6 +6015,7 @@ __webpack_require__.r(__webpack_exports__);
 /* client/UI/editors/GrammarEditor.svelte generated by Svelte v3.15.0 */
 
 
+const { console: console_1 } = svelte_internal__WEBPACK_IMPORTED_MODULE_0__["globals"];
 
 
 
@@ -6027,14 +6032,14 @@ function create_fragment(ctx) {
 	let updating_value;
 	let current;
 
-	function codemirror_value_binding(value) {
-		ctx.codemirror_value_binding.call(null, value);
+	function codemirror_value_binding(value_1) {
+		ctx.codemirror_value_binding.call(null, value_1);
 	}
 
 	let codemirror_props = { tab: true, lineNumbers: true };
 
-	if (ctx.$grammarEditorValue !== void 0) {
-		codemirror_props.value = ctx.$grammarEditorValue;
+	if (ctx.value !== void 0) {
+		codemirror_props.value = ctx.value;
 	}
 
 	const codemirror = new svelte_codemirror__WEBPACK_IMPORTED_MODULE_2__["default"]({ props: codemirror_props, $$inline: true });
@@ -6047,7 +6052,7 @@ function create_fragment(ctx) {
 			div = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["element"])("div");
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["create_component"])(codemirror.$$.fragment);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(div, "class", "codemirror-container layout-template-container scrollable svelte-bs9cq2");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div, file, 149, 0, 3236);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div, file, 150, 0, 3240);
 		},
 		l: function claim(nodes) {
 			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -6060,9 +6065,9 @@ function create_fragment(ctx) {
 		p: function update(changed, ctx) {
 			const codemirror_changes = {};
 
-			if (!updating_value && changed.$grammarEditorValue) {
+			if (!updating_value && changed.value) {
 				updating_value = true;
-				codemirror_changes.value = ctx.$grammarEditorValue;
+				codemirror_changes.value = ctx.value;
 				Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_flush_callback"])(() => updating_value = false);
 			}
 
@@ -6113,9 +6118,10 @@ function instance($$self, $$props, $$invalidate) {
 	Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["component_subscribe"])($$self, _store_js__WEBPACK_IMPORTED_MODULE_4__["grammarCompilationErrors"], $$value => $$invalidate("$grammarCompilationErrors", $grammarCompilationErrors = $$value));
 	let codeMirror;
 	let modelWorker;
+	let { value } = $$props;
 
 	Object(svelte__WEBPACK_IMPORTED_MODULE_3__["onMount"])(async () => {
-		codeMirror.set($grammarEditorValue, "ebnf");
+		codeMirror.set(value, "ebnf");
 	});
 
 	Object(svelte__WEBPACK_IMPORTED_MODULE_3__["onDestroy"])(async () => {
@@ -6166,24 +6172,46 @@ function instance($$self, $$props, $$invalidate) {
 		}
 	};
 
+	const writable_props = ["value"];
+
+	Object.keys($$props).forEach(key => {
+		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console_1.warn(`<GrammarEditor> was created with unknown prop '${key}'`);
+	});
+
 	function codemirror_binding($$value) {
 		svelte_internal__WEBPACK_IMPORTED_MODULE_0__["binding_callbacks"][$$value ? "unshift" : "push"](() => {
 			$$invalidate("codeMirror", codeMirror = $$value);
 		});
 	}
 
-	function codemirror_value_binding(value) {
-		$grammarEditorValue = value;
-		_store_js__WEBPACK_IMPORTED_MODULE_4__["grammarEditorValue"].set($grammarEditorValue);
+	function codemirror_value_binding(value_1) {
+		value = value_1;
+		$$invalidate("value", value);
 	}
 
+	$$self.$set = $$props => {
+		if ("value" in $$props) $$invalidate("value", value = $$props.value);
+	};
+
 	$$self.$capture_state = () => {
-		return {};
+		return {
+			codeMirror,
+			modelWorker,
+			value,
+			log,
+			nil,
+			evalModelCode,
+			compileGrammarOnChange,
+			$grammarEditorValue,
+			$grammarCompiledParser,
+			$grammarCompilationErrors
+		};
 	};
 
 	$$self.$inject_state = $$props => {
 		if ("codeMirror" in $$props) $$invalidate("codeMirror", codeMirror = $$props.codeMirror);
 		if ("modelWorker" in $$props) modelWorker = $$props.modelWorker;
+		if ("value" in $$props) $$invalidate("value", value = $$props.value);
 		if ("log" in $$props) log = $$props.log;
 		if ("nil" in $$props) nil = $$props.nil;
 		if ("evalModelCode" in $$props) evalModelCode = $$props.evalModelCode;
@@ -6195,8 +6223,8 @@ function instance($$self, $$props, $$invalidate) {
 
 	return {
 		codeMirror,
+		value,
 		compileGrammarOnChange,
-		$grammarEditorValue,
 		codemirror_binding,
 		codemirror_value_binding
 	};
@@ -6205,7 +6233,7 @@ function instance($$self, $$props, $$invalidate) {
 class GrammarEditor extends svelte_internal__WEBPACK_IMPORTED_MODULE_0__["SvelteComponentDev"] {
 	constructor(options) {
 		super(options);
-		Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["init"])(this, options, instance, create_fragment, svelte_internal__WEBPACK_IMPORTED_MODULE_0__["safe_not_equal"], {});
+		Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["init"])(this, options, instance, create_fragment, svelte_internal__WEBPACK_IMPORTED_MODULE_0__["safe_not_equal"], { value: 0 });
 
 		Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["dispatch_dev"])("SvelteRegisterComponent", {
 			component: this,
@@ -6213,6 +6241,21 @@ class GrammarEditor extends svelte_internal__WEBPACK_IMPORTED_MODULE_0__["Svelte
 			options,
 			id: create_fragment.name
 		});
+
+		const { ctx } = this.$$;
+		const props = options.props || ({});
+
+		if (ctx.value === undefined && !("value" in props)) {
+			console_1.warn("<GrammarEditor> was created without expected prop 'value'");
+		}
+	}
+
+	get value() {
+		throw new Error("<GrammarEditor>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+	}
+
+	set value(value) {
+		throw new Error("<GrammarEditor>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
 	}
 }
 
@@ -6283,6 +6326,7 @@ __webpack_require__.r(__webpack_exports__);
 /* client/UI/editors/LiveCodeEditor.svelte generated by Svelte v3.15.0 */
 
 
+const { console: console_1 } = svelte_internal__WEBPACK_IMPORTED_MODULE_0__["globals"];
 
 
 
@@ -6300,8 +6344,8 @@ function create_fragment(ctx) {
 	let updating_value;
 	let current;
 
-	function codemirror_value_binding(value) {
-		ctx.codemirror_value_binding.call(null, value);
+	function codemirror_value_binding(value_1) {
+		ctx.codemirror_value_binding.call(null, value_1);
 	}
 
 	let codemirror_props = {
@@ -6312,8 +6356,8 @@ function create_fragment(ctx) {
 		cmdPeriod: ctx.stopAudioOnEditorCommand
 	};
 
-	if (ctx.$liveCodeEditorValue !== void 0) {
-		codemirror_props.value = ctx.$liveCodeEditorValue;
+	if (ctx.value !== void 0) {
+		codemirror_props.value = ctx.value;
 	}
 
 	const codemirror = new svelte_codemirror__WEBPACK_IMPORTED_MODULE_2__["default"]({ props: codemirror_props, $$inline: true });
@@ -6326,7 +6370,7 @@ function create_fragment(ctx) {
 			div = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["element"])("div");
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["create_component"])(codemirror.$$.fragment);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(div, "class", "codemirror-container layout-template-container scrollable svelte-1okks6w");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div, file, 234, 0, 6411);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div, file, 237, 0, 6442);
 		},
 		l: function claim(nodes) {
 			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -6339,9 +6383,9 @@ function create_fragment(ctx) {
 		p: function update(changed, ctx) {
 			const codemirror_changes = {};
 
-			if (!updating_value && changed.$liveCodeEditorValue) {
+			if (!updating_value && changed.value) {
 				updating_value = true;
-				codemirror_changes.value = ctx.$liveCodeEditorValue;
+				codemirror_changes.value = ctx.value;
 				Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_flush_callback"])(() => updating_value = false);
 			}
 
@@ -6381,14 +6425,12 @@ if (is_browser) {
 }
 
 function instance($$self, $$props, $$invalidate) {
-	let $liveCodeEditorValue;
 	let $grammarCompiledParser;
 	let $liveCodeParseResults;
 	let $liveCodeAbstractSyntaxTree;
 	let $liveCodeParseErrors;
+	let $liveCodeEditorValue;
 	let $dspCode;
-	Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["validate_store"])(_store_js__WEBPACK_IMPORTED_MODULE_4__["liveCodeEditorValue"], "liveCodeEditorValue");
-	Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["component_subscribe"])($$self, _store_js__WEBPACK_IMPORTED_MODULE_4__["liveCodeEditorValue"], $$value => $$invalidate("$liveCodeEditorValue", $liveCodeEditorValue = $$value));
 	Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["validate_store"])(_store_js__WEBPACK_IMPORTED_MODULE_4__["grammarCompiledParser"], "grammarCompiledParser");
 	Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["component_subscribe"])($$self, _store_js__WEBPACK_IMPORTED_MODULE_4__["grammarCompiledParser"], $$value => $$invalidate("$grammarCompiledParser", $grammarCompiledParser = $$value));
 	Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["validate_store"])(_store_js__WEBPACK_IMPORTED_MODULE_4__["liveCodeParseResults"], "liveCodeParseResults");
@@ -6397,14 +6439,17 @@ function instance($$self, $$props, $$invalidate) {
 	Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["component_subscribe"])($$self, _store_js__WEBPACK_IMPORTED_MODULE_4__["liveCodeAbstractSyntaxTree"], $$value => $$invalidate("$liveCodeAbstractSyntaxTree", $liveCodeAbstractSyntaxTree = $$value));
 	Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["validate_store"])(_store_js__WEBPACK_IMPORTED_MODULE_4__["liveCodeParseErrors"], "liveCodeParseErrors");
 	Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["component_subscribe"])($$self, _store_js__WEBPACK_IMPORTED_MODULE_4__["liveCodeParseErrors"], $$value => $$invalidate("$liveCodeParseErrors", $liveCodeParseErrors = $$value));
+	Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["validate_store"])(_store_js__WEBPACK_IMPORTED_MODULE_4__["liveCodeEditorValue"], "liveCodeEditorValue");
+	Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["component_subscribe"])($$self, _store_js__WEBPACK_IMPORTED_MODULE_4__["liveCodeEditorValue"], $$value => $$invalidate("$liveCodeEditorValue", $liveCodeEditorValue = $$value));
 	Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["validate_store"])(_store_js__WEBPACK_IMPORTED_MODULE_4__["dspCode"], "dspCode");
 	Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["component_subscribe"])($$self, _store_js__WEBPACK_IMPORTED_MODULE_4__["dspCode"], $$value => $$invalidate("$dspCode", $dspCode = $$value));
+	let { value = "" } = $$props;
 	let codeMirror;
 	let parserWorker;
 	let messaging = new _messaging_pubSub_js__WEBPACK_IMPORTED_MODULE_6__["PubSub"]();
 
 	Object(svelte__WEBPACK_IMPORTED_MODULE_3__["onMount"])(async () => {
-		codeMirror.set($liveCodeEditorValue, "js", "monokai");
+		codeMirror.set(value, "js", "monokai");
 		parserWorker = new worker_loader_workers_parser_worker_js__WEBPACK_IMPORTED_MODULE_8___default.a();
 	});
 
@@ -6422,9 +6467,7 @@ function instance($$self, $$props, $$invalidate) {
 	};
 
 	let parseLiveCodeAsync = e => {
-		console.log("DEBUG:LiveCodeEditor:parseLiveCode:");
-		console.log(e);
-		Object(_utils_history_js__WEBPACK_IMPORTED_MODULE_5__["addToHistory"])("lchist_", e);
+		Object(_utils_history_js__WEBPACK_IMPORTED_MODULE_5__["addToHistory"])("live-code-history-", e);
 
 		if (window.Worker) {
 			let parserWorkerAsync = new Promise((res, rej) => {
@@ -6518,22 +6561,49 @@ function instance($$self, $$props, $$invalidate) {
 		messaging.publish("stop-audio");
 	};
 
+	const writable_props = ["value"];
+
+	Object.keys($$props).forEach(key => {
+		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console_1.warn(`<LiveCodeEditor> was created with unknown prop '${key}'`);
+	});
+
 	function codemirror_binding($$value) {
 		svelte_internal__WEBPACK_IMPORTED_MODULE_0__["binding_callbacks"][$$value ? "unshift" : "push"](() => {
 			$$invalidate("codeMirror", codeMirror = $$value);
 		});
 	}
 
-	function codemirror_value_binding(value) {
-		$liveCodeEditorValue = value;
-		_store_js__WEBPACK_IMPORTED_MODULE_4__["liveCodeEditorValue"].set($liveCodeEditorValue);
+	function codemirror_value_binding(value_1) {
+		value = value_1;
+		$$invalidate("value", value);
 	}
 
+	$$self.$set = $$props => {
+		if ("value" in $$props) $$invalidate("value", value = $$props.value);
+	};
+
 	$$self.$capture_state = () => {
-		return {};
+		return {
+			value,
+			codeMirror,
+			parserWorker,
+			messaging,
+			log,
+			nil,
+			parseLiveCodeAsync,
+			parseLiveCodeOnChange,
+			translateILtoDSPasync,
+			$grammarCompiledParser,
+			$liveCodeParseResults,
+			$liveCodeAbstractSyntaxTree,
+			$liveCodeParseErrors,
+			$liveCodeEditorValue,
+			$dspCode
+		};
 	};
 
 	$$self.$inject_state = $$props => {
+		if ("value" in $$props) $$invalidate("value", value = $$props.value);
 		if ("codeMirror" in $$props) $$invalidate("codeMirror", codeMirror = $$props.codeMirror);
 		if ("parserWorker" in $$props) parserWorker = $$props.parserWorker;
 		if ("messaging" in $$props) messaging = $$props.messaging;
@@ -6542,20 +6612,20 @@ function instance($$self, $$props, $$invalidate) {
 		if ("parseLiveCodeAsync" in $$props) parseLiveCodeAsync = $$props.parseLiveCodeAsync;
 		if ("parseLiveCodeOnChange" in $$props) $$invalidate("parseLiveCodeOnChange", parseLiveCodeOnChange = $$props.parseLiveCodeOnChange);
 		if ("translateILtoDSPasync" in $$props) translateILtoDSPasync = $$props.translateILtoDSPasync;
-		if ("$liveCodeEditorValue" in $$props) _store_js__WEBPACK_IMPORTED_MODULE_4__["liveCodeEditorValue"].set($liveCodeEditorValue = $$props.$liveCodeEditorValue);
 		if ("$grammarCompiledParser" in $$props) _store_js__WEBPACK_IMPORTED_MODULE_4__["grammarCompiledParser"].set($grammarCompiledParser = $$props.$grammarCompiledParser);
 		if ("$liveCodeParseResults" in $$props) _store_js__WEBPACK_IMPORTED_MODULE_4__["liveCodeParseResults"].set($liveCodeParseResults = $$props.$liveCodeParseResults);
 		if ("$liveCodeAbstractSyntaxTree" in $$props) _store_js__WEBPACK_IMPORTED_MODULE_4__["liveCodeAbstractSyntaxTree"].set($liveCodeAbstractSyntaxTree = $$props.$liveCodeAbstractSyntaxTree);
 		if ("$liveCodeParseErrors" in $$props) _store_js__WEBPACK_IMPORTED_MODULE_4__["liveCodeParseErrors"].set($liveCodeParseErrors = $$props.$liveCodeParseErrors);
+		if ("$liveCodeEditorValue" in $$props) _store_js__WEBPACK_IMPORTED_MODULE_4__["liveCodeEditorValue"].set($liveCodeEditorValue = $$props.$liveCodeEditorValue);
 		if ("$dspCode" in $$props) _store_js__WEBPACK_IMPORTED_MODULE_4__["dspCode"].set($dspCode = $$props.$dspCode);
 	};
 
 	return {
+		value,
 		codeMirror,
 		parseLiveCodeOnChange,
 		evalLiveCodeOnEditorCommand,
 		stopAudioOnEditorCommand,
-		$liveCodeEditorValue,
 		codemirror_binding,
 		codemirror_value_binding
 	};
@@ -6564,7 +6634,7 @@ function instance($$self, $$props, $$invalidate) {
 class LiveCodeEditor extends svelte_internal__WEBPACK_IMPORTED_MODULE_0__["SvelteComponentDev"] {
 	constructor(options) {
 		super(options);
-		Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["init"])(this, options, instance, create_fragment, svelte_internal__WEBPACK_IMPORTED_MODULE_0__["safe_not_equal"], {});
+		Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["init"])(this, options, instance, create_fragment, svelte_internal__WEBPACK_IMPORTED_MODULE_0__["safe_not_equal"], { value: 0 });
 
 		Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["dispatch_dev"])("SvelteRegisterComponent", {
 			component: this,
@@ -6572,6 +6642,14 @@ class LiveCodeEditor extends svelte_internal__WEBPACK_IMPORTED_MODULE_0__["Svelt
 			options,
 			id: create_fragment.name
 		});
+	}
+
+	get value() {
+		throw new Error("<LiveCodeEditor>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+	}
+
+	set value(value) {
+		throw new Error("<LiveCodeEditor>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
 	}
 }
 
@@ -6642,6 +6720,7 @@ __webpack_require__.r(__webpack_exports__);
 /* client/UI/editors/ModelEditor.svelte generated by Svelte v3.15.0 */
 
 
+const { console: console_1 } = svelte_internal__WEBPACK_IMPORTED_MODULE_0__["globals"];
 
 
 
@@ -6655,10 +6734,12 @@ const file = "client/UI/editors/ModelEditor.svelte";
 function create_fragment(ctx) {
 	let div;
 	let updating_value;
+	let t;
+	let input;
 	let current;
 
-	function codemirror_value_binding(value) {
-		ctx.codemirror_value_binding.call(null, value);
+	function codemirror_value_binding(value_1) {
+		ctx.codemirror_value_binding.call(null, value_1);
 	}
 
 	let codemirror_props = {
@@ -6669,8 +6750,8 @@ function create_fragment(ctx) {
 		shiftEnter: ctx.evalModelEditorExpression
 	};
 
-	if (ctx.$modelEditorValue !== void 0) {
-		codemirror_props.value = ctx.$modelEditorValue;
+	if (ctx.value !== void 0) {
+		codemirror_props.value = ctx.value;
 	}
 
 	const codemirror = new svelte_codemirror__WEBPACK_IMPORTED_MODULE_2__["default"]({ props: codemirror_props, $$inline: true });
@@ -6682,8 +6763,16 @@ function create_fragment(ctx) {
 		c: function create() {
 			div = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["element"])("div");
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["create_component"])(codemirror.$$.fragment);
+			t = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["space"])();
+			input = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["element"])("input");
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(div, "class", "codemirror-container layout-template-container scrollable svelte-x0vynt");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div, file, 188, 0, 4935);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div, file, 198, 0, 5173);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(input, "aria-hidden", "true");
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(input, "id", "hiddenCopyField");
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(input, "position", "absolute");
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(input, "left", "-999em");
+			input.value = "";
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(input, file, 211, 0, 5631);
 		},
 		l: function claim(nodes) {
 			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -6691,14 +6780,16 @@ function create_fragment(ctx) {
 		m: function mount(target, anchor) {
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["insert_dev"])(target, div, anchor);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["mount_component"])(codemirror, div, null);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["insert_dev"])(target, t, anchor);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["insert_dev"])(target, input, anchor);
 			current = true;
 		},
 		p: function update(changed, ctx) {
 			const codemirror_changes = {};
 
-			if (!updating_value && changed.$modelEditorValue) {
+			if (!updating_value && changed.value) {
 				updating_value = true;
-				codemirror_changes.value = ctx.$modelEditorValue;
+				codemirror_changes.value = ctx.value;
 				Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_flush_callback"])(() => updating_value = false);
 			}
 
@@ -6717,6 +6808,8 @@ function create_fragment(ctx) {
 			if (detaching) Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["detach_dev"])(div);
 			ctx.codemirror_binding(null);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["destroy_component"])(codemirror);
+			if (detaching) Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["detach_dev"])(t);
+			if (detaching) Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["detach_dev"])(input);
 		}
 	};
 
@@ -6738,9 +6831,7 @@ if (is_browser) {
 }
 
 function instance($$self, $$props, $$invalidate) {
-	let $modelEditorValue;
-	Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["validate_store"])(_store_js__WEBPACK_IMPORTED_MODULE_4__["modelEditorValue"], "modelEditorValue");
-	Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["component_subscribe"])($$self, _store_js__WEBPACK_IMPORTED_MODULE_4__["modelEditorValue"], $$value => $$invalidate("$modelEditorValue", $modelEditorValue = $$value));
+	let { value = "" } = $$props;
 	let codeMirror;
 	let modelWorker;
 	let messaging = new _messaging_pubSub_js__WEBPACK_IMPORTED_MODULE_5__["PubSub"]();
@@ -6748,7 +6839,7 @@ function instance($$self, $$props, $$invalidate) {
 	let subscriptionTokenMODR;
 
 	Object(svelte__WEBPACK_IMPORTED_MODULE_3__["onMount"])(async () => {
-		codeMirror.set($modelEditorValue, "js");
+		codeMirror.set(value, "js");
 		subscriptionTokenMID = messaging.subscribe("model-input-data", e => postToModel(e));
 		subscriptionTokenMODR = messaging.subscribe("model-output-data-request", e => postToModel(e));
 		modelWorker = new worker_loader_workers_ml_worker_js__WEBPACK_IMPORTED_MODULE_6___default.a();
@@ -6805,6 +6896,12 @@ function instance($$self, $$props, $$invalidate) {
 				},
 				sendcode: data => {
 					console.log(data);
+				},
+				pbcopy: data => {
+					let copyField = document.getElementById("hiddenCopyField");
+					copyField.value = data.msg;
+					copyField.select();
+					document.execCommand("Copy");
 				}
 			};
 
@@ -6830,15 +6927,21 @@ function instance($$self, $$props, $$invalidate) {
 		let modelCode = codeMirror.getSelection();
 		modelWorker.postMessage({ eval: modelCode });
 		window.localStorage.setItem("modelEditorValue", codeMirror.getValue());
-		Object(_utils_history_js__WEBPACK_IMPORTED_MODULE_7__["addToHistory"])("modelhist_", modelCode);
+		Object(_utils_history_js__WEBPACK_IMPORTED_MODULE_7__["addToHistory"])("model-history-", modelCode);
 	}
 
 	function evalModelEditorExpressionBlock() {
 		let modelCode = codeMirror.getBlock();
 		modelWorker.postMessage({ eval: modelCode });
 		window.localStorage.setItem("modelEditorValue", codeMirror.getValue());
-		Object(_utils_history_js__WEBPACK_IMPORTED_MODULE_7__["addToHistory"])("modelhist_", modelCode);
+		Object(_utils_history_js__WEBPACK_IMPORTED_MODULE_7__["addToHistory"])("model-history", modelCode);
 	}
+
+	const writable_props = ["value"];
+
+	Object.keys($$props).forEach(key => {
+		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console_1.warn(`<ModelEditor> was created with unknown prop '${key}'`);
+	});
 
 	function codemirror_binding($$value) {
 		svelte_internal__WEBPACK_IMPORTED_MODULE_0__["binding_callbacks"][$$value ? "unshift" : "push"](() => {
@@ -6846,16 +6949,33 @@ function instance($$self, $$props, $$invalidate) {
 		});
 	}
 
-	function codemirror_value_binding(value) {
-		$modelEditorValue = value;
-		_store_js__WEBPACK_IMPORTED_MODULE_4__["modelEditorValue"].set($modelEditorValue);
+	function codemirror_value_binding(value_1) {
+		value = value_1;
+		$$invalidate("value", value);
 	}
 
+	$$self.$set = $$props => {
+		if ("value" in $$props) $$invalidate("value", value = $$props.value);
+	};
+
 	$$self.$capture_state = () => {
-		return {};
+		return {
+			value,
+			codeMirror,
+			modelWorker,
+			messaging,
+			subscriptionTokenMID,
+			subscriptionTokenMODR,
+			log,
+			nil,
+			postToModel,
+			postFromModel,
+			postToModelAsync
+		};
 	};
 
 	$$self.$inject_state = $$props => {
+		if ("value" in $$props) $$invalidate("value", value = $$props.value);
 		if ("codeMirror" in $$props) $$invalidate("codeMirror", codeMirror = $$props.codeMirror);
 		if ("modelWorker" in $$props) modelWorker = $$props.modelWorker;
 		if ("messaging" in $$props) messaging = $$props.messaging;
@@ -6866,15 +6986,14 @@ function instance($$self, $$props, $$invalidate) {
 		if ("postToModel" in $$props) postToModel = $$props.postToModel;
 		if ("postFromModel" in $$props) postFromModel = $$props.postFromModel;
 		if ("postToModelAsync" in $$props) postToModelAsync = $$props.postToModelAsync;
-		if ("$modelEditorValue" in $$props) _store_js__WEBPACK_IMPORTED_MODULE_4__["modelEditorValue"].set($modelEditorValue = $$props.$modelEditorValue);
 	};
 
 	return {
+		value,
 		codeMirror,
 		nil,
 		evalModelEditorExpression,
 		evalModelEditorExpressionBlock,
-		$modelEditorValue,
 		codemirror_binding,
 		codemirror_value_binding
 	};
@@ -6883,7 +7002,7 @@ function instance($$self, $$props, $$invalidate) {
 class ModelEditor extends svelte_internal__WEBPACK_IMPORTED_MODULE_0__["SvelteComponentDev"] {
 	constructor(options) {
 		super(options);
-		Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["init"])(this, options, instance, create_fragment, svelte_internal__WEBPACK_IMPORTED_MODULE_0__["safe_not_equal"], {});
+		Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["init"])(this, options, instance, create_fragment, svelte_internal__WEBPACK_IMPORTED_MODULE_0__["safe_not_equal"], { value: 0 });
 
 		Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["dispatch_dev"])("SvelteRegisterComponent", {
 			component: this,
@@ -6891,6 +7010,14 @@ class ModelEditor extends svelte_internal__WEBPACK_IMPORTED_MODULE_0__["SvelteCo
 			options,
 			id: create_fragment.name
 		});
+	}
+
+	get value() {
+		throw new Error("<ModelEditor>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+	}
+
+	set value(value) {
+		throw new Error("<ModelEditor>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
 	}
 }
 
@@ -6955,10 +7082,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _editors_LiveCodeEditor_svelte__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../editors/LiveCodeEditor.svelte */ "./client/UI/editors/LiveCodeEditor.svelte");
 /* harmony import */ var _widgets_LiveCodeParseOutput_svelte__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../widgets/LiveCodeParseOutput.svelte */ "./client/UI/widgets/LiveCodeParseOutput.svelte");
 /* harmony import */ var _widgets_GrammarCompileOutput_svelte__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../widgets/GrammarCompileOutput.svelte */ "./client/UI/widgets/GrammarCompileOutput.svelte");
-/* harmony import */ var _store_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../store.js */ "./client/store.js");
-/* harmony import */ var _Users_francisco_Documents_dev_MIMIC_sema_client_UI_layouts_Dashboard_svelte_css__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./client/UI/layouts/Dashboard.svelte.css */ "./client/UI/layouts/Dashboard.svelte.css");
-/* harmony import */ var _Users_francisco_Documents_dev_MIMIC_sema_client_UI_layouts_Dashboard_svelte_css__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(_Users_francisco_Documents_dev_MIMIC_sema_client_UI_layouts_Dashboard_svelte_css__WEBPACK_IMPORTED_MODULE_11__);
+/* harmony import */ var _messaging_pubSub_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../messaging/pubSub.js */ "./client/messaging/pubSub.js");
+/* harmony import */ var _store_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../store.js */ "./client/store.js");
+/* harmony import */ var _Users_francisco_Documents_dev_MIMIC_sema_client_UI_layouts_Dashboard_svelte_css__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./client/UI/layouts/Dashboard.svelte.css */ "./client/UI/layouts/Dashboard.svelte.css");
+/* harmony import */ var _Users_francisco_Documents_dev_MIMIC_sema_client_UI_layouts_Dashboard_svelte_css__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(_Users_francisco_Documents_dev_MIMIC_sema_client_UI_layouts_Dashboard_svelte_css__WEBPACK_IMPORTED_MODULE_12__);
 /* client/UI/layouts/Dashboard.svelte generated by Svelte v3.15.0 */
+
 
 
 
@@ -6975,7 +7104,7 @@ __webpack_require__.r(__webpack_exports__);
 
 const file = "client/UI/layouts/Dashboard.svelte";
 
-// (272:8) {:else}
+// (281:8) {:else}
 function create_else_block(ctx) {
 	let updating_value;
 	let current;
@@ -7030,14 +7159,14 @@ function create_else_block(ctx) {
 		block,
 		id: create_else_block.name,
 		type: "else",
-		source: "(272:8) {:else}",
+		source: "(281:8) {:else}",
 		ctx
 	});
 
 	return block;
 }
 
-// (270:56) 
+// (278:56) 
 function create_if_block_4(ctx) {
 	let current;
 
@@ -7073,14 +7202,14 @@ function create_if_block_4(ctx) {
 		block,
 		id: create_if_block_4.name,
 		type: "if",
-		source: "(270:56) ",
+		source: "(278:56) ",
 		ctx
 	});
 
 	return block;
 }
 
-// (268:55) 
+// (275:55) 
 function create_if_block_3(ctx) {
 	let current;
 
@@ -7116,34 +7245,21 @@ function create_if_block_3(ctx) {
 		block,
 		id: create_if_block_3.name,
 		type: "if",
-		source: "(268:55) ",
+		source: "(275:55) ",
 		ctx
 	});
 
 	return block;
 }
 
-// (265:40) 
+// (272:40) 
 function create_if_block_2(ctx) {
-	let updating_value;
 	let current;
 
-	function livecodeeditor_value_binding(value_1) {
-		ctx.livecodeeditor_value_binding.call(null, value_1);
-	}
-
-	let livecodeeditor_props = {};
-
-	if (ctx.value !== void 0) {
-		livecodeeditor_props.value = ctx.value;
-	}
-
 	const livecodeeditor = new _editors_LiveCodeEditor_svelte__WEBPACK_IMPORTED_MODULE_7__["default"]({
-			props: livecodeeditor_props,
+			props: { value: ctx.item.value },
 			$$inline: true
 		});
-
-	svelte_internal__WEBPACK_IMPORTED_MODULE_0__["binding_callbacks"].push(() => Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["bind"])(livecodeeditor, "value", livecodeeditor_value_binding));
 
 	const block = {
 		c: function create() {
@@ -7155,13 +7271,7 @@ function create_if_block_2(ctx) {
 		},
 		p: function update(changed, ctx) {
 			const livecodeeditor_changes = {};
-
-			if (!updating_value && changed.value) {
-				updating_value = true;
-				livecodeeditor_changes.value = ctx.value;
-				Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_flush_callback"])(() => updating_value = false);
-			}
-
+			if (changed.item) livecodeeditor_changes.value = ctx.item.value;
 			livecodeeditor.$set(livecodeeditor_changes);
 		},
 		i: function intro(local) {
@@ -7182,34 +7292,21 @@ function create_if_block_2(ctx) {
 		block,
 		id: create_if_block_2.name,
 		type: "if",
-		source: "(265:40) ",
+		source: "(272:40) ",
 		ctx
 	});
 
 	return block;
 }
 
-// (262:43) 
+// (269:43) 
 function create_if_block_1(ctx) {
-	let updating_value;
 	let current;
 
-	function grammareditor_value_binding(value_1) {
-		ctx.grammareditor_value_binding.call(null, value_1);
-	}
-
-	let grammareditor_props = {};
-
-	if (ctx.value !== void 0) {
-		grammareditor_props.value = ctx.value;
-	}
-
 	const grammareditor = new _editors_GrammarEditor_svelte__WEBPACK_IMPORTED_MODULE_6__["default"]({
-			props: grammareditor_props,
+			props: { value: ctx.item.value },
 			$$inline: true
 		});
-
-	svelte_internal__WEBPACK_IMPORTED_MODULE_0__["binding_callbacks"].push(() => Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["bind"])(grammareditor, "value", grammareditor_value_binding));
 
 	const block = {
 		c: function create() {
@@ -7221,13 +7318,7 @@ function create_if_block_1(ctx) {
 		},
 		p: function update(changed, ctx) {
 			const grammareditor_changes = {};
-
-			if (!updating_value && changed.value) {
-				updating_value = true;
-				grammareditor_changes.value = ctx.value;
-				Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_flush_callback"])(() => updating_value = false);
-			}
-
+			if (changed.item) grammareditor_changes.value = ctx.item.value;
 			grammareditor.$set(grammareditor_changes);
 		},
 		i: function intro(local) {
@@ -7248,30 +7339,21 @@ function create_if_block_1(ctx) {
 		block,
 		id: create_if_block_1.name,
 		type: "if",
-		source: "(262:43) ",
+		source: "(269:43) ",
 		ctx
 	});
 
 	return block;
 }
 
-// (260:8) {#if item.type === 'model' }
+// (265:8) {#if item.type === 'model' }
 function create_if_block(ctx) {
-	let updating_value;
 	let current;
 
-	function modeleditor_value_binding(value_1) {
-		ctx.modeleditor_value_binding.call(null, value_1);
-	}
-
-	let modeleditor_props = {};
-
-	if (ctx.value !== void 0) {
-		modeleditor_props.value = ctx.value;
-	}
-
-	const modeleditor = new _editors_ModelEditor_svelte__WEBPACK_IMPORTED_MODULE_5__["default"]({ props: modeleditor_props, $$inline: true });
-	svelte_internal__WEBPACK_IMPORTED_MODULE_0__["binding_callbacks"].push(() => Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["bind"])(modeleditor, "value", modeleditor_value_binding));
+	const modeleditor = new _editors_ModelEditor_svelte__WEBPACK_IMPORTED_MODULE_5__["default"]({
+			props: { value: ctx.item.value },
+			$$inline: true
+		});
 
 	const block = {
 		c: function create() {
@@ -7283,13 +7365,7 @@ function create_if_block(ctx) {
 		},
 		p: function update(changed, ctx) {
 			const modeleditor_changes = {};
-
-			if (!updating_value && changed.value) {
-				updating_value = true;
-				modeleditor_changes.value = ctx.value;
-				Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_flush_callback"])(() => updating_value = false);
-			}
-
+			if (changed.item) modeleditor_changes.value = ctx.item.value;
 			modeleditor.$set(modeleditor_changes);
 		},
 		i: function intro(local) {
@@ -7310,14 +7386,14 @@ function create_if_block(ctx) {
 		block,
 		id: create_if_block.name,
 		type: "if",
-		source: "(260:8) {#if item.type === 'model' }",
+		source: "(265:8) {#if item.type === 'model' }",
 		ctx
 	});
 
 	return block;
 }
 
-// (250:2) <Grid {$dashboardItems}         useTransform {breakpoints}          rowHeight={100}          gap={1}          bind:items {cols}          let:item               on:adjust={onAdjust}>
+// (255:2) <Grid {$dashboardItems}         useTransform {breakpoints}          rowHeight={100}          gap={1}          bind:items {cols}          let:item               on:adjust={onAdjust}>
 function create_default_slot(ctx) {
 	let span0;
 	let t1;
@@ -7363,12 +7439,12 @@ function create_default_slot(ctx) {
 			t3 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["space"])();
 			if_block.c();
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(span0, "class", "move svelte-1vulgvc");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(span0, file, 256, 4, 6840);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(span0, file, 261, 4, 7084);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(span1, "class", "close svelte-1vulgvc");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(span1, file, 258, 6, 7001);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(span1, file, 263, 6, 7246);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(div, "class", "content svelte-1vulgvc");
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(div, "background", ctx.item.static ? "#ccccee" : ctx.item.data);
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div, file, 257, 4, 6872);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div, file, 262, 4, 7116);
 
 			dispose = [
 				Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["listen_dev"])(
@@ -7445,7 +7521,7 @@ function create_default_slot(ctx) {
 		block,
 		id: create_default_slot.name,
 		type: "slot",
-		source: "(250:2) <Grid {$dashboardItems}         useTransform {breakpoints}          rowHeight={100}          gap={1}          bind:items {cols}          let:item               on:adjust={onAdjust}>",
+		source: "(255:2) <Grid {$dashboardItems}         useTransform {breakpoints}          rowHeight={100}          gap={1}          bind:items {cols}          let:item               on:adjust={onAdjust}>",
 		ctx
 	});
 
@@ -7487,7 +7563,7 @@ function create_fragment(ctx) {
 			div = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["element"])("div");
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["create_component"])(grid.$$.fragment);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(div, "class", "layout-template-container svelte-1vulgvc");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div, file, 248, 0, 6612);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div, file, 253, 0, 6856);
 		},
 		l: function claim(nodes) {
 			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -7543,9 +7619,19 @@ var cols = 15;
 const mousedown_handler = e => e.stopPropagation();
 
 function instance($$self, $$props, $$invalidate) {
+	let $liveCodeEditorValue;
+	let $grammarEditorValue;
+	let $modelEditorValue;
 	let $dashboardItems;
-	Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["validate_store"])(_store_js__WEBPACK_IMPORTED_MODULE_10__["dashboardItems"], "dashboardItems");
-	Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["component_subscribe"])($$self, _store_js__WEBPACK_IMPORTED_MODULE_10__["dashboardItems"], $$value => $$invalidate("$dashboardItems", $dashboardItems = $$value));
+	Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["validate_store"])(_store_js__WEBPACK_IMPORTED_MODULE_11__["liveCodeEditorValue"], "liveCodeEditorValue");
+	Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["component_subscribe"])($$self, _store_js__WEBPACK_IMPORTED_MODULE_11__["liveCodeEditorValue"], $$value => $$invalidate("$liveCodeEditorValue", $liveCodeEditorValue = $$value));
+	Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["validate_store"])(_store_js__WEBPACK_IMPORTED_MODULE_11__["grammarEditorValue"], "grammarEditorValue");
+	Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["component_subscribe"])($$self, _store_js__WEBPACK_IMPORTED_MODULE_11__["grammarEditorValue"], $$value => $$invalidate("$grammarEditorValue", $grammarEditorValue = $$value));
+	Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["validate_store"])(_store_js__WEBPACK_IMPORTED_MODULE_11__["modelEditorValue"], "modelEditorValue");
+	Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["component_subscribe"])($$self, _store_js__WEBPACK_IMPORTED_MODULE_11__["modelEditorValue"], $$value => $$invalidate("$modelEditorValue", $modelEditorValue = $$value));
+	Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["validate_store"])(_store_js__WEBPACK_IMPORTED_MODULE_11__["dashboardItems"], "dashboardItems");
+	Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["component_subscribe"])($$self, _store_js__WEBPACK_IMPORTED_MODULE_11__["dashboardItems"], $$value => $$invalidate("$dashboardItems", $dashboardItems = $$value));
+	const messaging = new _messaging_pubSub_js__WEBPACK_IMPORTED_MODULE_10__["PubSub"]();
 	let { value = "" } = $$props;
 	let breakpoints = [[1000, 10], [700, 5], [500, 3], [400, 1]];
 	const id = () => "_" + Math.random().toString(36).substr(2, 9);
@@ -7594,7 +7680,8 @@ function instance($$self, $$props, $$invalidate) {
 			lineNumbers: true,
 			hasFocus: false,
 			theme: "monokai",
-			data: "#151515"
+			data: "#151515",
+			value: $liveCodeEditorValue
 		}),
 		svelte_grid_build_helper__WEBPACK_IMPORTED_MODULE_2__["default"].item({
 			x: 7,
@@ -7633,7 +7720,8 @@ function instance($$self, $$props, $$invalidate) {
 			lineNumbers: false,
 			hasFocus: false,
 			theme: "cobalt",
-			data: "#AAAAAA"
+			data: "#AAAAAA",
+			value: $grammarEditorValue
 		}),
 		svelte_grid_build_helper__WEBPACK_IMPORTED_MODULE_2__["default"].item({
 			x: 0,
@@ -7646,13 +7734,14 @@ function instance($$self, $$props, $$invalidate) {
 			lineNumbers: true,
 			hasFocus: false,
 			theme: "icecoder",
-			data: "#f0f0f0"
+			data: "#f0f0f0",
+			value: $modelEditorValue
 		})
 	];
 
 	let layout;
 	let items = [];
-	Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_store_value"])(_store_js__WEBPACK_IMPORTED_MODULE_10__["dashboardItems"], $dashboardItems = svelte_grid_build_helper__WEBPACK_IMPORTED_MODULE_2__["default"].resizeItems(items, cols));
+	Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_store_value"])(_store_js__WEBPACK_IMPORTED_MODULE_11__["dashboardItems"], $dashboardItems = svelte_grid_build_helper__WEBPACK_IMPORTED_MODULE_2__["default"].resizeItems(items, cols));
 
 	if (typeof window !== "undefined") {
 		if (!window.localStorage.getItem("layout")) {
@@ -7703,7 +7792,7 @@ function instance($$self, $$props, $$invalidate) {
 	function remove(item, event) {
 		$$invalidate("items", items = items.filter(value => value.id !== item.id));
 		window.localStorage.setItem("layout", JSON.stringify(items));
-		Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_store_value"])(_store_js__WEBPACK_IMPORTED_MODULE_10__["dashboardItems"], $dashboardItems = svelte_grid_build_helper__WEBPACK_IMPORTED_MODULE_2__["default"].resizeItems(items, cols));
+		Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_store_value"])(_store_js__WEBPACK_IMPORTED_MODULE_11__["dashboardItems"], $dashboardItems = svelte_grid_build_helper__WEBPACK_IMPORTED_MODULE_2__["default"].resizeItems(items, cols));
 	}
 
 	const update = (item, prop, value) => {
@@ -7716,21 +7805,6 @@ function instance($$self, $$props, $$invalidate) {
 	Object.keys($$props).forEach(key => {
 		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<Dashboard> was created with unknown prop '${key}'`);
 	});
-
-	function modeleditor_value_binding(value_1) {
-		value = value_1;
-		$$invalidate("value", value);
-	}
-
-	function grammareditor_value_binding(value_1) {
-		value = value_1;
-		$$invalidate("value", value);
-	}
-
-	function livecodeeditor_value_binding(value_1) {
-		value = value_1;
-		$$invalidate("value", value);
-	}
 
 	function editor_value_binding(value_1) {
 		value = value_1;
@@ -7754,6 +7828,9 @@ function instance($$self, $$props, $$invalidate) {
 			layoutOriginal,
 			layout,
 			items,
+			$liveCodeEditorValue,
+			$grammarEditorValue,
+			$modelEditorValue,
 			$dashboardItems
 		};
 	};
@@ -7765,7 +7842,10 @@ function instance($$self, $$props, $$invalidate) {
 		if ("layoutOriginal" in $$props) layoutOriginal = $$props.layoutOriginal;
 		if ("layout" in $$props) layout = $$props.layout;
 		if ("items" in $$props) $$invalidate("items", items = $$props.items);
-		if ("$dashboardItems" in $$props) _store_js__WEBPACK_IMPORTED_MODULE_10__["dashboardItems"].set($dashboardItems = $$props.$dashboardItems);
+		if ("$liveCodeEditorValue" in $$props) _store_js__WEBPACK_IMPORTED_MODULE_11__["liveCodeEditorValue"].set($liveCodeEditorValue = $$props.$liveCodeEditorValue);
+		if ("$grammarEditorValue" in $$props) _store_js__WEBPACK_IMPORTED_MODULE_11__["grammarEditorValue"].set($grammarEditorValue = $$props.$grammarEditorValue);
+		if ("$modelEditorValue" in $$props) _store_js__WEBPACK_IMPORTED_MODULE_11__["modelEditorValue"].set($modelEditorValue = $$props.$modelEditorValue);
+		if ("$dashboardItems" in $$props) _store_js__WEBPACK_IMPORTED_MODULE_11__["dashboardItems"].set($dashboardItems = $$props.$dashboardItems);
 	};
 
 	return {
@@ -7776,9 +7856,6 @@ function instance($$self, $$props, $$invalidate) {
 		addItem,
 		remove,
 		$dashboardItems,
-		modeleditor_value_binding,
-		grammareditor_value_binding,
-		livecodeeditor_value_binding,
 		editor_value_binding,
 		grid_items_binding
 	};
@@ -9996,7 +10073,7 @@ class AudioEngine {
 	 */
 	async init(numClockPeers) {
 		if (this.audioContext === undefined) {
-			
+
       this.audioContext = new AudioContext({
 				// create audio context with optimally configured latency
 				latencyHint: "playback",
@@ -10007,13 +10084,13 @@ class AudioEngine {
       this.connectMediaStream();
       this.loadImportedSamples();
 
-      // No need to inject the callback here, messaging is built in KuraClock 
+      // No need to inject the callback here, messaging is built in KuraClock
       // this.kuraClock = new kuramotoNetClock((phase, idx) => {
       //   // console.log( `DEBUG:AudioEngine:sendPeersMyClockPhase:phase:${phase}:id:${idx}`);
       //   // This requires an initialised audio worklet
       //   this.audioWorkletNode.port.postMessage({ phase: phase, i: idx });
       // });
-				
+
 
       if (this.kuraClock.connected()) {
         this.kuraClock.queryPeers(async numClockPeers => {
@@ -11601,10 +11678,14 @@ const jsFuncMap = {
 		setup: (o, p) => "",
 		loop:  (o, p) => `this.clockTrig(${p[0].loop},${p.length > 1 ? p[1].loop : 0})`
 	},
-  // clfreq: {
-	// 	setup: (o, p) => "",
-	// 	loop:  (o, p) => `this.setClockFreq(${p[0].loop})`
-	// },
+  clfreq: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `this.setClockFreq(${p[0].loop})`
+	},
+  clbpm: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `this.setClockFreq(60/${p[0].loop})`
+	},
   onzx: {
 		setup: (o, p) => `${o} = new Module.maxiTrigger();`,
 		loop:  (o, p) => `${o}.onZX(${p[0].loop})`
@@ -11617,15 +11698,25 @@ const jsFuncMap = {
 		setup: (o, p) => `${o} = new Module.maxiCounter();`,
 		loop:  (o, p) => `${o}.count(${p[0].loop},${p[1].loop})`
 	},
-  index: {
+  idx: {
 		setup: (o, p) => `${o} = new Module.maxiIndex();`,
 		loop:  (o, p) => `${o}.pull(${p[0].loop},${p[1].loop},${p[2].loop})`
+  },
+  svf: {
+    //set cutoff and resonance only when params change to save CPU
+		setup: (o, p) => `${o} = new Module.maxiSVF(); ${o}_p1 = new Module.maxiTrigger(); ${o}_p2 = new Module.maxiTrigger();`,
+		loop:  (o, p) => `(()=>{${o}_cutoff = ${p[1].loop}; if (${o}_p1.onChanged(${o}_cutoff, 1e-5)) {${o}.setCutoff(${o}_cutoff)};
+                            ${o}_res = ${p[2].loop}; if (${o}_p2.onChanged(${o}_res, 1e-5)) {${o}.setResonance(${o}_res)};
+                        return ${o}.play(${p[0].loop},${p[3].loop},${p[4].loop},${p[5].loop},${p[6].loop})})()`
   },
   bitclock: {
     setup: (o, p) => "",
 		loop:  (o, p) => `this.bitclock`
-  }
-
+  },
+  pvshift: {
+		setup: (o, p) => `${o} = new pvshift();`,
+		loop:  (o, p) => `${o}.play(${p[0].loop},${p[1].loop})`
+	},
 };
 
 class IRToJavascript {
@@ -11743,6 +11834,35 @@ class IRToJavascript {
         // }
         return ccode;
       },
+      '@list': (ccode, el) => {
+        //a list can be static and/or dynamic
+        //create a vector for the list
+        let objName = "q.l" + IRToJavascript.getNextID();
+        ccode.setup += `${objName} = new Module.VectorDouble();`;
+        ccode.setup += `${objName}.resize(${el.length},0);`;
+
+        //in the loop, we create a function that returns the list. It might also update dynamic elements of the list
+        ccode.loop += `(()=>{`;
+        let extraSetupCode = "";
+
+        for(let i_list=0; i_list < el.length; i_list++) {
+          //if the element is a static number, set this element once in the setup code
+          let element =  IRToJavascript.traverseTree(el[i_list], IRToJavascript.emptyCode(), level, vars);
+          if(Object.keys(el[i_list])[0] == '@num') {
+              ccode.setup += `${objName}.set(${i_list}, ${element.loop});`;
+          }else{
+              //if the element not a number, set this element each update before returning the list
+              extraSetupCode += element.setup;
+              ccode.loop += `${objName}.set(${i_list}, ${element.loop});`;
+          }
+        }
+
+        ccode.loop += `return ${objName}})()`;
+        ccode.setup += extraSetupCode;
+        // ccode.loop+=`${objName}`;
+        console.log(ccode);
+        return ccode;
+      }
     }
 
     if (Array.isArray(t)) {
@@ -11766,11 +11886,13 @@ class IRToJavascript {
   static treeToCode(tree) {
     // console.log(tree);
     let vars = {};
+    console.log("1");
     let code = IRToJavascript.traverseTree(tree, IRToJavascript.emptyCode(), 0, vars);
+    console.log("2");
     code.setup = `() => {let q=this.newq(); ${code.setup}; return q;}`;
     code.loop = `(q, inputs, mem) => {${code.loop} return q.sigOut;}`
-    // console.log("DEBUG:treeToCode");
-    // console.log(code.loop);
+    console.log("DEBUG:treeToCode");
+    console.log(code.loop);
     // console.log(code.paramMarkers);
     return code;
   }
@@ -11816,7 +11938,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("\nvar esn = {};\nesn.N = 10;\nesn.NOut = 1;\nesn.x = tf.randomUniform([esn.N,1]);\nesn.res = tf.randomNormal([esn.N, esn.N],0, 1.9);\nesn.wout = tf.randomUniform([esn.NOut,esn.N]);\nesn.output = tf.zeros([esn.Nout])\nesn.leakRate = tf.scalar(0.5);\nesn.leakRateInv = tf.sub(tf.scalar(1.0), esn.leakRate);\nesn.leakRateInv.dataSync()\nesn.xold = tf.clone(esn.x);\n\nesn.calc = () => {\n tf.tidy(() => {\n     tf.dispose(esn.xold);\n     esn.xold = esn.x;\n     let xnew =  tf.matMul(esn.res, esn.x);\n     xnew = tf.add(tf.mul(tf.tanh(xnew), esn.leakRate), tf.mul(tf.tanh(esn.xold), esn.leakRateInv));\n     esn.x = tf.keep(xnew);\n     let newOutput = tf.keep(tf.matMul(esn.wout, esn.x));\n     tf.dispose(esn.output);\n     esn.output = tf.keep(newOutput);\n     return 0;\n });\n};\n__________\nesn.calc()\nesn.output.dataSync()\n//esn.res.dataSync()\n__________\nnext = () => {return 0;}\n__________\nnext = () => {\n   esn.calc()\n   return ((esn.output.dataSync()[0] + 1) * 100) + 100;\n}\n__________\ntf.memory().numTensors\nesn\nesn\n__________\nconsole.log(\"cheese\")\nconsole.log(\"cheese2\")\nconsole.log(\"cheese3\")");
+/* harmony default export */ __webpack_exports__["default"] = ("//js - Echo state network (tfjs)\nvar esn = {};\nesn.N = 10;\nesn.NOut = 1;\nesn.x = tf.randomUniform([esn.N,1]);\nesn.res = tf.randomNormal([esn.N, esn.N],0, 1.9);\nesn.wout = tf.randomUniform([esn.NOut,esn.N]);\nesn.output = tf.zeros([esn.Nout])\nesn.leakRate = tf.scalar(0.5);\nesn.leakRateInv = tf.sub(tf.scalar(1.0), esn.leakRate);\nesn.leakRateInv.dataSync()\nesn.xold = tf.clone(esn.x);\n\nesn.calc = () => {\n tf.tidy(() => {\n     tf.dispose(esn.xold);\n     esn.xold = esn.x;\n     let xnew =  tf.matMul(esn.res, esn.x);\n     xnew = tf.add(tf.mul(tf.tanh(xnew), esn.leakRate), tf.mul(tf.tanh(esn.xold), esn.leakRateInv));\n     esn.x = tf.keep(xnew);\n     let newOutput = tf.keep(tf.matMul(esn.wout, esn.x));\n     tf.dispose(esn.output);\n     esn.output = tf.keep(newOutput);\n     return 0;\n });\n};\n__________\nesn.calc()\nesn.output.dataSync()\n//esn.res.dataSync()\n__________\nnext = () => {return 0;}\n__________\nnext = () => {\n   esn.calc()\n   return ((esn.output.dataSync()[0] + 1) * 100) + 100;\n}\n__________\ntf.memory().numTensors\nesn\nesn\n__________\nconsole.log(\"cheese\")\nconsole.log(\"cheese2\")\nconsole.log(\"cheese3\")");
 
 /***/ }),
 
@@ -11842,7 +11964,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("//js\nvar model = tf.sequential();\nmodel.add(tf.layers.dense({ \n  inputShape: [1], \n  units: 100, \n  activation: 'sigmoid'\n}));\nmodel.add(tf.layers.dense({ units: 100, activation: 'sigmoid' }));\nmodel.add(tf.layers.dense({ units: 1, activation: 'sigmoid' }));\nmodel.compile({ \n  optimizer: 'adam',\n  loss: 'binaryCrossentropy',\n  metrics: ['accuracy']\n});\n\n//set up the training data set\nvar xs = tf.tensor2d([-1, 0, 1, 2, 3, 4], [6, 1]);\nvar ys = tf.tensor2d([1, 0, 1, 0, 0, 1], [6, 1]);\n\n//train the model on the data set\nmodel.fit(xs, ys, { epochs: 50 }).then(result => {console.log(`DEBUG:ml.model: Model trained`); console.dir(result)});\n\n//define the callback for testing the model on new data \nvar test = (x) => { return model.predict(tf.tensor2d([x], [1, 1])).dataSync()[0]; }\n\n__________\n//route the test data into the model\nvar w = 0;\ninput = (id,x) => {console.log(\">toModel:    \"+[id,x]); w=x};\n__________\n//route the model predictions back to the live coding environment \noutput = (x) => {p = test(w);console.log(\">fromModel: \"+p); return p;}\n\n\n");
+/* harmony default export */ __webpack_exports__["default"] = ("//js - Three-layer model for binary classification (tfjs)\nvar model = tf.sequential();\nmodel.add(tf.layers.dense({ \n  inputShape: [1], \n  units: 100, \n  activation: 'sigmoid'\n}));\nmodel.add(tf.layers.dense({ units: 100, activation: 'sigmoid' }));\nmodel.add(tf.layers.dense({ units: 1, activation: 'sigmoid' }));\nmodel.compile({ \n  optimizer: 'adam',\n  loss: 'binaryCrossentropy',\n  metrics: ['accuracy']\n});\n\n//set up the training data set\nvar xs = tf.tensor2d([-1, 0, 1, 2, 3, 4], [6, 1]);\nvar ys = tf.tensor2d([1, 0, 1, 0, 0, 1], [6, 1]);\n\n//train the model on the data set\nmodel.fit(xs, ys, { epochs: 50 }).then(result => {console.log(`DEBUG:ml.model: Model trained`); console.dir(result)});\n\n//define the callback for testing the model on new data \nvar test = (x) => { return model.predict(tf.tensor2d([x], [1, 1])).dataSync()[0]; }\n\n__________\n//route the test data into the model\nvar w = 0;\ninput = (id,x) => {console.log(\">toModel:    \"+[id,x]); w=x};\n__________\n//route the model predictions back to the live coding environment \noutput = (x) => {p = test(w);console.log(\">fromModel: \"+p); return p;}\n\n\n");
 
 /***/ }),
 
@@ -11855,7 +11977,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("//js\nvar model = tf.sequential();\nmodel.add(tf.layers.dense({ \n  inputShape: [1],\n  units: 50, \n  activation: 'sigmoid', \n  kernelInitialiser: 'leCunNormal' }));\nmodel.add(tf.layers.dense({ units: 1 }));\nmodel.compile({ loss: 'meanSquaredError', optimizer: 'sgd' });\n\n//set up the training data set\nvar xs = tf.tensor2d([-1, 0, 1, 2, 3, 4], [6, 1]);\nvar ys = tf.tensor2d([-3, -1, 1, 3, 500, 70], [6, 1]);\n\n//train the model on the data set\nmodel.fit(xs, ys, { epochs: 50 }).then(result => {console.log(`INFO:ml.model: Model trained`); console.dir(result)});\n\n//define the callback for testing the model on new data \nvar test = (x) => { return model.predict(tf.tensor2d([x], [1, 1])).dataSync()[0]; }\n\n__________\n//route the test data into the model\nvar w = 0;\ninput = (id,x) => {console.log(\">toModel:   \"+[id,x]); w=x};\n__________\n//route the model predictions back to the live coding environment \noutput = (x) => {p = test(w); console.log(\">fromModel: \"+p); return p;}\n\n\n");
+/* harmony default export */ __webpack_exports__["default"] = ("//js – Two-layer non linear model for regression (tfjs)\nvar model = tf.sequential();\nmodel.add(tf.layers.dense({ \n  inputShape: [1],\n  units: 50, \n  activation: 'sigmoid', \n  kernelInitialiser: 'leCunNormal' }));\nmodel.add(tf.layers.dense({ units: 1 }));\nmodel.compile({ loss: 'meanSquaredError', optimizer: 'sgd' });\n\n//set up the training data set\nvar xs = tf.tensor2d([-1, 0, 1, 2, 3, 4], [6, 1]);\nvar ys = tf.tensor2d([-3, -1, 1, 3, 500, 70], [6, 1]);\n\n//train the model on the data set\nmodel.fit(xs, ys, { epochs: 50 }).then(result => {console.log(`INFO:ml.model: Model trained`); console.dir(result)});\n\n//define the callback for testing the model on new data \nvar test = (x) => { return model.predict(tf.tensor2d([x], [1, 1])).dataSync()[0]; }\n\n__________\n//route the test data into the model\nvar w = 0;\ninput = (id,x) => {console.log(\">toModel:   \"+[id,x]); w=x};\n__________\n//route the model predictions back to the live coding environment \noutput = (x) => {p = test(w); console.log(\">fromModel: \"+p); return p;}\n\n\n");
 
 /***/ }),
 
@@ -11868,7 +11990,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("//js\n\n//hyperparameters of long-short-term-memory (LSTM) model \nvar lstmLayerSizes;\nvar learningRate; \nvar numEpochs; \nvar examplesPerEpoch; \nvar batchSize; \nvar validationSplit;\nvar sentenceIndices;\nvar length;\nvar temperature;\n\n//create the model \ncreateModel(lstmLayerSizes) {\n  if (!Array.isArray(lstmLayerSizes)) {\n    lstmLayerSizes = [lstmLayerSizes];\n  }\n  this.model = tf.sequential();\n  for (let i = 0; i < lstmLayerSizes.length; ++i) {\n    const lstmLayerSize = lstmLayerSizes[i];\n    this.model.add(tf.layers.lstm({\n      units: lstmLayerSize,\n      returnSequences: i < lstmLayerSizes.length - 1,\n      inputShape: i === 0 ? [this.sampleLen_, this.charSetSize_] : undefined\n    }));\n  }\n  this.model.add(\n      tf.layers.dense({units: this.charSetSize_, activation: 'softmax'}));\n}\n\ncompileModel(learningRate) {\n  const optimizer = tf.train.rmsprop(learningRate);\n  this.model.compile({optimizer: optimizer, loss: 'categoricalCrossentropy'});\n  console.log(`Compiled model with learning rate ${learningRate}`);\n  this.model.summary();\n}\n\nasync fitModel(numEpochs, examplesPerEpoch, batchSize, validationSplit) {\n  let batchCount = 0;\n  const batchesPerEpoch = examplesPerEpoch / batchSize;\n  const totalBatches = numEpochs * batchesPerEpoch;\n  onTrainBegin();\n  await tf.nextFrame();\n  let t = new Date().getTime();\n  for (let i = 0; i < numEpochs; ++i) {\n    const [xs, ys] = this.textData_.nextDataEpoch(examplesPerEpoch);\n    await this.model.fit(xs, ys, {\n      epochs: 1,\n      batchSize: batchSize,\n      validationSplit,\n      callbacks: {\n        onBatchEnd: async (batch, logs) => {\n          // Calculate the training speed in the current batch, in # of\n          // examples per second.\n          const t1 = new Date().getTime();\n          const examplesPerSec = batchSize / ((t1 - t) / 1e3);\n          t = t1;\n          onTrainBatchEnd(logs, ++batchCount / totalBatches, examplesPerSec);\n        },\n        onEpochEnd: async (epoch, logs) => {\n          onTrainEpochEnd(logs);\n        },\n      }\n    });\n    xs.dispose();\n    ys.dispose();\n  }\n}\nasync generateText(sentenceIndices, length, temperature) {\n  onTextGenerationBegin();\n  const temperatureScalar = tf.scalar(temperature);\n  let generated = '';\n  while (generated.length < length) {\n    // Encode the current input sequence as a one-hot Tensor.\n    const inputBuffer =\n        new tf.TensorBuffer([1, this.sampleLen_, this.charSetSize_]);\n    for (let i = 0; i < this.sampleLen_; ++i) {\n      inputBuffer.set(1, 0, i, sentenceIndices[i]);\n    }\n    const input = inputBuffer.toTensor();\n    // Call model.predict() to get the probability values of the next\n    // character.\n    const output = this.model.predict(input);\n    // Sample randomly based on the probability values.\n    const winnerIndex = sample(tf.squeeze(output), temperatureScalar);\n    const winnerChar = this.textData_.getFromCharSet(winnerIndex);\n    await onTextGenerationChar(winnerChar);\n    generated += winnerChar;\n    sentenceIndices = sentenceIndices.slice(1);\n    sentenceIndices.push(winnerIndex);\n    input.dispose();\n    output.dispose();\n  }\n  temperatureScalar.dispose();\n  return generated;\n}\n  ");
+/* harmony default export */ __webpack_exports__["default"] = ("//js - Long-short-term-memory (LSTM) model for text generation (tfjs)\n\n// Hyperparameters of LSTM model \nvar lstmLayerSizes;\nvar learningRate; \nvar numEpochs; \nvar examplesPerEpoch; \nvar batchSize; \nvar validationSplit;\nvar sentenceIndices;\nvar length;\nvar temperature;\n\n//create the model \ncreateModel(lstmLayerSizes) {\n  if (!Array.isArray(lstmLayerSizes)) {\n    lstmLayerSizes = [lstmLayerSizes];\n  }\n  this.model = tf.sequential();\n  for (let i = 0; i < lstmLayerSizes.length; ++i) {\n    const lstmLayerSize = lstmLayerSizes[i];\n    this.model.add(tf.layers.lstm({\n      units: lstmLayerSize,\n      returnSequences: i < lstmLayerSizes.length - 1,\n      inputShape: i === 0 ? [this.sampleLen_, this.charSetSize_] : undefined\n    }));\n  }\n  this.model.add(\n      tf.layers.dense({units: this.charSetSize_, activation: 'softmax'}));\n}\n\ncompileModel(learningRate) {\n  const optimizer = tf.train.rmsprop(learningRate);\n  this.model.compile({optimizer: optimizer, loss: 'categoricalCrossentropy'});\n  console.log(`Compiled model with learning rate ${learningRate}`);\n  this.model.summary();\n}\n\nasync fitModel(numEpochs, examplesPerEpoch, batchSize, validationSplit) {\n  let batchCount = 0;\n  const batchesPerEpoch = examplesPerEpoch / batchSize;\n  const totalBatches = numEpochs * batchesPerEpoch;\n  onTrainBegin();\n  await tf.nextFrame();\n  let t = new Date().getTime();\n  for (let i = 0; i < numEpochs; ++i) {\n    const [xs, ys] = this.textData_.nextDataEpoch(examplesPerEpoch);\n    await this.model.fit(xs, ys, {\n      epochs: 1,\n      batchSize: batchSize,\n      validationSplit,\n      callbacks: {\n        onBatchEnd: async (batch, logs) => {\n          // Calculate the training speed in the current batch, in # of\n          // examples per second.\n          const t1 = new Date().getTime();\n          const examplesPerSec = batchSize / ((t1 - t) / 1e3);\n          t = t1;\n          onTrainBatchEnd(logs, ++batchCount / totalBatches, examplesPerSec);\n        },\n        onEpochEnd: async (epoch, logs) => {\n          onTrainEpochEnd(logs);\n        },\n      }\n    });\n    xs.dispose();\n    ys.dispose();\n  }\n}\nasync generateText(sentenceIndices, length, temperature) {\n  onTextGenerationBegin();\n  const temperatureScalar = tf.scalar(temperature);\n  let generated = '';\n  while (generated.length < length) {\n    // Encode the current input sequence as a one-hot Tensor.\n    const inputBuffer =\n        new tf.TensorBuffer([1, this.sampleLen_, this.charSetSize_]);\n    for (let i = 0; i < this.sampleLen_; ++i) {\n      inputBuffer.set(1, 0, i, sentenceIndices[i]);\n    }\n    const input = inputBuffer.toTensor();\n    // Call model.predict() to get the probability values of the next\n    // character.\n    const output = this.model.predict(input);\n    // Sample randomly based on the probability values.\n    const winnerIndex = sample(tf.squeeze(output), temperatureScalar);\n    const winnerChar = this.textData_.getFromCharSet(winnerIndex);\n    await onTextGenerationChar(winnerChar);\n    generated += winnerChar;\n    sentenceIndices = sentenceIndices.slice(1);\n    sentenceIndices.push(winnerIndex);\n    input.dispose();\n    output.dispose();\n  }\n  temperatureScalar.dispose();\n  return generated;\n}\n  ");
 
 /***/ }),
 
@@ -11882,10 +12004,10 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _UI_App_svelte__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./UI/App.svelte */ "./client/UI/App.svelte");
-/* harmony import */ var _messaging_pubSub__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./messaging/pubSub */ "./client/messaging/pubSub.js");
+/* harmony import */ var _utils_history_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./utils/history.js */ "./client/utils/history.js");
+/* harmony import */ var _utils_history_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_utils_history_js__WEBPACK_IMPORTED_MODULE_1__);
 
 
-// import { createAudioEngine } from './audioEngine/audioEngineController.js';
 
 
 const app = new _UI_App_svelte__WEBPACK_IMPORTED_MODULE_0__["default"]({
@@ -11895,9 +12017,9 @@ const app = new _UI_App_svelte__WEBPACK_IMPORTED_MODULE_0__["default"]({
 	}
 });
 
-// window.messaging = new PubSub();
 
-// createAudioEngine();
+// exportHistory();
+// clearHistory();
 
 window.app = app;
 
@@ -12079,9 +12201,8 @@ const tutorialOptions = [
 	{ id: 2, text: `Tutorial 2`, content: _tutorials_tutorial2_ne__WEBPACK_IMPORTED_MODULE_9__["default"] },
 	{ id: 4, text: `Tutorial 4`, content: _tutorials_tutorial4_ne__WEBPACK_IMPORTED_MODULE_11__["default"] },
 	{ id: 3, text: `Tutorial 3`, content: _tutorials_tutorial3_ne__WEBPACK_IMPORTED_MODULE_10__["default"] },
-	// i commented these out because they were causing an error
-	// { id: 5, text: `Tutorial 5`, content: tutorial_5_grammar },
-	// { id: 6, text: `Tutorial 6`, content: tutorial_6_grammar },
+	{ id: 5, text: `Tutorial 5`, content: _tutorials_tutorial5_ne__WEBPACK_IMPORTED_MODULE_12__["default"] },
+	{ id: 6, text: `Tutorial 6`, content: _tutorials_tutorial6_ne__WEBPACK_IMPORTED_MODULE_13__["default"] },
 	{ id: 7, text: `Tutorial 7`, content: _assets_language_defaultGrammar_ne__WEBPACK_IMPORTED_MODULE_2__["default"] }
 ];
 
@@ -12293,14 +12414,41 @@ you can access all the keys in localStorage using Object.entries(localStoage) an
 
 */
 
+function getHistoryItemsFromLocalStorage() {
+
+  var items = {},
+		keys = Object.keys(localStorage),
+		i = keys.length;
+
+	while (i--) {
+		if (keys[i].startsWith("model-history-") || keys[i].startsWith("live-code-history") )
+			items[keys[i]] = JSON.parse(window.localStorage.getItem(keys[i]));
+	}
+
+	return items;
+}
+
 function addToHistory(historyName, item) {
   let nowdate = Date.now();
   let nowstr = new Date(nowdate).toISOString();
-  window.localStorage[historyName+nowstr] = JSON.stringify({"t":nowdate,"code":item});
+  // e.g. Key: lchist_2020-03-02T15:48:31.080Z, 
+  // Value: {"t":1583164111080,"code":":b:{{1,0.25}imp}\\909b; \n:s:{{1,0.25}imp}\\909; \n:c:{{{1,0.66}imp,{1,0.8}imp}add}\\909closed; \n:o:{{0.25,0.75}imp}\\909open; \n:tri:{40}tri; \n:sin:{45}sin; \n:saw:{4}saw; \n{:tri:, :saw:, {:sin:,0.4}mul, :b:, :o:, :c:, :s:}sum"}
+  window.localStorage[historyName+nowstr] = JSON.stringify( { "t": nowdate, "code": item } );
 }
 
+function exportHistory() {
 
-module.exports = {addToHistory};
+  console.log("DEBUG:History:ExportHistory: " );  
+  console.log(getHistoryItemsFromLocalStorage());  
+}
+
+function clearHistory() {
+
+  let items = Object.keys(getHistoryItemsFromLocalStorage());
+  items.forEach(item => window.localStorage.removeItem(item));
+}
+
+module.exports = { addToHistory, clearHistory, exportHistory };
 
 
 /***/ }),
@@ -35668,7 +35816,7 @@ module.exports = function(module) {
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = function() {
-  return new Worker(__webpack_require__.p + "c4b53de65aa7a54a010f.worker.js");
+  return new Worker(__webpack_require__.p + "3d1d343dc2bb3b56ca84.worker.js");
 };
 
 /***/ }),
@@ -35681,7 +35829,7 @@ module.exports = function() {
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = function() {
-  return new Worker(__webpack_require__.p + "3705ede9d1153cb3d374.worker.js");
+  return new Worker(__webpack_require__.p + "1db4714a3b9ec4161090.worker.js");
 };
 
 /***/ }),
