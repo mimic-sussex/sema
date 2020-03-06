@@ -1,8 +1,15 @@
-:b:{{1,0.25}imp}\909b; 
-:s:{{1,0.25}imp}\909; 
-:c:{{{1,0.66}imp,{1,0.8}imp}add}\909closed; 
-:o:{{0.25,0.75}imp}\909open; 
-:tri:{40}tri; 
-:sin:{45}sin; 
-:saw:{4}saw; 
-{:tri:, :saw:, {:sin:,0.4}mul, :b:, :o:, :c:, :s:}sum
+//Small example with samples, synths, lists, filter and mix
+:b:{{8,0.25}imp}\909b; //909b kickdrum sample, 8x/cycle, 0.25 offset
+:s:{{4,0}imp}\909;  //909 snare sample, 4x/cycle
+:c:{{{3,0.66}imp,{1,0.8}imp}add}\909closed;
+:o:{{0.25,0.75}imp}\909open; //open-hi-hat sample
+:tri:{40}tri; // triangle wave at 40Hz
+:sin:{45}sin; // sinewave at 45Hz
+:saw:{14}saw;  // sawwave at 4Hz
+:speed:{{1}pha,100,500}uexp;
+:svf:{{400}saw,:speed:, 5, 0,1,0,0}svf; //State variable filter:
+:x:{{10}imp,{4}pha,<200,400,600,{{{0.1}sin}abs,100}mul>}idx;
+:sw:{:x:}saw;
+
+//sum all of the above
+{:sx:, :tri:, :saw:, {:sin:,0.4}mul, :b:, :o:, :c:, :s:, :svf:}sum 

@@ -10,8 +10,8 @@ const app = new App({
 });
 
 
-// exportHistory();
-// clearHistory();
+//exportHistory();
+clearHistory();
 
 window.app = app;
 
