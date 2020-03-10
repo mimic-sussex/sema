@@ -61,6 +61,7 @@ module.exports = {
 			},
 			{
 				test: /\.css$/,
+        // exclude: [ path.resolve(__dirname, "client/global.css") ],
 				use: [
 					/**
 					 * MiniCssExtractPlugin doesn't support HMR.

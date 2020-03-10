@@ -1,3 +1,4 @@
+
 @{%
 
 const lexer = moo.compile({
