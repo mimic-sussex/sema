@@ -305,11 +305,25 @@
 
     <div>
       <button class="button-dark controls"
-              on:click={() => dispatchAdd('liveCodeParseOutput', selectedModelOption)}> 
+              on:click={ () => dispatchAdd('liveCodeParseOutput', selectedModelOption) }> 
         + Live Code Parse Out
       </button>
     </div>
-    
+
+    <div>
+      <button class="button-dark controls"
+              on:click={ () => dispatchAdd('oscilloscope') }> 
+        + Oscilloscope
+      </button>
+    </div>
+
+    <div>
+      <button class="button-dark controls"
+              on:click={ () => dispatchAdd('spectrogram') }> 
+        + Spectrogram
+      </button>
+    </div>
+
     <div class="controls">
 
       <div>

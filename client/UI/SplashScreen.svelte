@@ -1,7 +1,7 @@
 <script>
 
   import { splashScreenClicked } from '../store.js';
-  import src from '../../assets/img/sema.png';
+  import src from '../../assets/img/sema.svg';
 
   let handleClick = () => {
     $splashScreenClicked = "hidden";
@@ -49,8 +49,8 @@
 
   .logo-container {
     float: none;
-    width: 45%;
-    height: 55%;
+    width: 60%;
+    height: 70%;
     margin: 0 auto;
     display: grid;
   }
