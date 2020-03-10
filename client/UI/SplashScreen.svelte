@@ -1,8 +1,8 @@
 <script>
   import { splashScreenClicked } from '../store.js';
-
-  let src = './sema.png';
-
+  import src from '../../assets/img/sema.png';
+  import ico from '../../assets/img/favicon.ico';
+  
   let handleClick = () => {
     $splashScreenClicked = "hidden";
   }

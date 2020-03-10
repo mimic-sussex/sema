@@ -3,6 +3,31 @@
 	import * as GL from '@sveltejs/gl';
 	// import SvelteBox from './SvelteBox.svelte';
 	// import { logotype } from './images.js';
+  import NexusUI from "nexusui/dist/NexusUI.js";
+
+  NexusUI.context = window.AudioEngine.audioContext;
+  oscilloscope = new NexusUI.Oscilloscope("oscilloscope", {
+    // size: default
+  });
+  oscilloscope.colorize("fill", "#000");
+  oscilloscope.colorize("accent", "#FFF");
+  // window.AudioEngine.addAnalyser(oscilloscope); // Inject oscilloscope analyser, keep encapsulation for worklet node
+  oscilloscope.connect(window.AudioEngine.audioWorkletNode);
+
+  spectrogram = new NexusUI.Spectrogram("spectrogram", {
+    // size: [100, 50]
+  });
+  spectrogram.colorize("fill", "#000");
+  spectrogram.colorize("accent", "#FFF");
+  // window.AudioEngine.addAnalyser(spectrogram); // Inject oscilloscope analyser, keep encapsulation for worklet node
+  spectrogram.connect(window.AudioEngine.audioWorkletNode);
+
+  window.addEventListener("resize", function(event) {
+    // oscilloscope.resize(100, 120);
+    // spectrogram.resize(100, 150);
+    // console.log(analysers);
+  });
+
 
 	const prime = 0xff3e00;
 	const second = 0x676778;
@@ -25,6 +50,8 @@
 
 		return () => cancelAnimationFrame(frame);
 	});
+
+
 </script>
 
 <GL.Scene>

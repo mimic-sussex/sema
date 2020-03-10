@@ -100,7 +100,7 @@ module.exports = {
 				test: /tfjs.js/,
 				loader: "file-loader", // files should NOT get processed, only emitted
 				options: {
-					name: "maxi-processor.js"
+					name: "tfjs.js"
 				}
 			},
 			{
@@ -119,14 +119,14 @@ module.exports = {
 			},
 			{
 				//IMAGE LOADER
-				test: /\.(jpe?g|png|gif|svg|ico)$/i,
-				// include: './assets/img/',
-				use: {
-					loader: "file-loader",
-					options: {
-						name: "[name].[ext]",
-						outputPath: "img"
-					}
+				test: /\.(jpe?g|png|gif|svg)$/i,
+				loader: "file-loader"
+			},
+			{
+				test: /favicon.ico/,
+				loader: "file-loader", // files should NOT get processed, only emitted
+				options: {
+					name: "favicon.ico"
 				}
 			},
 			{
@@ -148,7 +148,7 @@ module.exports = {
 			noscriptHeader:
 				"To run Sema, please enable Javascript in the browser configuration",
 			template: "index.html",
-			filename: "./public/index.html", //relative to root of the application
+			filename: "./index.html", //relative to root of the application
 			excludeChunks: ["worker"]
 		}),
 		new LinkTypePlugin({
