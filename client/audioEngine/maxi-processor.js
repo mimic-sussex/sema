@@ -374,6 +374,14 @@ class MaxiProcessor extends AudioWorkletProcessor {
         for (let channel = 0; channel < channelCount; channel++) {
           output[channel][i] = w;
         }
+
+        //spectrogram
+        // let showvariable = this._mems[this.currentSignalFunction][':show'];
+        // let specgramValue = showvariable !=undefined ? showvariable : output[channel][0];
+        // output[SPECTROGAMCHANNEL][i] = specgramValue;
+        // then use channelsplitter
+
+
         // let w = this.testOsc.saw(200);
         // for (let channel = 0; channel < channelCount; channel++) {
         //   output[channel][i] = w;
