@@ -59,7 +59,7 @@ onmessage = m => {
 		if (evalRes != undefined) {
       console.log(evalRes);
     }
-		else console.log("0");
+		else console.log("done");
 	}
   else if ("val" in m.data) {
     // console.log("DEBUG:ml.worker:onmessage:val");
