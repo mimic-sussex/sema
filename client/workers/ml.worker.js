@@ -55,11 +55,15 @@ onmessage = m => {
   // console.log(m);
 
 	if (m.data.eval !== undefined) {
-		let evalRes = geval(m.data.eval);
-		if (evalRes != undefined) {
-      console.log(evalRes);
+    try {
+  		let evalRes = geval(m.data.eval);
+  		if (evalRes != undefined) {
+        console.log(evalRes);
+      }
+  		else console.log("done");
+    }catch(e) {
+      console.log(`Code eval exception: ${e}`);
     }
-		else console.log("done");
 	}
   else if ("val" in m.data) {
     // console.log("DEBUG:ml.worker:onmessage:val");
