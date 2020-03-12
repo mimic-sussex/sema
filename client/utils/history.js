@@ -14,18 +14,38 @@ you can access all the keys in localStorage using Object.entries(localStoage) an
 
 */
 
+function getHistoryItemsFromLocalStorage() {
+
+  var items = {},
+		keys = Object.keys(localStorage),
+		i = keys.length;
+
+	while (i--) {
+		if (keys[i].startsWith("model-history-") || keys[i].startsWith("live-code-history") )
+			items[keys[i]] = JSON.parse(window.localStorage.getItem(keys[i]));
+	}
+
+	return items;
+}
+
 function addToHistory(historyName, item) {
   let nowdate = Date.now();
   let nowstr = new Date(nowdate).toISOString();
-  window.localStorage[historyName+nowstr] = JSON.stringify({"t":nowdate,"code":item});
+  // e.g. Key: lchist_2020-03-02T15:48:31.080Z, 
+  // Value: {"t":1583164111080,"code":":b:{{1,0.25}imp}\\909b; \n:s:{{1,0.25}imp}\\909; \n:c:{{{1,0.66}imp,{1,0.8}imp}add}\\909closed; \n:o:{{0.25,0.75}imp}\\909open; \n:tri:{40}tri; \n:sin:{45}sin; \n:saw:{4}saw; \n{:tri:, :saw:, {:sin:,0.4}mul, :b:, :o:, :c:, :s:}sum"}
+  window.localStorage[historyName+nowstr] = JSON.stringify( { "t": nowdate, "code": item } );
 }
 
 function exportHistory() {
 
+  console.log("DEBUG:History:ExportHistory: " );  
+  console.log(getHistoryItemsFromLocalStorage());  
 }
 
 function clearHistory() {
-  
+
+  let items = Object.keys(getHistoryItemsFromLocalStorage());
+  items.forEach(item => window.localStorage.removeItem(item));
 }
 
-module.exports = {addToHistory};
+module.exports = { addToHistory, clearHistory, exportHistory };

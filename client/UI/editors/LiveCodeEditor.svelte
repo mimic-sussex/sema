@@ -20,7 +20,7 @@
     dspCode
   } from "../../store.js";
 
-  import {addToHistory} from "../../utils/history.js";
+  import { addToHistory } from "../../utils/history.js";
 
   // import {
   //   playAudio,
@@ -59,7 +59,8 @@
   let parseLiveCodeAsync = e => {
     // console.log('DEBUG:LiveCodeEditor:parseLiveCode:');
     // console.log(e);
-    addToHistory("lchist_", e);
+    addToHistory("live-code-history-", e);
+
     if(window.Worker){
       let parserWorkerAsync = new Promise( (res, rej) => {
 

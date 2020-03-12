@@ -37,16 +37,16 @@ const lexer = moo.compile({
   separator:      /,/,
   paramEnd:       /}/,
   paramBegin:     /{/,
-  listEnd:       /\>/,
-  listBegin:     /\</,
+  listEnd:        /\>/,
+  listBegin:      /\</,
   variable:       /:[a-zA-Z0-9]+:/,
   sample:         { match: /\\[a-zA-Z0-9]+/, lineBreaks: true, value: x => x.slice(1, x.length)},
-  slice:         { match: /\|[a-zA-Z0-9]+/, lineBreaks: true, value: x => x.slice(1, x.length)},
+  slice:          { match: /\|[a-zA-Z0-9]+/, lineBreaks: true, value: x => x.slice(1, x.length)},
   stretch:        { match: /\@[a-zA-Z0-9]+/, lineBreaks: true, value: x => x.slice(1, x.length)},
   number:         /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?\b/,
   semicolon:      /;/,
   funcName:       /[a-zA-Z][a-zA-Z0-9]*/,
-  comment:        /#[^\n]*/,
+  comment:        /\/\/[^\n]*/,
   ws:             { match: /\s+/, lineBreaks: true},
 });
 
@@ -65,9 +65,10 @@ Statement ->
   |
   Expression
   {% d => [ { '@sigOut': { '@spawn': d[0] }} ] %}
-  # |
-  # %hash . '\n'
-  #{% d => ( { '@comment': d[3] } ) %}
+	|
+	%comment _ Statement
+	{% d => d[2] %}
+
 
 Expression ->
   ParameterList _ %funcName
@@ -84,8 +85,6 @@ Expression ->
   |
   %variable _ Expression
   {% d => sema.setvar( d[0], d[2] ) %}
-  |
-  %comment {% id %}
 
 ParameterList ->
   %paramBegin Params %paramEnd

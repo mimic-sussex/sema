@@ -296,7 +296,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
 //@CLT
     this.clockTrig = (multiples, phase) => {
-        return (this.clockPhase(multiples, phase) - (1.0/this.sampleRate * multiples)) <= 0 ? 1 : -1;
+        return (this.clockPhase(multiples, phase) - (1.0/this.sampleRate * multiples)) <= 0 ? 1 : 0;
     };
     this.setClockFreq = (freq) => {
       this.clockFreq = freq;
