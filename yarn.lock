@@ -3104,11 +3104,6 @@ neo-async@^2.5.0, neo-async@^2.6.1:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.1.tgz#ac27ada66167fa8849a6addd837f6b189ad2081c"
   integrity sha512-iyam8fBuCUpWeKPGpaNMetEocMt364qkCsfL9JuhjXX6dRnguRVOfk2GZaDpPjcOKiiXCPINZC1GczQ7iTq3Zw==
 
-nexusui@^2.0.10:
-  version "2.0.10"
-  resolved "https://registry.yarnpkg.com/nexusui/-/nexusui-2.0.10.tgz#a756d422fc892d74547140cee2c812182ce7156a"
-  integrity sha512-EmSnmC1NGIf72kpDeF/c8CizDjaWxvF99w+UV4QZzyLO302rS64PxBnqt9XD51P69HTqCvKTJaTDXP8/GYS4KA==
-
 nice-try@^1.0.4:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/nice-try/-/nice-try-1.0.5.tgz#a3378a7696ce7d223e88fc9b764bd7ef1089e366"

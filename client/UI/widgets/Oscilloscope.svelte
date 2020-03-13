@@ -1,6 +1,6 @@
 <script>
 	import { onMount } from 'svelte';
-  import NexusUI from "nexusui/dist/NexusUI.js";
+  // import NexusUI from "nexusui/dist/NexusUI.js";
 
   export let context = null;
 
