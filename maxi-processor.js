@@ -64,6 +64,38 @@ class PostMsgTransducer {
   // }
 }
 
+class pvshift {
+  constructor() {
+    this.fft = new Module.maxiFFT();
+		this.fft.setup(1024,256,1024);
+		this.ifft = new Module.maxiIFFT();
+		this.ifft.setup(1024,256,1024);
+		this.mags = new Module.VectorFloat();
+		this.phases = new Module.VectorFloat();
+		this.mags.resize(512,0);
+		this.phases.resize(512,0);
+  }
+
+  play(sig, shift) {
+    if (this.fft.process(sig, Module.maxiFFTModes.WITH_POLAR_CONVERSION)) {
+      this.mags = this.fft.getMagnitudes();
+      this.phases = this.fft.getPhases();
+      //shift bins up
+      for(let i=511; i > 0; i--) {
+        if (i > shift) {
+          this.mags.set(i, this.mags.get(i-shift));
+          this.phases.set(i, this.phases.get(i-shift));
+        }else{
+          this.mags.set(i,0);
+          this.phases.set(i,0);
+        }
+      }
+      // console.log(mags.get(10));
+    }
+    sig = this.ifft.process(this.mags, this.phases, Module.maxiIFFTModes.SPECTRUM);
+    return sig;
+  }
+}
 
 
 /**
@@ -256,11 +288,15 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
     this.clockFreq = 0.8;
     this.clockPhaseSharingInterval=0; //counter for emiting clock phase over the network
+
+//@CLP
     this.clockPhase = (multiples, phase) => {
         return (((this.clockPhasor * multiples) % 1.0) + phase) % 1.0;
     };
+
+//@CLT
     this.clockTrig = (multiples, phase) => {
-        return (this.clockPhase(multiples, phase) - (1.0/this.sampleRate * multiples)) <= 0 ? 1 : -1;
+        return (this.clockPhase(multiples, phase) - (1.0/this.sampleRate * multiples)) <= 0 ? 1 : 0;
     };
     this.setClockFreq = (freq) => {
       this.clockFreq = freq;
@@ -270,7 +306,19 @@ class MaxiProcessor extends AudioWorkletProcessor {
     this.bitTime = Module.maxiBits.sig(0);  //this needs to be decoupled from the audio engine? or not... maybe a 'permenant block' with each grammar?
     this.dt = 0;
 
+    //this.testOsc = new Module.maxiOsc();
 
+    //deleteme
+    let alist = new Module.VectorDouble();
+    alist.resize(3,0);
+    let midx=new Module.maxiIndex();
+    alist.set(0,120);
+    alist.set(1,11);
+    alist.set(2,12);
+    let listf = (()=>{alist.set(2,Math.random()*100);return alist});
+    let v = midx.pull(0, 0, listf());
+    v = midx.pull(1, 3/3, listf());
+    console.log(v);
   }
 
   /**
@@ -291,6 +339,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
       let channelCount = output.length;
 
       for (let i = 0; i < output[0].length; ++i) {
+        //this needs decoupling?
         this.bitTime = Module.maxiBits.inc(this.bitTime);
         //net clocks
         // if (this.kuraPhase != -1) {
@@ -325,17 +374,13 @@ class MaxiProcessor extends AudioWorkletProcessor {
         for (let channel = 0; channel < channelCount; channel++) {
           output[channel][i] = w;
         }
+        // let w = this.testOsc.saw(200);
+        // for (let channel = 0; channel < channelCount; channel++) {
+        //   output[channel][i] = w;
+        // }
 
-        //todo: deleteme
-        // Module.maxiBits.toSignal(Module.maxiBits.fromSignal(-1));
-        Module.maxiBits.fromSignal(-0.5);
 
       }
-
-
-      // if (this.dt++ % 30 == 0) {
-      //   console.log(this.bitclock);
-      // }
 
       //remove old algo and data?
       let oldIdx = 1.0 - this.currentSignalFunction;
@@ -356,59 +401,10 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
       }
 
-      // this.port.postMessage("dspEnd");
-
-
-      // ts = this.timer.getTime() - ts;
-      // console.log(ts + ", " + 128/44100*1000);
-
-
-
-      // for (let channel = 0; channel < output.length; ++channel) {
-      //   let outputChannel;
-      //
-      //   if (this.DAC === undefined || this.DAC.length === 0) {
-      //     outputChannel = output[channel];
-      //   } else { // If the user specified a channel configuration for DAC
-      //     if (this.DAC[channel] === undefined) // If user-specified channel configuration is invalid (e.g. channel 7 in a 5.1 layout)
-      //       break;
-      //     else {
-      //       if (output[this.DAC[channel]] !== undefined) { // If user-specified channel configuration is valid
-      //         outputChannel = output[this.DAC[channel]];
-      //       } else { // If user-specified channel configuration is a subset of the total number of channel skip loop iterations until total number
-      //         continue;
-      //       }
-      //     }
-      //   }
-
-      // for (let i = 0; i < 128; ++i) {
-      //   outputChannel[i] = this.signals[this.currentSignalFunction]();
-      // }
-
-      // if (parameters.gainSyn.length === 1 && parameters.gainSeq.length === 1) { // if gain is constant, lenght === 1, gain[0]
-      //   for (let i = 0; i < 128; ++i) {
-      //     outputChannel[i] = this.signals[this.currentSignalFunction]() * this.logGain(parameters.gainSyn[0]) + this.loopPlayer() * this.logGain(parameters.gainSeq[0]);
-      //   }
-      // } else { // if gain is varying, lenght === 128, gain[i] for each sample of the render quantum
-      //   for (let i = 0; i < 128; ++i) {
-      //     outputChannel[i] = this.signals[this.currentSignalFunction]() * this.logGain(parameters.gainSyn[i]) + this.loopPlayer() * this.logGain(parameters.gainSeq[i]);
-      //   }
-      // }
-      // DEBUG:
-      // console.log(`inputs ${inputs.length}, outputsLen ${outputs.length}, outputLen ${output.length}, outputChannelLen ${outputChannel.length}`);
-      // }
     }
     return true;
   }
 
-  //Deprecated
-  generateNoiseBuffer(length) {
-    var bufferData = new Module.VectorDouble();
-    for (var n = 0; n < length; n++) {
-      bufferData.push_back(Math.random(1));
-    }
-    return bufferData;
-  }
 
   //Deprecated
   translateBlobToBuffer(blob) {
