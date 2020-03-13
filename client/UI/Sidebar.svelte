@@ -14,11 +14,12 @@
   }  from '../store.js';
 
   import { PubSub } from "../messaging/pubSub.js";
+  const messaging = new PubSub();
 
 	import { createEventDispatcher } from 'svelte';
 	const dispatch = createEventDispatcher();
 
-  const messaging = new PubSub();
+  
 
   let selectedLanguage = 1;
 
@@ -43,13 +44,18 @@
 	}
 
   function dispatchAdd(type, selected){
-    console.log(`DEBUG:Sidebar:dispatchAdd: /add/${type}/${selected.id}`);
+    // console.log(`DEBUG:Sidebar:dispatchAdd: /add/${type}/${selected.id}`);
     // console.log(selected.content);
 
-		this.messaging.publish("add-live-code-editor", {
-			type: "model-input-data",
-			id: event.data.id,
-			value: event.data.value
+    // messaging.publish("add-live-code-editor", {
+	  //   type: "model-input-data",
+		//   id: event.data.id,
+		//   value: event.data.value
+		// });
+
+    messaging.publish("add", {
+	    type: type,
+      payload: selected
 		});
 
     // dispatch("add", { type: type, id: selected.id, value: selected.content} );
@@ -86,7 +92,7 @@
     margin-right: 20px;
   }
 
-
+/* 
   .combobox{
     margin-top: 4px;
 
@@ -94,7 +100,7 @@
 
   .whiteText {
     color: whitesmoke;
-  }
+  } */
 
   .checkbox-span {
     color: whitesmoke;

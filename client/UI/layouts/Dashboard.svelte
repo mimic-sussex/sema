@@ -1,14 +1,18 @@
 <script>
+	import { onMount } from 'svelte';
   import Grid from "svelte-grid";
   import gridHelp from "svelte-grid/build/helper";
   import map from "lodash.map";
+  import { PubSub } from "../../messaging/pubSub.js"; 
+ 
   import Editor from '../editors/Editor.svelte';
   import ModelEditor from '../editors/ModelEditor.svelte';
   import GrammarEditor from '../editors/GrammarEditor.svelte';
   import LiveCodeEditor from '../editors/LiveCodeEditor.svelte';
   import LiveCodeParseOutput from '../widgets/LiveCodeParseOutput.svelte';
   import GrammarCompileOutput from '../widgets/GrammarCompileOutput.svelte';
-  import { PubSub } from "../../messaging/pubSub.js"; 
+  import Oscilloscope from '../widgets/Oscilloscope.svelte';
+  import Spectrogram from '../widgets/Spectrogram.svelte';
  
   import {
     dashboardItems,
@@ -21,7 +25,8 @@
  
   const messaging = new PubSub();
 
-  export let value = '';
+  export let value = "";
+
 
   var cols = 15;
 
@@ -33,7 +38,7 @@
       .toString(36)
       .substr(2, 9);
 
-  const types = ['live', 'model', 'grammar', 'liveCodeParseOutput', 'grammarCompileOutput' ];
+  const types = ['live', 'model', 'grammar', 'liveCodeParseOutput', 'grammarCompileOutput', 'oscilloscope', 'spectrogram'];
   const itype = () => types[Math.floor(Math.random() * types.length)];
 
   const random = (min, max) => Math.random() * (max - min) + min;
@@ -71,7 +76,9 @@
     gridHelp.item({ x: 7, y: 0, w: 3, h: 7, id: id(), name:'hello world', type:'liveCodeParseOutput', lineNumbers: false, hasFocus: false, theme: "shadowfox", data: '#ebdeff' }),
     gridHelp.item({ x: 10, y: 0, w: 8, h: 2, id: id(), name:'hello world', type:'grammarCompileOutput', lineNumbers: true, hasFocus: false, theme: "monokai", data: '#d1d5ff' }),
     gridHelp.item({ x: 10, y: 2, w: 5, h: 5, id: id(), name:'default', type:'grammar', lineNumbers: false, hasFocus: false, theme: "cobalt", data: '#AAAAAA', value: $grammarEditorValue }),
-    gridHelp.item({ x: 0, y: 4, w: 7, h: 4, id: id(), name:'hello world', type:'model', lineNumbers: true, hasFocus: false, theme: "icecoder", data: '#f0f0f0', value: $modelEditorValue })
+    gridHelp.item({ x: 0, y: 4, w: 7, h: 4, id: id(), name:'hello world', type:'model', lineNumbers: true, hasFocus: false, theme: "icecoder", data: '#f0f0f0', value: $modelEditorValue }),
+    gridHelp.item({ x: 0, y: 8, w: 7, h: 4, id: id(), name:'hello world', type:'oscilloscope', lineNumbers: true, hasFocus: false, theme: "icecoder", data: '#f0f0f0', value: "" }) 
+    // gridHelp.item({ x: 7, y: 8, w: 7, h: 4, id: id(), name:'hello world', type:'spectrogram', lineNumbers: true, hasFocus: false, theme: "icecoder", data: '#f0f0f0', value: $modelEditorValue })
   ];
   
   let layout;
@@ -171,6 +178,10 @@
 		// ...or this:
 		// items = items.map(i => i === item ? { ...i, [prop]: value } : i);
 	 }
+
+	onMount(() => {
+    messaging.subscribe('add', e => addItem(e.type) );
+	});
 
 </script>
 
@@ -277,7 +288,14 @@
        
         {:else if item.type === 'grammarCompileOutput' }
         <GrammarCompileOutput class='scrollable'/>
-       
+
+        {:else if item.type === 'oscilloscope' }
+        <Oscilloscope />
+
+        <!-- {:else if item.type === 'spectrogram' }
+        <Spectrogram /> -->
+
+
         {:else}
         <Editor bind:value={value}/>
         {/if}

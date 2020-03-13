@@ -131,6 +131,10 @@
     }
   }
 
+  function onModelEditorValueChange(){
+    window.localStorage.setItem("modelEditorValue", codeMirror.getValue());
+    addToHistory("model-history-", modelCode);
+  }
 
   function evalModelEditorExpression(){
     let modelCode = codeMirror.getSelection();
@@ -145,7 +149,7 @@
     modelWorker.postMessage({ eval: modelCode });
     // console.log("DEBUG:ModelEditor:evalModelEditorExpressionBlock: " + code);
     window.localStorage.setItem("modelEditorValue", codeMirror.getValue());
-    addToHistory("model-history", modelCode);
+    addToHistory("model-history-", modelCode);
   }
 
 </script>
@@ -201,7 +205,7 @@
               bind:value={value}
               tab={true}
               lineNumbers={true}
-              on:change={nil}
+              on:change={onModelEditorValueChange}
               ctrlEnter={evalModelEditorExpressionBlock}
               cmdEnter={evalModelEditorExpressionBlock}
               shiftEnter={evalModelEditorExpression}

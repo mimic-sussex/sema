@@ -1,49 +1,50 @@
 <script>
 	import { onMount } from 'svelte';
-	import * as GL from '@sveltejs/gl';
-	// import SvelteBox from './SvelteBox.svelte';
-	// import { logotype } from './images.js';
   import NexusUI from "nexusui/dist/NexusUI.js";
 
-  NexusUI.context = window.AudioEngine.audioContext;
-  oscilloscope = new NexusUI.Oscilloscope("oscilloscope", {
-    // size: default
-  });
-  oscilloscope.colorize("fill", "#000");
-  oscilloscope.colorize("accent", "#FFF");
-  // window.AudioEngine.addAnalyser(oscilloscope); // Inject oscilloscope analyser, keep encapsulation for worklet node
-  oscilloscope.connect(window.AudioEngine.audioWorkletNode);
+  export let context = null;
 
-  spectrogram = new NexusUI.Spectrogram("spectrogram", {
-    // size: [100, 50]
-  });
-  spectrogram.colorize("fill", "#000");
-  spectrogram.colorize("accent", "#FFF");
-  // window.AudioEngine.addAnalyser(spectrogram); // Inject oscilloscope analyser, keep encapsulation for worklet node
-  spectrogram.connect(window.AudioEngine.audioWorkletNode);
-
-  window.addEventListener("resize", function(event) {
-    // oscilloscope.resize(100, 120);
-    // spectrogram.resize(100, 150);
-    // console.log(analysers);
-  });
-
-
-	const prime = 0xff3e00;
-	const second = 0x676778;
-	const flash = 0x40b3ff;
-
-	let light = {};
+  let canvas;
+ 
+  function resize (w,h) {
+    canvas.width = w*2;
+    canvas.height = h*2;
+    canvas.style.width = w+'px';
+    canvas.style.height = h+'px';
+  }
 
 	onMount(() => {
+
 		let frame;
+ 
+    // NexusUI.context = window.AudioEngine.audioContext;
+    // NexusUI.context = context;
+    // oscilloscope = new NexusUI.Oscilloscope("oscilloscope", {
+    //   'size': [300,150] 
+    // });
+    // oscilloscope.colorize("fill", "#000");
+    // oscilloscope.colorize("accent", "#FFF");
+ 
+ 
+    // window.AudioEngine.addAnalyser(oscilloscope); // Inject oscilloscope analyser, keep encapsulation for worklet node
+    // oscilloscope.connect(window.AudioEngine.audioWorkletNode);
+
+    // spectrogram = new NexusUI.Spectrogram("spectrogram", {
+    //   // size: [100, 50]
+    // });
+    // spectrogram.colorize("fill", "#000");
+    // spectrogram.colorize("accent", "#FFF");
+    // // window.AudioEngine.addAnalyser(spectrogram); // Inject oscilloscope analyser, keep encapsulation for worklet node
+    // spectrogram.connect(window.AudioEngine.audioWorkletNode);
+
+    // window.addEventListener("resize", function(event) {
+    // // oscilloscope.resize(100, 120);
+    // // spectrogram.resize(100, 150);
+    // // console.log(analysers);
+    // });
 
 		const loop = () => {
 			frame = requestAnimationFrame(loop);
-
-			light.x = 3 * Math.sin(Date.now() * 0.001);
-			light.y = 2.5 + 2 * Math.sin(Date.now() * 0.0004);
-			light.z = 3 * Math.cos(Date.now() * 0.002);
 		};
 
 		loop();
@@ -52,50 +53,12 @@
 	});
 
 
+
 </script>
 
-<GL.Scene>
-	<GL.Target id="center" location={[0, 1, 0]}/>
-
-	<GL.OrbitControls maxPolarAngle={Math.PI / 2} let:location let:target>
-		<GL.PerspectiveCamera {location} lookAt={target} near={0.01} far={1000}/>
-	</GL.OrbitControls>
-
-	<GL.AmbientLight intensity={0.3}/>
-	<GL.DirectionalLight direction={[-1,-1,-1]} intensity={0.5}/>
-
-	<!-- moving light -->
-	<GL.Sphere location={[light.x,light.y + 0.2,light.z]} u-color={second} turns={12} bands={12} scale={0.1} />
-	<GL.PointLight location={[light.x,light.y,light.z]} u-color={second} intensity={0.6} />
-
-	<!-- floor -->
-	<GL.Plane
-		u-color={0xffffff}
-		location={[0,-0.01,0]}
-		rotation={[-90,0,0]}
-		scale={10}
-	/>
-
-	<GL.Plane
-		u-color={0xff3e00}
-		u-colormap="textures/svelte-logotype.png"
-		location={[0,1,-6]}
-		scale={[5.357548057,1,1]}
-	/>
-
-	<!-- transparent balls -->
-	<GL.Sphere u-color={prime} u-alpha={0.7} turns={60} bands={60} scale={0.3} location={[0,0.3,0]} />
-	<GL.Sphere u-color={flash} u-alpha={0.7} turns={60} bands={60} scale={0.7} location={[-1,0.7,-1]} />
-	<GL.Sphere u-color={second} u-alpha={0.7} turns={60} bands={60} scale={0.2} location={[-0.8,0.2,0]} />
-
-	<!-- logo boxes -->
-	<!-- <SvelteBox location={[-2,0.5,0]} rotation={[0,-20,0]}/>
-	<SvelteBox location={[1,0.75,-1]} rotation={[0,30,0]} scale={1.5}/> -->
-</GL.Scene>
 
 <div class="info">
-	<h1><a target="_blank" rel="noopener" href="https://github.com/sveltejs/gl">@sveltejs/gl</a></h1>
-	<p>The code for this demo lives <a target="_blank" rel="noopener" href="https://github.com/rich-harris/svelte-gl-demo">here</a></p>
+  <canvas bind:this={canvas}></canvas>
 </div>
 
 <style>

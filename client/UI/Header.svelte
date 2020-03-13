@@ -21,7 +21,7 @@
     color: whitesmoke;
 	}
 
-  .logo-container {
+  /* .logo-container {
     float: none;
     width: 60%;
     height: 60%;
@@ -32,7 +32,7 @@
   .sema-logo {
     width: 5%;
     height: auto;
-  }
+  } */
 
 </style>
 
