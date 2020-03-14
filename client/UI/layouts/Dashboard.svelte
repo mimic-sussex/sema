@@ -23,9 +23,12 @@
     liveCodeEditorValue
   } from "../../store.js"
  
-  const messaging = new PubSub();
+
 
   export let value = "";
+
+  const messaging = new PubSub();
+  messaging
 
 
   var cols = 15;
@@ -52,7 +55,7 @@
   const itheme = () => types[Math.floor(Math.random() * themes.length)];
 
   function generateLayout(col) {
-    return map(new Array(5), function(item, i) {
+    return map( new Array(5), function(item, i) {
       const x = Math.ceil(Math.random() * 3) + 2;
       const y = Math.ceil(Math.random() * 4) + 1;
       const iid = id();
@@ -116,41 +119,23 @@
     const col = 2;
     const x = Math.ceil(Math.random() * 3) + 2;
     const y = Math.ceil(Math.random() * 4) + 1;
-    const iid = id();
-    // items = [
-    //   ...items, 
-    //   { ...gridHelp.item({
-    //           x: (i * 2) % col,
-    //           y: Math.floor(i / 6) * y,
-    //           w: x,
-    //           h: y,
-    //           id: iid,
-    //           name: iid,
-    //           type: itemType,
-    //           lineNumbers: true,
-    //           hasFocus: false,
-    //           theme: 'monokai',
-    //           value: itemValue
-    //         }),
-    //     ...{ data: randomHexColorCode() }
-    //   }
-    // ]
 
-    let newItem = { ...gridHelp.item({
-              x: (i * 2) % col,
-              y: Math.floor(i / 6) * y,
-              w: x,
-              h: y,
-              id: iid,
-              name: iid,
-              type: itemType,
-              lineNumbers: true,
-              hasFocus: false,
-              theme: 'monokai',
-              value: itemValue
-            }),
-        ...{ data: randomHexColorCode() }
-      };
+    let newItem = { 
+      ...gridHelp.item({
+        x: (i * 2) % col,
+        y: Math.floor(i / 6) * y,
+        w: x,
+        h: y,
+        id: itemId,
+        name: itemType + itemId,
+        type: itemType,
+        lineNumbers: true,
+        hasFocus: false,
+        theme: 'monokai',
+        value: itemValue
+      }),
+      ...{ data: randomHexColorCode() }
+    };
     items = gridHelp.appendItem(newItem, items, cols);
     window.localStorage.setItem("layout", JSON.stringify(items)); 
     // $dashboardItems = gridHelp.resizeItems(items, cols);
@@ -158,10 +143,11 @@
 
 
   function remove(item, event) {
-    // console.log("DEBUG:Dashboard:remove:")
-    // console.log(item);
+    console.log("DEBUG:Dashboard:remove:item.id")
+    console.log(item.id);
     // console.log(event);
-
+    messaging.publish('remove-analyser', { id: item.id });
+    remove.bind(null, item);
     items = items.filter(value => value.id !== item.id);
     window.localStorage.setItem("layout", JSON.stringify(items));
     $dashboardItems = gridHelp.resizeItems(items, cols);
@@ -180,7 +166,7 @@
 	 }
 
 	onMount(() => {
-    messaging.subscribe('add', e => addItem(e.type) );
+    messaging.subscribe('add-analyser', e => addItem(e.type, e.id) );
 	});
 
 </script>
@@ -272,7 +258,8 @@
         on:adjust={onAdjust}>
     <span class='move'>+</span>
     <div class="content" style="background: { item.static ? '#ccccee' : item.data}" on:mousedown={ e => e.stopPropagation() } >
-      <span on:click={ remove.bind(null, item) } class='close'>✕</span>
+      <span on:click={ () => remove(item) } class='close'>✕</span>
+      <!-- <span on:click={ remove.bind(null, item) } class='close'>✕</span> -->
         {#if item.type === 'model' }
         <!-- <ModelEditor bind:value={value} /> -->
         <ModelEditor value={item.value} />

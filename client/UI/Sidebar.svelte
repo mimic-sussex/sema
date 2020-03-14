@@ -35,6 +35,7 @@
   let selectedGrammarOption;
   let selectedModelOption;
 
+  const id = () => "_" + Math.random().toString(36).substr(2, 9);
 
 	function sendLanguageSelect() {
     console.log("selectedLanguage: ", selectedLanguage);
@@ -53,10 +54,10 @@
 		//   value: event.data.value
 		// });
 
-    messaging.publish("add", {
-	    type: type,
-      payload: selected
-		});
+    // messaging.publish("add", {
+	  //   type: type,
+    //   payload: selected
+		// });
 
     // dispatch("add", { type: type, id: selected.id, value: selected.content} );
 
@@ -69,6 +70,12 @@
         break;
       case 'model':
         selectedModelOption = sidebarModelOptions[0];        
+        break;
+      case 'oscilloscope':
+        messaging.publish("add-analyser", { id: id(), type: 'oscilloscope' });
+        break;
+      case 'spectrogram':
+        messaging.publish("add-analyser", { id: id(), type: 'spectrogram'}); 
         break;
       default:
         break;

@@ -59,6 +59,10 @@ class AudioEngine {
 		this.messaging.subscribe("clock-phase", e =>
 			this.onMessagingEventHandler(e)
 		);
+		this.messaging.subscribe("add-analyser", e => this.createAnalyser(e.type, e.id));
+		this.messaging.subscribe("remove-analyser", e =>
+			this.removeAnalyser(e.id)
+		);
 		// this.messaging.subscribe("osc", e => console.log(`DEBUG:AudioEngine:OSC: ${e}`));
 
 		this.kuraClock = new kuramotoNetClock();
@@ -116,14 +120,14 @@ class AudioEngine {
 	 * TODO configuration object as argument
 	 * @createAnalyser
 	 */
-	createAnalyser() {
+	createAnalyser(name) {
 		if (this.audioContext !== undefined) {
 			let analyser = this.audioContext.createAnalyser();
 			analyser.fftSize = 2048;
 			let dataArray = new Uint8Array(analyser.frequencyBinCount);
 			analyser.getByteTimeDomainData(dataArray);
-			this.analysers.push(analyser);
 			this.connectAnalyser(analyser); // Move out
+			this.analysers[name] = analyser;
 		}
 	}
 
@@ -134,6 +138,21 @@ class AudioEngine {
 	connectAnalyser(analyser) {
 		if (this.audioWorkletNode !== undefined) {
 			this.audioWorkletNode.connect(analyser);
+		}
+	}
+
+	/**
+	 * Creates a WAAPI analyser node
+	 * TODO configuration object as argument
+	 * @createAnalyser
+	 */
+	removeAnalyser(name) {
+		if (this.audioContext !== undefined) {
+      let analyser = this.analysers[name];
+			if (analyser !== undefined ){
+        this.disconnectAnalyser(analyser); // Move out
+			  delete this.analysers[name];
+      }
 		}
 	}
 
