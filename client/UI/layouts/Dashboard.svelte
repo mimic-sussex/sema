@@ -3,8 +3,7 @@
   import Grid from "svelte-grid";
   import gridHelp from "svelte-grid/build/helper";
   import map from "lodash.map";
-  import { PubSub } from "../../messaging/pubSub.js"; 
- 
+  
   import Editor from '../editors/Editor.svelte';
   import ModelEditor from '../editors/ModelEditor.svelte';
   import GrammarEditor from '../editors/GrammarEditor.svelte';
@@ -14,6 +13,9 @@
   import Oscilloscope from '../widgets/Oscilloscope.svelte';
   import Spectrogram from '../widgets/Spectrogram.svelte';
  
+  import { id, random, randomHexColorCode } from '../../utils/utils.js';
+  import { PubSub } from "../../messaging/pubSub.js"; 
+
   import {
     dashboardItems,
     selectedItem,
@@ -22,34 +24,17 @@
     modelEditorValue,
     liveCodeEditorValue
   } from "../../store.js"
- 
-
 
   export let value = "";
 
   const messaging = new PubSub();
-  messaging
-
 
   var cols = 15;
 
   let breakpoints = [[1000, 10], [700, 5], [500, 3], [400, 1]];
 
-  const id = () =>
-    "_" +
-    Math.random()
-      .toString(36)
-      .substr(2, 9);
-
-  const types = ['live', 'model', 'grammar', 'liveCodeParseOutput', 'grammarCompileOutput', 'oscilloscope', 'spectrogram'];
+  const types = ['liveCodeEditor', 'modelEditor', 'grammarEditor', 'liveCodeParseOutput', 'grammarCompileOutput', 'oscilloscope', 'spectrogram'];
   const itype = () => types[Math.floor(Math.random() * types.length)];
-
-  const random = (min, max) => Math.random() * (max - min) + min;
-
-  const randomHexColorCode = () => {
-    let n = (Math.random() * 0xfffff * 1000000).toString(16);
-    return "#" + n.slice(0, 6);
-  };
 
   const themes = ['monokai', 'cobalt', 'icecoder', 'shadowfox' ];
   const itheme = () => types[Math.floor(Math.random() * themes.length)];
@@ -75,46 +60,69 @@
   }
 
   let layoutOriginal = [
-    gridHelp.item({ x: 0, y: 0, w: 7, h: 3, id: id(), name:'default', type:'live', lineNumbers: true, hasFocus: false, theme: "monokai",  data: '#151515', value: $liveCodeEditorValue  }), 
+    gridHelp.item({ x: 0, y: 0, w: 7, h: 3, id: id(), name:'default', type:'liveCodeEditor', lineNumbers: true, hasFocus: false, theme: "monokai",  data: '#151515', value: $liveCodeEditorValue  }), 
     gridHelp.item({ x: 7, y: 0, w: 3, h: 7, id: id(), name:'hello world', type:'liveCodeParseOutput', lineNumbers: false, hasFocus: false, theme: "shadowfox", data: '#ebdeff' }),
     gridHelp.item({ x: 10, y: 0, w: 8, h: 2, id: id(), name:'hello world', type:'grammarCompileOutput', lineNumbers: true, hasFocus: false, theme: "monokai", data: '#d1d5ff' }),
-    gridHelp.item({ x: 10, y: 2, w: 5, h: 5, id: id(), name:'default', type:'grammar', lineNumbers: false, hasFocus: false, theme: "cobalt", data: '#AAAAAA', value: $grammarEditorValue }),
-    gridHelp.item({ x: 0, y: 4, w: 7, h: 4, id: id(), name:'hello world', type:'model', lineNumbers: true, hasFocus: false, theme: "icecoder", data: '#f0f0f0', value: $modelEditorValue }),
-    gridHelp.item({ x: 0, y: 8, w: 7, h: 4, id: id(), name:'hello world', type:'oscilloscope', lineNumbers: true, hasFocus: false, theme: "icecoder", data: '#f0f0f0', value: "" }) 
-    // gridHelp.item({ x: 7, y: 8, w: 7, h: 4, id: id(), name:'hello world', type:'spectrogram', lineNumbers: true, hasFocus: false, theme: "icecoder", data: '#f0f0f0', value: $modelEditorValue })
+    gridHelp.item({ x: 10, y: 2, w: 5, h: 5, id: id(), name:'default', type:'grammarEditor', lineNumbers: false, hasFocus: false, theme: "cobalt", data: '#AAAAAA', value: $grammarEditorValue }),
+    gridHelp.item({ x: 0, y: 4, w: 7, h: 4, id: id(), name:'hello world', type:'modelEditor', lineNumbers: true, hasFocus: false, theme: "icecoder", data: '#f0f0f0', value: $modelEditorValue }),
+    gridHelp.item({ x: 0, y: 8, w: 7, h: 4, id: id(), name:'hello world', type:'oscilloscope', lineNumbers: true, hasFocus: false, theme: "icecoder", data: '#f0f0f0', value: "" }),
+    gridHelp.item({ x: 7, y: 8, w: 7, h: 4, id: id(), name:'hello world', type:'spectrogram', lineNumbers: true, hasFocus: false, theme: "icecoder", data: '#f0f0f0', value: $modelEditorValue })
   ];
-  
-  let layout;
 
-  let items = [];
+  // let layoutOriginal = [
+  //   gridHelp.item({ x: 0, y: 0, w: 7, h: 3, id: id(), name:'default', type:'liveCodeEditor', lineNumbers: true, hasFocus: false, theme: "monokai",  data: '#151515', value: "sdf"  }), 
+  //   gridHelp.item({ x: 7, y: 0, w: 3, h: 7, id: id(), name:'hello world', type:'liveCodeParseOutput', lineNumbers: false, hasFocus: false, theme: "shadowfox", data: '#ebdeff' }),
+  //   gridHelp.item({ x: 10, y: 0, w: 8, h: 2, id: id(), name:'hello world', type:'grammarCompileOutput', lineNumbers: true, hasFocus: false, theme: "monokai", data: '#d1d5ff' }),
+  //   gridHelp.item({ x: 10, y: 2, w: 5, h: 5, id: id(), name:'default', type:'grammarEditor', lineNumbers: false, hasFocus: false, theme: "cobalt", data: '#AAAAAA', value: "qwe" }),
+  //   gridHelp.item({ x: 0, y: 4, w: 7, h: 4, id: id(), name:'hello world', type:'modelEditor', lineNumbers: true, hasFocus: false, theme: "icecoder", data: '#f0f0f0', value: "zxc" }),
+  //   gridHelp.item({ x: 0, y: 8, w: 7, h: 4, id: id(), name:'hello world', type:'oscilloscope', lineNumbers: true, hasFocus: false, theme: "icecoder", data: '#f0f0f0', value: "" }) 
+  //     // gridHelp.item({ x: 7, y: 8, w: 7, h: 4, id: id(), name:'hello world', type:'spectrogram', lineNumbers: true, hasFocus: false, theme: "icecoder", data: '#f0f0f0', value: $modelEditorValue })
+  // ];
 
+  // let layout;
+
+  // let items = [];
   // items = generateLayout(cols);
-  $dashboardItems = gridHelp.resizeItems(items, cols);
 
-  if (typeof window !== "undefined") {
-    if (!window.localStorage.getItem("layout")) {
-      window.localStorage.setItem("layout", JSON.stringify(layoutOriginal));
-      items = layoutOriginal; 
-    } else {
-      items = JSON.parse(window.localStorage.getItem("layout"));
+
+  // $dashboardItems = layoutOriginal;
+
+  // $dashboardItems = gridHelp.resizeItems(layoutOriginal, cols);
+  // $dashboardItems = gridHelp.resizeItems(items, cols);
+
+  const loadDashboardItems = () => {
+
+    if (typeof window !== "undefined") {
+
+      const layout = window.localStorage.getItem("layout");
+      
+      if ( layout === null || layout === undefined || layout === "") {
+        // If first time load, no layout persisted on local storage, set hardcoded default from assets 
+        window.localStorage.setItem("layout", JSON.stringify(layoutOriginal));
+        // Populate dashboard store
+        $dashboardItems = layoutOriginal; 
+      } else {
+        // If NOT first time load, hidrate layout from local storage into store
+        $dashboardItems = JSON.parse(window.localStorage.getItem("layout"));
+
+        // @TODO Request load analysers into audioEngine, before setting up add-analysers UI callback
+
+      }
     }
   }
-  
-  // let items = layout;
-  // console.log('DEBUG:Dashboard:items:');
-  // console.log(items);
-
 
   const onAdjust = () => {
-    window.localStorage.setItem("layout", JSON.stringify(items));
+    window.localStorage.setItem("layout", JSON.stringify($dashboardItems));
+    // window.localStorage.setItem("layout", JSON.stringify(items));
   };
   
   const reset = () => {
-    items = layoutOriginal;
+    // items = layoutOriginal;
+    $dashboardItems = layoutOriginal;
     window.localStorage.setItem("layout", JSON.stringify(layoutOriginal));
   };
 
-  export const addItem = (itemType, itemId, itemValue) => {
+  const addItem = (type, id, value) => {
     const i = 2;
     const col = 2;
     const x = Math.ceil(Math.random() * 3) + 2;
@@ -126,48 +134,66 @@
         y: Math.floor(i / 6) * y,
         w: x,
         h: y,
-        id: itemId,
-        name: itemType + itemId,
-        type: itemType,
+        id: id,
+        name: type + id,
+        type: type,
         lineNumbers: true,
         hasFocus: false,
         theme: 'monokai',
-        value: itemValue
+        value: value
       }),
       ...{ data: randomHexColorCode() }
     };
-    items = gridHelp.appendItem(newItem, items, cols);
+    $dashboardItems = gridHelp.appendItem(newItem, $dashboardItems, cols);
+    // items = gridHelp.appendItem(newItem, items, cols);
     window.localStorage.setItem("layout", JSON.stringify(items)); 
     // $dashboardItems = gridHelp.resizeItems(items, cols);
   }
 
-
-  function remove(item, event) {
+  function remove(item) {
     console.log("DEBUG:Dashboard:remove:item.id")
     console.log(item.id);
-    // console.log(event);
-    messaging.publish('remove-analyser', { id: item.id });
-    remove.bind(null, item);
-    items = items.filter(value => value.id !== item.id);
-    window.localStorage.setItem("layout", JSON.stringify(items));
-    $dashboardItems = gridHelp.resizeItems(items, cols);
+    
+    if(item.type === 'oscilloscope' || item.type === 'spectrogram'){
+      messaging.publish('remove-analyser', { id: item.id }); // notify audio engine to remove associated analyser
+    }
+    remove.bind(null, item); // remove dashboard item binding
+    $dashboardItems = $dashboardItems.filter(value => value.id !== item.id);
+    // items = items.filter(value => value.id !== item.id);
+
+    // window.localStorage.setItem("layout", JSON.stringify($dashboardItems));
+
+    // window.localStorage.setItem("layout", JSON.stringify(items));
+    // $dashboardItems = gridHelp.resizeItems(items, cols);
     // if (adjustAfterRemove) {
     //   items = gridHelp.resizeItems(items, cols);
     // }
   }
 
 
-	const update = (item, prop, value) => {
-		// either this...
-		item[prop] = value;
-		items = items; // force an update
-		// ...or this:
-		// items = items.map(i => i === item ? { ...i, [prop]: value } : i);
-	 }
+	const updateItem = e => {
+
+    let { item, value } = e.detail;
+
+    if( value !== undefined ){ // @TODO Why is there a first call with value null
+      // either this...
+      item['value'] = value;
+      $dashboardItems = $dashboardItems; // force an update
+      // ...or this:
+      // items = items.map(i => i === item ? { ...i, [prop]: value } : i);
+
+      window.localStorage.setItem("layout", JSON.stringify($dashboardItems)); 
+    }
+	}
 
 	onMount(() => {
+
+    loadDashboardItems();
+ 
     messaging.subscribe('add-analyser', e => addItem(e.type, e.id) );
-	});
+    messaging.subscribe('add-editor', e => addItem(e.type, e.id) );
+	
+  });
 
 </script>
 
@@ -247,44 +273,54 @@
 	} */
 
 </style>
-
 <div class="layout-template-container">
-  <Grid {$dashboardItems}
-        useTransform {breakpoints} 
+  <Grid items={$dashboardItems}
+        {breakpoints}
+        {cols}  
+        useTransform 
         rowHeight={100} 
         gap={1} 
-        bind:items {cols} 
+        bind:dashboardItems  
         let:item      
         on:adjust={onAdjust}>
+    
     <span class='move'>+</span>
-    <div class="content" style="background: { item.static ? '#ccccee' : item.data}" on:mousedown={ e => e.stopPropagation() } >
+    
+    <div  class="content" 
+          style="background: { item.static ? '#ccccee' : item.data }" 
+          on:mousedown={ e => e.stopPropagation() } >
+      
       <span on:click={ () => remove(item) } class='close'>✕</span>
-      <!-- <span on:click={ remove.bind(null, item) } class='close'>✕</span> -->
-        {#if item.type === 'model' }
-        <!-- <ModelEditor bind:value={value} /> -->
-        <ModelEditor value={item.value} />
 
-        {:else if item.type === 'grammar' }
-        <GrammarEditor value={item.value} />
+        {#if item.type === 'modelEditor' }
+        <ModelEditor  {item} 
+                      />
+
+        {:else if item.type === 'grammarEditor' }
+        <GrammarEditor  {item}
+                        />
         
-        {:else if item.type === 'live' }
-        <LiveCodeEditor value={item.value} />
+        {:else if item.type === 'liveCodeEditor' }
+        <!-- on:change={ e => updateItem(e) }  -->
+        <LiveCodeEditor {item} 
+                        
+                        />
        
         {:else if item.type === 'liveCodeParseOutput' }
-        <LiveCodeParseOutput class='scrollable'/>
+        <LiveCodeParseOutput class='scrollable' />
        
         {:else if item.type === 'grammarCompileOutput' }
-        <GrammarCompileOutput class='scrollable'/>
+        <GrammarCompileOutput class='scrollable' />
 
         {:else if item.type === 'oscilloscope' }
         <Oscilloscope />
 
-        <!-- {:else if item.type === 'spectrogram' }
-        <Spectrogram /> -->
-
+        {:else if item.type === 'spectrogram' }
+        <Spectrogram />
 
         {:else}
         <Editor bind:value={value}/>
+
         {/if}
     </div>
   </Grid>

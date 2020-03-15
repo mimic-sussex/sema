@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
   // import NexusUI from "nexusui/dist/NexusUI.js";
 
-  export let context = null;
+  // export let context = null;
 
   let canvas;
  

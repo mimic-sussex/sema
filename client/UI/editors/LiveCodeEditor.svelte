@@ -10,7 +10,10 @@
 </script>
 
 <script>
-	import { onMount, onDestroy } from 'svelte';
+
+	import { onMount, onDestroy, createEventDispatcher } from 'svelte';
+	const dispatch = createEventDispatcher();
+
   import {
     grammarCompiledParser,
     liveCodeEditorValue,
@@ -34,14 +37,18 @@
 
   import ParserWorker from "worker-loader!../../workers/parser.worker.js";
 
-  export let value = "";
+  // export let value;
+  export let item;
 
   let codeMirror;
   let parserWorker;
   let messaging = new PubSub();
 
   onMount(async () => {
-    codeMirror.set(value, "js", 'monokai');
+    console.log('DEBUG:LiveCodeEditor:onMount:')
+    console.log(item);
+    codeMirror.set(item.value, "js", 'monokai');
+    // codeMirror.set(value, "js", 'monokai');
 
     parserWorker = new ParserWorker();  // Create one worker per widget lifetime
 	});
@@ -55,6 +62,11 @@
 
   let nil = (e) => { }
 
+  let onValueChange = e => {
+    // Dispatch item value update to parent's
+    console.log("DEBUG:LiveCodeEditor:onValueChange:")
+    // dispatch('change', { item: item, value: e.detail.value });
+  }
 
   let parseLiveCodeAsync = e => {
     // console.log('DEBUG:LiveCodeEditor:parseLiveCode:');
@@ -113,6 +125,8 @@
       liveCodeEditorValue = $liveCodeEditorValue;
 
     if(liveCodeEditorValue) parseLiveCodeAsync(liveCodeEditorValue);
+
+
 
     // window.localStorage.setItem("parserEditor+ID", editor.getValue());
   }
@@ -236,13 +250,13 @@
 </style>
 
 <div class="codemirror-container layout-template-container scrollable">
-
+              <!-- on:change={ e => onValueChange(e) } -->
  <!-- bind:value={$liveCodeEditorValue} -->
   <CodeMirror bind:this={codeMirror}
-              bind:value={value}             
+              bind:value={item.value}             
               tab={true}
+              on:change={ e => onValueChange(e) }
               lineNumbers={true}
-              on:change={parseLiveCodeOnChange}
               ctrlEnter={evalLiveCodeOnEditorCommand}
               cmdEnter={evalLiveCodeOnEditorCommand}
               cmdPeriod={stopAudioOnEditorCommand}

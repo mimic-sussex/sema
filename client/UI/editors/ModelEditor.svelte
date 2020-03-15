@@ -25,6 +25,7 @@
 
 
   export let value = "";
+  export let item;
 
   let codeMirror;
   let modelWorker;
@@ -53,6 +54,11 @@
   let log = e => console.log(e.detail.value);
 
   let nil = (e) => { }
+
+  let onValueChange = e => {
+    // Dispatch item value update to parent's
+    dispatch('change', { item: item, value: e.detail.value });
+  }
 
   let postToModel = e => {
     // console.log(`DEBUG:ModelEditor:postToModel:${e}`);
@@ -202,7 +208,7 @@
 <!-- <div class="layout-template-container" contenteditable="true" bind:innerHTML={layoutTemplate}> -->
 <div class="codemirror-container layout-template-container scrollable">
   <CodeMirror bind:this={codeMirror}
-              bind:value={value}
+              bind:value={item.value}
               tab={true}
               lineNumbers={true}
               on:change={onModelEditorValueChange}

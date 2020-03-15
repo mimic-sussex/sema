@@ -610,7 +610,7 @@ class IRToJavascript {
         ccode.loop += `return ${objName}})()`;
         ccode.setup += extraSetupCode;
         // ccode.loop+=`${objName}`;
-        console.log(ccode);
+        // console.log(ccode);
         return ccode;
       }
     }
@@ -636,13 +636,13 @@ class IRToJavascript {
   static treeToCode(tree) {
     // console.log(tree);
     let vars = {};
-    console.log("1");
+    // console.log("1");
     let code = IRToJavascript.traverseTree(tree, IRToJavascript.emptyCode(), 0, vars);
-    console.log("2");
+    // console.log("2");
     code.setup = `() => {let q=this.newq(); ${code.setup}; return q;}`;
     code.loop = `(q, inputs, mem) => {${code.loop} return q.sigOut;}`
-    console.log("DEBUG:treeToCode");
-    console.log(code.loop);
+    // console.log("DEBUG:treeToCode");
+    // console.log(code.loop);
     // console.log(code.paramMarkers);
     return code;
   }

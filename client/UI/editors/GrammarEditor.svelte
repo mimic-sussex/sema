@@ -25,10 +25,12 @@
 
   let codeMirror;
   let modelWorker; 
-  export let value;
+  // export let value;
+  export let item;
 
   onMount(async () => {
-    codeMirror.set(value, "ebnf");
+    codeMirror.set(item.value, "ebnf");
+    // codeMirror.set(value, "ebnf");
     // modelWorker = new ModelWorker();  // Create one worker per widget lifetime
 	});
 
@@ -40,6 +42,13 @@
   let log = (e) => { console.log(e.detail.value); }
 
   let nil = (e) => { }
+
+  let onValueChange = e => {
+    // Dispatch item value update to parent's
+    console.log("DEBUG:LiveCodeEditor:onValueChange:")
+    dispatch('change', { item: item, value: e.detail.value });
+  }
+
 
   let evalModelCode = e => {
 
@@ -150,7 +159,7 @@
 <!-- <div class="layout-template-container" contenteditable="true" bind:innerHTML={layoutTemplate}> -->
 <div class="codemirror-container layout-template-container scrollable">
   <CodeMirror bind:this={codeMirror}  
-              bind:value={value} 
+              bind:value={item.value} 
               tab={true} 
               lineNumbers={true}  
               on:change={compileGrammarOnChange}  /> 

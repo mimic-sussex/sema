@@ -133,15 +133,6 @@
 	onDestroy(unsubscribe); // Prevent memory leaks by disposing the component
   
 
-  const unsubscribe2 = grammarEditorValue.subscribe(value => {
-    // console.log("DEBUG:Layout:grammarEditorValue: ", value);
-    //  grammarCompiledParser
-    // let liveParser = new nearley.Parser(nearley.Grammar.fromCompiled(grammarCompiled));
-    // let c = compile(value)
-    // let {errors, output} = c;
-    // console.log("DEBUG:Layout:grammarEditorValue: ", errors);
-    // changeLayout(value.id);
-  })
 
   onMount(async () => {
     // codeMirror1.set($grammarEditorValue, "ebnf");
@@ -471,7 +462,6 @@
 <div class="layout-template-container scrollable">
 
   <div class="tutorial-container" style="display:{tutorialContainerDisplay}">
-
     <Tutorial>
       <div slot="grammarEditor" class="codemirror-container flex scrollable codemirror-gutter codemirror-linenumber">
         <CodeMirror bind:this={codeMirror1}  
@@ -546,12 +536,9 @@
     </Dashboard>
   </div>
 
-  <div class="quadrants-container" style="display:{quadrantsContainerDisplay}">
-    <!-- <Quadrants liveCodeEditorValue={value} grammarEditorValue={value} modelEditorValue={value}  /> -->
+  <!-- <div class="quadrants-container" style="display:{quadrantsContainerDisplay}">
     <Quadrants>
       <div slot="viz">
-        <!-- <Oscilloscope></Oscilloscope>
-        <Spectrogram></Spectrogram> -->
       </div>
       <div slot="liveCodeEditor" class="codemirror-container flex scrollable codemirror-gutter codemirror-linenumber">
         <CodeMirror bind:this={codeMirror3}  bind:value={$liveCodeEditorValue} lineNumbers={true} on:change={nil} />
@@ -563,7 +550,7 @@
         <CodeMirror bind:this={codeMirror5}  bind:value={$modelEditorValue} lineNumbers={true}  on:change={nil} />
       </div>
     </Quadrants>
-  </div>
+  </div> -->
 
   <!-- <div class="live-container" style="display:{liveContainerDisplay}">
     <Live>
@@ -576,9 +563,9 @@
     </Live>
   </div> -->
 
-  <div class="live-container" style="display:{liveContainerDisplay}">
+  <!-- <div class="live-container" style="display:{liveContainerDisplay}">
     <Model>
     </Model>
-  </div>
+  </div> -->
 
 </div>
