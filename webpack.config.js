@@ -157,7 +157,7 @@ module.exports = {
 		new HtmlWebpackPlugin({
 			noscriptHeader:
 				"To run Sema, please enable Javascript in the browser configuration",
-			template: "index.html",
+			template: "./client/index.html",
 			filename: "./index.html", //relative to root of the application
 			excludeChunks: ["worker"]
 		}),

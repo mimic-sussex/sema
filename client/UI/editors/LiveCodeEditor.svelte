@@ -39,6 +39,9 @@
 
   // export let value;
   export let item;
+  export let lineNumbers = true;
+  export let tab = true;
+  
 
   let codeMirror;
   let parserWorker;
@@ -54,6 +57,7 @@
 	});
 
   onDestroy(async () => {
+    console.log('DEBUG:LiveCodeEditor:onDestroy:')
     parserWorker.terminate();
     parserWorker = null; // cannot delete in strict mode
 	});
@@ -65,7 +69,7 @@
   let onValueChange = e => {
     // Dispatch item value update to parent's
     console.log("DEBUG:LiveCodeEditor:onValueChange:")
-    // dispatch('change', { item: item, value: e.detail.value });
+    dispatch('change', { item: item, value: e.detail.value });
   }
 
   let parseLiveCodeAsync = e => {
@@ -253,10 +257,10 @@
               <!-- on:change={ e => onValueChange(e) } -->
  <!-- bind:value={$liveCodeEditorValue} -->
   <CodeMirror bind:this={codeMirror}
-              bind:value={item.value}             
-              tab={true}
-              on:change={ e => onValueChange(e) }
-              lineNumbers={true}
+              bind:value={item.value}
+              on:change={ e => onValueChange(e  ) }             
+              {tab}
+              {lineNumbers}
               ctrlEnter={evalLiveCodeOnEditorCommand}
               cmdEnter={evalLiveCodeOnEditorCommand}
               cmdPeriod={stopAudioOnEditorCommand}

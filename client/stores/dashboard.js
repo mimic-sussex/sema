@@ -1,6 +1,6 @@
 import { writable, readable } from 'svelte/store';
 
-import compile from "./../compiler/compiler";
+import compile from "../compiler/compiler";
 
 import default_grammar from '../../assets/language/defaultGrammar.ne';
 import gabber_grammar from "../../assets/language/gabber.ne";
