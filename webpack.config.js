@@ -61,7 +61,7 @@ module.exports = {
 			},
 			{
 				test: /\.css$/,
-        // exclude: [ path.resolve(__dirname, "client/global.css") ],
+				// exclude: [ path.resolve(__dirname, "client/global.css") ],
 				use: [
 					/**
 					 * MiniCssExtractPlugin doesn't support HMR.
@@ -70,6 +70,15 @@ module.exports = {
 					prod ? MiniCssExtractPlugin.loader : "style-loader",
 					"css-loader"
 				]
+			},
+			{
+				test: /\.glsl$/,
+				loader: "file-loader", // files should NOT get processed, only emitted
+        // include: ['./**/*.glsl', '../../../**/*.glsl'],
+				options: {
+          compress: false,
+					name: "[name].glsl"
+				}
 			},
 			{
 				test: /\.ne$/,

@@ -15,7 +15,7 @@ const app = new App({
 
 
 //exportHistory();
-clearHistory();
+// clearHistory();
 
 window.app = app;
 

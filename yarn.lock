@@ -41,6 +41,14 @@
   dependencies:
     "@hapi/hoek" "^8.3.0"
 
+"@sveltejs/gl@0.0.15":
+  version "0.0.15"
+  resolved "https://registry.yarnpkg.com/@sveltejs/gl/-/gl-0.0.15.tgz#1593f4ef045efe342e3e0c782ddc12a1772510ec"
+  integrity sha512-vD9T7cqYlLpdM2jTnzhPVTYP/PtY2TApwbMzpwqSxJ01BUw3kwov+fkHjJpMTorBa5FQ49B4i2TeOj6gKFlBWw==
+  dependencies:
+    gl-matrix "^3.0.0"
+    yootils "0.0.16"
+
 "@types/anymatch@*":
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/@types/anymatch/-/anymatch-1.3.1.tgz#336badc1beecb9dacc38bea2cf32adf627a8421a"
@@ -1975,6 +1983,11 @@ get-value@^2.0.3, get-value@^2.0.6:
   resolved "https://registry.yarnpkg.com/get-value/-/get-value-2.0.6.tgz#dc15ca1c672387ca76bd37ac0a395ba2042a2c28"
   integrity sha1-3BXKHGcjh8p2vTesCjlbogQqLCg=
 
+gl-matrix@^3.0.0:
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/gl-matrix/-/gl-matrix-3.2.1.tgz#2d8e35125bf854f49abded8a0c8350b1a4907a26"
+  integrity sha512-YYVO8jUSf6+SakL4AJmx9Jc7zAZhkJQ+WhdtX3VQe5PJdCOX6/ybY4x1vk+h94ePnjRn6uml68+QxTAJneUpvA==
+
 glob-parent@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/glob-parent/-/glob-parent-3.1.0.tgz#9e6af6299d8d3bd2bd40430832bd113df906c5ae"
@@ -3090,11 +3103,6 @@ neo-async@^2.5.0, neo-async@^2.6.1:
   version "2.6.1"
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.1.tgz#ac27ada66167fa8849a6addd837f6b189ad2081c"
   integrity sha512-iyam8fBuCUpWeKPGpaNMetEocMt364qkCsfL9JuhjXX6dRnguRVOfk2GZaDpPjcOKiiXCPINZC1GczQ7iTq3Zw==
-
-nexusui@^2.0.10:
-  version "2.0.10"
-  resolved "https://registry.yarnpkg.com/nexusui/-/nexusui-2.0.10.tgz#a756d422fc892d74547140cee2c812182ce7156a"
-  integrity sha512-EmSnmC1NGIf72kpDeF/c8CizDjaWxvF99w+UV4QZzyLO302rS64PxBnqt9XD51P69HTqCvKTJaTDXP8/GYS4KA==
 
 nice-try@^1.0.4:
   version "1.0.5"
@@ -5244,3 +5252,8 @@ yargs@13.2.4:
     which-module "^2.0.0"
     y18n "^4.0.0"
     yargs-parser "^13.1.0"
+
+yootils@0.0.16:
+  version "0.0.16"
+  resolved "https://registry.yarnpkg.com/yootils/-/yootils-0.0.16.tgz#4a41acf7f0c333c8508e72b046b0c749171b9de8"
+  integrity sha512-aIVecm5ucOzwhtKbl0zkfg0ZSOUR9c2da0k8cIc9umjjzkvVCWUUX/UHZ1CLPsv4wmJLqt0aWeLB7p9n9JDwYQ==
