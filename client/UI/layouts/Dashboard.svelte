@@ -289,8 +289,6 @@
         {:else if item.type === 'grammarCompileOutput' }
         <GrammarCompileOutput class='scrollable'/>
 
-<<<<<<< HEAD
-=======
         {:else if item.type === 'oscilloscope' }
         <Oscilloscope />
 
@@ -298,7 +296,6 @@
         <Spectrogram /> -->
 
 
->>>>>>> sema_v0.4
         {:else}
         <Editor bind:value={value}/>
         {/if}
