@@ -8,8 +8,8 @@
   import LiveCodeEditor from '../editors/LiveCodeEditor.svelte';
   import LiveCodeParseOutput from '../widgets/LiveCodeParseOutput.svelte';
   import GrammarCompileOutput from '../widgets/GrammarCompileOutput.svelte';
-  import { PubSub } from "../../messaging/pubSub.js"; 
- 
+  import { PubSub } from "../../messaging/pubSub.js";
+
   import {
     dashboardItems,
     selectedItem,
@@ -18,7 +18,7 @@
     modelEditorValue,
     liveCodeEditorValue
   } from "../../store.js"
- 
+
   const messaging = new PubSub();
 
   export let value = '';
@@ -67,13 +67,13 @@
   }
 
   let layoutOriginal = [
-    gridHelp.item({ x: 0, y: 0, w: 7, h: 3, id: id(), name:'default', type:'live', lineNumbers: true, hasFocus: false, theme: "monokai",  data: '#151515', value: $liveCodeEditorValue  }), 
+    gridHelp.item({ x: 0, y: 0, w: 7, h: 3, id: id(), name:'default', type:'live', lineNumbers: true, hasFocus: false, theme: "monokai",  data: '#151515', value: $liveCodeEditorValue  }),
     gridHelp.item({ x: 7, y: 0, w: 3, h: 7, id: id(), name:'hello world', type:'liveCodeParseOutput', lineNumbers: false, hasFocus: false, theme: "shadowfox", data: '#ebdeff' }),
     gridHelp.item({ x: 10, y: 0, w: 8, h: 2, id: id(), name:'hello world', type:'grammarCompileOutput', lineNumbers: true, hasFocus: false, theme: "monokai", data: '#d1d5ff' }),
     gridHelp.item({ x: 10, y: 2, w: 5, h: 5, id: id(), name:'default', type:'grammar', lineNumbers: false, hasFocus: false, theme: "cobalt", data: '#AAAAAA', value: $grammarEditorValue }),
     gridHelp.item({ x: 0, y: 4, w: 7, h: 4, id: id(), name:'hello world', type:'model', lineNumbers: true, hasFocus: false, theme: "icecoder", data: '#f0f0f0', value: $modelEditorValue })
   ];
-  
+
   let layout;
 
   let items = [];
@@ -84,12 +84,12 @@
   if (typeof window !== "undefined") {
     if (!window.localStorage.getItem("layout")) {
       window.localStorage.setItem("layout", JSON.stringify(layoutOriginal));
-      items = layoutOriginal; 
+      items = layoutOriginal;
     } else {
       items = JSON.parse(window.localStorage.getItem("layout"));
     }
   }
-  
+
   // let items = layout;
   // console.log('DEBUG:Dashboard:items:');
   // console.log(items);
@@ -98,7 +98,7 @@
   const onAdjust = () => {
     window.localStorage.setItem("layout", JSON.stringify(items));
   };
-  
+
   const reset = () => {
     items = layoutOriginal;
     window.localStorage.setItem("layout", JSON.stringify(layoutOriginal));
@@ -111,7 +111,7 @@
     const y = Math.ceil(Math.random() * 4) + 1;
     const iid = id();
     // items = [
-    //   ...items, 
+    //   ...items,
     //   { ...gridHelp.item({
     //           x: (i * 2) % col,
     //           y: Math.floor(i / 6) * y,
@@ -145,7 +145,7 @@
         ...{ data: randomHexColorCode() }
       };
     items = gridHelp.appendItem(newItem, items, cols);
-    window.localStorage.setItem("layout", JSON.stringify(items)); 
+    window.localStorage.setItem("layout", JSON.stringify(items));
     // $dashboardItems = gridHelp.resizeItems(items, cols);
   }
 
@@ -193,7 +193,7 @@
     border-radius: 6px;
     border-top-left-radius: 0px;
     border-bottom-right-radius: 3px;
-    
+
   }
 
   :global(*) {
@@ -235,7 +235,7 @@
   }
 
   .move {
-    font-size: 1.2em; 
+    font-size: 1.2em;
     position: absolute;
     padding: 1px 5px;
     cursor: move;
@@ -253,11 +253,11 @@
 
 <div class="layout-template-container">
   <Grid {$dashboardItems}
-        useTransform {breakpoints} 
-        rowHeight={100} 
-        gap={1} 
-        bind:items {cols} 
-        let:item      
+        useTransform {breakpoints}
+        rowHeight={100}
+        gap={1}
+        bind:items {cols}
+        let:item
         on:adjust={onAdjust}>
     <span class='move'>+</span>
     <div class="content" style="background: { item.static ? '#ccccee' : item.data}" on:mousedown={ e => e.stopPropagation() } >
@@ -268,16 +268,16 @@
 
         {:else if item.type === 'grammar' }
         <GrammarEditor value={item.value} />
-        
+
         {:else if item.type === 'live' }
         <LiveCodeEditor value={item.value} />
-       
+
         {:else if item.type === 'liveCodeParseOutput' }
         <LiveCodeParseOutput class='scrollable'/>
-       
+
         {:else if item.type === 'grammarCompileOutput' }
         <GrammarCompileOutput class='scrollable'/>
-       
+
         {:else}
         <Editor bind:value={value}/>
         {/if}

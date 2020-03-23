@@ -39,7 +39,7 @@
   import { PubSub } from '../messaging/pubSub.js'
 
   import IRToJavascript from "../intermediateLanguage/IR.js";
-  
+
   import * as nearley from 'nearley/lib/nearley.js'
   import compile from '../compiler/compiler';
 
@@ -58,9 +58,9 @@
   let codeMirror3, codeMirror4, codeMirror5; // []
   let codeMirror6, codeMirror7;
 
-  let messaging = new PubSub();   
+  let messaging = new PubSub();
 
-  let unsubcribeSelectedTutorialGrammarUpdates; 
+  let unsubcribeSelectedTutorialGrammarUpdates;
 
   let dashboard;
 
@@ -131,7 +131,7 @@
     changeLayout(value.id);
   })
 	onDestroy(unsubscribe); // Prevent memory leaks by disposing the component
-  
+
 
   const unsubscribe2 = grammarEditorValue.subscribe(value => {
     // console.log("DEBUG:Layout:grammarEditorValue: ", value);
@@ -154,21 +154,21 @@
     // codeMirror6.set($modelEditorValue, "js");
 
     const unsubcribeSelectedTutorialGrammarUpdates = selectedTutorialGrammar.subscribe(value => {
-      codeMirror1.update($selectedTutorialGrammar); 
+      codeMirror1.update($selectedTutorialGrammar);
       compileGrammarOnChange();
     });
-    onDestroy(unsubcribeSelectedTutorialGrammarUpdates); // Prevent memory leaks by disposing the component 
+    onDestroy(unsubcribeSelectedTutorialGrammarUpdates); // Prevent memory leaks by disposing the component
 
     const unsubscribePlaygroundActive = playgroundActive.subscribe(value => {
       console.log("DEBUG:Layout:selectedlayout: ", value);
       if(value){
-        codeMirror1.update($selectedTutorialGrammar); 
+        codeMirror1.update($selectedTutorialGrammar);
         codeMirror2.update($liveCodeEditorValue);
         changeLayout(3);
       }
       else {
         console.log("DEBUG:Layout:selectedlayout: ")
-        changeLayout(1); 
+        changeLayout(1);
       }
     });
     onDestroy(unsubscribePlaygroundActive); // Prevent memory leaks by disposing the component
@@ -221,13 +221,13 @@
       .then(outputs => {
 
         // console.log('DEBUG:Layout:parseLiveCode:then')
-        // console.log(outputs); 
+        // console.log(outputs);
         const {parserOutputs, parserResults} = outputs;
 
         // $liveCodeParseResults = outputs;
         $liveCodeParseResults = parserResults;
 
-        // console.log(outputs); 
+        // console.log(outputs);
         $liveCodeAbstractSyntaxTree = parserOutputs;
 
 
@@ -246,34 +246,34 @@
   }
 
 
-  let compileGrammarOnChange = e => { 
+  let compileGrammarOnChange = e => {
 
-    let grammarEditorValue = null; 
+    let grammarEditorValue = null;
 
     if(e !== undefined && e.detail !== undefined && e.detail.value !== undefined)
-      grammarEditorValue = e.detail.value; 
-    else 
-      grammarEditorValue = $grammarEditorValue; 
+      grammarEditorValue = e.detail.value;
+    else
+      grammarEditorValue = $grammarEditorValue;
 
     try {
       window.localStorage.grammarEditorValue = grammarEditorValue;
 
       let {errors, output} = compile(grammarEditorValue);
-      $grammarCompiledParser = output; 
+      $grammarCompiledParser = output;
       $grammarCompilationErrors = errors;
 
       // console.log('DEBUG:Layout:compileGrammarOnChange');
-      // console.log($grammarCompiledParser); 
+      // console.log($grammarCompiledParser);
 
       if($grammarCompiledParser && ( $liveCodeEditorValue && $liveCodeEditorValue !== "") ){
         // DEBUG
         // $liveCodeEditorValue = e.detail.value;
 
         // console.log('DEBUG:Layout:compileGrammarOnChange');
-        // console.log($liveCodeEditorValue); 
+        // console.log($liveCodeEditorValue);
 
         parseLiveCode();
-  
+
       }
     }
     catch (e) {
@@ -288,7 +288,7 @@
 
   let parseLiveCodeOnChange = e => {
     // console.log('DEBUG:Layout:parseLiveCodeOnChange');
-    // console.log($liveCodeEditorValue); 
+    // console.log($liveCodeEditorValue);
     if($grammarCompiledParser){
       //DEBUG
       $liveCodeEditorValue = e.detail.value;
@@ -301,12 +301,12 @@
   }
 
   let translateILtoDSP = e => {
-    
+
     $dspCode = IRToJavascript.treeToCode($liveCodeParseResults);
-    messaging.publish("eval-dsp", $dspCode); 
-    // evalDSP($dspCode); 
+    messaging.publish("eval-dsp", $dspCode);
+    // evalDSP($dspCode);
   }
- 
+
   let translateILtoDSPasync = e => {  // [NOTE:FB] Note the 'async'
 
     if(window.Worker){
@@ -341,7 +341,7 @@
       .then(outputs => {
         $dspCode = outputs;
         // evalDSP($dspCode);
-        messaging.publish("eval-dsp", $dspCode); 
+        messaging.publish("eval-dsp", $dspCode);
         // $liveCodeParseErrors = "";
         // console.log('DEBUG:Layout:translateILtoDSPasync');
         // console.log($dspCode);
@@ -357,9 +357,9 @@
     console.log('DEBUG:Layout:cmdEnter')
     console.log($liveCodeAbstractSyntaxTree);
     if($grammarCompiledParser && $liveCodeEditorValue && $liveCodeAbstractSyntaxTree){
-      
+
       translateILtoDSPasync();
-      
+
       // translateILtoDSP();
     }
   }
@@ -369,7 +369,7 @@
     translateILtoDSP();
   }
 
-  let cmdPeriod = () =>  messaging.publish("stop-audio"); 
+  let cmdPeriod = () =>  messaging.publish("stop-audio");
 
 
 
@@ -399,7 +399,7 @@
     background: transparent;
     font: 400 14px/1.7 var(--font-mono);
     color: var(--base);
-    
+
   }
 
 
@@ -412,7 +412,7 @@
     font-family: monospace;
   }
 
-/* 
+/*
   .codemirror-cursor :global(.CodeMirror-cursor) {
     border-left: 2px solid rgb(255, 136, 0);
     border-right: none;
@@ -427,11 +427,11 @@
     left: 2px; width: 21px;
     width: 15px;
   } */
-/* 
+/*
   .codemirror-gutter :global(.CodeMirror-gutters) {
     width: 20px;
   } */
-  
+
   /* .CodeMirror-linenumbers :global(.Codemirror-linenumber){
 
   } */
@@ -470,26 +470,26 @@
 <!-- <div class="layout-template-container" contenteditable="true" bind:innerHTML={layoutTemplate}> -->
 <div class="layout-template-container scrollable">
 
-  <div class="tutorial-container" style="display:{tutorialContainerDisplay}">
+  <!-- <div class="tutorial-container" style="display:{tutorialContainerDisplay}">
 
     <Tutorial>
       <div slot="grammarEditor" class="codemirror-container flex scrollable codemirror-gutter codemirror-linenumber">
-        <CodeMirror bind:this={codeMirror1}  
-                    bind:value={$grammarEditorValue} 
-                    tab={true} 
-                    lineNumbers={true}  
-                    on:change={compileGrammarOnChange}  /> 
+        <CodeMirror bind:this={codeMirror1}
+                    bind:value={$grammarEditorValue}
+                    tab={true}
+                    lineNumbers={true}
+                    on:change={compileGrammarOnChange}  />
       </div>
-      
+
       <div slot="liveCodeEditor" class="codemirror-container flex scrollable codemirror-container-live-code codemirror-cursor codemirror-linenumber codemirror-gutter">
-        <CodeMirror bind:this={codeMirror2}  
-                    bind:value={$liveCodeEditorValue} 
-                    tab={true} 
-                    lineNumbers={true} 
-                    on:change={parseLiveCodeOnChange} 
-                    cmdEnter={cmdEnter} 
-                    ctrlEnter={ctrlEnter} 
-                    cmdPeriod={cmdPeriod} /> 
+        <CodeMirror bind:this={codeMirror2}
+                    bind:value={$liveCodeEditorValue}
+                    tab={true}
+                    lineNumbers={true}
+                    on:change={parseLiveCodeOnChange}
+                    cmdEnter={cmdEnter}
+                    ctrlEnter={ctrlEnter}
+                    cmdPeriod={cmdPeriod} />
       </div>
 
       <div slot="liveCodeCompilerOutput" class="codemirror-container flex scrollable">
@@ -502,8 +502,7 @@
           <strong style="color:green; margin:15px 0 15px 5px">Abstract Syntax Tree:</strong>
           <br>
           <div style="margin-left:5px">
-          <!-- <div style="overflow-y: scroll; height:auto;"> -->
-            <Inspect.Value value={ $liveCodeAbstractSyntaxTree[0]['@lang'] } depth={7} />
+          <Inspect.Value value={ $liveCodeAbstractSyntaxTree[0]['@lang'] } depth={7} />
           </div>
         </div>
       {:else}
@@ -511,7 +510,6 @@
           <strong style="color: red; margin:15px 0 10px 5px">SyntaxError: Invalid or unexpected token!</strong>
           <br>
           <div style="margin-left:5px">
-          <!-- <div style="overflow-y: scroll; height:auto;"> -->
             <span style="white-space: pre-wrap">{ $liveCodeParseErrors } </span>
           </div>
         </div>
@@ -525,7 +523,6 @@
           <strong style="color:red; margin:15px 0 15px 5px">Grammar compilation errors:</strong>
           <br>
           <div style="margin-left:5px">
-          <!-- <div style="overflow-y: scroll; height:auto;"> -->
             <span style="white-space: pre-wrap">{ $grammarCompilationErrors } </span>
           </div>
         </div>
@@ -538,7 +535,7 @@
 
 
     </Tutorial>
-  </div>
+  </div> -->
 
   <div class="dashboard-container" style="display:{dashboardContainerDisplay}" >
     <!-- <Dashboard liveCodeEditorValue={value} grammarEditorValue={value} modelEditorValue={value} /> -->
@@ -546,12 +543,9 @@
     </Dashboard>
   </div>
 
-  <div class="quadrants-container" style="display:{quadrantsContainerDisplay}">
-    <!-- <Quadrants liveCodeEditorValue={value} grammarEditorValue={value} modelEditorValue={value}  /> -->
+  <!-- <div class="quadrants-container" style="display:{quadrantsContainerDisplay}">
     <Quadrants>
       <div slot="viz">
-        <!-- <Oscilloscope></Oscilloscope>
-        <Spectrogram></Spectrogram> -->
       </div>
       <div slot="liveCodeEditor" class="codemirror-container flex scrollable codemirror-gutter codemirror-linenumber">
         <CodeMirror bind:this={codeMirror3}  bind:value={$liveCodeEditorValue} lineNumbers={true} on:change={nil} />
@@ -564,7 +558,7 @@
       </div>
     </Quadrants>
   </div>
-
+ -->
   <!-- <div class="live-container" style="display:{liveContainerDisplay}">
     <Live>
       <div slot="liveCodeEditor" class="codemirror-container flex scrollable">
@@ -575,10 +569,10 @@
       </div>
     </Live>
   </div> -->
-
+<!--
   <div class="live-container" style="display:{liveContainerDisplay}">
     <Model>
     </Model>
-  </div>
+  </div> -->
 
 </div>

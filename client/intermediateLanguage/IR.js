@@ -73,27 +73,27 @@ const jsFuncMap = {
     loop:  (o, p) => `(${p[0].loop} % ${p[1].loop})` },
 	add: {
 		setup: (o, p) => "",
-		loop:  (o, p) => `Module.maxiMath.add(${p[0].loop},${p[1].loop})`
+		loop:  (o, p) => `(${p[0].loop}+${p[1].loop})`
 	},
 	mul: {
 		setup: (o, p) => "",
-		loop:  (o, p) => `Module.maxiMath.mul(${p[0].loop},${p[1].loop})`
+		loop:  (o, p) => `(${p[0].loop}*${p[1].loop})`
 	},
 	sub: {
 		setup: (o, p) => "",
-		loop:  (o, p) => `Module.maxiMath.sub(${p[0].loop},${p[1].loop})`
+		loop:  (o, p) => `(${p[0].loop}-${p[1].loop})`
 	},
 	div: {
 		setup: (o, p) => "",
-		loop:  (o, p) => `Module.maxiMath.div(${p[0].loop},${p[1].loop})`
+		loop:  (o, p) => `(${p[1].loop} != 0 ? ${p[0].loop}/${p[1].loop} : 0)`
 	},
 	pow: {
 		setup: (o, p) => "",
-		loop:  (o, p) => `Module.maxiMath.pow(${p[0].loop},${p[1].loop})`
+		loop:  (o, p) => `Math.pow(${p[0].loop},${p[1].loop})`
 	},
 	abs: {
 		setup: (o, p) => "",
-		loop:  (o, p) => `Module.maxiMath.abs(${p[0].loop})`
+		loop:  (o, p) => `Math.abs(${p[0].loop})`
 	},
 	env: {
 		setup: (o, p) => `${o} = new Module.maxiEnv();

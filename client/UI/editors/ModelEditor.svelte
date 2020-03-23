@@ -12,10 +12,13 @@
 <script>
 	import { onMount, onDestroy } from 'svelte';
 
-  import {
-    modelEditorValue
-  } from "../../store.js";
+  // import {
+  //   modelEditorValue
+  // } from "../../store.js";
 
+  var modelEditorValue = window.localStorage.modelEditorValue;
+
+  console.log(modelEditorValue);
   import { PubSub } from '../../messaging/pubSub.js';
 
   import ModelWorker from "worker-loader!../../workers/ml.worker.js";
@@ -198,7 +201,7 @@
 <!-- <div class="layout-template-container" contenteditable="true" bind:innerHTML={layoutTemplate}> -->
 <div class="codemirror-container layout-template-container scrollable">
   <CodeMirror bind:this={codeMirror}
-              bind:value={value}
+              bind:value={modelEditorValue}
               tab={true}
               lineNumbers={true}
               on:change={nil}
