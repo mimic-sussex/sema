@@ -308,17 +308,6 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
     //this.testOsc = new Module.maxiOsc();
 
-    //deleteme
-    let alist = new Module.VectorDouble();
-    alist.resize(3,0);
-    let midx=new Module.maxiIndex();
-    alist.set(0,120);
-    alist.set(1,11);
-    alist.set(2,12);
-    let listf = (()=>{alist.set(2,Math.random()*100);return alist});
-    let v = midx.pull(0, 0, listf());
-    v = midx.pull(1, 3/3, listf());
-    console.log(v);
   }
 
   /**
