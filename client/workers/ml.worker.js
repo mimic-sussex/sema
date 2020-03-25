@@ -45,7 +45,14 @@ var sema = {
       "func": "pbcopy",
       "msg": msg,
     });
-  }
+  },
+  sendBuffer: (bufferName,data) => {
+      postMessage({
+          "func": "sendbuf",
+          "name": bufferName,
+          "data": data
+      });
+  },
 };
 `);
 

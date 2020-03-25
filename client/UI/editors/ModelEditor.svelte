@@ -107,6 +107,10 @@
           copyField.value = data.msg;
           copyField.select();
           document.execCommand("Copy");
+        },
+        sendbuf: data => {
+          console.log(data);
+          messaging.publish("model-send-buffer", data);
         }
       };
       responders[m.data.func](m.data);
