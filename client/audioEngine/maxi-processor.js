@@ -198,6 +198,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
     this.sampleBuffers={};
     this.sampleVectorBuffers = {};
+    this.sampleVectorBuffers['defaultEmptyBuffer'] = new Float32Array(1);
 
     this.transducers = {};
 
@@ -209,10 +210,13 @@ class MaxiProcessor extends AudioWorkletProcessor {
     };
 
     this.getSampleBuffer = (bufferName) => {
-      // console.log(this.sampleBuffers);
-      // console.log(bufferName);
-        // return this.translateFloat32ArrayToBuffer(this.sampleBuffers[bufferName]);
-        return this.sampleVectorBuffers[bufferName];
+        let sample = this.sampleVectorBuffers['defaultEmptyBuffer']; //defailt - silence
+        if (bufferName in this.sampleVectorBuffers) {
+          sample = this.sampleVectorBuffers[bufferName];
+        }else{
+          console.warn(`${bufferName} doesn't exist yet`);
+        }
+        return sample;
     };
 
     this.netClock = new Module.maxiAsyncKuramotoOscillator(3);  //TODO: this should be the same as numpeers
