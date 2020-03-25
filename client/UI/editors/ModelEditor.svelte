@@ -135,8 +135,9 @@
   }
 
   function onModelEditorValueChange(){
-    window.localStorage.setItem("modelEditorValue", codeMirror.getValue());
-    addToHistory("model-history-", modelCode);
+    //don't need to save on every key stroke
+    // window.localStorage.setItem("modelEditorValue", codeMirror.getValue());
+    // addToHistory("model-history-", modelCode);
   }
 
   function evalModelEditorExpression(){

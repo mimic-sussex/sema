@@ -12,9 +12,9 @@
 <script>
 	import { onMount, onDestroy } from 'svelte';
 
-  import {  
+  import {
     grammarEditorValue,
-    grammarCompiledParser, 
+    grammarCompiledParser,
     grammarCompilationErrors
   } from "../../store.js";
 
@@ -24,7 +24,7 @@
   import ModelWorker from "worker-loader!../../workers/ml.worker.js";
 
   let codeMirror;
-  let modelWorker; 
+  let modelWorker;
   export let value;
 
   onMount(async () => {
@@ -35,7 +35,7 @@
   onDestroy(async () => {
     // modelWorker.terminate();
 	});
-  
+
 
   let log = (e) => { console.log(e.detail.value); }
 
@@ -72,24 +72,26 @@
     }
   }
 
-  let compileGrammarOnChange = e => { 
+  let compileGrammarOnChange = e => {
 
-    let grammarEditorValue = null; 
+    let grammarEditorValue = null;
 
-    if(e !== undefined && e.detail !== undefined && e.detail.value !== undefined)
-      grammarEditorValue = e.detail.value; 
-    else 
-      grammarEditorValue = $grammarEditorValue; 
+    // if(e !== undefined && e.detail !== undefined && e.detail.value !== undefined)
+    //   grammarEditorValue = e.detail.value;
+    if(e !== undefined)
+      grammarEditorValue = codeMirror.getValue(); 
+    else
+      grammarEditorValue = $grammarEditorValue;
 
     try {
       window.localStorage.grammarEditorValue = grammarEditorValue;
       let {errors, output} = compile(grammarEditorValue);
-      $grammarCompiledParser = output; 
+      $grammarCompiledParser = output;
       $grammarCompilationErrors = errors;
 
       // console.log('DEBUG:GrammarEditor:compileGrammarOnChange');
       // console.log($grammarCompiledParser);
-      // console.log($grammarCompilationErrors); 
+      // console.log($grammarCompilationErrors);
     }
     catch (e) {
 
@@ -149,10 +151,9 @@
 
 <!-- <div class="layout-template-container" contenteditable="true" bind:innerHTML={layoutTemplate}> -->
 <div class="codemirror-container layout-template-container scrollable">
-  <CodeMirror bind:this={codeMirror}  
-              bind:value={value} 
-              tab={true} 
-              lineNumbers={true}  
-              on:change={compileGrammarOnChange}  /> 
+  <CodeMirror bind:this={codeMirror}
+              bind:value={value}
+              tab={true}
+              lineNumbers={true}
+              on:change={compileGrammarOnChange}  />
 </div>
- 

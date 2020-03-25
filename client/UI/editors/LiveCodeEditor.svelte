@@ -40,10 +40,16 @@
   let parserWorker;
   let messaging = new PubSub();
 
+  let btrack;
+
+
   onMount(async () => {
     codeMirror.set(value, "js", 'monokai');
 
     parserWorker = new ParserWorker();  // Create one worker per widget lifetime
+
+    btrack = new blockTracker(codeMirror);
+
 	});
 
   onDestroy(async () => {
@@ -103,17 +109,132 @@
     }
   }
 
+  class blockData {
+    constructor(startLine, isSeparator) {
+      this.startLine = startLine;
+      this.isSeparator = isSeparator;
+    }
+  }
+
+  class blockTracker {
+    constructor(editorToTrack) {
+      this.editor = editorToTrack;
+      this.blocks = new Array();
+      this.blocks.push(new blockData(0, false));
+    }
+
+    onEditChange(change) {
+      let separatorExistsOnLine = (line) =>  {
+        return this.blocks.filter(b=>b.startLine==line).length == 1;
+      }
+      let insertSeparator = (line) => {
+        let insertionIndex = this.blocks.findIndex(x=>x.startLine > line);
+        console.log("Inserting separator at " + line);
+        const newBlock = new blockData(line, true);
+        if (insertionIndex == -1) {
+          this.blocks.push(newBlock);
+        }else{
+          this.blocks.splice(insertionIndex, 0, newBlock);
+        }
+      }
+      let testLine = (lineIndex, lineText) => {
+        if (/___+/.test(lineText)) {  // Test RegEx at least 3 underscores
+            console.log("Block separator found");
+            if (separatorExistsOnLine(lineIndex)) {
+                console.log("separator already exists");
+            }else{
+                console.log("adding new separator");
+                insertSeparator(lineIndex);
+                console.log(this.blocks);
+            }
+        }
+      }
+      let insertNewLines = (atLine, numberofLines) => {
+        this.blocks = this.blocks.map(
+          (b)=>{
+            if (b.startLine > atLine) {
+              b.startLine+=numberofLines;
+            }
+            return b;
+          }
+        );
+      }
+      let removeLines = (atLine, numberofLines) => {
+        this.blocks = this.blocks.map(
+          (b)=>{
+            if (b.startLine > atLine) {
+              b.startLine-=numberofLines;
+            }
+            return b;
+          }
+        );
+      }
+      console.log(change);
+      switch(change.origin) {
+          case "+delete":
+            //was a line removed?
+            if (change.removed.length==2 && change.removed[0] == "" && change.removed[1] == "") {
+              console.log("line removed");
+              removeLines(change.from.line, 1);
+              console.log(this.blocks);
+            }
+
+            break;
+          case "+input":
+            //was the input a new line?
+            if (change.text.length==2 && change.text[0] == "" && change.text[1] == "") {
+              console.log("new line");
+              insertNewLines(change.from.line, 1);
+              console.log(this.blocks);
+            }
+            testLine(change.from.line, this.editor.getLine(change.from.line));
+          break;
+          case "paste":
+            let startLine = change.from.line;
+            insertNewLines(change.from.line, change.text.length);
+            for (let line in change.text) {
+              console.log(line);
+              testLine(startLine + parseInt(line), change.text[line]);
+            }
+
+          break;
+      };
+      // if (change.origin == "+input" || change.origin == "paste") {
+      //   // if (change.from.line == change.to.line) {
+      //   for(let i_line = change.from.line; i_line <= change.to.line; i_line++) {
+      //     //get the current line
+      //     const currLine = this.editor.getLine(i_line);
+      //     console.log(currLine);
+      //     if (/___+/.test(currLine)) {  // Test RegEx at least 3 underscores
+      //         console.log("Block separator found");
+      //         if (separatorExistsOnLine(change.from.line)) {
+      //             console.log("separator already exists");
+      //         }else{
+      //             console.log("adding new separator");
+      //             insertSeparator(change.from.line);
+      //             console.log(this.blocks);
+      //         }
+      //     }
+      //   }
+      // }
+    }
+
+  };
+
+
   let parseLiveCodeOnChange = e => {
-
-    let liveCodeEditorValue = null;
-
-    if(e !== undefined && e.detail !== undefined && e.detail.value !== undefined)
-      window.localStorage.liveCodeEditorValue = liveCodeEditorValue = e.detail.value;
-    else
-      liveCodeEditorValue = $liveCodeEditorValue;
-
-    if(liveCodeEditorValue) parseLiveCodeAsync(liveCodeEditorValue);
-
+    // console.log(e.detail.changeObj);
+    // console.log(codeMirror.getLine(e.detail.changeObj.to.line));
+    btrack.onEditChange(e.detail.changeObj);
+    // let liveCodeEditorValue = null;
+    //
+    // if(e !== undefined && e.detail !== undefined && e.detail.value !== undefined)
+    //   window.localStorage.liveCodeEditorValue = liveCodeEditorValue = e.detail.value;
+    // else
+    //   liveCodeEditorValue = $liveCodeEditorValue;
+    //
+    // if(liveCodeEditorValue) parseLiveCodeAsync(liveCodeEditorValue);
+    //
     // window.localStorage.setItem("parserEditor+ID", editor.getValue());
   }
 
@@ -166,12 +287,14 @@
   const evalLiveCodeOnEditorCommand = () => {
 
     try {
+      console.log("parsing");
       parseLiveCodeAsync(codeMirror.getBlock()); // Code block parsed by parser.worker
       // Parse results are kept in stores for feeding svelte components
       if($grammarCompiledParser && $liveCodeEditorValue && $liveCodeAbstractSyntaxTree){
 
         // Tree traversal in the main tree. TODO defer to worker thread
-        let dspCode = IRToJavascript.treeToCode($liveCodeParseResults);
+        let dspCode = IRToJavascript.treeToCode($liveCodeParseResults, 0);
+        console.log("code generated");
 
         // publish eval message with code to audio engine
         messaging.publish("eval-dsp", dspCode);
@@ -239,7 +362,7 @@
 
  <!-- bind:value={$liveCodeEditorValue} -->
   <CodeMirror bind:this={codeMirror}
-              bind:value={value}             
+              bind:value={value}
               tab={true}
               lineNumbers={true}
               on:change={parseLiveCodeOnChange}

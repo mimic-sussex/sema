@@ -2,6 +2,9 @@
 
 var objectID = 0;
 
+var vars = {};
+
+
 const oscMap = {
   '@sin': "sinewave",
   "@saw": "saw",
@@ -635,10 +638,9 @@ class IRToJavascript {
 
   static treeToCode(tree, blockIdx=0) {
     // console.log(tree);
-    let vars = {};
-    console.log("1");
+    vars = {};
     let code = IRToJavascript.traverseTree(tree, IRToJavascript.emptyCode(), 0, vars, blockIdx);
-    console.log("2");
+    console.log(vars);
     code.setup = `() => {let q=this.newq(); ${code.setup}; return q;}`;
     code.loop = `(q, inputs, mem) => {${code.loop} return q.sigOut;}`
     console.log("DEBUG:treeToCode");

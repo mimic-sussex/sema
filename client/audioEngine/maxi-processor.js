@@ -168,15 +168,15 @@ class MaxiProcessor extends AudioWorkletProcessor {
     this._mems =[this.newmem(), this.newmem()];
     this._cleanup = [0,0];
 
-    this.setvar = (q, name, val) => {
-      q.vars[name] = val;
-      return val;
-    };
-
-    this.getvar = (q, name) => {
-      let val = q.vars[name];
-      return val ? val : 0.0;
-    };
+    // this.setvar = (q, name, val) => {
+    //   q.vars[name] = val;
+    //   return val;
+    // };
+    //
+    // this.getvar = (q, name) => {
+    //   let val = q.vars[name];
+    //   return val ? val : 0.0;
+    // };
 
     this.silence = (q, inputs) => {
       return 0.0
@@ -363,19 +363,6 @@ class MaxiProcessor extends AudioWorkletProcessor {
         for (let channel = 0; channel < channelCount; channel++) {
           output[channel][i] = w;
         }
-
-        //spectrogram
-        // let showvariable = this._mems[this.currentSignalFunction][':show'];
-        // let specgramValue = showvariable !=undefined ? showvariable : output[channel][0];
-        // output[SPECTROGAMCHANNEL][i] = specgramValue;
-        // then use channelsplitter
-
-
-        // let w = this.testOsc.saw(200);
-        // for (let channel = 0; channel < channelCount; channel++) {
-        //   output[channel][i] = w;
-        // }
-
 
       }
 
