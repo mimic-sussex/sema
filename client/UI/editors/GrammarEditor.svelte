@@ -156,10 +156,11 @@
 
 </style>
 
-<!-- <div class="layout-template-container" contenteditable="true" bind:innerHTML={layoutTemplate}> -->
+<!-- <div class="layout-template-container" contenteditable="true" bind:innerHTML={layoutTemplate}> 
+bind:value={item.value} -->
 <div class="codemirror-container layout-template-container scrollable">
   <CodeMirror bind:this={codeMirror}  
-              bind:value={item.value} 
+              
               tab={true} 
               lineNumbers={true}  
               on:change={compileGrammarOnChange}  /> 

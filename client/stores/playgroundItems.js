@@ -25,93 +25,96 @@ const originalItems = [
 			background: "#151515",
 			lineNumbers: true,
 			hasFocus: false,
+			background: "#151515",
 			theme: "icecoder",
 			component: LiveCodeEditor,
-      data: "" 
+			data: ""
 		}
 	},
 
-  {  
-    ...gridHelp.item({ x: 7, y: 0, w: 3, h: 7, id: id() }),
-    ...{ 
-      name:'hello world', 
-      type:'liveCodeParseOutput', 
-      lineNumbers: false, 
-      hasFocus: false, 
-      theme: "shadowfox", 
-      background: '#ebdeff',
-      component: LiveCodeParseOutput,
-      data: "" 
-    }
-  },
-    
-  {
-    ...gridHelp.item({ x: 10, y: 0, w: 8, h: 2, id: id() }),
-    ...{
-      name:'hello world', 
-      type:'grammarCompileOutput', 
-      lineNumbers: true, 
-      hasFocus: false, 
-      theme: "monokai", 
-      component: GrammarCompileOutput,
-      data: "" 
-    }
-  },
+	{
+		...gridHelp.item({ x: 7, y: 0, w: 3, h: 7, id: id() }),
+		...{
+			name: "hello world",
+			type: "liveCodeParseOutput",
+			lineNumbers: false,
+			hasFocus: false,
+			theme: "shadowfox",
+			background: "#ebdeff",
+			component: LiveCodeParseOutput,
+			data: ""
+		}
+	},
 
-  {
-    ...gridHelp.item({ x: 10, y: 2, w: 5, h: 5, id: id() }),
-    ...{
-      name:'hello world', 
-      type:'grammarEditor', 
-      lineNumbers: true, 
-      hasFocus: false, 
-      theme: "monokai", 
-      background: '#d1d5ff',
-      component: GrammarEditor,
-      data: "" 
-    }
-  },
+	{
+		...gridHelp.item({ x: 10, y: 0, w: 8, h: 2, id: id() }),
+		...{
+			name: "hello world",
+			type: "grammarCompileOutput",
+			lineNumbers: true,
+			hasFocus: false,
+			theme: "monokai",
+			background: "#d1d5ff",
+			component: GrammarCompileOutput,
+			data: ""
+		}
+	},
 
-  {
-    ...gridHelp.item({ x: 0, y: 4, w: 7, h: 4, id: id() }),
-    ...{
-      name:'hello world', 
-      type:'modelEditor', 
-      lineNumbers: true, 
-      hasFocus: false, 
-      theme: "monokai", 
-      component: ModelEditor,
-      data: "" 
-    }
-  },
+	{
+		...gridHelp.item({ x: 10, y: 2, w: 5, h: 5, id: id() }),
+		...{
+			name: "hello world",
+			type: "grammarEditor",
+			lineNumbers: true,
+			hasFocus: false,
+			theme: "monokai",
+			background: "#AAAAAA",
+			component: GrammarEditor,
+			data: ""
+		}
+	},
 
-  {
-    ...gridHelp.item({ x: 0, y: 8, w: 7, h: 4, id: id() }),
-    ...{
-      name:'hello world', 
-      type:'oscilloscope', 
-      lineNumbers: true, 
-      hasFocus: false, 
-      theme: "monokai", 
-      background: '#d1d5ff',
-      component: Oscilloscope,
-      data: "" 
-    }
-  },  
-  
-  {
-    ...gridHelp.item({  x: 7, y: 8, w: 7, h: 4, id: id() }),
-    ...{
-      name: 'hello world', 
-      type: 'spectrogram',
-      lineNumbers: true, 
-      hasFocus: false, 
-      theme: "monokai", 
-      background: '#d1d5ff',
-      component: Spectrogram,
-      data: "" 
-    }
-  }
+	{
+		...gridHelp.item({ x: 0, y: 4, w: 7, h: 4, id: id() }),
+		...{
+			name: "hello world",
+			type: "modelEditor",
+			lineNumbers: true,
+			hasFocus: false,
+			theme: "monokai",
+			background: "#f0f0f0",
+			component: ModelEditor,
+			data: ""
+		}
+	},
+
+	{
+		...gridHelp.item({ x: 0, y: 8, w: 7, h: 4, id: id() }),
+		...{
+			name: "hello world",
+			type: "oscilloscope",
+			lineNumbers: true,
+			hasFocus: false,
+			theme: "monokai",
+			background: "#f0f0f0",
+			component: Oscilloscope,
+			data: ""
+		}
+	},
+
+	{
+		...gridHelp.item({ x: 7, y: 8, w: 7, h: 4, id: id() }),
+		...{
+			name: "hello world",
+			type: "spectrogram",
+			lineNumbers: true,
+			hasFocus: false,
+			theme: "monokai",
+			background: "#f0f0f0",
+			component: Spectrogram,
+			data: ""
+		}
+	}
 ];
 
 

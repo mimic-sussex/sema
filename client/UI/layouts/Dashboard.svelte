@@ -25,6 +25,10 @@
     liveCodeEditorValue
   } from "../../store.js"
 
+  import {
+    items
+  } from "../../stores/playgroundItems.js"
+
   export let value = "";
 
   const messaging = new PubSub();
@@ -188,7 +192,7 @@
 
 	onMount(() => {
 
-    loadDashboardItems();
+    // loadDashboardItems();
  
     messaging.subscribe('add-analyser', e => addItem(e.type, e.id) );
     messaging.subscribe('add-editor', e => addItem(e.type, e.id) );
@@ -274,25 +278,31 @@
 
 </style>
 <div class="layout-template-container">
-  <Grid items={$dashboardItems}
+ <!-- bind:dashboardItems  on:adjust={onAdjust} -->
+  <Grid items={$items}
         {breakpoints}
         {cols}  
         useTransform 
         rowHeight={100} 
         gap={1} 
-        bind:dashboardItems  
+        bind:items={$items} 
         let:item      
-        on:adjust={onAdjust}>
+        >
     
     <span class='move'>+</span>
     
     <div  class="content" 
-          style="background: { item.static ? '#ccccee' : item.data }" 
+          style="background: { item.static ? '#ccccee' : item.background }" 
           on:mousedown={ e => e.stopPropagation() } >
-      
-      <span on:click={ () => remove(item) } class='close'>✕</span>
 
-        {#if item.type === 'modelEditor' }
+      <span class='close'
+            on:click={ () => remove(item) } >✕</span>
+
+  		<svelte:component this={item.component} 
+											{...item} />
+
+
+        <!-- {#if item.type === 'modelEditor' }
         <ModelEditor  {item} 
                       />
 
@@ -301,9 +311,9 @@
                         />
         
         {:else if item.type === 'liveCodeEditor' }
-        <!-- on:change={ e => updateItem(e) }  -->
+       
         <LiveCodeEditor {item} 
-                        
+            on:change={ e => updateItem(e) }            
                         />
        
         {:else if item.type === 'liveCodeParseOutput' }
@@ -321,7 +331,7 @@
         {:else}
         <Editor bind:value={value}/>
 
-        {/if}
+        {/if} -->
     </div>
   </Grid>
 </div>

@@ -27,9 +27,16 @@
   export let value = "";
   export let item;
 
+  export let name;
+	export let type;
+	export let lineNumbers;
+	export let hasFocus;
+	export let theme;
+	export let background;
+	export let data;
+
   let codeMirror;
   let modelWorker;
-
 
   let messaging = new PubSub();
   let subscriptionTokenMID;
@@ -41,6 +48,10 @@
     subscriptionTokenMODR = messaging.subscribe("model-output-data-request", e => postToModel(e) );
     modelWorker = new ModelWorker();  // Creates one ModelWorker per ModelEditor lifetime
     modelWorker.onmessage = e =>  onModelWorkerMessageHandler(e);
+
+    console.log('DEBUG:ModelEditor:onMount:');
+    console.log(name + ' ' + type + ' ' + lineNumbers +' ' + hasFocus +' ' + theme + ' ' + background + ' ' + data );
+
 	});
 
   onDestroy(async () => {
@@ -205,10 +216,10 @@
 
 </style>
 
-<!-- <div class="layout-template-container" contenteditable="true" bind:innerHTML={layoutTemplate}> -->
+<!-- <div class="layout-template-container" contenteditable="true" bind:value={item.value}  bind:innerHTML={layoutTemplate}> -->
 <div class="codemirror-container layout-template-container scrollable">
   <CodeMirror bind:this={codeMirror}
-              bind:value={item.value}
+              
               tab={true}
               lineNumbers={true}
               on:change={onModelEditorValueChange}
