@@ -59,6 +59,9 @@ class AudioEngine {
 		this.messaging.subscribe("clock-phase", e =>
 			this.onMessagingEventHandler(e)
 		);
+    this.messaging.subscribe("model-send-buffer", e=> {
+        this.onMessagingEventHandler(e)
+    });
 		// this.messaging.subscribe("osc", e => console.log(`DEBUG:AudioEngine:OSC: ${e}`));
 
 		this.kuraClock = new kuramotoNetClock();
