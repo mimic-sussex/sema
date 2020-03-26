@@ -10,7 +10,8 @@
 </script>
 
 <script>
-	import { onMount, onDestroy } from 'svelte';
+	import { onMount, onDestroy, createEventDispatcher } from 'svelte';
+	const dispatch = createEventDispatcher();;
 
   // import {
   //   modelEditorValue
@@ -26,23 +27,32 @@
   import { addToHistory } from "../../utils/history.js";
   import "../../machineLearning/lalolib.js";
 
-
-  export let value = "";
+  export let name;
+	export let type;
+	export let lineNumbers;
+	export let hasFocus;
+	export let theme;
+	export let background;
+	export let data;
 
   let codeMirror;
   let modelWorker;
-
 
   let messaging = new PubSub();
   let subscriptionTokenMID;
   let subscriptionTokenMODR;
 
   onMount(async () => {
-    codeMirror.set(value, "js");
+    codeMirror.set(data, "js");
+
     subscriptionTokenMID = messaging.subscribe("model-input-data", e => postToModel(e) );
     subscriptionTokenMODR = messaging.subscribe("model-output-data-request", e => postToModel(e) );
+
     modelWorker = new ModelWorker();  // Creates one ModelWorker per ModelEditor lifetime
     modelWorker.onmessage = e =>  onModelWorkerMessageHandler(e);
+
+    // console.log('DEBUG:ModelEditor:onMount:');
+    // console.log(name + ' ' + type + ' ' + lineNumbers +' ' + hasFocus +' ' + theme + ' ' + background /*+  ' ' + data */ );
 	});
 
   onDestroy(async () => {
@@ -56,6 +66,10 @@
   let log = e => console.log(e.detail.value);
 
   let nil = (e) => { }
+
+  let onChange = e => {
+    dispatch('change', { prop:'data', value: e.detail.value });
+  }
 
   let postToModel = e => {
     // console.log(`DEBUG:ModelEditor:postToModel:${e}`);
@@ -109,8 +123,13 @@
           document.execCommand("Copy");
         },
         sendbuf: data => {
-          console.log(data);
           messaging.publish("model-send-buffer", data);
+        },
+        envsave: data => {
+          messaging.publish("env-save", data);
+        },
+        envload: data => {
+          messaging.publish("env-load", data);
         }
       };
       responders[m.data.func](m.data);
@@ -121,11 +140,11 @@
     // clearTimeout(timeout);
   }
 
-  let postToModelAsync = modelCodel => {
+  let postToModelAsync = modelCode => {
     if(window.Worker){
       let modelWorkerAsync = new Promise((res, rej) => {
         // posts model code received from editor to worker
-        console.log('DEBUG:ModelEditor:postToModelAsync:catch')
+        // console.log('DEBUG:ModelEditor:postToModelAsync:catch')
 
       })
       .then(outputs => {
@@ -207,13 +226,13 @@
 
 </style>
 
-<!-- <div class="layout-template-container" contenteditable="true" bind:innerHTML={layoutTemplate}> -->
+<!-- <div class="layout-template-container" contenteditable="true" bind:value={item.value}  bind:innerHTML={layoutTemplate}> -->
 <div class="codemirror-container layout-template-container scrollable">
   <CodeMirror bind:this={codeMirror}
-              bind:value={modelEditorValue}
+              bind:value={data}
               tab={true}
               lineNumbers={true}
-              on:change={onModelEditorValueChange}
+              on:change={onChange}
               ctrlEnter={evalModelEditorExpressionBlock}
               cmdEnter={evalModelEditorExpressionBlock}
               shiftEnter={evalModelEditorExpression}

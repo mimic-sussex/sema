@@ -53,6 +53,25 @@ var sema = {
           "data": data
       });
   },
+  env: {
+    saveLocal: (name) => {
+      postMessage({
+            "func": "envsave",
+            "name": name,
+            "storage":"local"
+        }
+      )
+    },
+    loadLocal: (name) => {
+      postMessage({
+            "func": "envsave",
+            "name": name,
+            "storage":"local"
+        }
+      )
+    }
+
+  }
 };
 `);
 

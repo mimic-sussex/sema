@@ -10,11 +10,14 @@
   // import { setupAudio } from '../audioEngine/audioEngineController.js';
   import { AudioEngine } from '../audioEngine/audioEngine.js';
 
+	import { environment } from "../utils/history.js";
+
+
   // createAudioEngine();
 
   let audioEngine = new AudioEngine();
 
-  const unsubscribe = splashScreenClicked.subscribe( value => { 
+  const unsubscribe = splashScreenClicked.subscribe( value => {
     if(value === 'hidden') audioEngine.init(1);
 	});
   onDestroy(unsubscribe);

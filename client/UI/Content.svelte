@@ -2,9 +2,10 @@
   import Sidebar from './Sidebar.svelte';
   import Layout from './Layout.svelte';
   import { selectedLayout, layoutOptions} from '../store.js';
-  // let selectedLayout = 1; 
+  import Dashboard from './layouts/Dashboard.svelte'
 
   let layout;
+  let dashboard;
 
   function handleMessage(event) {
     // if(event.detail.layout) {
@@ -15,11 +16,11 @@
     // }
 	}
 
-  function handleAdd(event) {
-    // console.log('DEBUG:Content:handleAdd:');
-    // console.log(event.detail);
-    layout.addToDashboard(event.detail);
-	}
+  // function handleAdd(event) {
+  //   // console.log('DEBUG:Content:handleAdd:');
+  //   // console.log(event.detail);
+  //   layout.addToDashboard(event.detail);
+	// }
 
 </script>
 
@@ -44,22 +45,34 @@
     height: 100%;
     width: auto; /* width is defined by child */
   }
-  .layout-container {
+  /* .layout-container {
     grid-area: layout;
     grid-row: 0 / 2;
     height: 100%;
     overflow: hidden;
-  }
+  } */
 
+  .scrollable {
+		flex: 1 1 auto;
+		margin: 0 0 0.5em 0;
+		overflow-y: auto;
+	}
 </style>
 
-<div class="container">
+<div class="container scrollable">
+  
   <div class="sidebar-container">
-    <Sidebar on:message={handleMessage} 
-             on:add={handleAdd}
-    />
+    <Sidebar />
+    <!-- <Sidebar on:message={handleMessage} 
+             on:add={handleAdd} /> -->
   </div>
-  <div class="layout-container">
+  
+  <!-- <div class="layout-container">
     <Layout bind:this={layout} layoutTemplate={selectedLayout} />
+  </div> -->
+
+  <div class="dashboard-container">
+    <Dashboard bind:this={dashboard} />
   </div>
+
 </div>

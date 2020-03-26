@@ -32,7 +32,9 @@ class AudioEngine {
 	 * @constructor
 	 */
 	constructor() {
-		if (AudioEngine.instance) return AudioEngine.instance; // Singleton pattern
+		if (AudioEngine.instance) {
+			return AudioEngine.instance; // Singleton pattern
+		}
 		AudioEngine.instance = this;
 
 		// AudioContext needs lazy loading to workaround the Chrome warning
@@ -47,6 +49,7 @@ class AudioEngine {
 		// Hash of on-demand analysers (e.g. spectrogram, oscilloscope)
 		this.analysers = {};
 
+		// Sema's Publish-Subscribe pattern object with "lowercase-lowecase" format convention for subscription topic
 		this.messaging = new PubSub();
 		this.messaging.subscribe("eval-dsp", e => this.evalDSP(e));
 		this.messaging.subscribe("stop-audio", e => this.stop());
@@ -62,6 +65,10 @@ class AudioEngine {
     this.messaging.subscribe("model-send-buffer", e=> {
         this.onMessagingEventHandler(e)
     });
+		this.messaging.subscribe("add-analyser", e =>
+			this.createAnalyser(e.type, e.id)
+		);
+		this.messaging.subscribe("remove-analyser", e => this.removeAnalyser(e.id));
 		// this.messaging.subscribe("osc", e => console.log(`DEBUG:AudioEngine:OSC: ${e}`));
 
 		this.kuraClock = new kuramotoNetClock();
@@ -116,27 +123,32 @@ class AudioEngine {
 
 	/**
 	 * Creates a WAAPI analyser node
-	 * TODO configuration object as argument
+	 * @todo configuration object as argumen
 	 * @createAnalyser
 	 */
-	createAnalyser() {
+	createAnalyser(name) {
 		if (this.audioContext !== undefined) {
 			let analyser = this.audioContext.createAnalyser();
 			analyser.fftSize = 2048;
 			let dataArray = new Uint8Array(analyser.frequencyBinCount);
 			analyser.getByteTimeDomainData(dataArray);
-			this.analysers.push(analyser);
-			this.connectAnalyser(analyser); // Move out
+			this.analysers[name] = analyser;
+			this.connectAnalyser(analyser); // @todo Move out
 		}
 	}
 
 	/**
-	 * Connects WAAPI analyser node to the main audio worklet for visualisation.
-	 * @connectAnalyser
+	 * Creates a WAAPI analyser node
+	 * TODO configuration object as argument
+	 * @createAnalyser
 	 */
-	connectAnalyser(analyser) {
-		if (this.audioWorkletNode !== undefined) {
-			this.audioWorkletNode.connect(analyser);
+	removeAnalyser(name) {
+		if (this.audioContext !== undefined) {
+			let analyser = this.analysers[name];
+			if (analyser !== undefined) {
+				this.disconnectAnalyser(analyser); // @todo Move out
+				delete this.analysers[name];
+			}
 		}
 	}
 
@@ -147,6 +159,16 @@ class AudioEngine {
 	disconnectAnalyser(analyser) {
 		if (this.audioWorkletNode !== undefined) {
 			this.audioWorkletNode.disconnect(analyser);
+		}
+	}
+
+	/**
+	 * Connects WAAPI analyser node to the main audio worklet for visualisation.
+	 * @connectAnalyser
+	 */
+	connectAnalyser(analyser) {
+		if (this.audioWorkletNode !== undefined) {
+			this.audioWorkletNode.connect(analyser);
 		}
 	}
 
@@ -181,7 +203,7 @@ class AudioEngine {
 	async init(numClockPeers) {
 		if (this.audioContext === undefined) {
 			this.audioContext = new AudioContext({
-				// create audio context with optimally configured latency
+				// create audio context with latency optimally configured for playback
 				latencyHint: "playback",
 				sample: 44100
 			});

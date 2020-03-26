@@ -133,15 +133,6 @@
 	onDestroy(unsubscribe); // Prevent memory leaks by disposing the component
 
 
-  const unsubscribe2 = grammarEditorValue.subscribe(value => {
-    // console.log("DEBUG:Layout:grammarEditorValue: ", value);
-    //  grammarCompiledParser
-    // let liveParser = new nearley.Parser(nearley.Grammar.fromCompiled(grammarCompiled));
-    // let c = compile(value)
-    // let {errors, output} = c;
-    // console.log("DEBUG:Layout:grammarEditorValue: ", errors);
-    // changeLayout(value.id);
-  })
 
   onMount(async () => {
     // codeMirror1.set($grammarEditorValue, "ebnf");
@@ -470,8 +461,7 @@
 <!-- <div class="layout-template-container" contenteditable="true" bind:innerHTML={layoutTemplate}> -->
 <div class="layout-template-container scrollable">
 
-  <!-- <div class="tutorial-container" style="display:{tutorialContainerDisplay}">
-
+  <div class="tutorial-container" style="display:{tutorialContainerDisplay}">
     <Tutorial>
       <div slot="grammarEditor" class="codemirror-container flex scrollable codemirror-gutter codemirror-linenumber">
         <CodeMirror bind:this={codeMirror1}
@@ -557,8 +547,8 @@
         <CodeMirror bind:this={codeMirror5}  bind:value={$modelEditorValue} lineNumbers={true}  on:change={nil} />
       </div>
     </Quadrants>
-  </div>
- -->
+  </div> -->
+
   <!-- <div class="live-container" style="display:{liveContainerDisplay}">
     <Live>
       <div slot="liveCodeEditor" class="codemirror-container flex scrollable">
@@ -569,8 +559,8 @@
       </div>
     </Live>
   </div> -->
-<!--
-  <div class="live-container" style="display:{liveContainerDisplay}">
+
+  <!-- <div class="live-container" style="display:{liveContainerDisplay}">
     <Model>
     </Model>
   </div> -->
