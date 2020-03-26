@@ -76,3 +76,18 @@ Sema uses Web Audio API Audio Worklets. Their performance seems very sensitive t
 [Data storage and loading](doc/Model_loading_storing.md)
 
 [Maximilian DSP Library API](doc/maxi_API_doc.md)
+
+
+## Publications
+
+Bernardo, F., Kiefer, C., Magnusson, T. (2020). *Designing for a Pluralist and User-Friendly
+Live Code Language Ecosystem with Sema.* 5th International Conference on Live Coding,
+University of Limerick, Limerick, Ireland
+
+Bernardo, F., Kiefer, C., Magnusson, T. (2019). *An AudioWorklet-based Signal Engine for
+a Live Coding Language Ecosystem.* In Proceedings of Web Audio Conference 2019,
+Norwegian University of Science and Technology (NTNU), Trondheim, Norway (Best Paper
+Award at Web Audio Conference 2019)
+
+
+
