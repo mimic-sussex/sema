@@ -10,7 +10,8 @@
 </script>
 
 <script>
-	import { onMount, onDestroy } from 'svelte';
+	import { onMount, onDestroy, createEventDispatcher } from 'svelte';
+	const dispatch = createEventDispatcher();
 
   import {
     grammarEditorValue,
@@ -23,12 +24,21 @@
 
   import ModelWorker from "worker-loader!../../workers/ml.worker.js";
 
+  export let name;
+	export let type;
+	export let lineNumbers;
+	export let hasFocus;
+	export let theme;
+	export let background;
+	export let data;
+
   let codeMirror;
   let modelWorker;
-  export let value;
+
 
   onMount(async () => {
-    codeMirror.set(value, "ebnf");
+    codeMirror.set(data, "ebnf");
+    // codeMirror.set(value, "ebnf");
     // modelWorker = new ModelWorker();  // Create one worker per widget lifetime
 	});
 
@@ -40,6 +50,12 @@
   let log = (e) => { console.log(e.detail.value); }
 
   let nil = (e) => { }
+
+  let onChange = e => {
+
+    dispatch('change', { prop:'data', value: e.detail.value });
+  }
+
 
   let evalModelCode = e => {
 
@@ -79,7 +95,7 @@
     // if(e !== undefined && e.detail !== undefined && e.detail.value !== undefined)
     //   grammarEditorValue = e.detail.value;
     if(e !== undefined)
-      grammarEditorValue = codeMirror.getValue(); 
+      grammarEditorValue = codeMirror.getValue();
     else
       grammarEditorValue = $grammarEditorValue;
 
@@ -149,11 +165,12 @@
 
 </style>
 
-<!-- <div class="layout-template-container" contenteditable="true" bind:innerHTML={layoutTemplate}> -->
+<!-- <div class="layout-template-container" contenteditable="true" bind:innerHTML={layoutTemplate}>
+bind:value={item.value} -->
 <div class="codemirror-container layout-template-container scrollable">
   <CodeMirror bind:this={codeMirror}
-              bind:value={value}
+              bind:value={data}
               tab={true}
               lineNumbers={true}
-              on:change={compileGrammarOnChange}  />
+              on:change={onChange} />
 </div>

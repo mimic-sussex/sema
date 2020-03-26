@@ -10,7 +10,10 @@
 </script>
 
 <script>
-	import { onMount, onDestroy } from 'svelte';
+
+	import { onMount, onDestroy, createEventDispatcher } from 'svelte';
+	const dispatch = createEventDispatcher();
+
   import {
     grammarCompiledParser,
     liveCodeEditorValue,
@@ -22,19 +25,21 @@
 
   import { addToHistory } from "../../utils/history.js";
 
-  // import {
-  //   playAudio,
-  //   stopAudio,
-  //   evalDSP
-  // } from '../../audioEngine/audioEngineController.js'
-
   import { PubSub } from '../../messaging/pubSub.js';
 
   import IRToJavascript from "../../intermediateLanguage/IR.js";
 
   import ParserWorker from "worker-loader!../../workers/parser.worker.js";
 
-  export let value = "";
+  export let tab = true;
+
+  export let name;
+	export let type;
+	export let lineNumbers;
+	export let hasFocus;
+	export let theme;
+	export let background;
+	export let data;
 
   let codeMirror;
   let parserWorker;
@@ -44,8 +49,10 @@
 
 
   onMount(async () => {
-    codeMirror.set(value, "js", 'monokai');
-
+    console.log('DEBUG:LiveCodeEditor:onMount:')
+    // console.log(item);
+    codeMirror.set(data, "js", 'monokai');
+    // codeMirror.set(value, "js", 'monokai');
     parserWorker = new ParserWorker();  // Create one worker per widget lifetime
 
     btrack = new blockTracker(codeMirror);
@@ -53,6 +60,7 @@
 	});
 
   onDestroy(async () => {
+    console.log('DEBUG:LiveCodeEditor:onDestroy:')
     parserWorker.terminate();
     parserWorker = null; // cannot delete in strict mode
 	});
@@ -61,6 +69,10 @@
 
   let nil = (e) => { }
 
+  let onValueChange = e => {
+
+    dispatch('change', { prop:'data', value: e.detail.value });
+  }
 
   let parseLiveCodeAsync = e => {
     // console.log('DEBUG:LiveCodeEditor:parseLiveCode:');
@@ -377,13 +389,13 @@
 </style>
 
 <div class="codemirror-container layout-template-container scrollable">
-
- <!-- bind:value={$liveCodeEditorValue} -->
+              <!-- on:change={ e => onValueChange(e) } -->
+ <!--bind:value={item.data}  bind:value={$liveCodeEditorValue} -->
   <CodeMirror bind:this={codeMirror}
-              bind:value={value}
-              tab={true}
-              lineNumbers={true}
-              on:change={parseLiveCodeOnChange}
+  bind:value={data}
+              on:change={ e => onValueChange(e) }
+              {tab}
+              {lineNumbers}
               ctrlEnter={evalLiveCodeOnEditorCommand}
               cmdEnter={evalLiveCodeOnEditorCommand}
               cmdPeriod={stopAudioOnEditorCommand}
