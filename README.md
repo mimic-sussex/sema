@@ -6,6 +6,11 @@
 [![stability-experimental](https://img.shields.io/badge/stability-experimental-orange.svg)](https://github.com/emersion/stability-badges#experimental)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/mimic-sussex/sema/blob/master/LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/mimic-sussex/eppEditor/blob/master/CONTRIBUTING.md)
+[![Website](https://img.shields.io/badge/website?down_color=lightgrey&down_message=offline&up_color=blue&up_message=online&url=https%3A%2F%2Fshields.io
+)](https://github.com/mimic-sussex/eppEditor/blob/master/CONTRIBUTING.md)
+
+
+
 <br />
 
 Sema is a playground where you can rapidly prototype live coding mini-languages for signal synthesis, machine learning and machine listening. 
