@@ -9,12 +9,58 @@ import LiveCodeParseOutput  from "../UI/widgets/LiveCodeParseOutput.svelte";
 import GrammarCompileOutput from "../UI/widgets/GrammarCompileOutput.svelte";
 import Oscilloscope         from "../UI/widgets/Oscilloscope.svelte";
 import Spectrogram          from "../UI/widgets/Spectrogram.svelte";
+import StoreDebugger        from "../UI/widgets/StoreDebugger.svelte";
+
+import default_grammar from "../../assets/language/defaultGrammar.ne";
+import gabber_grammar  from "../../assets/language/gabber.ne";
+import nibble_grammar  from "../../assets/language/nibble.ne";
+
+import default_liveCode from "../../assets/language/defaultLiveCode.sem";
+import gabber_liveCode  from "../../assets/language/gabber.sem";
+import nibble_liveCode  from "../../assets/language/nibble.sem";
+
+import hello_world_code_example           from "../machineLearning/tfjs/hello-world/hello-world.tf";
+import two_layer_non_linear_code_example  from "../machineLearning/tfjs/non-linear/two-layer-non-linear.tf";
+import binary_classification_code_example from "../machineLearning/tfjs/non-linear/binary-classification.tf";
+import echo_state_network_code_example    from "../machineLearning/tfjs/echo-state/echo-state-network.tf";
+import lstm_txt_gen_code_example          from "../machineLearning/tfjs/rnn/lstm-txt-gen.tf";
+import music_rnn_example                  from "../machineLearning/magenta/music-rnn.tf";
+
 
 const id = () =>
 	"_" +
 	Math.random()
 		.toString(36)
 		.substr(2, 9);
+
+
+
+let createItemNestedStore = () => {
+
+  return	{
+		...gridHelp.item({ x: 7, y: 0, w: 7, h: 3, id: id() }),
+		...{
+			type: "liveCodeEditor",
+			name: "hello-world",
+			background: "#151515",
+			lineNumbers: true,
+			hasFocus: false,
+			background: "#151515",
+			theme: "icecoder",
+			component: LiveCodeEditor,
+			data: writable(default_liveCode)
+		}
+	}
+};
+
+
+let nestedStoresItems = [
+	writable(createItemNestedStore()),
+	writable(createItemNestedStore()),
+	writable(createItemNestedStore()),
+	writable(createItemNestedStore()),
+];
+
 
 const originalItems = [
 	{
@@ -28,12 +74,12 @@ const originalItems = [
 			background: "#151515",
 			theme: "icecoder",
 			component: LiveCodeEditor,
-			data: ""
+			data: default_liveCode
 		}
 	},
 
 	{
-		...gridHelp.item({ x: 7, y: 0, w: 3, h: 7, id: id() }),
+		...gridHelp.item({ x: 7, y: 8, w: 3, h: 7, id: id() }),
 		...{
 			name: "hello world",
 			type: "liveCodeParseOutput",
@@ -70,7 +116,7 @@ const originalItems = [
 			theme: "monokai",
 			background: "#AAAAAA",
 			component: GrammarEditor,
-			data: ""
+			data: default_grammar
 		}
 	},
 
@@ -84,12 +130,26 @@ const originalItems = [
 			theme: "monokai",
 			background: "#f0f0f0",
 			component: ModelEditor,
+			data: hello_world_code_example
+		}
+	},
+
+	{
+		...gridHelp.item({ x: 4, y: 0, w: 4, h: 30, id: id() }),
+		...{
+			name: "hello world",
+			type: "oscilloscope",
+			lineNumbers: true,
+			hasFocus: false,
+			theme: "monokai",
+			background: "#f0f0f0",
+			component: StoreDebugger,
 			data: ""
 		}
 	},
 
 	{
-		...gridHelp.item({ x: 0, y: 8, w: 7, h: 4, id: id() }),
+		...gridHelp.item({ x: 0, y: 8, w: 3, h: 4, id: id() }),
 		...{
 			name: "hello world",
 			type: "oscilloscope",
@@ -103,7 +163,7 @@ const originalItems = [
 	},
 
 	{
-		...gridHelp.item({ x: 7, y: 8, w: 7, h: 4, id: id() }),
+		...gridHelp.item({ x: 7, y: 8, w: 3, h: 4, id: id() }),
 		...{
 			name: "hello world",
 			type: "spectrogram",
@@ -120,6 +180,8 @@ const originalItems = [
 
 // Dashboard layout in items list
 export const items = writable(originalItems);
+
+// export const items = writable(nestedStoresItems);
 
 // Dashboard layout SELECTED item which receives focus and has item controls loaded
 export const focusedItem = writable({});

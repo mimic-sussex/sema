@@ -27,9 +27,18 @@
   let modelWorker; 
   // export let value;
   export let item;
+  export let name;
+	export let type;
+	export let lineNumbers;
+	export let hasFocus;
+	export let theme;
+	export let background;
+	export let data;
+
+
 
   onMount(async () => {
-    codeMirror.set(item.value, "ebnf");
+    codeMirror.set(data, "ebnf");
     // codeMirror.set(value, "ebnf");
     // modelWorker = new ModelWorker();  // Create one worker per widget lifetime
 	});
@@ -160,7 +169,7 @@
 bind:value={item.value} -->
 <div class="codemirror-container layout-template-container scrollable">
   <CodeMirror bind:this={codeMirror}  
-              
+              bind:value={data}
               tab={true} 
               lineNumbers={true}  
               on:change={compileGrammarOnChange}  /> 

@@ -278,7 +278,7 @@
 
 </style>
 <div class="layout-template-container">
- <!-- bind:dashboardItems  on:adjust={onAdjust} -->
+ <!--  on:adjust={onAdjust} -->
   <Grid items={$items}
         {breakpoints}
         {cols}  
@@ -296,42 +296,10 @@
           on:mousedown={ e => e.stopPropagation() } >
 
       <span class='close'
-            on:click={ () => remove(item) } >✕</span>
+            on:click={ () => remove(item) }>✕</span>
 
-  		<svelte:component this={item.component} 
-											{...item} />
+  		<svelte:component this={item.component} {...item} />
 
-
-        <!-- {#if item.type === 'modelEditor' }
-        <ModelEditor  {item} 
-                      />
-
-        {:else if item.type === 'grammarEditor' }
-        <GrammarEditor  {item}
-                        />
-        
-        {:else if item.type === 'liveCodeEditor' }
-       
-        <LiveCodeEditor {item} 
-            on:change={ e => updateItem(e) }            
-                        />
-       
-        {:else if item.type === 'liveCodeParseOutput' }
-        <LiveCodeParseOutput class='scrollable' />
-       
-        {:else if item.type === 'grammarCompileOutput' }
-        <GrammarCompileOutput class='scrollable' />
-
-        {:else if item.type === 'oscilloscope' }
-        <Oscilloscope />
-
-        {:else if item.type === 'spectrogram' }
-        <Spectrogram />
-
-        {:else}
-        <Editor bind:value={value}/>
-
-        {/if} -->
     </div>
   </Grid>
 </div>

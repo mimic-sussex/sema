@@ -23,8 +23,6 @@
   import { addToHistory } from "../../utils/history.js";
   import "../../machineLearning/lalolib.js";
 
-
-  export let value = "";
   export let item;
 
   export let name;
@@ -43,14 +41,16 @@
   let subscriptionTokenMODR;
 
   onMount(async () => {
-    codeMirror.set(value, "js");
+    codeMirror.set(data, "js");
+   
     subscriptionTokenMID = messaging.subscribe("model-input-data", e => postToModel(e) );
     subscriptionTokenMODR = messaging.subscribe("model-output-data-request", e => postToModel(e) );
+
     modelWorker = new ModelWorker();  // Creates one ModelWorker per ModelEditor lifetime
     modelWorker.onmessage = e =>  onModelWorkerMessageHandler(e);
 
     console.log('DEBUG:ModelEditor:onMount:');
-    console.log(name + ' ' + type + ' ' + lineNumbers +' ' + hasFocus +' ' + theme + ' ' + background + ' ' + data );
+    console.log(name + ' ' + type + ' ' + lineNumbers +' ' + hasFocus +' ' + theme + ' ' + background /*+  ' ' + data */ );
 
 	});
 
@@ -67,7 +67,8 @@
   let nil = (e) => { }
 
   let onValueChange = e => {
-    // Dispatch item value update to parent's
+    // Dispatch item value 0update to parent's
+    
     dispatch('change', { item: item, value: e.detail.value });
   }
 
@@ -131,11 +132,11 @@
     // clearTimeout(timeout);
   }
 
-  let postToModelAsync = modelCodel => {
+  let postToModelAsync = modelCode => {
     if(window.Worker){
       let modelWorkerAsync = new Promise((res, rej) => {
         // posts model code received from editor to worker
-        console.log('DEBUG:ModelEditor:postToModelAsync:catch')
+        // console.log('DEBUG:ModelEditor:postToModelAsync:catch')
 
       })
       .then(outputs => {
@@ -148,7 +149,7 @@
     }
   }
 
-  function onModelEditorValueChange(){
+  function onModelEditorValueChange(modelCode){
     window.localStorage.setItem("modelEditorValue", codeMirror.getValue());
     addToHistory("model-history-", modelCode);
   }
@@ -219,7 +220,7 @@
 <!-- <div class="layout-template-container" contenteditable="true" bind:value={item.value}  bind:innerHTML={layoutTemplate}> -->
 <div class="codemirror-container layout-template-container scrollable">
   <CodeMirror bind:this={codeMirror}
-              
+              bind:value={data}
               tab={true}
               lineNumbers={true}
               on:change={onModelEditorValueChange}

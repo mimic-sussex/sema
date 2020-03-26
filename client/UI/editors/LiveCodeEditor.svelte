@@ -25,12 +25,6 @@
 
   import { addToHistory } from "../../utils/history.js";
 
-  // import {
-  //   playAudio,
-  //   stopAudio,
-  //   evalDSP
-  // } from '../../audioEngine/audioEngineController.js'
-
   import { PubSub } from '../../messaging/pubSub.js';
 
   import IRToJavascript from "../../intermediateLanguage/IR.js";
@@ -39,9 +33,16 @@
 
   // export let value;
   export let item;
-  export let lineNumbers = true;
+
   export let tab = true;
   
+  export let name;
+	export let type;
+	export let lineNumbers;
+	export let hasFocus;
+	export let theme;
+	export let background;
+	export let data;
 
   let codeMirror;
   let parserWorker;
@@ -49,10 +50,9 @@
 
   onMount(async () => {
     console.log('DEBUG:LiveCodeEditor:onMount:')
-    console.log(item);
-    codeMirror.set(item.data, "js", 'monokai');
+    // console.log(item);
+    codeMirror.set(data, "js", 'monokai');
     // codeMirror.set(value, "js", 'monokai');
-
     parserWorker = new ParserWorker();  // Create one worker per widget lifetime
 	});
 
@@ -69,6 +69,8 @@
   let onValueChange = e => {
     // Dispatch item value update to parent's
     console.log("DEBUG:LiveCodeEditor:onValueChange:")
+    console.log( { item: item, value: e.detail.value } )
+    console.log(data); 
     dispatch('change', { item: item, value: e.detail.value });
   }
 
@@ -257,8 +259,8 @@
               <!-- on:change={ e => onValueChange(e) } -->
  <!--bind:value={item.data}  bind:value={$liveCodeEditorValue} -->
   <CodeMirror bind:this={codeMirror}
-              
-              on:change={ e => onValueChange(e  ) }             
+              bind:value={data}
+              on:change={ e => onValueChange(e ) }             
               {tab}
               {lineNumbers}
               ctrlEnter={evalLiveCodeOnEditorCommand}
