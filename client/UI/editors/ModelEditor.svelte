@@ -113,7 +113,7 @@
         },
         envsave: data => {
           messaging.publish("env-save", data);
-        }
+        },
         envload: data => {
           messaging.publish("env-load", data);
         }
