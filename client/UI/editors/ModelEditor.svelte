@@ -109,8 +109,13 @@
           document.execCommand("Copy");
         },
         sendbuf: data => {
-          console.log(data);
           messaging.publish("model-send-buffer", data);
+        },
+        envsave: data => {
+          messaging.publish("env-save", data);
+        }
+        envload: data => {
+          messaging.publish("env-load", data);
         }
       };
       responders[m.data.func](m.data);
