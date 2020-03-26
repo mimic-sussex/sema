@@ -175,28 +175,18 @@
   }
 
 
-	const updateItem = e => {
+	const update = (item, prop, value) => {
 
-    let { item, value } = e.detail;
-
-    if( value !== undefined ){ // @TODO Why is there a first call with value null
-      // either this...
-      item['value'] = value;
-      $dashboardItems = $dashboardItems; // force an update
-      // ...or this:
-      // items = items.map(i => i === item ? { ...i, [prop]: value } : i);
-
-      window.localStorage.setItem("layout", JSON.stringify($dashboardItems)); 
+    if( prop !== undefined || value !== undefined ){
+      // item[prop] = value;
+      // $items = $items; // force an update
+      $items = $items.map(i => i === item ? { ...i, [prop]: value } : i);
     }
 	}
 
 	onMount(() => {
-
-    // loadDashboardItems();
- 
     messaging.subscribe('add-analyser', e => addItem(e.type, e.id) );
     messaging.subscribe('add-editor', e => addItem(e.type, e.id) );
-	
   });
 
 </script>
@@ -286,19 +276,20 @@
         rowHeight={100} 
         gap={1} 
         bind:items={$items} 
-        let:item      
-        >
+        let:item >
     
-    <span class='move'>+</span>
+    <span class='move' >+</span>
     
     <div  class="content" 
           style="background: { item.static ? '#ccccee' : item.background }" 
           on:mousedown={ e => e.stopPropagation() } >
 
       <span class='close'
-            on:click={ () => remove(item) }>✕</span>
+            on:click={ () => remove(item) } >✕</span>
 
-  		<svelte:component this={item.component} {...item} />
+  		<svelte:component this={item.component} 
+                        {...item} 
+                        on:change={ e => update(item, e.detail.prop, e.detail.value) } />
 
     </div>
   </Grid>

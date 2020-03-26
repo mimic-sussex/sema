@@ -10,11 +10,12 @@
 </script>
 
 <script>
-	import { onMount, onDestroy } from 'svelte';
+	import { onMount, onDestroy, createEventDispatcher } from 'svelte';
+	const dispatch = createEventDispatcher();;
 
-  import {
-    modelEditorValue
-  } from "../../store.js";
+  // import {
+  //   modelEditorValue
+  // } from "../../store.js";
 
   import { PubSub } from '../../messaging/pubSub.js';
 
@@ -22,8 +23,6 @@
 
   import { addToHistory } from "../../utils/history.js";
   import "../../machineLearning/lalolib.js";
-
-  export let item;
 
   export let name;
 	export let type;
@@ -49,9 +48,8 @@
     modelWorker = new ModelWorker();  // Creates one ModelWorker per ModelEditor lifetime
     modelWorker.onmessage = e =>  onModelWorkerMessageHandler(e);
 
-    console.log('DEBUG:ModelEditor:onMount:');
-    console.log(name + ' ' + type + ' ' + lineNumbers +' ' + hasFocus +' ' + theme + ' ' + background /*+  ' ' + data */ );
-
+    // console.log('DEBUG:ModelEditor:onMount:');
+    // console.log(name + ' ' + type + ' ' + lineNumbers +' ' + hasFocus +' ' + theme + ' ' + background /*+  ' ' + data */ );
 	});
 
   onDestroy(async () => {
@@ -66,10 +64,8 @@
 
   let nil = (e) => { }
 
-  let onValueChange = e => {
-    // Dispatch item value 0update to parent's
-    
-    dispatch('change', { item: item, value: e.detail.value });
+  let onChange = e => {
+    dispatch('change', { prop:'data', value: e.detail.value });
   }
 
   let postToModel = e => {
@@ -223,7 +219,7 @@
               bind:value={data}
               tab={true}
               lineNumbers={true}
-              on:change={onModelEditorValueChange}
+              on:change={onChange}
               ctrlEnter={evalModelEditorExpressionBlock}
               cmdEnter={evalModelEditorExpressionBlock}
               shiftEnter={evalModelEditorExpression}

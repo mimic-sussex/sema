@@ -10,7 +10,8 @@
 </script>
 
 <script>
-	import { onMount, onDestroy } from 'svelte';
+	import { onMount, onDestroy, createEventDispatcher } from 'svelte';
+	const dispatch = createEventDispatcher();
 
   import {  
     grammarEditorValue,
@@ -23,10 +24,6 @@
 
   import ModelWorker from "worker-loader!../../workers/ml.worker.js";
 
-  let codeMirror;
-  let modelWorker; 
-  // export let value;
-  export let item;
   export let name;
 	export let type;
 	export let lineNumbers;
@@ -35,6 +32,8 @@
 	export let background;
 	export let data;
 
+  let codeMirror;
+  let modelWorker; 
 
 
   onMount(async () => {
@@ -52,10 +51,9 @@
 
   let nil = (e) => { }
 
-  let onValueChange = e => {
-    // Dispatch item value update to parent's
-    console.log("DEBUG:LiveCodeEditor:onValueChange:")
-    dispatch('change', { item: item, value: e.detail.value });
+  let onChange = e => {
+    
+    dispatch('change', { prop:'data', value: e.detail.value });
   }
 
 
@@ -171,7 +169,7 @@ bind:value={item.value} -->
   <CodeMirror bind:this={codeMirror}  
               bind:value={data}
               tab={true} 
-              lineNumbers={true}  
-              on:change={compileGrammarOnChange}  /> 
+              lineNumbers={true} 
+              on:change={onChange} /> 
 </div>
  

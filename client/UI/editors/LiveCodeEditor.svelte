@@ -31,9 +31,6 @@
 
   import ParserWorker from "worker-loader!../../workers/parser.worker.js";
 
-  // export let value;
-  export let item;
-
   export let tab = true;
   
   export let name;
@@ -67,11 +64,8 @@
   let nil = (e) => { }
 
   let onValueChange = e => {
-    // Dispatch item value update to parent's
-    console.log("DEBUG:LiveCodeEditor:onValueChange:")
-    console.log( { item: item, value: e.detail.value } )
-    console.log(data); 
-    dispatch('change', { item: item, value: e.detail.value });
+    
+    dispatch('change', { prop:'data', value: e.detail.value });
   }
 
   let parseLiveCodeAsync = e => {
@@ -260,7 +254,7 @@
  <!--bind:value={item.data}  bind:value={$liveCodeEditorValue} -->
   <CodeMirror bind:this={codeMirror}
               bind:value={data}
-              on:change={ e => onValueChange(e ) }             
+              on:change={ e => onValueChange(e) }             
               {tab}
               {lineNumbers}
               ctrlEnter={evalLiveCodeOnEditorCommand}
