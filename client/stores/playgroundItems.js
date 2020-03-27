@@ -179,6 +179,10 @@ const originalItems = [
 // 	writable(createItemNestedStore()),
 // ];
 
+export const reset = () => {
+  items.set(layoutOriginal);
+};
+
 export let createRandomItem = (type) => {
   const i = 2;
 	const col = 2;
