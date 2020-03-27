@@ -71,105 +71,44 @@
   }
 
   canvas {
-    opacity:0.1;
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color: rgba(0, 0, 0, 0.0);
 
    display: block;
    visibility: hidden;
-  /*left: 50%;
-  margin: -200px 0 0 -200px;
-  position: absolute;
-  top: 50%; */
   }
 </style>
 
 
 
-<!-- <div class="overlay" style='visibility:{$splashScreenClicked}'>
-  <button class="button-start-audio" on:click={handleClick}>
-    <div class="logo-container">
-      <img {src} class="sema-logo" alt="sema logo image">
-      <span class="sema-type">Sema</span>
-      <br>
-      <br>
-    </div>
-  </button>
-</div> -->
 <div class="overlay">
-<canvas id="canvas" width="100%" height="100%"></canvas>
+<canvas id="canvas" width="100%" height="100%" style="opacity:0.0"></canvas>
 </div>
 
 <script>
 
-import { onMount, onDestroy } from 'svelte';
+import { onMount} from 'svelte';
 
 var ctx;
-var size = 500;
-var center = {x: size / 2, y: 20};
-var minSegmentHeight = 5;
-var groundHeight = size - 20;
-var color = "hsl(180, 80%, 80%)";
-var roughness = 2;
-var maxDifference = size / 5;
-
-
-function render() {
-  ctx.shadowBlur = 0;
-  ctx.globalCompositeOperation = "source-over";
-  ctx.fillRect(0, 0, size, size);
-  ctx.globalCompositeOperation = "lighter";
-  ctx.shadowBlur = 15;
-  var lightning = createLightning();
-  ctx.beginPath();
-  for (var i = 0; i < lightning.length; i++) {
-    ctx.lineTo(lightning[i].x, lightning[i].y);
-  }
-  ctx.stroke();
-  requestAnimationFrame(render);
-}
-
-function createLightning() {
-  var segmentHeight = groundHeight - center.y;
-  var lightning = [];
-  lightning.push({x: center.x, y: center.y});
-  lightning.push({x: Math.random() * (size - 100) + 50, y: groundHeight + (Math.random() - 0.9) * 50});
-  var currDiff = maxDifference;
-  while (segmentHeight > minSegmentHeight) {
-    var newSegments = [];
-    for (var i = 0; i < lightning.length - 1; i++) {
-      var start = lightning[i];
-      var end = lightning[i + 1];
-      var midX = (start.x + end.x) / 2;
-      var newX = midX + (Math.random() * 2 - 1) * currDiff;
-      newSegments.push(start, {x: newX, y: (start.y + end.y) / 2});
-    }
-
-    newSegments.push(lightning.pop());
-    lightning = newSegments;
-
-    currDiff /= roughness;
-    segmentHeight /= 2;
-  }
-  return lightning;
-}
+var sizex = window.innerWidth;
+var sizey = window.innerHeight;
 
 onMount(async () => {
   var c = document.getElementById("canvas");
   console.log(c);
   c.width = window.innerWidth;
   c.height = window.innerHeight;
-  ctx = c.getContext("2d");
+  // ctx = c.getContext("2d");
+  //
+  // ctx.globalCompositeOperation = "lighter";
+  //
+  // ctx.strokeStyle = color;
+  // ctx.shadowColor = color;
+  //
+  // ctx.fillStyle = color;
+  // ctx.fillRect(0, 0, sizex, sizey);
+  // ctx.fillStyle = "hsla(0, 0%, 10%, 0.2)";
 
-  ctx.globalCompositeOperation = "lighter";
-
-  ctx.strokeStyle = color;
-  ctx.shadowColor = color;
-
-  ctx.fillStyle = color;
-  ctx.fillRect(0, 0, size, size);
-  ctx.fillStyle = "hsla(0, 0%, 10%, 0.2)";
-
-  // render();
+//  render();
 });
 
 </script>
