@@ -72,7 +72,8 @@
   let onChange = e => {
     console.log('DEBUG:LiveCodeEditor:onchange:');
     console.log(e);
-    dispatch('change', { prop:'data', value: e.detail.value });
+    // dispatch('change', { prop:'data', value: e.detail.value });
+    dispatch('change', { prop:'data', value: codeMirror.getValue() });
   }
 
   let parseLiveCodeAsync = e => {
