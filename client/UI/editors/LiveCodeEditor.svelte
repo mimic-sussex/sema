@@ -47,9 +47,9 @@
 
   onMount(async () => {
     console.log('DEBUG:LiveCodeEditor:onMount:')
-    // console.log(item);
+    console.log(data);
     codeMirror.set(data, "js", 'monokai');
-    // codeMirror.set(value, "js", 'monokai');
+    
     parserWorker = new ParserWorker();  // Create one worker per widget lifetime
 	});
 
@@ -63,8 +63,9 @@
 
   let nil = (e) => { }
 
-  let onValueChange = e => {
-    
+  let onChange = e => {
+    console.log('DEBUG:LiveCodeEditor:onchange:');
+    console.log(e);
     dispatch('change', { prop:'data', value: e.detail.value });
   }
 
@@ -250,11 +251,10 @@
 </style>
 
 <div class="codemirror-container layout-template-container scrollable">
-              <!-- on:change={ e => onValueChange(e) } -->
- <!--bind:value={item.data}  bind:value={$liveCodeEditorValue} -->
+
   <CodeMirror bind:this={codeMirror}
               bind:value={data}
-              on:change={ e => onValueChange(e) }             
+              on:change={ e => onChange(e) }             
               {tab}
               {lineNumbers}
               ctrlEnter={evalLiveCodeOnEditorCommand}
