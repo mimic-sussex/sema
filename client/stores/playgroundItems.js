@@ -257,7 +257,7 @@ export let createNewItem = (type, id, data) => {
 				background: "#AAAAAA"
 			};
 			break;
-		case "grammarEditor":
+		case "modelEditor":
 			component = {
 				component: ModelEditor,
 				theme: "monokai",
@@ -295,8 +295,6 @@ export let createNewItem = (type, id, data) => {
 		default:
 			break;
 	}
-
-  // let newId = id();
 
   // return component template 
   return {
@@ -355,10 +353,12 @@ export function storable(key, initialValue) {
 			localStorage.setItem(key, JSON.stringify(value));
 			set(value); // capture set and write to localStorage
 		},
+
 		update(cb) {
 			const value = cb(get(store));
 			this.set(value); // capture updates and write to localStore
 		},
+
 		subscribe // punt subscriptions to underlying store
 	};
 }

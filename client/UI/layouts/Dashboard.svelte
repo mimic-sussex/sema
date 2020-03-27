@@ -106,17 +106,7 @@
     }
     remove.bind(null, item); // remove dashboard item binding
     $items = $items.filter(value => value.id !== item.id);
-    // items = items.filter(value => value.id !== item.id);
-
-    // window.localStorage.setItem("layout", JSON.stringify($dashboardItems));
-
-    // window.localStorage.setItem("layout", JSON.stringify(items));
-    // $dashboardItems = gridHelp.resizeItems(items, cols);
-    // if (adjustAfterRemove) {
-    //   items = gridHelp.resizeItems(items, cols);
-    // }
   }
-
 
 	const update = (item, prop, value) => {
     if( prop !== undefined || value !== undefined ){
@@ -129,14 +119,11 @@
   const addItem = (type, id, value) => {
     let newItem = createNewItem(type, id, value);
     $items = gridHelp.appendItem(newItem, $items, cols);
-    // items = gridHelp.appendItem(newItem, items, cols);
-    // window.localStorage.setItem("layout", JSON.stringify(items));
-    // $dashboardItems = gridHelp.resizeItems(items, cols);
   }
 
 	onMount(() => {
+    messaging.subscribe('add-editor', e => addItem(e.type, e.id, e.data) );
     messaging.subscribe('add-analyser', e => addItem(e.type, e.id) );
-    messaging.subscribe('add-editor', e => addItem(e.type, e.id) );
   });
 
 </script>
