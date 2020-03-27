@@ -3,15 +3,6 @@
   import Grid from "svelte-grid";
   import gridHelp from "svelte-grid/build/helper";
   import map from "lodash.map";
-  
-  // import Editor from '../editors/Editor.svelte';
-  // import ModelEditor from '../editors/ModelEditor.svelte';
-  // import GrammarEditor from '../editors/GrammarEditor.svelte';
-  // import LiveCodeEditor from '../editors/LiveCodeEditor.svelte';
-  // import LiveCodeParseOutput from '../widgets/LiveCodeParseOutput.svelte';
-  // import GrammarCompileOutput from '../widgets/GrammarCompileOutput.svelte';
-  // import Oscilloscope from '../widgets/Oscilloscope.svelte';
-  // import Spectrogram from '../widgets/Spectrogram.svelte';
  
   import { id, random, randomHexColorCode } from '../../utils/utils.js';
   import { PubSub } from "../../messaging/pubSub.js"; 
@@ -64,42 +55,15 @@
     });
   }
 
-  const loadDashboardItems = () => {
-
-    if (typeof window !== "undefined") {
-
-      const layout = window.localStorage.getItem("layout");
-      
-      if ( layout === null || layout === undefined || layout === "") {
-        // If first time load, no layout persisted on local storage, set hardcoded default from assets 
-        window.localStorage.setItem("layout", JSON.stringify(layoutOriginal));
-        // Populate dashboard store
-        $dashboardItems = layoutOriginal; 
-      } else {
-        // If NOT first time load, hidrate layout from local storage into store
-        $dashboardItems = JSON.parse(window.localStorage.getItem("layout"));
-
-        // @TODO Request load analysers into audioEngine, before setting up add-analysers UI callback
-
-      }
-    }
-  }
-
   const onAdjust = () => {
-    console.log('adjust')
-    $items = $items;
+    // console.log('adjust')
+    $items = $items; // call a re-render
   };
   
-  const reset = () => {
-    // items = layoutOriginal;
-    $dashboardItems = layoutOriginal;
-  
-  };
-
 
   const remove = item => {
-    console.log("DEBUG:Dashboard:remove:item.id")
-    console.log(item.id);
+    // console.log("DEBUG:Dashboard:remove:item.id")
+    // console.log(item.id);
     
     if(item.type === 'oscilloscope' || item.type === 'spectrogram'){
       messaging.publish('remove-analyser', { id: item.id }); // notify audio engine to remove associated analyser
