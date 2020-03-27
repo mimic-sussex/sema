@@ -62,6 +62,9 @@ class AudioEngine {
 		this.messaging.subscribe("clock-phase", e =>
 			this.onMessagingEventHandler(e)
 		);
+    this.messaging.subscribe("model-send-buffer", e=> {
+        this.onMessagingEventHandler(e)
+    });
 		this.messaging.subscribe("add-analyser", e =>
 			this.createAnalyser(e.type, e.id)
 		);

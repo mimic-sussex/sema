@@ -45,6 +45,40 @@ var sema = {
       "func": "pbcopy",
       "msg": msg,
     });
+  },
+  sendBuffer: (bufferName,data) => {
+      postMessage({
+          "func": "sendbuf",
+          "name": bufferName,
+          "data": data
+      });
+  },
+  env: {
+    saveLocal: (name) => {
+      postMessage({
+            "func": "envsave",
+            "name": name,
+            "storage":"local"
+        }
+      )
+    },
+    loadLocal: (name) => {
+      postMessage({
+            "func": "envsave",
+            "name": name,
+            "storage":"local"
+        }
+      )
+    }
+
+  },
+  //run in the DOM
+  domeval: (code) => {
+    postMessage({
+          "func": "domeval",
+          "code": code,
+      }
+    )
   }
 };
 `);
@@ -55,11 +89,15 @@ onmessage = m => {
   // console.log(m);
 
 	if (m.data.eval !== undefined) {
-		let evalRes = geval(m.data.eval);
-		if (evalRes != undefined) {
-      console.log(evalRes);
+    try {
+  		let evalRes = geval(m.data.eval);
+  		if (evalRes != undefined) {
+        console.log(evalRes);
+      }
+  		else console.log("done");
+    }catch(e) {
+      console.log(`Code eval exception: ${e}`);
     }
-		else console.log("0");
 	}
   else if ("val" in m.data) {
     // console.log("DEBUG:ml.worker:onmessage:val");

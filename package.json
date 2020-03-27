@@ -33,7 +33,7 @@
     "serve": "^11.0.0",
     "style-loader": "^1.0.0",
     "svelte": "3.15.0",
-    "svelte-codemirror": "https://github.com/frantic0/svelte-codemirror.git",
+    "svelte-codemirror": "https://github.com/mimic-sussex/svelte-codemirror.git",
     "svelte-grid": "^1.10.5",
     "svelte-inspect": "^0.1.2",
     "svelte-loader": "2.13.3",

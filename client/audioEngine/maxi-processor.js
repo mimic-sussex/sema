@@ -168,15 +168,15 @@ class MaxiProcessor extends AudioWorkletProcessor {
     this._mems =[this.newmem(), this.newmem()];
     this._cleanup = [0,0];
 
-    this.setvar = (q, name, val) => {
-      q.vars[name] = val;
-      return val;
-    };
-
-    this.getvar = (q, name) => {
-      let val = q.vars[name];
-      return val ? val : 0.0;
-    };
+    // this.setvar = (q, name, val) => {
+    //   q.vars[name] = val;
+    //   return val;
+    // };
+    //
+    // this.getvar = (q, name) => {
+    //   let val = q.vars[name];
+    //   return val ? val : 0.0;
+    // };
 
     this.silence = (q, inputs) => {
       return 0.0
@@ -198,6 +198,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
     this.sampleBuffers={};
     this.sampleVectorBuffers = {};
+    this.sampleVectorBuffers['defaultEmptyBuffer'] = new Float32Array(1);
 
     this.transducers = {};
 
@@ -209,21 +210,31 @@ class MaxiProcessor extends AudioWorkletProcessor {
     };
 
     this.getSampleBuffer = (bufferName) => {
-      // console.log(this.sampleBuffers);
-      // console.log(bufferName);
-        // return this.translateFloat32ArrayToBuffer(this.sampleBuffers[bufferName]);
-        return this.sampleVectorBuffers[bufferName];
+        let sample = this.sampleVectorBuffers['defaultEmptyBuffer']; //defailt - silence
+        if (bufferName in this.sampleVectorBuffers) {
+          sample = this.sampleVectorBuffers[bufferName];
+        }else{
+          console.warn(`${bufferName} doesn't exist yet`);
+        }
+        return sample;
     };
 
     this.netClock = new Module.maxiAsyncKuramotoOscillator(3);  //TODO: this should be the same as numpeers
     this.kuraPhase = -1;
     this.kuraPhaseIdx = 1;
 
+    let addSampleBuffer = (name, buf) => {
+      this.sampleVectorBuffers[name] = this.translateFloat32ArrayToBuffer(buf);
+    };
+
     this.port.onmessage = event => { // message port async handler
       if ('address' in event.data) {
         //this must be an OSC message
         this.OSCMessages[event.data.address] = event.data.args;
         //console.log(this.OSCMessages);
+      } else if ('func' in event.data && 'sendbuf' == event.data.func) {
+        console.log("aesendbuf", event.data);
+        addSampleBuffer(event.data.name, event.data.data);
       } else if ('worker' in event.data) { //from a worker
         //this must be an OSC message
         if (this.transducers[event.data.transducerName]) {
@@ -235,10 +246,11 @@ class MaxiProcessor extends AudioWorkletProcessor {
         // console.log(event.data);
         let sampleKey = event.data.sample.substr(0,event.data.sample.length - 4)
         // this.sampleBuffers[sampleKey] = event.data.buffer;
-        this.sampleVectorBuffers[sampleKey] = this.translateFloat32ArrayToBuffer(event.data.buffer);
+        addSampleBuffer(sampleKey, event.data.buffer);
+        // this.sampleVectorBuffers[sampleKey] = this.translateFloat32ArrayToBuffer(event.data.buffer);
       }else if ('phase' in event.data) {
         // console.log(this.kuraPhaseIdx);
-        console.log(event);
+        // console.log(event);
         this.netClock.setPhase(event.data.phase, event.data.i);
         // this.kuraPhase = event.data.phase;
         // this.kuraPhaseIdx = event.data.i;
@@ -308,17 +320,6 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
     //this.testOsc = new Module.maxiOsc();
 
-    //deleteme
-    let alist = new Module.VectorDouble();
-    alist.resize(3,0);
-    let midx=new Module.maxiIndex();
-    alist.set(0,120);
-    alist.set(1,11);
-    alist.set(2,12);
-    let listf = (()=>{alist.set(2,Math.random()*100);return alist});
-    let v = midx.pull(0, 0, listf());
-    v = midx.pull(1, 3/3, listf());
-    console.log(v);
   }
 
   /**
@@ -374,11 +375,6 @@ class MaxiProcessor extends AudioWorkletProcessor {
         for (let channel = 0; channel < channelCount; channel++) {
           output[channel][i] = w;
         }
-        // let w = this.testOsc.saw(200);
-        // for (let channel = 0; channel < channelCount; channel++) {
-        //   output[channel][i] = w;
-        // }
-
 
       }
 

@@ -10,11 +10,15 @@
   // import { setupAudio } from '../audioEngine/audioEngineController.js';
   import { AudioEngine } from '../audioEngine/audioEngine.js';
 
+	import { environment } from "../utils/history.js";
+
+	import CanvasOverlay from './CanvasOverlay.svelte';
+
   // createAudioEngine();
 
   let audioEngine = new AudioEngine();
 
-  const unsubscribe = splashScreenClicked.subscribe( value => { 
+  const unsubscribe = splashScreenClicked.subscribe( value => {
     if(value === 'hidden') audioEngine.init(1);
 	});
   onDestroy(unsubscribe);
@@ -34,4 +38,6 @@
   <Header></Header>
   <Content></Content>
   <SplashScreen></SplashScreen>
+	<CanvasOverlay></CanvasOverlay>
+
 </div>

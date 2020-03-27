@@ -17,6 +17,9 @@
   //   modelEditorValue
   // } from "../../store.js";
 
+  var modelEditorValue = window.localStorage.modelEditorValue;
+
+  console.log(modelEditorValue);
   import { PubSub } from '../../messaging/pubSub.js';
 
   import ModelWorker from "worker-loader!../../workers/ml.worker.js";
@@ -41,7 +44,7 @@
 
   onMount(async () => {
     codeMirror.set(data, "js");
-   
+
     subscriptionTokenMID = messaging.subscribe("model-input-data", e => postToModel(e) );
     subscriptionTokenMODR = messaging.subscribe("model-output-data-request", e => postToModel(e) );
 
@@ -77,6 +80,18 @@
   let postFromModel = e => {
     // console.log(`DEBUG:ModelEditor:postFromModel:${e}`);
     // console.log(e)
+  }
+
+  let evalDomCode = (code) => {
+    try {
+      let evalRes = eval(code);
+      if (evalRes != undefined) {
+        console.log(evalRes);
+      }
+      else console.log("done");
+    }catch(e) {
+      console.log(`DOM Code eval exception: ${e}`);
+    }
   }
 
   const onModelWorkerMessageHandler = m => {
@@ -118,6 +133,20 @@
           copyField.value = data.msg;
           copyField.select();
           document.execCommand("Copy");
+        },
+        sendbuf: data => {
+          messaging.publish("model-send-buffer", data);
+        },
+        envsave: data => {
+          messaging.publish("env-save", data);
+        },
+        envload: data => {
+          messaging.publish("env-load", data);
+        },
+        domeval: data => {
+          console.log(data.code);
+          evalDOMCode(data.code);
+          // document.getElementById('canvas').style.display= "none";
         }
       };
       responders[m.data.func](m.data);
@@ -145,9 +174,10 @@
     }
   }
 
-  function onModelEditorValueChange(modelCode){
-    window.localStorage.setItem("modelEditorValue", codeMirror.getValue());
-    addToHistory("model-history-", modelCode);
+  function onModelEditorValueChange(){
+    //don't need to save on every key stroke
+    // window.localStorage.setItem("modelEditorValue", codeMirror.getValue());
+    // addToHistory("model-history-", modelCode);
   }
 
   function evalModelEditorExpression(){
@@ -160,10 +190,20 @@
 
   function evalModelEditorExpressionBlock() {
     let modelCode = codeMirror.getBlock();
-    modelWorker.postMessage({ eval: modelCode });
-    // console.log("DEBUG:ModelEditor:evalModelEditorExpressionBlock: " + code);
-    window.localStorage.setItem("modelEditorValue", codeMirror.getValue());
-    addToHistory("model-history-", modelCode);
+    console.log(modelCode);
+    let linebreakPos = modelCode.indexOf('\n');
+    let firstLine = modelCode.substr(0,linebreakPos)
+    console.log(firstLine);
+    if(firstLine == "//--DOM") {
+      modelCode = modelCode.substr(linebreakPos);
+      evalDomCode(modelCode);
+      addToHistory("dom-history-", modelCode);
+    }else{
+      modelWorker.postMessage({ eval: modelCode });
+      // console.log("DEBUG:ModelEditor:evalModelEditorExpressionBlock: " + code);
+      window.localStorage.setItem("modelEditorValue", codeMirror.getValue());
+      addToHistory("model-history-", modelCode);
+    }
   }
 
 </script>
