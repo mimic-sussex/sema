@@ -75,7 +75,7 @@
     background-color: rgba(0, 0, 0, 0.1);
 
    display: block;
-   visibility: visible;
+   visibility: hidden;
   /*left: 50%;
   margin: -200px 0 0 -200px;
   position: absolute;
@@ -125,7 +125,6 @@ function render() {
     ctx.lineTo(lightning[i].x, lightning[i].y);
   }
   ctx.stroke();
-  console.log(ctx)
   requestAnimationFrame(render);
 }
 
@@ -157,8 +156,8 @@ function createLightning() {
 onMount(async () => {
   var c = document.getElementById("canvas");
   console.log(c);
-  c.width = 500;
-  c.height = 500;
+  c.width = window.innerWidth;
+  c.height = window.innerHeight;
   ctx = c.getContext("2d");
 
   ctx.globalCompositeOperation = "lighter";
@@ -170,7 +169,7 @@ onMount(async () => {
   ctx.fillRect(0, 0, size, size);
   ctx.fillStyle = "hsla(0, 0%, 10%, 0.2)";
 
-  render();
+  // render();
 });
 
 </script>

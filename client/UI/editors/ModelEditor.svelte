@@ -82,6 +82,18 @@
     // console.log(e)
   }
 
+  let evalDomCode = (code) => {
+    try {
+      let evalRes = eval(code);
+      if (evalRes != undefined) {
+        console.log(evalRes);
+      }
+      else console.log("done");
+    }catch(e) {
+      console.log(`DOM Code eval exception: ${e}`);
+    }
+  }
+
   const onModelWorkerMessageHandler = m => {
 
     // console.log('DEBUG:ModelEditor:onModelWorkerMessageHandler:')
@@ -130,6 +142,11 @@
         },
         envload: data => {
           messaging.publish("env-load", data);
+        },
+        domeval: data => {
+          console.log(data.code);
+          evalDOMCode(data.code);
+          // document.getElementById('canvas').style.display= "none";
         }
       };
       responders[m.data.func](m.data);
@@ -173,10 +190,20 @@
 
   function evalModelEditorExpressionBlock() {
     let modelCode = codeMirror.getBlock();
-    modelWorker.postMessage({ eval: modelCode });
-    // console.log("DEBUG:ModelEditor:evalModelEditorExpressionBlock: " + code);
-    window.localStorage.setItem("modelEditorValue", codeMirror.getValue());
-    addToHistory("model-history-", modelCode);
+    console.log(modelCode);
+    let linebreakPos = modelCode.indexOf('\n');
+    let firstLine = modelCode.substr(0,linebreakPos)
+    console.log(firstLine);
+    if(firstLine == "//--DOM") {
+      modelCode = modelCode.substr(linebreakPos);
+      evalDomCode(modelCode);
+      addToHistory("dom-history-", modelCode);
+    }else{
+      modelWorker.postMessage({ eval: modelCode });
+      // console.log("DEBUG:ModelEditor:evalModelEditorExpressionBlock: " + code);
+      window.localStorage.setItem("modelEditorValue", codeMirror.getValue());
+      addToHistory("model-history-", modelCode);
+    }
   }
 
 </script>
