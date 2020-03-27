@@ -257,7 +257,7 @@ export let createNewItem = (type, id, data) => {
 				background: "#AAAAAA"
 			};
 			break;
-		case "grammarEditor":
+		case "modelEditor":
 			component = {
 				component: ModelEditor,
 				theme: "monokai",
@@ -295,8 +295,6 @@ export let createNewItem = (type, id, data) => {
 		default:
 			break;
 	}
-
-  // let newId = id();
 
   // return component template 
   return {

@@ -48,25 +48,17 @@
     // console.log(`DEBUG:Sidebar:dispatchAdd: /add/${type}/${selected.id}`);
     // console.log(selected.content);
 
-    // messaging.publish("add-live-code-editor", {
-	  //   type: "model-input-data",
-		//   id: event.data.id,
-		//   value: event.data.value
-		// });
-
-    // dispatch("add", { type: type, id: selected.id, value: selected.content} );
-
     switch (type) {
       case 'live':
-        messaging.publish("add-editor", { id: id(), type: 'liveCodeEditor' });
+        messaging.publish("add-editor", { id: id(), type: 'liveCodeEditor', data: selected.content });
         selectedLiveCodeOption = sidebarLiveCodeOptions[0];        
         break;
       case 'grammar':
-        messaging.publish("add-editor", { id: id(), type: 'grammarEditor' });
+        messaging.publish("add-editor", { id: id(), type: 'grammarEditor', data: selected.content });
         selectedGrammarOption = sidebarGrammarOptions[0];        
         break;
       case 'model':
-        messaging.publish("add-editor", { id: id(), type: 'modelEditor' });
+        messaging.publish("add-editor", { id: id(), type: 'modelEditor', data: selected.content });
         selectedModelOption = sidebarModelOptions[0];        
         break;
       case 'oscilloscope':
