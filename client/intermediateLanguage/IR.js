@@ -2,6 +2,9 @@
 
 var objectID = 0;
 
+var vars = {};
+
+
 const oscMap = {
   '@sin': "sinewave",
   "@saw": "saw",
@@ -73,27 +76,27 @@ const jsFuncMap = {
     loop:  (o, p) => `(${p[0].loop} % ${p[1].loop})` },
 	add: {
 		setup: (o, p) => "",
-		loop:  (o, p) => `Module.maxiMath.add(${p[0].loop},${p[1].loop})`
+		loop:  (o, p) => `(${p[0].loop}+${p[1].loop})`
 	},
 	mul: {
 		setup: (o, p) => "",
-		loop:  (o, p) => `Module.maxiMath.mul(${p[0].loop},${p[1].loop})`
+		loop:  (o, p) => `(${p[0].loop}*${p[1].loop})`
 	},
 	sub: {
 		setup: (o, p) => "",
-		loop:  (o, p) => `Module.maxiMath.sub(${p[0].loop},${p[1].loop})`
+		loop:  (o, p) => `(${p[0].loop}-${p[1].loop})`
 	},
 	div: {
 		setup: (o, p) => "",
-		loop:  (o, p) => `Module.maxiMath.div(${p[0].loop},${p[1].loop})`
+		loop:  (o, p) => `(${p[1].loop} != 0 ? ${p[0].loop}/${p[1].loop} : 0)`
 	},
 	pow: {
 		setup: (o, p) => "",
-		loop:  (o, p) => `Module.maxiMath.pow(${p[0].loop},${p[1].loop})`
+		loop:  (o, p) => `Math.pow(${p[0].loop},${p[1].loop})`
 	},
 	abs: {
 		setup: (o, p) => "",
-		loop:  (o, p) => `Module.maxiMath.abs(${p[0].loop})`
+		loop:  (o, p) => `Math.abs(${p[0].loop})`
 	},
 	env: {
 		setup: (o, p) => `${o} = new Module.maxiEnv();
@@ -484,7 +487,7 @@ class IRToJavascript {
     };
   }
 
-  static traverseTree(t, code, level, vars) {
+  static traverseTree(t, code, level, vars, blockIdx) {
     // console.log(`DEBUG:IR:traverseTree:level: ${level}`);
     // console.log(`DEBUG:IR:traverseTree:vars:`);
     // console.log(vars);
@@ -492,7 +495,7 @@ class IRToJavascript {
       '@lang': (ccode, el) => {
         let statements = [];
         el.map((langEl) => {
-          let statementCode = IRToJavascript.traverseTree(langEl, IRToJavascript.emptyCode(), level, vars);
+          let statementCode = IRToJavascript.traverseTree(langEl, IRToJavascript.emptyCode(), level, vars, blockIdx);
           // console.log("@lang: " + statementCode.loop);
           ccode.setup += statementCode.setup;
           ccode.loop += statementCode.loop;
@@ -501,12 +504,12 @@ class IRToJavascript {
         return ccode;
       },
       '@sigOut': (ccode, el) => {
-        ccode = IRToJavascript.traverseTree(el, ccode, level, vars);
+        ccode = IRToJavascript.traverseTree(el, ccode, level, vars, blockIdx);
         ccode.loop = `q.sigOut = ${ccode.loop};`;
         return ccode;
       },
       '@spawn': (ccode, el) => {
-        ccode = IRToJavascript.traverseTree(el, ccode, level, vars);
+        ccode = IRToJavascript.traverseTree(el, ccode, level, vars, blockIdx);
         ccode.loop += ";";
         return ccode;
       },
@@ -516,13 +519,13 @@ class IRToJavascript {
 
         let functionName = el['@func'].value;
         let funcInfo = jsFuncMap[functionName];
-        let objName = "q.u" + IRToJavascript.getNextID();
+        let objName = "q.b" + blockIdx + "u" + IRToJavascript.getNextID();
 
         let allParams=[];
 
         for (let p = 0; p < el['@params'].length; p++) {
           let params = IRToJavascript.emptyCode();
-          params = IRToJavascript.traverseTree(el['@params'][p], params, level+1, vars);
+          params = IRToJavascript.traverseTree(el['@params'][p], params, level+1, vars, blockIdx);
           // console.log(params);
           allParams[p] = params;
         }
@@ -550,7 +553,7 @@ class IRToJavascript {
           vars[variableName] = memIdx;
           // console.log(memIdx);
         }
-        let varValueCode = IRToJavascript.traverseTree(el['@varvalue'], IRToJavascript.emptyCode(), level+1, vars);
+        let varValueCode = IRToJavascript.traverseTree(el['@varvalue'], IRToJavascript.emptyCode(), level+1, vars, blockIdx);
         ccode.setup += varValueCode.setup;
         // ccode.loop = `this.setvar(q, '${el['@varname']}', ${varValueCode.loop})`;
         ccode.loop = `(mem[${memIdx}] = ${varValueCode.loop})`;
@@ -571,7 +574,7 @@ class IRToJavascript {
           // console.log("String: " + el);
           ccode.loop += `'${el}'`;
         } else {
-          ccode = IRToJavascript.traverseTree(el, ccode, level, vars);
+          ccode = IRToJavascript.traverseTree(el, ccode, level, vars, blockIdx);
         }
         return ccode;
       },
@@ -587,7 +590,7 @@ class IRToJavascript {
       '@list': (ccode, el) => {
         //a list can be static and/or dynamic
         //create a vector for the list
-        let objName = "q.l" + IRToJavascript.getNextID();
+        let objName = "q.b" + blockIdx + "l" + IRToJavascript.getNextID();
         ccode.setup += `${objName} = new Module.VectorDouble();`;
         ccode.setup += `${objName}.resize(${el.length},0);`;
 
@@ -597,7 +600,7 @@ class IRToJavascript {
 
         for(let i_list=0; i_list < el.length; i_list++) {
           //if the element is a static number, set this element once in the setup code
-          let element =  IRToJavascript.traverseTree(el[i_list], IRToJavascript.emptyCode(), level, vars);
+          let element =  IRToJavascript.traverseTree(el[i_list], IRToJavascript.emptyCode(), level, vars, blockIdx);
           if(Object.keys(el[i_list])[0] == '@num') {
               ccode.setup += `${objName}.set(${i_list}, ${element.loop});`;
           }else{
@@ -610,7 +613,7 @@ class IRToJavascript {
         ccode.loop += `return ${objName}})()`;
         ccode.setup += extraSetupCode;
         // ccode.loop+=`${objName}`;
-        console.log(ccode);
+        // console.log(ccode);
         return ccode;
       }
     }
@@ -633,16 +636,15 @@ class IRToJavascript {
     return code;
   }
 
-  static treeToCode(tree) {
+  static treeToCode(tree, blockIdx=0) {
     // console.log(tree);
-    let vars = {};
-    console.log("1");
-    let code = IRToJavascript.traverseTree(tree, IRToJavascript.emptyCode(), 0, vars);
-    console.log("2");
+    vars = {};
+    let code = IRToJavascript.traverseTree(tree, IRToJavascript.emptyCode(), 0, vars, blockIdx);
+    // console.log(vars);
     code.setup = `() => {let q=this.newq(); ${code.setup}; return q;}`;
     code.loop = `(q, inputs, mem) => {${code.loop} return q.sigOut;}`
-    console.log("DEBUG:treeToCode");
-    console.log(code.loop);
+    // console.log("DEBUG:treeToCode");
+    // console.log(code.loop);
     // console.log(code.paramMarkers);
     return code;
   }

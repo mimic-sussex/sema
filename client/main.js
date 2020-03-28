@@ -1,4 +1,8 @@
 import App from './UI/App.svelte';
+import ico from "../assets/img/favicon.ico";
+import globalCss from "./global.css";
+
+
 
 import { exportHistory, clearHistory } from "./utils/history.js";
 
@@ -11,7 +15,7 @@ const app = new App({
 
 
 //exportHistory();
-clearHistory();
+// clearHistory();
 
 window.app = app;
 

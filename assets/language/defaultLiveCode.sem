@@ -1,3 +1,4 @@
+
 //Small example with samples, synths, lists, filter and mix
 :b:{{8,0.25}imp}\909b; //909b kickdrum sample, 8x/cycle, 0.25 offset
 :s:{{4,0}imp}\909;  //909 snare sample, 4x/cycle

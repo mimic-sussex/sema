@@ -10,12 +10,16 @@
 </script>
 
 <script>
-	import { onMount, onDestroy } from 'svelte';
+	import { onMount, onDestroy, createEventDispatcher } from 'svelte';
+	const dispatch = createEventDispatcher();;
 
-  import {
-    modelEditorValue
-  } from "../../store.js";
+  // import {
+  //   modelEditorValue
+  // } from "../../store.js";
 
+  var modelEditorValue = window.localStorage.modelEditorValue;
+
+  console.log(modelEditorValue);
   import { PubSub } from '../../messaging/pubSub.js';
 
   import ModelWorker from "worker-loader!../../workers/ml.worker.js";
@@ -23,23 +27,32 @@
   import { addToHistory } from "../../utils/history.js";
   import "../../machineLearning/lalolib.js";
 
-
-  export let value = "";
+  export let name;
+	export let type;
+	export let lineNumbers;
+	export let hasFocus;
+	export let theme;
+	export let background;
+	export let data;
 
   let codeMirror;
   let modelWorker;
-
 
   let messaging = new PubSub();
   let subscriptionTokenMID;
   let subscriptionTokenMODR;
 
   onMount(async () => {
-    codeMirror.set(value, "js");
+    codeMirror.set(data, "js");
+
     subscriptionTokenMID = messaging.subscribe("model-input-data", e => postToModel(e) );
     subscriptionTokenMODR = messaging.subscribe("model-output-data-request", e => postToModel(e) );
+
     modelWorker = new ModelWorker();  // Creates one ModelWorker per ModelEditor lifetime
     modelWorker.onmessage = e =>  onModelWorkerMessageHandler(e);
+
+    // console.log('DEBUG:ModelEditor:onMount:');
+    // console.log(name + ' ' + type + ' ' + lineNumbers +' ' + hasFocus +' ' + theme + ' ' + background /*+  ' ' + data */ );
 	});
 
   onDestroy(async () => {
@@ -54,6 +67,10 @@
 
   let nil = (e) => { }
 
+  let onChange = e => {
+    dispatch('change', { prop:'data', value: codeMirror.getValue() });
+  }
+
   let postToModel = e => {
     // console.log(`DEBUG:ModelEditor:postToModel:${e}`);
     // console.log(e)
@@ -63,6 +80,18 @@
   let postFromModel = e => {
     // console.log(`DEBUG:ModelEditor:postFromModel:${e}`);
     // console.log(e)
+  }
+
+  let evalDomCode = (code) => {
+    try {
+      let evalRes = eval(code);
+      if (evalRes != undefined) {
+        console.log(evalRes);
+      }
+      else console.log("done");
+    }catch(e) {
+      console.log(`DOM Code eval exception: ${e}`);
+    }
   }
 
   const onModelWorkerMessageHandler = m => {
@@ -104,6 +133,20 @@
           copyField.value = data.msg;
           copyField.select();
           document.execCommand("Copy");
+        },
+        sendbuf: data => {
+          messaging.publish("model-send-buffer", data);
+        },
+        envsave: data => {
+          messaging.publish("env-save", data);
+        },
+        envload: data => {
+          messaging.publish("env-load", data);
+        },
+        domeval: data => {
+          console.log(data.code);
+          evalDOMCode(data.code);
+          // document.getElementById('canvas').style.display= "none";
         }
       };
       responders[m.data.func](m.data);
@@ -114,11 +157,11 @@
     // clearTimeout(timeout);
   }
 
-  let postToModelAsync = modelCodel => {
+  let postToModelAsync = modelCode => {
     if(window.Worker){
       let modelWorkerAsync = new Promise((res, rej) => {
         // posts model code received from editor to worker
-        console.log('DEBUG:ModelEditor:postToModelAsync:catch')
+        // console.log('DEBUG:ModelEditor:postToModelAsync:catch')
 
       })
       .then(outputs => {
@@ -131,6 +174,11 @@
     }
   }
 
+  function onModelEditorValueChange(){
+    //don't need to save on every key stroke
+    // window.localStorage.setItem("modelEditorValue", codeMirror.getValue());
+    // addToHistory("model-history-", modelCode);
+  }
 
   function evalModelEditorExpression(){
     let modelCode = codeMirror.getSelection();
@@ -142,10 +190,20 @@
 
   function evalModelEditorExpressionBlock() {
     let modelCode = codeMirror.getBlock();
-    modelWorker.postMessage({ eval: modelCode });
-    // console.log("DEBUG:ModelEditor:evalModelEditorExpressionBlock: " + code);
-    window.localStorage.setItem("modelEditorValue", codeMirror.getValue());
-    addToHistory("model-history", modelCode);
+    console.log(modelCode);
+    let linebreakPos = modelCode.indexOf('\n');
+    let firstLine = modelCode.substr(0,linebreakPos)
+    console.log(firstLine);
+    if(firstLine == "//--DOM") {
+      modelCode = modelCode.substr(linebreakPos);
+      evalDomCode(modelCode);
+      addToHistory("dom-history-", modelCode);
+    }else{
+      modelWorker.postMessage({ eval: modelCode });
+      // console.log("DEBUG:ModelEditor:evalModelEditorExpressionBlock: " + code);
+      window.localStorage.setItem("modelEditorValue", codeMirror.getValue());
+      addToHistory("model-history-", modelCode);
+    }
   }
 
 </script>
@@ -195,13 +253,13 @@
 
 </style>
 
-<!-- <div class="layout-template-container" contenteditable="true" bind:innerHTML={layoutTemplate}> -->
+<!-- <div class="layout-template-container" contenteditable="true" bind:value={item.value}  bind:innerHTML={layoutTemplate}> -->
 <div class="codemirror-container layout-template-container scrollable">
   <CodeMirror bind:this={codeMirror}
-              bind:value={value}
+              bind:value={data}
               tab={true}
               lineNumbers={true}
-              on:change={nil}
+              on:change={onChange}
               ctrlEnter={evalModelEditorExpressionBlock}
               cmdEnter={evalModelEditorExpressionBlock}
               shiftEnter={evalModelEditorExpression}

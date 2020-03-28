@@ -14,10 +14,10 @@
     "test": "cross-env NODE_ENV=development webpack"
   },
   "dependencies": {
+    "@sveltejs/gl": "0.0.15",
     "lodash.clonedeep": "^4.5.0",
     "lodash.map": "^4.6.0",
-    "nearley": "^2.19.0",
-    "nexusui": "^2.0.10"
+    "nearley": "^2.19.0"
   },
   "devDependencies": {
     "clean-webpack-plugin": "^3.0.0",
@@ -26,13 +26,14 @@
     "file-loader": "^5.0.1",
     "html-webpack-link-type-plugin": "^1.0.3",
     "html-webpack-plugin": "^3.2.0",
+    "layercake": "^2.0.1",
     "mini-css-extract-plugin": "^0.6.0",
     "raw-loader": "^3.1.0",
     "rollup": "^1.26.3",
     "serve": "^11.0.0",
     "style-loader": "^1.0.0",
     "svelte": "3.15.0",
-    "svelte-codemirror": "https://github.com/frantic0/svelte-codemirror.git",
+    "svelte-codemirror": "https://github.com/mimic-sussex/svelte-codemirror.git",
     "svelte-grid": "^1.10.5",
     "svelte-inspect": "^0.1.2",
     "svelte-loader": "2.13.3",

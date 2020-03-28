@@ -26,6 +26,27 @@ sema.loadF32Array(fn,
 sema.pbcopy("some text to copy to the clipboard")
 ```
 
+# create a buffer and send it to the audio engine
+
+in the ML window:
+
+```
+a = new Float32Array(1000);
+
+for(let i=0; i < a.length; i++) {
+	a[i] = Math.sin(i/2) + (Math.random() -0.5);
+	a[i] *= 1.0-(i/a.length);
+}
+sema.sendBuffer("newbuf",a)
+```
+
+in the live code window (default language):
+
+```
+{{1}imp}\newbuf
+```
+
+
 # record data from osc to a variable
 
 Send data 20 times per second to the model, with id 0:

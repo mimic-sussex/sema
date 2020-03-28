@@ -10,11 +10,12 @@
 </script>
 
 <script>
-	import { onMount, onDestroy } from 'svelte';
+	import { onMount, onDestroy, createEventDispatcher } from 'svelte';
+	const dispatch = createEventDispatcher();
 
-  import {  
+  import {
     grammarEditorValue,
-    grammarCompiledParser, 
+    grammarCompiledParser,
     grammarCompilationErrors
   } from "../../store.js";
 
@@ -23,23 +24,38 @@
 
   import ModelWorker from "worker-loader!../../workers/ml.worker.js";
 
+  export let name;
+	export let type;
+	export let lineNumbers;
+	export let hasFocus;
+	export let theme;
+	export let background;
+	export let data;
+
   let codeMirror;
-  let modelWorker; 
-  export let value;
+  let modelWorker;
+
 
   onMount(async () => {
-    codeMirror.set(value, "ebnf");
+    codeMirror.set(data, "ebnf");
+    // codeMirror.set(value, "ebnf");
     // modelWorker = new ModelWorker();  // Create one worker per widget lifetime
 	});
 
   onDestroy(async () => {
     // modelWorker.terminate();
 	});
-  
+
 
   let log = (e) => { console.log(e.detail.value); }
 
   let nil = (e) => { }
+
+  let onChange = e => {
+
+    dispatch('change', { prop:'data', value: codeMirror.getValue() });
+  }
+
 
   let evalModelCode = e => {
 
@@ -72,24 +88,26 @@
     }
   }
 
-  let compileGrammarOnChange = e => { 
+  let compileGrammarOnChange = e => {
 
-    let grammarEditorValue = null; 
+    let grammarEditorValue = null;
 
-    if(e !== undefined && e.detail !== undefined && e.detail.value !== undefined)
-      grammarEditorValue = e.detail.value; 
-    else 
-      grammarEditorValue = $grammarEditorValue; 
+    // if(e !== undefined && e.detail !== undefined && e.detail.value !== undefined)
+    //   grammarEditorValue = e.detail.value;
+    if(e !== undefined)
+      grammarEditorValue = codeMirror.getValue();
+    else
+      grammarEditorValue = $grammarEditorValue;
 
     try {
       window.localStorage.grammarEditorValue = grammarEditorValue;
       let {errors, output} = compile(grammarEditorValue);
-      $grammarCompiledParser = output; 
+      $grammarCompiledParser = output;
       $grammarCompilationErrors = errors;
 
       // console.log('DEBUG:GrammarEditor:compileGrammarOnChange');
       // console.log($grammarCompiledParser);
-      // console.log($grammarCompilationErrors); 
+      // console.log($grammarCompilationErrors);
     }
     catch (e) {
 
@@ -147,12 +165,12 @@
 
 </style>
 
-<!-- <div class="layout-template-container" contenteditable="true" bind:innerHTML={layoutTemplate}> -->
+<!-- <div class="layout-template-container" contenteditable="true" bind:innerHTML={layoutTemplate}>
+bind:value={item.value} -->
 <div class="codemirror-container layout-template-container scrollable">
-  <CodeMirror bind:this={codeMirror}  
-              bind:value={value} 
-              tab={true} 
-              lineNumbers={true}  
-              on:change={compileGrammarOnChange}  /> 
+  <CodeMirror bind:this={codeMirror}
+              bind:value={data}
+              tab={true}
+              lineNumbers={true}
+              on:change={onChange} />
 </div>
- 
