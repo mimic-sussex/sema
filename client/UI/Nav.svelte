@@ -48,6 +48,8 @@
 
   .whiteText {
     color: whitesmoke;
+    /* background: rgb(0,16,18); */
+    
   }
 
   a, a:hover {
