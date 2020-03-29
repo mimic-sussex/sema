@@ -37,8 +37,6 @@
     "svelte-grid": "^1.10.5",
     "svelte-inspect": "^0.1.2",
     "svelte-loader": "2.13.3",
-    "svelte-oscilloscope": "https://github.com/frantic0/svelte-oscilloscope.git",
-    "svelte-spectrogram": "https://github.com/frantic0/svelte-spectrogram.git",
     "webpack": "^4.30.0",
     "webpack-bundle-analyzer": "^3.6.0",
     "webpack-cli": "^3.3.0",
