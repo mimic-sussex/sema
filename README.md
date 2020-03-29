@@ -83,8 +83,8 @@ Bernardo, F., Kiefer, C., Magnusson, T. (2020). *Designing for a Pluralist and U
 Live Code Language Ecosystem with Sema.* 5th International Conference on Live Coding,
 University of Limerick, Limerick, Ireland
 
-Bernardo, F., Kiefer, C., Magnusson, T. (2019). *An AudioWorklet-based Signal Engine for
-a Live Coding Language Ecosystem.* In Proceedings of Web Audio Conference 2019,
+Bernardo, F., Kiefer, C., Magnusson, T. (2019). [*An AudioWorklet-based Signal Engine for
+a Live Coding Language Ecosystem.*](https://www.ntnu.edu/documents/1282113268/1290797448/WAC2019-CameraReadySubmission-40.pdf) In Proceedings of Web Audio Conference 2019,
 Norwegian University of Science and Technology (NTNU), Trondheim, Norway (Best Paper
 Award at Web Audio Conference 2019)
 
