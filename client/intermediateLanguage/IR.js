@@ -573,13 +573,14 @@ class IRToJavascript {
         ccode.loop += `mem[${memIdx}]`;
         return ccode;
       },
-      '@string': (ccode, el) => {
-        console.log("String: " + el);
-        if (typeof el === 'string' || el instanceof String) {
-          ccode.loop += `'${el}'`;
-        } else {
-          ccode = IRToJavascript.traverseTree(el, ccode, level, vars, blockIdx);
+      '@str': (ccode, el) => {
+        console.log(el.value);
+        if (typeof el.value === 'string' || el.value instanceof String) {
+          ccode.loop += `'${el.value}'`;
         }
+        // else {
+        //   ccode = IRToJavascript.traverseTree(el, ccode, level, vars, blockIdx);
+        // }
         return ccode;
       },
       '@num': (ccode, el) => {
@@ -626,14 +627,14 @@ class IRToJavascript {
       t.map((el) => {
         Object.keys(el).map((k) => {
           // console.log("DEBUG:traverseTree:@ARRAYAttribMap");
-          // console.log(k);
+          console.log(k);
           code = attribMap[k](code, el[k]);
         });
       })
     } else {
       Object.keys(t).map((k) => {
         // console.log("DEBUG:traverseTree:@OBJECTAttribMap");
-        // console.log(k);
+        console.log(k);
         code = attribMap[k](code, t[k]);
       });
     }
