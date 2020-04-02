@@ -1,68 +1,10 @@
 import Module from './maximilian.wasmmodule.js';
+// import PostMsgTransducer from './PostMsgTransducer.js'
 // import {
 //   MMLLOnsetDetector
 // } from '../machineListening/MMLLOnsetDetector.js';
 
 
-
-class PostMsgTransducer {
-
-  constructor(msgPort, sampleRate, sendFrequency = 2, name) {
-    if (sendFrequency == 0)
-      this.sendPeriod = Number.MAX_SAFE_INTEGER;
-    else
-      this.sendPeriod = 1.0 / sendFrequency * sampleRate;
-    this.sendCounter = this.sendPeriod;
-    this.port = msgPort;
-    this.val = 0;
-    this.name=name;
-  }
-
-  incoming(msg) {
-    this.val = msg.value;
-  }
-
-  send(id, sendMsg) {
-    if (this.sendCounter >= this.sendPeriod) {
-      this.port.postMessage({
-        rq: "send",
-        value: sendMsg,
-        id: id
-      });
-      this.sendCounter -= this.sendPeriod;
-    } else {
-      this.sendCounter++;
-    }
-    return 0;
-  }
-
-  receive(sendMsg) {
-    if (this.sendCounter >= this.sendPeriod) {
-      this.port.postMessage({
-        rq: "receive",
-        value: sendMsg,
-        transducerName: this.name
-      });
-      this.sendCounter -= this.sendPeriod;
-    } else {
-      this.sendCounter++;
-    }
-    return this.val;
-  }
-
-  // io(sendMsg) {
-  //   if (this.sendCounter >= this.sendPeriod) {
-  //     this.port.postMessage({
-  //       rq: "dataplease",
-  //       value: sendMsg
-  //     });
-  //     this.sendCounter -= this.sendPeriod;
-  //   } else {
-  //     this.sendCounter++;
-  //   }
-  //   return this.val;
-  // }
-}
 
 class pvshift {
   constructor() {
@@ -130,6 +72,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
   constructor() {
     super();
 
+    console.log("AE");
     let q1 = Module.maxiBits.sig(63);
     // for(let i=0; i < 123; i++) q1 = Module.maxiBits.inc(q1);
     // let q2 = Module.maxiBits.sig(255);
@@ -203,8 +146,11 @@ class MaxiProcessor extends AudioWorkletProcessor {
     this.transducers = {};
 
     this.registerTransducer = (name, rate) => {
-      let trans = new PostMsgTransducer(this.port, this.sampleRate, rate, name);
-      this.transducers[name] = trans;
+      console.log("test");
+      if (!this.transducers.name) {
+        let trans = new PostMsgTransducer(this.port, this.sampleRate, rate, name);
+        this.transducers[name] = trans;
+      }
       console.log(this.transducers);
       return trans;
     };
