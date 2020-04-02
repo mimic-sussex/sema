@@ -7,7 +7,6 @@
   import SplashScreen from './SplashScreen.svelte';
   import { splashScreenClicked } from '../store.js';
 
-  // import { setupAudio } from '../audioEngine/audioEngineController.js';
   import { AudioEngine } from '../audioEngine/audioEngine.js';
 
 	import { environment } from "../utils/history.js";
