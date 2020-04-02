@@ -102,13 +102,19 @@
 
       })
       .then(outputs => {
-        // console.log('DEBUG:LiveCodeEditor:parseLiveCode:then1');
-        // console.log(outputs);
+        console.log('DEBUG:LiveCodeEditor:parseLiveCode:then1');
+        console.log(outputs);
         const { parserOutputs, parserResults } = outputs;
         if( parserOutputs && parserResults ){
           $liveCodeParseResults = parserResults;
           $liveCodeAbstractSyntaxTree = parserOutputs;  //Deep clone created in the worker for AST visualization
           $liveCodeParseErrors = "";
+          // Tree traversal in the main tree. 
+          let dspCode = IRToJavascript.treeToCode($liveCodeParseResults, 0);
+          console.log("code generated");
+
+          // publish eval message with code to audio engine
+          messaging.publish("eval-dsp", dspCode);
         }
         else {
           // console.log('DEBUG:LiveCodeEditor:parseLiveCode:then2');
@@ -189,19 +195,19 @@
 
   const evalLiveCodeOnEditorCommand = () => {
 
+    console.log("parsing");
     try {
-      console.log("parsing");
       parseLiveCodeAsync(codeMirror.getBlock()); // Code block parsed by parser.worker
-      // Parse results are kept in stores for feeding svelte components
-      if($grammarCompiledParser && $liveCodeEditorValue && $liveCodeAbstractSyntaxTree){
-
-        // Tree traversal in the main tree. TODO defer to worker thread
-        let dspCode = IRToJavascript.treeToCode($liveCodeParseResults, 0);
-        console.log("code generated");
-
-        // publish eval message with code to audio engine
-        messaging.publish("eval-dsp", dspCode);
-      }
+      // // Parse results are kept in stores for feeding svelte components
+      // if($grammarCompiledParser && $liveCodeEditorValue && $liveCodeAbstractSyntaxTree){
+      //
+      //   // Tree traversal in the main tree. TODO defer to worker thread
+      //   let dspCode = IRToJavascript.treeToCode($liveCodeParseResults, 0);
+      //   console.log("code generated");
+      //
+      //   // publish eval message with code to audio engine
+      //   messaging.publish("eval-dsp", dspCode);
+      // }
     } catch (error) {
       console.log('DEBUG:LiveCodeEditor:evalLiveCodeOnEditorCommand:')
       console.log($liveCodeAbstractSyntaxTree);
