@@ -172,5 +172,5 @@ bind:value={item.value} -->
               bind:value={data}
               tab={true}
               lineNumbers={true}
-              on:change={onChange} />
+              on:change={compileGrammarOnChange} />
 </div>
