@@ -87,6 +87,7 @@
 
 	onMount(() => {
     messaging.subscribe('add-editor', e => addItem(e.type, e.id, e.data) );
+    messaging.subscribe('add-debugger', e => addItem(e.type, e.id) );
     messaging.subscribe('add-analyser', e => addItem(e.type, e.id) );
   });
 

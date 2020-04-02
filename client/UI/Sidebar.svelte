@@ -61,6 +61,12 @@
         messaging.publish("add-editor", { id: id(), type: 'modelEditor', data: selected.content });
         selectedModelOption = sidebarModelOptions[0];        
         break;
+      case 'liveCodeParseOutput':
+        messaging.publish("add-debugger", { id: id(), type: 'liveCodeParseOutput'});
+        break;
+      case 'grammarCompileOutput':
+        messaging.publish("add-debugger", { id: id(), type: 'grammarCompileOutput'});
+        break;
       case 'oscilloscope':
         messaging.publish("add-analyser", { id: id(), type: 'oscilloscope' });
         break;
@@ -89,16 +95,6 @@
     margin-right: 20px;
 
   }
-
-/* 
-  .combobox{
-    margin-top: 4px;
-
-  }
-
-  .whiteText {
-    color: whitesmoke;
-  } */
 
   .checkbox-span {
     color: whitesmoke;
@@ -321,14 +317,14 @@
 
     <div>
       <button class="button-dark controls"
-              on:click={ () => dispatchAdd('grammarCompileOutput', selectedModelOption) }> 
+              on:click={ () => dispatchAdd('grammarCompileOutput') }> 
         + Grammar Compile Out
       </button>
     </div>
 
     <div>
       <button class="button-dark controls"
-              on:click={ () => dispatchAdd('liveCodeParseOutput', selectedModelOption) }> 
+              on:click={ () => dispatchAdd('liveCodeParseOutput') }> 
         + Live Code Parse Out
       </button>
     </div>
