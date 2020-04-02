@@ -53,7 +53,7 @@
 
   let onChange = e => {
 
-    dispatch('change', { prop:'data', value: e.detail.value });
+    dispatch('change', { prop:'data', value: codeMirror.getValue() });
   }
 
 

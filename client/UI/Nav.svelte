@@ -5,6 +5,20 @@
     tutorialsActive
   } from "../store.js"
 
+  function handleCClick() {
+      let c = document.getElementById('canvas');
+      let op = parseFloat(c.style.opacity);
+      console.log(op);
+      if (op < 0.2) {
+        c.style.opacity = 0.2;
+      }else if (op < 0.9) {
+        c.style.opacity = 0.9;
+      }else{
+        c.style.opacity = 0;
+      }
+
+  }
+
   function handlePClick() {
 		$playgroundActive = true;
     $tutorialsActive = !$playgroundActive;
@@ -69,6 +83,9 @@
 
 <div class="whiteText">
   <ul>
+  <li>
+      <span style="color:white" on:click={handleCClick}>Canvas</span>
+    </li>
     <li>
       <span style="color:{ $playgroundActive? 'orange':'white' }" on:click={handlePClick}>Playground</span>
     </li>

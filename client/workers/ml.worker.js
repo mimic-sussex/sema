@@ -71,6 +71,14 @@ var sema = {
       )
     }
 
+  },
+  //run in the DOM
+  domeval: (code) => {
+    postMessage({
+          "func": "domeval",
+          "code": code,
+      }
+    )
   }
 };
 `);

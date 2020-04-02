@@ -1,4 +1,6 @@
 import { writable, readable } from 'svelte/store';
+// import { writable as internal, get } from "svelte/store";
+
 
 import gridHelp from "svelte-grid/build/helper/index.mjs";
 
@@ -32,35 +34,6 @@ const id = () =>
 	Math.random()
 		.toString(36)
 		.substr(2, 9);
-
-
-
-let createItemNestedStore = () => {
-
-  return	{
-		...gridHelp.item({ x: 7, y: 0, w: 7, h: 3, id: id() }),
-		...{
-			type: "liveCodeEditor",
-			name: "hello-world",
-			background: "#151515",
-			lineNumbers: true,
-			hasFocus: false,
-			background: "#151515",
-			theme: "icecoder",
-			component: LiveCodeEditor,
-			data: writable(default_liveCode)
-		}
-	}
-};
-
-
-let nestedStoresItems = [
-	writable(createItemNestedStore()),
-	writable(createItemNestedStore()),
-	writable(createItemNestedStore()),
-	writable(createItemNestedStore()),
-];
-
 
 const originalItems = [
 	{
@@ -178,13 +151,231 @@ const originalItems = [
 ];
 
 
+
+
+
+
+// let createItemNestedStore = () => {
+//   return	{
+// 		...gridHelp.item({ x: 7, y: 0, w: 7, h: 3, id: id() }),
+// 		...{
+// 			type: "liveCodeEditor",
+// 			name: "hello-world",
+// 			background: "#151515",
+// 			lineNumbers: true,
+// 			hasFocus: false,
+// 			background: "#151515",
+// 			theme: "icecoder",
+// 			component: LiveCodeEditor,
+// 			data: writable(default_liveCode)
+// 		}
+// 	}
+// };
+
+// let nestedStoresItems = [
+// 	writable(createItemNestedStore()),
+// 	writable(createItemNestedStore()),
+// 	writable(createItemNestedStore()),
+// 	writable(createItemNestedStore()),
+// ];
+
+export const reset = () => {
+  items.set(layoutOriginal);
+};
+
+export let createRandomItem = (type) => {
+  const i = 2;
+	const col = 2;
+	const x = Math.ceil(Math.random() * 3) + 2;
+	const y = Math.ceil(Math.random() * 4) + 1;
+
+
+  let item = {
+		...gridHelp.item({
+			x: (i * 2) % col,
+			y: Math.floor(i / 6) * y,
+			w: x,
+			h: y,
+			id: id,
+			name: type + id,
+			type: type,
+			lineNumbers: true,
+			hasFocus: false,
+			theme: "monokai",
+			data: "value"
+		})
+	};  
+
+  return item;
+} 
+
+let hydrateJSONcomponent = item => {
+
+  switch (item.type) {
+  	case "liveCodeEditor":
+  		item.component = LiveCodeEditor;
+  		break;
+  	case "grammarEditor":
+  		item.component = GrammarEditor;
+  		break;
+  	case "modelEditor":
+  		item.component = ModelEditor;
+  		break;
+  	case "liveCodeParseOutput":
+  		item.component = LiveCodeParseOutput;
+  		break;
+  	case "grammarCompileOutput":
+  		item.component = GrammarCompileOutput;
+  		break;
+  	case "storeDebugger":
+  		item.component = StoreDebugger;
+  		break;
+  	case "oscilloscope":
+  		item.component = Oscilloscope;
+  		break;
+  	case "spectrogram":
+  		item.component = Spectrogram;
+  		break;
+  	default:
+  		break;
+  } 
+  return item;
+}
+
+export let createNewItem = (type, id, data) => {
+
+  let component;
+
+  switch (type) {
+		case "liveCodeEditor":
+			component = {
+				component: LiveCodeEditor,
+				background: "#151515",
+				theme: "icecoder"
+			};
+			break;
+		case "grammarEditor":
+			component = {
+				component: GrammarEditor,
+				theme: "monokai",
+				background: "#AAAAAA"
+			};
+			break;
+		case "modelEditor":
+			component = {
+				component: ModelEditor,
+				theme: "monokai",
+				background: "#f0f0f0"
+			};
+			break;
+		case "liveCodeParseOutput":
+			component = {
+				component: LiveCodeParseOutput,
+				background: "#ebdeff"
+			};
+			break;
+		case "grammarCompileOutput":
+			component = {
+				component: GrammarCompileOutput,
+				background: "#d1d5ff"
+			};
+			break;
+		case "storeDebugger":
+			component = {
+				component: StoreDebugger,
+				background: "#d1d5ff"
+			};
+			break;
+		case "oscilloscope":
+			component = {
+				component: Oscilloscope
+			};
+			break;
+		case "spectrogram":
+			component = {
+				component: Spectrogram
+			};
+			break;
+		default:
+			break;
+	}
+
+  // return component template 
+  return {
+		...gridHelp.item({ x: 7, y: 0, w: 7, h: 3, id: id }),
+		...{
+			type: type,
+			name: type + "-" + id,
+			data: data,
+			lineNumbers: true,
+			hasFocus: false
+		},
+		...component
+	};
+};
+
+
+export const loadPlaygroundItems = () => {
+
+	if (typeof window !== "undefined") {
+
+		const playgroundItems = window.localStorage.getItem("items");
+
+		return ( playgroundItems === null ||
+			playgroundItems === undefined ||
+			playgroundItems === ""
+		) ? originalItems : JSON.parse(playgroundItems)
+		
+	} else
+    return originalItems;
+};
+
+const storePlaygroundItemsInLocalStorage = () => {
+  
+  if (typeof window !== "undefined") {
+    window.localStorage.setItem("playgroundItems", JSON.stringify($items));
+  }
+};
+
+
+/*
+ * Wrap writable store
+ */
+export function storable(key, initialValue) {
+
+	const store = writable(initialValue); // create an underlying store
+	const { subscribe, set, update } = store;
+
+	const json = localStorage.getItem(key); // get the last value from localStorage
+	if (json) {
+		set(JSON.parse(json).map(item => hydrateJSONcomponent(item))); // use the value from localStorage if it exists
+	}
+
+	// return an object with the same interface as svelte's writable()
+	return {
+		set(value) {
+			localStorage.setItem(key, JSON.stringify(value));
+			set(value); // capture set and write to localStorage
+		},
+
+		update(cb) {
+			const value = cb(get(store));
+			this.set(value); // capture updates and write to localStore
+		},
+
+		subscribe // punt subscriptions to underlying store
+	};
+}
+
+
 // Dashboard layout in items list
-export const items = writable(originalItems);
-
+// export const items = writable(originalItems); // base svelteStore
+export const items = storable("items", originalItems); // localStorageWrapper
 // export const items = writable(nestedStoresItems);
+// export const items = writable([ hydrateJSONcomponent(createRandomItem('liveCodeEditor'))]);
 
-// Dashboard layout SELECTED item which receives focus and has item controls loaded
+// Dashboard SELECTED item which receives focus and has item controls loaded
 export const focusedItem = writable({});
 
-// Dashboard layout SELECTED item which receives focus and has item controls loaded
+// Dashboard SELECTED item which receives focus and has item controls loaded
 export const focusedItemControls = writable([]);

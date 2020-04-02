@@ -12,6 +12,7 @@
 
 	import { environment } from "../utils/history.js";
 
+	import CanvasOverlay from './CanvasOverlay.svelte';
 
   // createAudioEngine();
 
@@ -37,4 +38,6 @@
   <Header></Header>
   <Content></Content>
   <SplashScreen></SplashScreen>
+	<CanvasOverlay></CanvasOverlay>
+
 </div>
