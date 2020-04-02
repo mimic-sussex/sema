@@ -574,8 +574,8 @@ class IRToJavascript {
         return ccode;
       },
       '@string': (ccode, el) => {
+        console.log("String: " + el);
         if (typeof el === 'string' || el instanceof String) {
-          // console.log("String: " + el);
           ccode.loop += `'${el}'`;
         } else {
           ccode = IRToJavascript.traverseTree(el, ccode, level, vars, blockIdx);
