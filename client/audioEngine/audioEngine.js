@@ -129,9 +129,10 @@ class AudioEngine {
 	createAnalyser(name) {
 		if (this.audioContext !== undefined) {
 			let analyser = this.audioContext.createAnalyser();
-			analyser.fftSize = 2048;
-			let dataArray = new Uint8Array(analyser.frequencyBinCount);
-			analyser.getByteTimeDomainData(dataArray);
+      analyser.smoothingTimeConstant = 0.25;
+      analyser.fftSize = 256; // default 2048;
+      analyser.minDecibels = -90; // default 
+			analyser.maxDecibels = -0; // default -10; max 0
 			this.analysers[name] = analyser;
 			this.connectAnalyser(analyser); // @todo Move out
 		}
@@ -162,6 +163,25 @@ class AudioEngine {
 		}
 	}
 
+
+  pollAnalyserData(analyser) {
+    if(analyser !== undefined){
+      
+      const timeDataArray = new Uint8Array(analyser.fftSize); // Uint8Array should be the same length as the fftSize 
+      const frequencyDataArray = new Uint8Array(analyser.fftSize); 
+      
+      analyser.getByteTimeDomainData(timeDataArray);
+      analyser.getByteTimeDomainData(frequencyDataArray);
+
+      return {
+				smoothingTimeConstant: analyser.smoothingTimeConstant,
+				fftSize: analyser.fftSize,
+				frequencyDataArray: frequencyDataArray,
+				timeDataArray: timeDataArray
+			};
+    }
+  }
+
 	/**
 	 * Connects WAAPI analyser node to the main audio worklet for visualisation.
 	 * @connectAnalyser
@@ -169,6 +189,18 @@ class AudioEngine {
 	connectAnalyser(analyser) {
 		if (this.audioWorkletNode !== undefined) {
 			this.audioWorkletNode.connect(analyser);
+      
+      let frame;
+      let analyserData; 
+
+      const analyserPollingLoop = () => {
+        analyserData = this.pollAnalyserData(analyser);
+        // console.log('analyserData');
+        // console.log(analyserData);
+        this.messaging.publish("analyser-data", analyserData);
+        frame = requestAnimationFrame(analyserPollingLoop);
+      }
+      analyserPollingLoop(); 
 		}
 	}
 
@@ -336,7 +368,6 @@ class AudioEngine {
 	 * Loads audioWorklet processor code into a worklet,
 	 * setups up all handlers (errors, async messaging, etc),
 	 * connects the worklet processor to the WAAPI graph
-	 *
 	 */
 	async loadWorkletProcessorCode() {
 		if (this.audioContext !== undefined) {
@@ -414,15 +445,15 @@ class AudioEngine {
 		} else throw "Audio Context is not initialised!";
 	}
 
-	lazyLoadSample(sampleName, sample) {
+	lazyLoadSample(sampleName) {
 		import(/* webpackMode: "lazy" */ `../../assets/samples/${sampleName}`)
-			.then(sample => this.loadSample(sampleName, `samples/${sampleName}`))
-			.catch(err => console.error(`DEBUG:AudioEngine:lazyLoadSample: ` + err));
+		.then( () => this.loadSample(sampleName, `samples/${sampleName}`))
+		.catch(err => console.error(`DEBUG:AudioEngine:lazyLoadSample: ` + err));
 	}
 
 	loadImportedSamples() {
 		let samplesNames = this.getSamplesNames();
-		console.log("DEBUG:AudioEngine:getSamplesNames: " + samplesNames);
+		// console.log("DEBUG:AudioEngine:getSamplesNames: " + samplesNames);
 		samplesNames.forEach(sampleName => {
 			this.lazyLoadSample(sampleName);
 		});

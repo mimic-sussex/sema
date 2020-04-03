@@ -29,7 +29,7 @@
 
   let breakpoints = [[1000, 10], [700, 5], [500, 3], [400, 1]];
 
-  const types = ['liveCodeEditor', 'modelEditor', 'grammarEditor', 'liveCodeParseOutput', 'grammarCompileOutput', 'oscilloscope', 'spectrogram'];
+  const types = ['liveCodeEditor', 'modelEditor', 'grammarEditor', 'liveCodeParseOutput', 'grammarCompileOutput', 'analyser'];
   const itype = () => types[Math.floor(Math.random() * types.length)];
 
   const themes = ['monokai', 'cobalt', 'icecoder', 'shadowfox' ];
@@ -65,7 +65,7 @@
     // console.log("DEBUG:Dashboard:remove:item.id")
     // console.log(item.id);
     
-    if(item.type === 'oscilloscope' || item.type === 'spectrogram'){
+    if(item.type === 'analyser'){
       messaging.publish('remove-analyser', { id: item.id }); // notify audio engine to remove associated analyser
     }
     remove.bind(null, item); // remove dashboard item binding
@@ -87,6 +87,7 @@
 
 	onMount(() => {
     messaging.subscribe('add-editor', e => addItem(e.type, e.id, e.data) );
+    messaging.subscribe('add-debugger', e => addItem(e.type, e.id) );
     messaging.subscribe('add-analyser', e => addItem(e.type, e.id) );
   });
 

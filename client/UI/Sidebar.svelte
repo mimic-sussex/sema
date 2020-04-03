@@ -61,11 +61,14 @@
         messaging.publish("add-editor", { id: id(), type: 'modelEditor', data: selected.content });
         selectedModelOption = sidebarModelOptions[0];        
         break;
-      case 'oscilloscope':
-        messaging.publish("add-analyser", { id: id(), type: 'oscilloscope' });
+      case 'liveCodeParseOutput':
+        messaging.publish("add-debugger", { id: id(), type: 'liveCodeParseOutput'});
         break;
-      case 'spectrogram':
-        messaging.publish("add-analyser", { id: id(), type: 'spectrogram'}); 
+      case 'grammarCompileOutput':
+        messaging.publish("add-debugger", { id: id(), type: 'grammarCompileOutput'});
+        break;
+      case 'analyser':
+        messaging.publish("add-analyser", { id: id(), type: 'analyser' });
         break;
       default:
         break;
@@ -89,16 +92,6 @@
     margin-right: 20px;
 
   }
-
-/* 
-  .combobox{
-    margin-top: 4px;
-
-  }
-
-  .whiteText {
-    color: whitesmoke;
-  } */
 
   .checkbox-span {
     color: whitesmoke;
@@ -321,29 +314,22 @@
 
     <div>
       <button class="button-dark controls"
-              on:click={ () => dispatchAdd('grammarCompileOutput', selectedModelOption) }> 
+              on:click={ () => dispatchAdd('grammarCompileOutput') }> 
         + Grammar Compile Out
       </button>
     </div>
 
     <div>
       <button class="button-dark controls"
-              on:click={ () => dispatchAdd('liveCodeParseOutput', selectedModelOption) }> 
+              on:click={ () => dispatchAdd('liveCodeParseOutput') }> 
         + Live Code Parse Out
       </button>
     </div>
 
     <div>
       <button class="button-dark controls"
-              on:click={ () => dispatchAdd('oscilloscope') }> 
-        + Oscilloscope
-      </button>
-    </div>
-
-    <div>
-      <button class="button-dark controls"
-              on:click={ () => dispatchAdd('spectrogram') }> 
-        + Spectrogram
+              on:click={ () => dispatchAdd('analyser') }> 
+        + Analyser
       </button>
     </div>
 
