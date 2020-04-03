@@ -79,6 +79,8 @@ Sema uses Web Audio API Audio Worklets. Their performance seems very sensitive t
 
 ## Publications
 
+Bernardo, F., Kiefer, C., Magnusson, T. (forthcoming). *A Signal Engine for a Live Code Language Ecosystem.* Journal of Audio Engineering Society, Vol. 68, No. 1, October 
+
 Bernardo, F., Kiefer, C., Magnusson, T. (2020). *Designing for a Pluralist and User-Friendly
 Live Code Language Ecosystem with Sema.* 5th International Conference on Live Coding,
 University of Limerick, Limerick, Ireland
