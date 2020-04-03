@@ -54,8 +54,8 @@
     drawContext.canvas.width = canvas.offsetWidth;    // needed for 'automatic' resizing the canvas to current size
     drawContext.canvas.height = canvas.offsetHeight;  // TODO: Optimise by doing this only on canvas resize call
     
-    drawContext.fillStyle = 'rgb(16, 16, 16)';        // paint background
-    drawContext.fillRect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
+    // drawContext.fillStyle = 'rgb(16, 16, 16)';        // paint background
+    drawContext.clearRect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
     // Frequency domain chart
     for (let i = 0; i < frequencyBinCount; i++) {
       let value = frequencyDataArray[i];
@@ -73,10 +73,10 @@
       let value = timeDataArray[i];
       let percent = value / 255;
       let height = canvas.offsetHeight * percent;
-      let offset = canvas.offsetHeight - height - 2;
+      let offset = canvas.offsetHeight - height - 1;
       let barWidth = canvas.offsetWidth/frequencyBinCount;
       drawContext.fillStyle = 'white';
-      drawContext.fillRect(i * barWidth, offset, 2, 4);
+      drawContext.fillRect(i * barWidth, offset, barWidth, 2);
     }
 	};
 
@@ -122,7 +122,7 @@
 
   canvas {
     /* opacity:0.1; */
-    /* background-color: rgba(0, 0, 0, 0.1); */
+    background-color: rgb(16, 16, 16);
     height: 100%;
     width: 100%;
     /* display: block; */
@@ -142,7 +142,6 @@
 <!-- <div class="canvas-container"> -->
   <canvas bind:this={canvas} 
           class="canvas"
-          style="background-color:blue;"
           onclick={ () => toggleRendering() } ></canvas>
 <!-- </div> -->
 

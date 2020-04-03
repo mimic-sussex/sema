@@ -171,7 +171,7 @@ class AudioEngine {
       const frequencyDataArray = new Uint8Array(analyser.fftSize); 
       
       analyser.getByteTimeDomainData(timeDataArray);
-      analyser.getByteTimeDomainData(frequencyDataArray);
+      analyser.getByteFrequencyData(frequencyDataArray);
 
       return {
 				smoothingTimeConstant: analyser.smoothingTimeConstant,
