@@ -9,6 +9,10 @@ Saw wave:
 
 {100}saw
 
+Play a sample:
+
+{{2}imp}\909closed
+
 State variable filter:
 
 :speed:{{1}pha,100,500}uexp;
@@ -40,13 +44,13 @@ const lexer = moo.compile({
   listEnd:        /\>/,
   listBegin:      /\</,
   variable:       /:[a-zA-Z0-9]+:/,
-	string:					{match: /'[a-zA-Z0-9]+'/, value: x=>x.slice(1,x.length-1)},
   sample:         { match: /\\[a-zA-Z0-9]+/, lineBreaks: true, value: x => x.slice(1, x.length)},
   slice:          { match: /\|[a-zA-Z0-9]+/, lineBreaks: true, value: x => x.slice(1, x.length)},
   stretch:        { match: /\@[a-zA-Z0-9]+/, lineBreaks: true, value: x => x.slice(1, x.length)},
   number:         /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?\b/,
   semicolon:      /;/,
   funcName:       /[a-zA-Z][a-zA-Z0-9]*/,
+	string:					{match: /'[a-zA-Z0-9]+'/, value: x=>x.slice(1,x.length-1)},
   comment:        /\/\/[^\n]*/,
   ws:             { match: /\s+/, lineBreaks: true},
 });
@@ -76,13 +80,13 @@ Expression ->
   {% d => sema.synth( d[2].value, d[0]['@params'] ) %}
   |
   ParameterList _ %sample
-  {% d => sema.synth( 'sampler', d[0]['@params'].concat( [ sema.str( d[2].value ) ] ) ) %}
+  {% d => sema.synth( 'sampler', d[0]['@params'].concat( [ sema.str( d[2] ) ] ) ) %}
   |
   ParameterList _ %slice
-  {% d => sema.synth( 'slice', d[0]['@params'].concat( [ sema.str( d[2].value ) ] ) ) %}
+  {% d => sema.synth( 'slice', d[0]['@params'].concat( [ sema.str( d[2] ) ] ) ) %}
   |
   ParameterList _ %stretch
-  {% d => sema.synth( 'stretch', d[0]['@params'].concat( [ sema.str( d[2].value ) ] ) ) %}
+  {% d => sema.synth( 'stretch', d[0]['@params'].concat( [ sema.str( d[2] ) ] ) ) %}
   |
   %variable _ Expression
   {% d => sema.setvar( d[0], d[2] ) %}
@@ -104,7 +108,7 @@ ParamElement ->
   {% d => ( { '@num': d[0] } ) %}
 	|
 	%string
-  {% d => ( { '@str': d[0] } ) %}
+  {% d => ( { '@string': d[0] } ) %}
   |
   Expression
   {% id %}

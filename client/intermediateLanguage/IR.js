@@ -56,11 +56,11 @@ var jsFuncMap = {
 	},
 	gt: {
 		setup: (o, p) => "",
-		loop:  (o, p) => `(${p[0].loop} > ${p[1].loop}) ? 1 : 0`
+		loop:  (o, p) => `((${p[0].loop} > ${p[1].loop}) ? 1 : 0)`
 	},
 	lt: {
 		setup: (o, p) => "",
-		loop:  (o, p) => `(${p[0].loop} < ${p[1].loop}) ? 1 : 0`
+		loop:  (o, p) => `((${p[0].loop} < ${p[1].loop}) ? 1 : 0)`
 	},
 	mod: {
     setup: (o, p) => "",
@@ -484,14 +484,14 @@ class IRToJavascript {
       '@getvar': (ccode, el) => {
         let memIdx = vars[el.value];
         if (memIdx == undefined) {
-          memIdx = Object.keys(vars).length;
+					memIdx = Object.keys(vars).length;
           vars[el.value] = memIdx;
         }
         // ccode.loop += `this.getvar(q, '${el.value}')`;
         ccode.loop += `mem[${memIdx}]`;
         return ccode;
       },
-      '@str': (ccode, el) => {
+      '@string': (ccode, el) => {
         console.log(el.value);
         if (typeof el.value === 'string' || el.value instanceof String) {
           ccode.loop += `'${el.value}'`;
