@@ -9,7 +9,7 @@ import GrammarEditor        from "../UI/editors/GrammarEditor.svelte";
 import LiveCodeEditor       from "../UI/editors/LiveCodeEditor.svelte";
 import LiveCodeParseOutput  from "../UI/widgets/LiveCodeParseOutput.svelte";
 import GrammarCompileOutput from "../UI/widgets/GrammarCompileOutput.svelte";
-import Oscilloscope         from "../UI/widgets/Oscilloscope.svelte";
+import Analyser             from "../UI/widgets/Analyser.svelte";
 import Spectrogram          from "../UI/widgets/Spectrogram.svelte";
 import StoreDebugger        from "../UI/widgets/StoreDebugger.svelte";
 
@@ -125,29 +125,29 @@ const originalItems = [
 		...gridHelp.item({ x: 0, y: 8, w: 3, h: 4, id: id() }),
 		...{
 			name: "hello world",
-			type: "oscilloscope",
+			type: "analyser",
 			lineNumbers: true,
 			hasFocus: false,
 			theme: "monokai",
 			background: "#f0f0f0",
-			component: Oscilloscope,
-			data: ""
-		}
-	},
-
-	{
-		...gridHelp.item({ x: 7, y: 8, w: 3, h: 4, id: id() }),
-		...{
-			name: "hello world",
-			type: "spectrogram",
-			lineNumbers: true,
-			hasFocus: false,
-			theme: "monokai",
-			background: "#f0f0f0",
-			component: Spectrogram,
+			component: Analyser,
 			data: ""
 		}
 	}
+
+	// {
+	// 	...gridHelp.item({ x: 7, y: 8, w: 3, h: 4, id: id() }),
+	// 	...{
+	// 		name: "hello world",
+	// 		type: "spectrogram",
+	// 		lineNumbers: true,
+	// 		hasFocus: false,
+	// 		theme: "monokai",
+	// 		background: "#f0f0f0",
+	// 		component: Spectrogram,
+	// 		data: ""
+	// 	}
+	// }
 ];
 
 
@@ -230,8 +230,8 @@ let hydrateJSONcomponent = item => {
   	case "storeDebugger":
   		item.component = StoreDebugger;
   		break;
-  	case "oscilloscope":
-  		item.component = Oscilloscope;
+  	case "analyser":
+  		item.component = Analyser;
   		break;
   	case "spectrogram":
   		item.component = Spectrogram;
@@ -286,9 +286,9 @@ export let createNewItem = (type, id, data) => {
 				background: "#d1d5ff"
 			};
 			break;
-		case "oscilloscope":
+		case "analyser":
 			component = {
-				component: Oscilloscope
+				component: Analyser
 			};
 			break;
 		case "spectrogram":

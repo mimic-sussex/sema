@@ -67,11 +67,8 @@
       case 'grammarCompileOutput':
         messaging.publish("add-debugger", { id: id(), type: 'grammarCompileOutput'});
         break;
-      case 'oscilloscope':
-        messaging.publish("add-analyser", { id: id(), type: 'oscilloscope' });
-        break;
-      case 'spectrogram':
-        messaging.publish("add-analyser", { id: id(), type: 'spectrogram'}); 
+      case 'analyser':
+        messaging.publish("add-analyser", { id: id(), type: 'analyser' });
         break;
       default:
         break;
@@ -331,15 +328,8 @@
 
     <div>
       <button class="button-dark controls"
-              on:click={ () => dispatchAdd('oscilloscope') }> 
-        + Oscilloscope
-      </button>
-    </div>
-
-    <div>
-      <button class="button-dark controls"
-              on:click={ () => dispatchAdd('spectrogram') }> 
-        + Spectrogram
+              on:click={ () => dispatchAdd('analyser') }> 
+        + Analyser
       </button>
     </div>
 
