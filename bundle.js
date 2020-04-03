@@ -2374,7 +2374,7 @@ function create_fragment(ctx) {
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["create_component"])(canvasoverlay.$$.fragment);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(div, "id", "app");
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(div, "class", "svelte-17iano7");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div, file, 36, 0, 848);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div, file, 35, 0, 773);
 		},
 		l: function claim(nodes) {
 			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -2531,10 +2531,11 @@ function create_fragment(ctx) {
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(canvas, "id", "canvas");
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(canvas, "width", "100%");
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(canvas, "height", "100%");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(canvas, "class", "svelte-pqi4fp");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(canvas, file, 98, 0, 1987);
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(div, "class", "overlay svelte-pqi4fp");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div, file, 97, 0, 1965);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(canvas, "opacity", "0.0");
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(canvas, "class", "svelte-1y537t3");
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(canvas, file, 83, 0, 1570);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(div, "class", "overlay svelte-1y537t3");
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div, file, 82, 0, 1548);
 		},
 		l: function claim(nodes) {
 			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -2562,78 +2563,16 @@ function create_fragment(ctx) {
 	return block;
 }
 
-var size = 500;
-var minSegmentHeight = 5;
-var color = "hsl(180, 80%, 80%)";
-var roughness = 2;
-
 function instance($$self) {
 	var ctx;
-	var center = { x: size / 2, y: 20 };
-	var groundHeight = size - 20;
-	var maxDifference = size / 5;
-
-	function render() {
-		ctx.shadowBlur = 0;
-		ctx.globalCompositeOperation = "source-over";
-		ctx.fillRect(0, 0, size, size);
-		ctx.globalCompositeOperation = "lighter";
-		ctx.shadowBlur = 15;
-		var lightning = createLightning();
-		ctx.beginPath();
-
-		for (var i = 0; i < lightning.length; i++) {
-			ctx.lineTo(lightning[i].x, lightning[i].y);
-		}
-
-		ctx.stroke();
-		requestAnimationFrame(render);
-	}
-
-	function createLightning() {
-		var segmentHeight = groundHeight - center.y;
-		var lightning = [];
-		lightning.push({ x: center.x, y: center.y });
-
-		lightning.push({
-			x: Math.random() * (size - 100) + 50,
-			y: groundHeight + (Math.random() - 0.9) * 50
-		});
-
-		var currDiff = maxDifference;
-
-		while (segmentHeight > minSegmentHeight) {
-			var newSegments = [];
-
-			for (var i = 0; i < lightning.length - 1; i++) {
-				var start = lightning[i];
-				var end = lightning[i + 1];
-				var midX = (start.x + end.x) / 2;
-				var newX = midX + (Math.random() * 2 - 1) * currDiff;
-				newSegments.push(start, { x: newX, y: (start.y + end.y) / 2 });
-			}
-
-			newSegments.push(lightning.pop());
-			lightning = newSegments;
-			currDiff /= roughness;
-			segmentHeight /= 2;
-		}
-
-		return lightning;
-	}
+	var sizex = window.innerWidth;
+	var sizey = window.innerHeight;
 
 	Object(svelte__WEBPACK_IMPORTED_MODULE_1__["onMount"])(async () => {
 		var c = document.getElementById("canvas");
 		console.log(c);
 		c.width = window.innerWidth;
 		c.height = window.innerHeight;
-		ctx = c.getContext("2d");
-		ctx.globalCompositeOperation = "lighter";
-		ctx.strokeStyle = color;
-		ctx.shadowColor = color;
-		ctx.fillStyle = color;
-		ctx.fillRect(0, 0, size, size);
-		ctx.fillStyle = "hsla(0, 0%, 10%, 0.2)";
 	});
 
 	$$self.$capture_state = () => {
@@ -2642,13 +2581,8 @@ function instance($$self) {
 
 	$$self.$inject_state = $$props => {
 		if ("ctx" in $$props) ctx = $$props.ctx;
-		if ("size" in $$props) size = $$props.size;
-		if ("center" in $$props) center = $$props.center;
-		if ("minSegmentHeight" in $$props) minSegmentHeight = $$props.minSegmentHeight;
-		if ("groundHeight" in $$props) groundHeight = $$props.groundHeight;
-		if ("color" in $$props) color = $$props.color;
-		if ("roughness" in $$props) roughness = $$props.roughness;
-		if ("maxDifference" in $$props) maxDifference = $$props.maxDifference;
+		if ("sizex" in $$props) sizex = $$props.sizex;
+		if ("sizey" in $$props) sizey = $$props.sizey;
 	};
 
 	return {};
@@ -4342,25 +4276,28 @@ function create_fragment(ctx) {
 	let ul;
 	let li0;
 	let span0;
-	let t0;
 	let t1;
 	let li1;
 	let span1;
 	let t2;
 	let t3;
 	let li2;
-	let a0;
+	let span2;
+	let t4;
 	let t5;
 	let li3;
-	let a1;
+	let a0;
 	let t7;
 	let li4;
+	let a1;
+	let t9;
+	let li5;
 	let a2;
 	let svg0;
 	let use0;
 	let path0;
-	let t8;
-	let li5;
+	let t10;
+	let li6;
 	let a3;
 	let svg1;
 	let use1;
@@ -4373,91 +4310,101 @@ function create_fragment(ctx) {
 			ul = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["element"])("ul");
 			li0 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["element"])("li");
 			span0 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["element"])("span");
-			t0 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["text"])("Playground");
+			span0.textContent = "Canvas";
 			t1 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["space"])();
 			li1 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["element"])("li");
 			span1 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["element"])("span");
-			t2 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["text"])("Tutorials");
+			t2 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["text"])("Playground");
 			t3 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["space"])();
 			li2 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["element"])("li");
-			a0 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["element"])("a");
-			a0.textContent = "Samples";
+			span2 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["element"])("span");
+			t4 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["text"])("Tutorials");
 			t5 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["space"])();
 			li3 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["element"])("li");
-			a1 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["element"])("a");
-			a1.textContent = "Docs";
+			a0 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["element"])("a");
+			a0.textContent = "Samples";
 			t7 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["space"])();
 			li4 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["element"])("li");
+			a1 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["element"])("a");
+			a1.textContent = "Docs";
+			t9 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["space"])();
+			li5 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["element"])("li");
 			a2 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["element"])("a");
 			svg0 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["svg_element"])("svg");
 			use0 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["svg_element"])("use");
 			path0 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["svg_element"])("path");
-			t8 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["space"])();
-			li5 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["element"])("li");
+			t10 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["space"])();
+			li6 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["element"])("li");
 			a3 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["element"])("a");
 			svg1 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["svg_element"])("svg");
 			use1 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["svg_element"])("use");
 			path1 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["svg_element"])("path");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(span0, "color", ctx.$playgroundActive ? "orange" : "white");
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(span0, "color", "white");
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(span0, "class", "svelte-1tqwv0e");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(span0, file, 74, 6, 975);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(span0, file, 88, 6, 1285);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(li0, "class", "svelte-1tqwv0e");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(li0, file, 73, 4, 964);
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(span1, "color", ctx.$tutorialsActive ? "orange" : "white");
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(li0, file, 87, 2, 1274);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(span1, "color", ctx.$playgroundActive ? "orange" : "white");
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(span1, "class", "svelte-1tqwv0e");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(span1, file, 77, 6, 1102);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(span1, file, 91, 6, 1374);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(li1, "class", "svelte-1tqwv0e");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(li1, file, 76, 4, 1091);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(li1, file, 90, 4, 1363);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(span2, "color", ctx.$tutorialsActive ? "orange" : "white");
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(span2, "class", "svelte-1tqwv0e");
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(span2, file, 94, 6, 1501);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(li2, "class", "svelte-1tqwv0e");
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(li2, file, 93, 4, 1490);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(a0, "href", "samples");
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(a0, "target", "_blank");
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(a0, "class", "svelte-1tqwv0e");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(a0, file, 80, 6, 1227);
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(li2, "class", "svelte-1tqwv0e");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(li2, file, 79, 4, 1216);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(a0, file, 97, 6, 1626);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(li3, "class", "svelte-1tqwv0e");
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(li3, file, 96, 4, 1615);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(a1, "href", "https://github.com/mimic-sussex/sema/tree/master/doc");
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(a1, "target", "_blank");
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(a1, "class", "svelte-1tqwv0e");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(a1, file, 83, 6, 1298);
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(li3, "class", "svelte-1tqwv0e");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(li3, file, 82, 4, 1287);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(a1, file, 100, 6, 1697);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(li4, "class", "svelte-1tqwv0e");
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(li4, file, 99, 4, 1686);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["xlink_attr"])(use0, "xlink:href", "#community");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(use0, file, 87, 63, 1545);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(use0, file, 104, 63, 1944);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(path0, "d", "M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z");
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(path0, "class", "svelte-1tqwv0e");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(path0, file, 88, 10, 1591);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(path0, file, 105, 10, 1990);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(svg0, "class", "icon svelte-5yec39");
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(svg0, "width", "25");
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(svg0, "height", "20");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(svg0, file, 87, 8, 1490);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(svg0, file, 104, 8, 1889);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(a2, "href", "https://forum.toplap.org/c/communities/sema");
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(a2, "target", "_blank");
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(a2, "class", "svelte-1tqwv0e");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(a2, file, 86, 6, 1411);
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(li4, "class", "svelte-1tqwv0e");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(li4, file, 85, 4, 1400);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(a2, file, 103, 6, 1810);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(li5, "class", "svelte-1tqwv0e");
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(li5, file, 102, 4, 1799);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["xlink_attr"])(use1, "xlink:href", "#github");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(use1, file, 94, 63, 1849);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(use1, file, 111, 63, 2248);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(path1, "d", "M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22");
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(path1, "class", "svelte-1tqwv0e");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(path1, file, 95, 10, 1892);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(path1, file, 112, 10, 2291);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(svg1, "class", "icon svelte-5yec89");
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(svg1, "width", "25");
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(svg1, "height", "20");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(svg1, file, 94, 8, 1794);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(svg1, file, 111, 8, 2193);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(a3, "href", "https://github.com/mimic-sussex/sema");
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(a3, "target", "_blank");
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(a3, "class", "svelte-1tqwv0e");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(a3, file, 93, 6, 1722);
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(li5, "class", "svelte-1tqwv0e");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(li5, file, 92, 4, 1711);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(a3, file, 110, 6, 2121);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(li6, "class", "svelte-1tqwv0e");
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(li6, file, 109, 4, 2110);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(ul, "class", "svelte-1tqwv0e");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(ul, file, 72, 2, 955);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(ul, file, 86, 2, 1267);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(div, "class", "whiteText svelte-1tqwv0e");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div, file, 71, 0, 929);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div, file, 85, 0, 1241);
 
 			dispose = [
-				Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["listen_dev"])(span0, "click", ctx.handlePClick, false, false, false),
-				Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["listen_dev"])(span1, "click", ctx.handleTClick, false, false, false)
+				Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["listen_dev"])(span0, "click", handleCClick, false, false, false),
+				Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["listen_dev"])(span1, "click", ctx.handlePClick, false, false, false),
+				Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["listen_dev"])(span2, "click", ctx.handleTClick, false, false, false)
 			];
 		},
 		l: function claim(nodes) {
@@ -4468,37 +4415,40 @@ function create_fragment(ctx) {
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append_dev"])(div, ul);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append_dev"])(ul, li0);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append_dev"])(li0, span0);
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append_dev"])(span0, t0);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append_dev"])(ul, t1);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append_dev"])(ul, li1);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append_dev"])(li1, span1);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append_dev"])(span1, t2);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append_dev"])(ul, t3);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append_dev"])(ul, li2);
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append_dev"])(li2, a0);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append_dev"])(li2, span2);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append_dev"])(span2, t4);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append_dev"])(ul, t5);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append_dev"])(ul, li3);
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append_dev"])(li3, a1);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append_dev"])(li3, a0);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append_dev"])(ul, t7);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append_dev"])(ul, li4);
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append_dev"])(li4, a2);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append_dev"])(li4, a1);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append_dev"])(ul, t9);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append_dev"])(ul, li5);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append_dev"])(li5, a2);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append_dev"])(a2, svg0);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append_dev"])(svg0, use0);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append_dev"])(svg0, path0);
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append_dev"])(ul, t8);
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append_dev"])(ul, li5);
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append_dev"])(li5, a3);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append_dev"])(ul, t10);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append_dev"])(ul, li6);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append_dev"])(li6, a3);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append_dev"])(a3, svg1);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append_dev"])(svg1, use1);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append_dev"])(svg1, path1);
 		},
 		p: function update(changed, ctx) {
 			if (changed.$playgroundActive) {
-				Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(span0, "color", ctx.$playgroundActive ? "orange" : "white");
+				Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(span1, "color", ctx.$playgroundActive ? "orange" : "white");
 			}
 
 			if (changed.$tutorialsActive) {
-				Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(span1, "color", ctx.$tutorialsActive ? "orange" : "white");
+				Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(span2, "color", ctx.$tutorialsActive ? "orange" : "white");
 			}
 		},
 		i: svelte_internal__WEBPACK_IMPORTED_MODULE_0__["noop"],
@@ -4518,6 +4468,20 @@ function create_fragment(ctx) {
 	});
 
 	return block;
+}
+
+function handleCClick() {
+	let c = document.getElementById("canvas");
+	let op = parseFloat(c.style.opacity);
+	console.log(op);
+
+	if (op < 0.2) {
+		c.style.opacity = 0.2;
+	} else if (op < 0.9) {
+		c.style.opacity = 0.9;
+	} else {
+		c.style.opacity = 0;
+	}
 }
 
 function instance($$self, $$props, $$invalidate) {
@@ -6308,12 +6272,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _intermediateLanguage_IR_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../intermediateLanguage/IR.js */ "./client/intermediateLanguage/IR.js");
 /* harmony import */ var worker_loader_workers_parser_worker_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! worker-loader!../../workers/parser.worker.js */ "./node_modules/worker-loader/dist/cjs.js!./client/workers/parser.worker.js");
 /* harmony import */ var worker_loader_workers_parser_worker_js__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(worker_loader_workers_parser_worker_js__WEBPACK_IMPORTED_MODULE_8__);
-/* harmony import */ var _Users_francisco_Documents_dev_MIMIC_sema_client_UI_editors_LiveCodeEditor_svelte_css__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./client/UI/editors/LiveCodeEditor.svelte.css */ "./client/UI/editors/LiveCodeEditor.svelte.css");
-/* harmony import */ var _Users_francisco_Documents_dev_MIMIC_sema_client_UI_editors_LiveCodeEditor_svelte_css__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_Users_francisco_Documents_dev_MIMIC_sema_client_UI_editors_LiveCodeEditor_svelte_css__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var _liveCodeEditor_blockTracker_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./liveCodeEditor.blockTracker.js */ "./client/UI/editors/liveCodeEditor.blockTracker.js");
+/* harmony import */ var _Users_francisco_Documents_dev_MIMIC_sema_client_UI_editors_LiveCodeEditor_svelte_css__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./client/UI/editors/LiveCodeEditor.svelte.css */ "./client/UI/editors/LiveCodeEditor.svelte.css");
+/* harmony import */ var _Users_francisco_Documents_dev_MIMIC_sema_client_UI_editors_LiveCodeEditor_svelte_css__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(_Users_francisco_Documents_dev_MIMIC_sema_client_UI_editors_LiveCodeEditor_svelte_css__WEBPACK_IMPORTED_MODULE_10__);
 /* client/UI/editors/LiveCodeEditor.svelte generated by Svelte v3.15.0 */
 
 
 const { console: console_1 } = svelte_internal__WEBPACK_IMPORTED_MODULE_0__["globals"];
+
 
 
 
@@ -6358,7 +6324,7 @@ function create_fragment(ctx) {
 			div = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["element"])("div");
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["create_component"])(codemirror.$$.fragment);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(div, "class", "codemirror-container layout-template-container scrollable svelte-1okks6w");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div, file, 392, 0, 12041);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(div, file, 269, 0, 7598);
 		},
 		l: function claim(nodes) {
 			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -6420,7 +6386,6 @@ function instance($$self, $$props, $$invalidate) {
 	let $liveCodeAbstractSyntaxTree;
 	let $liveCodeParseErrors;
 	let $dspCode;
-	let $liveCodeEditorValue;
 	Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["validate_store"])(_store_js__WEBPACK_IMPORTED_MODULE_4__["grammarCompiledParser"], "grammarCompiledParser");
 	Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["component_subscribe"])($$self, _store_js__WEBPACK_IMPORTED_MODULE_4__["grammarCompiledParser"], $$value => $$invalidate("$grammarCompiledParser", $grammarCompiledParser = $$value));
 	Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["validate_store"])(_store_js__WEBPACK_IMPORTED_MODULE_4__["liveCodeParseResults"], "liveCodeParseResults");
@@ -6431,8 +6396,6 @@ function instance($$self, $$props, $$invalidate) {
 	Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["component_subscribe"])($$self, _store_js__WEBPACK_IMPORTED_MODULE_4__["liveCodeParseErrors"], $$value => $$invalidate("$liveCodeParseErrors", $liveCodeParseErrors = $$value));
 	Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["validate_store"])(_store_js__WEBPACK_IMPORTED_MODULE_4__["dspCode"], "dspCode");
 	Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["component_subscribe"])($$self, _store_js__WEBPACK_IMPORTED_MODULE_4__["dspCode"], $$value => $$invalidate("$dspCode", $dspCode = $$value));
-	Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["validate_store"])(_store_js__WEBPACK_IMPORTED_MODULE_4__["liveCodeEditorValue"], "liveCodeEditorValue");
-	Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["component_subscribe"])($$self, _store_js__WEBPACK_IMPORTED_MODULE_4__["liveCodeEditorValue"], $$value => $$invalidate("$liveCodeEditorValue", $liveCodeEditorValue = $$value));
 	const dispatch = Object(svelte__WEBPACK_IMPORTED_MODULE_3__["createEventDispatcher"])();
 	let { tab = true } = $$props;
 	let { name } = $$props;
@@ -6452,7 +6415,7 @@ function instance($$self, $$props, $$invalidate) {
 		console.log(data);
 		codeMirror.set(data, "js", "monokai");
 		parserWorker = new worker_loader_workers_parser_worker_js__WEBPACK_IMPORTED_MODULE_8___default.a();
-		btrack = new blockTracker(codeMirror);
+		btrack = new _liveCodeEditor_blockTracker_js__WEBPACK_IMPORTED_MODULE_9__["blockTracker"](codeMirror);
 	});
 
 	Object(svelte__WEBPACK_IMPORTED_MODULE_3__["onDestroy"])(async () => {
@@ -6496,12 +6459,17 @@ function instance($$self, $$props, $$invalidate) {
 						}
 					};
 				}).then(outputs => {
+				console.log("DEBUG:LiveCodeEditor:parseLiveCode:then1");
+				console.log(outputs);
 				const { parserOutputs, parserResults } = outputs;
 
 				if (parserOutputs && parserResults) {
 					Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_store_value"])(_store_js__WEBPACK_IMPORTED_MODULE_4__["liveCodeParseResults"], $liveCodeParseResults = parserResults);
 					Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_store_value"])(_store_js__WEBPACK_IMPORTED_MODULE_4__["liveCodeAbstractSyntaxTree"], $liveCodeAbstractSyntaxTree = parserOutputs);
 					Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_store_value"])(_store_js__WEBPACK_IMPORTED_MODULE_4__["liveCodeParseErrors"], $liveCodeParseErrors = "");
+					let dspCode = _intermediateLanguage_IR_js__WEBPACK_IMPORTED_MODULE_7__["default"].treeToCode($liveCodeParseResults, 0);
+					console.log("code generated");
+					messaging.publish("eval-dsp", dspCode);
 				} else {
 					Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_store_value"])(_store_js__WEBPACK_IMPORTED_MODULE_4__["liveCodeParseErrors"], $liveCodeParseErrors = outputs);
 					Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_store_value"])(_store_js__WEBPACK_IMPORTED_MODULE_4__["liveCodeAbstractSyntaxTree"], $liveCodeAbstractSyntaxTree = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_store_value"])(_store_js__WEBPACK_IMPORTED_MODULE_4__["liveCodeParseResults"], $liveCodeParseResults = ""));
@@ -6511,147 +6479,6 @@ function instance($$self, $$props, $$invalidate) {
 			});
 		}
 	};
-
-	class blockData {
-		constructor(startLine, isSeparator) {
-			this.startLine = startLine;
-			this.isSeparator = isSeparator;
-		}
-	}
-
-	class blockTracker {
-		constructor(editorToTrack) {
-			this.editor = editorToTrack;
-			this.blocks = new Array();
-			this.blocks.push(new blockData(0, false));
-		}
-
-		onEditChange(change) {
-			let separatorExistsOnLine = line => {
-				return this.blocks.filter(b => b.startLine == line).length == 1;
-			};
-
-			let insertSeparator = line => {
-				let insertionIndex = this.blocks.findIndex(x => x.startLine > line);
-				console.log("Inserting separator at " + line);
-				const newBlock = new blockData(line, true);
-
-				if (insertionIndex == -1) {
-					this.blocks.push(newBlock);
-				} else {
-					this.blocks.splice(insertionIndex, 0, newBlock);
-				}
-			};
-
-			let testInsertLine = (lineIndex, lineText) => {
-				if ((/___+/).test(lineText)) {
-					console.log("Block separator found");
-
-					if (separatorExistsOnLine(lineIndex)) {
-						console.log("separator already exists");
-					} else {
-						console.log("adding new separator");
-						insertSeparator(lineIndex);
-						console.table(this.blocks);
-					}
-				}
-			};
-
-			let testRemoveLine = (lineIndex, lineText, testTarget) => {
-				if ((/___+/).test(lineText) == testTarget) {
-					console.log("testRemoveLine +ve at " + lineIndex);
-
-					if (separatorExistsOnLine(lineIndex)) {
-						console.log("removing separator");
-						this.blocks = this.blocks.filter(b => b.startLine != lineIndex);
-					}
-				}
-			};
-
-			let insertNewLines = (atLine, numberofLines) => {
-				this.blocks = this.blocks.map(b => {
-					if (b.startLine > atLine) {
-						b.startLine += numberofLines;
-					}
-
-					return b;
-				});
-			};
-
-			let removeLines = (atLine, numberofLines) => {
-				this.blocks = this.blocks.map(b => {
-					if (b.startLine > atLine) {
-						b.startLine -= numberofLines;
-					}
-
-					return b;
-				});
-			};
-
-			console.log(change);
-
-			switch (change.origin) {
-				case "+delete":
-				case "cut":
-					if (change.removed.length == 2 && change.removed[0] == "" && change.removed[1] == "") {
-						console.log("line removed");
-						removeLines(change.from.line, 1);
-						console.table(this.blocks);
-					} else {
-						console.log("Source line: " + this.editor.getLine(change.from.line));
-						console.log("Removed: " + change.removed);
-						let startIdx = 0;
-						let endIdx = change.removed.length;
-
-						if (change.from.ch > 0) {
-							console.log("testing first line");
-							testRemoveLine(change.from.line, this.editor.getLine(change.from.line), false);
-							startIdx++;
-						}
-
-						if (change.to.ch > 0) {
-							console.log("testing last line");
-							let lineToCheck = change.from.line + change.removed.length;
-							testRemoveLine(lineToCheck, this.editor.getLine(chage.from.line), false);
-							endIdx--;
-						}
-
-						if (change.removed.length > 1) {
-							for (let i_line = startIdx; i_line < endIdx; i_line++) {
-								console.log("testing multi line " + i_line + ": " + change.removed[i_line]);
-								testRemoveLine(change.from.line + i_line, change.removed[i_line], true);
-								console.table(this.blocks);
-							}
-
-							removeLines(change.from.line, change.removed.length - 1);
-						}
-
-						console.table(this.blocks);
-					}
-					break;
-				case "+input":
-					if (change.text.length == 2 && change.text[0] == "" && change.text[1] == "") {
-						console.log("new line");
-						insertNewLines(change.from.line, 1);
-						console.table(this.blocks);
-					}
-					testInsertLine(change.from.line, this.editor.getLine(change.from.line));
-					break;
-				case "paste":
-					let startLine = change.from.line;
-					insertNewLines(change.from.line, change.text.length);
-					for (let line in change.text) {
-						console.log(line);
-						testInsertLine(startLine + parseInt(line), change.text[line]);
-					}
-					break;
-			}
-
-			
-		}
-	}
-
-	
 
 	let parseLiveCodeOnChange = e => {
 		btrack.onEditChange(e.detail.changeObj);
@@ -6696,15 +6523,10 @@ function instance($$self, $$props, $$invalidate) {
 	};
 
 	const evalLiveCodeOnEditorCommand = () => {
-		try {
-			console.log("parsing");
-			parseLiveCodeAsync(codeMirror.getBlock());
+		console.log("parsing");
 
-			if ($grammarCompiledParser && $liveCodeEditorValue && $liveCodeAbstractSyntaxTree) {
-				let dspCode = _intermediateLanguage_IR_js__WEBPACK_IMPORTED_MODULE_7__["default"].treeToCode($liveCodeParseResults, 0);
-				console.log("code generated");
-				messaging.publish("eval-dsp", dspCode);
-			}
+		try {
+			parseLiveCodeAsync(codeMirror.getBlock());
 		} catch(error) {
 			console.log("DEBUG:LiveCodeEditor:evalLiveCodeOnEditorCommand:");
 			console.log($liveCodeAbstractSyntaxTree);
@@ -6778,8 +6600,7 @@ function instance($$self, $$props, $$invalidate) {
 			$liveCodeParseResults,
 			$liveCodeAbstractSyntaxTree,
 			$liveCodeParseErrors,
-			$dspCode,
-			$liveCodeEditorValue
+			$dspCode
 		};
 	};
 
@@ -6807,7 +6628,6 @@ function instance($$self, $$props, $$invalidate) {
 		if ("$liveCodeAbstractSyntaxTree" in $$props) _store_js__WEBPACK_IMPORTED_MODULE_4__["liveCodeAbstractSyntaxTree"].set($liveCodeAbstractSyntaxTree = $$props.$liveCodeAbstractSyntaxTree);
 		if ("$liveCodeParseErrors" in $$props) _store_js__WEBPACK_IMPORTED_MODULE_4__["liveCodeParseErrors"].set($liveCodeParseErrors = $$props.$liveCodeParseErrors);
 		if ("$dspCode" in $$props) _store_js__WEBPACK_IMPORTED_MODULE_4__["dspCode"].set($dspCode = $$props.$dspCode);
-		if ("$liveCodeEditorValue" in $$props) _store_js__WEBPACK_IMPORTED_MODULE_4__["liveCodeEditorValue"].set($liveCodeEditorValue = $$props.$liveCodeEditorValue);
 	};
 
 	return {
@@ -7528,6 +7348,152 @@ var exported = content.locals ? content.locals : {};
 
 
 module.exports = exported;
+
+/***/ }),
+
+/***/ "./client/UI/editors/liveCodeEditor.blockTracker.js":
+/*!**********************************************************!*\
+  !*** ./client/UI/editors/liveCodeEditor.blockTracker.js ***!
+  \**********************************************************/
+/*! exports provided: blockTracker, blockData */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "blockTracker", function() { return blockTracker; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "blockData", function() { return blockData; });
+class blockData {
+  constructor(startLine, isSeparator) {
+    this.startLine = startLine;
+    this.isSeparator = isSeparator;
+  }
+}
+
+class blockTracker {
+  constructor(editorToTrack) {
+    this.editor = editorToTrack;
+    this.blocks = new Array();
+    this.blocks.push(new blockData(0, false));
+  }
+
+  onEditChange(change) {
+    let separatorExistsOnLine = (line) =>  {
+      return this.blocks.filter(b=>b.startLine==line).length == 1;
+    }
+    let insertSeparator = (line) => {
+      let insertionIndex = this.blocks.findIndex(x=>x.startLine > line);
+      console.log("Inserting separator at " + line);
+      const newBlock = new blockData(line, true);
+      if (insertionIndex == -1) {
+        this.blocks.push(newBlock);
+      }else{
+        this.blocks.splice(insertionIndex, 0, newBlock);
+      }
+    }
+    let testInsertLine = (lineIndex, lineText) => {
+      if (/___+/.test(lineText)) {  // Test RegEx at least 3 underscores
+          console.log("Block separator found");
+          if (separatorExistsOnLine(lineIndex)) {
+              console.log("separator already exists");
+          }else{
+              console.log("adding new separator");
+              insertSeparator(lineIndex);
+              console.table(this.blocks);
+          }
+      }
+    }
+    let testRemoveLine = (lineIndex, lineText, testTarget) => {
+      //test for abscence or presence, depending on testTarget
+      if (/___+/.test(lineText) == testTarget) {  // Test RegEx at least 3 underscores
+        console.log("testRemoveLine +ve at " + lineIndex);
+        if (separatorExistsOnLine(lineIndex)) {
+            console.log("removing separator");
+            this.blocks = this.blocks.filter(b=>b.startLine!=lineIndex);
+        }
+      }
+    }
+    let insertNewLines = (atLine, numberofLines) => {
+      this.blocks = this.blocks.map(
+        (b)=>{
+          if (b.startLine > atLine) {
+            b.startLine+=numberofLines;
+          }
+          return b;
+        }
+      );
+    }
+    let removeLines = (atLine, numberofLines) => {
+      this.blocks = this.blocks.map(
+        (b)=>{
+          if (b.startLine > atLine) {
+            b.startLine-=numberofLines;
+          }
+          return b;
+        }
+      );
+    }
+    console.log(change);
+    switch(change.origin) {
+        case "+delete":
+        case "cut":
+          //was a line removed?
+          if (change.removed.length==2 && change.removed[0] == "" && change.removed[1] == "") {
+            console.log("line removed");
+            removeLines(change.from.line, 1);
+            console.table(this.blocks);
+          }else{
+            console.log("Source line: " + this.editor.getLine(change.from.line));
+            console.log("Removed: " + change.removed);
+            //check the first line (in case of partial removal)
+            let startIdx = 0;
+            let endIdx = change.removed.length;
+            if (change.from.ch > 0) {
+              console.log("testing first line");
+              testRemoveLine(change.from.line, this.editor.getLine(change.from.line), false);
+              startIdx++;
+            }
+            if (change.to.ch > 0) {
+              console.log("testing last line");
+              let lineToCheck = change.from.line + change.removed.length;
+              testRemoveLine(lineToCheck, this.editor.getLine(chage.from.line), false);
+              endIdx--;
+            }
+            if (change.removed.length>1) {
+              for(let i_line=startIdx; i_line < endIdx; i_line++) {
+                console.log("testing multi line " + i_line + ": " + change.removed[i_line]);
+                testRemoveLine(change.from.line + i_line, change.removed[i_line], true);
+                console.table(this.blocks);
+              }
+              removeLines(change.from.line, change.removed.length-1);
+            }
+            console.table(this.blocks);
+          }
+          break;
+        case "+input":
+          //was the input a new line?
+          if (change.text.length==2 && change.text[0] == "" && change.text[1] == "") {
+            console.log("new line");
+            insertNewLines(change.from.line, 1);
+            console.table(this.blocks);
+          }
+          testInsertLine(change.from.line, this.editor.getLine(change.from.line));
+        break;
+        case "paste":
+          let startLine = change.from.line;
+          insertNewLines(change.from.line, change.text.length);
+          for (let line in change.text) {
+            console.log(line);
+            testInsertLine(startLine + parseInt(line), change.text[line]);
+          }
+
+        break;
+    };
+  }
+
+};
+
+
+
 
 /***/ }),
 
@@ -13620,7 +13586,7 @@ module.exports = exports;
 var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
 exports = ___CSS_LOADER_API_IMPORT___(false);
 // Module
-exports.push([module.i, ".overlay.svelte-pqi4fp{position:fixed;display:grid;width:100%;height:100%;top:0;left:0;right:0;bottom:0;justify-self:center;align-content:center;background-color:rgba(0, 0, 0, 0.1);z-index:4;cursor:auto;pointer-events:none;visibility:visible}canvas.svelte-pqi4fp{opacity:0.1;background-color:rgba(0, 0, 0, 0.1);display:block;visibility:hidden}", ""]);
+exports.push([module.i, ".overlay.svelte-1y537t3{position:fixed;display:grid;width:100%;height:100%;top:0;left:0;right:0;bottom:0;justify-self:center;align-content:center;background-color:rgba(0, 0, 0, 0.1);z-index:4;cursor:auto;pointer-events:none;visibility:visible}canvas.svelte-1y537t3{background-color:rgba(0, 0, 0, 0.0);display:block;visibility:hidden}", ""]);
 // Exports
 module.exports = exports;
 
