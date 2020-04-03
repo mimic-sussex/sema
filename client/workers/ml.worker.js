@@ -110,7 +110,7 @@ onmessage = m => {
 		delete loadResponders[m.data.name];
 	}
   else if (m.data.type === "model-input-data") {
-    input(m.data.id, m.data.value);
+    input(m.data.value, m.data.ch);
   }
   else if(m.data.type === "model-output-data-request"){
 		postMessage({

@@ -4,16 +4,7 @@ var objectID = 0;
 
 var vars = {};
 
-
-const oscMap = {
-  '@sin': "sinewave",
-  "@saw": "saw",
-  "@square": "square",
-  "@tri": "triangle",
-  "@pha": "phasor"
-};
-
-const jsFuncMap = {
+var jsFuncMap = {
 	saw: {
 		setup: (o, p) => `${o} = new Module.maxiOsc();
                       ${o}.phaseReset(${p.length > 1 ? p[1].loop : 0.0});`,
@@ -188,30 +179,21 @@ const jsFuncMap = {
 		setup: (o, p) => `${o} = new Module.maxiFilter()`,
 		loop:  (o, p) => `${o}.hires(${p[0].loop},${p[1].loop},${p[2].loop})`
 	},
+
 	toJS: {
-		setup: (o, p) => `${o} = this.registerTransducer('${o}', ${p[0].loop}, 'ML')`,
-		loop:  (o, p) => `${o}.send(${p[1].loop}, ${p[2].loop})`
+		setup: (o, p) => `${o} = this.createMLOutputTransducer(${p[0].loop})`,
+		loop:  (o, p) => `${o}.send(this.ifListThenToArray(${p[1].loop}), ${p[2].loop})`
 	},
+
 	fromJS: {
 		setup: (o, p) => `${o} = this.registerTransducer('${o}', ${p[0].loop}, 'ML')`,
 		loop:  (o, p) => `${o}.receive(${p[1].loop})`
 	},
-  toNet: {
-    setup: (o, p) => `${o} = this.registerTransducer('${o}', ${p[2].loop}, 'NET')`,
-		loop:  (o, p) => `${o}.send(${p[0].loop})`
+
+  toNet: { //value, dest, channel, frequency
+    setup: (o, p) => `${o} = this.registerTransducer('${o}', ${p[3].loop}, 'NET')`,
+		loop:  (o, p) => `${o}.send([${p[1].loop},${p[0].loop},${p[2].loop}])`
   },
-	// 'adc': {"setup":(o,p)=>"", "loop":(o,p)=>`inputs[${p[0].loop}]`},
-	// adc: { setup: (o, p) => "", loop: (o, p) => `inputs` },
-	// sampler: {
-	// 	setup: (o, p) => `${o} = new Module.maxiSample();
-  //                     ${o}.setSample(this.getSampleBuffer(${p[1].loop}));`,
-	// 	loop:  (o, p) => `(${o}.isReady() ? ${o}.playOnZX(${p[0].loop}) : 0.0)`
-	// },
-	// loop: {
-	// 	setup: (o, p) => `${o} = new Module.maxiSample();
-  //                     ${o}.setSample(this.getSampleBuffer(${p[1].loop}));`,
-	// 	loop:  (o, p) => `(${o}.isReady() ? ${o}.play(${p[0].loop}) : 0.0)`
-	// },
 	oscin: {
 		setup: (o, p) => "",
 		loop:  (o, p) => `this.OSCTransducer(${p[0].loop},${p[1].loop})`
@@ -230,70 +212,6 @@ const jsFuncMap = {
                       ${o}stretch = new Module.maxiStretch();
                       ${o}stretch.setSample(${o});`,
 		loop:  (o, p) => `(${o}.isReady() ? ${o}stretch.play(${p[0].loop},${p[1].loop},${p[2].loop},${p[3].loop},0.0) : 0.0)`
-	},
-  blin: {
-		setup: (o, p) => "",
-		loop:  (o, p) => `Module.maxiMap.linlin(${p[0].loop}, -1, 1, ${p[1].loop}, ${p[2].loop})`
-	},
-	ulin: {
-		setup: (o, p) => "",
-		loop:  (o, p) => `Module.maxiMap.linlin(${p[0].loop}, 0, 1, ${p[1].loop}, ${p[2].loop})`
-	},
-	bexp: {
-		setup: (o, p) => "",
-		loop:  (o, p) => `Module.maxiMap.linexp(${p[0].loop}, -1, 1, ${p[1].loop}, ${p[2].loop})`
-	},
-	uexp: {
-		setup: (o, p) => "",
-		loop:  (o, p) => `Module.maxiMap.linexp(${p[0].loop}, 0.0000001, 1, ${p[1].loop}, ${p[2].loop})`
-	},
-	linlin: {
-		setup: (o, p) => "",
-		loop:  (o, p) => `Module.maxiMap.linlin(${p[0].loop}, ${p[1].loop}, ${p[2].loop}),${p[3].loop}, ${p[4].loop})`
-	},
-	linexp: {
-		setup: (o, p) => "",
-		loop:  (o, p) => `Module.maxiMap.linexp(${p[0].loop}, ${p[1].loop}, ${p[2].loop}), ${p[3].loop}, ${p[4].loop})`
-	},
-	dist: {
-		setup: (o, p) => `${o} = new Module.maxiDistortion()`,
-		loop:  (o, p) => `${o}.atanDist(${p[0].loop},${p[1].loop})`
-	},
-	flange: {
-		setup: (o, p) => `${o} = new Module.maxiFlanger()`,
-		loop:  (o, p) => `${o}.flange(${p[0].loop},${p[1].loop},${p[2].loop},${p[3].loop},${p[4].loop})`
-	},
-	chor: {
-		setup: (o, p) => `${o} = new Module.maxiChorus()`,
-		loop:  (o, p) => `${o}.chorus(${p[0].loop},${p[1].loop},${p[2].loop},${p[3].loop},${p[4].loop})`
-	},
-	dl: {
-		setup: (o, p) => `${o} = new Module.maxiDelayline()`,
-		loop:  (o, p) => `${o}.dl(${p[0].loop},${p[1].loop},${p[2].loop})`
-	},
-	lpf: {
-		setup: (o, p) => `${o} = new Module.maxiFilter()`,
-		loop:  (o, p) => `${o}.lopass(${p[0].loop},${p[1].loop})`
-	},
-	hpf: {
-		setup: (o, p) => `${o} = new Module.maxiFilter()`,
-		loop:  (o, p) => `${o}.hipass(${p[0].loop},${p[1].loop})`
-	},
-	lpz: {
-		setup: (o, p) => `${o} = new Module.maxiFilter()`,
-		loop:  (o, p) => `${o}.lores(${p[0].loop},${p[1].loop},${p[2].loop})`
-	},
-	hpz: {
-		setup: (o, p) => `${o} = new Module.maxiFilter()`,
-		loop:  (o, p) => `${o}.hires(${p[0].loop},${p[1].loop},${p[2].loop})`
-	},
-	toJS: {
-		setup: (o, p) => `${o} = this.registerTransducer('${o}', ${p[0].loop})`,
-		loop:  (o, p) => `${o}.send(${p[1].loop}, ${p[2].loop})`
-	},
-	fromJS: {
-		setup: (o, p) => `${o} = this.registerTransducer('${o}', ${p[0].loop})`,
-		loop:  (o, p) => `${o}.receive(${p[1].loop})`
 	},
 	// 'adc': {"setup":(o,p)=>"", "loop":(o,p)=>`inputs[${p[0].loop}]`},
 	adc: { setup: (o, p) => "", loop: (o, p) => `inputs` },

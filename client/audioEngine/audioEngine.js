@@ -83,6 +83,11 @@ class AudioEngine {
     this.kuraClock = new kuramotoNetClock();
 
     this.peerNet = new PeerStreaming();
+    this.messaging.subscribe("peermsg", (e)=> {
+      console.log('peer', e);
+      e.ttype = 'NET';
+      onMessagingEventHandler(e);
+    });
   }
 
   /**
@@ -104,13 +109,12 @@ class AudioEngine {
             // publishes to model/JS editor, which posts to ml.worker
             this.messaging.publish("model-input-data", {
               type: "model-input-data",
-              id: event.data.id,
-              value: event.data.value
+              value: event.data.value,
+              ch: event.data.ch, //channel ID
             });
             break;
           case 'NET':
-            consooe.log(event.data.value);
-            // this.peerNet.send()
+            this.peerNet.send(event.data.value[0], event.data.value[1], event.data.value[2]);
             break;
         }
       } else if (event.data.rq != undefined && event.data.rq === "receive") {
@@ -121,7 +125,7 @@ class AudioEngine {
             this.messaging.publish("model-output-data-request", {
               type: "model-output-data-request",
               value: event.data.value,
-              transducerName: event.data.transducerName
+              channel: event.data.ch
             });
             break;
           case 'NET':
