@@ -186,8 +186,8 @@ var jsFuncMap = {
 	},
 
 	fromJS: {
-		setup: (o, p) => `${o} = this.registerTransducer('${o}', ${p[0].loop}, 'ML')`,
-		loop:  (o, p) => `${o}.receive(${p[1].loop})`
+		setup: (o, p) => `${o} = this.registerInputTransducer('ML', ${p[0].loop})`,
+		loop:  (o, p) => `${o}.getValue()`
 	},
 
   toNet: { //value, dest, channel, frequency

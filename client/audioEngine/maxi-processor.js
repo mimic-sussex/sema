@@ -40,6 +40,23 @@ class PostMsgOutputTransducer {
   }
 }
 
+class PostMsgInputTransducer {
+  constructor(transducerType, channelID) {
+    this.transducerType = transducerType;
+    this.channelID = channelID;
+    this.value = 0;
+  }
+
+  setValue(data) {
+    this.value = data;
+    console.log(data);
+  }
+
+  getValue() {
+    return this.value;
+  }
+}
+
 
 class PostMsgTransducer {
 
@@ -228,16 +245,13 @@ class MaxiProcessor extends AudioWorkletProcessor {
     this.sampleVectorBuffers = {};
     this.sampleVectorBuffers['defaultEmptyBuffer'] = new Float32Array(1);
 
-    this.transducers = {};
+    this.transducers = [];
 
-    this.registerTransducer = (name, rate, ttype) => {
-      let trans = this.transducers.name;
-      if (!trans) {
-        trans = new PostMsgTransducer(this.port, this.sampleRate, rate, name, ttype);
-        this.transducers[name] = trans;
-      }
+    this.registerInputTransducer = (ttype, channelID) => {
+      let transducer = new PostMsgInputTransducer(ttype, channelID);
+      this.transducers.push(transducer);
       console.log(this.transducers);
-      return trans;
+      return transducer;
     };
 
     this.getSampleBuffer = (bufferName) => {
@@ -266,12 +280,18 @@ class MaxiProcessor extends AudioWorkletProcessor {
       } else if ('func' in event.data && 'sendbuf' == event.data.func) {
         console.log("aesendbuf", event.data);
         addSampleBuffer(event.data.name, event.data.data);
-      } else if ('worker' in event.data) { //from a worker
-        //this must be an OSC message
-        if (this.transducers[event.data.transducerName]) {
-          // console.log(this.transducers[event.data.tname]);
-          this.transducers[event.data.transducerName].incoming(event.data);
+      } else if ('func' in event.data && 'data' == event.data.func) {
+        //this is from the ML window, map it on to any listening transducers
+        console.log('ae',event.data);
+        let targetTransducers = this.transducers.filter(x=>x.transducerType=='ML' && x.channelID == event.data.ch);
+        for(let idx in targetTransducers) {
+          targetTransducers[idx].setValue(event.data.val);
         }
+
+        // if (this.transducers[event.data.transducerName]) {
+        //   // console.log(this.transducers[event.data.tname]);
+        //   this.transducers[event.data.transducerName].incoming(event.data);
+        // }
       } else if ('sample' in event.data) { //from a worker
         // console.log("sample received");
         // console.log(event.data);
