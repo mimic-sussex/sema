@@ -66,7 +66,7 @@
       let hue = i/frequencyBinCount * 255;
       drawContext.fillStyle = 'hsl(' + hue + ', 100%, 75%)';
       // drawContext.fillStyle = 'hsl(' + hue + ', 100%, 75%)';
-      drawContext.fillRect(i * barWidth, offset, barWidth, height);
+      drawContext.fillRect(i * barWidth, offset, barWidth, canvas.offsetHeight);
     }
     // Time domain chart
     for (let i = 0; i < frequencyBinCount; i++) {
