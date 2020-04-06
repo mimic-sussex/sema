@@ -1,8 +1,17 @@
 import Module from "./maximilian.wasmmodule.js"; //NOTE:FB We need this import here for webpack to emit maximilian.wasmmodule.js
 import CustomProcessor from "./maxi-processor";
-import { loadSampleToArray } from "./maximilian.util";
-import { kuramotoNetClock } from "../interfaces/clockInterface.js";
-import { PubSub } from "../messaging/pubSub.js";
+import {
+  loadSampleToArray
+} from "./maximilian.util";
+import {
+  kuramotoNetClock
+} from "../interfaces/clockInterface.js";
+import {
+  PubSub
+} from "../messaging/pubSub.js";
+import {
+  PeerStreaming
+} from "../interfaces/peerStreaming.js";
 
 /**
  * The CustomAudioNode is a class that extends AudioWorkletNode
@@ -11,15 +20,15 @@ import { PubSub } from "../messaging/pubSub.js";
  * @extends AudioWorkletNode
  */
 class MaxiNode extends AudioWorkletNode {
-	constructor(audioContext, processorName) {
-		// super(audioContext, processorName);
-		let options = {
-			numberOfInputs: 1,
-			numberOfOutputs: 1,
-			outputChannelCount: [2]
-		};
-		super(audioContext, processorName, options);
-	}
+  constructor(audioContext, processorName) {
+    // super(audioContext, processorName);
+    let options = {
+      numberOfInputs: 1,
+      numberOfOutputs: 1,
+      outputChannelCount: [2]
+    };
+    super(audioContext, processorName, options);
+  }
 }
 
 /**
@@ -28,405 +37,429 @@ class MaxiNode extends AudioWorkletNode {
  * @class AudioEngine
  */
 class AudioEngine {
-	/**
-	 * @constructor
-	 */
-	constructor() {
-		if (AudioEngine.instance) {
-			return AudioEngine.instance; // Singleton pattern
-		}
-		AudioEngine.instance = this;
+  /**
+   * @constructor
+   */
+  constructor() {
+    if (AudioEngine.instance) {
+      return AudioEngine.instance; // Singleton pattern
+    }
+    AudioEngine.instance = this;
 
-		// AudioContext needs lazy loading to workaround the Chrome warning
-		// Audio Engine first play() call, triggered by user, prevents the warning
-		// by setting this.audioContext = new AudioContext();
-		this.audioContext;
-		this.audioWorkletProcessorName = "maxi-processor";
-		this.audioWorkletUrl = "maxi-processor.js";
-		this.audioWorkletNode;
-		this.samplesLoaded = false;
+    // AudioContext needs lazy loading to workaround the Chrome warning
+    // Audio Engine first play() call, triggered by user, prevents the warning
+    // by setting this.audioContext = new AudioContext();
+    this.audioContext;
+    this.audioWorkletProcessorName = "maxi-processor";
+    this.audioWorkletUrl = "maxi-processor.js";
+    this.audioWorkletNode;
+    this.samplesLoaded = false;
 
-		// Hash of on-demand analysers (e.g. spectrogram, oscilloscope)
-		this.analysers = {};
+    // Hash of on-demand analysers (e.g. spectrogram, oscilloscope)
+    this.analysers = {};
 
-		// Sema's Publish-Subscribe pattern object with "lowercase-lowecase" format convention for subscription topic
-		this.messaging = new PubSub();
-		this.messaging.subscribe("eval-dsp", e => this.evalDSP(e));
-		this.messaging.subscribe("stop-audio", e => this.stop());
-		this.messaging.subscribe("load-sample", (name, url) =>
-			this.loadSample(name, url)
-		);
-		this.messaging.subscribe("model-output-data", e =>
-			this.onMessagingEventHandler(e)
-		);
-		this.messaging.subscribe("clock-phase", e =>
-			this.onMessagingEventHandler(e)
-		);
-    this.messaging.subscribe("model-send-buffer", e=> {
-        this.onMessagingEventHandler(e)
+    // Sema's Publish-Subscribe pattern object with "lowercase-lowecase" format convention for subscription topic
+    this.messaging = new PubSub();
+    this.messaging.subscribe("eval-dsp", e => this.evalDSP(e));
+    this.messaging.subscribe("stop-audio", e => this.stop());
+    this.messaging.subscribe("load-sample", (name, url) =>
+      this.loadSample(name, url)
+    );
+    this.messaging.subscribe("model-output-data", e =>
+      this.onMessagingEventHandler(e)
+    );
+    this.messaging.subscribe("clock-phase", e =>
+      this.onMessagingEventHandler(e)
+    );
+    this.messaging.subscribe("model-send-buffer", e => {
+      this.onMessagingEventHandler(e)
     });
-		this.messaging.subscribe("add-analyser", e =>
-			this.createAnalyser(e.type, e.id)
-		);
-		this.messaging.subscribe("remove-analyser", e => this.removeAnalyser(e.id));
-		// this.messaging.subscribe("osc", e => console.log(`DEBUG:AudioEngine:OSC: ${e}`));
+    this.messaging.subscribe("add-analyser", e =>
+      this.createAnalyser(e.type, e.id)
+    );
+    this.messaging.subscribe("remove-analyser", e => this.removeAnalyser(e.id));
+    // this.messaging.subscribe("osc", e => console.log(`DEBUG:AudioEngine:OSC: ${e}`));
 
-		this.kuraClock = new kuramotoNetClock();
-	}
+    this.kuraClock = new kuramotoNetClock();
 
-	/**
-	 * Handler of audio worklet processor events
-	 * @onProcessorMessageEventHandler
-	 */
-	onProcessorMessageEventHandler(event) {
-		if (event != undefined && event.data != undefined) {
-			// console.log("DEBUG:AudioEngine:processorMessageHandler:");
-			// console.log(event);
-			if (event.data === "giveMeSomeSamples") {
-			} else if (event.data.phase != undefined) {
-				// console.log('DEBUG:AudioEngine:phase:');
-				// console.log(event.data.phase);
-				this.kuraClock.broadcastPhase(event.data.phase); // TODO Refactor p to phase
-			} else if (event.data.rq != undefined && event.data.rq === "send") {
-				// Stream generated by 'toJS' live code instruction — e.g. {10,0,{1}sin}toJS;
-				// publishes to model/JS editor, which posts to ml.worker
-				this.messaging.publish("model-input-data", {
-					type: "model-input-data",
-					id: event.data.id,
-					value: event.data.value
-				});
-			} else if (event.data.rq != undefined && event.data.rq === "receive") {
-				// Stream generated by 'fromJS' live code instruction – e.g. {{10,1}fromJS}saw
-				// publishes to model/JS editor, which posts to ml.worker
-				this.messaging.publish("model-output-data-request", {
-					type: "model-output-data-request",
-					value: event.data.value,
-					transducerName: event.data.transducerName
-				});
-			}
-		}
-	}
+    this.peerNet = new PeerStreaming();
+    this.messaging.subscribe("peermsg", (e)=> {
+      console.log('peer', e);
+      e.ttype = 'NET';
+      onMessagingEventHandler(e);
+    });
+  }
 
-	/**
-	 * Handler of the Pub/Sub message events
-	 * whose topics are subscribed to in the audio engine constructor
-	 * @onMessagingEventHandler
-	 */
-	onMessagingEventHandler(event) {
-		if (event != undefined) {
-			// Receive notification from "model-output-data" topic
-			// console.log("DEBUG:AudioEngine:onMessagingEventHandler:");
-			// console.log(event);
-			this.audioWorkletNode.port.postMessage(event);
-		}
-	}
+  /**
+   * Handler of audio worklet processor events
+   * @onProcessorMessageEventHandler
+   */
+  onProcessorMessageEventHandler(event) {
+    if (event != undefined && event.data != undefined) {
+      // console.log("DEBUG:AudioEngine:processorMessageHandler:");
+      // console.log(event);
+      if (event.data === "giveMeSomeSamples") {} else if (event.data.phase != undefined) {
+        // console.log('DEBUG:AudioEngine:phase:');
+        // console.log(event.data.phase);
+        this.kuraClock.broadcastPhase(event.data.phase); // TODO Refactor p to phase
+      } else if (event.data.rq != undefined && event.data.rq === "send") {
+        switch (event.data.ttype) {
+          case 'ML':
+            // Stream generated by 'toJS' live code instruction — e.g. {10,0,{1}sin}toJS;
+            // publishes to model/JS editor, which posts to ml.worker
+            this.messaging.publish("model-input-data", {
+              type: "model-input-data",
+              value: event.data.value,
+              ch: event.data.ch, //channel ID
+            });
+            break;
+          case 'NET':
+            this.peerNet.send(event.data.value[0], event.data.value[1], event.data.value[2]);
+            break;
+        }
+      } else if (event.data.rq != undefined && event.data.rq === "receive") {
+        switch (event.data.ttype) {
+          case 'ML':
+            // Stream generated by 'fromJS' live code instruction – e.g. {{10,1}fromJS}saw
+            // publishes to model/JS editor, which posts to ml.worker
+            this.messaging.publish("model-output-data-request", {
+              type: "model-output-data-request",
+              value: event.data.value,
+              channel: event.data.ch
+            });
+            break;
+          case 'NET':
+            break;
+        }
+      }
+    }
+  }
 
-	/**
-	 * Creates a WAAPI analyser node
-	 * @todo configuration object as argumen
-	 * @createAnalyser
-	 */
-	createAnalyser(name) {
-		if (this.audioContext !== undefined) {
-			let analyser = this.audioContext.createAnalyser();
-			analyser.fftSize = 2048;
-			let dataArray = new Uint8Array(analyser.frequencyBinCount);
-			analyser.getByteTimeDomainData(dataArray);
-			this.analysers[name] = analyser;
-			this.connectAnalyser(analyser); // @todo Move out
-		}
-	}
+  /**
+   * Handler of the Pub/Sub message events
+   * whose topics are subscribed to in the audio engine constructor
+   * @onMessagingEventHandler
+   */
+  onMessagingEventHandler(event) {
+    if (event != undefined) {
+      // Receive notification from "model-output-data" topic
+      // console.log("DEBUG:AudioEngine:onMessagingEventHandler:");
+      // console.log(event);
+      this.audioWorkletNode.port.postMessage(event);
+    }
+  }
 
-	/**
-	 * Creates a WAAPI analyser node
-	 * TODO configuration object as argument
-	 * @createAnalyser
-	 */
-	removeAnalyser(name) {
-		if (this.audioContext !== undefined) {
-			let analyser = this.analysers[name];
-			if (analyser !== undefined) {
-				this.disconnectAnalyser(analyser); // @todo Move out
-				delete this.analysers[name];
-			}
-		}
-	}
+  /**
+   * Creates a WAAPI analyser node
+   * @todo configuration object as argumen
+   * @createAnalyser
+   */
+  createAnalyser(name) {
+    if (this.audioContext !== undefined) {
+      let analyser = this.audioContext.createAnalyser();
+      analyser.fftSize = 2048;
+      let dataArray = new Uint8Array(analyser.frequencyBinCount);
+      analyser.getByteTimeDomainData(dataArray);
+      this.analysers[name] = analyser;
+      this.connectAnalyser(analyser); // @todo Move out
+    }
+  }
 
-	/**
-	 * Connects WAAPI analyser node to the main audio worklet for visualisation.
-	 * @disconnectAnalyser
-	 */
-	disconnectAnalyser(analyser) {
-		if (this.audioWorkletNode !== undefined) {
-			this.audioWorkletNode.disconnect(analyser);
-		}
-	}
+  /**
+   * Creates a WAAPI analyser node
+   * TODO configuration object as argument
+   * @createAnalyser
+   */
+  removeAnalyser(name) {
+    if (this.audioContext !== undefined) {
+      let analyser = this.analysers[name];
+      if (analyser !== undefined) {
+        this.disconnectAnalyser(analyser); // @todo Move out
+        delete this.analysers[name];
+      }
+    }
+  }
 
-	/**
-	 * Connects WAAPI analyser node to the main audio worklet for visualisation.
-	 * @connectAnalyser
-	 */
-	connectAnalyser(analyser) {
-		if (this.audioWorkletNode !== undefined) {
-			this.audioWorkletNode.connect(analyser);
-		}
-	}
+  /**
+   * Connects WAAPI analyser node to the main audio worklet for visualisation.
+   * @disconnectAnalyser
+   */
+  disconnectAnalyser(analyser) {
+    if (this.audioWorkletNode !== undefined) {
+      this.audioWorkletNode.disconnect(analyser);
+    }
+  }
 
-	// NOTE:FB Test code should be segregated from production code into its own fixture.
-	// Otherwise, it becomes bloated, difficult to read and reason about.
-	// messageHandler(data) {
-	// 	if (data == "dspStart") {
-	// 		this.ts = window.performance.now();
-	// 	}
-	// 	if (data == "dspEnd") {
-	// 		this.ts = window.performance.now() - this.ts;
-	// 		this.dspTime = this.dspTime * 0.9 + this.ts * 0.1; //time for 128 sample buffer
-	// 		this.onNewDSPLoadValue((this.dspTime / 2.90249433106576) * 100);
-	// 	}
-	// 	if (data == "evalEnd") {
-	// 		let evalts = window.performance.now();
-	// 		this.onEvalTimestamp(evalts);
-	// 	} else if (data == "evalEnd") {
-	// 		let evalts = window.performance.now();
-	// 		this.onEvalTimestamp(evalts);
-	// 	} else if (data == "giveMeSomeSamples") {
-	// 		// this.msgHandler("giveMeSomeSamples");    	// NOTE:FB Untangling the previous msgHandler hack from the audio engine
-	// 	} else {
-	// 		this.msgHandler(data);
-	// 	}
-	// }
+  /**
+   * Connects WAAPI analyser node to the main audio worklet for visualisation.
+   * @connectAnalyser
+   */
+  connectAnalyser(analyser) {
+    if (this.audioWorkletNode !== undefined) {
+      this.audioWorkletNode.connect(analyser);
+    }
+  }
 
-	/**
-	 * Initialises audio context and sets worklet processor code
-	 * @play
-	 */
-	async init(numClockPeers) {
-		if (this.audioContext === undefined) {
-			this.audioContext = new AudioContext({
-				// create audio context with latency optimally configured for playback
-				latencyHint: "playback",
-				sample: 44100
-			});
+  // NOTE:FB Test code should be segregated from production code into its own fixture.
+  // Otherwise, it becomes bloated, difficult to read and reason about.
+  // messageHandler(data) {
+  // 	if (data == "dspStart") {
+  // 		this.ts = window.performance.now();
+  // 	}
+  // 	if (data == "dspEnd") {
+  // 		this.ts = window.performance.now() - this.ts;
+  // 		this.dspTime = this.dspTime * 0.9 + this.ts * 0.1; //time for 128 sample buffer
+  // 		this.onNewDSPLoadValue((this.dspTime / 2.90249433106576) * 100);
+  // 	}
+  // 	if (data == "evalEnd") {
+  // 		let evalts = window.performance.now();
+  // 		this.onEvalTimestamp(evalts);
+  // 	} else if (data == "evalEnd") {
+  // 		let evalts = window.performance.now();
+  // 		this.onEvalTimestamp(evalts);
+  // 	} else if (data == "giveMeSomeSamples") {
+  // 		// this.msgHandler("giveMeSomeSamples");    	// NOTE:FB Untangling the previous msgHandler hack from the audio engine
+  // 	} else {
+  // 		this.msgHandler(data);
+  // 	}
+  // }
 
-			await this.loadWorkletProcessorCode();
-			this.connectMediaStream();
-			this.loadImportedSamples();
+  /**
+   * Initialises audio context and sets worklet processor code
+   * @play
+   */
+  async init(numClockPeers) {
+    if (this.audioContext === undefined) {
+      this.audioContext = new AudioContext({
+        // create audio context with latency optimally configured for playback
+        latencyHint: "playback",
+        sample: 44100
+      });
 
-			// No need to inject the callback here, messaging is built in KuraClock
-			// this.kuraClock = new kuramotoNetClock((phase, idx) => {
-			//   // console.log( `DEBUG:AudioEngine:sendPeersMyClockPhase:phase:${phase}:id:${idx}`);
-			//   // This requires an initialised audio worklet
-			//   this.audioWorkletNode.port.postMessage({ phase: phase, i: idx });
-			// });
+      await this.loadWorkletProcessorCode();
+      this.connectMediaStream();
+      this.loadImportedSamples();
 
-			if (this.kuraClock.connected()) {
-				this.kuraClock.queryPeers(async numClockPeers => {
-					console.log(`DEBUG:AudioEngine:init:numClockPeers: ${numClockPeers}`);
-				});
-			}
-		}
-	}
+      // No need to inject the callback here, messaging is built in KuraClock
+      // this.kuraClock = new kuramotoNetClock((phase, idx) => {
+      //   // console.log( `DEBUG:AudioEngine:sendPeersMyClockPhase:phase:${phase}:id:${idx}`);
+      //   // This requires an initialised audio worklet
+      //   this.audioWorkletNode.port.postMessage({ phase: phase, i: idx });
+      // });
 
-	/**
-	 * Initialises audio context and sets worklet processor code
-	 * or re-starts audio playback by stopping and running the latest Audio Worklet Processor code
-	 * @play
-	 */
-	play() {
-		if (this.audioContext !== undefined) {
-			if (this.audioContext.state !== "suspended") {
-				this.stop();
-				return false;
-			} else {
-				this.audioContext.resume();
-				return true;
-			}
-		}
-	}
+      if (this.kuraClock.connected()) {
+        this.kuraClock.queryPeers(async numClockPeers => {
+          console.log(`DEBUG:AudioEngine:init:numClockPeers: ${numClockPeers}`);
+        });
+      }
+    }
+  }
 
-	/**
-	 * Suspends AudioContext (Pause)
-	 * @stop
-	 */
-	stop() {
-		if (this.audioWorkletNode !== undefined) {
-			this.audioContext.suspend();
-		}
-	}
+  /**
+   * Initialises audio context and sets worklet processor code
+   * or re-starts audio playback by stopping and running the latest Audio Worklet Processor code
+   * @play
+   */
+  play() {
+    if (this.audioContext !== undefined) {
+      if (this.audioContext.state !== "suspended") {
+        this.stop();
+        return false;
+      } else {
+        this.audioContext.resume();
+        return true;
+      }
+    }
+  }
 
-	/**
-	 * Stops audio by disconnecting AudioNode with AudioWorkletProcessor code
-	 * from Web Audio graph TODO Investigate when it is best to just STOP the graph exectution
-	 * @stop
-	 */
-	stopAndRelease() {
-		if (this.audioWorkletNode !== undefined) {
-			this.audioWorkletNode.disconnect(this.audioContext.destination);
-			this.audioWorkletNode = undefined;
-		}
-	}
+  /**
+   * Suspends AudioContext (Pause)
+   * @stop
+   */
+  stop() {
+    if (this.audioWorkletNode !== undefined) {
+      this.audioContext.suspend();
+    }
+  }
 
-	more(gain) {
-		if (this.audioWorkletNode !== undefined) {
-			const gainParam = this.audioWorkletNode.parameters.get(gain);
-			gainParam.value += 0.5;
-			console.log(gain + ": " + gainParam.value); // DEBUG
-			return true;
-		} else return false;
-	}
+  /**
+   * Stops audio by disconnecting AudioNode with AudioWorkletProcessor code
+   * from Web Audio graph TODO Investigate when it is best to just STOP the graph exectution
+   * @stop
+   */
+  stopAndRelease() {
+    if (this.audioWorkletNode !== undefined) {
+      this.audioWorkletNode.disconnect(this.audioContext.destination);
+      this.audioWorkletNode = undefined;
+    }
+  }
 
-	less(gain) {
-		if (this.audioWorkletNode !== undefined) {
-			const gainParam = this.audioWorkletNode.parameters.get(gain);
-			gainParam.value -= 0.5;
-			console.log(gain + ": " + gainParam.value); // DEBUG
-			return true;
-		} else return false;
-	}
+  more(gain) {
+    if (this.audioWorkletNode !== undefined) {
+      const gainParam = this.audioWorkletNode.parameters.get(gain);
+      gainParam.value += 0.5;
+      console.log(gain + ": " + gainParam.value); // DEBUG
+      return true;
+    } else return false;
+  }
 
-	evalDSP(dspFunction) {
-		// console.log("DEBUG:AudioEngine:evalDSP:");
-		// console.log(dspFunction);
-		if (this.audioWorkletNode !== undefined) {
-			if (this.audioContext.state === "suspended") this.audioContext.resume();
-			this.audioWorkletNode.port.postMessage({
-				eval: 1,
-				setup: dspFunction.setup,
-				loop: dspFunction.loop
-			});
-			return true;
-		} else return false;
-	}
+  less(gain) {
+    if (this.audioWorkletNode !== undefined) {
+      const gainParam = this.audioWorkletNode.parameters.get(gain);
+      gainParam.value -= 0.5;
+      console.log(gain + ": " + gainParam.value); // DEBUG
+      return true;
+    } else return false;
+  }
 
-	sendClockPhase(phase, idx) {
-		if (this.audioWorkletNode !== undefined) {
-			this.audioWorkletNode.port.postMessage({ phase: phase, i: idx });
-		}
-	}
+  evalDSP(dspFunction) {
+    // console.log("DEBUG:AudioEngine:evalDSP:");
+    // console.log(dspFunction);
+    if (this.audioWorkletNode !== undefined) {
+      if (this.audioContext.state === "suspended") this.audioContext.resume();
+      this.audioWorkletNode.port.postMessage({
+        eval: 1,
+        setup: dspFunction.setup,
+        loop: dspFunction.loop
+      });
+      return true;
+    } else return false;
+  }
 
-	onAudioInputInit(stream) {
-		// console.log("DEBUG:AudioEngine: Audio Input init");
-		let mediaStreamSource = this.audioContext.createMediaStreamSource(stream);
-		mediaStreamSource.connect(this.audioWorkletNode);
-	}
+  sendClockPhase(phase, idx) {
+    if (this.audioWorkletNode !== undefined) {
+      this.audioWorkletNode.port.postMessage({
+        phase: phase,
+        i: idx
+      });
+    }
+  }
 
-	onAudioInputFail(error) {
-		console.log(
-			`DEBUG:AudioEngine:AudioInputFail: ${error.message} ${error.name}`
-		);
-	}
+  onAudioInputInit(stream) {
+    // console.log("DEBUG:AudioEngine: Audio Input init");
+    let mediaStreamSource = this.audioContext.createMediaStreamSource(stream);
+    mediaStreamSource.connect(this.audioWorkletNode);
+  }
 
-	/**
-	 * Sets up an AudioIn WAAPI sub-graph
-	 * @connectMediaStreamSourceInput
-	 */
-	async connectMediaStream() {
-		const constraints = (window.constraints = {
-			audio: true,
-			video: false
-		});
+  onAudioInputFail(error) {
+    console.log(
+      `DEBUG:AudioEngine:AudioInputFail: ${error.message} ${error.name}`
+    );
+  }
 
-		navigator.mediaDevices
-			.getUserMedia(constraints)
-			.then(s => this.onAudioInputInit(s))
-			.catch(this.onAudioInputFail);
-	}
+  /**
+   * Sets up an AudioIn WAAPI sub-graph
+   * @connectMediaStreamSourceInput
+   */
+  async connectMediaStream() {
+    const constraints = (window.constraints = {
+      audio: true,
+      video: false
+    });
 
-	/**
-	 * Loads audioWorklet processor code into a worklet,
-	 * setups up all handlers (errors, async messaging, etc),
-	 * connects the worklet processor to the WAAPI graph
-	 *
-	 */
-	async loadWorkletProcessorCode() {
-		if (this.audioContext !== undefined) {
-			try {
-				await this.audioContext.audioWorklet.addModule(this.audioWorkletUrl);
+    navigator.mediaDevices
+      .getUserMedia(constraints)
+      .then(s => this.onAudioInputInit(s))
+      .catch(this.onAudioInputFail);
+  }
 
-				// Custom node constructor with required parameters
-				this.audioWorkletNode = new MaxiNode(
-					this.audioContext,
-					this.audioWorkletProcessorName
-				);
+  /**
+   * Loads audioWorklet processor code into a worklet,
+   * setups up all handlers (errors, async messaging, etc),
+   * connects the worklet processor to the WAAPI graph
+   *
+   */
+  async loadWorkletProcessorCode() {
+    if (this.audioContext !== undefined) {
+      try {
+        await this.audioContext.audioWorklet.addModule(this.audioWorkletUrl);
 
-				// All possible error event handlers subscribed
-				this.audioWorkletNode.onprocessorerror = event => {
-					// Errors from the processor
-					console.log(
-						`DEBUG:AudioEngine:loadWorkletProcessorCode: MaxiProcessor Error detected`
-					);
-				};
+        // Custom node constructor with required parameters
+        this.audioWorkletNode = new MaxiNode(
+          this.audioContext,
+          this.audioWorkletProcessorName
+        );
 
-				this.audioWorkletNode.port.onmessageerror = event => {
-					//  error from the processor port
-					console.log(
-						`DEBUG:AudioEngine:loadWorkletProcessorCode: Error message from port: ` +
-							event.data
-					);
-				};
+        // All possible error event handlers subscribed
+        this.audioWorkletNode.onprocessorerror = event => {
+          // Errors from the processor
+          console.log(
+            `DEBUG:AudioEngine:loadWorkletProcessorCode: MaxiProcessor Error detected`
+          );
+        };
 
-				// State changes in the audio worklet processor
-				this.audioWorkletNode.onprocessorstatechange = event => {
-					console.log(
-						`DEBUG:AudioEngine:loadWorkletProcessorCode: MaxiProcessor state change detected: ` +
-							audioWorkletNode.processorState
-					);
-				};
+        this.audioWorkletNode.port.onmessageerror = event => {
+          //  error from the processor port
+          console.log(
+            `DEBUG:AudioEngine:loadWorkletProcessorCode: Error message from port: ` +
+            event.data
+          );
+        };
 
-				// Worklet Processor message handler
-				this.audioWorkletNode.port.onmessage = event => {
-					this.onProcessorMessageEventHandler(event);
-				};
+        // State changes in the audio worklet processor
+        this.audioWorkletNode.onprocessorstatechange = event => {
+          console.log(
+            `DEBUG:AudioEngine:loadWorkletProcessorCode: MaxiProcessor state change detected: ` +
+            audioWorkletNode.processorState
+          );
+        };
 
-				// Connect the worklet node to the audio graph
-				this.audioWorkletNode.connect(this.audioContext.destination);
+        // Worklet Processor message handler
+        this.audioWorkletNode.port.onmessage = event => {
+          this.onProcessorMessageEventHandler(event);
+        };
 
-				return true;
-			} catch (err) {
-				console.log(
-					"DEBUG:AudioEngine:loadWorkletProcessorCode: AudioWorklet not supported in this browser: ",
-					err.message
-				);
-				return false;
-			}
-		} else {
-			return false;
-		}
-	}
+        // Connect the worklet node to the audio graph
+        this.audioWorkletNode.connect(this.audioContext.destination);
 
-	getSamplesNames() {
-		const r = require.context("../../assets/samples", false, /\.wav$/);
+        return true;
+      } catch (err) {
+        console.log(
+          "DEBUG:AudioEngine:loadWorkletProcessorCode: AudioWorklet not supported in this browser: ",
+          err.message
+        );
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
 
-		// return an array list of filenames (with extension)
-		const importAll = r => r.keys().map(file => file.match(/[^\/]+$/)[0]);
+  getSamplesNames() {
+    const r = require.context("../../assets/samples", false, /\.wav$/);
 
-		return importAll(r);
-	}
+    // return an array list of filenames (with extension)
+    const importAll = r => r.keys().map(file => file.match(/[^\/]+$/)[0]);
 
-	loadSample(objectName, url) {
-		if (this.audioContext !== undefined) {
-			loadSampleToArray(
-				this.audioContext,
-				objectName,
-				url,
-				this.audioWorkletNode
-			);
-		} else throw "Audio Context is not initialised!";
-	}
+    return importAll(r);
+  }
 
-	lazyLoadSample(sampleName, sample) {
-		import(/* webpackMode: "lazy" */ `../../assets/samples/${sampleName}`)
-			.then(sample => this.loadSample(sampleName, `samples/${sampleName}`))
-			.catch(err => console.error(`DEBUG:AudioEngine:lazyLoadSample: ` + err));
-	}
+  loadSample(objectName, url) {
+    if (this.audioContext !== undefined) {
+      loadSampleToArray(
+        this.audioContext,
+        objectName,
+        url,
+        this.audioWorkletNode
+      );
+    } else throw "Audio Context is not initialised!";
+  }
 
-	loadImportedSamples() {
-		let samplesNames = this.getSamplesNames();
-		console.log("DEBUG:AudioEngine:getSamplesNames: " + samplesNames);
-		samplesNames.forEach(sampleName => {
-			this.lazyLoadSample(sampleName);
-		});
-	}
+  lazyLoadSample(sampleName, sample) {
+    import( /* webpackMode: "lazy" */ `../../assets/samples/${sampleName}`)
+      .then(sample => this.loadSample(sampleName, `samples/${sampleName}`))
+      .catch(err => console.error(`DEBUG:AudioEngine:lazyLoadSample: ` + err));
+  }
+
+  loadImportedSamples() {
+    let samplesNames = this.getSamplesNames();
+    console.log("DEBUG:AudioEngine:getSamplesNames: " + samplesNames);
+    samplesNames.forEach(sampleName => {
+      this.lazyLoadSample(sampleName);
+    });
+  }
 }
 
-export { AudioEngine };
+export {
+  AudioEngine
+};

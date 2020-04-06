@@ -102,14 +102,14 @@
 
       })
       .then(outputs => {
-        console.log('DEBUG:LiveCodeEditor:parseLiveCode:then1');
-        console.log(outputs);
+        // console.log('DEBUG:LiveCodeEditor:parseLiveCode:then1');
+        // console.log(outputs);
         const { parserOutputs, parserResults } = outputs;
         if( parserOutputs && parserResults ){
           $liveCodeParseResults = parserResults;
           $liveCodeAbstractSyntaxTree = parserOutputs;  //Deep clone created in the worker for AST visualization
           $liveCodeParseErrors = "";
-          // Tree traversal in the main tree. 
+          // Tree traversal in the main tree.
           let dspCode = IRToJavascript.treeToCode($liveCodeParseResults, 0);
           console.log("code generated");
 
@@ -195,7 +195,7 @@
 
   const evalLiveCodeOnEditorCommand = () => {
 
-    console.log("parsing");
+    // console.log("parsing");
     try {
       parseLiveCodeAsync(codeMirror.getBlock()); // Code block parsed by parser.worker
       // // Parse results are kept in stores for feeding svelte components
