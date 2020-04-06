@@ -247,8 +247,16 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
     this.transducers = [];
 
+    this.matchTransducers = (ttype, channel) => {
+        return this.transducers.filter(x=>x.transducerType==ttype && x.channelID == channel);
+    }
+
     this.registerInputTransducer = (ttype, channelID) => {
       let transducer = new PostMsgInputTransducer(ttype, channelID);
+      let existingTransducers = this.matchTransducers(ttype, channelID);
+      if (existingTransducers.length > 0) {
+        transducer.setValue(existingTransducers[0].getValue());
+      }
       this.transducers.push(transducer);
       console.log(this.transducers);
       return transducer;
@@ -282,8 +290,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
         addSampleBuffer(event.data.name, event.data.data);
       } else if ('func' in event.data && 'data' == event.data.func) {
         //this is from the ML window, map it on to any listening transducers
-        console.log('ae',event.data);
-        let targetTransducers = this.transducers.filter(x=>x.transducerType=='ML' && x.channelID == event.data.ch);
+        let targetTransducers = this.matchTransducers('ML', event.data.ch);
         for(let idx in targetTransducers) {
           targetTransducers[idx].setValue(event.data.val);
         }
