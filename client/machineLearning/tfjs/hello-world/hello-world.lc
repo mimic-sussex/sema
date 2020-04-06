@@ -1,3 +1,2 @@
-:out:{10,0,{{{50}sin}abs,10}mul}toJS;
-:in:{10,1}fromJS;
-{:in:}saw
+{1, {{0.5}pha, 5}mul, 0}toJS;
+{{{0}fromJS,10}mul}sawn

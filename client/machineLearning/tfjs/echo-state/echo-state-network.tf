@@ -36,10 +36,3 @@ next = () => {
    return ((esn.output.dataSync()[0] + 1) * 100) + 100;
 }
 __________
-tf.memory().numTensors
-esn
-esn
-__________
-console.log("cheese")
-console.log("cheese2")
-console.log("cheese3")
