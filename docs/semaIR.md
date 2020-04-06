@@ -281,9 +281,10 @@ Receive and open sound control signal
 ### toJS
 Creates a transducer for sending a signal to a javascript model
  1. Polling frequency
- 2. Data 1
- 3. Data 2
+ 2. Data value (this can be a list or a number)
+ 3. Channel
 ### fromJS
 Creates a transducer for receiving a signal from a javascript model
- 1. Polling frequency
- 2. Data
+  1. Channel (a number)
+
+These functions are paired with 'input' and 'output' in the machine learning window

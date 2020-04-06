@@ -1,3 +1,17 @@
+# communicating with the audio engine
+
+The audio engine sends data with @toJS.  This sends a data item, and a channel number, which is routed to the 'input' function in the ML window.  You can reply with the output function, e.g.
+
+```
+input = (x, id) => {
+	console.log(">toModel: "+[id,x]);
+	let prediction = test(x);
+	console.log('Prediction: ',prediction);
+	output(prediction, 0)
+};
+
+```
+
 # data storage and loading
 
 ```
