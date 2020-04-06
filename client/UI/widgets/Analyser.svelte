@@ -101,7 +101,7 @@
 </script>
 
 <style>
-  .canvas-container {
+  /* .canvas-container {
     height: 100%;
     width: 100%;
     background: transparent;
@@ -112,8 +112,8 @@
 		top: 0;
 		left: 0;
 		background-color: rgba(255,255,255,0.7);
-		/* padding: 1em; */
-  }
+		padding: 1em; 
+  } */
 
   canvas {
     /* opacity:0.1; */
@@ -134,9 +134,7 @@
 </style>
 
 
-<!-- <div class="canvas-container"> -->
-  <canvas bind:this={canvas} 
-          class="canvas"
-          onclick={ () => toggleRendering() } ></canvas>
-<!-- </div> -->
+<canvas bind:this={canvas} 
+        class="canvas"
+        onclick={ () => toggleRendering() } ></canvas>
 
