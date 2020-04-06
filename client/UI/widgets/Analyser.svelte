@@ -36,11 +36,6 @@
     }
   }
 
-  let getFrequencyValue = function(freq) {
-    var nyquist = context.sampleRate/2;
-    var index = Math.round(freq/nyquist * this.freqs.length);
-    return this.freqs[index];
-  }
 
 	const renderLoop = () => {
      
