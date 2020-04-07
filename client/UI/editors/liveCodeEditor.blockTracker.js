@@ -70,6 +70,7 @@ class blockTracker {
     }
     console.log(change);
     switch(change.origin) {
+        //same handler for deleting and cutting
         case "+delete":
         case "cut":
           //was a line removed?
@@ -91,7 +92,7 @@ class blockTracker {
             if (change.to.ch > 0) {
               console.log("testing last line");
               let lineToCheck = change.from.line + change.removed.length;
-              testRemoveLine(lineToCheck, this.editor.getLine(chage.from.line), false);
+              testRemoveLine(lineToCheck, this.editor.getLine(change.from.line), false);
               endIdx--;
             }
             if (change.removed.length>1) {
@@ -122,6 +123,17 @@ class blockTracker {
             testInsertLine(startLine + parseInt(line), change.text[line]);
           }
 
+        break;
+        case "setValue":
+          for (let line in change.text) {
+            testInsertLine(parseInt(line), change.text[line]);
+          }
+        break;
+        case "undo":
+        //TODO
+        break;
+        case "redo":
+        //TODO
         break;
     };
   }
