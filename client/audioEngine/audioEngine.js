@@ -229,7 +229,7 @@ class AudioEngine {
 				let analyserFrameId = requestAnimationFrame(analyserPollingLoop);
 
         this.analysers[name] = { analyser, analyserFrameId };
-				console.log(`frameID of analyser ${name}: ${analyserFrameId}`);
+				// console.log(`frameID of analyser ${name}: ${analyserFrameId}`);
 
 				return analyserFrameId;
 			};
