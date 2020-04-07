@@ -332,6 +332,10 @@ Set the clock frequency (Hz)
 Set the clock speed in bpm
  1. Beats per minute
 
+### barfreq
+Set the number of times a bar occurs within a cycle of the clock.  New blocks of code are started at the beginning of a bar.
+1. Frequency
+
 ## Triggers
 
 ### onzx

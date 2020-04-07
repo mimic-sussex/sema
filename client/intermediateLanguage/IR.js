@@ -366,6 +366,10 @@ var jsFuncMap = {
 		setup: (o, p) => "",
 		loop:  (o, p) => `this.setClockFreq(60/${p[0].loop})`
 	},
+	barfreq: {
+		setup: (o, p) => "",
+		loop:  (o, p) => `this.setBarFrequency(${p[0].loop})`
+	},
   onzx: {
 		setup: (o, p) => `${o} = new Module.maxiTrigger();`,
 		loop:  (o, p) => `${o}.onZX(${p[0].loop})`
