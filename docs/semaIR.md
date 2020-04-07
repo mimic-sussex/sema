@@ -276,13 +276,13 @@ Receive and open sound control signal
  1. OSC address
  2. Index of the OSC data element to observe (-1 means all elements)
 
-### toNet
+### toPeer
  1. Signal
  2. Destination (peer ID) (see sema.peerinfo())
  3. Channel number
  4. Frequency
 
-### fromNet
+### fromPeer
  1. Source (peer ID) (see sema.peerinfo())
  2. Channel number
 
@@ -297,3 +297,5 @@ Creates a transducer for receiving a signal from a javascript model
   1. Channel (a number)
 
 These functions are paired with 'input' and 'output' in the machine learning window
+
+## Sequencing

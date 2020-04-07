@@ -73,7 +73,7 @@ class blockTracker {
         //same handler for deleting and cutting
         case "+delete":
         case "cut":
-          //was a line removed?
+          //was a line single removed?
           if (change.removed.length==2 && change.removed[0] == "" && change.removed[1] == "") {
             console.log("line removed");
             removeLines(change.from.line, 1);
