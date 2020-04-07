@@ -72,9 +72,9 @@
   let nil = (e) => { }
 
   let onChange = e => {
-    console.log('DEBUG:LiveCodeEditor:onchange:');
+    // console.log('DEBUG:LiveCodeEditor:onchange:');
     console.log(e);
-    // dispatch('change', { prop:'data', value: e.detail.value });
+    btrack.onEditChange(e.detail.changeObj);    
     dispatch('change', { prop:'data', value: codeMirror.getValue() });
   }
 
@@ -131,10 +131,10 @@
     }
   }
 
-  let parseLiveCodeOnChange = e => {
+  // let parseLiveCodeOnChange = e => {
     // console.log(e.detail.changeObj);
     // console.log(codeMirror.getLine(e.detail.changeObj.to.line));
-    btrack.onEditChange(e.detail.changeObj);
+    // btrack.onEditChange(e.detail.changeObj);
     // let liveCodeEditorValue = null;
     //
     // if(e !== undefined && e.detail !== undefined && e.detail.value !== undefined)
@@ -145,7 +145,7 @@
     // if(liveCodeEditorValue) parseLiveCodeAsync(liveCodeEditorValue);
     //
     // window.localStorage.setItem("parserEditor+ID", editor.getValue());
-  }
+  // }
 
   let translateILtoDSPasync = e => { // [NOTE:FB] Note the 'async'
 

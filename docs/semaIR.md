@@ -113,6 +113,11 @@ Creates a sampler with a signal input, the sample plays when the input has a pos
 Creates a sampler that plays in a continuous loop
  1. Speed
  2. Sample name
+### slice
+Slice up a sample
+1. Trigger, on which to set the sample position
+2. The sample position to set when a trigger is received (0-1)
+3. The sample name
 ### sah
 Sample and hold
 1. Input signal
@@ -268,6 +273,15 @@ Resonant lowpass filter
  1. Input signal
  2. Filter frequency (Hz)
  3. Resonance
+### svf
+State variable filter
+1. Input signal
+2. Cutoff frequency (Hz)
+3. Resonance
+4. Low pass filter amount (0-1)
+4. Band pass filter amount (0-1)
+4. High pass filter amount (0-1)
+5. Notch filter amount (0-1)
 
 ## Networking
 
@@ -276,13 +290,13 @@ Receive and open sound control signal
  1. OSC address
  2. Index of the OSC data element to observe (-1 means all elements)
 
-### toNet
+### toPeer
  1. Signal
  2. Destination (peer ID) (see sema.peerinfo())
  3. Channel number
  4. Frequency
 
-### fromNet
+### fromPeer
  1. Source (peer ID) (see sema.peerinfo())
  2. Channel number
 
@@ -297,3 +311,49 @@ Creates a transducer for receiving a signal from a javascript model
   1. Channel (a number)
 
 These functions are paired with 'input' and 'output' in the machine learning window
+
+## Clock functions
+
+### clp
+Phasor derived from constantly running clock phasor
+  1. Multiples of the clock base frequency
+  2. Phase offset (0-1)
+
+### clt
+Trigger derived from constantly running clock phasor
+  1. Multiples of the clock base frequency
+  2. Phase offset (0-1)
+
+### clfreq
+Set the clock frequency (Hz)
+ 1. Frequency
+
+### clbpm
+Set the clock speed in bpm
+ 1. Beats per minute
+
+### barfreq
+Set the number of times a bar occurs within a cycle of the clock.  New blocks of code are started at the beginning of a bar.
+1. Frequency
+
+## Triggers
+
+### onzx
+Create a trigger on a zero crossing
+ 1. A signal
+
+### onchange
+Create a trigger when a change occurs in the input signal
+1. A signal
+2. Tolerance (a trigger will be generated if the change is more than +/- this value)
+
+### count
+Counts up when receiving a trigger
+1. Input trigger
+2. Reset trigger
+
+### idx
+Index into a list
+1. Trigger input - output a value when triggered
+2. The index of the value to be output when a trigger is received (normalised to between 0 and 1)
+3. A list of values

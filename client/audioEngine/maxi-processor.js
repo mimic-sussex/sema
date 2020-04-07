@@ -300,26 +300,21 @@ class MaxiProcessor extends AudioWorkletProcessor {
           // let setupFunction = new Function(`return ${event.data['setup']}`);
           setupFunction = eval(event.data['setup']);
           loopFunction = eval(event.data['loop']);
-          // let loopFunction = new Function(`return ${event.data['loop']}`);
-
-
 
           let oldSignalFunction = this.currentSignalFunction;
           this.currentSignalFunction = 1 - this.currentSignalFunction;
           this._q[this.currentSignalFunction] = setupFunction();
           //allow feedback between evals
           this._mems[this.currentSignalFunction] = this._mems[oldSignalFunction];
-//          this._mems[this.currentSignalFunction] = this.newmem();
-          // this._q[this.currentSignalFunction] = setupFunction()();
+
           this.signals[this.currentSignalFunction] = loopFunction;
           this._cleanup[this.currentSignalFunction] = 0;
-          // this.signals[this.currentSignalFunction] = loopFunction();
-
 
           let xfadeBegin = Module.maxiMap.linlin(1.0 - this.currentSignalFunction, 0, 1, -1, 1);
           let xfadeEnd = Module.maxiMap.linlin(this.currentSignalFunction, 0, 1, -1, 1);
           this.xfadeControl.prepare(xfadeBegin, xfadeEnd, 18); // short xfade across signals
-          this.xfadeControl.triggerEnable(true); //no clock yet, so enable the trigger straight away
+          // this.codeQueued = true;
+          this.xfadeControl.triggerEnable(true); //enable the trigger straight away
         } catch (err) {
           if (err instanceof TypeError) {
             console.log("TypeError in worklet evaluation: " + err.name + " – " + err.message);
@@ -333,8 +328,10 @@ class MaxiProcessor extends AudioWorkletProcessor {
     };
     this.port.postMessage("giveMeSomeSamples");
 
-    this.clockFreq = 0.8;
+    this.clockFreq = 0.7 / 4;
     this.clockPhaseSharingInterval=0; //counter for emiting clock phase over the network
+    this.barFrequency = 4;
+    this.setBarFrequency = (freq) => {this.barFrequency = freq};
 
 //@CLP
     this.clockPhase = (multiples, phase) => {
@@ -419,9 +416,18 @@ class MaxiProcessor extends AudioWorkletProcessor {
         this.bitclock = Module.maxiBits.sig(Math.floor(this.clockPhase(1,0) * 1023.999999999));
 
         //xfade between old and new algorhythms
+        // if (this.codeQueued) {
+        //   if (this.clockTrig(1,0)) {
+        //     this.xfadeControl.triggerEnable(true); //trigger a cross fade into the new code
+        //     this.codeQueued = false;
+        //     console.log('trig');
+        //   }
+        // }
+
         let sig0 = this.signals[0](this._q[0], inputs[0][0][i], this._mems[0]);
         let sig1 = this.signals[1](this._q[1], inputs[0][0][i], this._mems[1]);
-        let xf = this.xfadeControl.play(i == 0 ? 1 : 0);
+        // let xf = this.xfadeControl.play(i == 0 ? 1 : 0);
+        let xf = this.xfadeControl.play(this.clockTrig(this.barFrequency,0));
         let w = Module.maxiXFade.xfade(sig0, sig1, xf);
 
 

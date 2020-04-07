@@ -255,19 +255,19 @@ Note: to separate the two functions in the model window you use 10 underscores:
 __________
 ```
 
-# Peer to peer communication using `fromNet` and `toNet`
+# Peer to peer communication using `fromPeer` and `toPeer`
 
 You will need to find out your Peer ID: run `sema.peerinfo()` in the ML window, and the ID will be copied to the paste bufferName. Share this ID with others who you will communicate with.
 
 ```
 :sig:{{1.9}pha,200}mul;
-{:sig:,'1q18023vvt300000',0, 10}toNet
+{:sig:,'1q18023vvt300000',0, 10}toPeer
 ```
 
 This will stream the signal in variable :sig: to peer '1q18023vvt300000' on channel 0 at frequency 10Hz
 
 ```
-{{'i6etfg8bcx000000', 0}fromNet}sqr
+{{'i6etfg8bcx000000', 0}fromPeer}sqr
 ```
 
 This receives data from peer 'i6etfg8bcx000000' on channel 0.
