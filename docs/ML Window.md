@@ -1,3 +1,17 @@
+# communicating with the audio engine
+
+The audio engine sends data with @toJS.  This sends a data item, and a channel number, which is routed to the 'input' function in the ML window.  You can reply with the output function, e.g.
+
+```
+input = (x, id) => {
+	console.log(">toModel: "+[id,x]);
+	let prediction = test(x);
+	console.log('Prediction: ',prediction);
+	output(prediction, 0)
+};
+
+```
+
 # data storage and loading
 
 ```
@@ -25,6 +39,15 @@ sema.loadF32Array(fn,
 ```
 sema.pbcopy("some text to copy to the clipboard")
 ```
+
+# Peer networking information
+
+Find out your peer ID, to use with ```fromNet``` and ```toNet```
+
+```
+sema.peerinfo()
+```
+This will copy your peerID to the paste buffer
 
 # create a buffer and send it to the audio engine
 

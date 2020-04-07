@@ -51,51 +51,47 @@
 
   let nil = (e) => { }
 
-  let onChange = e => {
 
-    dispatch('change', { prop:'data', value: codeMirror.getValue() });
-  }
-
-
-  let evalModelCode = e => {
-
-    if(window.Worker){
-      let modelWorkerAsync = new Promise( (res, rej) => {
-
-        modelWorker.postMessage({
-          eval: e
-        });
-
-        modelWorker.onmessage = m => {
-          if(m.data.message !== undefined){
-            // console.log('DEBUG:ModelEditor:evalModelCode:onmessage')
-            // console.log(e);
-            console.log(m.data.message);
-          }
-          else if(m.data !== undefined && m.data.length != 0){
-            res(m.data);
-          }
-          clearTimeout(timeout);
-        }
-      })
-      .then(outputs => {
-
-      })
-      .catch(e => {
-        // console.log('DEBUG:ModelEditor:parserWorkerAsync:catch')
-        // console.log(e);
-      });
-    }
-  }
-
+  // let evalModelCode = e => {
+  //
+  //   if(window.Worker){
+  //     let modelWorkerAsync = new Promise( (res, rej) => {
+  //
+  //       modelWorker.postMessage({
+  //         eval: e
+  //       });
+  //
+  //       modelWorker.onmessage = m => {
+  //         if(m.data.message !== undefined){
+  //           // console.log('DEBUG:ModelEditor:evalModelCode:onmessage')
+  //           // console.log(e);
+  //           console.log(m.data.message);
+  //         }
+  //         else if(m.data !== undefined && m.data.length != 0){
+  //           res(m.data);
+  //         }
+  //         clearTimeout(timeout);
+  //       }
+  //     })
+  //     .then(outputs => {
+  //
+  //     })
+  //     .catch(e => {
+  //       // console.log('DEBUG:ModelEditor:parserWorkerAsync:catch')
+  //       // console.log(e);
+  //     });
+  //   }
+  // }
+  //
   let compileGrammarOnChange = e => {
 
     let grammarEditorValue = null;
 
     // if(e !== undefined && e.detail !== undefined && e.detail.value !== undefined)
     //   grammarEditorValue = e.detail.value;
-    if(e !== undefined)
+    if(e !== undefined){
       grammarEditorValue = codeMirror.getValue();
+    }
     else
       grammarEditorValue = $grammarEditorValue;
 
@@ -104,6 +100,7 @@
       let {errors, output} = compile(grammarEditorValue);
       $grammarCompiledParser = output;
       $grammarCompilationErrors = errors;
+      dispatch('change', { prop:'data', value: grammarEditorValue });
 
       // console.log('DEBUG:GrammarEditor:compileGrammarOnChange');
       // console.log($grammarCompiledParser);
@@ -172,5 +169,5 @@ bind:value={item.value} -->
               bind:value={data}
               tab={true}
               lineNumbers={true}
-              on:change={onChange} />
+              on:change={compileGrammarOnChange} />
 </div>

@@ -7,8 +7,8 @@ importScripts("./lalolib.js");
 
 // let a = tf.tensor([100]);
 var geval = eval; // puts eval into global scope https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/eval
-geval("var input = (id,x) => {}");
-geval("var output = (x) => {return 0;}");
+geval("var input = (value, channel) => {}");
+geval("var output = (value,channel) => {postMessage({func:'data', val:value, ch:channel});}");
 geval(`
 var loadResponders = {};
 var sema = {
@@ -79,6 +79,12 @@ var sema = {
           "code": code,
       }
     )
+  },
+  peerinfo: () => {
+    postMessage ({
+      "func": "peerinfo"
+    });
+    console.log("Your peer ID has been copied to the paste buffer")
   }
 };
 `);
@@ -110,14 +116,14 @@ onmessage = m => {
 		delete loadResponders[m.data.name];
 	}
   else if (m.data.type === "model-input-data") {
-    input(m.data.id, m.data.value);
+    input(m.data.value, m.data.ch);
   }
-  else if(m.data.type === "model-output-data-request"){
-		postMessage({
-			func: "data",
-			worker: "testmodel",
-			value: output(m.data.value),
-			tranducerName: m.data.transducerName
-		});
-	}
+  // else if(m.data.type === "model-output-data-request"){
+	// 	postMessage({
+	// 		func: "data",
+	// 		worker: "testmodel",
+	// 		value: output(m.data.value),
+	// 		tranducerName: m.data.transducerName
+	// 	});
+	// }
 };
