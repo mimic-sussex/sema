@@ -276,6 +276,15 @@ Receive and open sound control signal
  1. OSC address
  2. Index of the OSC data element to observe (-1 means all elements)
 
+### toNet
+ 1. Signal
+ 2. Destination (peer ID) (see sema.peerinfo())
+ 3. Channel number
+ 4. Frequency
+
+### fromNet
+ 1. Source (peer ID) (see sema.peerinfo())
+ 2. Channel number
 
 ## Machine Learning
 ### toJS

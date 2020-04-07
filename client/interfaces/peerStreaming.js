@@ -8,29 +8,31 @@ class PeerStreaming {
   constructor() {
     this.connections = {};
     this.messaging = new PubSub();
-    //use peerJD cloud server for now
+    this.peerID = "";
+    //use peerJS cloud server for now
     this.peer = new Peer({
       key: 'lwjd5qra8257b9',
       debug: 2
     });
     //open a listener
     this.peer.on('open', function(id) {
-      console.log('My peer ID is: ' + id);
-    });
+      this.peerID = id;
+      console.log('My peer ID is: ' + this.peerID);
+    }.bind(this));
     //listenen for connections
     this.peer.on('connection', function(conn) {
       console.log('Connection received', conn);
-      console.log(this);
+      // console.log(this);
       //on connection, create a handler for incoming data
       conn.on('data', ((e) => {
-          console.log('received',e);
+          // console.log('received',e);
           this.messaging.publish("peermsg", {ch:e[0],val:e[1],src:conn.peer});
       }).bind(this));
     }.bind(this));
   }
 
   send(destination, value, channel) {
-    console.log("send",destination, value, channel);
+    // console.log("send",destination, value, channel);
     if (!this.connections.destination) {
       this.connections.destination = this.peer.connect(destination);
       this.connections.destination.on('open', () => {
@@ -39,7 +41,7 @@ class PeerStreaming {
     }else{
       // console.log(this.connections.destination);
       if (this.connections.destination.open) {
-        console.log('sending', destination, value)
+        // console.log('sending', destination, value)
         this.connections.destination.send([channel, value]);
       }
     }

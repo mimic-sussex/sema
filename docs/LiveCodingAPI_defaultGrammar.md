@@ -220,18 +220,18 @@ Multiply signals:
 # communication to the model (lower editor window)
 
 
-### Send data to model: 
+### Send data to model:
 
-10 times per second (argument 1) with identifier 0 (argument 2). The third argument is signal to send (in this case the output of `{1}sin`.
+10 times per second (argument 1) on channel 0 (argument 3). The second argument is signal to send (in this case the output of `{1}sin`).
 
 In the live code editor:
 
-`{10,0,{1}sin}toJS`
+`{10,{1}sin,0}toJS`
 
 In the model/js editor:
 
 ```
-input = (id,x) => {console.log([id,x])};
+input = (x,channel) => {console.log([x,id])};
 
 ```
 
@@ -239,13 +239,14 @@ input = (id,x) => {console.log([id,x])};
 
 In the live code editor:
 
-`{{10,1}fromJS}saw`
+`{{0}fromJS}saw`
+
+to receive data on channel 0
 
 In the model/js editor:
 
 ```
-y=100;
-output = (x) => {console.log("in "+x); y++; return y;}
+output(100,0)
 ```
 
 Note: to separate the two functions in the model window you use 10 underscores:
@@ -253,6 +254,23 @@ Note: to separate the two functions in the model window you use 10 underscores:
 ```
 __________
 ```
+
+# Peer to peer communication using `fromNet` and `toNet`
+
+You will need to find out your Peer ID: run `sema.peerinfo()` in the ML window, and the ID will be copied to the paste bufferName. Share this ID with others who you will communicate with.
+
+```
+:sig:{{1.9}pha,200}mul;
+{:sig:,'1q18023vvt300000',0, 10}toNet
+```
+
+This will stream the signal in variable :sig: to peer '1q18023vvt300000' on channel 0 at frequency 10Hz
+
+```
+{{'i6etfg8bcx000000', 0}fromNet}sqr
+```
+
+This receives data from peer 'i6etfg8bcx000000' on channel 0.
 
 # osc communication
 

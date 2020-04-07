@@ -12,6 +12,8 @@ import {
 import {
   PeerStreaming
 } from "../interfaces/peerStreaming.js";
+import {copyToPasteBuffer} from '../utils/pasteBuffer.js';
+
 
 /**
  * The CustomAudioNode is a class that extends AudioWorkletNode
@@ -83,11 +85,17 @@ class AudioEngine {
     this.kuraClock = new kuramotoNetClock();
 
     this.peerNet = new PeerStreaming();
+
+    //the message has incoming data from other peers
     this.messaging.subscribe("peermsg", (e)=> {
-      console.log('peer', e);
       e.ttype = 'NET';
       e.peermsg = 1;
       this.onMessagingEventHandler(e);
+    });
+
+    this.messaging.subscribe("peerinfo-request", (e) => {
+      console.log(this.peerNet.peerID);
+      copyToPasteBuffer(this.peerNet.peerID);
     });
   }
 

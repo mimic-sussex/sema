@@ -207,7 +207,6 @@ class MaxiProcessor extends AudioWorkletProcessor {
               eq = channel == chID;
             }else{
               for(let v in keys) {
-                console.log(v);
                 if(chID[v] != undefined) {
                   if (chID[v] != channel[v]) {
                     eq = false;
@@ -232,7 +231,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
         transducer.setValue(existingTransducers[0].getValue());
       }
       this.transducers.push(transducer);
-      console.log(this.transducers);
+      // console.log(this.transducers);
       return transducer;
     };
 
@@ -273,7 +272,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
         console.log('peer', event);
         //this is from peer streaming, map it on to any listening transducers
         let targetTransducers = this.matchTransducers('NET', [event.data.src, event.data.ch]);
-        console.log(targetTransducers.length);
+        // console.log(targetTransducers.length);
         for(let idx in targetTransducers) {
           targetTransducers[idx].setValue(event.data.val);
         }

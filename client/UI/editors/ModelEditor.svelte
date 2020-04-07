@@ -12,6 +12,7 @@
 <script>
 	import { onMount, onDestroy, createEventDispatcher } from 'svelte';
 	const dispatch = createEventDispatcher();;
+  import {copyToPasteBuffer} from '../../utils/pasteBuffer.js';
 
   // import {
   //   modelEditorValue
@@ -129,10 +130,11 @@
           console.log(data);
         },
         pbcopy: data => {
-          let copyField=document.getElementById("hiddenCopyField");
-          copyField.value = data.msg;
-          copyField.select();
-          document.execCommand("Copy");
+          copyToPasteBuffer(data.msg);
+          // let copyField=document.getElementById("hiddenCopyField");
+          // copyField.value = data.msg;
+          // copyField.select();
+          // document.execCommand("Copy");
         },
         sendbuf: data => {
           messaging.publish("model-send-buffer", data);
@@ -147,6 +149,9 @@
           console.log(data.code);
           evalDOMCode(data.code);
           // document.getElementById('canvas').style.display= "none";
+        },
+        peerinfo: data => {
+          messaging.publish("peerinfo-request", {});
         }
       };
       responders[m.data.func](m.data);

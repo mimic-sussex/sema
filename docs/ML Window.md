@@ -40,6 +40,15 @@ sema.loadF32Array(fn,
 sema.pbcopy("some text to copy to the clipboard")
 ```
 
+# Peer networking information
+
+Find out your peer ID, to use with ```fromNet``` and ```toNet```
+
+```
+sema.peerinfo()
+```
+This will copy your peerID to the paste buffer
+
 # create a buffer and send it to the audio engine
 
 in the ML window:

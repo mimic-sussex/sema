@@ -79,6 +79,12 @@ var sema = {
           "code": code,
       }
     )
+  },
+  peerinfo: () => {
+    postMessage ({
+      "func": "peerinfo"
+    });
+    console.log("Your peer ID has been copied to the paste buffer")
   }
 };
 `);
