@@ -2,10 +2,13 @@
 
 # Sema – Live Code Language Design Playground #
 ![version](https://img.shields.io/badge/version-0.4-red)
-[![Build Status](https://travis-ci.com/mimic-sussex/sema.svg?branch=master)](https://travis-ci.com/mimic-sussex/sema)
 [![stability-experimental](https://img.shields.io/badge/stability-experimental-orange.svg)](https://github.com/emersion/stability-badges#experimental)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-yellow.svg)](https://github.com/mimic-sussex/eppEditor/blob/master/CONTRIBUTING.md)
+[![Build Status](https://travis-ci.com/mimic-sussex/sema.svg?branch=master)](https://travis-ci.com/mimic-sussex/sema)
+[![Website](https://img.shields.io/website?url=https%3A%2F%2Fsema.codes)](https://sema.codes)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/mimic-sussex/sema/blob/master/LICENSE)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/mimic-sussex/eppEditor/blob/master/CONTRIBUTING.md)
+
+
 <br />
 
 Sema is a playground where you can rapidly prototype live coding mini-languages for signal synthesis, machine learning and machine listening. 
@@ -72,3 +75,20 @@ Sema uses Web Audio API Audio Worklets. Their performance seems very sensitive t
 [Data storage and loading](doc/Model_loading_storing.md)
 
 [Maximilian DSP Library API](doc/maxi_API_doc.md)
+
+
+## Publications
+
+Bernardo, F., Kiefer, C., Magnusson, T. (forthcoming). *A Signal Engine for a Live Code Language Ecosystem.* Journal of Audio Engineering Society, Vol. 68, No. 1, October 
+
+Bernardo, F., Kiefer, C., Magnusson, T. (2020). *Designing for a Pluralist and User-Friendly
+Live Code Language Ecosystem with Sema.* 5th International Conference on Live Coding,
+University of Limerick, Limerick, Ireland
+
+Bernardo, F., Kiefer, C., Magnusson, T. (2019). [*An AudioWorklet-based Signal Engine for
+a Live Coding Language Ecosystem.*](https://www.ntnu.edu/documents/1282113268/1290797448/WAC2019-CameraReadySubmission-40.pdf) In Proceedings of Web Audio Conference 2019,
+Norwegian University of Science and Technology (NTNU), Trondheim, Norway (Best Paper
+Award at Web Audio Conference 2019)
+
+
+

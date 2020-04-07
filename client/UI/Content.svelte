@@ -38,7 +38,7 @@
     overflow: hidden;
   }
   .sidebar-container {
-    background-color: blue;
+    background: linear-gradient(150deg, rgba(0,18,1,1) 0%, rgba(7,5,17,1) 33%, rgba(16,12,12,1) 67%, rgb(12, 12, 12) 100%);
     /* margin-left: 10px; */
     grid-area: sidebar;
     grid-row: 0 / 1;
