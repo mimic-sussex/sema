@@ -47,9 +47,10 @@ class AudioEngine {
 		this.samplesLoaded = false;
 
 		// Hash of on-demand analysers (e.g. spectrogram, oscilloscope)
+		// NOTE: analysers from localStorage are loaded from local Storage before user-started audioContext init
 		this.analysers = {};
 
-		// Sema's Publish-Subscribe pattern object with "lowercase-lowecase" format convention for subscription topic
+		// Sema's Publish-Subscribe pattern object with "lowercase-lowercase" format convention for subscription topic
 		this.messaging = new PubSub();
 		this.messaging.subscribe("eval-dsp", e => this.evalDSP(e));
 		this.messaging.subscribe("stop-audio", e => this.stop());
@@ -62,13 +63,15 @@ class AudioEngine {
 		this.messaging.subscribe("clock-phase", e =>
 			this.onMessagingEventHandler(e)
 		);
-    this.messaging.subscribe("model-send-buffer", e=> {
-        this.onMessagingEventHandler(e)
-    });
-		this.messaging.subscribe("add-analyser", e =>
-			this.createAnalyser(e.type, e.id)
+		this.messaging.subscribe("model-send-buffer", e =>
+			this.onMessagingEventHandler(e)
 		);
-		this.messaging.subscribe("remove-analyser", e => this.removeAnalyser(e.id));
+		this.messaging.subscribe("add-engine-analyser", e =>
+			this.createAnalyser(e)
+		);
+		this.messaging.subscribe("remove-engine-analyser", e =>
+			this.removeAnalyser(e)
+		);
 		// this.messaging.subscribe("osc", e => console.log(`DEBUG:AudioEngine:OSC: ${e}`));
 
 		this.kuraClock = new kuramotoNetClock();
@@ -113,7 +116,7 @@ class AudioEngine {
 	 * @onMessagingEventHandler
 	 */
 	onMessagingEventHandler(event) {
-		if (event != undefined) {
+		if (event !== undefined) {
 			// Receive notification from "model-output-data" topic
 			// console.log("DEBUG:AudioEngine:onMessagingEventHandler:");
 			// console.log(event);
@@ -126,107 +129,95 @@ class AudioEngine {
 	 * @todo configuration object as argumen
 	 * @createAnalyser
 	 */
-	createAnalyser(name) {
-		if (this.audioContext !== undefined) {
+	createAnalyser(event) {
+		// If Analyser creation happens after AudioContext intialization, create and connect WAAPI analyser
+		if (this.audioContext !== undefined && event !== undefined) {
+
 			let analyser = this.audioContext.createAnalyser();
-      analyser.smoothingTimeConstant = 0.25;
-      analyser.fftSize = 256; // default 2048;
-      analyser.minDecibels = -90; // default 
+			analyser.smoothingTimeConstant = 0.25;
+			analyser.fftSize = 256; // default 2048;
+			analyser.minDecibels = -90; // default
 			analyser.maxDecibels = -0; // default -10; max 0
-			this.analysers[name] = analyser;
-			this.connectAnalyser(analyser); // @todo Move out
+			this.connectAnalyser(analyser, event.id); // @todo Move out
+
+    // Other if AudioContext is NOT created yet (after app load, before splashScreen click)
+		} else if (this.audioContext === undefined) {
+      this.analysers[event.id] = {}; 
 		}
 	}
 
 	/**
-	 * Creates a WAAPI analyser node
-	 * TODO configuration object as argument
-	 * @createAnalyser
+	 * Polls data from connected WAAPI analyser return structured object with data and time data in arrays
+	 * @param {*} analyser
 	 */
-	removeAnalyser(name) {
-		if (this.audioContext !== undefined) {
-			let analyser = this.analysers[name];
-			if (analyser !== undefined) {
-				this.disconnectAnalyser(analyser); // @todo Move out
-				delete this.analysers[name];
-			}
-		}
-	}
+	pollAnalyserData(analyser) {
+		if (analyser !== undefined) {
+			const timeDataArray = new Uint8Array(analyser.fftSize); // Uint8Array should be the same length as the fftSize
+			const frequencyDataArray = new Uint8Array(analyser.fftSize);
 
-	/**
-	 * Connects WAAPI analyser node to the main audio worklet for visualisation.
-	 * @disconnectAnalyser
-	 */
-	disconnectAnalyser(analyser) {
-		if (this.audioWorkletNode !== undefined) {
-			this.audioWorkletNode.disconnect(analyser);
-		}
-	}
+			analyser.getByteTimeDomainData(timeDataArray);
+			analyser.getByteFrequencyData(frequencyDataArray);
 
-
-  pollAnalyserData(analyser) {
-    if(analyser !== undefined){
-      
-      const timeDataArray = new Uint8Array(analyser.fftSize); // Uint8Array should be the same length as the fftSize 
-      const frequencyDataArray = new Uint8Array(analyser.fftSize); 
-      
-      analyser.getByteTimeDomainData(timeDataArray);
-      analyser.getByteFrequencyData(frequencyDataArray);
-
-      return {
+			return {
 				smoothingTimeConstant: analyser.smoothingTimeConstant,
 				fftSize: analyser.fftSize,
 				frequencyDataArray: frequencyDataArray,
 				timeDataArray: timeDataArray
 			};
-    }
-  }
+		}
+	}
 
 	/**
 	 * Connects WAAPI analyser node to the main audio worklet for visualisation.
 	 * @connectAnalyser
 	 */
-	connectAnalyser(analyser) {
+	connectAnalyser(analyser, name) {
 		if (this.audioWorkletNode !== undefined) {
 			this.audioWorkletNode.connect(analyser);
-      
-      let frame;
-      let analyserData; 
 
-      const analyserPollingLoop = () => {
-        analyserData = this.pollAnalyserData(analyser);
-        // console.log('analyserData');
-        // console.log(analyserData);
-        this.messaging.publish("analyser-data", analyserData);
-        frame = requestAnimationFrame(analyserPollingLoop);
-      }
-      analyserPollingLoop(); 
+			let analyserFrameId;
+			let analyserData;
+
+			/**
+			 * Creates requestAnimationFrame loop for polling data and publishing
+			 * Returns Analyser Frame ID for adding to Analysers hash and cancelling animation frame
+			 */
+			const analyserPollingLoop = () => {
+				analyserData = this.pollAnalyserData(analyser);
+
+				this.messaging.publish("analyser-data", analyserData);
+				let analyserFrameId = requestAnimationFrame(analyserPollingLoop);
+
+        this.analysers[name] = { analyser, analyserFrameId };
+				console.log(`frameID of analyser ${name}: ${analyserFrameId}`);
+
+				return analyserFrameId;
+			};
+
+			// analyserFrameId = analyserPollingLoop;
+			
+      analyserPollingLoop();       
 		}
 	}
 
-	// NOTE:FB Test code should be segregated from production code into its own fixture.
-	// Otherwise, it becomes bloated, difficult to read and reason about.
-	// messageHandler(data) {
-	// 	if (data == "dspStart") {
-	// 		this.ts = window.performance.now();
-	// 	}
-	// 	if (data == "dspEnd") {
-	// 		this.ts = window.performance.now() - this.ts;
-	// 		this.dspTime = this.dspTime * 0.9 + this.ts * 0.1; //time for 128 sample buffer
-	// 		this.onNewDSPLoadValue((this.dspTime / 2.90249433106576) * 100);
-	// 	}
-	// 	if (data == "evalEnd") {
-	// 		let evalts = window.performance.now();
-	// 		this.onEvalTimestamp(evalts);
-	// 	} else if (data == "evalEnd") {
-	// 		let evalts = window.performance.now();
-	// 		this.onEvalTimestamp(evalts);
-	// 	} else if (data == "giveMeSomeSamples") {
-	// 		// this.msgHandler("giveMeSomeSamples");    	// NOTE:FB Untangling the previous msgHandler hack from the audio engine
-	// 	} else {
-	// 		this.msgHandler(data);
-	// 	}
-	// }
+	connectAnalysers() {
+    Object.keys(this.analysers).map( id => this.createAnalyser( { id } )); 
+  }
+
+	/**
+	 * Removes a WAAPI analyser node, disconnects graph, cancels animation frame, deletes from hash
+	 * @removeAnalyser
+	 */
+	removeAnalyser(event) {
+		if (this.audioContext !== undefined && this.audioWorkletNode !== undefined) {
+			let analyser = this.analysers[event.id];
+			if (analyser !== undefined) {
+        cancelAnimationFrame(this.analysers[event.id].analyserFrameId);
+				delete this.analysers[event.id];
+        // this.audioWorkletNode.disconnect(analyser);			
+			}
+		}
+	}
 
 	/**
 	 * Initialises audio context and sets worklet processor code
@@ -241,7 +232,11 @@ class AudioEngine {
 			});
 
 			await this.loadWorkletProcessorCode();
+
 			this.connectMediaStream();
+
+			this.connectAnalysers(); // Connect Analysers loaded from the store
+
 			this.loadImportedSamples();
 
 			// No need to inject the callback here, messaging is built in KuraClock
@@ -447,8 +442,8 @@ class AudioEngine {
 
 	lazyLoadSample(sampleName) {
 		import(/* webpackMode: "lazy" */ `../../assets/samples/${sampleName}`)
-		.then( () => this.loadSample(sampleName, `samples/${sampleName}`))
-		.catch(err => console.error(`DEBUG:AudioEngine:lazyLoadSample: ` + err));
+			.then(() => this.loadSample(sampleName, `samples/${sampleName}`))
+			.catch(err => console.error(`DEBUG:AudioEngine:lazyLoadSample: ` + err));
 	}
 
 	loadImportedSamples() {
@@ -458,6 +453,30 @@ class AudioEngine {
 			this.lazyLoadSample(sampleName);
 		});
 	}
+
+	// NOTE:FB Test code should be segregated from production code into its own fixture.
+	// Otherwise, it becomes bloated, difficult to read and reason about.
+	// messageHandler(data) {
+	// 	if (data == "dspStart") {
+	// 		this.ts = window.performance.now();
+	// 	}
+	// 	if (data == "dspEnd") {
+	// 		this.ts = window.performance.now() - this.ts;
+	// 		this.dspTime = this.dspTime * 0.9 + this.ts * 0.1; //time for 128 sample buffer
+	// 		this.onNewDSPLoadValue((this.dspTime / 2.90249433106576) * 100);
+	// 	}
+	// 	if (data == "evalEnd") {
+	// 		let evalts = window.performance.now();
+	// 		this.onEvalTimestamp(evalts);
+	// 	} else if (data == "evalEnd") {
+	// 		let evalts = window.performance.now();
+	// 		this.onEvalTimestamp(evalts);
+	// 	} else if (data == "giveMeSomeSamples") {
+	// 		// this.msgHandler("giveMeSomeSamples");    	// NOTE:FB Untangling the previous msgHandler hack from the audio engine
+	// 	} else {
+	// 		this.msgHandler(data);
+	// 	}
+	// }
 }
 
 export { AudioEngine };

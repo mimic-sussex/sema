@@ -5,7 +5,12 @@
 
   let messaging = new PubSub();
 
+  export let id;
+  export let name;
+	export let type;
   export let mode;
+  export let hasFocus;
+  export let background;
 
   let fftSize = 256;   
   let frequencyBinCount = 128;
@@ -36,22 +41,7 @@
     }
   }
 
-
-	const renderLoop = () => {
-     
-    if (isRendering) {
-      frame = requestAnimationFrame(renderLoop);
-      // console.log(`canvas w:${canvas.width} h:${canvas.height}`);
-    }  
-    
-    let drawContext = canvas.getContext('2d');
-    
-    drawContext.canvas.width = canvas.offsetWidth;    // needed for 'automatic' resizing the canvas to current size
-    drawContext.canvas.height = canvas.offsetHeight;  // TODO: Optimise by doing this only on canvas resize call
-    
-    // drawContext.fillStyle = 'rgb(16, 16, 16)';        // paint background
-    drawContext.clearRect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
-    // Frequency domain chart
+  const drawFrequencyData = drawContext => {
     for (let i = 0; i < frequencyBinCount; i++) {
       let value = frequencyDataArray[i];
       let percent = value / 255;
@@ -60,10 +50,11 @@
       let barWidth = canvas.offsetWidth/frequencyBinCount;
       let hue = i/frequencyBinCount * 255;
       drawContext.fillStyle = 'hsl(' + hue + ', 100%, 75%)';
-      // drawContext.fillStyle = 'hsl(' + hue + ', 100%, 75%)';
       drawContext.fillRect(i * barWidth, offset, barWidth, canvas.offsetHeight);
     }
-    // Time domain chart
+  }
+
+  const drawTimeData = drawContext => {
     for (let i = 0; i < frequencyBinCount; i++) {
       let value = timeDataArray[i];
       let percent = value / 255;
@@ -73,6 +64,27 @@
       drawContext.fillStyle = 'white';
       drawContext.fillRect(i * barWidth, offset, barWidth, 2);
     }
+  }
+
+	const renderLoop = () => {
+     
+    if (isRendering) {
+      frame = requestAnimationFrame(renderLoop);
+      // console.log(`canvas w:${canvas.width} h:${canvas.height}`);
+
+      let drawContext = canvas.getContext('2d');
+      drawContext.canvas.width = canvas.offsetWidth;    // needed for 'automatic' resizing the canvas to current size
+      drawContext.canvas.height = canvas.offsetHeight;  // TODO: Optimise by doing this only on canvas resize call
+      drawContext.clearRect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
+
+      if( mode === 'oscilloscope' ) drawTimeData(drawContext);
+      else if( mode === 'spectrogram' ) drawFrequencyData(drawContext); 
+      else {
+        drawFrequencyData(drawContext); 
+        drawTimeData(drawContext);
+      }
+    }
+    else return;
 	};
 
   const toggleRendering = () => {
@@ -88,6 +100,9 @@
 
 
   onMount(async () => {
+    // Request the creation of an WAAPI analyser to the Audio Engine
+    messaging.publish("add-engine-analyser", { id } );
+
     canvas.addEventListener('onclick', () => toggleRendering(), false);
     messaging.subscribe('analyser-data', e => updateAnalyserByteData(e) );
     renderLoop();

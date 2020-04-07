@@ -131,7 +131,7 @@ const originalItems = [
 			theme: "monokai",
 			background: "#f0f0f0",
 			component: Analyser,
-			data: ""
+			mode: "spectrogram"
 		}
 	}
 
@@ -233,9 +233,6 @@ let hydrateJSONcomponent = item => {
   	case "analyser":
   		item.component = Analyser;
   		break;
-  	case "spectrogram":
-  		item.component = Spectrogram;
-  		break;
   	default:
   		break;
   } 
@@ -257,15 +254,15 @@ export let createNewItem = (type, id, data) => {
 		case "grammarEditor":
 			component = {
 				component: GrammarEditor,
-				theme: "monokai",
-				background: "#AAAAAA"
+				background: "#AAAAAA",
+				theme: "monokai"
 			};
 			break;
 		case "modelEditor":
 			component = {
 				component: ModelEditor,
-				theme: "monokai",
-				background: "#f0f0f0"
+				background: "#f0f0f0",
+				theme: "monokai"
 			};
 			break;
 		case "liveCodeParseOutput":
@@ -288,12 +285,9 @@ export let createNewItem = (type, id, data) => {
 			break;
 		case "analyser":
 			component = {
-				component: Analyser
-			};
-			break;
-		case "spectrogram":
-			component = {
-				component: Spectrogram
+				component: Analyser,
+				background: "#ffffff",
+				mode: "spectrogram"
 			};
 			break;
 		default:
@@ -305,7 +299,7 @@ export let createNewItem = (type, id, data) => {
 		...gridHelp.item({ x: 7, y: 0, w: 7, h: 3, id: id }),
 		...{
 			type: type,
-			name: type + "-" + id,
+			name: type + id,
 			data: data,
 			lineNumbers: true,
 			hasFocus: false
@@ -314,32 +308,29 @@ export let createNewItem = (type, id, data) => {
 	};
 };
 
+/**
+ * Populates dashboard on application load, 
+ * checks local Storage for items from previous session and loads 
+ * or otherwise, loads hardcoded layout configuration
+ */
+// export const loadPlaygroundItems = () => {
 
-export const loadPlaygroundItems = () => {
+// 	if (typeof window !== "undefined") {
 
-	if (typeof window !== "undefined") {
+// 		const playgroundItems = window.localStorage.getItem("items");
 
-		const playgroundItems = window.localStorage.getItem("items");
-
-		return ( playgroundItems === null ||
-			playgroundItems === undefined ||
-			playgroundItems === ""
-		) ? originalItems : JSON.parse(playgroundItems)
+// 		return ( playgroundItems === null ||
+// 			playgroundItems === undefined ||
+// 			playgroundItems === ""
+// 		) ? originalItems : JSON.parse(playgroundItems)
 		
-	} else
-    return originalItems;
-};
-
-const storePlaygroundItemsInLocalStorage = () => {
-  
-  if (typeof window !== "undefined") {
-    window.localStorage.setItem("playgroundItems", JSON.stringify($items));
-  }
-};
+// 	} else
+//     return originalItems;
+// };
 
 
 /*
- * Wrap writable store
+ * Wraps writable store a
  */
 export function storable(key, initialValue) {
 
@@ -348,10 +339,10 @@ export function storable(key, initialValue) {
 
 	const json = localStorage.getItem(key); // get the last value from localStorage
 	if (json) {
-		set(JSON.parse(json).map(item => hydrateJSONcomponent(item))); // use the value from localStorage if it exists
+		set( JSON.parse(json).map( item => hydrateJSONcomponent(item) ) ); // use the value from localStorage if it exists
 	}
 
-	// return an object with the same interface as svelte's writable()
+	// return an object with the same interface as Svelte's writable() store interface
 	return {
 		set(value) {
 			localStorage.setItem(key, JSON.stringify(value));

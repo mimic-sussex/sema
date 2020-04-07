@@ -66,7 +66,7 @@
     // console.log(item.id);
     
     if(item.type === 'analyser'){
-      messaging.publish('remove-analyser', { id: item.id }); // notify audio engine to remove associated analyser
+      messaging.publish('remove-engine-analyser', { id: item.id }); // notify audio engine to remove associated analyser
     }
     remove.bind(null, item); // remove dashboard item binding
     $items = $items.filter(value => value.id !== item.id);
