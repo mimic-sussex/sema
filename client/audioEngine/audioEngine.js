@@ -223,14 +223,11 @@ class AudioEngine {
 			 * Returns Analyser Frame ID for adding to Analysers hash and cancelling animation frame
 			 */
 			const analyserPollingLoop = () => {
-				analyserData = this.pollAnalyserData(analyser);
 
+				analyserData = this.pollAnalyserData(analyser);
 				this.messaging.publish("analyser-data", analyserData);
 				let analyserFrameId = requestAnimationFrame(analyserPollingLoop);
-
         this.analysers[name] = { analyser, analyserFrameId };
-				console.log(`frameID of analyser ${name}: ${analyserFrameId}`);
-
 				return analyserFrameId;
 			};
 
