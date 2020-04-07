@@ -30,6 +30,7 @@ class PeerStreaming {
   }
 
   send(destination, value, channel) {
+    console.log("send",destination, value, channel);
     if (!this.connections.destination) {
       this.connections.destination = this.peer.connect(destination);
       this.connections.destination.on('open', () => {

@@ -190,10 +190,15 @@ var jsFuncMap = {
 		loop:  (o, p) => `${o}.getValue()`
 	},
 
-  toNet: { //value, dest, channel, frequency
-    setup: (o, p) => `${o} = this.registerTransducer('${o}', ${p[3].loop}, 'NET')`,
-		loop:  (o, p) => `${o}.send([${p[1].loop},${p[0].loop},${p[2].loop}])`
+	toNet: { //value, dest, channel, frequency
+    setup: (o, p) => `${o} = this.createNetOutputTransducer(${p[3].loop})`,
+		loop:  (o, p) => `${o}.send(${p[0].loop},[${p[1].loop},${p[2].loop}])`
   },
+	fromNet: { //source, channel
+		setup: (o, p) => `${o} = this.registerInputTransducer('NET', [${p[0].loop}, ${p[1].loop}])`,
+		loop:  (o, p) => `${o}.getValue()`
+  },
+
 	oscin: {
 		setup: (o, p) => "",
 		loop:  (o, p) => `this.OSCTransducer(${p[0].loop},${p[1].loop})`

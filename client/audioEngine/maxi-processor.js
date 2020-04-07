@@ -58,55 +58,6 @@ class PostMsgInputTransducer {
 }
 
 
-class PostMsgTransducer {
-
-  constructor(msgPort, sampleRate, sendFrequency = 2, name, transducerType, keys) {
-    if (sendFrequency == 0)
-      this.sendPeriod = Number.MAX_SAFE_INTEGER;
-    else
-      this.sendPeriod = 1.0 / sendFrequency * sampleRate;
-    this.sendCounter = this.sendPeriod;
-    this.port = msgPort;
-    this.val = 0;
-    this.name=name;
-    this.transducerType = transducerType;
-    this.keys = keys;
-  }
-
-  incoming(msg) {
-    this.val = msg.value;
-  }
-
-  send(sendMsg) {
-    if (this.sendCounter >= this.sendPeriod) {
-      this.port.postMessage({
-        rq: "send",
-        value: sendMsg,
-        ttype: this.transducerType
-      });
-      this.sendCounter -= this.sendPeriod;
-    } else {
-      this.sendCounter++;
-    }
-    return 0;
-  }
-
-  receive(sendMsg) {
-    if (this.sendCounter >= this.sendPeriod) {
-      this.port.postMessage({
-        rq: "receive",
-        value: sendMsg,
-        transducerName: this.name,
-        ttype: this.transducerType
-      });
-      this.sendCounter -= this.sendPeriod;
-    } else {
-      this.sendCounter++;
-    }
-    return this.val;
-  }
-
-}
 
 
 class pvshift {
@@ -248,7 +199,30 @@ class MaxiProcessor extends AudioWorkletProcessor {
     this.transducers = [];
 
     this.matchTransducers = (ttype, channel) => {
-        return this.transducers.filter(x=>x.transducerType==ttype && x.channelID == channel);
+        return this.transducers.filter(x=>{
+          let testEqChannels = (chID, channel) => {
+            let eq = true;
+            let keys = Object.keys(channel);
+            if (keys.length==0) {
+              eq = channel == chID;
+            }else{
+              for(let v in keys) {
+                console.log(v);
+                if(chID[v] != undefined) {
+                  if (chID[v] != channel[v]) {
+                    eq = false;
+                    break;
+                  }
+                }else{
+                  eq = false;
+                  break;
+                }
+              }
+            }
+            return eq;
+          }
+          return x.transducerType==ttype && testEqChannels(x.channelID,channel);
+        });
     }
 
     this.registerInputTransducer = (ttype, channelID) => {
@@ -281,6 +255,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
     };
 
     this.port.onmessage = event => { // message port async handler
+      // console.log(event);
       if ('address' in event.data) {
         //this must be an OSC message
         this.OSCMessages[event.data.address] = event.data.args;
@@ -294,11 +269,14 @@ class MaxiProcessor extends AudioWorkletProcessor {
         for(let idx in targetTransducers) {
           targetTransducers[idx].setValue(event.data.val);
         }
-
-        // if (this.transducers[event.data.transducerName]) {
-        //   // console.log(this.transducers[event.data.tname]);
-        //   this.transducers[event.data.transducerName].incoming(event.data);
-        // }
+      } else if ('peermsg' in event.data) {
+        console.log('peer', event);
+        //this is from peer streaming, map it on to any listening transducers
+        let targetTransducers = this.matchTransducers('NET', [event.data.src, event.data.ch]);
+        console.log(targetTransducers.length);
+        for(let idx in targetTransducers) {
+          targetTransducers[idx].setValue(event.data.val);
+        }
       } else if ('sample' in event.data) { //from a worker
         // console.log("sample received");
         // console.log(event.data);
@@ -378,6 +356,10 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
     this.createMLOutputTransducer= (sendFrequency) => {
       return new PostMsgOutputTransducer(this.port, this.sampleRate, sendFrequency, 'ML');
+    }
+
+    this.createNetOutputTransducer= (sendFrequency) => {
+      return new PostMsgOutputTransducer(this.port, this.sampleRate, sendFrequency, 'NET');
     }
 
     this.ifListThenToArray = (x) => {
