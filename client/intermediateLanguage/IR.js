@@ -397,10 +397,16 @@ var jsFuncMap = {
     setup: (o, p) => "",
 		loop:  (o, p) => `this.bitclock`
   },
-  pvshift: {
+
+	pvshift: {
 		setup: (o, p) => `${o} = new pvshift();`,
 		loop:  (o, p) => `${o}.play(${p[0].loop},${p[1].loop})`
 	},
+
+	rsq: {
+		setup: (o, p) => `${o} = new Maximilian.maxiRatioSeq();`,
+		loop:  (o, p) => {return p.length == 2 ? `${o}.playTrig(${p[0].loop},${p[1].loop})` : `${o}.playValues(${p[0].loop},${p[1].loop},${p[2].loop})`}
+	}
 };
 
 class IRToJavascript {
