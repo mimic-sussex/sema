@@ -12,7 +12,7 @@ function vectorDoubleToF64Array(x) {
   return ar;
 }
 
-class PostMsgOutputTransducer {
+class OutputTransducer {
   constructor(port, sampleRate, sendFrequency = 2, transducerType) {
     if (sendFrequency == 0)
       this.sendPeriod = Number.MAX_SAFE_INTEGER;
@@ -40,7 +40,7 @@ class PostMsgOutputTransducer {
   }
 }
 
-class PostMsgInputTransducer {
+class InputTransducer {
   constructor(transducerType, channelID) {
     this.transducerType = transducerType;
     this.channelID = channelID;
@@ -148,16 +148,6 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
     this.numPeers = 1;
 
-    // this.maxiAudio = new Maximilian.maxiAudio();
-    this.clock = new Maximilian.maxiOsc();
-    this.kick = new Maximilian.maxiSample();
-    this.snare = new Maximilian.maxiSample();
-    this.closed = new Maximilian.maxiSample();
-    this.open = new Maximilian.maxiSample();
-
-
-    this.initialised = false;
-
     this.newq = () => {return {"vars":{}}};
     this.newmem = () => {return new Float64Array(512)};
     this._q = [this.newq(),this.newq()];
@@ -225,7 +215,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
     }
 
     this.registerInputTransducer = (ttype, channelID) => {
-      let transducer = new PostMsgInputTransducer(ttype, channelID);
+      let transducer = new InputTransducer(ttype, channelID);
       let existingTransducers = this.matchTransducers(ttype, channelID);
       if (existingTransducers.length > 0) {
         transducer.setValue(existingTransducers[0].getValue());
@@ -351,11 +341,11 @@ class MaxiProcessor extends AudioWorkletProcessor {
     this.dt = 0;
 
     this.createMLOutputTransducer= (sendFrequency) => {
-      return new PostMsgOutputTransducer(this.port, this.sampleRate, sendFrequency, 'ML');
+      return new OutputTransducer(this.port, this.sampleRate, sendFrequency, 'ML');
     }
 
     this.createNetOutputTransducer= (sendFrequency) => {
-      return new PostMsgOutputTransducer(this.port, this.sampleRate, sendFrequency, 'NET');
+      return new OutputTransducer(this.port, this.sampleRate, sendFrequency, 'NET');
     }
 
     this.ifListThenToArray = (x) => {
@@ -461,26 +451,6 @@ class MaxiProcessor extends AudioWorkletProcessor {
     return true;
   }
 
-
-  //Deprecated
-  translateBlobToBuffer(blob) {
-
-    let arrayBuffer = null;
-    let float32Array = null;
-    var fileReader = new FileReader();
-    fileReader.onload = function(event) {
-      arrayBuffer = event.target.result;
-      float32Array = new Float32Array(arrayBuffer);
-    };
-    fileReader.readAsArrayBuffer(blob);
-    let audioFloat32Array = fileReader.result;
-    var maxiSampleBufferData = new Maximilian.VectorDouble();
-    for (var i = 0; i < audioFloat32Array.length; i++) {
-      maxiSampleBufferData.push_back(audioFloat32Array[i]);
-    }
-    return maxiSampleBufferData;
-  }
-
   translateFloat32ArrayToBuffer(audioFloat32ArrayBuffer) {
 
     var maxiSampleBufferData = new Maximilian.VectorDouble();
@@ -489,12 +459,6 @@ class MaxiProcessor extends AudioWorkletProcessor {
     }
     return maxiSampleBufferData;
   }
-
-  logGain(gain) {
-    // return 0.095 * Math.exp(this.gain * 0.465);
-    return 0.0375 * Math.exp(gain * 0.465);
-  }
-
 
 };
 

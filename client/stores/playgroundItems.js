@@ -37,7 +37,7 @@ const id = () =>
 
 const originalItems = [
 	{
-		...gridHelp.item({ x: 7, y: 0, w: 7, h: 3, id: id() }),
+		...gridHelp.item({ x: 0, y: 0, w: 7, h: 3, id: id() }),
 		...{
 			type: "liveCodeEditor",
 			name: "hello-world",
@@ -52,6 +52,20 @@ const originalItems = [
 	},
 
 	{
+		...gridHelp.item({ x: 7, y: 0, w: 3, h: 3, id: id() }),
+		...{
+			name: "hello world",
+			type: "analyser",
+			lineNumbers: true,
+			hasFocus: false,
+			theme: "monokai",
+			background: "#f0f0f0",
+			component: Analyser,
+			mode: "both"
+		}
+	},
+
+	{
 		...gridHelp.item({ x: 7, y: 8, w: 3, h: 7, id: id() }),
 		...{
 			name: "hello world",
@@ -61,20 +75,6 @@ const originalItems = [
 			theme: "shadowfox",
 			background: "#ebdeff",
 			component: LiveCodeParseOutput,
-			data: ""
-		}
-	},
-
-	{
-		...gridHelp.item({ x: 7, y: 0, w: 4, h: 30, id: id() }),
-		...{
-			name: "hello world",
-			type: "storeDebugger",
-			lineNumbers: true,
-			hasFocus: false,
-			theme: "monokai",
-			background: "#f0f0f0",
-			component: StoreDebugger,
 			data: ""
 		}
 	},
@@ -108,7 +108,7 @@ const originalItems = [
 	},
 
 	{
-		...gridHelp.item({ x: 0, y: 4, w: 7, h: 4, id: id() }),
+		...gridHelp.item({ x: 0, y: 3, w: 7, h: 4, id: id() }),
 		...{
 			name: "hello world",
 			type: "modelEditor",
@@ -122,16 +122,16 @@ const originalItems = [
 	},
 
 	{
-		...gridHelp.item({ x: 0, y: 8, w: 3, h: 4, id: id() }),
+		...gridHelp.item({ x: 7, y: 7, w: 4, h: 30, id: id() }),
 		...{
 			name: "hello world",
-			type: "analyser",
+			type: "storeDebugger",
 			lineNumbers: true,
 			hasFocus: false,
 			theme: "monokai",
 			background: "#f0f0f0",
-			component: Analyser,
-			mode: "spectrogram"
+			component: StoreDebugger,
+			data: ""
 		}
 	}
 
