@@ -18,6 +18,13 @@ State variable filter:
 :speed:{{1}pha,100,500}uexp;
 {{100}saw,:speed:, 5, 0,1,0,0}svf
 
+Clock control:
+
+{0.1}clfreq;
+{4}barfreq;
+{{{16}clt}\909b,100,1}lpz
+
+
 Sequencing with idx and lists:
 
  - grabbing a single fixed element

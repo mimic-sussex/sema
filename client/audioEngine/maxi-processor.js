@@ -331,7 +331,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
     this.clockFreq = 0.7 / 4;
     this.clockPhaseSharingInterval=0; //counter for emiting clock phase over the network
     this.barFrequency = 4;
-    this.setBarFrequency = (freq) => {this.barFrequency = freq};
+    this.setBarFrequency = (freq) => {this.barFrequency = freq; return 0;};
 
 //@CLP
     this.clockPhase = (multiples, phase) => {
