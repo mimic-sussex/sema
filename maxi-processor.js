@@ -1,33 +1,36 @@
-import Module from './maximilian.wasmmodule.js';
+import Maximilian from './maximilian.wasmmodule.js';
+// import {PostMsgTransducer} from './transducer.js'
 // import {
 //   MMLLOnsetDetector
 // } from '../machineListening/MMLLOnsetDetector.js';
 
+function vectorDoubleToF64Array(x) {
+  let ar = new Float64Array(x.size());
+  for(let i=0; i < ar.length; i++) {
+    ar[i] = x.get(i);
+  }
+  return ar;
+}
 
-
-class PostMsgTransducer {
-
-  constructor(msgPort, sampleRate, sendFrequency = 2, name) {
+class PostMsgOutputTransducer {
+  constructor(port, sampleRate, sendFrequency = 2, transducerType) {
     if (sendFrequency == 0)
       this.sendPeriod = Number.MAX_SAFE_INTEGER;
     else
       this.sendPeriod = 1.0 / sendFrequency * sampleRate;
     this.sendCounter = this.sendPeriod;
-    this.port = msgPort;
-    this.val = 0;
-    this.name=name;
+    this.transducerType = transducerType;
+    this.port=port;
   }
 
-  incoming(msg) {
-    this.val = msg.value;
-  }
-
-  send(id, sendMsg) {
+  send(data, channelID) {
     if (this.sendCounter >= this.sendPeriod) {
+      console.log(data);
       this.port.postMessage({
         rq: "send",
-        value: sendMsg,
-        id: id
+        value: data,
+        ttype: this.transducerType,
+        ch: channelID
       });
       this.sendCounter -= this.sendPeriod;
     } else {
@@ -35,49 +38,42 @@ class PostMsgTransducer {
     }
     return 0;
   }
+}
 
-  receive(sendMsg) {
-    if (this.sendCounter >= this.sendPeriod) {
-      this.port.postMessage({
-        rq: "receive",
-        value: sendMsg,
-        transducerName: this.name
-      });
-      this.sendCounter -= this.sendPeriod;
-    } else {
-      this.sendCounter++;
-    }
-    return this.val;
+class PostMsgInputTransducer {
+  constructor(transducerType, channelID) {
+    this.transducerType = transducerType;
+    this.channelID = channelID;
+    this.value = 0;
   }
 
-  // io(sendMsg) {
-  //   if (this.sendCounter >= this.sendPeriod) {
-  //     this.port.postMessage({
-  //       rq: "dataplease",
-  //       value: sendMsg
-  //     });
-  //     this.sendCounter -= this.sendPeriod;
-  //   } else {
-  //     this.sendCounter++;
-  //   }
-  //   return this.val;
-  // }
+  setValue(data) {
+    this.value = data;
+    console.log(data);
+  }
+
+  getValue() {
+    return this.value;
+  }
 }
+
+
+
 
 class pvshift {
   constructor() {
-    this.fft = new Module.maxiFFT();
+    this.fft = new Maximilian.maxiFFT();
 		this.fft.setup(1024,256,1024);
-		this.ifft = new Module.maxiIFFT();
+		this.ifft = new Maximilian.maxiIFFT();
 		this.ifft.setup(1024,256,1024);
-		this.mags = new Module.VectorFloat();
-		this.phases = new Module.VectorFloat();
+		this.mags = new Maximilian.VectorFloat();
+		this.phases = new Maximilian.VectorFloat();
 		this.mags.resize(512,0);
 		this.phases.resize(512,0);
   }
 
   play(sig, shift) {
-    if (this.fft.process(sig, Module.maxiFFTModes.WITH_POLAR_CONVERSION)) {
+    if (this.fft.process(sig, Maximilian.maxiFFTModes.WITH_POLAR_CONVERSION)) {
       this.mags = this.fft.getMagnitudes();
       this.phases = this.fft.getPhases();
       //shift bins up
@@ -92,7 +88,7 @@ class pvshift {
       }
       // console.log(mags.get(10));
     }
-    sig = this.ifft.process(this.mags, this.phases, Module.maxiIFFTModes.SPECTRUM);
+    sig = this.ifft.process(this.mags, this.phases, Maximilian.maxiIFFTModes.SPECTRUM);
     return sig;
   }
 }
@@ -130,11 +126,11 @@ class MaxiProcessor extends AudioWorkletProcessor {
   constructor() {
     super();
 
-    let q1 = Module.maxiBits.sig(63);
-    // for(let i=0; i < 123; i++) q1 = Module.maxiBits.inc(q1);
-    // let q2 = Module.maxiBits.sig(255);
-    // let q3 = Module.maxiBits.land(q1,q2);
-    // let q4 = Module.maxiBits.shl(q3, 22);
+    let q1 = Maximilian.maxiBits.sig(63);
+    // for(let i=0; i < 123; i++) q1 = Maximilian.maxiBits.inc(q1);
+    // let q2 = Maximilian.maxiBits.sig(255);
+    // let q3 = Maximilian.maxiBits.land(q1,q2);
+    // let q4 = Maximilian.maxiBits.shl(q3, 22);
     // console.log("res: " + q1);
 
     this.sampleRate = 44100;
@@ -152,12 +148,12 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
     this.numPeers = 1;
 
-    // this.maxiAudio = new Module.maxiAudio();
-    this.clock = new Module.maxiOsc();
-    this.kick = new Module.maxiSample();
-    this.snare = new Module.maxiSample();
-    this.closed = new Module.maxiSample();
-    this.open = new Module.maxiSample();
+    // this.maxiAudio = new Maximilian.maxiAudio();
+    this.clock = new Maximilian.maxiOsc();
+    this.kick = new Maximilian.maxiSample();
+    this.snare = new Maximilian.maxiSample();
+    this.closed = new Maximilian.maxiSample();
+    this.open = new Maximilian.maxiSample();
 
 
     this.initialised = false;
@@ -183,7 +179,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
     };
     this.signals = [this.silence, this.silence];
     this.currentSignalFunction = 0;
-    this.xfadeControl = new Module.maxiLine();
+    this.xfadeControl = new Maximilian.maxiLine();
 
     this.timer = new Date();
 
@@ -198,47 +194,98 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
     this.sampleBuffers={};
     this.sampleVectorBuffers = {};
+    this.sampleVectorBuffers['defaultEmptyBuffer'] = new Float32Array(1);
 
-    this.transducers = {};
+    this.transducers = [];
 
-    this.registerTransducer = (name, rate) => {
-      let trans = new PostMsgTransducer(this.port, this.sampleRate, rate, name);
-      this.transducers[name] = trans;
-      console.log(this.transducers);
-      return trans;
+    this.matchTransducers = (ttype, channel) => {
+        return this.transducers.filter(x=>{
+          let testEqChannels = (chID, channel) => {
+            let eq = true;
+            let keys = Object.keys(channel);
+            if (keys.length==0) {
+              eq = channel == chID;
+            }else{
+              for(let v in keys) {
+                if(chID[v] != undefined) {
+                  if (chID[v] != channel[v]) {
+                    eq = false;
+                    break;
+                  }
+                }else{
+                  eq = false;
+                  break;
+                }
+              }
+            }
+            return eq;
+          }
+          return x.transducerType==ttype && testEqChannels(x.channelID,channel);
+        });
+    }
+
+    this.registerInputTransducer = (ttype, channelID) => {
+      let transducer = new PostMsgInputTransducer(ttype, channelID);
+      let existingTransducers = this.matchTransducers(ttype, channelID);
+      if (existingTransducers.length > 0) {
+        transducer.setValue(existingTransducers[0].getValue());
+      }
+      this.transducers.push(transducer);
+      // console.log(this.transducers);
+      return transducer;
     };
 
     this.getSampleBuffer = (bufferName) => {
-      // console.log(this.sampleBuffers);
-      // console.log(bufferName);
-        // return this.translateFloat32ArrayToBuffer(this.sampleBuffers[bufferName]);
-        return this.sampleVectorBuffers[bufferName];
+        let sample = this.sampleVectorBuffers['defaultEmptyBuffer']; //defailt - silence
+        if (bufferName in this.sampleVectorBuffers) {
+          sample = this.sampleVectorBuffers[bufferName];
+        }else{
+          console.warn(`${bufferName} doesn't exist yet`);
+        }
+        return sample;
     };
 
-    this.netClock = new Module.maxiAsyncKuramotoOscillator(3);  //TODO: this should be the same as numpeers
+    this.netClock = new Maximilian.maxiAsyncKuramotoOscillator(3);  //TODO: this should be the same as numpeers
     this.kuraPhase = -1;
     this.kuraPhaseIdx = 1;
 
+    let addSampleBuffer = (name, buf) => {
+      this.sampleVectorBuffers[name] = this.translateFloat32ArrayToBuffer(buf);
+    };
+
     this.port.onmessage = event => { // message port async handler
+      // console.log(event);
       if ('address' in event.data) {
         //this must be an OSC message
         this.OSCMessages[event.data.address] = event.data.args;
         //console.log(this.OSCMessages);
-      } else if ('worker' in event.data) { //from a worker
-        //this must be an OSC message
-        if (this.transducers[event.data.transducerName]) {
-          // console.log(this.transducers[event.data.tname]);
-          this.transducers[event.data.transducerName].incoming(event.data);
+      } else if ('func' in event.data && 'sendbuf' == event.data.func) {
+        console.log("aesendbuf", event.data);
+        addSampleBuffer(event.data.name, event.data.data);
+      } else if ('func' in event.data && 'data' == event.data.func) {
+        //this is from the ML window, map it on to any listening transducers
+        let targetTransducers = this.matchTransducers('ML', event.data.ch);
+        for(let idx in targetTransducers) {
+          targetTransducers[idx].setValue(event.data.val);
+        }
+      } else if ('peermsg' in event.data) {
+        console.log('peer', event);
+        //this is from peer streaming, map it on to any listening transducers
+        let targetTransducers = this.matchTransducers('NET', [event.data.src, event.data.ch]);
+        // console.log(targetTransducers.length);
+        for(let idx in targetTransducers) {
+          targetTransducers[idx].setValue(event.data.val);
         }
       } else if ('sample' in event.data) { //from a worker
         // console.log("sample received");
         // console.log(event.data);
         let sampleKey = event.data.sample.substr(0,event.data.sample.length - 4)
         // this.sampleBuffers[sampleKey] = event.data.buffer;
-        this.sampleVectorBuffers[sampleKey] = this.translateFloat32ArrayToBuffer(event.data.buffer);
+        addSampleBuffer(sampleKey, event.data.buffer);
+        // this.sampleVectorBuffers[sampleKey] = this.translateFloat32ArrayToBuffer(event.data.buffer);
       }else if ('phase' in event.data) {
         // console.log(this.kuraPhaseIdx);
-        console.log(event);
+        // console.log(event);
         this.netClock.setPhase(event.data.phase, event.data.i);
         // this.kuraPhase = event.data.phase;
         // this.kuraPhaseIdx = event.data.i;
@@ -253,26 +300,21 @@ class MaxiProcessor extends AudioWorkletProcessor {
           // let setupFunction = new Function(`return ${event.data['setup']}`);
           setupFunction = eval(event.data['setup']);
           loopFunction = eval(event.data['loop']);
-          // let loopFunction = new Function(`return ${event.data['loop']}`);
-
-
 
           let oldSignalFunction = this.currentSignalFunction;
           this.currentSignalFunction = 1 - this.currentSignalFunction;
           this._q[this.currentSignalFunction] = setupFunction();
           //allow feedback between evals
           this._mems[this.currentSignalFunction] = this._mems[oldSignalFunction];
-//          this._mems[this.currentSignalFunction] = this.newmem();
-          // this._q[this.currentSignalFunction] = setupFunction()();
+
           this.signals[this.currentSignalFunction] = loopFunction;
           this._cleanup[this.currentSignalFunction] = 0;
-          // this.signals[this.currentSignalFunction] = loopFunction();
 
-
-          let xfadeBegin = Module.maxiMap.linlin(1.0 - this.currentSignalFunction, 0, 1, -1, 1);
-          let xfadeEnd = Module.maxiMap.linlin(this.currentSignalFunction, 0, 1, -1, 1);
+          let xfadeBegin = Maximilian.maxiMap.linlin(1.0 - this.currentSignalFunction, 0, 1, -1, 1);
+          let xfadeEnd = Maximilian.maxiMap.linlin(this.currentSignalFunction, 0, 1, -1, 1);
           this.xfadeControl.prepare(xfadeBegin, xfadeEnd, 18); // short xfade across signals
-          this.xfadeControl.triggerEnable(true); //no clock yet, so enable the trigger straight away
+          // this.codeQueued = true;
+          this.xfadeControl.triggerEnable(true); //enable the trigger straight away
         } catch (err) {
           if (err instanceof TypeError) {
             console.log("TypeError in worklet evaluation: " + err.name + " – " + err.message);
@@ -286,8 +328,10 @@ class MaxiProcessor extends AudioWorkletProcessor {
     };
     this.port.postMessage("giveMeSomeSamples");
 
-    this.clockFreq = 0.8;
+    this.clockFreq = 0.7 / 4;
     this.clockPhaseSharingInterval=0; //counter for emiting clock phase over the network
+    this.barFrequency = 4;
+    this.setBarFrequency = (freq) => {this.barFrequency = freq; return 0;};
 
 //@CLP
     this.clockPhase = (multiples, phase) => {
@@ -303,10 +347,29 @@ class MaxiProcessor extends AudioWorkletProcessor {
       return 0;
     };
 
-    this.bitTime = Module.maxiBits.sig(0);  //this needs to be decoupled from the audio engine? or not... maybe a 'permenant block' with each grammar?
+    this.bitTime = Maximilian.maxiBits.sig(0);  //this needs to be decoupled from the audio engine? or not... maybe a 'permenant block' with each grammar?
     this.dt = 0;
 
-    //this.testOsc = new Module.maxiOsc();
+    this.createMLOutputTransducer= (sendFrequency) => {
+      return new PostMsgOutputTransducer(this.port, this.sampleRate, sendFrequency, 'ML');
+    }
+
+    this.createNetOutputTransducer= (sendFrequency) => {
+      return new PostMsgOutputTransducer(this.port, this.sampleRate, sendFrequency, 'NET');
+    }
+
+    this.ifListThenToArray = (x) => {
+      let val = x;
+      // console.log(typeof(x));
+      if (typeof(x) != 'number') {
+        val = vectorDoubleToF64Array(x);
+      }
+      return val;
+    }
+
+
+
+    //this.testOsc = new Maximilian.maxiOsc();
 
   }
 
@@ -329,7 +392,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
       for (let i = 0; i < output[0].length; ++i) {
         //this needs decoupling?
-        this.bitTime = Module.maxiBits.inc(this.bitTime);
+        this.bitTime = Maximilian.maxiBits.inc(this.bitTime);
         //net clocks
         // if (this.kuraPhase != -1) {
         //   // this.netClock.setPhase(this.kuraPhase, this.kuraPhaseIdx);
@@ -350,13 +413,22 @@ class MaxiProcessor extends AudioWorkletProcessor {
           this.port.postMessage({ phase: phase, c: "phase" });
         }
 
-        this.bitclock = Module.maxiBits.sig(Math.floor(this.clockPhase(1,0) * 1023.999999999));
+        this.bitclock = Maximilian.maxiBits.sig(Math.floor(this.clockPhase(1,0) * 1023.999999999));
 
         //xfade between old and new algorhythms
+        // if (this.codeQueued) {
+        //   if (this.clockTrig(1,0)) {
+        //     this.xfadeControl.triggerEnable(true); //trigger a cross fade into the new code
+        //     this.codeQueued = false;
+        //     console.log('trig');
+        //   }
+        // }
+
         let sig0 = this.signals[0](this._q[0], inputs[0][0][i], this._mems[0]);
         let sig1 = this.signals[1](this._q[1], inputs[0][0][i], this._mems[1]);
-        let xf = this.xfadeControl.play(i == 0 ? 1 : 0);
-        let w = Module.maxiXFade.xfade(sig0, sig1, xf);
+        // let xf = this.xfadeControl.play(i == 0 ? 1 : 0);
+        let xf = this.xfadeControl.play(this.clockTrig(this.barFrequency,0));
+        let w = Maximilian.maxiXFade.xfade(sig0, sig1, xf);
 
 
         //mono->stereo
@@ -402,7 +474,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
     };
     fileReader.readAsArrayBuffer(blob);
     let audioFloat32Array = fileReader.result;
-    var maxiSampleBufferData = new Module.VectorDouble();
+    var maxiSampleBufferData = new Maximilian.VectorDouble();
     for (var i = 0; i < audioFloat32Array.length; i++) {
       maxiSampleBufferData.push_back(audioFloat32Array[i]);
     }
@@ -411,7 +483,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
   translateFloat32ArrayToBuffer(audioFloat32ArrayBuffer) {
 
-    var maxiSampleBufferData = new Module.VectorDouble();
+    var maxiSampleBufferData = new Maximilian.VectorDouble();
     for (var i = 0; i < audioFloat32ArrayBuffer.length; i++) {
       maxiSampleBufferData.push_back(audioFloat32ArrayBuffer[i]);
     }
