@@ -1,4 +1,4 @@
-import Module from './maximilian.wasmmodule.js';
+import Maximilian from './maximilian.wasmmodule.js';
 // import {PostMsgTransducer} from './transducer.js'
 // import {
 //   MMLLOnsetDetector
@@ -62,18 +62,18 @@ class PostMsgInputTransducer {
 
 class pvshift {
   constructor() {
-    this.fft = new Module.maxiFFT();
+    this.fft = new Maximilian.maxiFFT();
 		this.fft.setup(1024,256,1024);
-		this.ifft = new Module.maxiIFFT();
+		this.ifft = new Maximilian.maxiIFFT();
 		this.ifft.setup(1024,256,1024);
-		this.mags = new Module.VectorFloat();
-		this.phases = new Module.VectorFloat();
+		this.mags = new Maximilian.VectorFloat();
+		this.phases = new Maximilian.VectorFloat();
 		this.mags.resize(512,0);
 		this.phases.resize(512,0);
   }
 
   play(sig, shift) {
-    if (this.fft.process(sig, Module.maxiFFTModes.WITH_POLAR_CONVERSION)) {
+    if (this.fft.process(sig, Maximilian.maxiFFTModes.WITH_POLAR_CONVERSION)) {
       this.mags = this.fft.getMagnitudes();
       this.phases = this.fft.getPhases();
       //shift bins up
@@ -88,7 +88,7 @@ class pvshift {
       }
       // console.log(mags.get(10));
     }
-    sig = this.ifft.process(this.mags, this.phases, Module.maxiIFFTModes.SPECTRUM);
+    sig = this.ifft.process(this.mags, this.phases, Maximilian.maxiIFFTModes.SPECTRUM);
     return sig;
   }
 }
@@ -126,11 +126,11 @@ class MaxiProcessor extends AudioWorkletProcessor {
   constructor() {
     super();
 
-    let q1 = Module.maxiBits.sig(63);
-    // for(let i=0; i < 123; i++) q1 = Module.maxiBits.inc(q1);
-    // let q2 = Module.maxiBits.sig(255);
-    // let q3 = Module.maxiBits.land(q1,q2);
-    // let q4 = Module.maxiBits.shl(q3, 22);
+    let q1 = Maximilian.maxiBits.sig(63);
+    // for(let i=0; i < 123; i++) q1 = Maximilian.maxiBits.inc(q1);
+    // let q2 = Maximilian.maxiBits.sig(255);
+    // let q3 = Maximilian.maxiBits.land(q1,q2);
+    // let q4 = Maximilian.maxiBits.shl(q3, 22);
     // console.log("res: " + q1);
 
     this.sampleRate = 44100;
@@ -148,12 +148,12 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
     this.numPeers = 1;
 
-    // this.maxiAudio = new Module.maxiAudio();
-    this.clock = new Module.maxiOsc();
-    this.kick = new Module.maxiSample();
-    this.snare = new Module.maxiSample();
-    this.closed = new Module.maxiSample();
-    this.open = new Module.maxiSample();
+    // this.maxiAudio = new Maximilian.maxiAudio();
+    this.clock = new Maximilian.maxiOsc();
+    this.kick = new Maximilian.maxiSample();
+    this.snare = new Maximilian.maxiSample();
+    this.closed = new Maximilian.maxiSample();
+    this.open = new Maximilian.maxiSample();
 
 
     this.initialised = false;
@@ -179,7 +179,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
     };
     this.signals = [this.silence, this.silence];
     this.currentSignalFunction = 0;
-    this.xfadeControl = new Module.maxiLine();
+    this.xfadeControl = new Maximilian.maxiLine();
 
     this.timer = new Date();
 
@@ -245,7 +245,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
         return sample;
     };
 
-    this.netClock = new Module.maxiAsyncKuramotoOscillator(3);  //TODO: this should be the same as numpeers
+    this.netClock = new Maximilian.maxiAsyncKuramotoOscillator(3);  //TODO: this should be the same as numpeers
     this.kuraPhase = -1;
     this.kuraPhaseIdx = 1;
 
@@ -310,8 +310,8 @@ class MaxiProcessor extends AudioWorkletProcessor {
           this.signals[this.currentSignalFunction] = loopFunction;
           this._cleanup[this.currentSignalFunction] = 0;
 
-          let xfadeBegin = Module.maxiMap.linlin(1.0 - this.currentSignalFunction, 0, 1, -1, 1);
-          let xfadeEnd = Module.maxiMap.linlin(this.currentSignalFunction, 0, 1, -1, 1);
+          let xfadeBegin = Maximilian.maxiMap.linlin(1.0 - this.currentSignalFunction, 0, 1, -1, 1);
+          let xfadeEnd = Maximilian.maxiMap.linlin(this.currentSignalFunction, 0, 1, -1, 1);
           this.xfadeControl.prepare(xfadeBegin, xfadeEnd, 18); // short xfade across signals
           // this.codeQueued = true;
           this.xfadeControl.triggerEnable(true); //enable the trigger straight away
@@ -347,7 +347,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
       return 0;
     };
 
-    this.bitTime = Module.maxiBits.sig(0);  //this needs to be decoupled from the audio engine? or not... maybe a 'permenant block' with each grammar?
+    this.bitTime = Maximilian.maxiBits.sig(0);  //this needs to be decoupled from the audio engine? or not... maybe a 'permenant block' with each grammar?
     this.dt = 0;
 
     this.createMLOutputTransducer= (sendFrequency) => {
@@ -369,7 +369,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
 
 
-    //this.testOsc = new Module.maxiOsc();
+    //this.testOsc = new Maximilian.maxiOsc();
 
   }
 
@@ -392,7 +392,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
       for (let i = 0; i < output[0].length; ++i) {
         //this needs decoupling?
-        this.bitTime = Module.maxiBits.inc(this.bitTime);
+        this.bitTime = Maximilian.maxiBits.inc(this.bitTime);
         //net clocks
         // if (this.kuraPhase != -1) {
         //   // this.netClock.setPhase(this.kuraPhase, this.kuraPhaseIdx);
@@ -413,7 +413,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
           this.port.postMessage({ phase: phase, c: "phase" });
         }
 
-        this.bitclock = Module.maxiBits.sig(Math.floor(this.clockPhase(1,0) * 1023.999999999));
+        this.bitclock = Maximilian.maxiBits.sig(Math.floor(this.clockPhase(1,0) * 1023.999999999));
 
         //xfade between old and new algorhythms
         // if (this.codeQueued) {
@@ -428,7 +428,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
         let sig1 = this.signals[1](this._q[1], inputs[0][0][i], this._mems[1]);
         // let xf = this.xfadeControl.play(i == 0 ? 1 : 0);
         let xf = this.xfadeControl.play(this.clockTrig(this.barFrequency,0));
-        let w = Module.maxiXFade.xfade(sig0, sig1, xf);
+        let w = Maximilian.maxiXFade.xfade(sig0, sig1, xf);
 
 
         //mono->stereo
@@ -474,7 +474,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
     };
     fileReader.readAsArrayBuffer(blob);
     let audioFloat32Array = fileReader.result;
-    var maxiSampleBufferData = new Module.VectorDouble();
+    var maxiSampleBufferData = new Maximilian.VectorDouble();
     for (var i = 0; i < audioFloat32Array.length; i++) {
       maxiSampleBufferData.push_back(audioFloat32Array[i]);
     }
@@ -483,7 +483,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
   translateFloat32ArrayToBuffer(audioFloat32ArrayBuffer) {
 
-    var maxiSampleBufferData = new Module.VectorDouble();
+    var maxiSampleBufferData = new Maximilian.VectorDouble();
     for (var i = 0; i < audioFloat32ArrayBuffer.length; i++) {
       maxiSampleBufferData.push_back(audioFloat32ArrayBuffer[i]);
     }
