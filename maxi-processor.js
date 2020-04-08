@@ -1,36 +1,33 @@
 import Module from './maximilian.wasmmodule.js';
-// import {PostMsgTransducer} from './transducer.js'
 // import {
 //   MMLLOnsetDetector
 // } from '../machineListening/MMLLOnsetDetector.js';
 
-function vectorDoubleToF64Array(x) {
-  let ar = new Float64Array(x.size());
-  for(let i=0; i < ar.length; i++) {
-    ar[i] = x.get(i);
-  }
-  return ar;
-}
 
-class PostMsgOutputTransducer {
-  constructor(port, sampleRate, sendFrequency = 2, transducerType) {
+
+class PostMsgTransducer {
+
+  constructor(msgPort, sampleRate, sendFrequency = 2, name) {
     if (sendFrequency == 0)
       this.sendPeriod = Number.MAX_SAFE_INTEGER;
     else
       this.sendPeriod = 1.0 / sendFrequency * sampleRate;
     this.sendCounter = this.sendPeriod;
-    this.transducerType = transducerType;
-    this.port=port;
+    this.port = msgPort;
+    this.val = 0;
+    this.name=name;
   }
 
-  send(data, channelID) {
+  incoming(msg) {
+    this.val = msg.value;
+  }
+
+  send(id, sendMsg) {
     if (this.sendCounter >= this.sendPeriod) {
-      console.log(data);
       this.port.postMessage({
         rq: "send",
-        value: data,
-        ttype: this.transducerType,
-        ch: channelID
+        value: sendMsg,
+        id: id
       });
       this.sendCounter -= this.sendPeriod;
     } else {
@@ -38,27 +35,34 @@ class PostMsgOutputTransducer {
     }
     return 0;
   }
+
+  receive(sendMsg) {
+    if (this.sendCounter >= this.sendPeriod) {
+      this.port.postMessage({
+        rq: "receive",
+        value: sendMsg,
+        transducerName: this.name
+      });
+      this.sendCounter -= this.sendPeriod;
+    } else {
+      this.sendCounter++;
+    }
+    return this.val;
+  }
+
+  // io(sendMsg) {
+  //   if (this.sendCounter >= this.sendPeriod) {
+  //     this.port.postMessage({
+  //       rq: "dataplease",
+  //       value: sendMsg
+  //     });
+  //     this.sendCounter -= this.sendPeriod;
+  //   } else {
+  //     this.sendCounter++;
+  //   }
+  //   return this.val;
+  // }
 }
-
-class PostMsgInputTransducer {
-  constructor(transducerType, channelID) {
-    this.transducerType = transducerType;
-    this.channelID = channelID;
-    this.value = 0;
-  }
-
-  setValue(data) {
-    this.value = data;
-    console.log(data);
-  }
-
-  getValue() {
-    return this.value;
-  }
-}
-
-
-
 
 class pvshift {
   constructor() {
@@ -194,98 +198,47 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
     this.sampleBuffers={};
     this.sampleVectorBuffers = {};
-    this.sampleVectorBuffers['defaultEmptyBuffer'] = new Float32Array(1);
 
-    this.transducers = [];
+    this.transducers = {};
 
-    this.matchTransducers = (ttype, channel) => {
-        return this.transducers.filter(x=>{
-          let testEqChannels = (chID, channel) => {
-            let eq = true;
-            let keys = Object.keys(channel);
-            if (keys.length==0) {
-              eq = channel == chID;
-            }else{
-              for(let v in keys) {
-                if(chID[v] != undefined) {
-                  if (chID[v] != channel[v]) {
-                    eq = false;
-                    break;
-                  }
-                }else{
-                  eq = false;
-                  break;
-                }
-              }
-            }
-            return eq;
-          }
-          return x.transducerType==ttype && testEqChannels(x.channelID,channel);
-        });
-    }
-
-    this.registerInputTransducer = (ttype, channelID) => {
-      let transducer = new PostMsgInputTransducer(ttype, channelID);
-      let existingTransducers = this.matchTransducers(ttype, channelID);
-      if (existingTransducers.length > 0) {
-        transducer.setValue(existingTransducers[0].getValue());
-      }
-      this.transducers.push(transducer);
-      // console.log(this.transducers);
-      return transducer;
+    this.registerTransducer = (name, rate) => {
+      let trans = new PostMsgTransducer(this.port, this.sampleRate, rate, name);
+      this.transducers[name] = trans;
+      console.log(this.transducers);
+      return trans;
     };
 
     this.getSampleBuffer = (bufferName) => {
-        let sample = this.sampleVectorBuffers['defaultEmptyBuffer']; //defailt - silence
-        if (bufferName in this.sampleVectorBuffers) {
-          sample = this.sampleVectorBuffers[bufferName];
-        }else{
-          console.warn(`${bufferName} doesn't exist yet`);
-        }
-        return sample;
+      // console.log(this.sampleBuffers);
+      // console.log(bufferName);
+        // return this.translateFloat32ArrayToBuffer(this.sampleBuffers[bufferName]);
+        return this.sampleVectorBuffers[bufferName];
     };
 
     this.netClock = new Module.maxiAsyncKuramotoOscillator(3);  //TODO: this should be the same as numpeers
     this.kuraPhase = -1;
     this.kuraPhaseIdx = 1;
 
-    let addSampleBuffer = (name, buf) => {
-      this.sampleVectorBuffers[name] = this.translateFloat32ArrayToBuffer(buf);
-    };
-
     this.port.onmessage = event => { // message port async handler
-      // console.log(event);
       if ('address' in event.data) {
         //this must be an OSC message
         this.OSCMessages[event.data.address] = event.data.args;
         //console.log(this.OSCMessages);
-      } else if ('func' in event.data && 'sendbuf' == event.data.func) {
-        console.log("aesendbuf", event.data);
-        addSampleBuffer(event.data.name, event.data.data);
-      } else if ('func' in event.data && 'data' == event.data.func) {
-        //this is from the ML window, map it on to any listening transducers
-        let targetTransducers = this.matchTransducers('ML', event.data.ch);
-        for(let idx in targetTransducers) {
-          targetTransducers[idx].setValue(event.data.val);
-        }
-      } else if ('peermsg' in event.data) {
-        console.log('peer', event);
-        //this is from peer streaming, map it on to any listening transducers
-        let targetTransducers = this.matchTransducers('NET', [event.data.src, event.data.ch]);
-        // console.log(targetTransducers.length);
-        for(let idx in targetTransducers) {
-          targetTransducers[idx].setValue(event.data.val);
+      } else if ('worker' in event.data) { //from a worker
+        //this must be an OSC message
+        if (this.transducers[event.data.transducerName]) {
+          // console.log(this.transducers[event.data.tname]);
+          this.transducers[event.data.transducerName].incoming(event.data);
         }
       } else if ('sample' in event.data) { //from a worker
         // console.log("sample received");
         // console.log(event.data);
         let sampleKey = event.data.sample.substr(0,event.data.sample.length - 4)
         // this.sampleBuffers[sampleKey] = event.data.buffer;
-        addSampleBuffer(sampleKey, event.data.buffer);
-        // this.sampleVectorBuffers[sampleKey] = this.translateFloat32ArrayToBuffer(event.data.buffer);
+        this.sampleVectorBuffers[sampleKey] = this.translateFloat32ArrayToBuffer(event.data.buffer);
       }else if ('phase' in event.data) {
         // console.log(this.kuraPhaseIdx);
-        // console.log(event);
+        console.log(event);
         this.netClock.setPhase(event.data.phase, event.data.i);
         // this.kuraPhase = event.data.phase;
         // this.kuraPhaseIdx = event.data.i;
@@ -352,25 +305,6 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
     this.bitTime = Module.maxiBits.sig(0);  //this needs to be decoupled from the audio engine? or not... maybe a 'permenant block' with each grammar?
     this.dt = 0;
-
-    this.createMLOutputTransducer= (sendFrequency) => {
-      return new PostMsgOutputTransducer(this.port, this.sampleRate, sendFrequency, 'ML');
-    }
-
-    this.createNetOutputTransducer= (sendFrequency) => {
-      return new PostMsgOutputTransducer(this.port, this.sampleRate, sendFrequency, 'NET');
-    }
-
-    this.ifListThenToArray = (x) => {
-      let val = x;
-      // console.log(typeof(x));
-      if (typeof(x) != 'number') {
-        val = vectorDoubleToF64Array(x);
-      }
-      return val;
-    }
-
-
 
     //this.testOsc = new Module.maxiOsc();
 
