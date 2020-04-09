@@ -94,6 +94,9 @@ class pvshift {
 }
 
 
+
+
+
 /**
  * The main Maxi Audio wrapper with a WASM-powered AudioWorkletProcessor.
  *
@@ -119,7 +122,6 @@ class MaxiProcessor extends AudioWorkletProcessor {
     }];
   }
 
-
   /**
    * @constructor
    */
@@ -143,8 +145,8 @@ class MaxiProcessor extends AudioWorkletProcessor {
     this.secondsPerBeat = (60.0 / this.tempo);
     this.counterTimeValue = (this.secondsPerBeat / 4); //___16th note
 
-    this.oldClock = 0;
-    this.phase = 0;
+    // this.oldClock = 0;
+    // this.phase = 0;
 
     this.numPeers = 1;
 
@@ -171,7 +173,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
     this.currentSignalFunction = 0;
     this.xfadeControl = new Maximilian.maxiLine();
 
-    this.timer = new Date();
+    // this.timer = new Date();
 
     this.OSCMessages = {};
 
@@ -297,6 +299,12 @@ class MaxiProcessor extends AudioWorkletProcessor {
           //allow feedback between evals
           this._mems[this.currentSignalFunction] = this._mems[oldSignalFunction];
 
+
+         
+         // output[SPECTROGAMCHANNEL][i] = specgramValue;
+         // then use channelsplitter
+
+
           this.signals[this.currentSignalFunction] = loopFunction;
           this._cleanup[this.currentSignalFunction] = 0;
 
@@ -420,6 +428,9 @@ class MaxiProcessor extends AudioWorkletProcessor {
         let xf = this.xfadeControl.play(this.clockTrig(this.barFrequency,0));
         let w = Maximilian.maxiXFade.xfade(sig0, sig1, xf);
 
+        // let scope = this._mems[this.currentSignalFunction][":show"];
+				// let scopeValue = scope !== undefined ? scope : output[channel][0];        
+        // output[1][i] = specgramValue;
 
         //mono->stereo
         for (let channel = 0; channel < channelCount; channel++) {

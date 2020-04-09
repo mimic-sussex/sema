@@ -45,6 +45,14 @@
     height: 100%;
     width: auto; /* width is defined by child */
   }
+
+  .dashboard-container {
+    grid-area: layout;
+    grid-row: 0 / 2;
+    height: 100%;
+    overflow: hidden;
+  }
+
   /* .layout-container {
     grid-area: layout;
     grid-row: 0 / 2;
@@ -52,11 +60,11 @@
     overflow: hidden;
   } */
 
-  .scrollable {
+  /* .scrollable {
 		flex: 1 1 auto;
 		margin: 0 0 0.5em 0;
 		overflow-y: auto;
-	}
+	} */
 </style>
 
 <div class="container scrollable">
