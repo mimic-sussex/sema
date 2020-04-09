@@ -37,7 +37,7 @@ const id = () =>
 
 const originalItems = [
 	{
-		...gridHelp.item({ x: 0, y: 0, w: 7, h: 3, id: id() }),
+		...gridHelp.item({ x: 0, y: 0, w: 6, h: 7, id: id() }),
 		...{
 			type: "liveCodeEditor",
 			name: "hello-world",
@@ -52,7 +52,7 @@ const originalItems = [
 	},
 
 	{
-		...gridHelp.item({ x: 7, y: 0, w: 3, h: 3, id: id() }),
+		...gridHelp.item({ x: 6, y: 0, w: 3, h: 2, id: id() }),
 		...{
 			name: "hello world",
 			type: "analyser",
@@ -66,7 +66,7 @@ const originalItems = [
 	},
 
 	{
-		...gridHelp.item({ x: 7, y: 8, w: 3, h: 7, id: id() }),
+		...gridHelp.item({ x: 6, y: 2, w: 3, h: 5, id: id() }),
 		...{
 			name: "hello world",
 			type: "liveCodeParseOutput",
@@ -80,7 +80,7 @@ const originalItems = [
 	},
 
 	{
-		...gridHelp.item({ x: 5, y: 15, w: 8, h: 2, id: id() }),
+		...gridHelp.item({ x: 9, y: 6, w: 18, h: 1, id: id() }),
 		...{
 			name: "hello world",
 			type: "grammarCompileOutput",
@@ -94,7 +94,7 @@ const originalItems = [
 	},
 
 	{
-		...gridHelp.item({ x: 10, y: 2, w: 5, h: 5, id: id() }),
+		...gridHelp.item({ x: 9, y: 3, w: 15, h: 3, id: id() }),
 		...{
 			name: "hello world",
 			type: "grammarEditor",
@@ -108,7 +108,7 @@ const originalItems = [
 	},
 
 	{
-		...gridHelp.item({ x: 0, y: 3, w: 7, h: 4, id: id() }),
+		...gridHelp.item({ x: 9, y: 0, w: 12, h: 3, id: id() }),
 		...{
 			name: "hello world",
 			type: "modelEditor",
