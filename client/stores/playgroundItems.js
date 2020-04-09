@@ -66,6 +66,20 @@ const originalItems = [
 	},
 
 	{
+		...gridHelp.item({ x: 9, y: 0, w: 18, h: 3, id: id() }),
+		...{
+			name: "hello world",
+			type: "modelEditor",
+			lineNumbers: true,
+			hasFocus: false,
+			theme: "monokai",
+			background: "#f0f0f0",
+			component: ModelEditor,
+			data: hello_world_code_example
+		}
+	},
+
+	{
 		...gridHelp.item({ x: 6, y: 2, w: 3, h: 5, id: id() }),
 		...{
 			name: "hello world",
@@ -79,19 +93,6 @@ const originalItems = [
 		}
 	},
 
-	{
-		...gridHelp.item({ x: 9, y: 6, w: 18, h: 1, id: id() }),
-		...{
-			name: "hello world",
-			type: "grammarCompileOutput",
-			lineNumbers: true,
-			hasFocus: false,
-			theme: "monokai",
-			background: "#d1d5ff",
-			component: GrammarCompileOutput,
-			data: ""
-		}
-	},
 
 	{
 		...gridHelp.item({ x: 9, y: 3, w: 15, h: 3, id: id() }),
@@ -108,20 +109,6 @@ const originalItems = [
 	},
 
 	{
-		...gridHelp.item({ x: 9, y: 0, w: 12, h: 3, id: id() }),
-		...{
-			name: "hello world",
-			type: "modelEditor",
-			lineNumbers: true,
-			hasFocus: false,
-			theme: "monokai",
-			background: "#f0f0f0",
-			component: ModelEditor,
-			data: hello_world_code_example
-		}
-	},
-
-	{
 		...gridHelp.item({ x: 7, y: 7, w: 4, h: 30, id: id() }),
 		...{
 			name: "hello world",
@@ -131,6 +118,20 @@ const originalItems = [
 			theme: "monokai",
 			background: "#f0f0f0",
 			component: StoreDebugger,
+			data: ""
+		}
+	},
+
+	{
+		...gridHelp.item({ x: 9, y: 6, w: 18, h: 1, id: id() }),
+		...{
+			name: "hello world",
+			type: "grammarCompileOutput",
+			lineNumbers: true,
+			hasFocus: false,
+			theme: "monokai",
+			background: "#d1d5ff",
+			component: GrammarCompileOutput,
 			data: ""
 		}
 	}
