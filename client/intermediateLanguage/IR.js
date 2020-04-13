@@ -67,15 +67,15 @@ var jsFuncMap = {
     loop:  (o, p) => `(${p[0].loop} % ${p[1].loop})` },
 	add: {
 		setup: (o, p) => "",
-		loop:  (o, p) => `(${p[0].loop}+${p[1].loop})`
+		loop:  (o, p) => `(${p[0].loop} + ${p[1].loop})`
 	},
 	mul: {
 		setup: (o, p) => "",
-		loop:  (o, p) => `(${p[0].loop}*${p[1].loop})`
+		loop:  (o, p) => `(${p[0].loop} * ${p[1].loop})`
 	},
 	sub: {
 		setup: (o, p) => "",
-		loop:  (o, p) => `(${p[0].loop}-${p[1].loop})`
+		loop:  (o, p) => `(${p[0].loop} - ${p[1].loop})`
 	},
 	div: {
 		setup: (o, p) => "",
@@ -406,8 +406,41 @@ var jsFuncMap = {
 	rsq: {
 		setup: (o, p) => `${o} = new Maximilian.maxiRatioSeq();`,
 		loop:  (o, p) => {return p.length == 2 ? `${o}.playTrig(${p[0].loop},${p[1].loop})` : `${o}.playValues(${p[0].loop},${p[1].loop},${p[2].loop})`}
+	},
+//if (${o}_tnote.onZX(${p[0].loop})) {${o}.noteOn(60,127)};     (()=>{return ${o}.play();})()
+	o303: {
+		setup: (o, p) => `${o} = new Open303.Open303();
+		${o}.setSampleRate(this.sampleRate);
+		${o}_tnote = new Maximilian.maxiTrigger();
+		${o}_twf = new Maximilian.maxiTrigger();
+		${o}_tcut = new Maximilian.maxiTrigger();
+		${o}_tres = new Maximilian.maxiTrigger();
+		${o}_tenvm = new Maximilian.maxiTrigger();
+		${o}_tdec = new Maximilian.maxiTrigger();
+		`,
+		loop:  (o, p) => `(()=>{
+			let newNote = ${o}_tnote.onZX(${p[0].loop});
+			if (newNote) {
+				if (${p[2].loop}>0) {
+					${o}.slideToNote(${p[1].loop},false);
+				}else{
+					${o}.triggerNote(${p[1].loop},false);
+				}
+			};
+			if (${o}_twf.onChanged(${p[3].loop}, 1e-5)) {${o}.setWaveform(${p[3].loop})};
+			if (${o}_tcut.onChanged(${p[4].loop}, 1e-5)) {${o}.setCutoff(${p[4].loop})};
+			if (${o}_tres.onChanged(${p[5].loop}, 1e-5)) {${o}.setResonance(${p[5].loop})};
+			if (${o}_tenvm.onChanged(${p[6].loop}, 1e-5)) {${o}.setEnvMod(${p[6].loop})};
+			if (${o}_tdec.onChanged(${p[7].loop}, 1e-5)) {${o}.setDecay(${p[7].loop})};
+			return ${o}.play();})()`
 	}
 };
+// if (${o}_twf.onChanged(${p[2].loop}, 1e-5)) {${o}.setWaveform(${p[2].loop})};
+// if (${o}_tcut.onChanged(${p[3].loop}, 1e-5)) {${o}.setCutoff(${p[3].loop})};
+// if (${o}_tres.onChanged(${p[4].loop}, 1e-5)) {${o}.setResonance(${p[4].loop})};
+// if (${o}_tenvm.onChanged(${p[5].loop}, 1e-5)) {${o}.setEnvMod(${p[5].loop})};
+// if (${o}_tdec.onChanged(${p[6].loop}, 1e-5)) {${o}.setDecay(${p[6].loop})};
+// if (newPitch || newVel) {${o}.noteOn(${p[0].loop},${p[1].loop})};
 
 class IRToJavascript {
 
@@ -579,7 +612,7 @@ class IRToJavascript {
     vars = {};
     let code = IRToJavascript.traverseTree(tree, IRToJavascript.emptyCode(), 0, vars, blockIdx);
     // console.log(vars);
-    code.setup = `() => {let q=this.newq(); ${code.setup}; return q;}`;
+    code.setup = `() => {let q=this.newq(); q.sigOut=0; ${code.setup}; return q;}`;
     code.loop = `(q, inputs, mem) => {${code.loop} return q.sigOut;}`
     // console.log("DEBUG:treeToCode");
     // console.log(code.loop);

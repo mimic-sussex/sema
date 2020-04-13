@@ -1,4 +1,5 @@
 import Maximilian from './maximilian.wasmmodule.js';
+import Open303 from './open303.wasmmodule.js';
 // import {PostMsgTransducer} from './transducer.js'
 // import {
 //   MMLLOnsetDetector
@@ -313,7 +314,6 @@ class MaxiProcessor extends AudioWorkletProcessor {
           let xfadeBegin = Maximilian.maxiMap.linlin(1.0 - this.currentSignalFunction, 0, 1, -1, 1);
           let xfadeEnd = Maximilian.maxiMap.linlin(this.currentSignalFunction, 0, 1, -1, 1);
           this.xfadeControl.prepare(xfadeBegin, xfadeEnd, 18); // short xfade across signals
-          // this.codeQueued = true;
           this.xfadeControl.triggerEnable(true); //enable the trigger straight away
         } catch (err) {
           if (err instanceof TypeError) {
@@ -414,15 +414,6 @@ class MaxiProcessor extends AudioWorkletProcessor {
         }
 
         this.bitclock = Maximilian.maxiBits.sig(Math.floor(this.clockPhase(1,0) * 1023.999999999));
-
-        //xfade between old and new algorhythms
-        // if (this.codeQueued) {
-        //   if (this.clockTrig(1,0)) {
-        //     this.xfadeControl.triggerEnable(true); //trigger a cross fade into the new code
-        //     this.codeQueued = false;
-        //     console.log('trig');
-        //   }
-        // }
 
         let sig0 = this.signals[0](this._q[0], inputs[0][0][i], this._mems[0]);
         let sig1 = this.signals[1](this._q[1], inputs[0][0][i], this._mems[1]);
