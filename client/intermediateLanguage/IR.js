@@ -222,8 +222,12 @@ var jsFuncMap = {
 	adc: { setup: (o, p) => "", loop: (o, p) => `inputs` },
 	sampler: {
 		setup: (o, p) => `${o} = new Maximilian.maxiSample();
-                      ${o}.setSample(this.getSampleBuffer(${p[1].loop}));`,
-		loop:  (o, p) => `(${o}.isReady() ? ${o}.playOnZX(${p[0].loop}) : 0.0)`
+                      ${o}.setSample(this.getSampleBuffer(${p[p.length-1].loop}));`,
+		loop:  (o, p) => {
+			let playArgs = `${p[0].loop}`;
+			if (p.length==3) {playArgs += `,${p[1].loop}`}
+			else if (p.length==4) {playArgs += `,${p[1].loop},${p[2].loop}`};
+			return `(${o}.isReady() ? ${o}.playOnZX(${playArgs}) : 0.0)`}
 	},
   loop: {
 		setup: (o, p) => `${o} = new Maximilian.maxiSample();
