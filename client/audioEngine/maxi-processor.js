@@ -254,6 +254,9 @@ class MaxiProcessor extends AudioWorkletProcessor {
       this.sampleVectorBuffers[name] = this.translateFloat32ArrayToBuffer(buf);
     };
 
+    this.codeSwapStates = {QUEUD:0, XFADING:1, NONE:2};
+    this.codeSwapState = this.codeSwapStates.NONE;
+
     this.port.onmessage = event => { // message port async handler
       // console.log(event);
       if ('address' in event.data) {
@@ -302,19 +305,32 @@ class MaxiProcessor extends AudioWorkletProcessor {
           setupFunction = eval(event.data['setup']);
           loopFunction = eval(event.data['loop']);
 
-          let oldSignalFunction = this.currentSignalFunction;
-          this.currentSignalFunction = 1 - this.currentSignalFunction;
-          this._q[this.currentSignalFunction] = setupFunction();
+          // let oldSignalFunction = this.currentSignalFunction;
+          // this.currentSignalFunction = 1 - this.currentSignalFunction;
+          // this._q[this.currentSignalFunction] = setupFunction();
+          // //allow feedback between evals
+          // this._mems[this.currentSignalFunction] = this._mems[oldSignalFunction];
+          //
+          // this.signals[this.currentSignalFunction] = loopFunction;
+          // this._cleanup[this.currentSignalFunction] = 0;
+          //
+          // let xfadeBegin = Maximilian.maxiMap.linlin(1.0 - this.currentSignalFunction, 0, 1, -1, 1);
+          // let xfadeEnd = Maximilian.maxiMap.linlin(this.currentSignalFunction, 0, 1, -1, 1);
+
+          // let oldSignalFunction = this.currentSignalFunction;
+          this.nextSignalFunction = 1 - this.currentSignalFunction;
+          this._q[this.nextSignalFunction] = setupFunction();
           //allow feedback between evals
-          this._mems[this.currentSignalFunction] = this._mems[oldSignalFunction];
+          this._mems[this.nextSignalFunction] = this._mems[this.currentSignalFunction];
 
-          this.signals[this.currentSignalFunction] = loopFunction;
-          this._cleanup[this.currentSignalFunction] = 0;
+          this.signals[this.nextSignalFunction] = loopFunction;
+          this._cleanup[this.nextSignalFunction] = 0;
 
-          let xfadeBegin = Maximilian.maxiMap.linlin(1.0 - this.currentSignalFunction, 0, 1, -1, 1);
-          let xfadeEnd = Maximilian.maxiMap.linlin(this.currentSignalFunction, 0, 1, -1, 1);
+          let xfadeBegin = Maximilian.maxiMap.linlin(1.0 - this.nextSignalFunction, 0, 1, -1, 1);
+          let xfadeEnd = Maximilian.maxiMap.linlin(this.nextSignalFunction, 0, 1, -1, 1);
           this.xfadeControl.prepare(xfadeBegin, xfadeEnd, 18); // short xfade across signals
           this.xfadeControl.triggerEnable(true); //enable the trigger straight away
+          this.codeSwapState = this.codeSwapStates.QUEUD;
         } catch (err) {
           if (err instanceof TypeError) {
             console.log("TypeError in worklet evaluation: " + err.name + " – " + err.message);
@@ -368,9 +384,6 @@ class MaxiProcessor extends AudioWorkletProcessor {
     }
 
 
-
-    //this.testOsc = new Maximilian.maxiOsc();
-
   }
 
   /**
@@ -415,11 +428,30 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
         this.bitclock = Maximilian.maxiBits.sig(Math.floor(this.clockPhase(1,0) * 1023.999999999));
 
-        let sig0 = this.signals[0](this._q[0], inputs[0][0][i], this._mems[0]);
-        let sig1 = this.signals[1](this._q[1], inputs[0][0][i], this._mems[1]);
-        // let xf = this.xfadeControl.play(i == 0 ? 1 : 0);
-        let xf = this.xfadeControl.play(this.clockTrig(this.barFrequency,0));
-        let w = Maximilian.maxiXFade.xfade(sig0, sig1, xf);
+        let w=0;
+        //new code waiting?
+        if (this.codeSwapState == this.codeSwapStates.QUEUD) {
+          //fade in when a new bar happens
+          if (this.clockTrig(this.barFrequency,0)) {
+            this.codeSwapState = this.codeSwapStates.XFADING;
+            this.currentSignalFunction = 1 - this.currentSignalFunction;
+            console.log("xfade start");
+          }
+        }
+        if (this.codeSwapState == this.codeSwapStates.XFADING) {
+          let sig0 = this.signals[0](this._q[0], inputs[0][0][i], this._mems[0]);
+          let sig1 = this.signals[1](this._q[1], inputs[0][0][i], this._mems[1]);
+          // let xf = this.xfadeControl.play(i == 0 ? 1 : 0);
+          let xf = this.xfadeControl.play(this.clockTrig(this.barFrequency,0));
+          w = Maximilian.maxiXFade.xfade(sig0, sig1, xf);
+          if (this.xfadeControl.isLineComplete()) {
+            this.codeSwapState = this.codeSwapStates.NONE;
+            console.log("xfade complete");
+          }
+        }else{
+          //no xfading - play as normal
+          w = this.signals[this.currentSignalFunction](this._q[this.currentSignalFunction], inputs[0][0][i], this._mems[this.currentSignalFunction]);
+        }
 
 
         //mono->stereo
