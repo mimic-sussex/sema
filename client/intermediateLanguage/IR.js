@@ -109,7 +109,7 @@ var jsFuncMap = {
 		setup: (o, p) => "",
 		loop:  (o, p) => {
 			let s = `((${p[0].loop}`;
-			for (let i = 1; i < p.length; i++)
+				for (let i = 1; i < p.length; i++)
         s += `+${p[i].loop}`;
 			return s + `)/${p.length})`;
 		}
