@@ -18,6 +18,8 @@
   import { PubSub } from "../messaging/pubSub.js";
   const messaging = new PubSub();
 
+  import Markdown from "./Markdown.svelte";
+
 	import { createEventDispatcher } from 'svelte';
 	const dispatch = createEventDispatcher();
 
@@ -94,9 +96,12 @@
 
   .tutorial-navigator {
     display: inline-flex;
-    margin-top: 5px;
     width: 25em;
-    max-width: 25em; 
+    max-width: 25em;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    margin-left: 10px;
+    margin-right: 10px; 
   }
 
   .checkbox-span {
@@ -244,7 +249,7 @@
 
 <div class="sidebar">
   {#if $tutorialsActive }
-    <div class="tutorial-navigator controls">
+    <div class="tutorial-navigator">
      <!-- on:click={ () => dispatchNav('previousTurt') } -->
       <button class="button-dark"> 
         ◄
@@ -263,6 +268,9 @@
       </button>
     </div>
     <br/>
+
+    <Markdown>
+    </Markdown>
     <!-- <div class="language-combobox-container controls">
       <div>
         <span class="whiteText">Language</span>

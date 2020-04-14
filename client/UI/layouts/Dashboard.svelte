@@ -7,14 +7,6 @@
   import { id, random, randomHexColorCode } from '../../utils/utils.js';
   import { PubSub } from "../../messaging/pubSub.js"; 
 
-  import {
-    dashboardItems,
-    selectedItem,
-    selectedItemControls,
-    grammarEditorValue,
-    modelEditorValue,
-    liveCodeEditorValue
-  } from "../../store.js"
 
   import {
     items,
