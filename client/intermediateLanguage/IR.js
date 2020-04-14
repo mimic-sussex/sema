@@ -421,6 +421,8 @@ var jsFuncMap = {
 		${o}_tres = new Maximilian.maxiTrigger();
 		${o}_tenvm = new Maximilian.maxiTrigger();
 		${o}_tdec = new Maximilian.maxiTrigger();
+		${o}_tnoteoff = new Maximilian.maxiTrigger();
+		${o}_tatt = new Maximilian.maxiTrigger();
 		`,
 		loop:  (o, p) => `(()=>{
 			let newNote = ${o}_tnote.onZX(${p[0].loop});
@@ -431,11 +433,13 @@ var jsFuncMap = {
 					${o}.triggerNote(${p[1].loop},false);
 				}
 			};
-			if (${o}_twf.onChanged(${p[3].loop}, 1e-5)) {${o}.setWaveform(${p[3].loop})};
-			if (${o}_tcut.onChanged(${p[4].loop}, 1e-5)) {${o}.setCutoff(${p[4].loop})};
-			if (${o}_tres.onChanged(${p[5].loop}, 1e-5)) {${o}.setResonance(${p[5].loop})};
-			if (${o}_tenvm.onChanged(${p[6].loop}, 1e-5)) {${o}.setEnvMod(${p[6].loop})};
-			if (${o}_tdec.onChanged(${p[7].loop}, 1e-5)) {${o}.setDecay(${p[7].loop})};
+			if (${o}_tnoteoff.onChanged(${p[3].loop}, 1e-5)) {${o}.allNotesOff()};
+			if (${o}_twf.onChanged(${p[4].loop}, 1e-5)) {${o}.setWaveform(${p[4].loop})};
+			if (${o}_tcut.onChanged(${p[5].loop}, 1e-5)) {${o}.setCutoff(${p[5].loop})};
+			if (${o}_tres.onChanged(${p[6].loop}, 1e-5)) {${o}.setResonance(${p[6].loop})};
+			if (${o}_tenvm.onChanged(${p[7].loop}, 1e-5)) {${o}.setEnvMod(${p[7].loop})};
+			if (${o}_tatt.onChanged(${p[8].loop}, 1e-5)) {${o}.setNormalAttack(${p[8].loop})};
+			if (${o}_tdec.onChanged(${p[9].loop}, 1e-5)) {${o}.setDecay(${p[9].loop})};
 			return ${o}.play();})()`
 	},
 	freeverb: {
