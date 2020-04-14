@@ -437,7 +437,12 @@ var jsFuncMap = {
 			if (${o}_tenvm.onChanged(${p[6].loop}, 1e-5)) {${o}.setEnvMod(${p[6].loop})};
 			if (${o}_tdec.onChanged(${p[7].loop}, 1e-5)) {${o}.setDecay(${p[7].loop})};
 			return ${o}.play();})()`
+	},
+	freeverb: {
+		setup: (o, p) => `${o} = new Maximilian.maxiFreeVerb();`,
+		loop:  (o, p) => `${o}.play(${p[0].loop},${p[1].loop},${p[2].loop})`
 	}
+
 };
 // if (${o}_twf.onChanged(${p[2].loop}, 1e-5)) {${o}.setWaveform(${p[2].loop})};
 // if (${o}_tcut.onChanged(${p[3].loop}, 1e-5)) {${o}.setCutoff(${p[3].loop})};
