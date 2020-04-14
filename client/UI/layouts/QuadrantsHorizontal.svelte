@@ -8,7 +8,7 @@
 
 
   import {
-    tutorialOptions,
+    // tutorialOptions,
     selectedTutorial,
     selectedTutorialGrammar
   } from "../../store.js"
@@ -74,7 +74,7 @@
   const unsubscribe = selectedTutorial.subscribe(value => {
     // console.log("DEBUG:QuadrantsHorizontal:selectedTutorial: ", value.id);
     // console.log($selectedTutorialGrammar);
-    $selectedTutorialGrammar = tutorialOptions[value.id-1].content;
+    // $selectedTutorialGrammar = tutorialOptions[value.id-1].content;
    
   })
 	// onDestroy(unsubscribe); // Prevent memory leaks by disposing the componen

@@ -68,25 +68,22 @@ Sema uses Web Audio API Audio Worklets. Their performance seems very sensitive t
 
 ## Documentation
 
-[Livecoding with the default grammar](doc/LiveCodingAPI_defaultGrammar.md)
+[Default Livecoding Language](docs/default-livecoding-language.md)
 
-[Sema Intermediate Language](doc/semaIR.md)
+[Intermediate Language](docs/intermediate-language.md)
 
-[Data storage and loading](doc/Model_loading_storing.md)
+[Maximilian DSP Library API](docs/maximilian-dsp.md)
 
-[Maximilian DSP Library API](doc/maxi_API_doc.md)
-
+[Javascript Editor Utils](docs/javascript-editor-utils.md)
 
 ## Publications
 
 Bernardo, F., Kiefer, C., Magnusson, T. (forthcoming). *A Signal Engine for a Live Code Language Ecosystem.* Journal of Audio Engineering Society, Vol. 68, No. 1, October 
 
-Bernardo, F., Kiefer, C., Magnusson, T. (2020). *Designing for a Pluralist and User-Friendly
-Live Code Language Ecosystem with Sema.* 5th International Conference on Live Coding,
+Bernardo, F., Kiefer, C., Magnusson, T. (2020). *Designing for a Pluralist and User-Friendly Live Code Language Ecosystem with Sema.* 5th International Conference on Live Coding,
 University of Limerick, Limerick, Ireland
 
-Bernardo, F., Kiefer, C., Magnusson, T. (2019). [*An AudioWorklet-based Signal Engine for
-a Live Coding Language Ecosystem.*](https://www.ntnu.edu/documents/1282113268/1290797448/WAC2019-CameraReadySubmission-40.pdf) In Proceedings of Web Audio Conference 2019,
+Bernardo, F., Kiefer, C., Magnusson, T. (2019). [*An AudioWorklet-based Signal Engine for a Live Coding Language Ecosystem.*](https://www.ntnu.edu/documents/1282113268/1290797448/WAC2019-CameraReadySubmission-40.pdf) In Proceedings of Web Audio Conference 2019,
 Norwegian University of Science and Technology (NTNU), Trondheim, Norway (Best Paper
 Award at Web Audio Conference 2019)
 

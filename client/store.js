@@ -12,12 +12,12 @@ import nibble_liveCode from "../assets/language/nibble.sem";
 
 
 // Load tutorials from .ne files
-import tutorial_1_grammar from "../tutorials/tutorial1.ne";
-import tutorial_2_grammar from "../tutorials/tutorial2.ne";
-import tutorial_3_grammar from "../tutorials/tutorial3.ne";
-import tutorial_4_grammar from "../tutorials/tutorial4.ne";
-import tutorial_5_grammar from "../tutorials/tutorial5.ne";
-import tutorial_6_grammar from "../tutorials/tutorial6.ne";
+// import tutorial_1_grammar from "../tutorials/tutorial1.ne";
+// import tutorial_2_grammar from "../tutorials/tutorial2.ne";
+// import tutorial_3_grammar from "../tutorials/tutorial3.ne";
+// import tutorial_4_grammar from "../tutorials/tutorial4.ne";
+// import tutorial_5_grammar from "../tutorials/tutorial5.ne";
+// import tutorial_6_grammar from "../tutorials/tutorial6.ne";
 
 
 // Stores for the two main layouts
@@ -26,22 +26,22 @@ export const tutorialsActive = writable(false);
 
 
 // Store for tutorial options in Sidebar component
-export const tutorialOptions = [
-	// { id: 0, text: `Select Tutorial`, content: "" },
-	{ id: 1, text: `Tutorial 1`, content: tutorial_1_grammar },
-	{ id: 2, text: `Tutorial 2`, content: tutorial_2_grammar },
-	{ id: 4, text: `Tutorial 4`, content: tutorial_4_grammar },
-	{ id: 3, text: `Tutorial 3`, content: tutorial_3_grammar },
-	{ id: 5, text: `Tutorial 5`, content: tutorial_5_grammar },
-	{ id: 6, text: `Tutorial 6`, content: tutorial_6_grammar },
-	{ id: 7, text: `Tutorial 7`, content: default_grammar }
-];
+// export const tutorialOptions = [
+// 	// { id: 0, text: `Select Tutorial`, content: "" },
+// 	{ id: 1, text: `Tutorial 1`, content: tutorial_1_grammar },
+// 	{ id: 2, text: `Tutorial 2`, content: tutorial_2_grammar },
+// 	{ id: 4, text: `Tutorial 4`, content: tutorial_4_grammar },
+// 	{ id: 3, text: `Tutorial 3`, content: tutorial_3_grammar },
+// 	{ id: 5, text: `Tutorial 5`, content: tutorial_5_grammar },
+// 	{ id: 6, text: `Tutorial 6`, content: tutorial_6_grammar },
+// 	{ id: 7, text: `Tutorial 7`, content: default_grammar }
+// ];
 
 // Store for SELECTED tutorial options in Sidebar component
-export const selectedTutorial = writable(tutorialOptions[0]);
+// export const selectedTutorial = writable(tutorialOptions[0]);
 
 // Store for SELECTED tutorial GRAMMAR in Grammar Editor
-export const selectedTutorialGrammar = writable(tutorialOptions[0].content);
+// export const selectedTutorialGrammar = writable(tutorialOptions[0].content);
 
 
 // Load TFJS code from tf files

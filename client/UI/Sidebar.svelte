@@ -8,10 +8,16 @@
     selectedModel,
     selectedLayout, 
     layoutOptions, 
-    selectedTutorial, 
-    tutorialOptions,
+     
+    
     editorThemes
   }  from '../store.js';
+
+  import {
+    tutorialOptions,
+    selectedTutorial
+  } from '../stores/tutorial.js'
+
 
   import { id } from '../utils/utils.js';
 

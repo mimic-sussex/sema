@@ -9,7 +9,7 @@
     selectedLayout, 
     layoutOptions, 
     selectedTutorial, 
-    tutorialOptions,
+    // tutorialOptions,
     editorThemes
   }  from '../store.js';
 
