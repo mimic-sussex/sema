@@ -89,8 +89,14 @@
   .controls {
     margin-bottom: 20px;
     margin-left: 10px;
-    margin-right: 20px;
+    margin-right: 10px;
+  }
 
+  .tutorial-navigator {
+    display: inline-flex;
+    margin-top: 5px;
+    width: 25em;
+    max-width: 25em; 
   }
 
   .checkbox-span {
@@ -118,8 +124,7 @@
   }
 
   .layout-combobox-container{
-    margin-top: 5px; 
-
+    margin-top: 5px;
   }
 
   .combobox-dark {
@@ -209,7 +214,6 @@
     /* width: 100%; */
     max-width: 100%; 
     box-sizing: border-box;
-    margin-left: 10px;
     border: 0 solid #333;
     /* box-shadow: 0 1px 0 0px rgba(4, 4, 4, 0.04); */
     border-radius: .6em;
@@ -240,17 +244,23 @@
 
 <div class="sidebar">
   {#if $tutorialsActive }
-    <div class="layout-combobox-container controls">
-      <!-- <div>
-        <span class="whiteText">Tutorials</span>
-      </div> -->
+    <div class="tutorial-navigator controls">
+     <!-- on:click={ () => dispatchNav('previousTurt') } -->
+      <button class="button-dark"> 
+        ◄
+      </button>    
+
       <select class="combobox-dark" bind:value={$selectedTutorial} >
         {#each tutorialOptions as tutorialOption}
           <option value={tutorialOption}>
             {tutorialOption.text}
           </option>
         {/each}
-      </select>    
+      </select>   
+      <!-- on:click={ () => dispatchAdd('analyser') } -->
+      <button class="button-dark"> 
+        ►
+      </button>
     </div>
     <br/>
     <!-- <div class="language-combobox-container controls">
