@@ -69,6 +69,13 @@ var sema = {
             "storage":"local"
         }
       )
+    },
+    saveToPB: () => {
+      postMessage({
+            "func": "envsave",
+            "storage":"pastebuffer"
+        }
+      )
     }
 
   },

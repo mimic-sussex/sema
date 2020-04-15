@@ -345,7 +345,6 @@ export function storable(key, initialValue) {
 	// return an object with the same interface as Svelte's writable() store interface
 	return {
 		set(value) {
-			console.trace();
 			localStorage.setItem(key, JSON.stringify(value));
 			set(value); // capture set and write to localStorage
 		},
@@ -357,6 +356,10 @@ export function storable(key, initialValue) {
 
 		get() {
 				return localStorage.getItem(key);
+		},
+
+		hydrate(newItems) {
+			set( JSON.parse(newItems).map( item => hydrateJSONcomponent(item) ) ); // use the value from localStorage if it exists			
 		},
 
 		subscribe // punt subscriptions to underlying store

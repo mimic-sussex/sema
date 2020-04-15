@@ -6,6 +6,7 @@
 
   import { id, random, randomHexColorCode } from '../../utils/utils.js';
   import { PubSub } from "../../messaging/pubSub.js";
+	import {copyToPasteBuffer} from '../../utils/pasteBuffer.js';
 
   import {
     dashboardItems,
@@ -91,15 +92,20 @@
     messaging.subscribe('add-analyser', e => addItem(e.type, e.id) );
 		messaging.subscribe("env-save", e => {
 			console.log('env save', e);
-			localStorage.setItem(`env--${e.name}`, items.get());
+			if (e.storage=='local') {
+				localStorage.setItem(`env--${e.name}`, items.get());
+			}else{
+				copyToPasteBuffer(items.get());
+				console.log("Environment copied to the paste buffer")
+			}
 		});
 		messaging.subscribe("env-load", e => {
 			console.log('env load', e);
 			//need to JSON.parse
 			let envdataStr = localStorage.getItem(`env--${e.name}`);
-			let envData = JSON.parse(envdataStr);
-			console.log(envData);
-			items.set(envData);
+			// let envData = JSON.parse(envdataStr);
+			// console.log(envData);
+			items.hydrate(envdataStr);
 		});
 
   });
