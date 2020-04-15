@@ -204,10 +204,10 @@ export let createRandomItem = (type) => {
 			theme: "monokai",
 			data: "value"
 		})
-	};  
+	};
 
   return item;
-} 
+}
 
 let hydrateJSONcomponent = item => {
 
@@ -235,7 +235,7 @@ let hydrateJSONcomponent = item => {
   		break;
   	default:
   		break;
-  } 
+  }
   return item;
 }
 
@@ -294,7 +294,7 @@ export let createNewItem = (type, id, data) => {
 			break;
 	}
 
-  // return component template 
+  // return component template
   return {
 		...gridHelp.item({ x: 7, y: 0, w: 7, h: 3, id: id }),
 		...{
@@ -309,8 +309,8 @@ export let createNewItem = (type, id, data) => {
 };
 
 /**
- * Populates dashboard on application load, 
- * checks local Storage for items from previous session and loads 
+ * Populates dashboard on application load,
+ * checks local Storage for items from previous session and loads
  * or otherwise, loads hardcoded layout configuration
  */
 // export const loadPlaygroundItems = () => {
@@ -323,7 +323,7 @@ export let createNewItem = (type, id, data) => {
 // 			playgroundItems === undefined ||
 // 			playgroundItems === ""
 // 		) ? originalItems : JSON.parse(playgroundItems)
-		
+
 // 	} else
 //     return originalItems;
 // };
@@ -345,6 +345,7 @@ export function storable(key, initialValue) {
 	// return an object with the same interface as Svelte's writable() store interface
 	return {
 		set(value) {
+			console.trace();
 			localStorage.setItem(key, JSON.stringify(value));
 			set(value); // capture set and write to localStorage
 		},
@@ -352,6 +353,10 @@ export function storable(key, initialValue) {
 		update(cb) {
 			const value = cb(get(store));
 			this.set(value); // capture updates and write to localStore
+		},
+
+		get() {
+				return localStorage.getItem(key);
 		},
 
 		subscribe // punt subscriptions to underlying store
