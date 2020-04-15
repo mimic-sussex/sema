@@ -11,5 +11,5 @@ import { items } from '../../stores/playgroundItems.js'
 </style>
 
 <div>
-  <pre> { JSON.stringify($items, null, 2) } </pre>
+  <textarea> { JSON.stringify($items, null, 2) } </textarea>
 </div>
