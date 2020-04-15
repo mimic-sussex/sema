@@ -328,7 +328,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
           let xfadeBegin = Maximilian.maxiMap.linlin(1.0 - this.nextSignalFunction, 0, 1, -1, 1);
           let xfadeEnd = Maximilian.maxiMap.linlin(this.nextSignalFunction, 0, 1, -1, 1);
-          this.xfadeControl.prepare(xfadeBegin, xfadeEnd, 2); // short xfade across signals
+          this.xfadeControl.prepare(xfadeBegin, xfadeEnd, 2, true); // short xfade across signals
           this.xfadeControl.triggerEnable(true); //enable the trigger straight away
           this.codeSwapState = this.codeSwapStates.QUEUD;
         } catch (err) {

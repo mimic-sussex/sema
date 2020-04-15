@@ -411,7 +411,6 @@ var jsFuncMap = {
 		setup: (o, p) => `${o} = new Maximilian.maxiRatioSeq();`,
 		loop:  (o, p) => {return p.length == 2 ? `${o}.playTrig(${p[0].loop},${p[1].loop})` : `${o}.playValues(${p[0].loop},${p[1].loop},${p[2].loop})`}
 	},
-//if (${o}_tnote.onZX(${p[0].loop})) {${o}.noteOn(60,127)};     (()=>{return ${o}.play();})()
 	o303: {
 		setup: (o, p) => `${o} = new Open303.Open303();
 		${o}.setSampleRate(this.sampleRate);
@@ -445,6 +444,10 @@ var jsFuncMap = {
 	freeverb: {
 		setup: (o, p) => `${o} = new Maximilian.maxiFreeVerb();`,
 		loop:  (o, p) => `${o}.play(${p[0].loop},${p[1].loop},${p[2].loop})`
+	},
+	line: { //creates a triggered line from 0-1 - use other functions to shape the line
+		setup: (o, p) => `${o} = new Maximilian.maxiLine(); ${o}.prepare(0,1,${p[1].loop}, false); ${o}.triggerEnable(1);`,
+		loop:  (o, p) => `${o}.play(${p[0].loop})`
 	}
 
 };
