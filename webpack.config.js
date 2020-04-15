@@ -128,6 +128,20 @@ module.exports = {
 				}
 			},
 			{
+				//WASM LOADER
+				// Issue pointed out by Surma on the following gist – https://gist.github.com/surma/b2705b6cca29357ebea1c9e6e15684cc
+				// wasm files should not be processed but just be emitted
+				// and we want to have their public URL.
+				test: /open303.wasmmodule.js$/,
+				type: "javascript/auto",
+				// loader: 'wasm-loader', // WASM files get processed [NOT what we want]
+				loader: "file-loader", // WASM files are only emitted to the final dist, NOT processed
+				options: {
+					// mimetype: 'application/wasm',
+					name: "open303.wasmmodule.js"
+				}
+			},
+			{
 				//IMAGE LOADER
 				test: /\.(jpe?g|png|gif|svg)$/i,
 				loader: "file-loader"
