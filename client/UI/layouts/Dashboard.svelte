@@ -93,6 +93,14 @@
 			console.log('env save', e);
 			localStorage.setItem(`env--${e.name}`, items.get());
 		});
+		messaging.subscribe("env-load", e => {
+			console.log('env load', e);
+			//need to JSON.parse
+			let envdataStr = localStorage.getItem(`env--${e.name}`);
+			let envData = JSON.parse(envdataStr);
+			console.log(envData);
+			items.set(envData);
+		});
 
   });
 

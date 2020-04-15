@@ -64,7 +64,7 @@ var sema = {
     },
     loadLocal: (name) => {
       postMessage({
-            "func": "envsave",
+            "func": "envload",
             "name": name,
             "storage":"local"
         }
