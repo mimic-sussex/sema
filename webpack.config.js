@@ -12,32 +12,32 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 
 module.exports = {
 	entry: {
-		bundle: ["./client/main.js"]
+		bundle: ["./client/main.js"],
 		// parser: ["./workers/parser.worker.js"],
 		// ml: ["./workers/ml.worker.js"],
 		// il: ["./workers/il.worker.js"]
 	},
 	resolve: {
 		alias: {
-			svelte: path.resolve("node_modules", "svelte")
+			svelte: path.resolve("node_modules", "svelte"),
 		},
 		extensions: [".mjs", ".js", ".svelte"],
-		mainFields: ["svelte", "browser", "module", "main"]
+		mainFields: ["svelte", "browser", "module", "main"],
 	},
 	output: {
 		path: path.join(__dirname, "public"),
 		filename: "[name].js",
 		chunkFilename: "[name].[id].js",
 		// publicPath: "/public/",
-		globalObject: `(typeof self !== 'undefined' ? self : this)`
+		globalObject: `(typeof self !== 'undefined' ? self : this)`,
 	},
 	module: {
 		rules: [
 			{
 				test: /workers\/libs\/lalolib\.js/,
 				use: {
-					loader: "file-loader"
-				}
+					loader: "file-loader",
+				},
 			},
 			{
 				test: /\.js$/,
@@ -45,8 +45,8 @@ module.exports = {
 					path.resolve(__dirname, "client/workers/il.worker.js"),
 					path.resolve(__dirname, "client/workers/parser.worker.js"),
 					path.resolve(__dirname, "client/workers/ml.worker.js"),
-					path.resolve(__dirname, "client/workers/tfjs.min.js")
-				]
+					path.resolve(__dirname, "client/workers/tfjs.min.js"),
+				],
 			},
 			{
 				test: /\.svelte$/,
@@ -55,9 +55,9 @@ module.exports = {
 					options: {
 						emitCss: true,
 						hotReload: true,
-						dev: true
-					}
-				}
+						dev: true,
+					},
+				},
 			},
 			{
 				test: /\.css$/,
@@ -68,50 +68,50 @@ module.exports = {
 					 * For developing, use 'style-loader' instead.
 					 * */
 					prod ? MiniCssExtractPlugin.loader : "style-loader",
-					"css-loader"
-				]
+					"css-loader",
+				],
 			},
 			{
 				test: /\.glsl$/,
 				loader: "file-loader", // files should NOT get processed, only emitted
-        // include: ['./**/*.glsl', '../../../**/*.glsl'],
+				// include: ['./**/*.glsl', '../../../**/*.glsl'],
 				options: {
-          compress: false,
-					name: "[name].glsl"
-				}
+					compress: false,
+					name: "[name].glsl",
+				},
 			},
 			{
 				test: /\.ne$/,
-				use: ["raw-loader"]
+				use: ["raw-loader"],
 			},
 			{
 				test: /\.tf$/i,
-				loader: ["raw-loader"]
+				loader: ["raw-loader"],
 			},
 			{
 				test: /\.sem$/,
-				use: ["raw-loader"]
+				use: ["raw-loader"],
 			},
 			{
 				test: /maxi-processor.js/,
 				loader: "file-loader", // files should NOT get processed, only emitted
 				options: {
-					name: "maxi-processor.js"
-				}
+					name: "maxi-processor.js",
+				},
 			},
 			{
 				test: /lalolib.js/,
 				loader: "file-loader", // files should NOT get processed, only emitted
 				options: {
-					name: "lalolib.js"
-				}
+					name: "lalolib.js",
+				},
 			},
 			{
 				test: /tfjs.js/,
 				loader: "file-loader", // files should NOT get processed, only emitted
 				options: {
-					name: "tfjs.js"
-				}
+					name: "tfjs.js",
+				},
 			},
 			{
 				//WASM LOADER
@@ -124,20 +124,20 @@ module.exports = {
 				loader: "file-loader", // WASM files are only emitted to the final dist, NOT processed
 				options: {
 					// mimetype: 'application/wasm',
-					name: "maximilian.wasmmodule.js"
-				}
+					name: "maximilian.wasmmodule.js",
+				},
 			},
 			{
 				//IMAGE LOADER
 				test: /\.(jpe?g|png|gif|svg)$/i,
-				loader: "file-loader"
+				loader: "file-loader",
 			},
 			{
 				test: /favicon.ico/,
 				loader: "file-loader", // files should NOT get processed, only emitted
 				options: {
-					name: "favicon.ico"
-				}
+					name: "favicon.ico",
+				},
 			},
 			{
 				//AUDIO SAMPLE LOADER
@@ -146,11 +146,22 @@ module.exports = {
 					loader: "file-loader",
 					options: {
 						name: "[name].[ext]",
-						outputPath: "samples"
-					}
-				}
+						outputPath: "samples",
+					},
+				},
 			}
-		]
+			// {
+			// 	//TUTORIALS
+			// 	test: /\.(mp3|wav)$/,
+			// 	use: {
+			// 		loader: "file-loader",
+			// 		options: {
+			// 			name: "[name].[ext]",
+			// 			outputPath: "samples",
+			// 		},
+			// 	},
+			// },
+		],
 	},
 	mode,
 	plugins: [
@@ -159,16 +170,16 @@ module.exports = {
 				"To run Sema, please enable Javascript in the browser configuration",
 			template: "./client/index.html",
 			filename: "./index.html", //relative to root of the application
-			excludeChunks: ["worker"]
+			excludeChunks: ["worker"],
 		}),
 		new LinkTypePlugin({
-			"**/*.css": "text/css"
+			"**/*.css": "text/css",
 		}),
 		new MiniCssExtractPlugin({
-			filename: "[name].css"
+			filename: "[name].css",
 		}),
 		new WorkerPlugin(),
-		new webpack.ProgressPlugin()
+		new webpack.ProgressPlugin(),
 		// new CleanWebpackPlugin()
 		// new CleanWebpackPlugin({
 		//   dry: false,
@@ -190,6 +201,6 @@ module.exports = {
 	// },
 	// There is a further correction on the thread, which is congruent with what I had before
 	node: {
-		fs: "empty"
-	}
+		fs: "empty",
+	},
 };
