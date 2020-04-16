@@ -10,10 +10,11 @@ class blockTracker {
   constructor(editorToTrack) {
     this.editor = editorToTrack;
     this.blocks = new Array();
-    this.blocks.push(new blockData(0));
+    this.blocks.push(new blockData(-1));
   }
 
   onEditChange(change) {
+    //recording where separators are
     let separatorExistsOnLine = (line) =>  {
       return this.blocks.filter(b=>b.startLine==line).length == 1;
     }
@@ -27,25 +28,40 @@ class blockTracker {
         this.blocks.splice(insertionIndex, 0, newBlock);
       }
     }
-    let testInsertLine = (lineIndex, lineText) => {
-      if (/___+/.test(lineText)) {  // Test RegEx at least 3 underscores
+    let removeSeparator = (lineIndex) => {
+      this.blocks = this.blocks.filter(b=>b.startLine!=lineIndex);
+    }
+
+    //testing text changes
+    let testIsSeparator = (lineText) => {
+        return /^___+$/.test(lineText);
+    }
+    let testLineChange = (lineIndex, lineText) => {
+      let separatorAlreadyHere = separatorExistsOnLine(lineIndex);
+      //is the line a separator?
+      if (testIsSeparator(lineText)) {  // Test RegEx at least 3 underscores and no other characters on the line
           console.log("Block separator found");
-          if (separatorExistsOnLine(lineIndex)) {
+          if (separatorAlreadyHere) {
               console.log("separator already exists");
           }else{
               console.log("adding new separator");
               insertSeparator(lineIndex);
               console.table(this.blocks);
           }
+      }else{
+        if (separatorAlreadyHere) {
+          //remove the separator as it's no longer valid
+          removeSeparator(lineIndex);
+        }
       }
     }
     let testRemoveLine = (lineIndex, lineText, testTarget) => {
       //test for abscence or presence, depending on testTarget
-      if (/___+/.test(lineText) == testTarget) {  // Test RegEx at least 3 underscores
+      if (testIsSeparator(lineText) == testTarget) {  // Test RegEx at least 3 underscores
         console.log("testRemoveLine +ve at " + lineIndex);
         if (separatorExistsOnLine(lineIndex)) {
             console.log("removing separator");
-            this.blocks = this.blocks.filter(b=>b.startLine!=lineIndex);
+            removeSeparator(lineIndex);
         }
       }
     }
@@ -74,61 +90,106 @@ class blockTracker {
         //same handler for deleting and cutting
         case "+delete":
         case "cut":
-          //was a line single removed?
-          if (change.removed.length==2 && change.removed[0] == "" && change.removed[1] == "") {
-            console.log("line removed");
-            removeLines(change.from.line, 1);
-            console.table(this.blocks);
+          if (change.from.line = change.to.line) {
+              let lineToTest = this.editor.getLine(change.from.line);
+              console.log(lineToTest);
+              testLineChange(change.from.line, lineToTest);
           }else{
             console.log("Source line: " + this.editor.getLine(change.from.line));
             console.log("Removed: " + change.removed);
-            //check the first line (in case of partial removal)
-            let startIdx = 0;
-            let endIdx = change.removed.length;
-            if (change.from.ch > 0) {
-              console.log("testing first line");
-              testRemoveLine(change.from.line, this.editor.getLine(change.from.line), false);
-              startIdx++;
-            }
-            if (change.to.ch > 0) {
-              console.log("testing last line");
-              let lineToCheck = change.from.line + change.removed.length;
-              testRemoveLine(lineToCheck, this.editor.getLine(change.from.line), false);
-              endIdx--;
-            }
-            if (change.removed.length>1) {
-              for(let i_line=startIdx; i_line < endIdx; i_line++) {
-                console.log("testing multi line " + i_line + ": " + change.removed[i_line]);
-                testRemoveLine(change.from.line + i_line, change.removed[i_line], true);
-                console.table(this.blocks);
-              }
-              removeLines(change.from.line, change.removed.length-1);
-            }
-            console.table(this.blocks);
+            // //check the first line (in case of partial removal)
+            // let startIdx = 0;
+            // let endIdx = change.removed.length;
+            // if (change.from.ch > 0) {
+            //   console.log("testing first line");
+            //   testRemoveLine(change.from.line, this.editor.getLine(change.from.line), false);
+            //   startIdx++;
+            // }
+            // if (change.to.ch > 0) {
+            //   console.log("testing last line");
+            //   let lineToCheck = change.from.line + change.removed.length;
+            //   testRemoveLine(lineToCheck, this.editor.getLine(change.from.line), false);
+            //   endIdx--;
+            // }
+            // if (change.removed.length>1) {
+            //   for(let i_line=startIdx; i_line < endIdx; i_line++) {
+            //     console.log("testing multi line " + i_line + ": " + change.removed[i_line]);
+            //     testRemoveLine(change.from.line + i_line, change.removed[i_line], true);
+            //     console.table(this.blocks);
+            //   }
+            //   removeLines(change.from.line, change.removed.length-1);
+            // }
           }
+          console.table(this.blocks);
           break;
         case "+input":
-          //was the input a new line?
-          if (change.text.length==2 && change.text[0] == "" && change.text[1] == "") {
-            console.log("new line");
-            insertNewLines(change.from.line, 1);
-            console.table(this.blocks);
-          }
-          testInsertLine(change.from.line, this.editor.getLine(change.from.line));
-        break;
+        //   //was the input a new line?
+        //   if (change.text.length==2 && change.text[0] == "" && change.text[1] == "") {
+        //     console.log("new line");
+        //     insertNewLines(change.from.line, 1);
+        //     console.table(this.blocks);
+        //   }
+        //   let lineToTest = this.editor.getLine(change.from.line);
+        //   console.log(lineToTest);
+        //   testInsertLine(change.from.line, lineToTest);
+        // break;
         case "paste":
-          let startLine = change.from.line;
-          insertNewLines(change.from.line, change.text.length);
-          for (let line in change.text) {
-            console.log(line);
-            testInsertLine(startLine + parseInt(line), change.text[line]);
+          // console.log(change.)
+          console.log("Source line: " + this.editor.getLine(change.from.line));
+          console.log("Added: " + change.text);
+          //no new lines?
+          if (change.text.length==1) {
+              let lineToTest = this.editor.getLine(change.from.line);
+              console.log(lineToTest);
+              testLineChange(change.from.line, lineToTest);
+          }else{
+            let lastLineIndex = change.from.line + change.text.length - 1;
+            let lastLine = this.editor.getLine(lastLineIndex);
+            console.log("lastline", lastLine);
+            //did a separator get broken or moved?
+            if (change.from.ch < 3) { // 3 character min for a separator
+              console.log("ch < 3")
+              if (separatorExistsOnLine(change.from.line)) {
+                //look at the last line
+                if (testIsSeparator(lastLine)) {
+                    console.log("last line is separator")
+                    //move the separator
+                    this.blocks = this.blocks.map(b=>{
+                      console.log(b.startLine, lastLineIndex);
+                      console.log(change.from);
+                      if (b.startLine == change.from.line) {
+                        b.startLine = lastLineIndex;
+                        console.log("bs", b.startLine);
+                      }
+                      return b;
+                    }
+                    );
+                    console.log(this.blocks);
+                }else{
+                  removeSeparator(change.from.line);
+                }
+              }
+            }else{
+              //possible new separator on the last line
+              if (testIsSeparator(lastLine)) {
+                  console.log("last line is separator")
+                  insertSeparator(lastLineIndex);
+              }
+            }
           }
-
+          // let startLine = change.from.line;
+          // insertNewLines(change.from.line, change.text.length);
+          // for (let line in change.text) {
+          //   console.log(line);
+          //   testInsertLine(startLine + parseInt(line), change.text[line]);
+          // }
+          console.table(this.blocks);
         break;
         case "setValue":
           for (let line in change.text) {
-            testInsertLine(parseInt(line), change.text[line]);
+            testLineChange(parseInt(line), change.text[line]);
           }
+          console.table(this.blocks);
         break;
         case "undo":
         //TODO

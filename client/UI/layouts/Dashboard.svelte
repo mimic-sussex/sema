@@ -105,11 +105,16 @@
 			console.log('env load', e);
 			let envdataStr = 0;
 			if (e.storage=='local') {
+
 				envdataStr = localStorage.getItem(`env--${e.name}`);
+
+
 				if (envdataStr) {
 					let parsedEnv = JSON.parse(envdataStr);
 					items.hydrate(parsedEnv);
 				}
+
+
 			}else{
 				github.get(`/gists/${e.name}`)
 				.then(res => {
