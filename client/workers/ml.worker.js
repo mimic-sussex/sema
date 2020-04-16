@@ -76,7 +76,15 @@ var sema = {
             "storage":"pastebuffer"
         }
       )
-    }
+    },
+    loadGist: (gistid) => {
+      postMessage({
+            "func": "envload",
+            "name": gistid,
+            "storage":"gist"
+        }
+      )
+    },
 
   },
   //run in the DOM

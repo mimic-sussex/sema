@@ -359,7 +359,7 @@ export function storable(key, initialValue) {
 		},
 
 		hydrate(newItems) {
-			set( JSON.parse(newItems).map( item => hydrateJSONcomponent(item) ) ); // use the value from localStorage if it exists			
+			set( newItems.map( item => hydrateJSONcomponent(item) ) ); 
 		},
 
 		subscribe // punt subscriptions to underlying store

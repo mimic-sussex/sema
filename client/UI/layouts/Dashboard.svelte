@@ -23,6 +23,8 @@
     // loadPlaygroundItems
   } from "../../stores/playgroundItems.js"
 
+	const GitHubBase = require('github-base');
+	const github = new GitHubBase({ /* options */ });
 
   const messaging = new PubSub();
 
@@ -101,12 +103,27 @@
 		});
 		messaging.subscribe("env-load", e => {
 			console.log('env load', e);
-			//need to JSON.parse
-			let envdataStr = localStorage.getItem(`env--${e.name}`);
-			// let envData = JSON.parse(envdataStr);
-			// console.log(envData);
-			items.hydrate(envdataStr);
+			let envdataStr = 0;
+			if (e.storage=='local') {
+				envdataStr = localStorage.getItem(`env--${e.name}`);
+				if (envdataStr) {
+					let parsedEnv = JSON.parse(envdataStr);
+					items.hydrate(parsedEnv);
+				}
+			}else{
+				github.get(`/gists/${e.name}`)
+				.then(res => {
+					// console.log("git gist", res.body.files[Object.keys(res.body.files)[0]].content)
+					let envdataStr = res.body.files[Object.keys(res.body.files)[0]].content;
+					if (envdataStr) {
+						//fill in soon
+					}
+				})
+				.catch(console.error);
+			}
 		});
+
+
 
   });
 
