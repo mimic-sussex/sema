@@ -64,12 +64,27 @@ var sema = {
     },
     loadLocal: (name) => {
       postMessage({
-            "func": "envsave",
+            "func": "envload",
             "name": name,
             "storage":"local"
         }
       )
-    }
+    },
+    saveToPB: () => {
+      postMessage({
+            "func": "envsave",
+            "storage":"pastebuffer"
+        }
+      )
+    },
+    loadGist: (gistid) => {
+      postMessage({
+            "func": "envload",
+            "name": gistid,
+            "storage":"gist"
+        }
+      )
+    },
 
   },
   //run in the DOM

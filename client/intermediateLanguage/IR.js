@@ -67,15 +67,15 @@ var jsFuncMap = {
     loop:  (o, p) => `(${p[0].loop} % ${p[1].loop})` },
 	add: {
 		setup: (o, p) => "",
-		loop:  (o, p) => `(${p[0].loop}+${p[1].loop})`
+		loop:  (o, p) => `(${p[0].loop} + ${p[1].loop})`
 	},
 	mul: {
 		setup: (o, p) => "",
-		loop:  (o, p) => `(${p[0].loop}*${p[1].loop})`
+		loop:  (o, p) => `(${p[0].loop} * ${p[1].loop})`
 	},
 	sub: {
 		setup: (o, p) => "",
-		loop:  (o, p) => `(${p[0].loop}-${p[1].loop})`
+		loop:  (o, p) => `(${p[0].loop} - ${p[1].loop})`
 	},
 	div: {
 		setup: (o, p) => "",
@@ -109,7 +109,7 @@ var jsFuncMap = {
 		setup: (o, p) => "",
 		loop:  (o, p) => {
 			let s = `((${p[0].loop}`;
-			for (let i = 1; i < p.length; i++)
+				for (let i = 1; i < p.length; i++)
         s += `+${p[i].loop}`;
 			return s + `)/${p.length})`;
 		}
@@ -222,8 +222,12 @@ var jsFuncMap = {
 	adc: { setup: (o, p) => "", loop: (o, p) => `inputs` },
 	sampler: {
 		setup: (o, p) => `${o} = new Maximilian.maxiSample();
-                      ${o}.setSample(this.getSampleBuffer(${p[1].loop}));`,
-		loop:  (o, p) => `(${o}.isReady() ? ${o}.playOnZX(${p[0].loop}) : 0.0)`
+                      ${o}.setSample(this.getSampleBuffer(${p[p.length-1].loop}));`,
+		loop:  (o, p) => {
+			let playArgs = `${p[0].loop}`;
+			if (p.length==3) {playArgs += `,${p[1].loop}`}
+			else if (p.length==4) {playArgs += `,${p[1].loop},${p[2].loop}`};
+			return `(${o}.isReady() ? ${o}.playOnZX(${playArgs}) : 0.0)`}
 	},
   loop: {
 		setup: (o, p) => `${o} = new Maximilian.maxiSample();
@@ -406,8 +410,53 @@ var jsFuncMap = {
 	rsq: {
 		setup: (o, p) => `${o} = new Maximilian.maxiRatioSeq();`,
 		loop:  (o, p) => {return p.length == 2 ? `${o}.playTrig(${p[0].loop},${p[1].loop})` : `${o}.playValues(${p[0].loop},${p[1].loop},${p[2].loop})`}
+	},
+	o303: {
+		setup: (o, p) => `${o} = new Open303.Open303();
+		${o}.setSampleRate(this.sampleRate);
+		${o}_tnote = new Maximilian.maxiTrigger();
+		${o}_twf = new Maximilian.maxiTrigger();
+		${o}_tcut = new Maximilian.maxiTrigger();
+		${o}_tres = new Maximilian.maxiTrigger();
+		${o}_tenvm = new Maximilian.maxiTrigger();
+		${o}_tdec = new Maximilian.maxiTrigger();
+		${o}_tnoteoff = new Maximilian.maxiTrigger();
+		${o}_tatt = new Maximilian.maxiTrigger();
+		`,
+		loop:  (o, p) => `(()=>{
+			let newNote = ${o}_tnote.onZX(${p[0].loop});
+			if (newNote) {
+				if (${p[2].loop}>0) {
+					${o}.slideToNote(${p[1].loop},false);
+				}else{
+					${o}.triggerNote(${p[1].loop},false);
+				}
+			};
+			if (${o}_tnoteoff.onChanged(${p[3].loop}, 1e-5)) {${o}.allNotesOff()};
+			if (${o}_twf.onChanged(${p[4].loop}, 1e-5)) {${o}.setWaveform(${p[4].loop})};
+			if (${o}_tcut.onChanged(${p[5].loop}, 1e-5)) {${o}.setCutoff(${p[5].loop})};
+			if (${o}_tres.onChanged(${p[6].loop}, 1e-5)) {${o}.setResonance(${p[6].loop})};
+			if (${o}_tenvm.onChanged(${p[7].loop}, 1e-5)) {${o}.setEnvMod(${p[7].loop})};
+			if (${o}_tatt.onChanged(${p[8].loop}, 1e-5)) {${o}.setNormalAttack(${p[8].loop})};
+			if (${o}_tdec.onChanged(${p[9].loop}, 1e-5)) {${o}.setDecay(${p[9].loop})};
+			return ${o}.play();})()`
+	},
+	freeverb: {
+		setup: (o, p) => `${o} = new Maximilian.maxiFreeVerb();`,
+		loop:  (o, p) => `${o}.play(${p[0].loop},${p[1].loop},${p[2].loop})`
+	},
+	line: { //creates a triggered line from 0-1 - use other functions to shape the line
+		setup: (o, p) => `${o} = new Maximilian.maxiLine(); ${o}.prepare(0,1,${p[1].loop}, false); ${o}.triggerEnable(1);`,
+		loop:  (o, p) => `${o}.play(${p[0].loop})`
 	}
+
 };
+// if (${o}_twf.onChanged(${p[2].loop}, 1e-5)) {${o}.setWaveform(${p[2].loop})};
+// if (${o}_tcut.onChanged(${p[3].loop}, 1e-5)) {${o}.setCutoff(${p[3].loop})};
+// if (${o}_tres.onChanged(${p[4].loop}, 1e-5)) {${o}.setResonance(${p[4].loop})};
+// if (${o}_tenvm.onChanged(${p[5].loop}, 1e-5)) {${o}.setEnvMod(${p[5].loop})};
+// if (${o}_tdec.onChanged(${p[6].loop}, 1e-5)) {${o}.setDecay(${p[6].loop})};
+// if (newPitch || newVel) {${o}.noteOn(${p[0].loop},${p[1].loop})};
 
 class IRToJavascript {
 
@@ -579,7 +628,7 @@ class IRToJavascript {
     vars = {};
     let code = IRToJavascript.traverseTree(tree, IRToJavascript.emptyCode(), 0, vars, blockIdx);
     // console.log(vars);
-    code.setup = `() => {let q=this.newq(); ${code.setup}; return q;}`;
+    code.setup = `() => {let q=this.newq(); q.sigOut=0; ${code.setup}; return q;}`;
     code.loop = `(q, inputs, mem) => {${code.loop} return q.sigOut;}`
     // console.log("DEBUG:treeToCode");
     // console.log(code.loop);
