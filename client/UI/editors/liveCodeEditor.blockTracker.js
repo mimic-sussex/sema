@@ -123,16 +123,6 @@ class blockTracker {
           console.table(this.blocks);
           break;
         case "+input":
-        //   //was the input a new line?
-        //   if (change.text.length==2 && change.text[0] == "" && change.text[1] == "") {
-        //     console.log("new line");
-        //     insertNewLines(change.from.line, 1);
-        //     console.table(this.blocks);
-        //   }
-        //   let lineToTest = this.editor.getLine(change.from.line);
-        //   console.log(lineToTest);
-        //   testInsertLine(change.from.line, lineToTest);
-        // break;
         case "paste":
           // console.log(change.)
           console.log("Source line: " + this.editor.getLine(change.from.line));
