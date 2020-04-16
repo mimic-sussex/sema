@@ -1,7 +1,8 @@
+var blockID=0;
 class blockData {
-  constructor(startLine, isSeparator) {
+  constructor(startLine) {
     this.startLine = startLine;
-    this.isSeparator = isSeparator;
+    this.blockID = blockID++;
   }
 }
 
@@ -9,7 +10,7 @@ class blockTracker {
   constructor(editorToTrack) {
     this.editor = editorToTrack;
     this.blocks = new Array();
-    this.blocks.push(new blockData(0, false));
+    this.blocks.push(new blockData(0));
   }
 
   onEditChange(change) {
@@ -19,7 +20,7 @@ class blockTracker {
     let insertSeparator = (line) => {
       let insertionIndex = this.blocks.findIndex(x=>x.startLine > line);
       console.log("Inserting separator at " + line);
-      const newBlock = new blockData(line, true);
+      const newBlock = new blockData(line);
       if (insertionIndex == -1) {
         this.blocks.push(newBlock);
       }else{
