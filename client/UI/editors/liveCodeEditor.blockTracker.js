@@ -142,34 +142,35 @@ class blockTracker {
             insertNewLines(change.from.line, change.text.length-1);
 
             //did a separator get broken or moved?
-            if (change.from.ch < 3) { // 3 character min for a separator
-              console.log("ch < 3")
               if (separatorExistsOnLine(change.from.line)) {
-                //look at the last line
-                if (testIsSeparator(lastLine)) {
-                    console.log("last line is separator")
-                    //move the separator
-                    this.blocks = this.blocks.map(b=>{
-                      console.log(b.startLine, lastLineIndex);
-                      console.log(change.from);
-                      if (b.startLine == change.from.line) {
-                        b.startLine = lastLineIndex;
-                        console.log("bs", b.startLine);
+                if (change.from.ch < 3) { // 3 character min for a separator
+                  console.log("ch < 3")
+                  //look at the last line
+                  if (testIsSeparator(lastLine)) {
+                      console.log("last line is separator")
+                      //move the separator
+                      this.blocks = this.blocks.map(b=>{
+                        console.log(b.startLine, lastLineIndex);
+                        console.log(change.from);
+                        if (b.startLine == change.from.line) {
+                          b.startLine = lastLineIndex;
+                          console.log("bs", b.startLine);
+                        }
+                        return b;
                       }
-                      return b;
-                    }
-                    );
+                      );
+                  }else{
+                    removeSeparator(change.from.line);
+                  }
                 }else{
-                  removeSeparator(change.from.line);
+                  //possible new separator on the last line
+                  if (testIsSeparator(lastLine)) {
+                      console.log("last line is separator")
+                      insertSeparator(lastLineIndex);
+                  }
                 }
               }
-            }else{
-              //possible new separator on the last line
-              if (testIsSeparator(lastLine)) {
-                  console.log("last line is separator")
-                  insertSeparator(lastLineIndex);
-              }
-            }
+
             // if (change.text.length > 2) {
             //   //move any separators pushed by this insert
             //   insertNewLines(change.from.line, change.text.length-1);
