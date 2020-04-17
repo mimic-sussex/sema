@@ -88,43 +88,50 @@
     $items = gridHelp.appendItem(newItem, $items, cols);
   }
 
+  const clearItems = () => {
+    
+    $items = $items.map( item => remove(item) );
+
+  }
+
+  const saveEnvironment = e => {
+   	console.log('env save', e);
+		if (e.storage=='local') {
+			localStorage.setItem(`env--${e.name}`, items.get());
+		}else{
+			copyToPasteBuffer(items.get());
+			console.log("Environment copied to the paste buffer")
+		}
+  }
+
+  const loadEnvironment = e => {
+		console.log('env load', e);
+		let envdataStr = 0;
+		if (e.storage=='local') {
+			envdataStr = localStorage.getItem(`env--${e.name}`);
+			if (envdataStr) {
+				let parsedEnv = JSON.parse(envdataStr);
+				items.hydrate(parsedEnv);
+			}
+		}else{
+			github.get(`/gists/${e.name}`)
+			.then(res => {
+				// console.log("git gist", res.body.files[Object.keys(res.body.files)[0]].content)
+				let envdataStr = res.body.files[Object.keys(res.body.files)[0]].content;
+				if (envdataStr) {
+					//fill in soon
+				}
+			})
+			.catch(console.error);
+		}
+  }
+
 	onMount(() => {
     messaging.subscribe('add-editor', e => addItem(e.type, e.id, e.data) );
     messaging.subscribe('add-debugger', e => addItem(e.type, e.id) );
     messaging.subscribe('add-analyser', e => addItem(e.type, e.id) );
-		messaging.subscribe("env-save", e => {
-			console.log('env save', e);
-			if (e.storage=='local') {
-				localStorage.setItem(`env--${e.name}`, items.get());
-			}else{
-				copyToPasteBuffer(items.get());
-				console.log("Environment copied to the paste buffer")
-			}
-		});
-		messaging.subscribe("env-load", e => {
-			console.log('env load', e);
-			let envdataStr = 0;
-			if (e.storage=='local') {
-				envdataStr = localStorage.getItem(`env--${e.name}`);
-				if (envdataStr) {
-					let parsedEnv = JSON.parse(envdataStr);
-					items.hydrate(parsedEnv);
-				}
-			}else{
-				github.get(`/gists/${e.name}`)
-				.then(res => {
-					// console.log("git gist", res.body.files[Object.keys(res.body.files)[0]].content)
-					let envdataStr = res.body.files[Object.keys(res.body.files)[0]].content;
-					if (envdataStr) {
-						//fill in soon
-					}
-				})
-				.catch(console.error);
-			}
-		});
-
-
-
+		messaging.subscribe("env-save", e => saveEnvironment(e) );
+		messaging.subscribe("env-load", e => loadEnvironment(e) );
   });
 
 </script>
