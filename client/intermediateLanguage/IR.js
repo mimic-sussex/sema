@@ -425,20 +425,23 @@ var jsFuncMap = {
 		`,
 		loop:  (o, p) => `(()=>{
 			let newNote = ${o}_tnote.onZX(${p[0].loop});
+			let accent = ${p[3].loop};
 			if (newNote) {
 				if (${p[2].loop}>0) {
-					${o}.slideToNote(${p[1].loop},false);
+					${o}.slideToNote(${p[1].loop},accent);
 				}else{
-					${o}.triggerNote(${p[1].loop},false);
+					${o}.triggerNote(${p[1].loop},accent);
 				}
 			};
-			if (${o}_tnoteoff.onChanged(${p[3].loop}, 1e-5)) {${o}.allNotesOff()};
-			if (${o}_twf.onChanged(${p[4].loop}, 1e-5)) {${o}.setWaveform(${p[4].loop})};
-			if (${o}_tcut.onChanged(${p[5].loop}, 1e-5)) {${o}.setCutoff(${p[5].loop})};
-			if (${o}_tres.onChanged(${p[6].loop}, 1e-5)) {${o}.setResonance(${p[6].loop})};
-			if (${o}_tenvm.onChanged(${p[7].loop}, 1e-5)) {${o}.setEnvMod(${p[7].loop})};
-			if (${o}_tatt.onChanged(${p[8].loop}, 1e-5)) {${o}.setNormalAttack(${p[8].loop})};
-			if (${o}_tdec.onChanged(${p[9].loop}, 1e-5)) {${o}.setDecay(${p[9].loop})};
+
+			if (${o}_tnoteoff.onChanged(${p[4].loop}, 1e-5)) {${o}.allNotesOff()};
+			if (${o}_twf.onChanged(${p[5].loop}, 1e-5)) {${o}.setWaveform(${p[5].loop})};
+			if (${o}_tcut.onChanged(${p[6].loop}, 1e-5)) {${o}.setCutoff(${p[6].loop})};
+			if (${o}_tres.onChanged(${p[7].loop}, 1e-5)) {${o}.setResonance(${p[7].loop})};
+			if (${o}_tenvm.onChanged(${p[8].loop}, 1e-5)) {${o}.setEnvMod(${p[8].loop})};
+			if (${o}_tatt.onChanged(${p[9].loop}, 1e-5)) {${o}.setNormalAttack(${p[9].loop})};
+			if (${o}_tdec.onChanged(${p[10].loop}, 1e-5)) {${o}.setDecay(${p[10].loop})};
+			${o}.setAccent(${p[11].loop});
 			return ${o}.play();})()`
 	},
 	freeverb: {
@@ -448,9 +451,14 @@ var jsFuncMap = {
 	line: { //creates a triggered line from 0-1 - use other functions to shape the line
 		setup: (o, p) => `${o} = new Maximilian.maxiLine(); ${o}.prepare(0,1,${p[1].loop}, false); ${o}.triggerEnable(1);`,
 		loop:  (o, p) => `${o}.play(${p[0].loop})`
+	},
+	const: {
+		setup: (o, p) => ``,
+		loop:  (o, p) => `${p[0].loop}`
 	}
 
 };
+
 // if (${o}_twf.onChanged(${p[2].loop}, 1e-5)) {${o}.setWaveform(${p[2].loop})};
 // if (${o}_tcut.onChanged(${p[3].loop}, 1e-5)) {${o}.setCutoff(${p[3].loop})};
 // if (${o}_tres.onChanged(${p[4].loop}, 1e-5)) {${o}.setResonance(${p[4].loop})};
