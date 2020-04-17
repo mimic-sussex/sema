@@ -19,8 +19,8 @@
 
   import {
     items,
-    createNewItem
-    // loadPlaygroundItems
+    createNewItem,
+    hydrateJSONcomponent
   } from "../../stores/playgroundItems.js"
 
 	const GitHubBase = require('github-base');
@@ -106,11 +106,14 @@
 
   const loadEnvironment = e => {
 		console.log('env load', e);
-		let envdataStr = 0;
+		
+    let json;
+    
 		if (e.storage=='local') {
-			envdataStr = localStorage.getItem(`env--${e.name}`);
-			if (envdataStr) {
+			json = localStorage.getItem(`env--${e.name}`);
+			if (json) {
 				let parsedEnv = JSON.parse(envdataStr);
+        
 				items.hydrate(parsedEnv);
 			}
 		}else{

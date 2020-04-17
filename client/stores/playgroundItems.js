@@ -209,7 +209,7 @@ export let createRandomItem = (type) => {
   return item;
 }
 
-let hydrateJSONcomponent = item => {
+export let hydrateJSONcomponent = item => {
 
   switch (item.type) {
   	case "liveCodeEditor":
@@ -236,6 +236,8 @@ let hydrateJSONcomponent = item => {
   	default:
   		break;
   }
+  console.log('hydrateComponent');
+  console.log(item.data);
   return item;
 }
 
@@ -350,12 +352,12 @@ export function storable(key, initialValue) {
 		},
 
 		update(cb) {
-			const value = cb(get(store));
+			const value = cb(this.get(store));
 			this.set(value); // capture updates and write to localStore
 		},
 
 		get() {
-				return localStorage.getItem(key);
+			return localStorage.getItem(key);
 		},
 
 		hydrate(newItems) {
