@@ -133,6 +133,8 @@ class blockTracker {
               console.log(lineToTest);
               testLineChange(change.from.line, lineToTest);
           }else{
+            //multiline insert
+            //first deal with the possible broken separator
             let lastLineIndex = change.from.line + change.text.length - 1;
             let lastLine = this.editor.getLine(lastLineIndex);
             console.log("lastline", lastLine);
@@ -154,7 +156,6 @@ class blockTracker {
                       return b;
                     }
                     );
-                    console.log(this.blocks);
                 }else{
                   removeSeparator(change.from.line);
                 }
@@ -166,13 +167,18 @@ class blockTracker {
                   insertSeparator(lastLineIndex);
               }
             }
+            //move any separators below it
+            insertNewLines(change.from.line+1, change.text.length-1);
+            // if (change.text.length > 2) {
+            //   //move any separators pushed by this insert
+            //   insertNewLines(change.from.line, change.text.length-1);
+            //   //look through the inserted text and test for new separators
+            //   for (let line=1; line < change.text.length-2; line++) {
+            //     console.log(line);
+            //     testInsertLine(change.from.line + line, change.text[line]);
+            //   }
+            // }
           }
-          // let startLine = change.from.line;
-          // insertNewLines(change.from.line, change.text.length);
-          // for (let line in change.text) {
-          //   console.log(line);
-          //   testInsertLine(startLine + parseInt(line), change.text[line]);
-          // }
           console.table(this.blocks);
         break;
         case "setValue":
