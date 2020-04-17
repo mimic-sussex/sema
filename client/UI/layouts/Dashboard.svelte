@@ -119,10 +119,10 @@
 		if (e.storage=='local') {
 			let json = localStorage.getItem(`env--${e.name}`);
 			if (json) {
-        // let newItems = JSON.parse(json).map( item => hydrateJSONcomponent(item) );
+        let newItems = JSON.parse(json).map( item => hydrateJSONcomponent(item) );
         // console.log('DEBUG:loadEnvironment: Items (Hydrated from local storage):', newItems);
         // clearItems();
-				// $items = newItems;
+				$items = newItems;
 			}
 		}else{
 			github.get(`/gists/${e.name}`)
