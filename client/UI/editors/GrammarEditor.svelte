@@ -24,6 +24,7 @@
 
   import ModelWorker from "worker-loader!../../workers/ml.worker.js";
 
+  export let id;
   export let name;
 	export let type;
 	export let lineNumbers;
@@ -31,6 +32,19 @@
 	export let theme;
 	export let background;
 	export let data;
+  // export let static; // Error: ParseError: The keyword 'static' is reserved 
+  export let responsive;
+  export let resizable;
+  export let resize;
+  export let draggable;
+  export let drag;
+  export let min = {};
+  export let max = {};
+  export let x;
+  export let y;
+  export let w;
+  export let h;
+  export let component; 
 
   let codeMirror;
   let modelWorker;
@@ -43,7 +57,7 @@
 	});
 
   onDestroy(async () => {
-    console.log('DEBUG:LiveCodeEditor:onDestroy')
+    console.log('DEBUG:GrammarCodeEditor:onDestroy')
     console.log(data);
 	});
 

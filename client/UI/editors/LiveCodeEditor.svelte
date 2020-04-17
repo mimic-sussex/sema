@@ -35,6 +35,7 @@
 
   export let tab = true;
 
+  export let id;
   export let name;
 	export let type;
 	export let lineNumbers;
@@ -42,6 +43,19 @@
 	export let theme;
 	export let background;
 	export let data;
+  // export let static; // Error: ParseError: The keyword 'static' is reserved 
+  export let responsive;
+  export let resizable;
+  export let resize;
+  export let draggable;
+  export let drag;
+  export let min = {};
+  export let max = {};
+  export let x;
+  export let y;
+  export let w;
+  export let h;
+  export let component; 
 
   let codeMirror;
   let parserWorker;
@@ -73,7 +87,7 @@
 
   let onChange = e => {
     // console.log('DEBUG:LiveCodeEditor:onchange:');
-    console.log(e);
+    // console.log(e);
     btrack.onEditChange(e.detail.changeObj);    
     dispatch('change', { prop:'data', value: codeMirror.getValue() });
   }

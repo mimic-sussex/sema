@@ -82,44 +82,47 @@
   const remove = item => {
     // console.log("DEBUG:Dashboard:remove:item.id")
     // console.log(item.id);
-
     if(item.type === 'analyser'){
       messaging.publish('remove-engine-analyser', { id: item.id }); // notify audio engine to remove associated analyser
     }
     remove.bind(null, item); // remove dashboard item binding
-    $items = $items.filter(value => value.type !== item.type);
+    delete item.component;
+    $items = $items.filter( i => i.id !== item.id);
+    
+    console.log("DEBUG:dashboard:remove:"); 
+    console.log($items); 
   }
 
   const clearItems = () => {
     
     $items = $items.map( item => remove(item) );
-
+  
+    console.log("DEBUG:dashboard:clearItems:");  
+    console.log($items);
   }
 
   const saveEnvironment = e => {
-   	console.log('env save', e);
+   	console.log('DEBUG:saveEnvironment', e);
 		if (e.storage=='local') {
 			localStorage.setItem(`env--${e.name}`, items.get() );
 		}else{
 			copyToPasteBuffer(items.get());
-			console.log("Environment copied to the paste buffer")
+			console.log("DEBUG:saveEnvironment: Environment copied to the paste buffer")
 		}
   }
 
   const loadEnvironment = e => {
-		console.log('env load', e);
+		console.log('DEBUG:dashboard:loadEnvironment', e);
 		
-    let json;
+    clearItems();
     
 		if (e.storage=='local') {
-			json = localStorage.getItem(`env--${e.name}`);
+			let json = localStorage.getItem(`env--${e.name}`);
 			if (json) {
-        
-        let newItems = JSON.parse(json).map( item => hydrateJSONcomponent(item) );
-        console.log('Hydrated from local storage');
-        console.log(newItems);
-        clearItems();
-				$items = newItems;
+        // let newItems = JSON.parse(json).map( item => hydrateJSONcomponent(item) );
+        // console.log('DEBUG:loadEnvironment: Items (Hydrated from local storage):', newItems);
+        // clearItems();
+				// $items = newItems;
 			}
 		}else{
 			github.get(`/gists/${e.name}`)

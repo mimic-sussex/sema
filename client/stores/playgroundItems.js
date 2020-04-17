@@ -150,6 +150,65 @@ const originalItems = [
 	// }
 ];
 
+const testItems = [
+	{
+		...gridHelp.item({ x: 7, y: 0, w: 7, h: 3, id: id() }),
+		...{
+			type: "liveCodeEditor",
+			name: "hello-world",
+			background: "#151515",
+			lineNumbers: true,
+			hasFocus: false,
+			background: "#151515",
+			theme: "icecoder",
+			component: LiveCodeEditor,
+			data: "#lc-1",
+		},
+	},
+
+	{
+		...gridHelp.item({ x: 10, y: 2, w: 5, h: 5, id: id() }),
+		...{
+			name: "hello world",
+			type: "grammarEditor",
+			lineNumbers: true,
+			hasFocus: false,
+			theme: "monokai",
+			background: "#AAAAAA",
+			component: GrammarEditor,
+			data: "#g-1",
+		},
+	},
+
+	{
+		...gridHelp.item({ x: 0, y: 4, w: 7, h: 4, id: id() }),
+		...{
+			name: "hello world",
+			type: "modelEditor",
+			lineNumbers: true,
+			hasFocus: false,
+			theme: "monokai",
+			background: "#f0f0f0",
+			component: ModelEditor,
+			data: "//m-1",
+		},
+	},
+
+	{
+		...gridHelp.item({ x: 0, y: 8, w: 3, h: 4, id: id() }),
+		...{
+			name: "hello world",
+			type: "analyser",
+			lineNumbers: true,
+			hasFocus: false,
+			theme: "monokai",
+			background: "#f0f0f0",
+			component: Analyser,
+			mode: "spectrogram",
+			data: "1",
+		},
+	},
+];
 
 
 
@@ -238,8 +297,9 @@ export let hydrateJSONcomponent = item => {
         item.component = StoreDebugger;
     		break;
     }
-    console.log('hydrateComponent');
+    console.log("DEBUG:playground:hydrateComponent");
     console.log(item.data);
+    console.log(item.id);
     return item;
   // }
   // return null;
@@ -302,7 +362,7 @@ export let createNewItem = (type, id, data) => {
 
   // return component template
   return {
-		...gridHelp.item({ x: 7, y: 0, w: 7, h: 3, id: id }),
+		...gridHelp.item({ x: 0, y: 0, w: 2, h: 2, id: id }),
 		...{
 			type: type,
 			name: type + id,
