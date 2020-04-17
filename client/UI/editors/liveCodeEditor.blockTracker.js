@@ -138,6 +138,9 @@ class blockTracker {
             let lastLineIndex = change.from.line + change.text.length - 1;
             let lastLine = this.editor.getLine(lastLineIndex);
             console.log("lastline", lastLine);
+            //move any separators below
+            insertNewLines(change.from.line, change.text.length-1);
+
             //did a separator get broken or moved?
             if (change.from.ch < 3) { // 3 character min for a separator
               console.log("ch < 3")
@@ -167,8 +170,6 @@ class blockTracker {
                   insertSeparator(lastLineIndex);
               }
             }
-            //move any separators below it
-            insertNewLines(change.from.line+1, change.text.length-1);
             // if (change.text.length > 2) {
             //   //move any separators pushed by this insert
             //   insertNewLines(change.from.line, change.text.length-1);
