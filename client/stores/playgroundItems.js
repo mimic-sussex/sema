@@ -211,34 +211,38 @@ export let createRandomItem = (type) => {
 
 export let hydrateJSONcomponent = item => {
 
-  switch (item.type) {
-  	case "liveCodeEditor":
-  		item.component = LiveCodeEditor;
-  		break;
-  	case "grammarEditor":
-  		item.component = GrammarEditor;
-  		break;
-  	case "modelEditor":
-  		item.component = ModelEditor;
-  		break;
-  	case "liveCodeParseOutput":
-  		item.component = LiveCodeParseOutput;
-  		break;
-  	case "grammarCompileOutput":
-  		item.component = GrammarCompileOutput;
-  		break;
-  	case "storeDebugger":
-  		item.component = StoreDebugger;
-  		break;
-  	case "analyser":
-  		item.component = Analyser;
-  		break;
-  	default:
-  		break;
-  }
-  console.log('hydrateComponent');
-  console.log(item.data);
-  return item;
+  // if(item != undefined){
+    switch (item.type) {
+    	case "liveCodeEditor":
+    		item.component = LiveCodeEditor;
+    		break;
+    	case "grammarEditor":
+    		item.component = GrammarEditor;
+    		break;
+    	case "modelEditor":
+    		item.component = ModelEditor;
+    		break;
+    	case "liveCodeParseOutput":
+    		item.component = LiveCodeParseOutput;
+    		break;
+    	case "grammarCompileOutput":
+    		item.component = GrammarCompileOutput;
+    		break;
+    	case "storeDebugger":
+    		item.component = StoreDebugger;
+    		break;
+    	case "analyser":
+    		item.component = Analyser;
+    		break;
+    	default:
+        item.component = StoreDebugger;
+    		break;
+    }
+    console.log('hydrateComponent');
+    console.log(item.data);
+    return item;
+  // }
+  // return null;
 }
 
 export let createNewItem = (type, id, data) => {

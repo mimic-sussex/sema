@@ -64,16 +64,7 @@
   };
 
 
-  const remove = item => {
-    // console.log("DEBUG:Dashboard:remove:item.id")
-    // console.log(item.id);
 
-    if(item.type === 'analyser'){
-      messaging.publish('remove-engine-analyser', { id: item.id }); // notify audio engine to remove associated analyser
-    }
-    remove.bind(null, item); // remove dashboard item binding
-    $items = $items.filter(value => value.id !== item.id);
-  }
 
 	const update = (item, prop, value) => {
     if( prop !== undefined || value !== undefined ){
@@ -88,6 +79,17 @@
     $items = gridHelp.appendItem(newItem, $items, cols);
   }
 
+  const remove = item => {
+    // console.log("DEBUG:Dashboard:remove:item.id")
+    // console.log(item.id);
+
+    if(item.type === 'analyser'){
+      messaging.publish('remove-engine-analyser', { id: item.id }); // notify audio engine to remove associated analyser
+    }
+    remove.bind(null, item); // remove dashboard item binding
+    $items = $items.filter(value => value.type !== item.type);
+  }
+
   const clearItems = () => {
     
     $items = $items.map( item => remove(item) );
@@ -97,7 +99,7 @@
   const saveEnvironment = e => {
    	console.log('env save', e);
 		if (e.storage=='local') {
-			localStorage.setItem(`env--${e.name}`, items.get());
+			localStorage.setItem(`env--${e.name}`, items.get() );
 		}else{
 			copyToPasteBuffer(items.get());
 			console.log("Environment copied to the paste buffer")
@@ -112,9 +114,12 @@
 		if (e.storage=='local') {
 			json = localStorage.getItem(`env--${e.name}`);
 			if (json) {
-				let parsedEnv = JSON.parse(envdataStr);
         
-				items.hydrate(parsedEnv);
+        let newItems = JSON.parse(json).map( item => hydrateJSONcomponent(item) );
+        console.log('Hydrated from local storage');
+        console.log(newItems);
+        clearItems();
+				$items = newItems;
 			}
 		}else{
 			github.get(`/gists/${e.name}`)

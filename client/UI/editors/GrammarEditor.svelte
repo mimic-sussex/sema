@@ -37,13 +37,14 @@
 
 
   onMount(async () => {
+    console.log('DEBUG:GrammarCodeEditor:onMount:')
+    console.log(data);
     codeMirror.set(data, "ebnf");
-    // codeMirror.set(value, "ebnf");
-    // modelWorker = new ModelWorker();  // Create one worker per widget lifetime
 	});
 
   onDestroy(async () => {
-    // modelWorker.terminate();
+    console.log('DEBUG:LiveCodeEditor:onDestroy')
+    console.log(data);
 	});
 
 
