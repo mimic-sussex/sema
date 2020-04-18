@@ -270,7 +270,7 @@ export let createRandomItem = (type) => {
 
 export let hydrateJSONcomponent = item => {
 
-  // if(item != undefined){
+  if(item != undefined){
     switch (item.type) {
     	case "liveCodeEditor":
     		item.component = LiveCodeEditor;
@@ -297,15 +297,12 @@ export let hydrateJSONcomponent = item => {
         item.component = StoreDebugger;
     		break;
     }
-    console.log("DEBUG:playground:hydrateComponent");
-    console.log(item.data);
-    console.log(item.id);
-
     item.id = id();
     item.name = item.name + item.id; 
     return item;
-  // }
-  // return null;
+  }else{
+    createNewItem()
+  }
 }
 
 export let createNewItem = (type, id, data) => {
