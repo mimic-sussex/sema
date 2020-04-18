@@ -315,7 +315,6 @@ class MaxiProcessor extends AudioWorkletProcessor {
           //allow feedback between evals
           this._mems[this.nextSignalFunction] = this._mems[this.currentSignalFunction];
 
-<<<<<<< HEAD
 
          
          // output[SPECTROGAMCHANNEL][i] = specgramValue;
@@ -324,10 +323,6 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
           this.signals[this.currentSignalFunction] = loopFunction;
           this._cleanup[this.currentSignalFunction] = 0;
-=======
-          this.signals[this.nextSignalFunction] = loopFunction;
-          this._cleanup[this.nextSignalFunction] = 0;
->>>>>>> env-persist-FIX
 
           let xfadeBegin = Maximilian.maxiMap.linlin(1.0 - this.nextSignalFunction, 0, 1, -1, 1);
           let xfadeEnd = Maximilian.maxiMap.linlin(this.nextSignalFunction, 0, 1, -1, 1);

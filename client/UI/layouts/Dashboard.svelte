@@ -7,21 +7,9 @@
 
   import map from "lodash.map";
 
-<<<<<<< HEAD
-=======
   import { id, random, randomHexColorCode } from '../../utils/utils.js';
   import { PubSub } from "../../messaging/pubSub.js";
-	import {copyToPasteBuffer} from '../../utils/pasteBuffer.js';
-
-  // import {
-  //   dashboardItems,
-  //   selectedItem,
-  //   selectedItemControls,
-  //   grammarEditorValue,
-  //   modelEditorValue,
-  //   liveCodeEditorValue
-  // } from "../../store.js"
->>>>>>> env-persist-FIX
+	import { copyToPasteBuffer } from '../../utils/pasteBuffer.js';
 
   import {
     items,
@@ -108,14 +96,14 @@
   }
 
   const clearItems = () => {
-    console.log("DEBUG:dashboard:clearItems:")
+    // console.log("DEBUG:dashboard:clearItems:")
     // items.update( items => items.map( item => remove(item) ) );
     items.update( items => items.slice(items.length) );
     // items.set([]);
   }
 
   const saveEnvironment = e => {
-   	console.log('DEBUG:saveEnvironment', e);
+   	// console.log('DEBUG:saveEnvironment', e);
 		if (e.storage=='local') {
 			localStorage.setItem(`env--${e.name}`, items.get() );
 		}else{
@@ -125,7 +113,7 @@
   }
 
   const loadEnvironment = e => {
-		console.log('DEBUG:dashboard:loadEnvironment', e);
+		// console.log('DEBUG:dashboard:loadEnvironment', e);
 		
     clearItems();
     
@@ -134,7 +122,7 @@
 			if (json) { 
         let envItems = JSON.parse(json).map( item => hydrateJSONcomponent(item) );
         items.set( envItems ); 
-        items.update(items => gridHelp.resizeItems(items, 4, 100)); // Align items
+        items.update( items => gridHelp.resizeItems(items, 4, 100) ); // Align items
         // items.update( items => items.concat(envItems));
 			}
 		}else{
