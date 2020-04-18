@@ -12,6 +12,24 @@
   export let hasFocus;
   export let background;
 
+	export let lineNumbers;
+	export let theme;
+	export let data;
+  // export let static; // Error: ParseError: The keyword 'static' is reserved 
+  export let responsive;
+  export let resizable;
+  export let resize;
+  export let draggable;
+  export let drag;
+  export let min = {};
+  export let max = {};
+  export let x;
+  export let y;
+  export let w;
+  export let h;
+  export let component; 
+
+
   let fftSize = 256;   
   let frequencyBinCount = 128;
   let smoothingTimeConstant = 0.8;

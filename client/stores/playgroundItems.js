@@ -1,4 +1,4 @@
-import { writable, readable } from 'svelte/store';
+import { writable, readable, get } from 'svelte/store';
 // import { writable as internal, get } from "svelte/store";
 
 
@@ -151,6 +151,65 @@ const originalItems = [
 	// }
 ];
 
+const testItems = [
+	{
+		...gridHelp.item({ x: 7, y: 0, w: 2, h: 1, id: id() }),
+		...{
+			type: "liveCodeEditor",
+			name: "hello-world",
+			background: "#151515",
+			lineNumbers: true,
+			hasFocus: false,
+			background: "#151515",
+			theme: "icecoder",
+			component: LiveCodeEditor,
+			data: "#lc-1",
+		},
+	},
+
+	{
+		...gridHelp.item({ x: 10, y: 2, w: 2, h: 1, id: id() }),
+		...{
+			name: "hello world",
+			type: "grammarEditor",
+			lineNumbers: true,
+			hasFocus: false,
+			theme: "monokai",
+			background: "#AAAAAA",
+			component: GrammarEditor,
+			data: "#g-1",
+		},
+	},
+
+	{
+		...gridHelp.item({ x: 0, y: 4, w: 3, h: 1, id: id() }),
+		...{
+			name: "hello world",
+			type: "modelEditor",
+			lineNumbers: true,
+			hasFocus: false,
+			theme: "monokai",
+			background: "#f0f0f0",
+			component: ModelEditor,
+			data: "//m-1\nsema.env.saveLocal('1')",
+		},
+	},
+
+	{
+		...gridHelp.item({ x: 0, y: 8, w: 1, h: 1, id: id() }),
+		...{
+			name: "hello world",
+			type: "analyser",
+			lineNumbers: true,
+			hasFocus: false,
+			theme: "monokai",
+			background: "#f0f0f0",
+			component: Analyser,
+			mode: "spectrogram",
+			data: "1",
+		},
+	},
+];
 
 
 
@@ -205,39 +264,46 @@ export let createRandomItem = (type) => {
 			theme: "monokai",
 			data: "value"
 		})
-	};  
+	};
 
   return item;
-} 
+}
 
-let hydrateJSONcomponent = item => {
+export let hydrateJSONcomponent = item => {
 
-  switch (item.type) {
-  	case "liveCodeEditor":
-  		item.component = LiveCodeEditor;
-  		break;
-  	case "grammarEditor":
-  		item.component = GrammarEditor;
-  		break;
-  	case "modelEditor":
-  		item.component = ModelEditor;
-  		break;
-  	case "liveCodeParseOutput":
-  		item.component = LiveCodeParseOutput;
-  		break;
-  	case "grammarCompileOutput":
-  		item.component = GrammarCompileOutput;
-  		break;
-  	case "storeDebugger":
-  		item.component = StoreDebugger;
-  		break;
-  	case "analyser":
-  		item.component = Analyser;
-  		break;
-  	default:
-  		break;
-  } 
-  return item;
+  if(item != undefined){
+    switch (item.type) {
+    	case "liveCodeEditor":
+    		item.component = LiveCodeEditor;
+    		break;
+    	case "grammarEditor":
+    		item.component = GrammarEditor;
+    		break;
+    	case "modelEditor":
+    		item.component = ModelEditor;
+    		break;
+    	case "liveCodeParseOutput":
+    		item.component = LiveCodeParseOutput;
+    		break;
+    	case "grammarCompileOutput":
+    		item.component = GrammarCompileOutput;
+    		break;
+    	case "storeDebugger":
+    		item.component = StoreDebugger;
+    		break;
+    	case "analyser":
+    		item.component = Analyser;
+    		break;
+    	default:
+        item.component = StoreDebugger;
+    		break;
+    }
+    item.id = id();
+    item.name = item.name + item.id; 
+    return item;
+  }else{
+    createNewItem()
+  }
 }
 
 export let createNewItem = (type, id, data) => {
@@ -295,9 +361,9 @@ export let createNewItem = (type, id, data) => {
 			break;
 	}
 
-  // return component template 
+  // return component template
   return {
-		...gridHelp.item({ x: 7, y: 0, w: 7, h: 3, id: id }),
+		...gridHelp.item({ x: 0, y: 0, w: 2, h: 2, id: id }),
 		...{
 			type: type,
 			name: type + id,
@@ -310,8 +376,8 @@ export let createNewItem = (type, id, data) => {
 };
 
 /**
- * Populates dashboard on application load, 
- * checks local Storage for items from previous session and loads 
+ * Populates dashboard on application load,
+ * checks local Storage for items from previous session and loads
  * or otherwise, loads hardcoded layout configuration
  */
 // export const loadPlaygroundItems = () => {
@@ -324,7 +390,7 @@ export let createNewItem = (type, id, data) => {
 // 			playgroundItems === undefined ||
 // 			playgroundItems === ""
 // 		) ? originalItems : JSON.parse(playgroundItems)
-		
+
 // 	} else
 //     return originalItems;
 // };
@@ -340,6 +406,7 @@ export function storable(key, initialValue) {
 
 	const json = localStorage.getItem(key); // get the last value from localStorage
 	if (json) {
+    // set( JSON.parse(json));
 		set( JSON.parse(json).map( item => hydrateJSONcomponent(item) ) ); // use the value from localStorage if it exists
 	}
 
@@ -351,9 +418,17 @@ export function storable(key, initialValue) {
 		},
 
 		update(cb) {
-			const value = cb(get(store));
+			const value = cb(get(store)); // passes items to callback for invocation e.g items => items.concat(new)
 			this.set(value); // capture updates and write to localStore
 		},
+
+		get() {
+			return localStorage.getItem(key);
+		},
+
+		// hydrate(newItems) {
+		// 	set( newItems.map( item => hydrateJSONcomponent(item) ) ); 
+		// },
 
 		subscribe // punt subscriptions to underlying store
 	};
@@ -361,8 +436,9 @@ export function storable(key, initialValue) {
 
 
 // Dashboard layout in items list
-// export const items = writable(originalItems); // base svelteStore
-export const items = storable("items", originalItems); // localStorageWrapper
+// export const items = writable(testItems); // base svelteStore
+export const items = storable("items", testItems); // localStorageWrapper
+// export const items = storable("items", originalItems); // localStorageWrapper
 // export const items = writable(nestedStoresItems);
 // export const items = writable([ hydrateJSONcomponent(createRandomItem('liveCodeEditor'))]);
 

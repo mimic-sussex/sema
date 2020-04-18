@@ -1,20 +1,37 @@
 <script>
 	import { onMount } from 'svelte';
+  import { get } from 'svelte/store';
+
   import Grid from "svelte-grid";
   import gridHelp from "svelte-grid/build/helper";
-  import map from "lodash.map";
- 
-  import { id, random, randomHexColorCode } from '../../utils/utils.js';
-  import { PubSub } from "../../messaging/pubSub.js"; 
 
+  import map from "lodash.map";
+
+<<<<<<< HEAD
+=======
+  import { id, random, randomHexColorCode } from '../../utils/utils.js';
+  import { PubSub } from "../../messaging/pubSub.js";
+	import {copyToPasteBuffer} from '../../utils/pasteBuffer.js';
+
+  // import {
+  //   dashboardItems,
+  //   selectedItem,
+  //   selectedItemControls,
+  //   grammarEditorValue,
+  //   modelEditorValue,
+  //   liveCodeEditorValue
+  // } from "../../store.js"
+>>>>>>> env-persist-FIX
 
   import {
     items,
-    createNewItem
-    // loadPlaygroundItems 
+    createNewItem,
+    hydrateJSONcomponent
   } from "../../stores/playgroundItems.js"
 
-  
+	const GitHubBase = require('github-base');
+	const github = new GitHubBase({ /* options */ });
+
   const messaging = new PubSub();
 
   var cols = 15;
@@ -47,22 +64,21 @@
     });
   }
 
-  const onAdjust = () => {
-    // console.log('adjust')
+  const onAdjust = e => {
+    console.log("DEBUG:dashboard:onAdjust:", e.detail); 
     $items = $items; // call a re-render
   };
-  
 
-  const remove = item => {
-    // console.log("DEBUG:Dashboard:remove:item.id")
-    // console.log(item.id);
-    
-    if(item.type === 'analyser'){
-      messaging.publish('remove-engine-analyser', { id: item.id }); // notify audio engine to remove associated analyser
-    }
-    remove.bind(null, item); // remove dashboard item binding
-    $items = $items.filter(value => value.id !== item.id);
-  }
+  const onChildMount = e => {
+
+    console.log("DEBUG:dashboard:onChildMount:", e.detail); 
+    // $items = $items; // call a re-render
+  };
+
+
+
+
+
 
 	const update = (item, prop, value) => {
     if( prop !== undefined || value !== undefined ){
@@ -75,12 +91,71 @@
   const addItem = (type, id, value) => {
     let newItem = createNewItem(type, id, value);
     $items = gridHelp.appendItem(newItem, $items, cols);
-  }    
+  }
+
+  const remove = item => {
+
+    if(item.type === 'analyser'){
+      messaging.publish('remove-engine-analyser', { id: item.id }); // notify audio engine to remove associated analyser
+    }
+
+    remove.bind(null, item); // remove dashboard item binding
+    delete item.component;
+    $items = $items.filter( i => i.id !== item.id);
+    
+    console.log("DEBUG:dashboard:remove:"); 
+    console.log($items); 
+  }
+
+  const clearItems = () => {
+    console.log("DEBUG:dashboard:clearItems:")
+    // items.update( items => items.map( item => remove(item) ) );
+    items.update( items => items.slice(items.length) );
+    // items.set([]);
+  }
+
+  const saveEnvironment = e => {
+   	console.log('DEBUG:saveEnvironment', e);
+		if (e.storage=='local') {
+			localStorage.setItem(`env--${e.name}`, items.get() );
+		}else{
+			copyToPasteBuffer(items.get());
+			console.log("DEBUG:saveEnvironment: Environment copied to the paste buffer")
+		}
+  }
+
+  const loadEnvironment = e => {
+		console.log('DEBUG:dashboard:loadEnvironment', e);
+		
+    clearItems();
+    
+		if (e.storage === 'local') {
+			let json = localStorage.getItem(`env--${e.name}`);
+			if (json) { 
+        let envItems = JSON.parse(json).map( item => hydrateJSONcomponent(item) );
+        items.set( envItems ); 
+        items.update(items => gridHelp.resizeItems(items, 4, 100)); // Align items
+        // items.update( items => items.concat(envItems));
+			}
+		}else{
+			github.get(`/gists/${e.name}`)
+			.then(res => {
+				// console.log("git gist", res.body.files[Object.keys(res.body.files)[0]].content)
+				let envdataStr = res.body.files[Object.keys(res.body.files)[0]].content;
+				if (envdataStr) {
+					//fill in soon
+				}
+			})
+			.catch(console.error);
+		}
+  }
 
 	onMount(() => {
     messaging.subscribe('add-editor', e => addItem(e.type, e.id, e.data) );
     messaging.subscribe('add-debugger', e => addItem(e.type, e.id) );
     messaging.subscribe('add-analyser', e => addItem(e.type, e.id) );
+		messaging.subscribe('env-save', e => saveEnvironment(e) );
+		messaging.subscribe('env-load', e => loadEnvironment(e) );
   });
 
 </script>
@@ -104,7 +179,7 @@
     border-radius: 6px;
     border-top-left-radius: 0px;
     border-bottom-right-radius: 3px;
-    
+
   }
 
   :global(*) {
@@ -146,7 +221,7 @@
   }
 
   .move {
-    font-size: 1.2em; 
+    font-size: 1.2em;
     position: absolute;
     padding: 1px 5px;
     cursor: move;
@@ -166,26 +241,27 @@
  <!--   -->
   <Grid items={$items}
         {breakpoints}
-        {cols}  
-        useTransform 
-        rowHeight={100} 
-        gap={1} 
-        bind:items={$items} 
+        {cols}
+        useTransform
+        rowHeight={100}
+        gap={1}
+        bind:items={$items}
         let:item
         on:adjust={onAdjust}
+        on:mount={onChildMount}
         >
-    
+
     <span class='move' >+</span>
-    
-    <div  class="content" 
-          style="background: { item.static ? '#ccccee' : item.background }" 
+
+    <div  class="content"
+          style="background: { item.static ? '#ccccee' : item.background }"
           on:mousedown={ e => e.stopPropagation() } >
 
       <span class='close'
             on:click={ () => remove(item) } >✕</span>
 
-  		<svelte:component this={item.component} 
-                        {...item} 
+  		<svelte:component this={item.component}
+                        {...item}
                         on:change={ e => update(item, e.detail.prop, e.detail.value) } />
 
     </div>

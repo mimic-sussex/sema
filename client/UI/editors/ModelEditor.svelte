@@ -28,6 +28,7 @@
   import { addToHistory } from "../../utils/history.js";
   import "../../machineLearning/lalolib.js";
 
+  export let id;
   export let name;
 	export let type;
 	export let lineNumbers;
@@ -35,6 +36,19 @@
 	export let theme;
 	export let background;
 	export let data;
+  // export let static; // Error: ParseError: The keyword 'static' is reserved 
+  export let responsive;
+  export let resizable;
+  export let resize;
+  export let draggable;
+  export let drag;
+  export let min = {};
+  export let max = {};
+  export let x;
+  export let y;
+  export let w;
+  export let h;
+  export let component; 
 
   let codeMirror;
   let modelWorker;
@@ -52,8 +66,9 @@
     modelWorker = new ModelWorker();  // Creates one ModelWorker per ModelEditor lifetime
     modelWorker.onmessage = e =>  onModelWorkerMessageHandler(e);
 
-    // console.log('DEBUG:ModelEditor:onMount:');
-    // console.log(name + ' ' + type + ' ' + lineNumbers +' ' + hasFocus +' ' + theme + ' ' + background /*+  ' ' + data */ );
+
+    console.log('DEBUG:ModelEditor:onMount:');
+    console.log(data);    // console.log(name + ' ' + type + ' ' + lineNumbers +' ' + hasFocus +' ' + theme + ' ' + background /*+  ' ' + data */ );
 	});
 
   onDestroy(async () => {
@@ -62,6 +77,7 @@
     messaging.unsubscribe(subscriptionTokenMID);
     messaging.unsubscribe(subscriptionTokenMODR);
     messaging = null;
+    console.log('DEBUG:ModelEditor:onDestroy')
 	});
 
   let log = e => console.log(e.detail.value);
@@ -87,11 +103,11 @@
     try {
       let evalRes = eval(code);
       if (evalRes != undefined) {
-        console.log(evalRes);
+        // console.log(evalRes);
       }
-      else console.log("done");
+      // else console.log("done");
     }catch(e) {
-      console.log(`DOM Code eval exception: ${e}`);
+      // console.log(`DOM Code eval exception: ${e}`);
     }
   }
 
@@ -107,11 +123,11 @@
           messaging.publish("model-output-data", data)
         },
         save: data => {
-          console.log("save");
+          // console.log("save");
           window.localStorage.setItem(data.name, data.val);
         },
         load: data => {
-          console.log("load");
+          // console.log("load");
           let msg = {
             name: data.name,
             val: window.localStorage.getItem(data.name)
@@ -119,7 +135,7 @@
           modelWorker.postMessage(msg);
         },
         download: data => {
-          console.log("download");
+          // console.log("download");
           let downloadData = window.localStorage.getItem(data.name);
           let blob = new Blob([downloadData], {
             type: "text/plain;charset=utf-8"
@@ -127,7 +143,7 @@
           saveData(blob, `${data.name}.data`);
         },
         sendcode: data => {
-          console.log(data);
+          // console.log(data);
         },
         pbcopy: data => {
           copyToPasteBuffer(data.msg);
@@ -146,7 +162,7 @@
           messaging.publish("env-load", data);
         },
         domeval: data => {
-          console.log(data.code);
+          // console.log(data.code);
           evalDOMCode(data.code);
           // document.getElementById('canvas').style.display= "none";
         },
@@ -195,10 +211,10 @@
 
   function evalModelEditorExpressionBlock() {
     let modelCode = codeMirror.getBlock();
-    console.log(modelCode);
+    // console.log(modelCode);
     let linebreakPos = modelCode.indexOf('\n');
     let firstLine = modelCode.substr(0,linebreakPos)
-    console.log(firstLine);
+    // console.log(firstLine);
     if(firstLine == "//--DOM") {
       modelCode = modelCode.substr(linebreakPos);
       evalDomCode(modelCode);

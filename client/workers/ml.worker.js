@@ -64,12 +64,27 @@ var sema = {
     },
     loadLocal: (name) => {
       postMessage({
-            "func": "envsave",
+            "func": "envload",
             "name": name,
             "storage":"local"
         }
       )
-    }
+    },
+    saveToPB: () => {
+      postMessage({
+            "func": "envsave",
+            "storage":"pastebuffer"
+        }
+      )
+    },
+    loadGist: (gistid) => {
+      postMessage({
+            "func": "envload",
+            "name": gistid,
+            "storage":"gist"
+        }
+      )
+    },
 
   },
   //run in the DOM
@@ -98,9 +113,10 @@ onmessage = m => {
     try {
   		let evalRes = geval(m.data.eval);
   		if (evalRes != undefined) {
-        console.log(evalRes);
+        // console.log(evalRes);
       }
-  		else console.log("done");
+  		else ;
+        // console.log("done");
     }catch(e) {
       console.log(`Code eval exception: ${e}`);
     }
