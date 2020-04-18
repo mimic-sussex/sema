@@ -1,4 +1,4 @@
-import { writable, readable } from 'svelte/store';
+import { writable, readable, get } from 'svelte/store';
 // import { writable as internal, get } from "svelte/store";
 
 
@@ -152,7 +152,7 @@ const originalItems = [
 
 const testItems = [
 	{
-		...gridHelp.item({ x: 7, y: 0, w: 7, h: 3, id: id() }),
+		...gridHelp.item({ x: 7, y: 0, w: 2, h: 1, id: id() }),
 		...{
 			type: "liveCodeEditor",
 			name: "hello-world",
@@ -167,7 +167,7 @@ const testItems = [
 	},
 
 	{
-		...gridHelp.item({ x: 10, y: 2, w: 5, h: 5, id: id() }),
+		...gridHelp.item({ x: 10, y: 2, w: 2, h: 1, id: id() }),
 		...{
 			name: "hello world",
 			type: "grammarEditor",
@@ -181,7 +181,7 @@ const testItems = [
 	},
 
 	{
-		...gridHelp.item({ x: 0, y: 4, w: 7, h: 4, id: id() }),
+		...gridHelp.item({ x: 0, y: 4, w: 3, h: 1, id: id() }),
 		...{
 			name: "hello world",
 			type: "modelEditor",
@@ -190,12 +190,12 @@ const testItems = [
 			theme: "monokai",
 			background: "#f0f0f0",
 			component: ModelEditor,
-			data: "//m-1",
+			data: "//m-1\nsema.env.saveLocal('1')",
 		},
 	},
 
 	{
-		...gridHelp.item({ x: 0, y: 8, w: 3, h: 4, id: id() }),
+		...gridHelp.item({ x: 0, y: 8, w: 1, h: 1, id: id() }),
 		...{
 			name: "hello world",
 			type: "analyser",
@@ -300,6 +300,9 @@ export let hydrateJSONcomponent = item => {
     console.log("DEBUG:playground:hydrateComponent");
     console.log(item.data);
     console.log(item.id);
+
+    item.id = id();
+    item.name = item.name + item.id; 
     return item;
   // }
   // return null;
@@ -405,6 +408,7 @@ export function storable(key, initialValue) {
 
 	const json = localStorage.getItem(key); // get the last value from localStorage
 	if (json) {
+    // set( JSON.parse(json));
 		set( JSON.parse(json).map( item => hydrateJSONcomponent(item) ) ); // use the value from localStorage if it exists
 	}
 
@@ -416,7 +420,7 @@ export function storable(key, initialValue) {
 		},
 
 		update(cb) {
-			const value = cb(this.get(store));
+			const value = cb(get(store)); // passes items to callback for invocation e.g items => items.concat(new)
 			this.set(value); // capture updates and write to localStore
 		},
 
@@ -424,9 +428,9 @@ export function storable(key, initialValue) {
 			return localStorage.getItem(key);
 		},
 
-		hydrate(newItems) {
-			set( newItems.map( item => hydrateJSONcomponent(item) ) ); 
-		},
+		// hydrate(newItems) {
+		// 	set( newItems.map( item => hydrateJSONcomponent(item) ) ); 
+		// },
 
 		subscribe // punt subscriptions to underlying store
 	};
@@ -434,8 +438,9 @@ export function storable(key, initialValue) {
 
 
 // Dashboard layout in items list
-// export const items = writable(originalItems); // base svelteStore
-export const items = storable("items", originalItems); // localStorageWrapper
+// export const items = writable(testItems); // base svelteStore
+export const items = storable("items", testItems); // localStorageWrapper
+// export const items = storable("items", originalItems); // localStorageWrapper
 // export const items = writable(nestedStoresItems);
 // export const items = writable([ hydrateJSONcomponent(createRandomItem('liveCodeEditor'))]);
 

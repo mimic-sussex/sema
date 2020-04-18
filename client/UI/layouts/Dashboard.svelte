@@ -1,21 +1,24 @@
 <script>
 	import { onMount } from 'svelte';
+  import { get } from 'svelte/store';
+
   import Grid from "svelte-grid";
   import gridHelp from "svelte-grid/build/helper";
+
   import map from "lodash.map";
 
   import { id, random, randomHexColorCode } from '../../utils/utils.js';
   import { PubSub } from "../../messaging/pubSub.js";
 	import {copyToPasteBuffer} from '../../utils/pasteBuffer.js';
 
-  import {
-    dashboardItems,
-    selectedItem,
-    selectedItemControls,
-    grammarEditorValue,
-    modelEditorValue,
-    liveCodeEditorValue
-  } from "../../store.js"
+  // import {
+  //   dashboardItems,
+  //   selectedItem,
+  //   selectedItemControls,
+  //   grammarEditorValue,
+  //   modelEditorValue,
+  //   liveCodeEditorValue
+  // } from "../../store.js"
 
   import {
     items,
@@ -58,10 +61,18 @@
     });
   }
 
-  const onAdjust = () => {
-    // console.log('adjust')
+  const onAdjust = e => {
+    console.log("DEBUG:dashboard:onAdjust:", e.detail); 
     $items = $items; // call a re-render
   };
+
+  const onChildMount = e => {
+
+    console.log("DEBUG:dashboard:onChildMount:", e.detail); 
+    // $items = $items; // call a re-render
+  };
+
+
 
 
 
@@ -80,11 +91,11 @@
   }
 
   const remove = item => {
-    // console.log("DEBUG:Dashboard:remove:item.id")
-    // console.log(item.id);
+
     if(item.type === 'analyser'){
       messaging.publish('remove-engine-analyser', { id: item.id }); // notify audio engine to remove associated analyser
     }
+
     remove.bind(null, item); // remove dashboard item binding
     delete item.component;
     $items = $items.filter( i => i.id !== item.id);
@@ -94,11 +105,10 @@
   }
 
   const clearItems = () => {
-    
-    $items = $items.map( item => remove(item) );
-  
-    console.log("DEBUG:dashboard:clearItems:");  
-    console.log($items);
+    console.log("DEBUG:dashboard:clearItems:")
+    // items.update( items => items.map( item => remove(item) ) );
+    items.update( items => items.slice(items.length) );
+    // items.set([]);
   }
 
   const saveEnvironment = e => {
@@ -116,13 +126,13 @@
 		
     clearItems();
     
-		if (e.storage=='local') {
+		if (e.storage === 'local') {
 			let json = localStorage.getItem(`env--${e.name}`);
-			if (json) {
-        let newItems = JSON.parse(json).map( item => hydrateJSONcomponent(item) );
-        // console.log('DEBUG:loadEnvironment: Items (Hydrated from local storage):', newItems);
-        // clearItems();
-				$items = newItems;
+			if (json) { 
+        let envItems = JSON.parse(json).map( item => hydrateJSONcomponent(item) );
+        items.set( envItems ); 
+        items.update(items => gridHelp.resizeItems(items, 4, 100)); // Align items
+        // items.update( items => items.concat(envItems));
 			}
 		}else{
 			github.get(`/gists/${e.name}`)
@@ -141,8 +151,8 @@
     messaging.subscribe('add-editor', e => addItem(e.type, e.id, e.data) );
     messaging.subscribe('add-debugger', e => addItem(e.type, e.id) );
     messaging.subscribe('add-analyser', e => addItem(e.type, e.id) );
-		messaging.subscribe("env-save", e => saveEnvironment(e) );
-		messaging.subscribe("env-load", e => loadEnvironment(e) );
+		messaging.subscribe('env-save', e => saveEnvironment(e) );
+		messaging.subscribe('env-load', e => loadEnvironment(e) );
   });
 
 </script>
@@ -234,6 +244,7 @@
         bind:items={$items}
         let:item
         on:adjust={onAdjust}
+        on:mount={onChildMount}
         >
 
     <span class='move' >+</span>
