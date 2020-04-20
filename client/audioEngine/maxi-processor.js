@@ -87,7 +87,6 @@ class pvshift {
           this.phases.set(i,0);
         }
       }
-      // console.log(mags.get(10));
     }
     sig = this.ifft.process(this.mags, this.phases, Maximilian.maxiIFFTModes.SPECTRUM);
     return sig;

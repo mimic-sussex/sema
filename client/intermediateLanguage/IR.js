@@ -148,8 +148,20 @@ var jsFuncMap = {
 		loop:  (o, p) => `Maximilian.maxiMap.linexp(${p[0].loop}, ${p[1].loop}, ${p[2].loop}), ${p[3].loop}, ${p[4].loop})`
 	},
 	dist: {
-		setup: (o, p) => `${o} = new Maximilian.maxiDistortion()`,
+		setup: (o, p) => `${o} = new Maximilian.maxiNonlinearity()`,
 		loop:  (o, p) => `${o}.atanDist(${p[0].loop},${p[1].loop})`
+	},
+	softclip: {
+		setup: (o, p) => `${o} = new Maximilian.maxiNonlinearity()`,
+		loop:  (o, p) => `${o}.softclip(${p[0].loop})`
+	},
+	hardclip: {
+		setup: (o, p) => `${o} = new Maximilian.maxiNonlinearity()`,
+		loop:  (o, p) => `${o}.hardclip(${p[0].loop})`
+	},
+	asymclip: {
+		setup: (o, p) => `${o} = new Maximilian.maxiNonlinearity()`,
+		loop:  (o, p) => `${o}.asymclip(${p[0].loop},${p[1].loop},${p[2].loop})`
 	},
 	flange: {
 		setup: (o, p) => `${o} = new Maximilian.maxiFlanger()`,

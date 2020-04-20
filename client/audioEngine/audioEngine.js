@@ -264,7 +264,7 @@ class AudioEngine {
 		if (this.audioContext === undefined) {
 			this.audioContext = new AudioContext({
 				// create audio context with latency optimally configured for playback
-				latencyHint: "playback",
+        latencyHint: "playback",
 				sample: 44100
 			});
 
