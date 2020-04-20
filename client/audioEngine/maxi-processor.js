@@ -7,10 +7,52 @@ import Open303 from './open303.wasmmodule.js';
 
 function vectorDoubleToF64Array(x) {
   let ar = new Float64Array(x.size());
-  for(let i=0; i < ar.length; i++) {
+  for (let i = 0; i < ar.length; i++) {
     ar[i] = x.get(i);
   }
   return ar;
+}
+
+class triOsc {
+  constructor() {
+    this.phase = 0;
+  }
+
+  triangle(frequency) {
+    let output = 0;
+    if (this.phase >= 1.0) this.phase -= 1.0;
+    this.phase += (1. / (44100 / (frequency)));
+    if (this.phase <= 0.5) {
+      output = (this.phase - 0.25) * 4;
+    } else {
+      output = ((1.0 - this.phase) - 0.25) * 4;
+    }
+    return (output);
+  }
+
+}
+
+class LoadTester {
+  constructor(load, condition) {
+    this.oscs = [];
+    for (let i = 0; i < load; i++) {
+      if (condition == 0) {
+        this.oscs[i] = new Maximilian.maxiOsc();
+      }else {
+        this.oscs[i] = new triOsc();
+      }
+    }
+    console.log(this.oscs);
+  }
+
+  play(frequency) {
+    let output = 0;
+    for (let i = 0; i < this.oscs.length; i++) {
+      output += this.oscs[i].triangle(frequency);
+    }
+    output /= this.oscs.length;
+    return output;
+  }
 }
 
 class PostMsgOutputTransducer {
@@ -21,7 +63,7 @@ class PostMsgOutputTransducer {
       this.sendPeriod = 1.0 / sendFrequency * sampleRate;
     this.sendCounter = this.sendPeriod;
     this.transducerType = transducerType;
-    this.port=port;
+    this.port = port;
   }
 
   send(data, channelID) {
@@ -64,13 +106,13 @@ class PostMsgInputTransducer {
 class pvshift {
   constructor() {
     this.fft = new Maximilian.maxiFFT();
-		this.fft.setup(1024,256,1024);
-		this.ifft = new Maximilian.maxiIFFT();
-		this.ifft.setup(1024,256,1024);
-		this.mags = new Maximilian.VectorFloat();
-		this.phases = new Maximilian.VectorFloat();
-		this.mags.resize(512,0);
-		this.phases.resize(512,0);
+    this.fft.setup(1024, 256, 1024);
+    this.ifft = new Maximilian.maxiIFFT();
+    this.ifft.setup(1024, 256, 1024);
+    this.mags = new Maximilian.VectorFloat();
+    this.phases = new Maximilian.VectorFloat();
+    this.mags.resize(512, 0);
+    this.phases.resize(512, 0);
   }
 
   play(sig, shift) {
@@ -78,13 +120,13 @@ class pvshift {
       this.mags = this.fft.getMagnitudes();
       this.phases = this.fft.getPhases();
       //shift bins up
-      for(let i=511; i > 0; i--) {
+      for (let i = 511; i > 0; i--) {
         if (i > shift) {
-          this.mags.set(i, this.mags.get(i-shift));
-          this.phases.set(i, this.phases.get(i-shift));
-        }else{
-          this.mags.set(i,0);
-          this.phases.set(i,0);
+          this.mags.set(i, this.mags.get(i - shift));
+          this.phases.set(i, this.phases.get(i - shift));
+        } else {
+          this.mags.set(i, 0);
+          this.phases.set(i, 0);
         }
       }
     }
@@ -107,16 +149,17 @@ class MaxiProcessor extends AudioWorkletProcessor {
    */
   static get parameterDescriptors() { // TODO: parameters are static? Can we not change this map with a setter?
     return [{
-      name: 'gainSyn',
-      defaultValue: 2.5
-    }, {
-      name: 'gainSeq',
-      defaultValue: 6.5
-    },
-    {
-      name: 'numClockPeers',
-      defaultValue: 1
-    }];
+        name: 'gainSyn',
+        defaultValue: 2.5
+      }, {
+        name: 'gainSeq',
+        defaultValue: 6.5
+      },
+      {
+        name: 'numClockPeers',
+        defaultValue: 1
+      }
+    ];
   }
 
 
@@ -158,11 +201,17 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
     this.initialised = false;
 
-    this.newq = () => {return {"vars":{}}};
-    this.newmem = () => {return new Float64Array(512)};
-    this._q = [this.newq(),this.newq()];
-    this._mems =[this.newmem(), this.newmem()];
-    this._cleanup = [0,0];
+    this.newq = () => {
+      return {
+        "vars": {}
+      }
+    };
+    this.newmem = () => {
+      return new Float64Array(512)
+    };
+    this._q = [this.newq(), this.newq()];
+    this._mems = [this.newmem(), this.newmem()];
+    this._cleanup = [0, 0];
 
     // this.setvar = (q, name, val) => {
     //   q.vars[name] = val;
@@ -192,36 +241,36 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
     this.incoming = {};
 
-    this.sampleBuffers={};
+    this.sampleBuffers = {};
     this.sampleVectorBuffers = {};
     this.sampleVectorBuffers['defaultEmptyBuffer'] = new Float32Array(1);
 
     this.transducers = [];
 
     this.matchTransducers = (ttype, channel) => {
-        return this.transducers.filter(x=>{
-          let testEqChannels = (chID, channel) => {
-            let eq = true;
-            let keys = Object.keys(channel);
-            if (keys.length==0) {
-              eq = channel == chID;
-            }else{
-              for(let v in keys) {
-                if(chID[v] != undefined) {
-                  if (chID[v] != channel[v]) {
-                    eq = false;
-                    break;
-                  }
-                }else{
+      return this.transducers.filter(x => {
+        let testEqChannels = (chID, channel) => {
+          let eq = true;
+          let keys = Object.keys(channel);
+          if (keys.length == 0) {
+            eq = channel == chID;
+          } else {
+            for (let v in keys) {
+              if (chID[v] != undefined) {
+                if (chID[v] != channel[v]) {
                   eq = false;
                   break;
                 }
+              } else {
+                eq = false;
+                break;
               }
             }
-            return eq;
           }
-          return x.transducerType==ttype && testEqChannels(x.channelID,channel);
-        });
+          return eq;
+        }
+        return x.transducerType == ttype && testEqChannels(x.channelID, channel);
+      });
     }
 
     this.registerInputTransducer = (ttype, channelID) => {
@@ -236,16 +285,16 @@ class MaxiProcessor extends AudioWorkletProcessor {
     };
 
     this.getSampleBuffer = (bufferName) => {
-        let sample = this.sampleVectorBuffers['defaultEmptyBuffer']; //defailt - silence
-        if (bufferName in this.sampleVectorBuffers) {
-          sample = this.sampleVectorBuffers[bufferName];
-        }else{
-          console.warn(`${bufferName} doesn't exist yet`);
-        }
-        return sample;
+      let sample = this.sampleVectorBuffers['defaultEmptyBuffer']; //defailt - silence
+      if (bufferName in this.sampleVectorBuffers) {
+        sample = this.sampleVectorBuffers[bufferName];
+      } else {
+        console.warn(`${bufferName} doesn't exist yet`);
+      }
+      return sample;
     };
 
-    this.netClock = new Maximilian.maxiAsyncKuramotoOscillator(3);  //TODO: this should be the same as numpeers
+    this.netClock = new Maximilian.maxiAsyncKuramotoOscillator(3); //TODO: this should be the same as numpeers
     this.kuraPhase = -1;
     this.kuraPhaseIdx = 1;
 
@@ -253,7 +302,11 @@ class MaxiProcessor extends AudioWorkletProcessor {
       this.sampleVectorBuffers[name] = this.translateFloat32ArrayToBuffer(buf);
     };
 
-    this.codeSwapStates = {QUEUD:0, XFADING:1, NONE:2};
+    this.codeSwapStates = {
+      QUEUD: 0,
+      XFADING: 1,
+      NONE: 2
+    };
     this.codeSwapState = this.codeSwapStates.NONE;
 
     this.port.onmessage = event => { // message port async handler
@@ -268,7 +321,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
       } else if ('func' in event.data && 'data' == event.data.func) {
         //this is from the ML window, map it on to any listening transducers
         let targetTransducers = this.matchTransducers('ML', event.data.ch);
-        for(let idx in targetTransducers) {
+        for (let idx in targetTransducers) {
           targetTransducers[idx].setValue(event.data.val);
         }
       } else if ('peermsg' in event.data) {
@@ -276,17 +329,17 @@ class MaxiProcessor extends AudioWorkletProcessor {
         //this is from peer streaming, map it on to any listening transducers
         let targetTransducers = this.matchTransducers('NET', [event.data.src, event.data.ch]);
         // console.log(targetTransducers.length);
-        for(let idx in targetTransducers) {
+        for (let idx in targetTransducers) {
           targetTransducers[idx].setValue(event.data.val);
         }
       } else if ('sample' in event.data) { //from a worker
         // console.log("sample received");
         // console.log(event.data);
-        let sampleKey = event.data.sample.substr(0,event.data.sample.length - 4)
+        let sampleKey = event.data.sample.substr(0, event.data.sample.length - 4)
         // this.sampleBuffers[sampleKey] = event.data.buffer;
         addSampleBuffer(sampleKey, event.data.buffer);
         // this.sampleVectorBuffers[sampleKey] = this.translateFloat32ArrayToBuffer(event.data.buffer);
-      }else if ('phase' in event.data) {
+      } else if ('phase' in event.data) {
         // console.log(this.kuraPhaseIdx);
         // console.log(event);
         this.netClock.setPhase(event.data.phase, event.data.i);
@@ -344,32 +397,35 @@ class MaxiProcessor extends AudioWorkletProcessor {
     this.port.postMessage("giveMeSomeSamples");
 
     this.clockFreq = 0.7 / 4;
-    this.clockPhaseSharingInterval=0; //counter for emiting clock phase over the network
+    this.clockPhaseSharingInterval = 0; //counter for emiting clock phase over the network
     this.barFrequency = 4;
-    this.setBarFrequency = (freq) => {this.barFrequency = freq; return 0;};
-
-//@CLP
-    this.clockPhase = (multiples, phase) => {
-        return (((this.clockPhasor * multiples) % 1.0) + phase) % 1.0;
+    this.setBarFrequency = (freq) => {
+      this.barFrequency = freq;
+      return 0;
     };
 
-//@CLT
+    //@CLP
+    this.clockPhase = (multiples, phase) => {
+      return (((this.clockPhasor * multiples) % 1.0) + phase) % 1.0;
+    };
+
+    //@CLT
     this.clockTrig = (multiples, phase) => {
-        return (this.clockPhase(multiples, phase) - (1.0/this.sampleRate * multiples)) <= 0 ? 1 : 0;
+      return (this.clockPhase(multiples, phase) - (1.0 / this.sampleRate * multiples)) <= 0 ? 1 : 0;
     };
     this.setClockFreq = (freq) => {
       this.clockFreq = freq;
       return 0;
     };
 
-    this.bitTime = Maximilian.maxiBits.sig(0);  //this needs to be decoupled from the audio engine? or not... maybe a 'permenant block' with each grammar?
+    this.bitTime = Maximilian.maxiBits.sig(0); //this needs to be decoupled from the audio engine? or not... maybe a 'permenant block' with each grammar?
     this.dt = 0;
 
-    this.createMLOutputTransducer= (sendFrequency) => {
+    this.createMLOutputTransducer = (sendFrequency) => {
       return new PostMsgOutputTransducer(this.port, this.sampleRate, sendFrequency, 'ML');
     }
 
-    this.createNetOutputTransducer= (sendFrequency) => {
+    this.createNetOutputTransducer = (sendFrequency) => {
       return new PostMsgOutputTransducer(this.port, this.sampleRate, sendFrequency, 'NET');
     }
 
@@ -419,17 +475,20 @@ class MaxiProcessor extends AudioWorkletProcessor {
         //share the clock if networked
         // if (this.clockPhaseSharingInterval++ == 2000) {
         if (this.netClock.size() > 1 && this.clockPhaseSharingInterval++ == 2000) {
-          this.clockPhaseSharingInterval=0;
+          this.clockPhaseSharingInterval = 0;
           let phase = this.netClock.getPhase(0);
           // console.log(`DEBUG:MaxiProcessor:phase: ${phase}`);
-          this.port.postMessage({ phase: phase, c: "phase" });
+          this.port.postMessage({
+            phase: phase,
+            c: "phase"
+          });
         }
 
-        this.bitclock = Maximilian.maxiBits.sig(Math.floor(this.clockPhase(1,0) * 1023.999999999));
+        this.bitclock = Maximilian.maxiBits.sig(Math.floor(this.clockPhase(1, 0) * 1023.999999999));
 
-        let w=0;
+        let w = 0;
         //new code waiting?
-        let barTrig = this.clockTrig(this.barFrequency,0);
+        let barTrig = this.clockTrig(this.barFrequency, 0);
         if (this.codeSwapState == this.codeSwapStates.QUEUD) {
           //fade in when a new bar happens
           if (barTrig) {
@@ -449,7 +508,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
             this.codeSwapState = this.codeSwapStates.NONE;
             console.log("xfade complete", xf);
           }
-        }else {
+        } else {
           //no xfading - play as normal
           w = this.signals[this.currentSignalFunction](this._q[this.currentSignalFunction], inputs[0][0][i], this._mems[this.currentSignalFunction]);
         }
@@ -467,7 +526,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
       if (this.xfadeControl.isLineComplete() && this._cleanup[oldIdx] == 0) {
         this.signals[oldIdx] = this.silence;
         //clean up object heap - we must do this because emscripten objects need manual memory management
-        for(let obj in this._q[oldIdx]) {
+        for (let obj in this._q[oldIdx]) {
           //if there a delete() function
           if (this._q[oldIdx][obj].delete != undefined) {
             //delete the emscripten object manually

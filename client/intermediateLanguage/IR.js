@@ -467,6 +467,10 @@ var jsFuncMap = {
 	const: {
 		setup: (o, p) => ``,
 		loop:  (o, p) => `${p[0].loop}`
+	},
+	loadtester: {
+		setup: (o, p) => `${o} = new LoadTester(${p[0].loop},${p[1].loop});`,
+		loop:  (o, p) => `${o}.play(${p[2].loop})`
 	}
 
 };
