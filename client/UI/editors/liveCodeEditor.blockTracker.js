@@ -90,13 +90,26 @@ class blockTracker {
       //same handler for deleting and cutting
       case "+delete":
       case "cut":
-        if (change.from.line = change.to.line) {
+        if (change.from.line == change.to.line) {
           let lineToTest = this.editor.getLine(change.from.line);
           console.log(lineToTest);
           testLineChange(change.from.line, lineToTest);
         } else {
+          //TODO this section needs more work to cases where change.from/to.ch>0 and for joining of separators
           console.log("Source line: " + this.editor.getLine(change.from.line));
           console.log("Removed: " + change.removed);
+          let lastLineIndex = change.from.line + change.text.length - 1;
+          let lastLine = this.editor.getLine(lastLineIndex);
+          console.log("Lastline", lastLine);
+          //test the first line
+          let lineToTest = this.editor.getLine(change.from.line);
+          for(let i_line=0; i_line < change.removed.length; i_line++) {
+            console.log("testing multi line " + i_line + ": " + change.removed[i_line]);
+            testRemoveLine(change.from.line + i_line, change.removed[i_line], true);
+          }
+          removeLines(change.from.line, change.removed.length-1);
+
+
           // //check the first line (in case of partial removal)
           // let startIdx = 0;
           // let endIdx = change.removed.length;
