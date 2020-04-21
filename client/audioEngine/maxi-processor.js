@@ -32,17 +32,50 @@ class triOsc {
 
 }
 
+function maxiCheerpOsc(){
+	this.d0=-0.;
+	;
+	this.d=[this];
+	__ZN13maxiCheerpOscC1Ev(this);
+}
+maxiCheerpOsc.prototype.triangle=function (a0){
+	return __ZN13maxiCheerpOsc8triangleEd(this,a0);
+};
+//var aSlot=null;var oSlot=0;var nullArray=[null];var nullObj={d:nullArray,o:0};
+function __ZN13maxiCheerpOscC1Ev(Lthis){
+	Lthis.d0=0;
+	return;
+}
+function __ZN13maxiCheerpOsc8triangleEd(Lthis,Lfrequency){
+	var tmp0=-0.;
+	tmp0=+Lthis.d0;
+	if(!(tmp0<1)){
+		tmp0=tmp0+-1;
+		Lthis.d0=tmp0;
+	}
+	tmp0=tmp0+1/(44100/Lfrequency);
+	Lthis.d0=tmp0;
+	if(!(tmp0>.5)){
+		return (tmp0+-0.25)*4;
+	}
+	tmp0=1-tmp0;
+	return (tmp0+-0.25)*4;
+}
+
+
 class LoadTester {
   constructor(load, condition) {
     this.oscs = [];
     for (let i = 0; i < load; i++) {
       if (condition == 0) {
         this.oscs[i] = new Maximilian.maxiOsc();
-      }else {
+      }else if (condition == 1){
         this.oscs[i] = new triOsc();
+      }else{
+        this.oscs[i] = new maxiCheerpOsc();
       }
     }
-    console.log(this.oscs);
+    console.log(Maximilian);
   }
 
   play(frequency) {
