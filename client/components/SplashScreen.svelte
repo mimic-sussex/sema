@@ -2,6 +2,7 @@
 
   import { splashScreenClicked } from '../store.js';
   import src from '../../assets/img/sema.svg';
+  import SignIn from './signin/SignIn.svelte'
 
   let handleClick = () => {
     $splashScreenClicked = "hidden";
@@ -76,6 +77,7 @@
       <img {src} class="sema-logo" alt="sema logo image">
       <span class="sema-type">Sema</span>
       <br>
+      <SignIn />
       <br>
     </div>
   </button>

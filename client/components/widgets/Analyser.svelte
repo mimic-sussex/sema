@@ -41,6 +41,7 @@
 	let frame;
   let isRendering = true; 
 
+
   function randomBytes() {
     for (let i = 0; i < frequencyBinCount; i++) {
       frequencyDataArray[i] = Math.floor(Math.random() * canvas.offsetWidth);

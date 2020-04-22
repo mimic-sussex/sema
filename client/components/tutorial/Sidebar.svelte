@@ -254,7 +254,6 @@
 
 
 <div class="sidebar">
-  {#if $tutorialsActive }
     <div class="tutorial-navigator">
      <!-- on:click={ () => dispatchNav('previousTurt') } -->
       <button class="button-dark"> 
@@ -290,97 +289,5 @@
       </select>    
     </div> -->
 
-  {:else if $playgroundActive }
-  <div class="layout-combobox-container">
-    <!-- Live Code Combobox Selector -->
-    <div class="controls">
-      <!-- <div>
-        <span class="whiteText">Add Live Code </span>
-      </div> -->
-      <select class="combobox-dark" 
-              bind:this={$selectedModel} 
-              bind:value={selectedLiveCodeOption} 
-              on:change={() => dispatchAdd('live', selectedLiveCodeOption)} >
-        {#each sidebarLiveCodeOptions as liveCodeOption}
-          <option value={liveCodeOption}>
-            {liveCodeOption.text}
-          </option>
-        {/each}
-      </select>    
-    </div>
 
-    <!-- Grammar Combobox Selector -->
-    <div class="controls">
-      <select class="combobox-dark" 
-              bind:value={selectedGrammarOption} 
-              on:change={ () => dispatchAdd('grammar', selectedGrammarOption) } >
-        {#each sidebarGrammarOptions as grammarOption}
-          <option value={grammarOption}>
-            { grammarOption.text }
-          </option>
-        {/each}
-      </select>    
-    </div>
-
-    <!-- Model Combobox Selector -->
-    <div class="controls">
-      <!-- <select class="combobox" bind:value={$selectedTutorial} > -->
-      <select class="combobox-dark"
-              bind:value={selectedModelOption} 
-              on:change={ () => dispatchAdd('model', selectedModelOption) } >
-        {#each sidebarModelOptions as modelOption}
-          <option value={modelOption}>
-            { modelOption.text }
-          </option>
-        {/each}
-      </select>    
-    </div>
-
-    <div>
-      <button class="button-dark controls"
-              on:click={ () => dispatchAdd('grammarCompileOutput') }> 
-        + Grammar Compile Out
-      </button>
-    </div>
-
-    <div>
-      <button class="button-dark controls"
-              on:click={ () => dispatchAdd('liveCodeParseOutput') }> 
-        + Live Code Parse Out
-      </button>
-    </div>
-
-    <div>
-      <button class="button-dark controls"
-              on:click={ () => dispatchAdd('analyser') }> 
-        + Analyser
-      </button>
-    </div>
-
-    <div class="controls">
-
-      <div>
-        <label class="checkbox-container">Line Numbers
-          <input type="checkbox" checked="checked" class="checkbox-input">
-          <span  class="checkbox-span"></span>
-        </label>
-      </div>
-
-      <div class="">
-        <!-- <div>
-          <span class="whiteText">Select Theme</span>
-        </div> -->
-        <!-- <select class="combobox" bind:value={$selectedTutorial} > -->
-        <select class="combobox-dark" >
-          {#each editorThemes as modelOption}
-            <option value={ modelOption }>
-              {modelOption.text}
-            </option>
-          {/each}
-        </select>    
-      </div>
-
-    </div>
-  </div>
-  {/if}
 </div>

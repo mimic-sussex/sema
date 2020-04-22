@@ -4,14 +4,14 @@ import { writable, readable, get } from 'svelte/store';
 
 import gridHelp from "svelte-grid/build/helper/index.mjs";
 
-import ModelEditor          from "../UI/editors/ModelEditor.svelte";
-import GrammarEditor        from "../UI/editors/GrammarEditor.svelte";
-import LiveCodeEditor       from "../UI/editors/LiveCodeEditor.svelte";
-import LiveCodeParseOutput  from "../UI/widgets/LiveCodeParseOutput.svelte";
-import GrammarCompileOutput from "../UI/widgets/GrammarCompileOutput.svelte";
-import Analyser             from "../UI/widgets/Analyser.svelte";
-import Spectrogram          from "../UI/widgets/Spectrogram.svelte";
-import StoreDebugger        from "../UI/widgets/StoreDebugger.svelte";
+import ModelEditor          from "../components/editors/ModelEditor.svelte";
+import GrammarEditor        from "../components/editors/GrammarEditor.svelte";
+import LiveCodeEditor       from "../components/editors/LiveCodeEditor.svelte";
+import LiveCodeParseOutput  from "../components/widgets/LiveCodeParseOutput.svelte";
+import GrammarCompileOutput from "../components/widgets/GrammarCompileOutput.svelte";
+import Analyser             from "../components/widgets/Analyser.svelte";
+import Spectrogram          from "../components/widgets/Spectrogram.svelte";
+import StoreDebugger        from "../components/widgets/StoreDebugger.svelte";
 
 import default_grammar from "../../assets/language/defaultGrammar.ne";
 import gabber_grammar  from "../../assets/language/gabber.ne";

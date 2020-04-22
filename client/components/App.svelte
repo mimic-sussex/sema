@@ -1,9 +1,6 @@
 <script>
 	import { onDestroy } from 'svelte';
 
-  import Header from './Header.svelte';
-	import Content from './Content.svelte';
-
   import SplashScreen from './SplashScreen.svelte';
   import { splashScreenClicked } from '../store.js';
 
@@ -13,7 +10,9 @@
 
 	import CanvasOverlay from './CanvasOverlay.svelte';
 
-  // createAudioEngine();
+  import { Router } from "@sveltech/routify";
+  import { routes } from "@sveltech/routify/tmp/routes";
+
 
   let audioEngine = new AudioEngine();
 
@@ -28,15 +27,18 @@
   #app {
   	/* height: 100%; */
   	height: 100vh;
-  	background: rgb(0, 0, 0);
+  	background: linear-gradient(150deg, rgba(0,18,1,1) 0%, rgba(7,5,17,1) 33%, rgba(16,12,12,1) 67%, rgba(18,16,16,1) 100%);
     overflow-y: hidden; /* hide vertical */
   }
 </style>
 
-<div id="app">
+<Router {routes} />
+
+
+<!-- <div id="app">
   <Header></Header>
   <Content></Content>
   <SplashScreen></SplashScreen>
 	<CanvasOverlay></CanvasOverlay>
 
-</div>
+</div> -->
