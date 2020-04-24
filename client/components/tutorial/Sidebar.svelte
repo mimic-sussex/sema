@@ -1,17 +1,4 @@
 <script>
-  import { 
-    tutorialsActive,
-    playgroundActive,
-    sidebarLiveCodeOptions,
-    sidebarGrammarOptions,
-    sidebarModelOptions,
-    selectedModel,
-    selectedLayout, 
-    layoutOptions, 
-     
-    
-    editorThemes
-  }  from '../../store.js';
 
   import {
     tutorialOptions,
@@ -37,51 +24,6 @@
 		{ id: 3, text: `IXI` },
 		{ id: 4, text: `Maya` },
 	];
-
-  // let selectModel;
-  let selectedLiveCodeOption;
-  let selectedGrammarOption;
-  let selectedModelOption;
-
-  
-
-	function sendLanguageSelect() {
-    console.log("selectedLanguage: ", selectedLanguage);
-    dispatch('message', {
-			language: selectedLanguage.id
-		});
-	}
-
-  function dispatchAdd(type, selected){
-    // console.log(`DEBUG:Sidebar:dispatchAdd: /add/${type}/${selected.id}`);
-    // console.log(selected.content);
-
-    switch (type) {
-      case 'live':
-        messaging.publish("add-editor", { id: id(), type: 'liveCodeEditor', data: selected.content });
-        selectedLiveCodeOption = sidebarLiveCodeOptions[0];        
-        break;
-      case 'grammar':
-        messaging.publish("add-editor", { id: id(), type: 'grammarEditor', data: selected.content });
-        selectedGrammarOption = sidebarGrammarOptions[0];        
-        break;
-      case 'model':
-        messaging.publish("add-editor", { id: id(), type: 'modelEditor', data: selected.content });
-        selectedModelOption = sidebarModelOptions[0];        
-        break;
-      case 'liveCodeParseOutput':
-        messaging.publish("add-debugger", { id: id(), type: 'liveCodeParseOutput'});
-        break;
-      case 'grammarCompileOutput':
-        messaging.publish("add-debugger", { id: id(), type: 'grammarCompileOutput'});
-        break;
-      case 'analyser':
-        messaging.publish("add-analyser", { id: id(), type: 'analyser' });
-        break;
-      default:
-        break;
-    }
-  }
 
 
 </script>
@@ -276,18 +218,5 @@
 
     <Markdown>
     </Markdown>
-    <!-- <div class="language-combobox-container controls">
-      <div>
-        <span class="whiteText">Language</span>
-      </div>
-      <select class="combobox" bind:value={selectedLanguage} on:change="{ () => sendLanguageSelect() }">
-        {#each languageOptions as languageOption}
-          <option value={languageOption}>
-            {languageOption.text}
-          </option>
-        {/each}
-      </select>    
-    </div> -->
-
 
 </div>
