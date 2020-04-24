@@ -11,17 +11,17 @@
      
     
     editorThemes
-  }  from '../store.js';
+  }  from '../../store.js';
 
   import {
     tutorialOptions,
     selectedTutorial
-  } from '../stores/tutorial.js'
+  } from '../../stores/tutorial.js'
 
 
-  import { id } from '../utils/utils.js';
+  import { id } from '../../utils/utils.js';
 
-  import { PubSub } from "../messaging/pubSub.js";
+  import { PubSub } from "../../messaging/pubSub.js";
   const messaging = new PubSub();
 
   import Markdown from "./Markdown.svelte";

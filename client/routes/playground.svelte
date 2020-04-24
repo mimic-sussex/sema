@@ -5,6 +5,10 @@
 
 </script>
 
+<svelte:head>
+	<title>Sema – Playground</title>
+</svelte:head>
+
 <div class="container scrollable">
   <div class="sidebar-container">
     <Sidebar />

@@ -26,7 +26,7 @@ const firestore = firebase.firestore(app); // Initialize firestore
 const auth = firebase.auth(app); // Initialize firebase auth
 // const loggedIn$ = authState(auth).pipe(filter((user) => !!user)); // Observable only return when user is logged in.
 // collectionData, loggedIn$
-export { app, auth, firestore, };
+export { app, auth, firestore };
 
 export default firebase;
 

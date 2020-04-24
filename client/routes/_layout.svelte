@@ -1,6 +1,6 @@
 <script>
-	import Nav from '../components//Nav.svelte';
-	import UserObserver from '../components/signin/UserObserver.svelte';
+	// import Nav from '../components//Nav.svelte';
+	import UserObserver from '../components/user/UserObserver.svelte';
 
 	export let segment;
 </script>
@@ -74,9 +74,13 @@
 
 </style>
 
-<!-- <UserObserver /> -->
+<svelte:head>
+  <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.5.0/firebase-ui-auth.css" />
+	<title>Sema</title>
+</svelte:head>
 
-<!-- <Nav { segment }/> -->
+<UserObserver />
+
 
 <div>
   <h1>sema</h1>

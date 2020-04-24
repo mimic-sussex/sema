@@ -5216,6 +5216,20 @@ run-queue@^1.0.0, run-queue@^1.0.3:
   dependencies:
     aproba "^1.1.1"
 
+rxfire@^3.12.2:
+  version "3.12.2"
+  resolved "https://registry.yarnpkg.com/rxfire/-/rxfire-3.12.2.tgz#dee6722fb7bd89b9be8c7c8d16891faeaf7c6fe8"
+  integrity sha512-SVxyiZWOVxlRDMS7lMHEaALJ4wTROF2O6lzN4El5HT+VqksBbtZiGJCMdLLp2eMhKNDVO/DVJAQ4G06oWz+U1g==
+  dependencies:
+    tslib "1.11.1"
+
+rxjs@^6.5.5:
+  version "6.5.5"
+  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-6.5.5.tgz#c5c884e3094c8cfee31bf27eb87e54ccfc87f9ec"
+  integrity sha512-WfQI+1gohdf0Dai/Bbmk5L5ItH5tYqm3ki2c5GdWhKjalzjg93N3avFjVStyZZz+A2Em+ZxKH5bNghw9UeylGQ==
+  dependencies:
+    tslib "^1.9.0"
+
 safe-buffer@5.1.2, safe-buffer@~5.1.0, safe-buffer@~5.1.1:
   version "5.1.2"
   resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.1.2.tgz#991ec69d296e0313747d59bdfd2b745c35f8828d"
