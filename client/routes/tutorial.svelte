@@ -1,16 +1,19 @@
 <script>
-
   import Sidebar from '../components/tutorial/Sidebar.svelte';
   import Dashboard from '../components/layouts/Dashboard.svelte';
-
+  import { items } from "../stores/tutorial.js"
 </script>
+
+<svelte:head>
+	<title>Sema – Tutorial</title>
+</svelte:head>
 
 <div class="container scrollable">
   <div class="sidebar-container">
     <Sidebar />
   </div>
   <div class="dashboard-container">
-    <Dashboard />
+    <Dashboard {items} />
   </div>
 </div>
 

@@ -1,5 +1,5 @@
 <script>
-import { items } from '../../stores/playgroundItems.js'
+import { items } from '../../stores/playground.js'
 
 // export let items;
 

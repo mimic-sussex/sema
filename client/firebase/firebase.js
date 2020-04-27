@@ -15,7 +15,7 @@ var firebaseConfig = {
 	storageBucket: "sema-4c354.appspot.com",
 	messagingSenderId: "217754460414",
 	appId: "1:217754460414:web:591194d7611f4319fa45af",
-	measurementId: "G-B8Q59X8D6Y",
+	measurementId: "G-B8Q59X8D6Y"
 };
 
 // Initialize Firebase

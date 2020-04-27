@@ -14,8 +14,9 @@
   }  from '../../store.js';
 
   import {
-    tutorialOptions,
-    selectedTutorial
+    tutorials,
+    currentTutorial,
+    items
   } from '../../stores/tutorial.js'
 
 
@@ -28,15 +29,6 @@
 
 	import { createEventDispatcher } from 'svelte';
 	const dispatch = createEventDispatcher();
-
-  let selectedLanguage = 1;
-
-  let languageOptions = [
-		{ id: 1, text: `Default` },
-		{ id: 2, text: `Bits` },
-		{ id: 3, text: `IXI` },
-		{ id: 4, text: `Maya` },
-	];
 
   // let selectModel;
   let selectedLiveCodeOption;
@@ -110,33 +102,32 @@
     margin-right: 10px; 
   }
 
-  .checkbox-span {
+  /* .checkbox-span {
     color: whitesmoke;
     margin-left: 20px; 
-  }
-  .checkbox-input {
+  } */
+  /* .checkbox-input {
     margin-left: 5px; 
-  }
+  } */
 
   /* The checkbox container */
-  .checkbox-container {
+  /* .checkbox-container {
     display: block;
     position: relative;
     color: whitesmoke;
-    /* padding-left: 25px; */
     margin-bottom: 10px;
     cursor: pointer;
-    /* font-size: 22px; */
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
     font-size: 12px;
-  }
-
+  } */
+  
+  /* 
   .layout-combobox-container{
     margin-top: 5px;
-  }
+  } */
 
   .combobox-dark {
     display: block;
@@ -260,8 +251,8 @@
         ◄
       </button>    
 
-      <select class="combobox-dark" bind:value={$selectedTutorial} >
-        {#each tutorialOptions as tutorialOption}
+      <select class="combobox-dark" bind:value={$currentTutorial} >
+        {#each tutorials as tutorialOption}
           <option value={tutorialOption}>
             {tutorialOption.text}
           </option>

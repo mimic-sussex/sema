@@ -2,7 +2,7 @@
 
   import Sidebar from '../components/playground/Sidebar.svelte';
   import Dashboard from '../components/layouts/Dashboard.svelte';
-
+  import { items } from "../stores/playground.js"
 </script>
 
 <svelte:head>
@@ -14,7 +14,7 @@
     <Sidebar />
   </div>
   <div class="dashboard-container">
-    <Dashboard />
+    <Dashboard {items} />
   </div>
 </div>
 

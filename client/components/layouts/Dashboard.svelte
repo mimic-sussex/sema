@@ -12,13 +12,16 @@
 	import { copyToPasteBuffer } from '../../utils/pasteBuffer.js';
 
   import {
-    items,
+    // items,
     createNewItem,
     hydrateJSONcomponent
-  } from "../../stores/playgroundItems.js"
+  } from "../../stores/playground.js"
 
 	const GitHubBase = require('github-base');
 	const github = new GitHubBase({ /* options */ });
+
+
+  export let items;
 
   const messaging = new PubSub();
 

@@ -1,6 +1,7 @@
 import { writable, readable, get } from 'svelte/store';
 // import { writable as internal, get } from "svelte/store";
 
+import { id } from "../utils/utils";
 
 import gridHelp from "svelte-grid/build/helper/index.mjs";
 
@@ -10,7 +11,6 @@ import LiveCodeEditor       from "../components/editors/LiveCodeEditor.svelte";
 import LiveCodeParseOutput  from "../components/widgets/LiveCodeParseOutput.svelte";
 import GrammarCompileOutput from "../components/widgets/GrammarCompileOutput.svelte";
 import Analyser             from "../components/widgets/Analyser.svelte";
-import Spectrogram          from "../components/widgets/Spectrogram.svelte";
 import StoreDebugger        from "../components/widgets/StoreDebugger.svelte";
 
 import default_grammar from "../../assets/language/defaultGrammar.ne";
@@ -29,11 +29,11 @@ import lstm_txt_gen_code_example          from "../machineLearning/tfjs/rnn/lstm
 import music_rnn_example                  from "../machineLearning/magenta/music-rnn.tf";
 
 
-const id = () =>
-	"_" +
-	Math.random()
-		.toString(36)
-		.substr(2, 9);
+// const id = () =>
+// 	"_" +
+// 	Math.random()
+// 		.toString(36)
+// 		.substr(2, 9);
 
 const originalItems = [
 	{
@@ -135,20 +135,6 @@ const originalItems = [
 			data: ""
 		}
 	}
-
-	// {
-	// 	...gridHelp.item({ x: 7, y: 8, w: 3, h: 4, id: id() }),
-	// 	...{
-	// 		name: "hello world",
-	// 		type: "spectrogram",
-	// 		lineNumbers: true,
-	// 		hasFocus: false,
-	// 		theme: "monokai",
-	// 		background: "#f0f0f0",
-	// 		component: Spectrogram,
-	// 		data: ""
-	// 	}
-	// }
 ];
 
 const testItems = [
@@ -437,8 +423,8 @@ export function storable(key, initialValue) {
 
 // Dashboard layout in items list
 // export const items = writable(testItems); // base svelteStore
-export const items = storable("items", testItems); // localStorageWrapper
-// export const items = storable("items", originalItems); // localStorageWrapper
+// export const items = storable("items", testItems); // localStorageWrapper
+export const items = storable("items", originalItems); // localStorageWrapper
 // export const items = writable(nestedStoresItems);
 // export const items = writable([ hydrateJSONcomponent(createRandomItem('liveCodeEditor'))]);
 
