@@ -25,10 +25,11 @@ import {copyToPasteBuffer} from '../utils/pasteBuffer.js';
 class MaxiNode extends AudioWorkletNode {
   constructor(audioContext, processorName) {
     // super(audioContext, processorName);
+    console.log();
     let options = {
       numberOfInputs: 1,
       numberOfOutputs: 1,
-      outputChannelCount: [2]
+      outputChannelCount: [audioContext.destination.maxChannelCount]
     };
     super(audioContext, processorName, options);
   }
@@ -270,7 +271,15 @@ class AudioEngine {
 				// sampleRate: 44100
 			});
 
+      this.audioContext.destination.channelInterpretation='discrete';
+      this.audioContext.destination.channelCountMode='explicit';
+      this.audioContext.destination.channelCount=this.audioContext.destination.maxChannelCount;
+      console.log(this.audioContext.destination);
+
 			await this.loadWorkletProcessorCode();
+      this.audioWorkletNode.channelInterpretation='discrete';
+      this.audioWorkletNode.channelCountMode='expicit';
+      this.audioWorkletNode.channelCount=this.audioContext.destination.maxChannelCount;
 
       this.connectMediaStream();
 
@@ -411,7 +420,7 @@ class AudioEngine {
 				// Custom node constructor with required parameters
 				this.audioWorkletNode = new MaxiNode(
 					this.audioContext,
-					this.audioWorkletProcessorName
+          this.audioWorkletProcessorName
 				);
 
 				// All possible error event handlers subscribed

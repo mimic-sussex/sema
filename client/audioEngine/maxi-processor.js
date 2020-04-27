@@ -107,22 +107,22 @@ class pvshift {
  */
 class MaxiProcessor extends AudioWorkletProcessor {
 
-  /**
-   * @getter
-   */
-  static get parameterDescriptors() { // TODO: parameters are static? Can we not change this map with a setter?
-    return [{
-      name: 'gainSyn',
-      defaultValue: 2.5
-    }, {
-      name: 'gainSeq',
-      defaultValue: 6.5
-    },
-    {
-      name: 'numClockPeers',
-      defaultValue: 1
-    }];
-  }
+  // /**
+  //  * @getter
+  //  */
+  // static get parameterDescriptors() { // TODO: parameters are static? Can we not change this map with a setter?
+  //   return [{
+  //     name: 'gainSyn',
+  //     defaultValue: 2.5
+  //   }, {
+  //     name: 'gainSeq',
+  //     defaultValue: 6.5
+  //   },
+  //   {
+  //     name: 'numClockPeers',
+  //     defaultValue: 1
+  //   }];
+  // }
 
 
   /**
@@ -130,21 +130,15 @@ class MaxiProcessor extends AudioWorkletProcessor {
    */
   constructor() {
     super();
-
-    console.log("map: ", maxiMap.linlin(0.5,0,1,5,10));
+    console.log("channels", this);
 
     let q1 = Maximilian.maxiBits.sig(63);
-    // for(let i=0; i < 123; i++) q1 = Maximilian.maxiBits.inc(q1);
-    // let q2 = Maximilian.maxiBits.sig(255);
-    // let q3 = Maximilian.maxiBits.land(q1,q2);
-    // let q4 = Maximilian.maxiBits.shl(q3, 22);
-    // console.log("res: " + q1);
 
     this.sampleRate = 44100;
 
-    this.DAC = [0];
-
-    // this.onsetDetector = new MMLLOnsetDetector(this.sampleRate);
+    //we don't know the number of channels at this stage, so reserve lots for the DAC
+    this.DAC = [];
+    for(let i=0; i < 512; i++) this.DAC[i] = 0.0;
 
     this.tempo = 120.0; // tempo (in beats per minute);
     this.secondsPerBeat = (60.0 / this.tempo);
@@ -157,10 +151,10 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
     // this.maxiAudio = new Maximilian.maxiAudio();
     this.clock = new Maximilian.maxiOsc();
-    this.kick = new Maximilian.maxiSample();
-    this.snare = new Maximilian.maxiSample();
-    this.closed = new Maximilian.maxiSample();
-    this.open = new Maximilian.maxiSample();
+    // this.kick = new Maximilian.maxiSample();
+    // this.snare = new Maximilian.maxiSample();
+    // this.closed = new Maximilian.maxiSample();
+    // this.open = new Maximilian.maxiSample();
 
 
     this.initialised = false;
@@ -304,26 +298,9 @@ class MaxiProcessor extends AudioWorkletProcessor {
         let setupFunction;
         let loopFunction;
         try {
-          // console.log("[DEBUG]:MaxiProcessor:Process: ");
-          // console.log(event.data);
-
-          // let setupFunction = new Function(`return ${event.data['setup']}`);
           setupFunction = eval(event.data['setup']);
           loopFunction = eval(event.data['loop']);
 
-          // let oldSignalFunction = this.currentSignalFunction;
-          // this.currentSignalFunction = 1 - this.currentSignalFunction;
-          // this._q[this.currentSignalFunction] = setupFunction();
-          // //allow feedback between evals
-          // this._mems[this.currentSignalFunction] = this._mems[oldSignalFunction];
-          //
-          // this.signals[this.currentSignalFunction] = loopFunction;
-          // this._cleanup[this.currentSignalFunction] = 0;
-          //
-          // let xfadeBegin = Maximilian.maxiMap.linlin(1.0 - this.currentSignalFunction, 0, 1, -1, 1);
-          // let xfadeEnd = Maximilian.maxiMap.linlin(this.currentSignalFunction, 0, 1, -1, 1);
-
-          // let oldSignalFunction = this.currentSignalFunction;
           this.nextSignalFunction = 1 - this.currentSignalFunction;
           this._q[this.nextSignalFunction] = setupFunction();
           //allow feedback between evals
@@ -405,6 +382,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
     // console.log(`gain: ` + parameters.gain[0]);
     const outputsLength = outputs.length;
 
+
     for (let outputId = 0; outputId < outputsLength; ++outputId) {
       let output = outputs[outputId];
       let channelCount = output.length;
@@ -463,10 +441,14 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
 
         //mono->stereo
+        // for (let channel = 0; channel < channelCount; channel++) {
+        //   output[channel][i] = w;
+        // }
         for (let channel = 0; channel < channelCount; channel++) {
-          output[channel][i] = w;
+          output[channel][i] = 0;
         }
-
+        output[0][i] = Math.random();
+        output[7][i] = Math.random();
       }
 
       //remove old algo and data?
