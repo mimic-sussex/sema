@@ -224,6 +224,22 @@ class blockTracker {
     };
   }
 
+  getBlockFromLine(line) {
+    let blockIndex=0;
+    let nextBlockID=0
+    for(let i=0; i < this.blocks.length-1; i++) {
+      if (i==blocks.length-1) {
+        blockIndex =i;
+      }else{
+        if (line > this.blocks[i].startLine && i < this.blocks[i+1].startLine) {
+          blockIndex = i;
+        }
+      }
+    }
+    let blockID = this.blocks[blockIndex].blockID;
+    return {id:blockID, idx:blockIndex};
+  }
+
 };
 
 export {

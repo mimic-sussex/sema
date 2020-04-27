@@ -1,4 +1,5 @@
 import Module from "./maximilian.wasmmodule.js"; //NOTE:FB We need this import here for webpack to emit maximilian.wasmmodule.js
+import Open303 from "./open303.wasmmodule.js"; //NOTE:FB We need this import here for webpack to emit maximilian.wasmmodule.js
 import CustomProcessor from "./maxi-processor";
 import {
   loadSampleToArray
@@ -265,12 +266,13 @@ class AudioEngine {
 			this.audioContext = new AudioContext({
 				// create audio context with latency optimally configured for playback
         latencyHint: "playback",
-				sample: 44100
+        // latencyHint: 32/44100,  //this doesn't work below 512 on chrome (?)
+				// sampleRate: 44100
 			});
 
 			await this.loadWorkletProcessorCode();
 
-			this.connectMediaStream();
+      this.connectMediaStream();
 
 			this.connectAnalysers(); // Connect Analysers loaded from the store
 
@@ -443,6 +445,7 @@ class AudioEngine {
 
 				// Connect the worklet node to the audio graph
 				this.audioWorkletNode.connect(this.audioContext.destination);
+        console.log(this.audioContext.destination);
 
 				return true;
 			} catch (err) {
