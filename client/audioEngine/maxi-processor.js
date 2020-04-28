@@ -138,7 +138,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
     //we don't know the number of channels at this stage, so reserve lots for the DAC
     this.DAC = [];
-    for(let i=0; i < 512; i++) this.DAC[i] = 0.0;
+    this.DACChannelsInitalised = false;
 
     this.tempo = 120.0; // tempo (in beats per minute);
     this.secondsPerBeat = (60.0 / this.tempo);
@@ -366,6 +366,23 @@ class MaxiProcessor extends AudioWorkletProcessor {
       return val;
     }
 
+    this.dacOut = (x, ch) => {
+      if (ch >=this.DAC.length) {
+        ch = this.DAC.length-1;
+      }else if (ch < 0) {
+        ch = 0;
+      }
+      this.DAC[ch] = x;
+      return x;
+    }
+
+    this.dacOutAll = (x) => {
+      for(let i=0; i < this.DAC.length; i++) {
+        this.DAC[i] = x;
+      }
+      return x;
+    }
+
 
   }
 
@@ -373,16 +390,15 @@ class MaxiProcessor extends AudioWorkletProcessor {
    * @process
    */
   process(inputs, outputs, parameters) {
-    // this.port.postMessage("dspStart");
+    if (!this.DACChannelsInitalised) {
+      //first run - set up the output array
+      for(let i=0; i < outputs[0].length; i++) this.DAC[i] = 0.0;
+      console.log('init DAC', outputs[0].length);
+      this.DACChannelsInitalised = true;
+    }
 
-
-    // let ts = this.timer.getTime();
-
-    // DEBUG:
-    // console.log(`gain: ` + parameters.gain[0]);
     const outputsLength = outputs.length;
-
-
+    // console.log(outputsLength);
     for (let outputId = 0; outputId < outputsLength; ++outputId) {
       let output = outputs[outputId];
       let channelCount = output.length;
@@ -424,19 +440,30 @@ class MaxiProcessor extends AudioWorkletProcessor {
           }
         }
         if (this.codeSwapState == this.codeSwapStates.XFADING) {
-          let sig0 = this.signals[0](this._q[0], inputs[0][0][i], this._mems[0]);
-          let sig1 = this.signals[1](this._q[1], inputs[0][0][i], this._mems[1]);
+          // let sig0 = this.signals[0](this._q[0], inputs[0][0][i], this._mems[0]);
+          // let sig1 = this.signals[1](this._q[1], inputs[0][0][i], this._mems[1]);
+          // // let xf = this.xfadeControl.play(i == 0 ? 1 : 0);
+          // let xf = this.xfadeControl.play(barTrig);
+          // // if (i==0) console.log(xf);
+          // w = Maximilian.maxiXFade.xfade(sig0, sig1, xf);
+          // if (this.xfadeControl.isLineComplete()) {
+          //   this.codeSwapState = this.codeSwapStates.NONE;
+          //   console.log("xfade complete", xf);
+          // }
+          this.signals[0](this._q[0], inputs[0][0][i], this._mems[0]);
+          this.signals[1](this._q[1], inputs[0][0][i], this._mems[1]);
           // let xf = this.xfadeControl.play(i == 0 ? 1 : 0);
-          let xf = this.xfadeControl.play(barTrig);
+          // let xf = this.xfadeControl.play(barTrig);
           // if (i==0) console.log(xf);
-          w = Maximilian.maxiXFade.xfade(sig0, sig1, xf);
-          if (this.xfadeControl.isLineComplete()) {
-            this.codeSwapState = this.codeSwapStates.NONE;
-            console.log("xfade complete", xf);
-          }
+          // w = Maximilian.maxiXFade.xfade(sig0, sig1, xf);
+          // if (this.xfadeControl.isLineComplete()) {
+          this.codeSwapState = this.codeSwapStates.NONE;
+            // console.log("xfade complete", xf);
+          // }
         }else {
           //no xfading - play as normal
-          w = this.signals[this.currentSignalFunction](this._q[this.currentSignalFunction], inputs[0][0][i], this._mems[this.currentSignalFunction]);
+          // w = this.signals[this.currentSignalFunction](this._q[this.currentSignalFunction], inputs[0][0][i], this._mems[this.currentSignalFunction]);
+          this.signals[this.currentSignalFunction](this._q[this.currentSignalFunction], inputs[0][0][i], this._mems[this.currentSignalFunction]);
         }
 
 
@@ -445,10 +472,8 @@ class MaxiProcessor extends AudioWorkletProcessor {
         //   output[channel][i] = w;
         // }
         for (let channel = 0; channel < channelCount; channel++) {
-          output[channel][i] = 0;
+          output[channel][i] = this.DAC[channel];
         }
-        output[0][i] = Math.random();
-        output[7][i] = Math.random();
       }
 
       //remove old algo and data?

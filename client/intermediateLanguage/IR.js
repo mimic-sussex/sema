@@ -467,6 +467,14 @@ var jsFuncMap = {
 	const: {
 		setup: (o, p) => ``,
 		loop:  (o, p) => `${p[0].loop}`
+	},
+	dac: {
+		setup: (o, p) => ``,
+		loop:  (o, p) => `this.dacOutAll(${p[0].loop})`
+	},
+	dacx: {
+		setup: (o, p) => ``,
+		loop:  (o, p) => `this.dacOut(${p[0].loop},${p[1].loop})`
 	}
 
 };
@@ -509,11 +517,11 @@ class IRToJavascript {
         });
         return ccode;
       },
-      '@sigOut': (ccode, el) => {
-        ccode = IRToJavascript.traverseTree(el, ccode, level, vars, blockIdx);
-        ccode.loop = `q.sigOut = ${ccode.loop};`;
-        return ccode;
-      },
+      // '@sigOut': (ccode, el) => {
+      //   ccode = IRToJavascript.traverseTree(el, ccode, level, vars, blockIdx);
+      //   ccode.loop = `q.sigOut = ${ccode.loop};`;
+      //   return ccode;
+      // },
       '@spawn': (ccode, el) => {
         ccode = IRToJavascript.traverseTree(el, ccode, level, vars, blockIdx);
         ccode.loop += ";";
@@ -648,11 +656,12 @@ class IRToJavascript {
     vars = {};
     let code = IRToJavascript.traverseTree(tree, IRToJavascript.emptyCode(), 0, vars, blockIdx);
     // console.log(vars);
-    code.setup = `() => {let q=this.newq(); q.sigOut=0; ${code.setup}; return q;}`;
-    code.loop = `(q, inputs, mem) => {${code.loop} return q.sigOut;}`
-    // console.log("DEBUG:treeToCode");
-    // console.log(code.loop);
-    // console.log(code.paramMarkers);
+		// code.setup = `() => {let q=this.newq(); q.sigOut=0; ${code.setup}; return q;}`;
+    // code.loop = `(q, inputs, mem) => {${code.loop} return q.sigOut;}`
+		code.setup = `() => {let q=this.newq(); ${code.setup}; return q;}`;
+    code.loop = `(q, inputs, mem) => {${code.loop}}`
+    console.log("DEBUG:treeToCode");
+    console.log(code.loop);
     return code;
   }
 }

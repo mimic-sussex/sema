@@ -4,6 +4,35 @@ The code examples below work for *one* sematic language, the default demo langua
 
 There are two windows in the sema system. The top one is the sematic window for the unique language. The bottom one is a window for JavaScript code, where we, for example, run machine learning models.
 
+# audio outputs
+
+to route a signal to the outputs on your soundcard, there are the following options:
+
+1. Route a single signal to all outputs, by putting an asterisk at the point in the signal chain where you want to output e.g.
+
+```
+*{50}saw;
+```
+
+```
+{*{{50}saw, {51}saw}add, 500,3}hpz;
+```
+In the above example, the soundcard will monitor the saw waves, but not the hpz.
+
+2. Route a single signal to a single channel, using an asterisk and a channel number.
+
+```
+*0 {40}sqr;
+*1 {40.4}sqr;
+```
+
+
+To change channel numbers programatically, use the `dacx` function.
+
+```
+//alternate noise between left and right channels
+{{1}noiz,{{{0.1}pha,10}mul}sqr}dacx;
+```
 
 # oscillators
 

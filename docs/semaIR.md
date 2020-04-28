@@ -49,6 +49,19 @@ Get a variable
 ```
 It needs a function name, and an array of parameters.   You can use any of the options below:
 
+## Audio outputs
+
+### dac
+Output a signal - copy a single signal to all output channels
+Parameters:
+  1. Signal
+
+### dacx
+Output a signal to a single channel
+Parameters:
+  1. Signal
+  2. Channel number (starting from 0)
+
 ## Oscillators
 
 ### saw
