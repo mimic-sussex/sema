@@ -27,7 +27,7 @@ In the above example, the soundcard will monitor the saw waves, but not the hpz.
 ```
 
 
-To change channel numbers programatically, use the `dacx` function.
+To change channel numbers programmatically, use the `dacx` function.
 
 ```
 //alternate noise between left and right channels
