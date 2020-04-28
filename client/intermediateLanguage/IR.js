@@ -470,11 +470,14 @@ var jsFuncMap = {
 	},
 	dac: {
 		setup: (o, p) => ``,
-		loop:  (o, p) => `this.dacOutAll(${p[0].loop})`
-	},
-	dacx: {
-		setup: (o, p) => ``,
-		loop:  (o, p) => `this.dacOut(${p[0].loop},${p[1].loop})`
+		loop:  (o, p) => {
+			if (p.length==1) {
+				return `this.dacOutAll(${p[0].loop})`;
+			}
+			else {
+				return `this.dacOut(${p[0].loop},${p[1].loop})`;
+			}
+		}
 	}
 
 };

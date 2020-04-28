@@ -41,10 +41,10 @@ const lexer = moo.compile({
   separator:      /,/,
   paramEnd:       /}/,
   paramBegin:     /{/,
-  listEnd:        /\>/,
-  listBegin:      /\</,
-  dacoutCh:       /\*[0-9]+/,
-  dacout:       /\*/,
+  listEnd:        /\]/,
+  listBegin:      /\[/,
+  dacoutCh:       /\>[0-9]+/,
+  dacout:       /\>/,
   variable:       /:[a-zA-Z0-9]+:/,
   sample:         { match: /\\[a-zA-Z0-9]+/, lineBreaks: true, value: x => x.slice(1, x.length)},
   slice:          { match: /\|[a-zA-Z0-9]+/, lineBreaks: true, value: x => x.slice(1, x.length)},
@@ -98,7 +98,7 @@ Expression ->
   {% d => sema.synth( 'dac', [d[2]] ) %}
   |
   %dacoutCh _ Expression
-  {% d => sema.synth( 'dacx', [d[2], sema.num(d[0].value.substr(1))] ) %}
+  {% d => sema.synth( 'dac', [d[2], sema.num(d[0].value.substr(1))] ) %}
 
 ParameterList ->
   %paramBegin Params %paramEnd
