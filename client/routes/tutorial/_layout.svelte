@@ -1,10 +1,9 @@
 <script context="module">
 	export async function preload() {
-		const sections = await this.fetch(`tutorial.json`).then(r => r.json());
+		const sections = await this.fetch(`tutorial/tutorial.json`).then(r => r.json());
 		return { sections };
 	}
 </script>
-
 
 <script>
   // import Sidebar from '../../components/tutorial/Sidebar.svelte';
@@ -21,8 +20,10 @@
 
   // import "raw-loader?name=api/[name].[ext]!./tutorial.json";
   // import { get } from "./index.json.js";
-  import tutorial from './tutorial.json';
+  // import tutorial from './tutorial.json';
   // import './tutorial.json';
+	export let sections;
+  // let tutorial = preload();
 
   // const contents = JSON.stringify(tutorial.map(post => {
   //   return {
@@ -31,7 +32,8 @@
   //   };
   // }));
 
-  // console.log(contents)  
+  console.log("DEBUG:Tutorial:_tutorial:");
+  console.log(sections)  
 
   let handleSelect = e => { 
     let href = e.target.value;

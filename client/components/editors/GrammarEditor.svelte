@@ -49,11 +49,12 @@
   let codeMirror;
   let modelWorker;
 
+  let log = e => { /* console.log(...e); */ }
 
   onMount(async () => {
     // console.log('DEBUG:GrammarCodeEditor:onMount:')
     // console.log(data);
-    console.log( id, name, type, lineNumbers, hasFocus, theme, background, data, responsive, resizable, resize, draggable, drag, min, max, x, y, w, h, component );
+    log( id, name, type, lineNumbers, hasFocus, theme, background, data, responsive, resizable, resize, draggable, drag, min, max, x, y, w, h, component );
 
     codeMirror.set(data, "ebnf");
 	});
@@ -64,7 +65,7 @@
 	});
 
 
-  let log = (e) => { console.log(e.detail.value); }
+
 
   let nil = (e) => { }
 

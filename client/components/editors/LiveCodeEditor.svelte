@@ -63,6 +63,7 @@
 
   let btrack;
 
+  let log = e => { /* console.log(...e); */ }
 
   onMount(async () => {
     // console.log('DEBUG:LiveCodeEditor:onMount:')
@@ -72,7 +73,7 @@
     parserWorker = new ParserWorker();  // Create one worker per widget lifetime
 
     btrack = new blockTracker(codeMirror);
-    console.log( id, name, type, lineNumbers, hasFocus, theme, background, data, responsive, resizable, resize, draggable, drag, min, max, x, y, w, h, component );
+    log( id, name, type, lineNumbers, hasFocus, theme, background, data, responsive, resizable, resize, draggable, drag, min, max, x, y, w, h, component );
 	});
 
   onDestroy(async () => {
@@ -80,8 +81,6 @@
     parserWorker.terminate();
     parserWorker = null; // cannot delete in strict mode
 	});
-
-  let log = (e) => { console.log(e.detail.value); }
 
   let nil = (e) => { }
 

@@ -57,6 +57,8 @@
   let subscriptionTokenMID;
   let subscriptionTokenMODR;
 
+  let log = e => { /* console.log(...e); */ }
+
   onMount(async () => {
     codeMirror.set(data, "js");
 
@@ -66,7 +68,7 @@
     modelWorker = new ModelWorker();  // Creates one ModelWorker per ModelEditor lifetime
     modelWorker.onmessage = e =>  onModelWorkerMessageHandler(e);
 
-    console.log( id, name, type, lineNumbers, hasFocus, theme, background, data, responsive, resizable, resize, draggable, drag, min, max, x, y, w, h, component );
+    log( id, name, type, lineNumbers, hasFocus, theme, background, data, responsive, resizable, resize, draggable, drag, min, max, x, y, w, h, component );
     // console.log('DEBUG:ModelEditor:onMount:');
     // console.log(data);    // console.log(name + ' ' + type + ' ' + lineNumbers +' ' + hasFocus +' ' + theme + ' ' + background /*+  ' ' + data */ );
 	});
@@ -79,8 +81,6 @@
     messaging = null;
     // console.log('DEBUG:ModelEditor:onDestroy')
 	});
-
-  let log = e => console.log(e.detail.value);
 
   let nil = (e) => { }
 

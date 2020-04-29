@@ -186,12 +186,6 @@ module.exports = {
 				toType: "dir",
 			},
 		]),
-		// new CopyPlugin([
-		// 	{
-		// 		from: "./client/routes/tutorial/tutorial.json",
-		// 		to: "./public/",
-		// 	},
-		// ]),
 		new HtmlWebpackPlugin({
 			noscriptHeader:
 				"To run Sema, please enable Javascript in the browser configuration",

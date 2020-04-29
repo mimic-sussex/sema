@@ -41,11 +41,11 @@
     margin-top: 0px;
   }
 
-  .controls {
+  /* .controls {
     margin-bottom: 20px;
     margin-left: 10px;
     margin-right: 10px;
-  }
+  } */
 
   .tutorial-navigator {
     display: inline-flex;

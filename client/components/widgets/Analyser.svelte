@@ -41,6 +41,7 @@
 	let frame;
   let isRendering = true; 
 
+  
 
   function randomBytes() {
     for (let i = 0; i < frequencyBinCount; i++) {
@@ -117,6 +118,7 @@
     isRendering = !isRendering;
   }
 
+  let log = e => { /* console.log(...e); */ }
 
   onMount(async () => {
     // Request the creation of an WAAPI analyser to the Audio Engine
@@ -124,7 +126,7 @@
 
     canvas.addEventListener('onclick', () => toggleRendering(), false);
     messaging.subscribe('analyser-data', e => updateAnalyserByteData(e) );
-    console.log( id, name, type, lineNumbers, hasFocus, theme, background, data, responsive, resizable, resize, draggable, drag, min, max, x, y, w, h, component );
+    log( id, name, type, lineNumbers, hasFocus, theme, background, data, responsive, resizable, resize, draggable, drag, min, max, x, y, w, h, component );
     renderLoop();
 	});
 

@@ -36,7 +36,7 @@
     visibility: visible;
   }
 
-  .button-start-audio {
+  /* .button-start-audio {
     margin:0 auto;
     display:block;
     width: 350px;
@@ -46,7 +46,7 @@
     font-family:monospace;
     cursor: pointer;
     border-radius: .4em;
-  }
+  } */
 
 
   canvas {
