@@ -86,8 +86,13 @@
 
   let onChange = e => {
     // console.log('DEBUG:LiveCodeEditor:onchange:');
+<<<<<<< HEAD:client/components/editors/LiveCodeEditor.svelte
     // console.log(e);
     btrack.onEditChange(e.detail.changeObj);    
+=======
+    console.log(e);
+    btrack.onEditChange(e.detail.changeObj);
+>>>>>>> origin/multiblocks:client/UI/editors/LiveCodeEditor.svelte
     dispatch('change', { prop:'data', value: codeMirror.getValue() });
   }
 
@@ -210,6 +215,7 @@
 
     // console.log("parsing");
     try {
+      console.log(codeMirror.getCursorPosition());
       parseLiveCodeAsync(codeMirror.getBlock()); // Code block parsed by parser.worker
       // // Parse results are kept in stores for feeding svelte components
       // if($grammarCompiledParser && $liveCodeEditorValue && $liveCodeAbstractSyntaxTree){

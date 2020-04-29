@@ -148,8 +148,20 @@ var jsFuncMap = {
 		loop:  (o, p) => `Maximilian.maxiMap.linexp(${p[0].loop}, ${p[1].loop}, ${p[2].loop}), ${p[3].loop}, ${p[4].loop})`
 	},
 	dist: {
-		setup: (o, p) => `${o} = new Maximilian.maxiDistortion()`,
+		setup: (o, p) => `${o} = new Maximilian.maxiNonlinearity()`,
 		loop:  (o, p) => `${o}.atanDist(${p[0].loop},${p[1].loop})`
+	},
+	softclip: {
+		setup: (o, p) => `${o} = new Maximilian.maxiNonlinearity()`,
+		loop:  (o, p) => `${o}.softclip(${p[0].loop})`
+	},
+	hardclip: {
+		setup: (o, p) => `${o} = new Maximilian.maxiNonlinearity()`,
+		loop:  (o, p) => `${o}.hardclip(${p[0].loop})`
+	},
+	asymclip: {
+		setup: (o, p) => `${o} = new Maximilian.maxiNonlinearity()`,
+		loop:  (o, p) => `${o}.asymclip(${p[0].loop},${p[1].loop},${p[2].loop})`
 	},
 	flange: {
 		setup: (o, p) => `${o} = new Maximilian.maxiFlanger()`,
@@ -216,7 +228,7 @@ var jsFuncMap = {
                       ${o}.setSample(this.getSampleBuffer(${p[4].loop}));
                       ${o}stretch = new Maximilian.maxiStretch();
                       ${o}stretch.setSample(${o});`,
-		loop:  (o, p) => `(${o}.isReady() ? ${o}stretch.play(${p[0].loop},${p[1].loop},${p[2].loop},${p[3].loop},0.0) : 0.0)`
+		loop:  (o, p) => `(${o}.isReady() ? ${ o}stretch.play(${p[0].loop},${p[1].loop},${p[2].loop},${p[3].loop},0.0) : 0.0)`
 	},
 	// 'adc': {"setup":(o,p)=>"", "loop":(o,p)=>`inputs[${p[0].loop}]`},
 	adc: { setup: (o, p) => "", loop: (o, p) => `inputs` },
@@ -425,20 +437,23 @@ var jsFuncMap = {
 		`,
 		loop:  (o, p) => `(()=>{
 			let newNote = ${o}_tnote.onZX(${p[0].loop});
+			let accent = ${p[3].loop};
 			if (newNote) {
 				if (${p[2].loop}>0) {
-					${o}.slideToNote(${p[1].loop},false);
+					${o}.slideToNote(${p[1].loop},accent);
 				}else{
-					${o}.triggerNote(${p[1].loop},false);
+					${o}.triggerNote(${p[1].loop},accent);
 				}
 			};
-			if (${o}_tnoteoff.onChanged(${p[3].loop}, 1e-5)) {${o}.allNotesOff()};
-			if (${o}_twf.onChanged(${p[4].loop}, 1e-5)) {${o}.setWaveform(${p[4].loop})};
-			if (${o}_tcut.onChanged(${p[5].loop}, 1e-5)) {${o}.setCutoff(${p[5].loop})};
-			if (${o}_tres.onChanged(${p[6].loop}, 1e-5)) {${o}.setResonance(${p[6].loop})};
-			if (${o}_tenvm.onChanged(${p[7].loop}, 1e-5)) {${o}.setEnvMod(${p[7].loop})};
-			if (${o}_tatt.onChanged(${p[8].loop}, 1e-5)) {${o}.setNormalAttack(${p[8].loop})};
-			if (${o}_tdec.onChanged(${p[9].loop}, 1e-5)) {${o}.setDecay(${p[9].loop})};
+
+			if (${o}_tnoteoff.onChanged(${p[4].loop}, 1e-5)) {${o}.allNotesOff()};
+			if (${o}_twf.onChanged(${p[5].loop}, 1e-5)) {${o}.setWaveform(${p[5].loop})};
+			if (${o}_tcut.onChanged(${p[6].loop}, 1e-5)) {${o}.setCutoff(${p[6].loop})};
+			if (${o}_tres.onChanged(${p[7].loop}, 1e-5)) {${o}.setResonance(${p[7].loop})};
+			if (${o}_tenvm.onChanged(${p[8].loop}, 1e-5)) {${o}.setEnvMod(${p[8].loop})};
+			if (${o}_tatt.onChanged(${p[9].loop}, 1e-5)) {${o}.setNormalAttack(${p[9].loop})};
+			if (${o}_tdec.onChanged(${p[10].loop}, 1e-5)) {${o}.setDecay(${p[10].loop})};
+			${o}.setAccent(${p[11].loop});
 			return ${o}.play();})()`
 	},
 	freeverb: {
@@ -448,9 +463,25 @@ var jsFuncMap = {
 	line: { //creates a triggered line from 0-1 - use other functions to shape the line
 		setup: (o, p) => `${o} = new Maximilian.maxiLine(); ${o}.prepare(0,1,${p[1].loop}, false); ${o}.triggerEnable(1);`,
 		loop:  (o, p) => `${o}.play(${p[0].loop})`
+	},
+	const: {
+		setup: (o, p) => ``,
+		loop:  (o, p) => `${p[0].loop}`
+	},
+	dac: {
+		setup: (o, p) => ``,
+		loop:  (o, p) => {
+			if (p.length==1) {
+				return `this.dacOutAll(${p[0].loop})`;
+			}
+			else {
+				return `this.dacOut(${p[0].loop},${p[1].loop})`;
+			}
+		}
 	}
 
 };
+
 // if (${o}_twf.onChanged(${p[2].loop}, 1e-5)) {${o}.setWaveform(${p[2].loop})};
 // if (${o}_tcut.onChanged(${p[3].loop}, 1e-5)) {${o}.setCutoff(${p[3].loop})};
 // if (${o}_tres.onChanged(${p[4].loop}, 1e-5)) {${o}.setResonance(${p[4].loop})};
@@ -489,11 +520,11 @@ class IRToJavascript {
         });
         return ccode;
       },
-      '@sigOut': (ccode, el) => {
-        ccode = IRToJavascript.traverseTree(el, ccode, level, vars, blockIdx);
-        ccode.loop = `q.sigOut = ${ccode.loop};`;
-        return ccode;
-      },
+      // '@sigOut': (ccode, el) => {
+      //   ccode = IRToJavascript.traverseTree(el, ccode, level, vars, blockIdx);
+      //   ccode.loop = `q.sigOut = ${ccode.loop};`;
+      //   return ccode;
+      // },
       '@spawn': (ccode, el) => {
         ccode = IRToJavascript.traverseTree(el, ccode, level, vars, blockIdx);
         ccode.loop += ";";
@@ -628,11 +659,12 @@ class IRToJavascript {
     vars = {};
     let code = IRToJavascript.traverseTree(tree, IRToJavascript.emptyCode(), 0, vars, blockIdx);
     // console.log(vars);
-    code.setup = `() => {let q=this.newq(); q.sigOut=0; ${code.setup}; return q;}`;
-    code.loop = `(q, inputs, mem) => {${code.loop} return q.sigOut;}`
-    // console.log("DEBUG:treeToCode");
-    // console.log(code.loop);
-    // console.log(code.paramMarkers);
+		// code.setup = `() => {let q=this.newq(); q.sigOut=0; ${code.setup}; return q;}`;
+    // code.loop = `(q, inputs, mem) => {${code.loop} return q.sigOut;}`
+		code.setup = `() => {let q=this.newq(); ${code.setup}; return q;}`;
+    code.loop = `(q, inputs, mem) => {${code.loop}}`
+    console.log("DEBUG:treeToCode");
+    console.log(code.loop);
     return code;
   }
 }
