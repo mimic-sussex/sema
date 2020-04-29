@@ -18,13 +18,6 @@ State variable filter:
 :speed:{{1}pha,100,500}uexp;
 {{100}saw,:speed:, 5, 0,1,0,0}svf
 
-Clock control:
-
-{0.1}clfreq;
-{4}barfreq;
-{{{16}clt}\909b,100,1}lpz
-
-
 Sequencing with idx and lists:
 
  - grabbing a single fixed element
@@ -48,13 +41,16 @@ const lexer = moo.compile({
   separator:      /,/,
   paramEnd:       /}/,
   paramBegin:     /{/,
-  listEnd:        /\>/,
-  listBegin:      /\</,
+  listEnd:        /\]/,
+  listBegin:      /\[/,
+  dacoutCh:       /\>[0-9]+/,
+  dacout:       /\>/,
   variable:       /:[a-zA-Z0-9]+:/,
   sample:         { match: /\\[a-zA-Z0-9]+/, lineBreaks: true, value: x => x.slice(1, x.length)},
   slice:          { match: /\|[a-zA-Z0-9]+/, lineBreaks: true, value: x => x.slice(1, x.length)},
   stretch:        { match: /\@[a-zA-Z0-9]+/, lineBreaks: true, value: x => x.slice(1, x.length)},
-  number:         /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?\b/,
+  clockTrig:         /0t-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?\b/,
+	number:         /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?\b/,
   semicolon:      /;/,
   funcName:       /[a-zA-Z][a-zA-Z0-9]*/,
 	string:					{match: /'[a-zA-Z0-9]+'/, value: x=>x.slice(1,x.length-1)},
@@ -75,8 +71,8 @@ Statement ->
   Expression _ %semicolon _ Statement
   {% d => [ { '@spawn': d[0] } ].concat(d[4]) %}
   |
-  Expression
-  {% d => [ { '@sigOut': { '@spawn': d[0] }} ] %}
+  Expression _ %semicolon
+  {% d => [ { '@spawn': d[0] } ] %}
 	|
 	%comment _ Statement
 	{% d => d[2] %}
@@ -97,10 +93,17 @@ Expression ->
   |
   %variable _ Expression
   {% d => sema.setvar( d[0], d[2] ) %}
+  |
+  %dacout _ Expression
+  {% d => sema.synth( 'dac', [d[2]] ) %}
+  |
+  %dacoutCh _ Expression
+  {% d => sema.synth( 'dac', [d[2], sema.num(d[0].value.substr(1))] ) %}
 
-	ParameterList ->
+ParameterList ->
   %paramBegin Params %paramEnd
   {% d => ( { 'paramBegin': d[0], '@params': d[1], 'paramEnd': d[2] } ) %}
+
 
 
 Params ->
