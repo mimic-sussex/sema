@@ -55,17 +55,17 @@
 	} */
 
 	figure {
-   	width: 210px;
-    height: 210px; 
+   	width: 187px;
+    height: 187px; 
     background-color: white;
-    border-radius: 4px;
+    border-radius: 2px;
     padding-top: 5px;
 		/* margin: 0 0 0 0; */
 	}
 
 	img {
-		width: 200px;
-    height: 200px;
+		width: 177px;
+    height: 177px;
 		/* max-width: 400px; */
 		/* margin: 0 0 1em 0; */
 	}
@@ -105,7 +105,12 @@
   </div>
   
   <div class='login'>
-    <button class='sign-in-guest-button' on:click={handleClick} > Sign in as Guest </button> 
+
+    <button class='sign-in-guest-button' 
+            on:click={handleClick} 
+            > Sign in as Guest </button> 
+  
     <SignIn />
+  
   </div>
 </div>
