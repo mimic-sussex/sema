@@ -80,6 +80,13 @@
 		}
 	} */
 
+  .sign-in-guest-button {
+    height: 40px;
+    width: 187px;
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
 </style>
 
 <!-- <h1>Great success{#if $currentUser }, { $currentUser.displayName } {/if} !</h1> -->
@@ -98,7 +105,7 @@
   </div>
   
   <div class='login'>
-    <button on:click={handleClick} > Sign in as Guest </button> 
+    <button class='sign-in-guest-button' on:click={handleClick} > Sign in as Guest </button> 
     <SignIn />
   </div>
 </div>
