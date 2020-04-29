@@ -1,12 +1,18 @@
 <script>
 
-import {
-  currentUser
-} from '../stores/user.js'
+  import { splashScreenClicked } from '../store.js';
 
-import src from '../../assets/img/sema.svg';
+  let handleClick = () => {
+    $splashScreenClicked = "hidden";
+  }
 
-import SignIn from '../components/user/SignIn.svelte';
+  import {
+    currentUser
+  } from '../stores/user.js'
+
+  import src from '../../assets/img/sema.svg';
+
+  import SignIn from '../components/user/SignIn.svelte';
 
 </script>
 
@@ -90,7 +96,9 @@ import SignIn from '../components/user/SignIn.svelte';
       <!-- <figcaption>Sema Logo</figcaption> -->
     </figure>
   </div>
+  
   <div class='login'>
+    <button on:click={handleClick} > Sign in as Guest </button> 
     <SignIn />
   </div>
 </div>
