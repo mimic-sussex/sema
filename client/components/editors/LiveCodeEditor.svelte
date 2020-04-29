@@ -65,18 +65,18 @@
 
 
   onMount(async () => {
-    console.log('DEBUG:LiveCodeEditor:onMount:')
-    console.log(data);
+    // console.log('DEBUG:LiveCodeEditor:onMount:')
+    // console.log(data);
     codeMirror.set(data, "js", 'monokai');
 
     parserWorker = new ParserWorker();  // Create one worker per widget lifetime
 
     btrack = new blockTracker(codeMirror);
-
+    console.log( id, name, type, lineNumbers, hasFocus, theme, background, data, responsive, resizable, resize, draggable, drag, min, max, x, y, w, h, component );
 	});
 
   onDestroy(async () => {
-    console.log('DEBUG:LiveCodeEditor:onDestroy:')
+    // console.log('DEBUG:LiveCodeEditor:onDestroy:')
     parserWorker.terminate();
     parserWorker = null; // cannot delete in strict mode
 	});

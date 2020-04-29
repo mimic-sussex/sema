@@ -5,16 +5,16 @@
     "Chris Kiefer <c.kiefer@sussex.ac.uk> (http://luuma.net)",
     "Thor Magnusson <t.magnusson@sussex.ac.uk> (http://www.ixi-audio.net)"
   ],
-  "version": "0.2.0",
-  "description": "sema, a live coding language design and performance playground",
+  "version": "0.5.0",
+  "description": "Sema, a live coding language design and performance playground",
   "scripts": {
+    "build": "cross-env NODE_ENV=production webpack",
     "dev": "run-p watch:routify watch:webpack",
     "watch:webpack": "webpack-dev-server --content-base public",
     "watch:routify": "routify -d --pages ./client/routes",
     "test": "mocha --opts mocha.opts",
     "prebuild": "routify --single-build",
-    "build": "cross-env NODE_ENV=production webpack",
-    "start": "sirv public --single"
+    "serve": "spassr --debug --serve-spa --spa-port 5001 --dist-dir ./public --app ./bundle.js --entrypoint ./index.html"
   },
   "dependencies": {
     "firebase": "^7.14.1",
@@ -30,6 +30,7 @@
   "devDependencies": {
     "@sveltech/routify": "^1.5.4",
     "clean-webpack-plugin": "^3.0.0",
+    "copy-webpack-plugin": "^5.1.1",
     "cross-env": "^5.2.0",
     "css-loader": "^3.2.0",
     "file-loader": "^5.0.1",
@@ -41,6 +42,7 @@
     "raw-loader": "^3.1.0",
     "rollup": "^1.26.3",
     "serve": "^11.0.0",
+    "spassr": "^1.0.2",
     "style-loader": "^1.0.0",
     "svelte": "3.15.0",
     "svelte-codemirror": "https://github.com/mimic-sussex/svelte-codemirror.git",

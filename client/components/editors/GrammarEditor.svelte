@@ -51,14 +51,16 @@
 
 
   onMount(async () => {
-    console.log('DEBUG:GrammarCodeEditor:onMount:')
-    console.log(data);
+    // console.log('DEBUG:GrammarCodeEditor:onMount:')
+    // console.log(data);
+    console.log( id, name, type, lineNumbers, hasFocus, theme, background, data, responsive, resizable, resize, draggable, drag, min, max, x, y, w, h, component );
+
     codeMirror.set(data, "ebnf");
 	});
 
   onDestroy(async () => {
-    console.log('DEBUG:GrammarCodeEditor:onDestroy')
-    console.log(data);
+    // console.log('DEBUG:GrammarCodeEditor:onDestroy')
+    // console.log(data);
 	});
 
 

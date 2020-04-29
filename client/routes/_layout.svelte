@@ -93,7 +93,7 @@
 
     <li><a href="/playground">Playground</a></li>
 
-    <li><a href="/tutorial">Tutorial</a></li>
+    <li><a href="/tutorial/">Tutorial</a></li>
 
     <!-- <li><a href="/docs">Docs</a></li> -->
     <li><a href='https://github.com/mimic-sussex/sema/tree/master/docs' target="_blank">Docs</a></li>

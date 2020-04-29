@@ -48,27 +48,6 @@
     border-radius: .4em;
   }
 
-  .logo-container {
-    float: none;
-    width: 60%;
-    height: 70%;
-    margin: 0 auto;
-    display: grid;
-  }
-
-  .sema-logo {
-    width: 100%;
-    height: auto;
-  }
-
-  .sema-type {
-    width: 100%;
-    height: auto;
-    font-size:150%;
-    margin: 0px 0px 0px 0px;
-    color: rgb(50, 50, 50);
-    /* font-family: 'LatoWebBlack';  */
-  }
 
   canvas {
     background-color: rgba(0, 0, 0, 0.0);

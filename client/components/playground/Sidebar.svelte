@@ -100,15 +100,7 @@
     margin-right: 10px;
   }
 
-  .tutorial-navigator {
-    display: inline-flex;
-    width: 25em;
-    max-width: 25em;
-    margin-top: 5px;
-    margin-bottom: 5px;
-    margin-left: 10px;
-    margin-right: 10px; 
-  }
+
 
   .checkbox-span {
     color: whitesmoke;

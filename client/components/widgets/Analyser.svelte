@@ -124,6 +124,7 @@
 
     canvas.addEventListener('onclick', () => toggleRendering(), false);
     messaging.subscribe('analyser-data', e => updateAnalyserByteData(e) );
+    console.log( id, name, type, lineNumbers, hasFocus, theme, background, data, responsive, resizable, resize, draggable, drag, min, max, x, y, w, h, component );
     renderLoop();
 	});
 
