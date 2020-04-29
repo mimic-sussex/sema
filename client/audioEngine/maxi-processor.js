@@ -1,14 +1,14 @@
 import Maximilian from './maximilian.wasmmodule.js';
 // import Open303 from './open303.wasmmodule.js';
 
-import {maxiMap} from './maximilian.transpile.js';
-var testMap = new maxiMap();
 
 // import {PostMsgTransducer} from './transducer.js'
 // import {
 //   MMLLOnsetDetector
 // } from '../machineListening/MMLLOnsetDetector.js';
 //
+
+
 
 function vectorDoubleToF64Array(x) {
   let ar = new Float64Array(x.size());
@@ -130,7 +130,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
    */
   constructor() {
     super();
-    console.log("channels", this);
+    console.log("TEST", Maximilian.maxiMap.linlin(0.5,0,1,10,50));
 
     let q1 = Maximilian.maxiBits.sig(63);
 

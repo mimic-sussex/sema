@@ -278,7 +278,7 @@ class AudioEngine {
 
 			await this.loadWorkletProcessorCode();
       this.audioWorkletNode.channelInterpretation='discrete';
-      this.audioWorkletNode.channelCountMode='expicit';
+      this.audioWorkletNode.channelCountMode='explicit';
       this.audioWorkletNode.channelCount=this.audioContext.destination.maxChannelCount;
 
       this.connectMediaStream();
