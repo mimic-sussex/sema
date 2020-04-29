@@ -151,8 +151,6 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
     this.numPeers = 1;
 
-<<<<<<< HEAD
-=======
     // this.maxiAudio = new Maximilian.maxiAudio();
     this.clock = new Maximilian.maxiOsc();
     // this.kick = new Maximilian.maxiSample();
@@ -163,7 +161,6 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
     this.initialised = false;
 
->>>>>>> origin/multiblocks
     this.newq = () => {return {"vars":{}}};
     this.newmem = () => {return new Float64Array(512)};
     this._q = [this.newq(),this.newq()];

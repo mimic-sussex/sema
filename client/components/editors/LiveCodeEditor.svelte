@@ -86,13 +86,8 @@
 
   let onChange = e => {
     // console.log('DEBUG:LiveCodeEditor:onchange:');
-<<<<<<< HEAD:client/components/editors/LiveCodeEditor.svelte
-    // console.log(e);
-    btrack.onEditChange(e.detail.changeObj);    
-=======
     console.log(e);
     btrack.onEditChange(e.detail.changeObj);
->>>>>>> origin/multiblocks:client/UI/editors/LiveCodeEditor.svelte
     dispatch('change', { prop:'data', value: codeMirror.getValue() });
   }
 

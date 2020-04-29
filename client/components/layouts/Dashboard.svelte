@@ -128,49 +128,18 @@
         items.update( items => gridHelp.resizeItems(items, 4, 100) ); // Align items
         // items.update( items => items.concat(envItems));
 			}
-<<<<<<< HEAD:client/components/layouts/Dashboard.svelte
 		}else{
 			github.get(`/gists/${e.name}`)
 			.then(res => {
 				// console.log("git gist", res.body.files[Object.keys(res.body.files)[0]].content)
 				let envdataStr = res.body.files[Object.keys(res.body.files)[0]].content;
-=======
-		});
-		messaging.subscribe("env-load", e => {
-			console.log('env load', e);
-			let envdataStr = 0;
-			if (e.storage=='local') {
-
-				envdataStr = localStorage.getItem(`env--${e.name}`);
-
-
->>>>>>> origin/multiblocks:client/UI/layouts/Dashboard.svelte
 				if (envdataStr) {
 					//fill in soon
 				}
-<<<<<<< HEAD:client/components/layouts/Dashboard.svelte
 			})
 			.catch(console.error);
 		}
   }
-=======
-
-
-			}else{
-				github.get(`/gists/${e.name}`)
-				.then(res => {
-					// console.log("git gist", res.body.files[Object.keys(res.body.files)[0]].content)
-					let envdataStr = res.body.files[Object.keys(res.body.files)[0]].content;
-					if (envdataStr) {
-						//fill in soon
-					}
-				})
-				.catch(console.error);
-			}
-		});
-
-
->>>>>>> origin/multiblocks:client/UI/layouts/Dashboard.svelte
 
 	onMount(() => {
     messaging.subscribe('add-editor', e => addItem(e.type, e.id, e.data) );

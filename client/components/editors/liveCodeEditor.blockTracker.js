@@ -19,33 +19,15 @@ class blockTracker {
       return this.blocks.filter(b => b.startLine == line).length == 1;
     }
     let insertSeparator = (line) => {
-<<<<<<< HEAD:client/components/editors/liveCodeEditor.blockTracker.js
-      let insertionIndex = this.blocks.findIndex(x=>x.startLine > line);
-      // console.log("Inserting separator at " + line);
-      const newBlock = new blockData(line, true);
-=======
       let insertionIndex = this.blocks.findIndex(x => x.startLine > line);
       console.log("Inserting separator at " + line);
       const newBlock = new blockData(line);
->>>>>>> origin/multiblocks:client/UI/editors/liveCodeEditor.blockTracker.js
       if (insertionIndex == -1) {
         this.blocks.push(newBlock);
       } else {
         this.blocks.splice(insertionIndex, 0, newBlock);
       }
     }
-<<<<<<< HEAD:client/components/editors/liveCodeEditor.blockTracker.js
-    let testInsertLine = (lineIndex, lineText) => {
-      if (/___+/.test(lineText)) {  // Test RegEx at least 3 underscores
-          // console.log("Block separator found");
-          if (separatorExistsOnLine(lineIndex)) {
-              // console.log("separator already exists");
-          }else{
-              // console.log("adding new separator");
-              insertSeparator(lineIndex);
-              // console.table(this.blocks);
-          }
-=======
     let removeSeparator = (lineIndex) => {
       this.blocks = this.blocks.filter(b => b.startLine != lineIndex);
     }
@@ -71,24 +53,15 @@ class blockTracker {
           //remove the separator as it's no longer valid
           removeSeparator(lineIndex);
         }
->>>>>>> origin/multiblocks:client/UI/editors/liveCodeEditor.blockTracker.js
       }
     }
     let testRemoveLine = (lineIndex, lineText, testTarget) => {
       //test for abscence or presence, depending on testTarget
-<<<<<<< HEAD:client/components/editors/liveCodeEditor.blockTracker.js
-      if (/___+/.test(lineText) == testTarget) {  // Test RegEx at least 3 underscores
-        // console.log("testRemoveLine +ve at " + lineIndex);
-        if (separatorExistsOnLine(lineIndex)) {
-            // console.log("removing separator");
-            this.blocks = this.blocks.filter(b=>b.startLine!=lineIndex);
-=======
       if (testIsSeparator(lineText) == testTarget) { // Test RegEx at least 3 underscores
         console.log("testRemoveLine +ve at " + lineIndex);
         if (separatorExistsOnLine(lineIndex)) {
           console.log("removing separator");
           removeSeparator(lineIndex);
->>>>>>> origin/multiblocks:client/UI/editors/liveCodeEditor.blockTracker.js
         }
       }
     }
@@ -112,52 +85,6 @@ class blockTracker {
         }
       );
     }
-<<<<<<< HEAD:client/components/editors/liveCodeEditor.blockTracker.js
-    // console.log(change);
-    switch(change.origin) {
-        //same handler for deleting and cutting
-        case "+delete":
-        case "cut":
-          //was a line single removed?
-          if (change.removed.length==2 && change.removed[0] == "" && change.removed[1] == "") {
-            // console.log("line removed");
-            removeLines(change.from.line, 1);
-            // console.table(this.blocks);
-          }else{
-            // console.log("Source line: " + this.editor.getLine(change.from.line));
-            // console.log("Removed: " + change.removed);
-            //check the first line (in case of partial removal)
-            let startIdx = 0;
-            let endIdx = change.removed.length;
-            if (change.from.ch > 0) {
-              // console.log("testing first line");
-              testRemoveLine(change.from.line, this.editor.getLine(change.from.line), false);
-              startIdx++;
-            }
-            if (change.to.ch > 0) {
-              // console.log("testing last line");
-              let lineToCheck = change.from.line + change.removed.length;
-              testRemoveLine(lineToCheck, this.editor.getLine(change.from.line), false);
-              endIdx--;
-            }
-            if (change.removed.length>1) {
-              for(let i_line=startIdx; i_line < endIdx; i_line++) {
-                // console.log("testing multi line " + i_line + ": " + change.removed[i_line]);
-                testRemoveLine(change.from.line + i_line, change.removed[i_line], true);
-                // console.table(this.blocks);
-              }
-              removeLines(change.from.line, change.removed.length-1);
-            }
-            // console.table(this.blocks);
-          }
-          break;
-        case "+input":
-          //was the input a new line?
-          if (change.text.length==2 && change.text[0] == "" && change.text[1] == "") {
-            // console.log("new line");
-            insertNewLines(change.from.line, 1);
-            // console.table(this.blocks);
-=======
     console.log(change);
     switch (change.origin) {
       //same handler for deleting and cutting
@@ -179,7 +106,6 @@ class blockTracker {
           for(let i_line=0; i_line < change.removed.length; i_line++) {
             console.log("testing multi line " + i_line + ": " + change.removed[i_line]);
             testRemoveLine(change.from.line + i_line, change.removed[i_line], true);
->>>>>>> origin/multiblocks:client/UI/editors/liveCodeEditor.blockTracker.js
           }
           removeLines(change.from.line, change.removed.length-1);
 
@@ -209,14 +135,6 @@ class blockTracker {
         }
         console.table(this.blocks);
         break;
-<<<<<<< HEAD:client/components/editors/liveCodeEditor.blockTracker.js
-        case "paste":
-          let startLine = change.from.line;
-          insertNewLines(change.from.line, change.text.length);
-          for (let line in change.text) {
-            // console.log(line);
-            testInsertLine(startLine + parseInt(line), change.text[line]);
-=======
       case "+input":
       case "paste":
         // console.log(change.)
@@ -277,7 +195,6 @@ class blockTracker {
               testLineChange(change.from.line + line, change.text[line]);
             }
             //TODO Monday: pasting in at the end of a separator
->>>>>>> origin/multiblocks:client/UI/editors/liveCodeEditor.blockTracker.js
           }
 
           // if (change.text.length > 2) {
