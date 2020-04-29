@@ -110,29 +110,14 @@ class pvshift {
  */
 class MaxiProcessor extends AudioWorkletProcessor {
 
-  // /**
-  //  * @getter
-  //  */
-  // static get parameterDescriptors() { // TODO: parameters are static? Can we not change this map with a setter?
-  //   return [{
-  //     name: 'gainSyn',
-  //     defaultValue: 2.5
-  //   }, {
-  //     name: 'gainSeq',
-  //     defaultValue: 6.5
-  //   },
-  //   {
-  //     name: 'numClockPeers',
-  //     defaultValue: 1
-  //   }];
-  // }
-
   /**
    * @constructor
    */
   constructor() {
     super();
     console.log("TEST", Maximilian.maxiMap.linlin(0.5,0,1,10,50));
+    let temp = new Maximilian.maxiNonlinearity();
+    console.log("TEST2", temp.asymclip(0.9,3,3));
 
     let q1 = Maximilian.maxiBits.sig(63);
 
@@ -307,21 +292,17 @@ class MaxiProcessor extends AudioWorkletProcessor {
           this._q[this.nextSignalFunction] = setupFunction();
           //allow feedback between evals
           this._mems[this.nextSignalFunction] = this._mems[this.currentSignalFunction];
-
-
-         
          // output[SPECTROGAMCHANNEL][i] = specgramValue;
          // then use channelsplitter
-
-
-          this.signals[this.currentSignalFunction] = loopFunction;
-          this._cleanup[this.currentSignalFunction] = 0;
+          this.signals[this.nextSignalFunction] = loopFunction;
+          this._cleanup[this.nextSignalFunction] = 0;
 
           let xfadeBegin = Maximilian.maxiMap.linlin(1.0 - this.nextSignalFunction, 0, 1, -1, 1);
           let xfadeEnd = Maximilian.maxiMap.linlin(this.nextSignalFunction, 0, 1, -1, 1);
           this.xfadeControl.prepare(xfadeBegin, xfadeEnd, 2, true); // short xfade across signals
           this.xfadeControl.triggerEnable(true); //enable the trigger straight away
           this.codeSwapState = this.codeSwapStates.QUEUD;
+          console.log("setup2");
         } catch (err) {
           if (err instanceof TypeError) {
             console.log("TypeError in worklet evaluation: " + err.name + " – " + err.message);
@@ -471,17 +452,20 @@ class MaxiProcessor extends AudioWorkletProcessor {
         }else {
           //no xfading - play as normal
           // w = this.signals[this.currentSignalFunction](this._q[this.currentSignalFunction], inputs[0][0][i], this._mems[this.currentSignalFunction]);
-          this.signals[this.currentSignalFunction](this._q[this.currentSignalFunction], inputs[0][0][i], this._mems[this.currentSignalFunction]);
+          try {
+
+            this.signals[this.currentSignalFunction](this._q[this.currentSignalFunction], inputs[0][0][i], this._mems[this.currentSignalFunction]);
+          }catch(err) {
+            console.log("EVAL ERROR", err);
+            console.log(this.currentSignalFunction);
+            console.log(this._q[this.currentSignalFunction]);
+          }
         }
 
         // let scope = this._mems[this.currentSignalFunction][":show"];
-				// let scopeValue = scope !== undefined ? scope : output[channel][0];        
+				// let scopeValue = scope !== undefined ? scope : output[channel][0];
         // output[1][i] = specgramValue;
 
-        //mono->stereo
-        // for (let channel = 0; channel < channelCount; channel++) {
-        //   output[channel][i] = w;
-        // }
         for (let channel = 0; channel < channelCount; channel++) {
           output[channel][i] = this.DAC[channel];
         }
