@@ -119,9 +119,17 @@ class MaxiProcessor extends AudioWorkletProcessor {
     let temp = new Maximilian.maxiNonlinearity();
     console.log("TEST2", temp.asymclip(0.9,3,3));
 
+
     let q1 = Maximilian.maxiBits.sig(63);
 
-    this.sampleRate = 44100;
+    // this.sampleRate = 44100;
+    console.log("SAMPLERATE", sampleRate);
+    //indicate audio settings in WASM and JS domains
+    // console.log();
+    Maximilian.maxiSettings.setup(sampleRate,1,512);
+    Maximilian.maxiJSSettings.setup(sampleRate, 1, 512);
+    // maxiJSSettings.setup(sampleRate, 1, 512);
+
 
     //we don't know the number of channels at this stage, so reserve lots for the DAC
     this.DAC = [];
@@ -328,7 +336,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
 //@CLT
     this.clockTrig = (multiples, phase) => {
-        return (this.clockPhase(multiples, phase) - (1.0/this.sampleRate * multiples)) <= 0 ? 1 : 0;
+        return (this.clockPhase(multiples, phase) - (1.0/sampleRate * multiples)) <= 0 ? 1 : 0;
     };
     this.setClockFreq = (freq) => {
       this.clockFreq = freq;
@@ -339,11 +347,11 @@ class MaxiProcessor extends AudioWorkletProcessor {
     this.dt = 0;
 
     this.createMLOutputTransducer= (sendFrequency) => {
-      return new OutputTransducer(this.port, this.sampleRate, sendFrequency, 'ML');
+      return new OutputTransducer(this.port, sampleRate, sendFrequency, 'ML');
     }
 
     this.createNetOutputTransducer= (sendFrequency) => {
-      return new OutputTransducer(this.port, this.sampleRate, sendFrequency, 'NET');
+      return new OutputTransducer(this.port, sampleRate, sendFrequency, 'NET');
     }
 
     this.ifListThenToArray = (x) => {
@@ -383,6 +391,9 @@ class MaxiProcessor extends AudioWorkletProcessor {
       //first run - set up the output array
       for(let i=0; i < outputs[0].length; i++) this.DAC[i] = 0.0;
       console.log('init DAC', outputs[0].length);
+      Maximilian.maxiJSSettings.setup(sampleRate, outputs[0].length, 512); 
+      Maximilian.maxiSettings.setup(sampleRate, outputs[0].length, 512);
+
       this.DACChannelsInitalised = true;
     }
 
