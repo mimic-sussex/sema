@@ -6,8 +6,9 @@ const prod = mode === 'production';
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const LinkTypePlugin = require("html-webpack-link-type-plugin").HtmlWebpackLinkTypePlugin;
 const WorkerPlugin = require("worker-plugin");
-const CleanWebpackPlugin = require("clean-webpack-plugin");
+const { CleanPlugin } = require("clean-webpack-plugin");
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 
 module.exports = {
@@ -71,6 +72,13 @@ module.exports = {
 					"css-loader",
 				],
 			},
+			// {
+			// 	test: /tutorial.json/,
+			// 	loader: "file-loader",
+			// 	options: {
+			// 		name: "tutorial.json",
+			// 	},
+			// },
 			{
 				test: /\.glsl$/,
 				loader: "file-loader", // files should NOT get processed, only emitted
@@ -80,6 +88,7 @@ module.exports = {
 					name: "[name].glsl",
 				},
 			},
+
 			{
 				test: /\.ne$/,
 				use: ["raw-loader"],
@@ -118,6 +127,9 @@ module.exports = {
 				// Issue pointed out by Surma on the following gist – https://gist.github.com/surma/b2705b6cca29357ebea1c9e6e15684cc
 				// wasm files should not be processed but just be emitted
 				// and we want to have their public URL.
+
+				//note - need to import this in audioengine.js to get webpack to trigger this filter
+
 				test: /maximilian.wasmmodule.js$/,
 				type: "javascript/auto",
 				// loader: 'wasm-loader', // WASM files get processed [NOT what we want]
@@ -126,6 +138,40 @@ module.exports = {
 					// mimetype: 'application/wasm',
 					name: "maximilian.wasmmodule.js",
 				},
+			},
+			{
+				//WASM LOADER
+				// Issue pointed out by Surma on the following gist – https://gist.github.com/surma/b2705b6cca29357ebea1c9e6e15684cc
+				// wasm files should not be processed but just be emitted
+				// and we want to have their public URL.
+
+				//note - need to import this in audioengine.js to get webpack to trigger this filter
+
+				test: /open303.wasmmodule.js$/,
+				type: "javascript/auto",
+				// loader: 'wasm-loader', // WASM files get processed [NOT what we want]
+				loader: "file-loader", // WASM files are only emitted to the final dist, NOT processed
+				options: {
+					// mimetype: 'application/wasm',
+					name: "open303.wasmmodule.js",
+				},
+			},
+			{
+				//WASM LOADER
+				// Issue pointed out by Surma on the following gist – https://gist.github.com/surma/b2705b6cca29357ebea1c9e6e15684cc
+				// wasm files should not be processed but just be emitted
+				// and we want to have their public URL.
+
+				//note - need to import this in audioengine.js to get webpack to trigger this filter
+
+				test: /maximilian.transpile.js$/,
+				type: "javascript/auto",
+				// loader: 'wasm-loader', // WASM files get processed [NOT what we want]
+				loader: "file-loader", // WASM files are only emitted to the final dist, NOT processed
+				options: {
+					// mimetype: 'application/wasm',
+					name: "maximilian.transpile.js"
+				}
 			},
 			{
 				//IMAGE LOADER
@@ -149,22 +195,20 @@ module.exports = {
 						outputPath: "samples",
 					},
 				},
-			}
-			// {
-			// 	//TUTORIALS
-			// 	test: /\.(mp3|wav)$/,
-			// 	use: {
-			// 		loader: "file-loader",
-			// 		options: {
-			// 			name: "[name].[ext]",
-			// 			outputPath: "samples",
-			// 		},
-			// 	},
-			// },
+			},
 		],
 	},
 	mode,
 	plugins: [
+		new webpack.ProgressPlugin(),
+		new CopyWebpackPlugin([
+			{
+				context: "./assets",
+				from: "tutorial",
+				to: "tutorial",
+				toType: "dir",
+			},
+		]),
 		new HtmlWebpackPlugin({
 			noscriptHeader:
 				"To run Sema, please enable Javascript in the browser configuration",
@@ -179,14 +223,8 @@ module.exports = {
 			filename: "[name].css",
 		}),
 		new WorkerPlugin(),
-		new webpack.ProgressPlugin(),
 		// new CleanWebpackPlugin()
-		// new CleanWebpackPlugin({
-		//   dry: false,
-		//   verbose: true,
-		//   cleanStaleWebpackAssets: true,
-		//   protectWebpackAssets: true,
-		// })
+
 		// new webpack.HotModuleReplacementPlugin(),
 		// new webpack.NoEmitOnErrorsPlugin(),
 	],

@@ -1,4 +1,5 @@
 import Module from "./maximilian.wasmmodule.js"; //NOTE:FB We need this import here for webpack to emit maximilian.wasmmodule.js
+import Open303 from "./open303.wasmmodule.js"; //NOTE:FB We need this import here for webpack to emit maximilian.wasmmodule.js
 import CustomProcessor from "./maxi-processor";
 import {
   loadSampleToArray
@@ -24,10 +25,11 @@ import {copyToPasteBuffer} from '../utils/pasteBuffer.js';
 class MaxiNode extends AudioWorkletNode {
   constructor(audioContext, processorName) {
     // super(audioContext, processorName);
+    console.log();
     let options = {
       numberOfInputs: 1,
       numberOfOutputs: 1,
-      outputChannelCount: [2]
+      outputChannelCount: [audioContext.destination.maxChannelCount]
     };
     super(audioContext, processorName, options);
   }
@@ -264,13 +266,22 @@ class AudioEngine {
 		if (this.audioContext === undefined) {
 			this.audioContext = new AudioContext({
 				// create audio context with latency optimally configured for playback
-				latencyHint: "playback",
-				sample: 44100
+        latencyHint: "playback",
+        // latencyHint: 32/44100,  //this doesn't work below 512 on chrome (?)
+				// sampleRate: 44100
 			});
 
-			await this.loadWorkletProcessorCode();
+      this.audioContext.destination.channelInterpretation='discrete';
+      this.audioContext.destination.channelCountMode='explicit';
+      this.audioContext.destination.channelCount=this.audioContext.destination.maxChannelCount;
+      console.log(this.audioContext.destination);
 
-			this.connectMediaStream();
+			await this.loadWorkletProcessorCode();
+      this.audioWorkletNode.channelInterpretation='discrete';
+      this.audioWorkletNode.channelCountMode='explicit';
+      this.audioWorkletNode.channelCount=this.audioContext.destination.maxChannelCount;
+
+      this.connectMediaStream();
 
 			this.connectAnalysers(); // Connect Analysers loaded from the store
 
@@ -409,7 +420,7 @@ class AudioEngine {
 				// Custom node constructor with required parameters
 				this.audioWorkletNode = new MaxiNode(
 					this.audioContext,
-					this.audioWorkletProcessorName
+          this.audioWorkletProcessorName
 				);
 
 				// All possible error event handlers subscribed
@@ -443,6 +454,7 @@ class AudioEngine {
 
 				// Connect the worklet node to the audio graph
 				this.audioWorkletNode.connect(this.audioContext.destination);
+        console.log(this.audioContext.destination);
 
 				return true;
 			} catch (err) {

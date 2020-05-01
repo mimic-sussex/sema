@@ -1,4 +1,4 @@
-import App from './UI/App.svelte';
+import App from './components/App.svelte';
 import ico from "../assets/img/favicon.ico";
 import globalCss from "./global.css";
 

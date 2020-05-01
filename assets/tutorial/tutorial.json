@@ -1,0 +1,98 @@
+[{
+  "title": "Introduction",
+  "sections": [{
+    "slug": "basics",
+    "title": "Basics",
+    "chapter_dir": "01-introduction",
+    "section_dir": "01-basics"
+  }, {
+    "slug": "layout",
+    "title": "Layout",
+    "chapter_dir": "01-introduction",
+    "section_dir": "02-layout"
+  }, {
+    "slug": "editors",
+    "title": "Editors",
+    "chapter_dir": "01-introduction",
+    "section_dir": "03-editors"
+  }, {
+    "slug": "widgets",
+    "title": "Widgets",
+    "chapter_dir": "01-introduction",
+    "section_dir": "04-widgets"
+  }]
+}, {
+  "title": "Live Coding",
+  "sections": [{
+    "slug": "reactive-assignments",
+    "title": "Assignments",
+    "chapter_dir": "02-live-coding",
+    "section_dir": "01-reactive-assignments"
+  }, {
+    "slug": "reactive-declarations",
+    "title": "Declarations",
+    "chapter_dir": "02-live-coding",
+    "section_dir": "02-reactive-declarations"
+  }, {
+    "slug": "reactive-statements",
+    "title": "Statements",
+    "chapter_dir": "02-live-coding",
+    "section_dir": "03-reactive-statements"
+  }, {
+    "slug": "updating-arrays-and-objects",
+    "title": "Updating arrays and objects",
+    "chapter_dir": "02-live-coding",
+    "section_dir": "04-updating-arrays-and-objects"
+  }]
+}, {
+  "title": "Machine Learning Integration",
+  "sections": [{
+    "slug": "declaring-props",
+    "title": "Declaring props",
+    "chapter_dir": "03-props",
+    "section_dir": "01-declaring-props"
+  }, {
+    "slug": "default-values",
+    "title": "Default values",
+    "chapter_dir": "03-props",
+    "section_dir": "02-default-values"
+  }, {
+    "slug": "spread-props",
+    "title": "Spread props",
+    "chapter_dir": "03-props",
+    "section_dir": "03-spread-props"
+  }]
+}, {
+  "title": "Language Design",
+  "sections": [{
+    "slug": "if-blocks",
+    "title": "If blocks",
+    "chapter_dir": "04-logic",
+    "section_dir": "01-if-blocks"
+  }, {
+    "slug": "else-blocks",
+    "title": "Else blocks",
+    "chapter_dir": "04-logic",
+    "section_dir": "02-else-blocks"
+  }, {
+    "slug": "else-if-blocks",
+    "title": "Else-if blocks",
+    "chapter_dir": "04-logic",
+    "section_dir": "03-else-if-blocks"
+  }, {
+    "slug": "each-blocks",
+    "title": "Each blocks",
+    "chapter_dir": "04-logic",
+    "section_dir": "04-each-blocks"
+  }, {
+    "slug": "keyed-each-blocks",
+    "title": "Keyed each blocks",
+    "chapter_dir": "04-logic",
+    "section_dir": "05-keyed-each-blocks"
+  }, {
+    "slug": "await-blocks",
+    "title": "Await blocks",
+    "chapter_dir": "04-logic",
+    "section_dir": "06-await-blocks"
+  }]
+}]
