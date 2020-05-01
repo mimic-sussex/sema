@@ -7,7 +7,6 @@
 <script>
   import { onMount, onDestroy } from 'svelte';
 
-  // import Sidebar from '../../components/tutorial/Sidebar.svelte';
   import Dashboard from '../../components/layouts/Dashboard.svelte';
   import Markdown from "../../components/tutorial/Markdown.svelte";
 
@@ -23,13 +22,11 @@
 		goto(`tutorial/${e.target.value}`);
 	}
 
-
-
   let handleSelect = e => { 
     let href = e.target.value;
+    console.log(href);
     $goto(href)
   }
-
 
   onMount( async () => {
     
