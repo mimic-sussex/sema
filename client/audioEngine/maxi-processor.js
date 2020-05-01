@@ -128,6 +128,14 @@ class MaxiProcessor extends AudioWorkletProcessor {
     // console.log();
     Maximilian.maxiSettings.setup(sampleRate,1,512);
     Maximilian.maxiJSSettings.setup(sampleRate, 1, 512);
+
+    let tidx = new Maximilian.maxiIndex();
+    console.log(tidx.pull(1, 0.9, [1,2,3]));
+
+    let trsq = new Maximilian.maxiRatioSeq();
+    console.log(trsq.playTrig(0.0, [1]));
+    console.log(trsq.playTrig(0.5, [1]));
+    console.log(trsq.playTrig(0.6, [1]));
     // maxiJSSettings.setup(sampleRate, 1, 512);
     // let tmpSeq = new Float64Array([1,2]);
     // let ctypes = new Maximilian.cheerpTypes2();

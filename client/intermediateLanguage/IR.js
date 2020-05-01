@@ -609,8 +609,9 @@ class IRToJavascript {
         //a list can be static and/or dynamic
         //create a vector for the list
         let objName = "q.b" + blockIdx + "l" + IRToJavascript.getNextID();
-        ccode.setup += `${objName} = new Maximilian.VectorDouble();`;
-        ccode.setup += `${objName}.resize(${el.length},0);`;
+				// ccode.setup += `${objName} = new Maximilian.VectorDouble();`;
+        // ccode.setup += `${objName}.resize(${el.length},0);`;
+				ccode.setup += `${objName} = new Float64Array(${el.length});`;
 
         //in the loop, we create a function that returns the list. It might also update dynamic elements of the list
         ccode.loop += `(()=>{`;
@@ -620,11 +621,12 @@ class IRToJavascript {
           //if the element is a static number, set this element once in the setup code
           let element =  IRToJavascript.traverseTree(el[i_list], IRToJavascript.emptyCode(), level, vars, blockIdx);
           if(Object.keys(el[i_list])[0] == '@num') {
-              ccode.setup += `${objName}.set(${i_list}, ${element.loop});`;
+						// ccode.setup += `${objName}.set(${i_list}, ${element.loop});`;
+						ccode.setup += `${objName}[${i_list}] = ${element.loop};`;
           }else{
               //if the element not a number, set this element each update before returning the list
               extraSetupCode += element.setup;
-              ccode.loop += `${objName}.set(${i_list}, ${element.loop});`;
+              ccode.loop += `${objName}[${i_list}] = ${element.loop};`;
           }
         }
 
