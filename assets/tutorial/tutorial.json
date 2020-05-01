@@ -39,60 +39,111 @@
     "chapter_dir": "02-live-coding",
     "section_dir": "03-reactive-statements"
   }, {
-    "slug": "updating-arrays-and-objects",
-    "title": "Updating arrays and objects",
+    "slug": "DSP-objects",
+    "title": "DSP objects",
     "chapter_dir": "02-live-coding",
-    "section_dir": "04-updating-arrays-and-objects"
+    "section_dir": "04-DSP-objects"
   }]
 }, {
   "title": "Machine Learning Integration",
   "sections": [{
-    "slug": "declaring-props",
-    "title": "Declaring props",
-    "chapter_dir": "03-props",
-    "section_dir": "01-declaring-props"
+    "slug": "piping-data-streams",
+    "title": "Piping data streams",
+    "chapter_dir": "03-machine-learning-integration",
+    "section_dir": "02-piping-data-streams"
   }, {
-    "slug": "default-values",
-    "title": "Default values",
-    "chapter_dir": "03-props",
-    "section_dir": "02-default-values"
+    "slug": "pre-trained-models-i",
+    "title": "Pre-trained model i",
+    "chapter_dir": "03-machine-learning-integration",
+    "section_dir": "03-pre-trained-models-i"
   }, {
-    "slug": "spread-props",
-    "title": "Spread props",
-    "chapter_dir": "03-props",
-    "section_dir": "03-spread-props"
-  }]
+    "slug": "pre-trained-models-ii",
+    "title": "Pre-trained model ii",
+    "chapter_dir": "03-machine-learning-integration",
+    "section_dir": "03-pre-trained-models-ii"
+  }, {
+    "slug": "linear-regression",
+    "title": "Linear regression",
+    "chapter_dir": "03-machine-learning-integration",
+    "section_dir": "03-linear-regression"
+  }, {
+    "slug": "binary-classification",
+    "title": "Binary classification",
+    "chapter_dir": "03-machine-learning-integration",
+    "section_dir": "03-binary-classification"
+  }, {
+    "slug": "non-linear",
+    "title": "Non linear",
+    "chapter_dir": "03-machine-learning-integration",
+    "section_dir": "03-non-linear"
+  }, {
+    "slug": "LSTM-for-text-generation",
+    "title": "LSTM for text generation",
+    "chapter_dir": "03-machine-learning-integration",
+    "section_dir": "03-LSTM-for-text-generation"
+  }, {
+    "slug": "echo-state-networks",
+    "title": "Echo state networks",
+    "chapter_dir": "03-machine-learning-integration",
+    "section_dir": "03-echo-state-network"
+  }
+  
+  ]
 }, {
   "title": "Language Design",
   "sections": [{
-    "slug": "if-blocks",
-    "title": "If blocks",
-    "chapter_dir": "04-logic",
-    "section_dir": "01-if-blocks"
+    "slug": "regular-expressions",
+    "title": "Regular expressions",
+    "chapter_dir": "04-language-design",
+    "section_dir": "01-regular-expressions"
   }, {
-    "slug": "else-blocks",
-    "title": "Else blocks",
-    "chapter_dir": "04-logic",
-    "section_dir": "02-else-blocks"
+    "slug": "grammar-rules",
+    "title": "Grammar rules",
+    "chapter_dir": "04-language-design",
+    "section_dir": "02-grammar-rules"
   }, {
-    "slug": "else-if-blocks",
-    "title": "Else-if blocks",
-    "chapter_dir": "04-logic",
-    "section_dir": "03-else-if-blocks"
+    "slug": "1-token-grammar",
+    "title": "1-token grammar",
+    "chapter_dir": "04-language-design",
+    "section_dir": "03-1-token-grammar"
   }, {
-    "slug": "each-blocks",
-    "title": "Each blocks",
-    "chapter_dir": "04-logic",
-    "section_dir": "04-each-blocks"
+    "slug": "multi-token-grammar",
+    "title": "Multi-token grammar",
+    "chapter_dir": "04-language-design",
+    "section_dir": "04-multi-token-grammar"
   }, {
-    "slug": "keyed-each-blocks",
-    "title": "Keyed each blocks",
-    "chapter_dir": "04-logic",
-    "section_dir": "05-keyed-each-blocks"
+    "slug": "separators",
+    "title": "Separators",
+    "chapter_dir": "04-language-design",
+    "section_dir": "05-separators"
   }, {
-    "slug": "await-blocks",
-    "title": "Await blocks",
-    "chapter_dir": "04-logic",
-    "section_dir": "06-await-blocks"
-  }]
+    "slug": "recursion",
+    "title": "Recursion",
+    "chapter_dir": "04-language-design",
+    "section_dir": "06-recursion"
+  }, {
+    "slug": "lists",
+    "title": "Lists",
+    "chapter_dir": "04-language-design",
+    "section_dir": "06-lists"
+  },
+  {
+		"slug": "semantic-actions",
+		"title": "Semantic actions",
+		"chapter_dir": "04-language-design",
+		"section_dir": "06-semantic-actions"
+	},
+  {
+		"slug": "intermediate-language",
+		"title": "Intermediate Language",
+		"chapter_dir": "04-language-design",
+		"section_dir": "06-intermediate-language"
+	},
+  {
+		"slug": "building-the-Sema-AST",
+		"title": "Building the Sema Abstract Syntax Tree",
+		"chapter_dir": "04-language-design",
+		"section_dir": "06-building-the-Sema-AST"
+	}
+  ]
 }]
