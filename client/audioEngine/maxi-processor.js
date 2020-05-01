@@ -129,6 +129,19 @@ class MaxiProcessor extends AudioWorkletProcessor {
     Maximilian.maxiSettings.setup(sampleRate,1,512);
     Maximilian.maxiJSSettings.setup(sampleRate, 1, 512);
     // maxiJSSettings.setup(sampleRate, 1, 512);
+    // let tmpSeq = new Float64Array([1,2]);
+    // let ctypes = new Maximilian.cheerpTypes2();
+    // let r = Maximilian.cheerpTypes.vectorTest(tmpSeq,0);
+    // console.log("RES",r);
+    // let tmprsq = new Maximilian.maxiRatioSeq();
+    // for(let i=0; i < 2; i+=0.25) {
+    //       console.log(i,tmprsq.playTrig(i % 1.0,tmpSeq));
+    //   }
+    // let vt = new Maximilian.vectorTest();
+    // let data = vt.makeDoubleVector(10,2);
+    // console.log(vt);
+    // console.log(vt.sumVector(tmpSeq));
+    // console.log(vector);
 
 
     //we don't know the number of channels at this stage, so reserve lots for the DAC
@@ -391,7 +404,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
       //first run - set up the output array
       for(let i=0; i < outputs[0].length; i++) this.DAC[i] = 0.0;
       console.log('init DAC', outputs[0].length);
-      Maximilian.maxiJSSettings.setup(sampleRate, outputs[0].length, 512); 
+      Maximilian.maxiJSSettings.setup(sampleRate, outputs[0].length, 512);
       Maximilian.maxiSettings.setup(sampleRate, outputs[0].length, 512);
 
       this.DACChannelsInitalised = true;
