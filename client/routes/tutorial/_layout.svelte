@@ -22,10 +22,18 @@
 		goto(`tutorial/${e.target.value}`);
 	}
 
-  let handleSelect = e => { 
-    let href = e.target.value;
-    console.log(href);
-    $goto(href)
+ 	// let loadLayout = async () => {
+	// 	return await fetch(`text.md`).then();
+	// }
+
+  let handleSelect = async e => { 
+
+    console.log($selected);
+    // slug: "editors", title: "Editors", chapter_dir: "01-introduction", section_dir: "03-editors"
+    $goto(`./${$selected.chapter_dir}/${$selected.section_dir}/`);
+
+
+    $items = await fetch(`${$selected.section_dir}/layout.json`).then(r => r.json());
   }
 
   onMount( async () => {
@@ -62,7 +70,7 @@
               <optgroup label="{i + 1}. {chapter.title}">
                 {#if chapter.sections !== undefined}
                   {#each chapter.sections as section, i}
-                    <option value={section.slug}>{String.fromCharCode(i + 97)}. {section.title}</option>
+                    <option value={section}>{String.fromCharCode(i + 97)}. {section.title}</option>
                   {/each}
                 {/if}  
               </optgroup>
