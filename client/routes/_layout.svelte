@@ -93,9 +93,10 @@
 
     <li><a href="/playground">Playground</a></li>
 
+    <!-- Note: need to keep the dash afte tutorial -->
     <li><a href="/tutorial/">Tutorial</a></li>
 
-    <!-- <li><a href="/docs">Docs</a></li> -->
+
     <li><a href='https://github.com/mimic-sussex/sema/tree/master/docs' target="_blank">Docs</a></li>
 
     <li><a href="/blog/">Blog</a></li>

@@ -8,19 +8,18 @@
 
   import marked from 'marked';
   
-  export let section;
 
   import { url, params } from "@sveltech/routify";
 
-  export let id;
+  export let scoped;
 
   console.log('chapter');
   console.log($params);
 
   // let x = preload();
   // console.log(x);
-
-  let source = `${$params.chapter} ${$params.section}`;
+  let { selected } = scoped
+  let source = `${$params.chapter} ${$params.section} ${selected} `;
 // let source = `
 // # H1 heading
 

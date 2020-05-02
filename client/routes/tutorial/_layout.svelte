@@ -1,6 +1,7 @@
 <script context="module">
 	export async function preload() {
-		return await fetch(`tutorial.json`).then(r => r.json());
+		// '/' absolute URL
+		return await fetch(`/tutorial/tutorial.json`).then(r => r.json());
 	}
 </script>
 
@@ -28,12 +29,15 @@
 
   let handleSelect = async e => { 
 
+
+
     console.log($selected);
     // slug: "editors", title: "Editors", chapter_dir: "01-introduction", section_dir: "03-editors"
-    $goto(`./${$selected.chapter_dir}/${$selected.section_dir}/`);
+    $goto(`/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/`);
 
+    $items = await fetch(`/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/layout.json`)
+                    .then(r => r.json());
 
-    $items = await fetch(`${$selected.section_dir}/layout.json`).then(r => r.json());
   }
 
   onMount( async () => {
@@ -87,7 +91,7 @@
       <br/>
       
       <!-- <Markdown /> -->
-      <slot>
+      <slot scoped={ $selected }>
       </slot>
       
     
