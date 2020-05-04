@@ -24,7 +24,6 @@
 		goto(`tutorial/${e.target.value}`);
 	}
 
-
   let handleSelect = async e => { 
     // console.log($selected);
 

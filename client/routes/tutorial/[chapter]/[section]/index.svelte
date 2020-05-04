@@ -1,9 +1,3 @@
-<script context="module">
-	export async function preload() {
-		return await fetch(`text.md`).then();
-	}
-</script>
-
 <script>
   import { onMount } from 'svelte';
   import { url, params } from "@sveltech/routify";
@@ -12,23 +6,25 @@
     selected
   } from '../../../../stores/tutorial.js';
 
-  export let scoped;
-  export let chapter; // we are grabbing this export variable value from Routify's file structure variable mechanism [chapter][section]
   export let section; // we are grabbing this export variable value from Routify's file structure variable mechanism [chapter][section]
-  export let source; 
-
-  console.log('chapter');
-  console.log($params);
-  console.log($url);
-  console.log(scoped);
-
-
+  
   // console.log(x);
   // let { selected } = scoped
-  // let source = `${$params.chapter} ${$params.section} ${selected} ${scoped}  ${section} ${chapter}`;
 
+  let fetchMarkdown = async (chapter, section) => {
+    // $: source = `${$params.chapter} ${$params.section} ${$url} ${section}`;
+    let content = await fetch(`/tutorial/${chapter}/${section}/index.md`).then( x => console.log(x) )
+    
 
-  $: markdown = marked(section); // Reactive expression, 'markdown' reacts to 'source' changes
+    return content;
+    // return await fetch(`/tutorial/${chapter}/${section}/index.md`).then();
+  }
+
+   fetchMarkdown($params.chapter, section); 
+  // $: markdown = marked(source); // Reactive expression, 'markdown' reacts to 'source' changes
+
+  $: source = `${$params.chapter} ${$params.section} ${$url} ${section}`;
+  $: markdown = marked(source); // Reactive expression, 'markdown' reacts to 'source' changes
 
 </script>
 
