@@ -119,7 +119,8 @@
     grid-area: sidebar;
     grid-row: 0 / 1;
     height: 100%;
-    width: auto; /* width is defined by child */
+    /* width: auto; width is defined by child */
+    width: 26em; 
   }
 
   .dashboard-container {

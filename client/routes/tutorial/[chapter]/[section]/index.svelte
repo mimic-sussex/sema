@@ -1,5 +1,5 @@
 <script>
-  import { onMount } from 'svelte';
+  import { tick, onMount } from 'svelte';
   import { url, params } from "@sveltech/routify";
   import marked from 'marked';
   import {
@@ -8,23 +8,25 @@
 
   export let section; // we are grabbing this export variable value from Routify's file structure variable mechanism [chapter][section]
   
-  // console.log(x);
-  // let { selected } = scoped
+  let markdown;
 
   let fetchMarkdown = async (chapter, section) => {
-    // $: source = `${$params.chapter} ${$params.section} ${$url} ${section}`;
-    let content = await fetch(`/tutorial/${chapter}/${section}/index.md`).then( x => console.log(x) )
-    
-
-    return content;
-    // return await fetch(`/tutorial/${chapter}/${section}/index.md`).then();
+    const res = await fetch(`/tutorial/${chapter}/${section}/index.md`)
+		const text = await res.text();
+    console.log(text);
+  
+    await tick();
+  	if (res.ok) {
+			markdown = marked(text);
+		} else {
+			throw new Error(text);
+		} 
   }
 
-   fetchMarkdown($params.chapter, section); 
-  // $: markdown = marked(source); // Reactive expression, 'markdown' reacts to 'source' changes
+  $: promise = fetchMarkdown($params.chapter, section); // Reactive statement, var 'promise' reacts to 'section' changes
 
-  $: source = `${$params.chapter} ${$params.section} ${$url} ${section}`;
-  $: markdown = marked(source); // Reactive expression, 'markdown' reacts to 'source' changes
+  // $: source = `${$params.chapter} ${section}`;
+  // $: markdown = source; // Reactive expression, 'markdown' reacts to 'source' changes
 
 </script>
 
@@ -49,5 +51,13 @@
 </style>
 
 <div class="markdown-container">
+{#await promise}
+	<p>...waiting</p>
+{:then number}
   <div class="markdown-output">{@html markdown}</div>
+{:catch error}
+	<p style="color: red">{error.message}</p>
+{/await}
+
+
 </div>
