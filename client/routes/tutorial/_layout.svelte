@@ -16,6 +16,7 @@
   import {
     tutorials,
     selected,
+    hydrateJSONcomponent,
     items
   } from '../../stores/tutorial.js';
 
@@ -23,20 +24,17 @@
 		goto(`tutorial/${e.target.value}`);
 	}
 
- 	// let loadLayout = async () => {
-	// 	return await fetch(`text.md`).then();
-	// }
 
   let handleSelect = async e => { 
+    // console.log($selected);
 
+    let json = await fetch(`/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/layout.json`)
+                    .then( r => r.json());
 
+    $items = json.map( item => hydrateJSONcomponent(item) );
 
-    console.log($selected);
     // slug: "editors", title: "Editors", chapter_dir: "01-introduction", section_dir: "03-editors"
     $goto(`/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/`);
-
-    $items = await fetch(`/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/layout.json`)
-                    .then(r => r.json());
 
   }
 

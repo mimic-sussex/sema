@@ -66,11 +66,6 @@
     // $items = $items; // call a re-render
   };
 
-
-
-
-
-
 	const update = (item, prop, value) => {
     if( prop !== undefined || value !== undefined ){
       // item[prop] = value;

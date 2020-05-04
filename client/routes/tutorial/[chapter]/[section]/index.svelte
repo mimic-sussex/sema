@@ -5,73 +5,30 @@
 </script>
 
 <script>
-
-  import marked from 'marked';
-  
-
+  import { onMount } from 'svelte';
   import { url, params } from "@sveltech/routify";
+  import marked from 'marked';
+  import {
+    selected
+  } from '../../../../stores/tutorial.js';
 
   export let scoped;
+  export let chapter; // we are grabbing this export variable value from Routify's file structure variable mechanism [chapter][section]
+  export let section; // we are grabbing this export variable value from Routify's file structure variable mechanism [chapter][section]
+  export let source; 
 
   console.log('chapter');
   console.log($params);
+  console.log($url);
+  console.log(scoped);
 
-  // let x = preload();
+
   // console.log(x);
-  let { selected } = scoped
-  let source = `${$params.chapter} ${$params.section} ${selected} `;
-// let source = `
-// # H1 heading
-
-// ## H2 heading
-
-// ### H3 heading
-
-// ---
-
-// **bold text**
-
-// *italicized text*
-
-// ---
-
-// 1. First item
-// 2. Second item
-// 3. Third item
-
-// - First item
-// - Second item
-// - Third item
-
-// [Sema](https://sema.codes/)
-// # H1 heading
-
-// ## H2 heading
-
-// ### H3 heading
-
-// ---
-
-// **bold text**
-
-// *italicized text*
-
-// ---
-
-// 1. First item
-// 2. Second item
-// 3. Third item
-
-// - First item
-// - Second item
-// - Third item
-
-// [Sema](https://sema.codes/)
+  // let { selected } = scoped
+  // let source = `${$params.chapter} ${$params.section} ${selected} ${scoped}  ${section} ${chapter}`;
 
 
-// `;
-
-let markdown = marked(source);
+  $: markdown = marked(section); // Reactive expression, 'markdown' reacts to 'source' changes
 
 </script>
 

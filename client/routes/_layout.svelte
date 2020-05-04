@@ -2,7 +2,7 @@
 	// import Nav from '../components//Nav.svelte';
 	import UserObserver from '../components/user/UserObserver.svelte';
 
-	export let segment;
+	// export let segment;
 </script>
 
 <style>
