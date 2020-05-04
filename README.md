@@ -72,7 +72,7 @@ Sema uses Web Audio API Audio Worklets. Their performance seems very sensitive t
 
 [Sema Intermediate Language](docs/sema-intermediate-language.md)
 
-[Maximilian DSP Library API](docs/maximilian-dsp-api.md)
+[Maximilian DSP API](docs/maximilian-dsp-api.md)
 
 [Javascript Editor Utils](docs/javascript-editor-utils.md)
 

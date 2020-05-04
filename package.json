@@ -11,9 +11,10 @@
     "build": "cross-env NODE_ENV=production webpack",
     "dev": "run-p watch:routify watch:webpack",
     "watch:webpack": "webpack-dev-server --content-base public",
-    "watch:routify": "routify -d --pages ./client/routes",
+    "watch:routify": "routify -d --pages ./client/routes/",
     "test": "mocha --opts mocha.opts",
-    "prebuild": "routify --single-build",
+    "export": "routify export",
+    "prebuild": "routify --single-build --pages ./client/routes/",
     "serve": "spassr --debug --serve-spa --spa-port 5001 --dist-dir ./public --app ./bundle.js --entrypoint ./index.html"
   },
   "dependencies": {

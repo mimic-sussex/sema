@@ -257,18 +257,41 @@ export function storable(key, initialValue) {
 
 
 // Store for tutorial options in Sidebar component
-let tutorialOptions = [	
-  { id: 1, text: `Tutorial 1`, content: "sdf" },
-	{ id: 2, text: `Tutorial 2`, content: "mar" },
-	{ id: 3, text: `Tutorial 3`, content: "mar" },
-	{ id: 4, text: `Tutorial 4`, content: "mar" },
-	{ id: 5, text: `Tutorial 5`, content: "mar" },
-	{ id: 6, text: `Tutorial 6`, content: "mar" },
-	{ id: 7, text: `Tutorial 7`, content: "adf" },
+let tutorialOptions = [
+	{
+		id: 1,
+		text: `Tutorial 1`,
+		sections: [
+			{
+				slug: "basics",
+				title: "Basics",
+				chapter_dir: "01-introduction",
+				section_dir: "01-basics",
+			},
+			{
+				slug: "layout",
+				title: "Layout",
+				chapter_dir: "01-introduction",
+				section_dir: "02-layout",
+			},
+			{
+				slug: "editors",
+				title: "Editors",
+				chapter_dir: "01-introduction",
+				section_dir: "03-editors",
+			},
+			{
+				slug: "widgets",
+				title: "Widgets",
+				chapter_dir: "01-introduction",
+				section_dir: "04-widgets",
+			},
+		],
+	}
 ];
 export let tutorials = writable(tutorialOptions);
 
 // Store for SELECTED tutorial options in Sidebar component
-export let currentTutorial = writable(tutorials[0]);
+export let selected = writable(tutorials[0]);
 
 export let items = storable("tutorial", testItems); // localStorageWrapper

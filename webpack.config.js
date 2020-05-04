@@ -223,7 +223,6 @@ module.exports = {
 			filename: "[name].css",
 		}),
 		new WorkerPlugin(),
-
 		// new CleanWebpackPlugin()
 
 		// new webpack.HotModuleReplacementPlugin(),
