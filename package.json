@@ -19,7 +19,9 @@
   "dependencies": {
     "firebase": "^7.14.1",
     "firebaseui": "^4.5.0",
+    "futil": "^1.67.0",
     "github-base": "^1.0.0",
+    "lodash": "^4.17.15",
     "lodash.clonedeep": "^4.5.0",
     "lodash.map": "^4.6.0",
     "marked": "^0.8.2",

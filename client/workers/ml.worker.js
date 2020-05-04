@@ -3,6 +3,8 @@
 importScripts("https://cdn.jsdelivr.net/npm/@tensorflow/tfjs");
 // importScripts("http://mlweb.loria.fr/lalolib.js");
 importScripts("./lalolib.js");
+importScripts("./svd.js");
+importScripts("./lodash.js");
 // import "./magenta/magentamusic.js";
 
 // let a = tf.tensor([100]);
@@ -115,7 +117,7 @@ onmessage = m => {
   		if (evalRes != undefined) {
         console.log(evalRes);
       }
-  		else 
+  		else
         console.log("done");
     }catch(e) {
       console.log(`Code eval exception: ${e}`);

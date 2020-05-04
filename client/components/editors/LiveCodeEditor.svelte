@@ -7,7 +7,7 @@
   if (is_browser) {
     import("../../utils/codeMirrorPlugins");
   }
-</script>
+</script> 
 
 <script>
 
@@ -43,7 +43,7 @@
 	export let theme;
 	export let background;
 	export let data;
-  // export let static; // Error: ParseError: The keyword 'static' is reserved 
+  // export let static; // Error: ParseError: The keyword 'static' is reserved
   export let responsive;
   export let resizable;
   export let resize;
@@ -55,7 +55,7 @@
   export let y;
   export let w;
   export let h;
-  export let component; 
+  export let component;
 
   let codeMirror;
   let parserWorker;
