@@ -11,11 +11,12 @@
   let markdown;
 
   let fetchMarkdown = async (chapter, section) => {
+  
     const res = await fetch(`/tutorial/${chapter}/${section}/index.md`)
 		const text = await res.text();
-    console.log(text);
-  
-    await tick();
+    // console.log(text);
+
+    await tick();    
   	if (res.ok) {
 			markdown = marked(text);
 		} else {

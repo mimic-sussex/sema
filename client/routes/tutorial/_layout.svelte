@@ -6,7 +6,7 @@
 </script>
 
 <script>
-  import { onMount, onDestroy } from 'svelte';
+  import { onMount, onDestroy, tick } from 'svelte';
 
   import Dashboard from '../../components/layouts/Dashboard.svelte';
   import Markdown from "../../components/tutorial/Markdown.svelte";
@@ -20,27 +20,32 @@
     items
   } from '../../stores/tutorial.js';
 
-	function navigate(e) {
-		goto(`tutorial/${e.target.value}`);
-	}
+	// function navigate(e) {
+	// 	goto(`tutorial/${e.target.value}`);
+	// }
 
   let handleSelect = async e => { 
     // console.log($selected);
+    $goto(`/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/`);
 
+    await tick();    
     let json = await fetch(`/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/layout.json`)
                     .then( r => r.json());
 
     $items = json.map( item => hydrateJSONcomponent(item) );
 
+
+
+
     // slug: "editors", title: "Editors", chapter_dir: "01-introduction", section_dir: "03-editors"
-    $goto(`/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/`);
+    
 
   }
 
   onMount( async () => {
     
     let chapters = await preload();
-    console.log(chapters)
+    // console.log(chapters)
 
     $tutorials = chapters;  
     $selected = $tutorials[0];
