@@ -113,10 +113,10 @@ onmessage = m => {
     try {
   		let evalRes = geval(m.data.eval);
   		if (evalRes != undefined) {
-        // console.log(evalRes);
+        console.log(evalRes);
       }
-  		else ;
-        // console.log("done");
+  		else 
+        console.log("done");
     }catch(e) {
       console.log(`Code eval exception: ${e}`);
     }
