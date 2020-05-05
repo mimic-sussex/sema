@@ -20,10 +20,6 @@
     items
   } from '../../stores/tutorial.js';
 
-	// function navigate(e) {
-	// 	goto(`tutorial/${e.target.value}`);
-	// }
-
   let handleSelect = async e => { 
     // console.log($selected);
     $goto(`/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/`);
@@ -34,12 +30,7 @@
 
     $items = json.map( item => hydrateJSONcomponent(item) );
 
-
-
-
     // slug: "editors", title: "Editors", chapter_dir: "01-introduction", section_dir: "03-editors"
-    
-
   }
 
   onMount( async () => {
@@ -49,7 +40,6 @@
 
     $tutorials = chapters;  
     $selected = $tutorials[0];
-
   });   
 
 </script>
