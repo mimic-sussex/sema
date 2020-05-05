@@ -8794,8 +8794,8 @@ function spMatrix(m,n, values, cols, rows) {
 			
 		/** @type{boolean} */ this.rowmajor = true;
 		/** @type{Float64Array} */ this.val = new Float64Array(nnz);  // nnz values
-		/** @type{Uint32Array} */ this.cols = new Uint32Array(nnz); // cols[j] = starting index of col j in val and rows
-		/** @type{Uint32Array} */ this.rows = new Uint32Array(m+1);   // rows[k] = row of val[k]
+		/** @type{Uint32Array} */ this.cols = new Uint32Array(nnz); // cols[k] = col of val[k]
+		/** @type{Uint32Array} */ this.rows = new Uint32Array(m+1);   // rows[i] = starting index of row i in val and cols
 	}
 	else {
 		var nnz = values.length;
@@ -8848,7 +8848,7 @@ spMatrix.prototype.row = function ( i ) {
 		return vec;*/
 	}
 	else {
-		error ("Cannot extract sparse column from a sparse matrix in row major format.");
+		error ("Cannot extract sparse row from a sparse matrix in column major format.");
 		return undefined;
 	}
 }
@@ -9483,9 +9483,32 @@ function mulspMatrixspMatrix (A, B) {
 		}
 		else {
 			var kc = 0;
+			/*
 			for ( var i=0; i < m; i++) {
 				for ( var j=0; j < n2; j++) {
 					c.val[kc] = spdot(A.row(i), B.col(j));
+					kc++;
+				}
+			}
+			*/
+			for ( var i=0; i < m; i++) {
+				var sa = A.rows[i];
+				var ea = A.rows[i+1];
+					
+				for ( var j=0; j < n2; j++) {
+					
+					var eb = B.cols[j+1];
+					var ka = sa;
+					var kb = B.cols[j];	
+					while ( ka < ea && kb < eb ){
+						var aj = A.cols[ka]; 
+						while ( B.rows[kb] < aj && kb < eb)
+							kb++;
+						if(B.rows[kb] == aj && kb < eb)
+							c.val[kc] += A.val[ka] * B.val[kb];	
+						ka++;
+					}
+
 					kc++;
 				}
 			}
