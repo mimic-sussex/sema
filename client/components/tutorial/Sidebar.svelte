@@ -84,7 +84,7 @@
     margin-top: 5px;
   } */
 
-  .combobox-dark {
+  /* .combobox-dark {
     display: block;
     font-size: 12px;
     font-family: sans-serif;
@@ -97,15 +97,7 @@
     max-width: 100%; 
     box-sizing: border-box;
     margin: 0;
-    /* border: 1px solid #333; */
     border: 0 solid #333;
-    /*border-right-color: rgba(34,37,45, 0.4);;
-    border-right-style: solid;
-    border-right-width: 1px;
-    border-bottom-color: rgba(34,37,45, 0.4);
-    border-bottom-style: solid;
-    border-bottom-width: 1px; */
-    /* box-shadow: 0 1px 0 0px rgba(4, 4, 4, 0.04); */
     border-radius: .6em;
     -moz-appearance: none;
     -webkit-appearance: none;
@@ -117,7 +109,7 @@
     -webkit-box-shadow: 5px 5px 20px -5px rgba(0,0,0,0.75), -5px -5px 20px rgba(255, 255, 255, 0.954);
     -moz-box-shadow: 5px 5px 20px -5px rgba(0,0,0,0.75), -5px -5px 20px rgba(255, 255, 255, 0.954);
     box-shadow: 2px 2px 3px rgb(0, 0, 0), -1px -1px 3px #ffffff61;
-  }
+  } */
 
   /* .combobox {
     display: block;
@@ -206,13 +198,13 @@
         ◄
       </button>    
 
-      <select class="combobox-dark" bind:value={$currentTutorial} >
+      <!-- <select class="combobox-dark" bind:value={$currentTutorial} >
         {#each tutorials as tutorialOption}
           <option value={tutorialOption}>
             {tutorialOption.text}
           </option>
         {/each}
-      </select>   
+      </select>    -->
       <!-- on:click={ () => dispatchAdd('analyser') } -->
       <button class="button-dark"> 
         ►

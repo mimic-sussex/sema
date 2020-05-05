@@ -1,12 +1,13 @@
 <script context="module">
 	export async function preload() {
-		const sections = await this.fetch(`tutorial/tutorial.json`).then(r => r.json());
-		return { sections };
+		// '/' absolute URL
+		return await fetch(`/tutorial/tutorial.json`).then(r => r.json());
 	}
 </script>
 
 <script>
-  // import Sidebar from '../../components/tutorial/Sidebar.svelte';
+  import { onMount, onDestroy, tick } from 'svelte';
+
   import Dashboard from '../../components/layouts/Dashboard.svelte';
   import Markdown from "../../components/tutorial/Markdown.svelte";
 
@@ -14,33 +15,42 @@
 
   import {
     tutorials,
-    currentTutorial,
+    selected,
+    hydrateJSONcomponent,
     items
   } from '../../stores/tutorial.js';
 
-  // import "raw-loader?name=api/[name].[ext]!./tutorial.json";
-  // import { get } from "./index.json.js";
-  // import tutorial from './tutorial.json';
-  // import './tutorial.json';
-	export let sections;
-  // let tutorial = preload();
+	// function navigate(e) {
+	// 	goto(`tutorial/${e.target.value}`);
+	// }
 
-  // const contents = JSON.stringify(tutorial.map(post => {
-  //   return {
-  //     title: post.title,
-  //     slug: post.slug
-  //   };
-  // }));
+  let handleSelect = async e => { 
+    // console.log($selected);
+    $goto(`/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/`);
 
-  console.log("DEBUG:Tutorial:_tutorial:");
-  console.log(sections)  
+    await tick();    
+    let json = await fetch(`/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/layout.json`)
+                    .then( r => r.json());
 
-  let handleSelect = e => { 
-    let href = e.target.value;
-    $goto(href)
+    $items = json.map( item => hydrateJSONcomponent(item) );
+
+
+
+
+    // slug: "editors", title: "Editors", chapter_dir: "01-introduction", section_dir: "03-editors"
+    
+
   }
 
-  
+  onMount( async () => {
+    
+    let chapters = await preload();
+    // console.log(chapters)
+
+    $tutorials = chapters;  
+    $selected = $tutorials[0];
+
+  });   
 
 </script>
 
@@ -53,31 +63,37 @@
     <div class="sidebar">
 
       <div class="tutorial-navigator">
-      <!-- on:click={ () => dispatchNav('previousTurt') } -->
         <button class="button-dark"> 
           ◄
         </button>    
 
         <select class="combobox-dark" 
-                bind:value={$currentTutorial} 
+                bind:value={$selected} 
                 on:change={ e => handleSelect(e) } 
                 >
-          {#each $tutorials as tutorialOption}
-            <option value={tutorialOption}> 
-              {tutorialOption.text}
-            </option>
-          {/each}
+          {#if $tutorials !== undefined} 
+            {#each $tutorials as chapter, i}                	
+              <optgroup label="{i + 1}. {chapter.title}">
+                {#if chapter.sections !== undefined}
+                  {#each chapter.sections as section, i}
+                    <option value={section}>{String.fromCharCode(i + 97)}. {section.title}</option>
+                  {/each}
+                {/if}  
+              </optgroup>
+            {/each}
+          {/if}
         </select>   
-        <!-- on:click={ () => dispatchAdd('analyser') } -->
+
         <button class="button-dark"> 
           ►
         </button>
+
       </div>
 
       <br/>
       
       <!-- <Markdown /> -->
-      <slot>
+      <slot scoped={ $selected }>
       </slot>
       
     
@@ -108,7 +124,8 @@
     grid-area: sidebar;
     grid-row: 0 / 1;
     height: 100%;
-    width: auto; /* width is defined by child */
+    /* width: auto; width is defined by child */
+    width: 26em; 
   }
 
   .dashboard-container {
