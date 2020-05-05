@@ -6,7 +6,7 @@
     selected
   } from '../../../../stores/tutorial.js';
 
-  export let section; // we are grabbing this export variable value from Routify's file structure variable mechanism [chapter][section]
+  export let section; // we are grabbing this export variable value from Routify's file structure variable mechanism [chapter]/[section]
   
   let markdown;
 
