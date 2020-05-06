@@ -14,7 +14,7 @@
   
     const res = await fetch(`/tutorial/${chapter}/${section}/index.md`)
 		const text = await res.text();
-    // console.log(text);
+    console.log(`DEBUG:[/${chapter}]/[${section}]:fetchMarkdown: `, text);
 
     // await tick();    
   	if (res.ok) {
@@ -24,7 +24,7 @@
 		} 
   }
 
-  $: promise = fetchMarkdown($params.chapter, section); // Reactive statement, var 'promise' reacts to 'section' changes
+  $: promise = fetchMarkdown($params.chapter, $params.section); // Reactive statement, var 'promise' reacts to 'section' changes
 
   // $: source = `${$params.chapter} ${section}`;
   // $: markdown = source; // Reactive expression, 'markdown' reacts to 'source' changes

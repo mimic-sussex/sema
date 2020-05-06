@@ -21,7 +21,9 @@
   } from '../../stores/tutorial.js';
 
   let handleSelect = async e => { 
-    // console.log($selected);
+    
+    console.log(`DEBUG:tutorial:_layout[/${$selected.chapter_dir}]/[${$selected.section_dir}]:`);
+    
     $goto(`/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/`);
 
     await tick();    
