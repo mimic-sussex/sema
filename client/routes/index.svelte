@@ -1,10 +1,10 @@
 <script>
 
-  import { splashScreenClicked } from '../store.js';
+  // import { splashScreenClicked } from '../store.js';
 
-  let handleClick = () => {
-    $splashScreenClicked = "hidden";
-  }
+  // let handleClick = () => {
+  //   $splashScreenClicked = "hidden";
+  // }
 
   import {
     currentUser
@@ -80,12 +80,7 @@
 		}
 	} */
 
-  .sign-in-guest-button {
-    height: 40px;
-    width: 187px;
-    font-size: 14px;
-    font-family: Arial, Helvetica, sans-serif;
-  }
+
 
 </style>
 
@@ -106,9 +101,9 @@
   
   <div class='login'>
 
-    <button class='sign-in-guest-button' 
-            on:click={handleClick} 
-            > Sign in as Guest </button> 
+    <!-- <button class='sign-in-guest-button' 
+            on:click={ handleClick } 
+            > Sign in as Guest </button>  -->
   
     <SignIn />
   

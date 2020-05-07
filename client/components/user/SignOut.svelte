@@ -20,7 +20,7 @@
         firebase.auth.GithubAuthProvider.PROVIDER_ID,
         // firebase.auth.EmailAuthProvider.PROVIDER_ID,
         // firebase.auth.PhoneAuthProvider.PROVIDER_ID,
-        // firebaseui.auth.AnonymousAuthProvider.PROVIDER_ID
+        firebaseui.auth.AnonymousAuthProvider.PROVIDER_ID
       ],
       callbacks: {
         signInSuccessWithAuthResult: function(authResult, redirectUrl) {
@@ -76,7 +76,7 @@
 
 <!-- <button class='button' on:click={ () => login() }> Login </button> -->
 {#if $currentUser}
-<button on:click={ () => signOut() }>SignOut</button>
+  <button on:click={ () => signOut() }>SignOut</button>
 <!-- {:else} -->
 <!-- <div id='firebaseui-auth-container'></div> -->
 {/if}
