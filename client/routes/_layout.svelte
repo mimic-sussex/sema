@@ -1,7 +1,8 @@
 <script>
 	// import Nav from '../components//Nav.svelte';
 	import UserObserver from '../components/user/UserObserver.svelte';
-
+	import SignOut from '../components/user/SignOut.svelte';
+  import { currentUser } from '../stores/user.js'
 	// export let segment;
 </script>
 
@@ -81,8 +82,8 @@
 
 <UserObserver />
 
-
-<div>
+{#if $currentUser}
+<div >
   <h1>sema</h1>
 
   <ul>
@@ -93,7 +94,7 @@
 
     <li><a href="/playground">Playground</a></li>
 
-    <!-- Note: need to keep the dash afte tutorial -->
+    <!-- Note: need to keep the dash after tutorial -->
     <li><a href="/tutorial/01-introduction/01-basics/">Tutorial</a></li>
 
 
@@ -119,6 +120,10 @@
       </a>
     </li>
 
+    <SignOut />
+
   </ul>
 </div>
+{/if}
+
 <slot></slot>

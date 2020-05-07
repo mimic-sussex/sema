@@ -75,8 +75,8 @@
 </style>
 
 <!-- <button class='button' on:click={ () => login() }> Login </button> -->
-{#if !$currentUser}
-<!-- <button on:click={ () => signOut() }>SignOut</button> -->
+{#if $currentUser}
+<button on:click={ () => signOut() }>SignOut</button>
 <!-- {:else} -->
-<div id='firebaseui-auth-container'></div>
+<!-- <div id='firebaseui-auth-container'></div> -->
 {/if}
