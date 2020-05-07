@@ -2,9 +2,17 @@
 
   import { currentUser } from '../../stores/user.js'
   import { onMount, tick } from 'svelte';
+  import { goto } from "@sveltech/routify";
   import * as firebaseui from 'firebaseui'
   import firebase, { app } from '../../firebase/firebase.js';
- 
+
+  import { splashScreenClicked } from '../../store.js';
+
+  let handleClick = () => {
+    $splashScreenClicked = "hidden";
+  }
+
+
   const createLoginButton = () => {
     // FirebaseUI config – We might want users to provide a Google Account 
     // or fetch the email address associated to GitHub account 
@@ -27,6 +35,10 @@
           // If a user signed in with email link, ?showPromo=1234 can be obtained from
           // window.location.href.
           // ...
+
+          // trigger 'Sign In as Guest' to change button visibility and kickstart Audio Engine
+          handleClick();         
+
           return false;
         }  
       }
@@ -56,9 +68,14 @@
       await tick();
       createLoginButton(); 
 
-    }).catch(function(error) {
-      // An error happened.
-      console.log('DEBUG:Login:', error);
+    }).catch( error => {
+
+      console.log('DEBUG:Login:', error);       // An error happened.
+
+    }).finally( () => {
+
+      $goto(`/`);       // Request Routify client-side router navigation to Home `/`
+    
     });
   }     
 
@@ -77,6 +94,4 @@
 <!-- <button class='button' on:click={ () => login() }> Login </button> -->
 {#if $currentUser}
   <button on:click={ () => signOut() }>SignOut</button>
-<!-- {:else} -->
-<!-- <div id='firebaseui-auth-container'></div> -->
 {/if}
