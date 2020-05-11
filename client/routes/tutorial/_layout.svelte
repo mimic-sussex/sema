@@ -22,7 +22,7 @@
 
   let handleSelect = async e => { 
     
-    console.log(`DEBUG:tutorial:_layout[/${$selected.chapter_dir}]/[${$selected.section_dir}]:`);
+    // console.log(`DEBUG:tutorial:_layout[/${$selected.chapter_dir}]/[${$selected.section_dir}]:`);
     
     $goto(`/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/`);
 

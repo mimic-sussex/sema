@@ -14,10 +14,8 @@ function getParserModuleExports(source) {
 
 const clone = (a) => JSON.parse(JSON.stringify(a))
 
-/*
- * [NOTE:FB] Can you believe this bug?! Data is a global variable from Webpack and its making this worker run dry!!
- * onmessage = function({ data }) {
-*/
+
+ 
 onmessage = function(message) {
   if (
 		message.data !== undefined &&
@@ -37,8 +35,8 @@ onmessage = function(message) {
       // parserOutputs = cloneDeep(parser.results);
 			// parserOutputs = parser.results;
 
-      // console.log("DEBUG:workerParser:onmessage:parserOut");
-			// console.log(parserOutputs);
+      console.log("DEBUG:workerParser:onmessage:parserOut");
+			console.log(parserOutputs);
 
     	postMessage({
 				parserOutputs: clone(parser.results),
@@ -46,8 +44,8 @@ onmessage = function(message) {
 			});
 
     } catch (e) {
-			// console.log("DEBUG:workerParser:onmessage:catch");
-			// console.dir(e.message);
+			console.log("DEBUG:workerParser:onmessage:catch");
+			console.dir(e.message);
       postMessage(e.message); // This sends parse errors caught with exception to the client for visibility! Do not remove!
 		}
 	}

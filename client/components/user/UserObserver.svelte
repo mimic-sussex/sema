@@ -2,10 +2,11 @@
 
   import { onMount } from 'svelte';
   import { currentUser } from '../../stores/user.js';
-  import firebase, { app, firestore } from '../../firebase/firebase.js';
+  // import firebase, { app, firestore } from '../../firebase/firebase.js';
+  import { app, auth, firestore } from '../../firebase/firebase.js';
   
   onMount(() => {
-    firebase.auth().onAuthStateChanged(function(user) {
+    auth.onAuthStateChanged(function(user) {
       if (user) {
         // User is signed in.
         let displayName = user.displayName;

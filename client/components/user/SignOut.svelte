@@ -4,7 +4,7 @@
   import { onMount, tick } from 'svelte';
   import { goto } from "@sveltech/routify";
   import * as firebaseui from 'firebaseui'
-  import firebase, { app } from '../../firebase/firebase.js';
+  import firebase, { auth, app } from '../../firebase/firebase.js';
 
   import { splashScreenClicked } from '../../store.js';
 
@@ -61,7 +61,7 @@
 
   const signOut = () => {
     // Handler needs to be async and use tick for Firebase widget to be injected
-    firebase.auth().signOut().then(async function() {
+    auth.signOut().then(async function() {
       // Sign-out successful.
       console.log('DEBUG:Login: Logged out');
       
@@ -89,9 +89,20 @@
 
 <style>
 
+
+  .sign-out-button {
+    height: auto;
+    width: auto;
+    font-size: 14px;
+    /* font-family: Arial, Helvetica, sans-serif; */
+    padding-top: 0.2em; 
+    padding-bottom: 0.2em;
+    margin-right: 20px;
+  }
+
 </style>
 
 <!-- <button class='button' on:click={ () => login() }> Login </button> -->
 {#if $currentUser}
-  <button on:click={ () => signOut() }>SignOut</button>
+  <button class='sign-out-button' on:click={ () => signOut() }>SignOut</button>
 {/if}

@@ -133,7 +133,7 @@ class blockTracker {
           //   removeLines(change.from.line, change.removed.length-1);
           // }
         }
-        console.table(this.blocks);
+        // console.table(this.blocks);
         break;
       case "+input":
       case "paste":

@@ -29,7 +29,8 @@
 
   import IRToJavascript from "../../intermediateLanguage/IR.js";
 
-  import ParserWorker from "worker-loader!../../workers/parser.worker.js";
+  // import ParserWorker from "worker-loader!Workers/parser.worker.js"; // Worker is resolved in webpack.config.js in alias
+  import ParserWorker from "worker-loader!../../workers/parser.worker.js"; // Worker is resolved in webpack.config.js in alias
 
   import {blockTracker, blockData} from './liveCodeEditor.blockTracker.js';
 
@@ -86,7 +87,7 @@
 
   let onChange = e => {
     // console.log('DEBUG:LiveCodeEditor:onchange:');
-    console.log(e);
+    // console.log(e);
     btrack.onEditChange(e.detail.changeObj);
     dispatch('change', { prop:'data', value: codeMirror.getValue() });
   }
@@ -106,8 +107,8 @@
         });
 
         parserWorker.onmessage = m => {  // Receive code from worker, pass it to then
-          // console.log('DEBUG:LiveCodeEditor:parseLiveCode:onmessage');
-          // console.log(m);
+          console.log('DEBUG:LiveCodeEditor:parseLiveCode:onmessage');
+          console.log(m);
           if(m.data !== undefined){
             res(m.data);
           }

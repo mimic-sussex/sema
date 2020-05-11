@@ -6,22 +6,24 @@
     selected
   } from '../../../../stores/tutorial.js';
 
-  export let section; // we are grabbing this export variable value from Routify's file structure variable mechanism [chapter]/[section]
+  // export let section; // we are grabbing this export variable value from Routify's file structure variable mechanism [chapter]/[section]
   
   let markdown;
 
   let fetchMarkdown = async (chapter, section) => {
-  
-    const res = await fetch(`/tutorial/${chapter}/${section}/index.md`)
-		const text = await res.text();
-    console.log(`DEBUG:[/${chapter}]/[${section}]:fetchMarkdown: `, text);
+    
+    if(chapter != undefined && section != undefined){ // There is a call with undefined value when navigating to Playground
+      const res = await fetch(`/tutorial/${chapter}/${section}/index.md`)
+      const text = await res.text();
+      // console.log(`DEBUG:[/${chapter}]/[${section}]:fetchMarkdown: `, text);
 
-    // await tick();    
-  	if (res.ok) {
-			markdown = marked(text);
-		} else {
-			throw new Error(text);
-		} 
+      // await tick();    
+      if (res.ok) {
+        markdown = marked(text);
+      } else {
+        throw new Error(text);
+      }
+    } 
   }
 
   $: promise = fetchMarkdown($params.chapter, $params.section); // Reactive statement, var 'promise' reacts to 'section' changes

@@ -10,7 +10,6 @@ const { CleanPlugin } = require("clean-webpack-plugin");
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 
-
 module.exports = {
 	entry: {
 		bundle: ["./client/main.js"],
@@ -21,6 +20,7 @@ module.exports = {
 	resolve: {
 		alias: {
 			svelte: path.resolve("node_modules", "svelte"),
+			// Workers: path.resolve(__dirname, "./client/workers/"),
 		},
 		extensions: [".mjs", ".js", ".svelte"],
 		mainFields: ["svelte", "browser", "module", "main"],
@@ -29,24 +29,26 @@ module.exports = {
 		path: path.join(__dirname, "public"),
 		filename: "[name].js",
 		chunkFilename: "[name].[id].js",
-		// publicPath: "/public/",
+		publicPath: "/",
 		globalObject: `(typeof self !== 'undefined' ? self : this)`,
 	},
 	module: {
 		rules: [
 			// {
-			// 	test: /workers\/libs\/lalolib\.js/,
+			// 	test: /\.workers\.js$/,
 			// 	use: {
-			// 		loader: "file-loader",
+			// 		loader: "worker-loader",
+			// 		options: { publicPath: "/workers/" },
 			// 	},
 			// },
 			{
 				test: /\.js$/,
 				exclude: [
-					path.resolve(__dirname, "client/workers/il.worker.js"),
-					path.resolve(__dirname, "client/workers/parser.worker.js"),
-					path.resolve(__dirname, "client/workers/ml.worker.js"),
-					path.resolve(__dirname, "client/workers/tfjs.min.js"),
+					// path.resolve(__dirname, "./client/workers/il.worker.js"),
+					// path.resolve(__dirname, "./client/workers/il.worker.js"),
+					// path.resolve(__dirname, "./client/workers/parser.worker.js"),
+					// path.resolve(__dirname, "./client/workers/ml.worker.js"),
+					// path.resolve(__dirname, "./client/workers/tfjs.min.js"),
 				],
 			},
 			{
@@ -184,8 +186,8 @@ module.exports = {
 				loader: "file-loader", // WASM files are only emitted to the final dist, NOT processed
 				options: {
 					// mimetype: 'application/wasm',
-					name: "maximilian.transpile.js"
-				}
+					name: "maximilian.transpile.js",
+				},
 			},
 			{
 				//IMAGE LOADER
@@ -236,7 +238,8 @@ module.exports = {
 		new MiniCssExtractPlugin({
 			filename: "[name].css",
 		}),
-		new WorkerPlugin(),
+		// new WorkerPlugin(),
+    
 		// new CleanWebpackPlugin()
 
 		// new webpack.HotModuleReplacementPlugin(),
