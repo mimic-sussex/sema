@@ -15,7 +15,7 @@
 		"test": "mocha --opts mocha.opts",
 		"export": "routify export",
 		"prebuild": "routify --single-build --pages ./client/routes/",
-		"serve": "spassr --debug --serve-spa --spa-port 5001 --dist-dir ./public --app ./bundle.js --entrypoint ./index.html"
+		"serve": "spassr --debug --serve-spa --spa-port 5002 --dist-dir ./public --app ./bundle.js --entrypoint ./index.html"
 	},
 	"dependencies": {
 		"firebase": "^7.14.1",
