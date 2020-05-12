@@ -68,7 +68,8 @@
               <optgroup label="{i + 1}. {chapter.title}">
                 {#if chapter.sections !== undefined}
                   {#each chapter.sections as section, i}
-                    <option value={section}>{String.fromCharCode(i + 97)}. {section.title}</option>
+                    <!-- <option value={section}>{String.fromCharCode(i + 97)}. {section.title}</option> -->
+                    <option value={section}>{section.title}</option>
                   {/each}
                 {/if}  
               </optgroup>

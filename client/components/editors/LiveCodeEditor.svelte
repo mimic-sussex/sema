@@ -14,15 +14,6 @@
 	import { onMount, onDestroy, createEventDispatcher } from 'svelte';
 	const dispatch = createEventDispatcher();
 
-  import {
-    grammarCompiledParser,
-    liveCodeEditorValue,
-    liveCodeParseErrors,
-    liveCodeParseResults,
-    liveCodeAbstractSyntaxTree,
-    dspCode
-  } from "../../store.js";
-
   import { addToHistory } from "../../utils/history.js";
 
   import { PubSub } from '../../messaging/pubSub.js';
@@ -33,6 +24,22 @@
   import ParserWorker from "worker-loader!../../workers/parser.worker.js"; // Worker is resolved in webpack.config.js in alias
 
   import {blockTracker, blockData} from './liveCodeEditor.blockTracker.js';
+
+  // import {
+  //   grammarCompiledParser,
+  //   liveCodeEditorValue,
+  //   liveCodeParseErrors,
+  //   liveCodeParseResults,
+  //   liveCodeAbstractSyntaxTree,
+  //   dspCode
+  // } from "../../store.js";
+  
+  export let grammarCompiledParser;
+  // export let liveCodeEditorValue;
+  export let liveCodeParseErrors;
+  export let liveCodeParseResults;
+  export let liveCodeAbstractSyntaxTree;
+  export let dspCode;
 
   export let tab = true;
 
@@ -102,7 +109,8 @@
 
         parserWorker.postMessage({ // Post code to worker for parsing
           liveCodeSource: e,
-          parserSource: $grammarCompiledParser,
+          // parserSource: $grammarCompiledParser,
+          parserSource:  grammarCompiledParser,
           type:'parse'
         });
 
@@ -120,11 +128,15 @@
         // console.log(outputs);
         const { parserOutputs, parserResults } = outputs;
         if( parserOutputs && parserResults ){
-          $liveCodeParseResults = parserResults;
-          $liveCodeAbstractSyntaxTree = parserOutputs;  //Deep clone created in the worker for AST visualization
-          $liveCodeParseErrors = "";
+          // $liveCodeParseResults = parserResults;
+          // $liveCodeAbstractSyntaxTree = parserOutputs;  //Deep clone created in the worker for AST visualization
+          // $liveCodeParseErrors = "";
+          liveCodeParseResults = parserResults;
+          liveCodeAbstractSyntaxTree = parserOutputs;  //Deep clone created in the worker for AST visualization
+          liveCodeParseErrors = "";
           // Tree traversal in the main tree.
-          let dspCode = IRToJavascript.treeToCode($liveCodeParseResults, 0);
+          // let dspCode = IRToJavascript.treeToCode($liveCodeParseResults, 0);
+          let dspCode = IRToJavascript.treeToCode(liveCodeParseResults, 0);
           console.log("code generated");
 
           // publish eval message with code to audio engine
@@ -133,14 +145,19 @@
         else {
           // console.log('DEBUG:LiveCodeEditor:parseLiveCode:then2');
           // console.dir(outputs);
-          $liveCodeParseErrors = outputs;
-          $liveCodeAbstractSyntaxTree = $liveCodeParseResults = '';
+         
+          // $liveCodeParseErrors = outputs;
+          // $liveCodeAbstractSyntaxTree = $liveCodeParseResults = '';
+          liveCodeParseErrors = outputs;
+          liveCodeAbstractSyntaxTree = liveCodeParseResults = '';
         }
       })
       .catch(e => {
         // console.log('DEBUG:parserEditor:parseLiveCode:catch')
         // console.log(e);
-        $liveCodeParseErrors = e;
+
+        // $liveCodeParseErrors = e;
+        liveCodeParseErrors = e;
       });
     }
   }
@@ -169,7 +186,8 @@
       let iLWorker = new ILWorker();
       let iLWorkerAsync = new Promise( (res, rej) => {
 
-        iLWorker.postMessage({ liveCodeAbstractSyntaxTree: $liveCodeParseResults, type:'ASTtoDSP'});
+        // iLWorker.postMessage({ liveCodeAbstractSyntaxTree: $liveCodeParseResults, type:'ASTtoDSP'});
+        iLWorker.postMessage({ liveCodeAbstractSyntaxTree: liveCodeParseResults, type:'ASTtoDSP'});
 
         let timeout = setTimeout(() => {
             iLWorker.terminate();
@@ -193,12 +211,12 @@
         }
       })
       .then(outputs => {
-        $dspCode = outputs;
-        // evalDSP($dspCode);
+        // $dspCode = outputs;
+        dspCode = outputs;
 
         // $liveCodeParseErrors = "";
         console.log('DEBUG:Layout:translateILtoDSPasync');
-        console.log($dspCode);
+        // console.log($dspCode);
       })
       .catch(e => {
         console.log('DEBUG:Layout:translateILtoDSPasync:catch')
@@ -225,7 +243,7 @@
       // }
     } catch (error) {
       console.log('DEBUG:LiveCodeEditor:evalLiveCodeOnEditorCommand:')
-      console.log($liveCodeAbstractSyntaxTree);
+      // console.log($liveCodeAbstractSyntaxTree);
     }
   }
 

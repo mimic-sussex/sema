@@ -56,13 +56,12 @@
   }
 
   const onAdjust = e => {
-    console.log("DEBUG:dashboard:onAdjust:", e.detail); 
+    // console.log("DEBUG:dashboard:onAdjust:", e.detail); 
     $items = $items; // call a re-render
   };
 
   const onChildMount = e => {
-
-    console.log("DEBUG:dashboard:onChildMount:", e.detail); 
+    // console.log("DEBUG:dashboard:onChildMount:", e.detail); 
     // $items = $items; // call a re-render
   };
 

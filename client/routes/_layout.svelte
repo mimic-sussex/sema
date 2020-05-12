@@ -95,7 +95,7 @@
     <li><a href="/playground/">Playground</a></li>
 
     <!-- Note: need to keep the dash after tutorial -->
-    <li><a href="/tutorial/01-introduction/01-basics/">Tutorial</a></li>
+    <li><a href="/tutorial/01-basics/01-introduction/">Tutorial</a></li>
 
 
     <li><a href='https://github.com/mimic-sussex/sema/tree/master/docs' target="_blank">Docs</a></li>
