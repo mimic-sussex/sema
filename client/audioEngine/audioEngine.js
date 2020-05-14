@@ -90,7 +90,8 @@ class AudioEngine {
 
 		this.kuraClock = new kuramotoNetClock();
 
-    this.peerNet = new PeerStreaming();
+    //temporarily disabled for now
+    // this.peerNet = new PeerStreaming();
 
     //the message has incoming data from other peers
     this.messaging.subscribe("peermsg", (e)=> {

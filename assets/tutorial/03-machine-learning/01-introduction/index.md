@@ -1,7 +1,5 @@
-# Semantics Actions II 
+# Introduction: The Machine Learning Window
 
-```Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.```
+Machine learning is managed in the 'machine learning' window in Sema.  This is a live coding window, programmed with Javascript.  It can send and receive data to and from the live coding window.  In this window, you can use a selection of machine learning libraries to train and run machine learning models.  You can create processes within this window that are run automatically, and are invisible to the live coder, so that they can use ML transparently.
 
-## Lorem ipsum dolor ## 
-
-sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+Follow the instructions in the ML window to learn the basic operations.
