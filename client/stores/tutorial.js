@@ -16,6 +16,8 @@ let liveCode = "";
 let modelCode = "";
 let grammarCode = "";
 
+
+
 const originalItems = [
 	{
 		...gridHelp.item({ x: 0, y: 0, w: 6, h: 7, id: id() }),
@@ -29,6 +31,8 @@ const originalItems = [
 			theme: "icecoder",
 			component: LiveCodeEditor,
 			data: liveCode,
+			grammarSource: "/languages/defaultGrammar.ne",
+			grammarCompiledParser: ""
 		},
 	},
 
@@ -130,6 +134,8 @@ const testItems = [
 			theme: "icecoder",
 			component: LiveCodeEditor,
 			data: "#lc-1",
+			grammarSource: "/languages/defaultGrammar.ne",
+			grammarCompiledParser: ""
 		},
 	},
 

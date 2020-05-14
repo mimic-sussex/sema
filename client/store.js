@@ -104,6 +104,7 @@ export const grammarEditorValue = writable(initGrammarEditorValue());
 
 export const grammarCompiledParser = writable(compile(default_grammar).output);
 
+
 export const grammarCompilationErrors = writable("");
 
 export const liveCodeEditorValue = writable(initLiveCodeEditorValue());

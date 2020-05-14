@@ -12,7 +12,11 @@
 <script>
 
 	import { onMount, onDestroy, createEventDispatcher } from 'svelte';
-	const dispatch = createEventDispatcher();
+	
+  const dispatch = createEventDispatcher();
+
+  import * as nearley from 'nearley/lib/nearley.js'
+  import compile from '../../compiler/compiler';
 
   import { addToHistory } from "../../utils/history.js";
 
@@ -23,23 +27,30 @@
   // import ParserWorker from "worker-loader!Workers/parser.worker.js"; // Worker is resolved in webpack.config.js in alias
   import ParserWorker from "worker-loader!../../workers/parser.worker.js"; // Worker is resolved in webpack.config.js in alias
 
-  import {blockTracker, blockData} from './liveCodeEditor.blockTracker.js';
+  import { blockTracker, blockData } from './liveCodeEditor.blockTracker.js';
 
-  // import {
+  import {
   //   grammarCompiledParser,
   //   liveCodeEditorValue,
   //   liveCodeParseErrors,
   //   liveCodeParseResults,
   //   liveCodeAbstractSyntaxTree,
   //   dspCode
-  // } from "../../store.js";
+  } from "../../store.js";
   
-  export let grammarCompiledParser;
+  // export let grammarSource = "/languages/defaultGrammar.ne";
+  export let grammarSource; 
+  let grammarSourceSubscriptionToken; 
+  let grammarCompiledParser;
+
   // export let liveCodeEditorValue;
   export let liveCodeParseErrors;
   export let liveCodeParseResults;
-  export let liveCodeAbstractSyntaxTree;
-  export let dspCode;
+  export let liveCodeAbstractSyntaxTree; 
+  export let dspCode; // code generated from the liveCode AST traversal
+
+  // console.log("grammarCompiledParser");
+  // console.log($grammarCompiledParser);
 
   export let tab = true;
 
@@ -50,7 +61,7 @@
 	export let hasFocus;
 	export let theme;
 	export let background;
-	export let data;
+	export let data;      // liveCode Value that is injected and to which CodeMirror is bound
   // export let static; // Error: ParseError: The keyword 'static' is reserved
   export let responsive;
   export let resizable;
@@ -73,36 +84,35 @@
 
   let log = e => { /* console.log(...e); */ }
 
-  onMount(async () => {
-    // console.log('DEBUG:LiveCodeEditor:onMount:')
-    // console.log(data);
-    codeMirror.set(data, "js", 'monokai');
-
-    parserWorker = new ParserWorker();  // Create one worker per widget lifetime
-
-    btrack = new blockTracker(codeMirror);
-    log( id, name, type, lineNumbers, hasFocus, theme, background, data, responsive, resizable, resize, draggable, drag, min, max, x, y, w, h, component );
-	});
-
-  onDestroy(async () => {
-    // console.log('DEBUG:LiveCodeEditor:onDestroy:')
-    parserWorker.terminate();
-    parserWorker = null; // cannot delete in strict mode
-	});
-
   let nil = (e) => { }
+
+  let isEmpty = str => {
+    return (!str || 0 === str.length);
+  }
+
+  let isRelativeURL = str => {
+    let re = /^[^\/]+\/[^\/].*$|^\/[^\/].*$/;
+    return re.exec(str)[0]===re.exec(str).input;
+  }
+
 
   let onChange = e => {
     // console.log('DEBUG:LiveCodeEditor:onchange:');
     // console.log(e);
     btrack.onEditChange(e.detail.changeObj);
-    dispatch('change', { prop:'data', value: codeMirror.getValue() });
+
+    // this event notifies the parent (Dashboard) to update this items on the items collection, because of the 'data' property change 
+    // CHECK <svelte:component on:change={ e => update(item, e.detail.prop, e.detail.value) }
+    dispatch('change', { 
+      prop:'data', 
+      value: codeMirror.getValue() 
+    });
   }
 
-  let parseLiveCodeAsync = e => {
+  let parseLiveCodeAsync = async e => {
     // console.log('DEBUG:LiveCodeEditor:parseLiveCode:');
     // console.log(e);
-    addToHistory("live-code-history-", e);
+    addToHistory("live-code-history-", e); // TODO: Needs refactoring to move up the chain (e.g. tutorial/playground, multiple editors)
 
     if(window.Worker){
       let parserWorkerAsync = new Promise( (res, rej) => {
@@ -124,8 +134,8 @@
 
       })
       .then(outputs => {
-        // console.log('DEBUG:LiveCodeEditor:parseLiveCode:then1');
-        // console.log(outputs);
+        console.log('DEBUG:LiveCodeEditor:parseLiveCode:then1');
+        console.log(outputs);
         const { parserOutputs, parserResults } = outputs;
         if( parserOutputs && parserResults ){
           // $liveCodeParseResults = parserResults;
@@ -162,26 +172,13 @@
     }
   }
 
-  // let parseLiveCodeOnChange = e => {
-    // console.log(e.detail.changeObj);
-    // console.log(codeMirror.getLine(e.detail.changeObj.to.line));
-    // btrack.onEditChange(e.detail.changeObj);
-    // let liveCodeEditorValue = null;
-    //
-    // if(e !== undefined && e.detail !== undefined && e.detail.value !== undefined)
-    //   window.localStorage.liveCodeEditorValue = liveCodeEditorValue = e.detail.value;
-    // else
-    //   liveCodeEditorValue = $liveCodeEditorValue;
-    //
-    // if(liveCodeEditorValue) parseLiveCodeAsync(liveCodeEditorValue);
-    //
-    // window.localStorage.setItem("parserEditor+ID", editor.getValue());
-  // }
-
-  let translateILtoDSPasync = e => { // [NOTE:FB] Note the 'async'
+  /**
+	 * Delegates the translation of the Intermediate Language to DSP to a worker created on demand
+	 * NOT IN USE currently but can be an optimisation when our language translation becomes more expensive
+	 */
+  let translateILtoDSPasync = async e => { // [NOTE:FB] Note the 'async'
 
     if(window.Worker){
-
       // let iLWorker = new Worker('../../il.worker.js');
       let iLWorker = new ILWorker();
       let iLWorkerAsync = new Promise( (res, rej) => {
@@ -225,22 +222,17 @@
     }
   }
 
-  const evalLiveCodeOnEditorCommand = () => {
+  const evalLiveCodeOnEditorCommand = async () => {
 
-    // console.log("parsing");
     try {
+      console.log("parsing");
       console.log(codeMirror.getCursorPosition());
-      parseLiveCodeAsync(codeMirror.getBlock()); // Code block parsed by parser.worker
-      // // Parse results are kept in stores for feeding svelte components
+
+      await parseLiveCodeAsync(codeMirror.getBlock()); // Code block parsed by parser.worker
+
       // if($grammarCompiledParser && $liveCodeEditorValue && $liveCodeAbstractSyntaxTree){
-      //
-      //   // Tree traversal in the main tree. TODO defer to worker thread
-      //   let dspCode = IRToJavascript.treeToCode($liveCodeParseResults, 0);
-      //   console.log("code generated");
-      //
-      //   // publish eval message with code to audio engine
-      //   messaging.publish("eval-dsp", dspCode);
-      // }
+      // let dspCode = IRToJavascript.treeToCode($liveCodeParseResults, 0); // Tree traversal in the main tree. TODO defer to worker thread
+      // messaging.publish("eval-dsp", dspCode); // publish eval message with code to audio engine
     } catch (error) {
       console.log('DEBUG:LiveCodeEditor:evalLiveCodeOnEditorCommand:')
       // console.log($liveCodeAbstractSyntaxTree);
@@ -251,6 +243,75 @@
     // publish eval message with code to audio engine
     messaging.publish("stop-audio");
   }
+
+  let fetchGrammarFrom = async url => {
+    if(!isEmpty(url)){  
+      const res = await fetch(grammarSource);
+      return await res.text();
+    }
+    else
+      throw Error("Empty URL");    
+  }
+
+  let compileParser = grammar => {
+    if(!isEmpty(grammar)){
+      let { errors, output } = compile(grammar);
+      if ( errors != null ) 
+        return output;
+      else 
+        throw Error("Grammar Malformed");
+    }
+    else
+      throw Error("Empty grammar");
+  }
+
+
+  let subscribeTo = grammarSource => {
+
+		grammarSourceSubscriptionToken = this.messaging.subscribe(grammarSource, e => {
+      if (event !== undefined) {
+        // Receive notification from "model-output-data" topic
+        console.log("DEBUG:LiveCodeEditor:subscribeTo:");
+        console.log(event);
+        // grammarCompiledParser =     
+			}
+		});
+  }
+
+
+  onMount( async () => {
+    // console.log('DEBUG:LiveCodeEditor:onMount:')
+    // console.log(data);
+    codeMirror.set(data, "js", 'monokai');
+
+    parserWorker = new ParserWorker();  // Create one worker per widget lifetime
+
+    btrack = new blockTracker(codeMirror);
+
+    if(isRelativeURL(grammarSource)){
+      let grammar = await fetchGrammarFrom(grammarSource);
+      grammarCompiledParser = compileParser(grammar);
+      console.log('DEBUG:LiveCodeEditor:onMount:grammarCompiledParser')
+      console.log(grammarCompiledParser) 
+    }
+    else{
+      subscribeTo(grammarSource);
+      console.log('DEBUG:LiveCodeEditor:onMount:grammarSource')
+      console.log(grammarSource)
+    }
+    log( id, name, type, lineNumbers, hasFocus, theme, background, data, responsive, resizable, resize, draggable, drag, min, max, x, y, w, h, component );
+    log( grammarSource, grammarCompiledParser );
+
+    console.log( grammarSource, grammarCompiledParser );
+	});
+
+
+  onDestroy( () => {
+    // console.log('DEBUG:LiveCodeEditor:onDestroy:')
+    parserWorker.terminate();
+    parserWorker = null; // cannot delete in strict mode
+	});
+
 
 </script>
 

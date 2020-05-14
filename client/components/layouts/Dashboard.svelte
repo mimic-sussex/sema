@@ -25,9 +25,11 @@
 
   const messaging = new PubSub();
 
+  // Svelte-grid configuration
   var cols = 15;
-
   let breakpoints = [[1000, 10], [700, 5], [500, 3], [400, 1]];
+  let rowHeight = 100;
+  let gap = 1;
 
   const types = ['liveCodeEditor', 'modelEditor', 'grammarEditor', 'liveCodeParseOutput', 'grammarCompileOutput', 'analyser'];
   const itype = () => types[Math.floor(Math.random() * types.length)];
@@ -227,9 +229,9 @@
   <Grid items={$items}
         {breakpoints}
         {cols}
+        {rowHeight}
+        {gap}
         useTransform
-        rowHeight={100}
-        gap={1}
         bind:items={$items}
         let:item
         on:adjust={onAdjust}

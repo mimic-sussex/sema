@@ -3,7 +3,6 @@
 		"drag": { "top": null, "left": null, "dragging": false },
 		"resize": { "resizing": false, "width": 0, "height": 0 },
 		"responsive": { "valueW": 0 },
-		"static": false,
 		"resizable": true,
 		"draggable": true,
 		"min": {},
@@ -19,13 +18,13 @@
 		"lineNumbers": true,
 		"hasFocus": false,
 		"theme": "icecoder",
-		"data": "#lc-2"
+		"data": "#lc-2",
+		"grammarSource":  "/languages/defaultGrammar.ne" 
 	},
 	{
 		"drag": { "top": null, "left": null, "dragging": false },
 		"resize": { "resizing": false, "width": 0, "height": 0 },
 		"responsive": { "valueW": 1 },
-		"static": false,
 		"resizable": true,
 		"draggable": true,
 		"min": {},

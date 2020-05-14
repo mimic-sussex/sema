@@ -47,8 +47,9 @@ const originalItems = [
 			background: "#151515",
 			theme: "icecoder",
 			component: LiveCodeEditor,
-			data: default_liveCode
-		}
+			data: default_liveCode,
+			grammarSource: "/languages/defaultGrammar.ne"
+		},
 	},
 
 	{
@@ -61,8 +62,8 @@ const originalItems = [
 			theme: "monokai",
 			background: "#f0f0f0",
 			component: Analyser,
-			mode: "both"
-		}
+			mode: "both",
+		},
 	},
 
 	{
@@ -75,8 +76,8 @@ const originalItems = [
 			theme: "monokai",
 			background: "#f0f0f0",
 			component: ModelEditor,
-			data: hello_world_code_example
-		}
+			data: hello_world_code_example,
+		},
 	},
 
 	{
@@ -89,10 +90,9 @@ const originalItems = [
 			theme: "shadowfox",
 			background: "#ebdeff",
 			component: LiveCodeParseOutput,
-			data: ""
-		}
+			data: "",
+		},
 	},
-
 
 	{
 		...gridHelp.item({ x: 9, y: 3, w: 15, h: 3, id: id() }),
@@ -104,8 +104,8 @@ const originalItems = [
 			theme: "monokai",
 			background: "#AAAAAA",
 			component: GrammarEditor,
-			data: default_grammar
-		}
+			data: default_grammar,
+		},
 	},
 
 	{
@@ -118,8 +118,8 @@ const originalItems = [
 			theme: "monokai",
 			background: "#f0f0f0",
 			component: StoreDebugger,
-			data: ""
-		}
+			data: "",
+		},
 	},
 
 	{
@@ -132,9 +132,9 @@ const originalItems = [
 			theme: "monokai",
 			background: "#d1d5ff",
 			component: GrammarCompileOutput,
-			data: ""
-		}
-	}
+			data: "",
+		},
+	},
 ];
 
 const testItems = [
@@ -150,6 +150,7 @@ const testItems = [
 			theme: "icecoder",
 			component: LiveCodeEditor,
 			data: "#lc-1",
+			grammarSource: "/languages/defaultGrammar.ne"
 		},
 	},
 

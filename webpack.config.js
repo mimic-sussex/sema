@@ -224,6 +224,12 @@ module.exports = {
 				to: "tutorial",
 				toType: "dir",
 			},
+			{
+				context: "./assets",
+				from: "language",
+				to: "languages",
+				toType: "dir",
+			},
 		]),
 		new HtmlWebpackPlugin({
 			noscriptHeader:
@@ -239,7 +245,7 @@ module.exports = {
 			filename: "[name].css",
 		}),
 		// new WorkerPlugin(),
-    
+
 		// new CleanWebpackPlugin()
 
 		// new webpack.HotModuleReplacementPlugin(),

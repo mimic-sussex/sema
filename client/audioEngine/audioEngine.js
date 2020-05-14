@@ -160,8 +160,8 @@ class AudioEngine {
 	onMessagingEventHandler(event) {
 		if (event !== undefined) {
 			// Receive notification from "model-output-data" topic
-			// console.log("DEBUG:AudioEngine:onMessagingEventHandler:");
-			// console.log(event);
+			console.log("DEBUG:AudioEngine:onMessagingEventHandler:");
+			console.log(event);
 			this.audioWorkletNode.port.postMessage(event);
 		}
 	}
@@ -360,8 +360,8 @@ class AudioEngine {
 	}
 
 	evalDSP(dspFunction) {
-		// console.log("DEBUG:AudioEngine:evalDSP:");
-		// console.log(dspFunction);
+		console.log("DEBUG:AudioEngine:evalDSP:");
+		console.log(dspFunction);
 		if (this.audioWorkletNode !== undefined) {
 			if (this.audioContext.state === "suspended") this.audioContext.resume();
 			this.audioWorkletNode.port.postMessage({
