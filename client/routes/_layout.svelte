@@ -17,7 +17,7 @@
   }
   
 	h1 {
-    margin-top: 5px;
+    margin-top: 0px;
 		margin-left: 10px;
     margin-bottom: 0px;
     color: whitesmoke;
@@ -26,6 +26,8 @@
   ul {
     display: flex;
     list-style-type: none;
+    margin-bottom: 0px;
+    margin-top: 10px;
   }
 
   li {
@@ -94,13 +96,14 @@
 
     <li><a href="/playground/">Playground</a></li>
 
-    <!-- Note: need to keep the dash after tutorial -->
-    <li><a href="/tutorial/01-basics/01-introduction/">Tutorial</a></li>
+    <!-- Note: need to keep the slash after tutorial path-->
+    <li><a href="/tutorial/">Tutorial</a></li>
+    <!-- <li><a href="/tutorial/01-basics/01-introduction/">Tutorial</a></li> -->
 
 
     <li><a href='https://github.com/mimic-sussex/sema/tree/master/docs' target="_blank">Docs</a></li>
 
-    <li><a href="/blog/">Blog</a></li>
+    <!-- <li><a href="/blog/">Blog</a></li> -->
 
     <li>
       <a href='https://forum.toplap.org/c/communities/sema' target="_blank">

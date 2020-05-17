@@ -22,13 +22,13 @@
 
   let handleSelect = async e => { 
     
-    // console.log(`DEBUG:tutorial:_layout[/${$selected.chapter_dir}]/[${$selected.section_dir}]:`);
+    console.log(`DEBUG:tutorial:_layout[/${$selected.chapter_dir}]/[${$selected.section_dir}]:`);
     
     $goto(`/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/`);
 
     await tick();    
     let json = await fetch(`/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/layout.json`)
-                    .then( r => r.json());
+                .then( r => r.json());
 
     $items = json.map( item => hydrateJSONcomponent(item) );
 
@@ -36,12 +36,18 @@
   }
 
   onMount( async () => {
-    
+    console.log(`DEBUG:tutorial:_layout:onMount: `); 
     let chapters = await preload();
-    // console.log(chapters)
 
     $tutorials = chapters;  
     $selected = $tutorials[0];
+    
+    console.log("Chapters")
+    console.log(chapters)
+    console.log($selected)
+
+    // $goto(`/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/`);
+
   });   
 
 </script>

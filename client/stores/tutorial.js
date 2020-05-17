@@ -271,33 +271,36 @@ let tutorialOptions = [
 			{
 				slug: "basics",
 				title: "Basics",
-				chapter_dir: "01-introduction",
-				section_dir: "01-basics",
+				chapter_dir: "01-basics",
+				section_dir: "01-introduction",
 			},
 			{
 				slug: "layout",
 				title: "Layout",
-				chapter_dir: "01-introduction",
+				chapter_dir: "01-basics",
 				section_dir: "02-layout",
 			},
 			{
 				slug: "editors",
 				title: "Editors",
-				chapter_dir: "01-introduction",
+				chapter_dir: "01-basics",
 				section_dir: "03-editors",
 			},
 			{
 				slug: "widgets",
 				title: "Widgets",
-				chapter_dir: "01-introduction",
+				chapter_dir: "01-basics",
 				section_dir: "04-widgets",
 			},
 		],
-	}
+	},
 ];
+
 export let tutorials = writable(tutorialOptions);
+// export let tutorials = writable([]);
 
 // Store for SELECTED tutorial options in Sidebar component
+// export let selected = writable({});
 export let selected = writable(tutorials[0]);
 
 export let items = storable("tutorial", testItems); // localStorageWrapper

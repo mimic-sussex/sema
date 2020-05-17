@@ -1,33 +1,73 @@
-<script>
-  import Sidebar from '../../components/tutorial/Sidebar.svelte';
-  import Dashboard from '../../components/layouts/Dashboard.svelte';
-  import { items } from "../../stores/tutorial.js"
+<script context="module">
+  export async function preload() {
+		// '/' absolute URL
+		return await fetch(`/tutorial/01-basics/01-introduction/`).then(r => r.json());
+	}
 </script>
 
-<svelte:head>
-	<title>Sema – Tutorial</title>
-</svelte:head>
+<script>
+  import { tick, onMount } from 'svelte';
+  import { url, params } from "@sveltech/routify";
+  import marked from 'marked';
+  import {
+    tutorials,
+    selected
+  } from '../../stores/tutorial.js';
 
-<div class="container scrollable">
-  <!-- <div class="sidebar-container">
-    <Sidebar />
-  </div>
-  <div class="dashboard-container">
-    <Dashboard {items} />
-  </div> -->
-</div>
+  // export let section; // we are grabbing this export variable value from Routify's file structure variable mechanism [chapter]/[section]
+  
+  let markdown;
+
+  let fetchMarkdown = async (chapter, section) => {
+    
+    if(chapter != undefined && section != undefined){ // There is a call with undefined value when navigating to Playground
+      const res = await fetch(`/tutorial/${chapter}/${section}/index.md`)
+      const text = await res.text();
+      // console.log(`DEBUG:[/${chapter}]/[${section}]:fetchMarkdown: `, text);
+
+      // await tick();    
+      if (res.ok) {
+        markdown = marked(text);
+      } else {
+        throw new Error(text);
+      }
+    } 
+  }
+
+  let promise;
+  
+  onMount( async () => {
+    console.log(`DEBUG:tutorial:index`);
+    promise = fetchMarkdown($selected.chapter_dir, $selected.section_dir); // Reactive statement, var 'promise' reacts to 'section' changes
+  });  
+</script>
 
 <style>
-  .container {
-  	height: 100%;
-  	display: grid;
-  	grid-template-columns: auto 1fr;
-  	grid-template-rows: 50% 50%;
-  	grid-template-areas:
-  		"sidebar layout"
-  		"sidebar layout";
-  	/* background-color: #6f7262; */
-	  background-color: #212121; 
-    overflow: hidden;
+
+  .markdown-container {
+    overflow: auto;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    border: solid 5px #aaaaaa;
+    border-radius: 5px;
+    height: 85vh;
+    background: #aaaaaa;
   }
+
+  .markdown-output {
+    /* width: 100%; */
+    padding: 0 1em;
+  }
+
 </style>
+
+<div class="markdown-container">
+{#await promise}
+	<p>...waiting</p>
+{:then number}
+  <div class="markdown-output">{@html markdown}</div>
+{:catch error}
+	<p style="color: red">{error.message}</p>
+{/await}
+</div>

@@ -291,18 +291,18 @@
     if(isRelativeURL(grammarSource)){
       let grammar = await fetchGrammarFrom(grammarSource);
       grammarCompiledParser = compileParser(grammar);
-      console.log('DEBUG:LiveCodeEditor:onMount:grammarCompiledParser')
-      console.log(grammarCompiledParser) 
+      // console.log('DEBUG:LiveCodeEditor:onMount:grammarCompiledParser')
+      // console.log(grammarCompiledParser) 
     }
     else{
       subscribeTo(grammarSource);
-      console.log('DEBUG:LiveCodeEditor:onMount:grammarSource')
-      console.log(grammarSource)
+      // console.log('DEBUG:LiveCodeEditor:onMount:grammarSource')
+      // console.log(grammarSource)
     }
     log( id, name, type, lineNumbers, hasFocus, theme, background, data, responsive, resizable, resize, draggable, drag, min, max, x, y, w, h, component );
     log( grammarSource, grammarCompiledParser );
 
-    console.log( grammarSource, grammarCompiledParser );
+    // console.log( grammarSource, grammarCompiledParser );
 	});
 
 

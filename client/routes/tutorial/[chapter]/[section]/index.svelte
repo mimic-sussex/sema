@@ -1,3 +1,11 @@
+<script context="module">
+	export async function preload() {
+		// '/' absolute URL
+		return await fetch(`/tutorial/01-basics/01-introduction/`).then(r => r.json());
+	}
+</script>
+
+
 <script>
   import { tick, onMount } from 'svelte';
   import { url, params } from "@sveltech/routify";
@@ -30,6 +38,15 @@
 
   // $: source = `${$params.chapter} ${section}`;
   // $: markdown = source; // Reactive expression, 'markdown' reacts to 'source' changes
+
+
+  onMount( async () => {
+
+    console.log('Chapter/Section index')
+    // console.log($selected)
+
+  });  
+
 
 </script>
 
