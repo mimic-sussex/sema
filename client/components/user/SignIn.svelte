@@ -7,10 +7,10 @@
 
   import { goto } from "@sveltech/routify";
 
-  import { splashScreenClicked } from '../../store.js';
+  import { audioEngineStatus } from '../../store.js';
 
   let handleClick = () => {
-    $splashScreenClicked = "hidden";
+    $audioEngineStatus = "hidden";
   }
 
 

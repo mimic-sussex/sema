@@ -6,10 +6,10 @@
   import * as firebaseui from 'firebaseui'
   import firebase, { auth, app } from '../../firebase/firebase.js';
 
-  import { splashScreenClicked } from '../../store.js';
+  import { audioEngineStatus } from '../../store.js';
 
   let handleClick = () => {
-    $splashScreenClicked = "hidden";
+    $audioEngineStatus = "hidden";
   }
 
 

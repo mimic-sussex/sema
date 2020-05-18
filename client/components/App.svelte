@@ -2,7 +2,7 @@
 	import { onDestroy } from 'svelte';
 
   import SplashScreen from './SplashScreen.svelte';
-  import { splashScreenClicked } from '../store.js';
+  import { audioEngineStatus } from '../store.js';
 
   import { AudioEngine } from '../audioEngine/audioEngine.js';
 
@@ -13,13 +13,20 @@
   import { Router } from "@sveltech/routify";
   import { routes } from "@sveltech/routify/tmp/routes";
 
+  import { PubSub } from '../messaging/pubSub.js';
+
+  let messaging = new PubSub();
 
   let audioEngine = new AudioEngine();
 
-  const unsubscribe = splashScreenClicked.subscribe( value => {
-    if(value === 'hidden') audioEngine.init(1);
+  const unsubscribe = audioEngineStatus.subscribe( value => {
+    if(value === 'running') audioEngine.init(1);
+    else if (value === 'paused')
+      messaging.publish("stop-audio");
 	});
   onDestroy(unsubscribe);
+
+  
 
 </script>
 

@@ -1,10 +1,10 @@
 <script>
 
-  import { splashScreenClicked } from '../store.js';
+  import { audioEngineStatus } from '../store.js';
   import src from '../../assets/img/sema.svg';
 
   let handleClick = () => {
-    $splashScreenClicked = "hidden";
+    $audioEngineStatus = "hidden";
   }
 
 </script>
@@ -70,7 +70,7 @@
   }
 </style>
 
-<div class="overlay" style='visibility:{$splashScreenClicked}'>
+<div class="overlay" style='visibility:{$audioEngineStatus}'>
   <button class="button-start-audio" on:click={handleClick}>
     <div class="logo-container">
       <img {src} class="sema-logo" alt="sema logo image">

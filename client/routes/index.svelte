@@ -1,11 +1,5 @@
 <script>
 
-  // import { splashScreenClicked } from '../store.js';
-
-  // let handleClick = () => {
-  //   $splashScreenClicked = "hidden";
-  // }
-
   import {
     currentUser
   } from '../stores/user.js'

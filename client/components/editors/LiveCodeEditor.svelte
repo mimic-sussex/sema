@@ -36,6 +36,7 @@
   //   liveCodeParseResults,
   //   liveCodeAbstractSyntaxTree,
   //   dspCode
+      audioEngineStatus
   } from "../../store.js";
   
   // export let grammarSource = "/languages/defaultGrammar.ne";
@@ -225,6 +226,10 @@
   const evalLiveCodeOnEditorCommand = async () => {
 
     try {
+
+      if($audioEngineStatus === 'paused')
+        $audioEngineStatus = 'running';
+
       console.log("parsing");
       console.log(codeMirror.getCursorPosition());
 
@@ -242,6 +247,10 @@
   const stopAudioOnEditorCommand = () => {
     // publish eval message with code to audio engine
     messaging.publish("stop-audio");
+    
+    // set audio engine status on store to change audioEngineStatus indicator/button
+    $audioEngineStatus = 'paused';
+
   }
 
   let fetchGrammarFrom = async url => {

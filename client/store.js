@@ -71,7 +71,7 @@ export const cm_theme_shadowfox = writable("");
 
 // SplashScreen visibility
 
-export const splashScreenClicked = writable(false);
+export const audioEngineStatus = writable('stopped');
 
 
 // Grammar and LiveCode Editors previous sessions' Values, store in LocalStorage

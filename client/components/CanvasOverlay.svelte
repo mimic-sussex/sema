@@ -1,14 +1,4 @@
-<!-- <script>
 
-  // import { splashScreenClicked } from '../store.js';
-  // import src from '../../assets/img/sema.svg';
-
-  // let handleClick = () => {
-  //   $splashScreenClicked = "hidden";
-  // }
-
-</script>
- -->
 <style>
 
   .overlay {
