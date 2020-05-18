@@ -19,19 +19,28 @@
   let markdown;
 
   let fetchMarkdown = async (chapter, section) => {
-    
-    if(chapter != undefined && section != undefined){ // There is a call with undefined value when navigating to Playground
-      const res = await fetch(`/tutorial/${chapter}/${section}/index.md`)
-      const text = await res.text();
-      // console.log(`DEBUG:[/${chapter}]/[${section}]:fetchMarkdown: `, text);
 
-      // await tick();    
-      if (res.ok) {
-        markdown = marked(text);
-      } else {
-        throw new Error(text);
-      }
-    } 
+
+    let res, text;
+
+    if(chapter != undefined && section != undefined){ // There is a call with undefined value when navigating to Playground
+      res = await fetch(`/tutorial/${chapter}/${section}/index.md`)
+      text = await res.text();
+    }
+    else
+    {
+      res = await fetch(`/tutorial/01-basics/01-introduction/index.md`)
+      text = await res.text();
+    }
+
+    // console.log(`DEBUG:[/${chapter}]/[${section}]:fetchMarkdown: `, text);
+
+    // await tick();    
+    if (res.ok) {
+      markdown = marked(text);
+    } else {
+      throw new Error(text);
+    }    
   }
 
   $: promise = fetchMarkdown($params.chapter, $params.section); // Reactive statement, var 'promise' reacts to 'section' changes
@@ -42,8 +51,9 @@
 
   onMount( async () => {
 
-    console.log('Chapter/Section index')
-    // console.log($selected)
+    console.log('DEBUG:tutorial/[chapter]/[section]/ index')
+    console.log($selected)
+    // promise = fetchMarkdown($selected.chapter_dir, $selected.section_dir); // Reactive statement, var 'promise' reacts to 'section' changes
 
   });  
 

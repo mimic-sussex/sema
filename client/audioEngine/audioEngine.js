@@ -56,7 +56,7 @@ class AudioEngine {
 		// by setting this.audioContext = new AudioContext();
 		this.audioContext;
 		this.audioWorkletProcessorName = "maxi-processor";
-		this.audioWorkletUrl = "maxi-processor.js";
+		this.audioWorkletUrl = "/maxi-processor.js";
 		this.audioWorkletNode;
 		this.samplesLoaded = false;
 
@@ -492,7 +492,7 @@ class AudioEngine {
 
 	lazyLoadSample(sampleName) {
 		import(/* webpackMode: "lazy" */ `../../assets/samples/${sampleName}`)
-			.then(() => this.loadSample(sampleName, `samples/${sampleName}`))
+			.then(() => this.loadSample(sampleName, `/samples/${sampleName}`))
 			.catch(err => console.error(`DEBUG:AudioEngine:lazyLoadSample: ` + err));
 	}
 

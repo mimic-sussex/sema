@@ -35,20 +35,6 @@
     // slug: "editors", title: "Editors", chapter_dir: "01-introduction", section_dir: "03-editors"
   }
 
-  onMount( async () => {
-    console.log(`DEBUG:tutorial:_layout:onMount: `); 
-    let chapters = await preload();
-
-    $tutorials = chapters;  
-    $selected = $tutorials[0];
-    
-    console.log("Chapters")
-    console.log(chapters)
-    console.log($selected)
-
-    // $goto(`/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/`);
-
-  });   
 
 </script>
 

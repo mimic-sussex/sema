@@ -296,6 +296,8 @@ let tutorialOptions = [
 	},
 ];
 
+
+
 export let tutorials = writable(tutorialOptions);
 // export let tutorials = writable([]);
 
@@ -304,3 +306,6 @@ export let tutorials = writable(tutorialOptions);
 export let selected = writable(tutorials[0]);
 
 export let items = storable("tutorial", testItems); // localStorageWrapper
+
+console.log("DEBUG:tutorial:store");
+
