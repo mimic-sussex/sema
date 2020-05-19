@@ -115,9 +115,9 @@ class MaxiProcessor extends AudioWorkletProcessor {
    */
   constructor() {
     super();
-    console.log("TEST", Maximilian.maxiMap.linlin(0.5,0,1,10,50));
-    let temp = new Maximilian.maxiNonlinearity();
-    console.log("TEST2", temp.asymclip(0.9,3,3));
+    // console.log("TEST", Maximilian.maxiMap.linlin(0.5,0,1,10,50));
+    // let temp = new Maximilian.maxiNonlinearity();
+    // console.log("TEST2", temp.asymclip(0.9,3,3));
 
 
     let q1 = Maximilian.maxiBits.sig(63);
@@ -128,29 +128,6 @@ class MaxiProcessor extends AudioWorkletProcessor {
     // console.log();
     Maximilian.maxiSettings.setup(sampleRate,1,512);
     Maximilian.maxiJSSettings.setup(sampleRate, 1, 512);
-
-    // let tidx = new Maximilian.maxiIndex();
-    // console.log(tidx.pull(1, 0.9, [1,2,3]));
-
-    // let trsq = new Maximilian.maxiRatioSeq();
-    // console.log(trsq.playTrig(0.0, [1]));
-    // console.log(trsq.playTrig(0.5, [1]));
-    // console.log(trsq.playTrig(0.6, [1]));
-    // maxiJSSettings.setup(sampleRate, 1, 512);
-    // let tmpSeq = new Float64Array([1,2]);
-    // let ctypes = new Maximilian.cheerpTypes2();
-    // let r = Maximilian.cheerpTypes.vectorTest(tmpSeq,0);
-    // console.log("RES",r);
-    // let tmprsq = new Maximilian.maxiRatioSeq();
-    // for(let i=0; i < 2; i+=0.25) {
-    //       console.log(i,tmprsq.playTrig(i % 1.0,tmpSeq));
-    //   }
-    // let vt = new Maximilian.vectorTest();
-    // let data = vt.makeDoubleVector(10,2);
-    // console.log(vt);
-    // console.log(vt.sumVector(tmpSeq));
-    // console.log(vector);
-
 
     //we don't know the number of channels at this stage, so reserve lots for the DAC
     this.DAC = [];
@@ -171,6 +148,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
     // this.snare = new Maximilian.maxiSample();
     // this.closed = new Maximilian.maxiSample();
     // this.open = new Maximilian.maxiSample();
+    this.currentSample = 0;
 
 
     this.initialised = false;
@@ -345,24 +323,55 @@ class MaxiProcessor extends AudioWorkletProcessor {
     };
     this.port.postMessage("giveMeSomeSamples");
 
-    this.clockFreq = 0.7 / 4;
+    // this.clockFreq = 0.7 / 4;
     this.clockPhaseSharingInterval=0; //counter for emiting clock phase over the network
-    this.barFrequency = 4;
-    this.setBarFrequency = (freq) => {this.barFrequency = freq; return 0;};
+    // this.barFrequency = 4;
+    // this.setBarFrequency = (freq) => {this.barFrequency = freq; return 0;};
+
+    this.bpm = 120;
+    this.beatsPerBar = 4;
+    this.maxTimeLength = sampleRate * 60 * 60 * 24; //24 hours
+
+    this.clockUpdate = () => {
+      this.beatLengthInSamples = 60/this.bpm * sampleRate;
+      this.barPhaseMultiplier = this.maxTimeLength / this.beatLengthInSamples / this.beatsPerBar;
+      console.log("CLOCK: ", this.barPhaseMultiplier, this.maxTimeLength);
+    };
+
+    this.setBPM = (bpm) => {
+      if(this.bpm != bpm) {
+        this.bpm = bpm;
+        this.clockUpdate();
+      }
+      return 0;
+    };
+
+    this.setBeatsPerBar = (bpb) => {
+      if (this.bearsPerBar != bpb) {
+        this.bearsPerBar = bpb;
+        this.clockUpdate();
+      }
+      return 0;
+    };
+
+    this.clockUpdate();
 
 //@CLP
+    //phasor over one bar length
     this.clockPhase = (multiples, phase) => {
-        return (((this.clockPhasor * multiples) % 1.0) + phase) % 1.0;
+        return (((this.clockPhasor * this.barPhaseMultiplier * multiples) % 1.0) + phase) % 1.0;
     };
 
 //@CLT
     this.clockTrig = (multiples, phase) => {
         return (this.clockPhase(multiples, phase) - (1.0/sampleRate * multiples)) <= 0 ? 1 : 0;
     };
-    this.setClockFreq = (freq) => {
-      this.clockFreq = freq;
-      return 0;
-    };
+
+
+    // this.setClockFreq = (freq) => {
+    //   this.clockFreq = freq;
+    //   return 0;
+    // };
 
     this.bitTime = Maximilian.maxiBits.sig(0);  //this needs to be decoupled from the audio engine? or not... maybe a 'permenant block' with each grammar?
     this.dt = 0;
@@ -427,6 +436,8 @@ class MaxiProcessor extends AudioWorkletProcessor {
       for (let i = 0; i < output[0].length; ++i) {
         //this needs decoupling?
         this.bitTime = Maximilian.maxiBits.inc(this.bitTime);
+
+        //leave this here - we'll bring it back in one day?s
         //net clocks
         // if (this.kuraPhase != -1) {
         //   // this.netClock.setPhase(this.kuraPhase, this.kuraPhaseIdx);
@@ -436,22 +447,26 @@ class MaxiProcessor extends AudioWorkletProcessor {
         // this.netClock.setPhase(this.netClock.getPhase(0), 2);
         //   this.kuraPhase = -1;
         // }
-        this.netClock.play(this.clockFreq, 100);
-        this.clockPhasor = this.netClock.getPhase(0) / (2 * Math.PI);
+
+        // this.netClock.play(this.clockFreq, 100);
+
+        //this.clockPhasor = this.netClock.getPhase(0) / (2 * Math.PI);
+        this.clockPhasor = (this.currentSample % this.maxTimeLength) / this.maxTimeLength;
+        this.currentSample++;
+
         //share the clock if networked
-        // if (this.clockPhaseSharingInterval++ == 2000) {
-        if (this.netClock.size() > 1 && this.clockPhaseSharingInterval++ == 2000) {
-          this.clockPhaseSharingInterval=0;
-          let phase = this.netClock.getPhase(0);
-          // console.log(`DEBUG:MaxiProcessor:phase: ${phase}`);
-          this.port.postMessage({ phase: phase, c: "phase" });
-        }
+        // if (this.netClock.size() > 1 && this.clockPhaseSharingInterval++ == 2000) {
+        //   this.clockPhaseSharingInterval=0;
+        //   let phase = this.netClock.getPhase(0);
+        //   // console.log(`DEBUG:MaxiProcessor:phase: ${phase}`);
+        //   this.port.postMessage({ phase: phase, c: "phase" });
+        // }
 
         this.bitclock = Maximilian.maxiBits.sig(Math.floor(this.clockPhase(1,0) * 1023.999999999));
 
         let w=0;
         //new code waiting?
-        let barTrig = this.clockTrig(this.barFrequency,0);
+        let barTrig = this.clockTrig(1,0);
         if (this.codeSwapState == this.codeSwapStates.QUEUD) {
           //fade in when a new bar happens
           if (barTrig) {

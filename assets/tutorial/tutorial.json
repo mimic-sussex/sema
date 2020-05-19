@@ -22,7 +22,7 @@
     "section_dir": "04-widgets"
   }]
 }, {
-  "title": "Live Coding",
+  "title": "Live Coding with the Default Language",
   "sections": [{
     "slug": "introduction",
     "title": "Introduction",
@@ -99,7 +99,7 @@
     "chapter_dir": "03-machine-learning",
     "section_dir": "09-echo-state-network"
   }
-  
+
   ]
 }, {
   "title": "Language Design",

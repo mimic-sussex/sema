@@ -366,6 +366,7 @@ var jsFuncMap = {
 		setup: (o, p) => "",
 		loop:  (o, p) => `Maximilian.maxiBits.fromSignal(${p[0].loop})`
 	},
+	//basic clock functions
   clp: {
 		setup: (o, p) => "",
 		loop:  (o, p) => `this.clockPhase(${p[0].loop},${p.length > 1 ? p[1].loop : 0})`
@@ -374,18 +375,13 @@ var jsFuncMap = {
 		setup: (o, p) => "",
 		loop:  (o, p) => `this.clockTrig(${p[0].loop},${p.length > 1 ? p[1].loop : 0})`
 	},
-  clfreq: {
+
+	//clock meta
+	clk: {
 		setup: (o, p) => "",
-		loop:  (o, p) => `this.setClockFreq(${p[0].loop})`
+		loop:  (o, p) => `(()=>{this.setBPM(${p[0].loop}); this.setBeatsPerBar(${p[0].loop});})()`
 	},
-  clbpm: {
-		setup: (o, p) => "",
-		loop:  (o, p) => `this.setClockFreq(60/${p[0].loop})`
-	},
-	barfreq: {
-		setup: (o, p) => "",
-		loop:  (o, p) => `this.setBarFrequency(${p[0].loop})`
-	},
+
   onzx: {
 		setup: (o, p) => `${o} = new Maximilian.maxiTrigger();`,
 		loop:  (o, p) => `${o}.onZX(${p[0].loop})`
@@ -413,7 +409,6 @@ var jsFuncMap = {
     setup: (o, p) => "",
 		loop:  (o, p) => `this.bitclock`
   },
-
 	pvshift: {
 		setup: (o, p) => `${o} = new pvshift();`,
 		loop:  (o, p) => `${o}.play(${p[0].loop},${p[1].loop})`
