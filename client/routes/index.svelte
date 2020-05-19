@@ -1,4 +1,18 @@
+<!-- <script context="module">
+	export async function preload() {
+		// '/' absolute URL
+    
+		return await fetch(`/tutorial/tutorial.json`).then(r => r.json());
+	}
+</script> -->
+
 <script>
+
+  import { tick, onMount, onDestroy } from 'svelte';
+  import {
+    tutorials,
+    selected
+  } from '../stores/tutorial.js'
 
   import {
     currentUser
@@ -8,7 +22,17 @@
 
   import SignIn from '../components/user/SignIn.svelte';
 
-  
+  // $tutorials = preload();
+  // $selected = $tutorials[0]
+
+  // onMount( async () => {
+   
+  //   console.log(`DEBUG:routes:index:onMount: `); 
+  //   // console.log(`DEBUG:routes:_layout: ${chapter_dir}`); 
+  //   // console.log(`DEBUG:routes:_layout: ${section_dir}`); 
+  //   $tutorials = await preload();
+  //   $selected = $tutorials[0]; 
+  // }); 
 
 
 </script>

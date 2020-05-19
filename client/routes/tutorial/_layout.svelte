@@ -1,10 +1,3 @@
-<script context="module">
-	export async function preload() {
-		// '/' absolute URL
-		return await fetch(`/tutorial/tutorial.json`).then(r => r.json());
-	}
-</script>
-
 <script>
   import { onMount, onDestroy, tick } from 'svelte';
 
@@ -22,15 +15,17 @@
 
   let handleSelect = async e => { 
     
-    console.log(`DEBUG:tutorial:_layout[/${$selected.chapter_dir}]/[${$selected.section_dir}]:`);
-    
-    $goto(`/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/`);
-
+   
     await tick();    
     let json = await fetch(`/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/layout.json`)
                 .then( r => r.json());
 
     $items = json.map( item => hydrateJSONcomponent(item) );
+
+    console.log(`DEBUG:tutorial:_layout[/${$selected.chapter_dir}]/[${$selected.section_dir}]:`);
+    
+    $goto(`/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/`);
+
 
     // slug: "editors", title: "Editors", chapter_dir: "01-introduction", section_dir: "03-editors"
   }
@@ -52,7 +47,7 @@
         </button>    
 
         <select class="combobox-dark" 
-                bind:value={$selected} 
+                bind:value={ $selected } 
                 on:change={ e => handleSelect(e) } 
                 >
           {#if $tutorials !== undefined} 

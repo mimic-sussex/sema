@@ -89,17 +89,16 @@
 
 <style>
 
-
+/* 
   .sign-out-button {
     height: auto;
     width: auto;
     font-size: 14px;
-    /* font-family: Arial, Helvetica, sans-serif; */
     padding-top: 0.2em; 
     padding-bottom: 0.2em;
     margin-right: 20px;
    
-  }
+  } */
 
   .button-dark {
     display: block;

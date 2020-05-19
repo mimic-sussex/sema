@@ -303,9 +303,8 @@ export let tutorials = writable(tutorialOptions);
 
 // Store for SELECTED tutorial options in Sidebar component
 // export let selected = writable({});
-export let selected = writable(tutorials[0]);
+export let selected = writable({});
 
 export let items = storable("tutorial", testItems); // localStorageWrapper
 
-console.log("DEBUG:tutorial:store");
 
