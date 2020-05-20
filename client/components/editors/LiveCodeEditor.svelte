@@ -37,12 +37,8 @@
   //   liveCodeAbstractSyntaxTree,
   //   dspCode
       audioEngineStatus
-  } from "../../store.js";
+  } from "../../stores/store.js";
   
-  // export let grammarSource = "/languages/defaultGrammar.ne";
-  export let grammarSource; 
-  let grammarSourceSubscriptionToken; 
-  let grammarCompiledParser;
 
   // export let liveCodeEditorValue;
   export let liveCodeParseErrors;
@@ -50,19 +46,29 @@
   export let liveCodeAbstractSyntaxTree; 
   export let dspCode; // code generated from the liveCode AST traversal
 
-  // console.log("grammarCompiledParser");
-  // console.log($grammarCompiledParser);
 
+  /* Custom Static properties */
   export let tab = true;
-
-  export let id;
-  export let name;
 	export let type;
+  export let name;  // For now is static
+
+  export let liveCodeSource; // e.g. "/languages/default/livecode.sem"; 
+  export let grammarSource;  // e.g. "/languages/default/grammar.ne";
+  let grammarSourceSubscriptionToken; 
+  let grammarCompiledParser;
+
+
+  /* Custom Dynamic properties */
 	export let lineNumbers;
 	export let hasFocus;
 	export let theme;
 	export let background;
 	export let data;      // liveCode Value that is injected and to which CodeMirror is bound
+  export let component;
+
+
+  /* Grid Items native properties */
+  export let id;
   // export let static; // Error: ParseError: The keyword 'static' is reserved
   export let responsive;
   export let resizable;
@@ -75,7 +81,7 @@
   export let y;
   export let w;
   export let h;
-  export let component;
+
 
   let codeMirror;
   let parserWorker;
@@ -92,8 +98,12 @@
   }
 
   let isRelativeURL = str => {
-    let re = /^[^\/]+\/[^\/].*$|^\/[^\/].*$/;
-    return re.exec(str)[0]===re.exec(str).input;
+    if(!isEmpty(str)){
+      let re = /^[^\/]+\/[^\/].*$|^\/[^\/].*$/;
+      return re.exec(str)[0]===re.exec(str).input;
+    }
+    else
+      throw Error("Empty URL"); 
   }
 
 
@@ -253,9 +263,9 @@
 
   }
 
-  let fetchGrammarFrom = async url => {
+  let fetchFrom = async url => {
     if(!isEmpty(url)){  
-      const res = await fetch(grammarSource);
+      const res = await fetch(url);
       return await res.text();
     }
     else
@@ -291,6 +301,13 @@
   onMount( async () => {
     // console.log('DEBUG:LiveCodeEditor:onMount:')
     // console.log(data);
+
+
+    if(isRelativeURL(liveCodeSource)){
+      data = await fetchFrom(liveCodeSource);
+    }
+
+
     codeMirror.set(data, "js", 'monokai');
 
     parserWorker = new ParserWorker();  // Create one worker per widget lifetime
@@ -298,8 +315,9 @@
     btrack = new blockTracker(codeMirror);
 
     if(isRelativeURL(grammarSource)){
-      let grammar = await fetchGrammarFrom(grammarSource);
+      let grammar = await fetchFrom(grammarSource);
       grammarCompiledParser = compileParser(grammar);
+
       // console.log('DEBUG:LiveCodeEditor:onMount:grammarCompiledParser')
       // console.log(grammarCompiledParser) 
     }

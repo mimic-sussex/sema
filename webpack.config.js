@@ -226,7 +226,7 @@ module.exports = {
 			},
 			{
 				context: "./assets",
-				from: "language",
+				from: "languages",
 				to: "languages",
 				toType: "dir",
 			},

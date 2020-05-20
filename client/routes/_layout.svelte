@@ -1,11 +1,3 @@
-<!-- <script context="module">
-	export async function preload() {
-		// '/' absolute URL
-    
-		return await fetch(`/tutorial/tutorial.json`).then(r => r.json());
-	}
-</script> -->
-
 <script>
 	// import Nav from '../components//Nav.svelte';
   import { tick, onMount, onDestroy } from 'svelte';
@@ -17,13 +9,42 @@
   import { currentUser } from '../stores/user.js'
   
   import {
+    sidebarLiveCodeOptions
+  } from '../stores/playground.js';
+
+  import {
     tutorials,
     selected
   } from '../stores/tutorial.js';
 
-  $: load();
+  $: loadPlayground();
+  $: loadTutorial();
 
-  let load = () => {
+  let loadPlayground = () => {
+		fetch(`/languages/languages.json`)
+      .then(r => r.json())
+      .then(json => {
+        console.log("DEBUG:_layout:loadPlayground");
+        console.log(json)
+        $sidebarLiveCodeOptions = $sidebarLiveCodeOptions.concat(json.map( language => ({ 
+            id: 1, 
+            disabled: false, 
+            text: language.name, 
+            content : {
+              grammar:  `/languages/${language.name}/grammar.ne`,
+              livecode: `/languages/${language.name}/livecode.sem`
+            }
+          })
+        ));
+        console.log($sidebarLiveCodeOptions)
+        // $sidebarLiveCodeOptions
+        // $sidebarGrammarOptions
+        // $selected = $tutorials[0].sections[0];
+        $ready();
+      });
+	}
+
+  let loadTutorial = () => {
 		fetch(`/tutorial/tutorial.json`)
       .then(r => r.json())
       .then(json => {
@@ -61,6 +82,7 @@
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
+    padding-right: 20px;
     background: linear-gradient(150deg, rgba(0,18,1,1) 0%, rgba(7,5,17,1) 33%, rgba(16,12,12,1) 67%, rgba(18,16,16,1) 100%);
   }
 

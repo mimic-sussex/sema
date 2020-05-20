@@ -1,22 +1,15 @@
 <script>
-  import { 
-    tutorialsActive,
-    playgroundActive,
-    sidebarLiveCodeOptions,
-    sidebarGrammarOptions,
-    sidebarModelOptions,
-    selectedModel,
-    selectedLayout, 
-    layoutOptions, 
-     
-    
-    editorThemes
-  }  from '../../store.js';
-
   import {
+    sidebarLiveCodeOptions,
+    sidebarModelOptions,
+    sidebarDebuggerOptions,
+    sidebarVisualisationOptions,
+    sidebarGrammarOptions,
+    editorThemes,
+    selectedModel,
     tutorialOptions,
     selectedTutorial
-  } from '../../stores/tutorial.js'
+  } from '../../stores/playground.js'
 
 
   import { id } from '../../utils/utils.js';
@@ -31,18 +24,13 @@
 
   let selectedLanguage = 1;
 
-  let languageOptions = [
-		{ id: 1, text: `Default` },
-		{ id: 2, text: `Bits` },
-		{ id: 3, text: `IXI` },
-		{ id: 4, text: `Maya` },
-	];
 
   // let selectModel;
   let selectedLiveCodeOption;
+  let selectedDebuggerOption;
+  let selectedVisualisationOption;
   let selectedGrammarOption;
   let selectedModelOption;
-
   
 
 	function sendLanguageSelect() {
@@ -59,7 +47,7 @@
     switch (type) {
       case 'live':
         messaging.publish("add-editor", { id: id(), type: 'liveCodeEditor', data: selected.content });
-        selectedLiveCodeOption = sidebarLiveCodeOptions[0];        
+        selectedLiveCodeOption = $sidebarLiveCodeOptions[0];        
         break;
       case 'grammar':
         messaging.publish("add-editor", { id: id(), type: 'grammarEditor', data: selected.content });
@@ -67,16 +55,18 @@
         break;
       case 'model':
         messaging.publish("add-editor", { id: id(), type: 'modelEditor', data: selected.content });
-        selectedModelOption = sidebarModelOptions[0];        
+        selectedModelOption = $sidebarModelOptions[0];        
         break;
-      case 'liveCodeParseOutput':
-        messaging.publish("add-debugger", { id: id(), type: 'liveCodeParseOutput'});
+      case 'debugger':
+        messaging.publish("add-debugger", { id: id(), type: 'liveCodeParseOutput', data: selected.content});
+        selectedDebuggerOption = sidebarDebuggerOptions[0];  
         break;
-      case 'grammarCompileOutput':
-        messaging.publish("add-debugger", { id: id(), type: 'grammarCompileOutput'});
-        break;
+      // case 'grammarCompileOutput':
+      //   messaging.publish("add-debugger", { id: id(), type: 'grammarCompileOutput'}, data: selected.content);
+      //   break;
       case 'analyser':
         messaging.publish("add-analyser", { id: id(), type: 'analyser' });
+        selectedVisualisationOption = sidebarVisualisationOptions[0];   
         break;
       default:
         break;
@@ -99,8 +89,6 @@
     margin-left: 10px;
     margin-right: 10px;
   }
-
-
 
   .checkbox-span {
     color: whitesmoke;
@@ -163,6 +151,12 @@
     -webkit-box-shadow: 5px 5px 20px -5px rgba(0,0,0,0.75), -5px -5px 20px rgba(255, 255, 255, 0.954);
     -moz-box-shadow: 5px 5px 20px -5px rgba(0,0,0,0.75), -5px -5px 20px rgba(255, 255, 255, 0.954);
     box-shadow: 2px 2px 3px rgb(0, 0, 0), -1px -1px 3px #ffffff61;
+  }
+
+  .dynamic-controls {
+    margin-top: 20px;
+
+
   }
 
   /* .combobox {
@@ -242,6 +236,12 @@
     
   }
 
+  .dynamic-properties-separator-hr {
+    width: 85%; 
+    height:1px; 
+    border-color:#555555;
+  }
+
 </style>
 
 
@@ -250,29 +250,14 @@
   <div class="layout-combobox-container">
     <!-- Live Code Combobox Selector -->
     <div class="controls">
-      <!-- <div>
-        <span class="whiteText">Add Live Code </span>
-      </div> -->
-      <select class="combobox-dark" 
-              bind:this={$selectedModel} 
-              bind:value={selectedLiveCodeOption} 
-              on:change={() => dispatchAdd('live', selectedLiveCodeOption)} >
-        {#each sidebarLiveCodeOptions as liveCodeOption}
-          <option value={liveCodeOption}>
-            {liveCodeOption.text}
-          </option>
-        {/each}
-      </select>    
-    </div>
 
-    <!-- Grammar Combobox Selector -->
-    <div class="controls">
       <select class="combobox-dark" 
-              bind:value={selectedGrammarOption} 
-              on:change={ () => dispatchAdd('grammar', selectedGrammarOption) } >
-        {#each sidebarGrammarOptions as grammarOption}
-          <option value={grammarOption}>
-            { grammarOption.text }
+              bind:value={selectedLiveCodeOption} 
+              on:change={ () => dispatchAdd('live', selectedLiveCodeOption)} 
+              on:click={ () => $sidebarLiveCodeOptions[0].disabled = true }>               
+        {#each $sidebarLiveCodeOptions as liveCodeOption}
+          <option disabled={liveCodeOption.disabled} value={liveCodeOption}>
+            { liveCodeOption.text }
           </option>
         {/each}
       </select>    
@@ -280,18 +265,49 @@
 
     <!-- Model Combobox Selector -->
     <div class="controls">
-      <!-- <select class="combobox" bind:value={$selectedTutorial} > -->
       <select class="combobox-dark"
               bind:value={selectedModelOption} 
-              on:change={ () => dispatchAdd('model', selectedModelOption) } >
-        {#each sidebarModelOptions as modelOption}
-          <option value={modelOption}>
+              on:change={ () => dispatchAdd('model', selectedModelOption) } 
+              on:click={ () => $sidebarModelOptions[0].disabled = true }             
+              >
+        {#each $sidebarModelOptions as modelOption}
+          <option disabled={modelOption.disabled} value={modelOption}>
             { modelOption.text }
           </option>
         {/each}
       </select>    
     </div>
 
+    <!-- Visualization Combobox Selector -->
+    <div class="controls">
+      <select class="combobox-dark" 
+              bind:value={selectedVisualisationOption} 
+              on:change={ () => dispatchAdd('analyser', selectedVisualisationOption ) } >
+        {#each sidebarVisualisationOptions as visualisationOption}
+          <option value={visualisationOption}>
+            { visualisationOption.text }
+          </option>
+        {/each}
+      </select>    
+    </div>
+
+    <!-- Debuggers Combobox Selector -->
+    <div class="controls">
+      <select class="combobox-dark" 
+              bind:value={selectedDebuggerOption} 
+              on:change={ () => dispatchAdd('debugger', selectedDebuggerOption) } >
+        {#each sidebarDebuggerOptions as debuggerOption}
+          <option value={debuggerOption}>
+            { debuggerOption.text }
+          </option>
+        {/each}
+      </select>    
+    </div>
+
+
+
+
+<!-- 
     <div>
       <button class="button-dark controls"
               on:click={ () => dispatchAdd('grammarCompileOutput') }> 
@@ -304,16 +320,33 @@
               on:click={ () => dispatchAdd('liveCodeParseOutput') }> 
         + Live Code Parse Out
       </button>
-    </div>
+    </div> -->
 
-    <div>
+    <!-- <div>
       <button class="button-dark controls"
               on:click={ () => dispatchAdd('analyser') }> 
         + Analyser
       </button>
-    </div>
+    </div> -->
 
-    <div class="controls">
+
+
+    <hr class="dynamic-properties-separator-hr">
+
+    <div class="dynamic-controls controls">
+
+      <!-- Grammar Combobox Selector -->
+      <div class="">
+        <select class="combobox-dark" 
+                bind:value={selectedGrammarOption} 
+                on:change={ () => dispatchAdd('grammar', selectedGrammarOption) } >
+          {#each $sidebarGrammarOptions as grammarOption}
+            <option value={grammarOption}>
+              { grammarOption.text }
+            </option>
+          {/each}
+        </select>    
+      </div>
 
       <div>
         <label class="checkbox-container">Line Numbers

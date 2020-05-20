@@ -6,7 +6,7 @@
   import * as firebaseui from 'firebaseui'
   import firebase, { auth, app } from '../../firebase/firebase.js';
 
-  import { audioEngineStatus } from '../../store.js';
+  import { audioEngineStatus } from '../../stores/store.js';
 
   let handleClick = () => {
     $audioEngineStatus = "hidden";

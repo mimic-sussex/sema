@@ -1,14 +1,14 @@
 import { writable, readable } from 'svelte/store';
 
-import compile from "./compiler/compiler";
+import compile from "../compiler/compiler";
 
-import default_grammar from '../assets/language/defaultGrammar.ne';
-import gabber_grammar from "../assets/language/gabber.ne";
-import nibble_grammar from "../assets/language/nibble.ne";
+// import default_grammar from '../assets/language/defaultGrammar.ne';
+// import gabber_grammar from "../assets/language/gabber.ne";
+// import nibble_grammar from "../assets/language/nibble.ne";
 
-import default_liveCode from "../assets/language/defaultLiveCode.sem";
-import gabber_liveCode from "../assets/language/gabber.sem";
-import nibble_liveCode from "../assets/language/nibble.sem";
+// import default_liveCode from "../assets/language/defaultLiveCode.sem";
+// import gabber_liveCode from "../assets/language/gabber.sem";
+// import nibble_liveCode from "../assets/language/nibble.sem";
 
 
 // Load tutorials from .ne files
@@ -46,12 +46,12 @@ export const tutorialsActive = writable(false);
 
 // Load TFJS code from tf files
 
-import hello_world_code_example from "./machineLearning/tfjs/hello-world/hello-world.tf";
-import two_layer_non_linear_code_example from "./machineLearning/tfjs/non-linear/two-layer-non-linear.tf";
-import binary_classification_code_example from "./machineLearning/tfjs/non-linear/binary-classification.tf";
-import echo_state_network_code_example from "./machineLearning/tfjs/echo-state/echo-state-network.tf";
-import lstm_txt_gen_code_example from "./machineLearning/tfjs/rnn/lstm-txt-gen.tf";
-import music_rnn_example from "./machineLearning/magenta/music-rnn.tf";
+import hello_world_code_example           from "../machineLearning/tfjs/hello-world/hello-world.tf";
+import two_layer_non_linear_code_example  from "../machineLearning/tfjs/non-linear/two-layer-non-linear.tf";
+import binary_classification_code_example from "../machineLearning/tfjs/non-linear/binary-classification.tf";
+import echo_state_network_code_example    from "../machineLearning/tfjs/echo-state/echo-state-network.tf";
+import lstm_txt_gen_code_example          from "../machineLearning/tfjs/rnn/lstm-txt-gen.tf";
+import music_rnn_example                  from "../machineLearning/magenta/music-rnn.tf";
 
 // Create stores for TFJS models to load into Sidebar selector
 
@@ -100,14 +100,15 @@ let initModelEditorValue = () => {
 
 // Grammar and LiveCode Editors CURRENT TUTORIAL session's Values and dependencies, reactive
 
-export const grammarEditorValue = writable(initGrammarEditorValue());
+// export const grammarEditorValue = writable(initGrammarEditorValue());
 
-export const grammarCompiledParser = writable(compile(default_grammar).output);
+// export const grammarCompiledParser = writable(compile(default_grammar).output);
+export const grammarCompiledParser = writable({});
 
 
 export const grammarCompilationErrors = writable("");
 
-export const liveCodeEditorValue = writable(initLiveCodeEditorValue());
+// export const liveCodeEditorValue = writable(initLiveCodeEditorValue());
 
 export const liveCodeParseResults = writable("");
 
@@ -122,20 +123,20 @@ export const dspCode = writable("");
 export const modelEditorValue = writable(initModelEditorValue());
 
 // Dashboard Store for Live Code Editor options in Sidebar component
-export const sidebarLiveCodeOptions = [
-	{ id: 0, text: `Add LiveCode Editor...`, content: "" },
-	{ id: 1, text: `+ default`, content: default_liveCode },
-	{ id: 2, text: `+ nibble`, content: nibble_liveCode },
-	{ id: 3, text: `+ gabber`, content: gabber_liveCode },
-];
+// export const sidebarLiveCodeOptions = [
+// 	{ id: 0, text: `LiveCode Editor`, content: "" },
+// 	{ id: 1, text: `+ default`, content: default_liveCode },
+// 	{ id: 2, text: `+ nibble`, content: nibble_liveCode },
+// 	{ id: 3, text: `+ gabber`, content: gabber_liveCode },
+// ];
 
-// Dashboard Store for Grammar Editor options in Sidebar component
-export const sidebarGrammarOptions = [
-	{ id: 1, text: `Add Grammar Editor...`, content: "" },
-	{ id: 1, text: `+ default`, content: default_grammar },
-	{ id: 2, text: `+ nibble`, content: nibble_grammar },
-	{ id: 3, text: `+ gabber`, content: gabber_grammar },
-];
+// // Dashboard Store for Grammar Editor options in Sidebar component
+// export const sidebarGrammarOptions = [
+// 	{ id: 1, text: `Grammar Editor`, content: "" },
+// 	{ id: 1, text: `+ default`, content: default_grammar },
+// 	{ id: 2, text: `+ nibble`, content: nibble_grammar },
+// 	{ id: 3, text: `+ gabber`, content: gabber_grammar },
+// ];
 
 
 // Store for TFJS model options in Sidebar component
