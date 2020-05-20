@@ -1,7 +1,13 @@
 # Introduction to live coding with the default language
 
-```Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.```
+Sema allows you to make or customise your own livecoding languages.  We provide the default language, which allows you to access all the functions in the signal engine. This set of tutorials guides you through the basic features.  In this tutorial, you can copy and paste the code examples into the live coding window.
 
-## Lorem ipsum dolor ##
+In the default language, commands take the format
 
-sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+{parameter, parameter, ...}function;
+
+Let's begin with a simple saw oscillator; paste this code into the live coding window, and press ctrl-enter to run it.
+
+```
+> {100}saw;
+```

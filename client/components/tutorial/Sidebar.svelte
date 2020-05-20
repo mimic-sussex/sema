@@ -1,15 +1,15 @@
 <script>
-  import { 
+  import {
     tutorialsActive,
     playgroundActive,
     sidebarLiveCodeOptions,
     sidebarGrammarOptions,
     sidebarModelOptions,
     selectedModel,
-    selectedLayout, 
-    layoutOptions, 
-     
-    
+    selectedLayout,
+    layoutOptions,
+
+
     editorThemes
   }  from '../../store.js';
 
@@ -34,7 +34,7 @@
 </script>
 
 <style>
-  
+
   .sidebar {
     /* width: 160px; */
     height: 100%;
@@ -54,15 +54,15 @@
     margin-top: 5px;
     margin-bottom: 5px;
     margin-left: 10px;
-    margin-right: 10px; 
+    margin-right: 10px;
   }
 
   /* .checkbox-span {
     color: whitesmoke;
-    margin-left: 20px; 
+    margin-left: 20px;
   } */
   /* .checkbox-input {
-    margin-left: 5px; 
+    margin-left: 5px;
   } */
 
   /* The checkbox container */
@@ -78,8 +78,8 @@
     user-select: none;
     font-size: 12px;
   } */
-  
-  /* 
+
+  /*
   .layout-combobox-container{
     margin-top: 5px;
   } */
@@ -94,7 +94,7 @@
     line-height: 1.3;
     padding: 0.7em 1em 0.7em 1em;
     width: 100%;
-    max-width: 100%; 
+    max-width: 100%;
     box-sizing: border-box;
     margin: 0;
     border: 0 solid #333;
@@ -120,7 +120,7 @@
     line-height: 1.3;
     padding: .5em .5em .5em .6em;
     width: 100%;
-    max-width: 100%; 
+    max-width: 100%;
     box-sizing: border-box;
     margin: 0;
     border: 1px solid #aaa;
@@ -143,7 +143,7 @@
       border-color: #aaa;
       box-shadow: 0 0 1px 3px rgba(59, 153, 252, .7);
       box-shadow: 0 0 0 3px -moz-mac-focusring;
-      color: #222; 
+      color: #222;
       outline: none;
       border-radius: .4em;
   } */
@@ -161,7 +161,7 @@
     line-height: 1.3;
     padding: 0.7em 1em 0.7em 1em;
     /* width: 100%; */
-    max-width: 100%; 
+    max-width: 100%;
     box-sizing: border-box;
     border: 0 solid #333;
     /* box-shadow: 0 1px 0 0px rgba(4, 4, 4, 0.04); */
@@ -185,7 +185,7 @@
     -webkit-box-shadow: 2px 2px 5px rgba(0,0,0),-1px -1px 1px rgb(34, 34, 34);
     -moz-box-shadow: 2px 2px 5px rgba(0,0,0), -1px -1px 1px rgb(34, 34, 34);;
     box-shadow: 2px 2px 3px rgb(0, 0, 0), -1px -1px 3px #ffffff61;
-    
+
   }
 
 </style>
@@ -194,9 +194,9 @@
 <div class="sidebar">
     <div class="tutorial-navigator">
      <!-- on:click={ () => dispatchNav('previousTurt') } -->
-      <button class="button-dark"> 
+      <button class="button-dark">
         ◄
-      </button>    
+      </button>
 
       <!-- <select class="combobox-dark" bind:value={$currentTutorial} >
         {#each tutorials as tutorialOption}
@@ -206,7 +206,7 @@
         {/each}
       </select>    -->
       <!-- on:click={ () => dispatchAdd('analyser') } -->
-      <button class="button-dark"> 
+      <button class="button-dark">
         ►
       </button>
     </div>
@@ -215,5 +215,5 @@
     <Markdown>
     </Markdown>
 
-    
+
 </div>

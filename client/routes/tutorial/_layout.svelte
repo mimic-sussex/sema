@@ -13,17 +13,17 @@
     items
   } from '../../stores/tutorial.js';
 
-  let handleSelect = async e => { 
-    
-   
-    await tick();    
+  let handleSelect = async e => {
+
+
+    await tick();
     let json = await fetch(`/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/layout.json`)
                 .then( r => r.json());
 
     $items = json.map( item => hydrateJSONcomponent(item) );
 
     console.log(`DEBUG:tutorial:_layout[/${$selected.chapter_dir}]/[${$selected.section_dir}]:`);
-    
+
     $goto(`/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/`);
 
 
@@ -42,41 +42,43 @@
     <div class="sidebar">
 
       <div class="tutorial-navigator">
-        <button class="button-dark"> 
+        <button class="button-dark">
           ◄
-        </button>    
+        </button>
 
-        <select class="combobox-dark" 
-                bind:value={ $selected } 
-                on:change={ e => handleSelect(e) } 
+        <div class="combobox-dark">
+        <select
+                bind:value={ $selected }
+                on:change={ e => handleSelect(e) }
                 >
-          {#if $tutorials !== undefined} 
-            {#each $tutorials as chapter, i}                	
+          {#if $tutorials !== undefined}
+            {#each $tutorials as chapter, i}
               <optgroup label="{i + 1}. {chapter.title}">
                 {#if chapter.sections !== undefined}
                   {#each chapter.sections as section, i}
                     <!-- <option value={section}>{String.fromCharCode(i + 97)}. {section.title}</option> -->
                     <option value={section}>{section.title}</option>
                   {/each}
-                {/if}  
+                {/if}
               </optgroup>
             {/each}
           {/if}
-        </select>   
+        </select>
+        </div>
 
-        <button class="button-dark"> 
+        <button class="button-dark">
           ►
         </button>
 
       </div>
 
       <br/>
-      
+
       <!-- <Markdown /> -->
       <slot scoped={ $selected }>
       </slot>
-      
-    
+
+
     </div>
   </div>
   <div class="dashboard-container">
@@ -94,7 +96,7 @@
   		"sidebar layout"
   		"sidebar layout";
   	/* background-color: #6f7262; */
-	  background-color: #212121; 
+	  background-color: #212121;
     overflow: hidden;
   }
 
@@ -105,7 +107,7 @@
     grid-row: 0 / 1;
     height: 100%;
     /* width: auto; width is defined by child */
-    width: 26em; 
+    width: 26em;
   }
 
   .dashboard-container {
@@ -116,6 +118,10 @@
   }
 
   .combobox-dark {
+    border: 0;
+  }
+
+  .combobox-dark select {
     display: block;
     font-size: 12px;
     font-family: sans-serif;
@@ -125,7 +131,7 @@
     line-height: 1.3;
     padding: 0.7em 1em 0.7em 1em;
     width: 100%;
-    max-width: 100%; 
+    max-width: 100%;
     box-sizing: border-box;
     margin: 0;
     /* border: 1px solid #333; */
@@ -150,6 +156,10 @@
     box-shadow: 2px 2px 3px rgb(0, 0, 0), -1px -1px 3px #ffffff61;
   }
 
+  .combobox-dark select optgroup{
+    color:black;
+  }
+
   .button-dark {
     display: block;
     font-size: 12px;
@@ -160,7 +170,7 @@
     line-height: 1.3;
     padding: 0.7em 1em 0.7em 1em;
     /* width: 100%; */
-    max-width: 100%; 
+    max-width: 100%;
     box-sizing: border-box;
     border: 0 solid #333;
     /* box-shadow: 0 1px 0 0px rgba(4, 4, 4, 0.04); */
@@ -184,7 +194,7 @@
     -webkit-box-shadow: 2px 2px 5px rgba(0,0,0),-1px -1px 1px rgb(34, 34, 34);
     -moz-box-shadow: 2px 2px 5px rgba(0,0,0), -1px -1px 1px rgb(34, 34, 34);;
     box-shadow: 2px 2px 3px rgb(0, 0, 0), -1px -1px 3px #ffffff61;
-    
+
   }
 
   .tutorial-navigator {
@@ -194,7 +204,7 @@
     margin-top: 5px;
     margin-bottom: 5px;
     margin-left: 10px;
-    margin-right: 10px; 
+    margin-right: 10px;
   }
 
 </style>
