@@ -44,8 +44,8 @@
 			let tag = 'script';
       markdown = marked(text);
 			let codeID=0;
-			while(markdown.indexOf("<code>")>-1) {
-				markdown = markdown.replace("<code>", `<button style="font-size:70%" type="button" onclick="copyCode('code${codeID}')">copy</button><br><code id='code${codeID++}'>`);
+			while(markdown.indexOf("<pre><code>")>-1) {
+				markdown = markdown.replace("<pre><code>", `<pre><button style="font-size:70%" type="button" onclick="copyCode('code${codeID}')">copy</button><br><code id='code${codeID++}'>`);
 			};
 						// markdown="test";
     } else {

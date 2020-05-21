@@ -67,6 +67,16 @@ code {
 	font-size: 110%;
 	background-color: white;
 	color: black;
+	padding: 2px;
+	border: 1px solid #454541;
+}
+
+pre code {
+	display: block;
+	border-radius: 5px;
+	font-size: 110%;
+	background-color: white;
+	color: black;
 	padding: 10px;
 	border: 1px solid #454541;
 }
