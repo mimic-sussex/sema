@@ -22,9 +22,9 @@
 
 
   let fetchMarkdown = async (chapter, section) => {
-    
+
     let res, text;
-    
+
     // if(chapter != undefined && section != undefined){ // There is a call with undefined value when navigating to Playground
       res = await fetch(`/tutorial/${chapter}/${section}/index.md`)
       text = await res.text();
@@ -39,15 +39,15 @@
     // console.log($selected)
     console.log(`DEBUG:/[${chapter}]/[${section}]:fetchMarkdown: `);
 
-    // await tick();    
+    // await tick();
     if (res.ok) {
       markdown = marked(text);
     } else {
       throw new Error(text);
-    }    
+    }
   }
 
-  
+
 
   // $: source = `${$params.chapter} ${section}`;
   // $: markdown = source; // Reactive expression, 'markdown' reacts to 'source' changes
@@ -59,7 +59,7 @@
     // console.log($selected)
     // promise = fetchMarkdown($selected.chapter_dir, $selected.section_dir); // Reactive statement, var 'promise' reacts to 'section' changes
 
-  });  
+  });
 
 
 </script>
@@ -75,6 +75,10 @@
     border-radius: 5px;
     height: 85vh;
     background: #aaaaaa;
+		-webkit-user-select: all;  /* Chrome 49+ */
+	  -moz-user-select: all;     /* Firefox 43+ */
+	  -ms-user-select: all;      /* No support yet */
+	  user-select: all;          /* Likely future */ 
   }
 
   .markdown-output {
