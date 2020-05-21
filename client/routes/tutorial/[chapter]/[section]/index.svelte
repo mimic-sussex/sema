@@ -7,6 +7,7 @@
 
 
 <script>
+
   import { tick, onMount } from 'svelte';
   import { url, params } from "@sveltech/routify";
   import marked from 'marked';
@@ -19,7 +20,6 @@
   let markdown;
 
   $: promise = fetchMarkdown($selected.chapter_dir, $selected.section_dir); // Reactive statement, var 'promise' reacts to 'section' changes
-
 
   let fetchMarkdown = async (chapter, section) => {
 
@@ -41,7 +41,13 @@
 
     // await tick();
     if (res.ok) {
+			let tag = 'script';
       markdown = marked(text);
+			let codeID=0;
+			while(markdown.indexOf("<code>")>-1) {
+				markdown = markdown.replace("<code>", `<button style="font-size:70%" type="button" onclick="copyCode('code${codeID}')">copy</button><br><code id='code${codeID++}'>`);
+			};
+						// markdown="test";
     } else {
       throw new Error(text);
     }
@@ -54,6 +60,9 @@
 
 
   onMount( async () => {
+
+		//add in copy button dynamically
+		let el = document.getElementsByClassName('markdown-output');
 
     // console.log(`DEBUG:tutorial/${$params.chapter}/${$params.chapter}/ index`);
     // console.log($selected)
@@ -78,7 +87,7 @@
 		-webkit-user-select: all;  /* Chrome 49+ */
 	  -moz-user-select: all;     /* Firefox 43+ */
 	  -ms-user-select: all;      /* No support yet */
-	  user-select: all;          /* Likely future */ 
+	  user-select: all;          /* Likely future */
   }
 
   .markdown-output {
@@ -87,7 +96,6 @@
   }
 
 </style>
-
 <div class="markdown-container">
 {#await promise}
 	<p>...waiting</p>
