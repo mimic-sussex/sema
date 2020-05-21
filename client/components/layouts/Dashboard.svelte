@@ -77,7 +77,10 @@
 
   const addItem = (type, id, value) => {
     let newItem = createNewItem(type, id, value);
-    $items = gridHelp.appendItem(newItem, $items, cols);
+    // $items = gridHelp.appendItem(newItem, $items, cols);
+
+    let findOutPosition = gridHelp.findSpaceForItem(newItem, $items, cols); // find out where to place
+    $items = [...$items, ...[{ ...newItem, ...findOutPosition }]];
   }
 
   const remove = item => {
