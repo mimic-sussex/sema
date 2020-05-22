@@ -49,18 +49,24 @@ Get a variable
 ```
 It needs a function name, and an array of parameters.   You can use any of the options below:
 
+## Audio inputs
+
+### adc
+Get a signal from the system default input
+Parameters:
+  1. Gain
+
 ## Audio outputs
 
 ### dac
-Output a signal - copy a single signal to all output channels
-Parameters:
-  1. Signal
+Output a signal to the system default audio interface
 
-### dacx
-Output a signal to a single channel
 Parameters:
   1. Signal
-  2. Channel number (starting from 0)
+  2. (optional) Channel number (starting from 0)
+
+If parameter 2 is to given, then the signal is copied to all the outputs
+
 
 ## Oscillators
 
