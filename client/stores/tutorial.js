@@ -1,6 +1,7 @@
 import { writable, readable } from "svelte/store";
 
-import { id } from '../utils/utils'
+import { id } from "../utils/utils";
+import { storable } from "../stores/common";
 
 import gridHelp from "svelte-grid/build/helper/index.mjs";
 
@@ -16,8 +17,6 @@ let liveCode = "";
 let modelCode = "";
 let grammarCode = "";
 
-
-
 const originalItems = [
 	{
 		...gridHelp.item({ x: 0, y: 0, w: 6, h: 7, id: id() }),
@@ -32,7 +31,7 @@ const originalItems = [
 			component: LiveCodeEditor,
 			data: liveCode,
 			grammarSource: "/languages/defaultGrammar.ne",
-			grammarCompiledParser: ""
+			grammarCompiledParser: "",
 		},
 	},
 
@@ -135,7 +134,7 @@ const testItems = [
 			component: LiveCodeEditor,
 			data: "#lc-1",
 			grammarSource: "/languages/defaultGrammar.ne",
-			grammarCompiledParser: ""
+			grammarCompiledParser: "",
 		},
 	},
 
@@ -183,85 +182,6 @@ const testItems = [
 	},
 ];
 
-
-
-export let hydrateJSONcomponent = (item) => {
-	if (item != undefined) {
-		switch (item.type) {
-			case "liveCodeEditor":
-				item.component = LiveCodeEditor;
-				break;
-			case "grammarEditor":
-				item.component = GrammarEditor;
-				break;
-			case "modelEditor":
-				item.component = ModelEditor;
-				break;
-			case "liveCodeParseOutput":
-				item.component = LiveCodeParseOutput;
-				break;
-			case "grammarCompileOutput":
-				item.component = GrammarCompileOutput;
-				break;
-			case "storeDebugger":
-				item.component = StoreDebugger;
-				break;
-			case "analyser":
-				item.component = Analyser;
-				break;
-			default:
-				item.component = StoreDebugger;
-				break;
-		}
-		item.id = id();
-		item.name = item.name + item.id;
-		return item;
-	} else {
-		createNewItem();
-	}
-};
-
-
-
-/*
- * Wraps writable store a
- */
-export function storable(key, initialValue) {
-
-	const store = writable(initialValue); // create an underlying store
-	const { subscribe, set, update } = store;
-
-	const json = localStorage.getItem(key); // get the last value from localStorage
-	if (json) {
-    // set( JSON.parse(json));
-		set( JSON.parse(json).map( item => hydrateJSONcomponent(item) ) ); // use the value from localStorage if it exists
-	}
-
-	// return an object with the same interface as Svelte's writable() store interface
-	return {
-		set(value) {
-			localStorage.setItem(key, JSON.stringify(value));
-			set(value); // capture set and write to localStorage
-		},
-
-		update(cb) {
-			const value = cb(get(store)); // passes items to callback for invocation e.g items => items.concat(new)
-			this.set(value); // capture updates and write to localStore
-		},
-
-		get() {
-			return localStorage.getItem(key);
-		},
-
-		// hydrate(newItems) {
-		// 	set( newItems.map( item => hydrateJSONcomponent(item) ) ); 
-		// },
-
-		subscribe // punt subscriptions to underlying store
-	};
-}
-
-
 // Store for tutorial options in Sidebar component
 let tutorialOptions = [
 	{
@@ -296,8 +216,6 @@ let tutorialOptions = [
 	},
 ];
 
-
-
 export let tutorials = writable(tutorialOptions);
 // export let tutorials = writable([]);
 
@@ -306,5 +224,3 @@ export let tutorials = writable(tutorialOptions);
 export let selected = writable({});
 
 export let items = storable("tutorial", testItems); // localStorageWrapper
-
-

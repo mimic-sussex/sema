@@ -11,7 +11,7 @@
 
 
     editorThemes
-  }  from '../../store.js';
+  }  from '../../stores/store.js';
 
   import {
     tutorials,

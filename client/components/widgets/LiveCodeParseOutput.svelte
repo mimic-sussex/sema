@@ -17,7 +17,7 @@
     grammarCompilationErrors, 
     liveCodeParseErrors,
     liveCodeAbstractSyntaxTree  
-  } from "../../store.js";
+  } from "../../stores/store.js";
   
   onMount(async () => {
     

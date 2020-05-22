@@ -8,10 +8,10 @@
     selectedModel,
     selectedLayout, 
     layoutOptions, 
-     
-    
+    sidebarDebuggerOptions,
+    selectedDebuggerOption, 
     editorThemes
-  }  from '../../store.js';
+  }  from '../../stores/store.js';
 
   import {
     tutorialOptions,
@@ -58,25 +58,27 @@
 
     switch (type) {
       case 'live':
-        messaging.publish("add-editor", { id: id(), type: 'liveCodeEditor', data: selected.content });
-        selectedLiveCodeOption = sidebarLiveCodeOptions[0];        
+        messaging.publish("playground-add-editor", { id: id(), type: 'liveCodeEditor', data: selected.content });
+        selectedLiveCodeOption = $sidebarLiveCodeOptions[0];        
         break;
       case 'grammar':
-        messaging.publish("add-editor", { id: id(), type: 'grammarEditor', data: selected.content });
+        messaging.publish("playground-add-editor", { id: id(), type: 'grammarEditor', data: selected.content });
         selectedGrammarOption = sidebarGrammarOptions[0];        
         break;
       case 'model':
-        messaging.publish("add-editor", { id: id(), type: 'modelEditor', data: selected.content });
-        selectedModelOption = sidebarModelOptions[0];        
+        messaging.publish("playground-add-editor", { id: id(), type: 'modelEditor', data: selected.content });
+        selectedModelOption = $sidebarModelOptions[0];        
         break;
-      case 'liveCodeParseOutput':
-        messaging.publish("add-debugger", { id: id(), type: 'liveCodeParseOutput'});
+      case 'debugger':
+        messaging.publish("playground-add-debugger", { id: id(), type: 'liveCodeParseOutput', data: selected.content});
+        selectedDebuggerOption = sidebarDebuggerOptions[0];  
         break;
-      case 'grammarCompileOutput':
-        messaging.publish("add-debugger", { id: id(), type: 'grammarCompileOutput'});
-        break;
+      // case 'grammarCompileOutput':
+      //   messaging.publish("playground-add-debugger", { id: id(), type: 'grammarCompileOutput'}, data: selected.content);
+      //   break;
       case 'analyser':
-        messaging.publish("add-analyser", { id: id(), type: 'analyser' });
+        messaging.publish("playground-add-analyser", { id: id(), type: 'analyser' });
+        selectedVisualisationOption = sidebarVisualisationOptions[0];   
         break;
       default:
         break;
@@ -254,25 +256,11 @@
         <span class="whiteText">Add Live Code </span>
       </div> -->
       <select class="combobox-dark" 
-              bind:this={$selectedModel} 
               bind:value={selectedLiveCodeOption} 
               on:change={() => dispatchAdd('live', selectedLiveCodeOption)} >
-        {#each sidebarLiveCodeOptions as liveCodeOption}
+        {#each $sidebarLiveCodeOptions as liveCodeOption}
           <option value={liveCodeOption}>
             {liveCodeOption.text}
-          </option>
-        {/each}
-      </select>    
-    </div>
-
-    <!-- Grammar Combobox Selector -->
-    <div class="controls">
-      <select class="combobox-dark" 
-              bind:value={selectedGrammarOption} 
-              on:change={ () => dispatchAdd('grammar', selectedGrammarOption) } >
-        {#each sidebarGrammarOptions as grammarOption}
-          <option value={grammarOption}>
-            { grammarOption.text }
           </option>
         {/each}
       </select>    
@@ -284,7 +272,7 @@
       <select class="combobox-dark"
               bind:value={selectedModelOption} 
               on:change={ () => dispatchAdd('model', selectedModelOption) } >
-        {#each sidebarModelOptions as modelOption}
+        {#each $sidebarModelOptions as modelOption}
           <option value={modelOption}>
             { modelOption.text }
           </option>
@@ -292,35 +280,74 @@
       </select>    
     </div>
 
+    <!-- Grammar Combobox Selector -->
+    <!-- <div class="controls">
+      <select class="combobox-dark" 
+              bind:value={selectedGrammarOption} 
+              on:change={ () => dispatchAdd('grammar', selectedGrammarOption) } >
+        {#each sidebarGrammarOptions as grammarOption}
+          <option value={grammarOption}>
+            { grammarOption.text }
+          </option>
+        {/each}
+      </select>    
+    </div> -->
+
+    <div>
+      <button class="button-dark controls"
+              on:click={ () => dispatchAdd('grammar') }> 
+        Grammar Editor
+      </button>
+    </div>
+
+    <!-- Debuggers Combobox Selector -->
+    <div class="controls">
+      <select class="combobox-dark" 
+              bind:value={selectedDebuggerOption} 
+              on:change={ () => dispatchAdd('debugger', selectedDebuggerOption) } >
+        {#each sidebarDebuggerOptions as debuggerOption}
+          <option value={debuggerOption}>
+            { debuggerOption.text }
+          </option>
+        {/each}
+      </select>    
+    </div>
+
+
     <div>
       <button class="button-dark controls"
               on:click={ () => dispatchAdd('grammarCompileOutput') }> 
-        + Grammar Compile Out
+        Grammar Compile Out
       </button>
     </div>
 
     <div>
       <button class="button-dark controls"
               on:click={ () => dispatchAdd('liveCodeParseOutput') }> 
-        + Live Code Parse Out
+        Live Code Parse Out
       </button>
     </div>
 
     <div>
       <button class="button-dark controls"
               on:click={ () => dispatchAdd('analyser') }> 
-        + Analyser
+        Analyser
       </button>
     </div>
 
-    <div class="controls">
+    <div>
+      <button class="button-dark controls"
+              on:click={ () => messaging.publish('playground-reset') }> 
+        Reset
+      </button>
+    </div>
 
-      <div>
-        <label class="checkbox-container">Line Numbers
-          <input type="checkbox" checked="checked" class="checkbox-input">
-          <span  class="checkbox-span"></span>
-        </label>
-      </div>
+    <div>
+      <label class="checkbox-container">Line Numbers
+        <input type="checkbox" checked="checked" class="checkbox-input">
+        <span  class="checkbox-span"></span>
+      </label>
+    </div>
 
       <div class="">
         <!-- <div>
@@ -335,7 +362,5 @@
           {/each}
         </select>    
       </div>
-
     </div>
-  </div>
 </div>

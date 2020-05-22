@@ -8,28 +8,23 @@
   import map from "lodash.map";
 
   import { id, random, randomHexColorCode } from '../../utils/utils.js';
+
   import { PubSub } from "../../messaging/pubSub.js";
+
 	import { copyToPasteBuffer } from '../../utils/pasteBuffer.js';
 
-  import {
-    // items,
-    createNewItem,
-    hydrateJSONcomponent
-  } from "../../stores/playground.js"
 
-	const GitHubBase = require('github-base');
-	const github = new GitHubBase({ /* options */ });
+  // import { hydrateJSONcomponent } from '../../stores/common.js'
 
-
-  export let items;
 
   const messaging = new PubSub();
 
   // Svelte-grid configuration
-  var cols = 15;
-  let breakpoints = [[1000, 10], [700, 5], [500, 3], [400, 1]];
-  let rowHeight = 100;
-  let gap = 1;
+  export let items;
+  export let cols;
+  export let breakpoints;
+  export let rowHeight;
+  export let gap;
 
   const types = ['liveCodeEditor', 'modelEditor', 'grammarEditor', 'liveCodeParseOutput', 'grammarCompileOutput', 'analyser'];
   const itype = () => types[Math.floor(Math.random() * types.length)];
@@ -75,13 +70,7 @@
     }
 	}
 
-  const addItem = (type, id, value) => {
-    let newItem = createNewItem(type, id, value);
-    // $items = gridHelp.appendItem(newItem, $items, cols);
 
-    let findOutPosition = gridHelp.findSpaceForItem(newItem, $items, cols); // find out where to place
-    $items = [...$items, ...[{ ...newItem, ...findOutPosition }]];
-  }
 
   const remove = item => {
 
@@ -97,56 +86,16 @@
     console.log($items); 
   }
 
-  const clearItems = () => {
-    // console.log("DEBUG:dashboard:clearItems:")
-    // items.update( items => items.map( item => remove(item) ) );
-    items.update( items => items.slice(items.length) );
-    // items.set([]);
-  }
 
-  const saveEnvironment = e => {
-   	// console.log('DEBUG:saveEnvironment', e);
-		if (e.storage=='local') {
-			localStorage.setItem(`env--${e.name}`, items.get() );
-		}else{
-			copyToPasteBuffer(items.get());
-			console.log("DEBUG:saveEnvironment: Environment copied to the paste buffer")
-		}
-  }
 
-  const loadEnvironment = e => {
-		// console.log('DEBUG:dashboard:loadEnvironment', e);
-		
-    clearItems();
-    
-		if (e.storage === 'local') {
-			let json = localStorage.getItem(`env--${e.name}`);
-			if (json) { 
-        let envItems = JSON.parse(json).map( item => hydrateJSONcomponent(item) );
-        items.set( envItems ); 
-        items.update( items => gridHelp.resizeItems(items, 4, 100) ); // Align items
-        // items.update( items => items.concat(envItems));
-			}
-		}else{
-			github.get(`/gists/${e.name}`)
-			.then(res => {
-				// console.log("git gist", res.body.files[Object.keys(res.body.files)[0]].content)
-				let envdataStr = res.body.files[Object.keys(res.body.files)[0]].content;
-				if (envdataStr) {
-					//fill in soon
-				}
-			})
-			.catch(console.error);
-		}
-  }
 
-	onMount(() => {
-    messaging.subscribe('add-editor', e => addItem(e.type, e.id, e.data) );
-    messaging.subscribe('add-debugger', e => addItem(e.type, e.id) );
-    messaging.subscribe('add-analyser', e => addItem(e.type, e.id) );
-		messaging.subscribe('env-save', e => saveEnvironment(e) );
-		messaging.subscribe('env-load', e => loadEnvironment(e) );
-  });
+	// onMount(() => {
+  //   messaging.subscribe('add-editor', e => addItem(e.type, e.id, e.data) );
+  //   messaging.subscribe('add-debugger', e => addItem(e.type, e.id) );
+  //   messaging.subscribe('add-analyser', e => addItem(e.type, e.id) );
+	// 	messaging.subscribe('env-save', e => saveEnvironment(e) );
+	// 	messaging.subscribe('env-load', e => loadEnvironment(e) );
+  // });
 
 </script>
 
@@ -228,7 +177,7 @@
 </style>
 
 <div class="layout-template-container scrollable">
- <!--   -->
+  <!-- Notice that were passing items as a store here ($)   -->
   <Grid items={$items}
         {breakpoints}
         {cols}

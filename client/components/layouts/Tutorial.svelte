@@ -25,7 +25,7 @@
             selectedLayout,
             layoutOptions,
             helloWorld
-  } from "../store.js";
+  } from "../stores/store.js";
 
   import {
     playAudio,

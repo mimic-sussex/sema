@@ -6,15 +6,23 @@
 
   import { goto, ready, url } from "@sveltech/routify";
 
+  import { hydrateJSONcomponent } from '../../stores/common.js';
+
   import {
     tutorials,
     selected,
-    hydrateJSONcomponent,
     items
   } from '../../stores/tutorial.js';
 
-  let handleSelect = async e => {
 
+  // Tutorial dashboard configuration
+  let cols = 15;
+  let breakpoints = [[1000, 10], [700, 5], [500, 3], [400, 1]];
+  let rowHeight = 100;
+  let gap = 1;
+
+
+  let handleSelect = async e => {
 
     await tick();
     let json = await fetch(`/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/layout.json`)
@@ -29,6 +37,7 @@
 
     // slug: "editors", title: "Editors", chapter_dir: "01-introduction", section_dir: "03-editors"
   }
+
 
 
 </script>
@@ -82,7 +91,12 @@
     </div>
   </div>
   <div class="dashboard-container">
-    <Dashboard {items} />
+    <Dashboard  {items}
+                {breakpoints}
+                {cols}
+                {rowHeight}
+                {gap}
+                />
   </div>
 </div>
 

@@ -37,7 +37,7 @@
   //   liveCodeAbstractSyntaxTree,
   //   dspCode
       audioEngineStatus
-  } from "../../store.js";
+  } from "../../stores/store.js";
   
   // export let grammarSource = "/languages/defaultGrammar.ne";
   export let grammarSource; 
@@ -92,10 +92,13 @@
   }
 
   let isRelativeURL = str => {
-    let re = /^[^\/]+\/[^\/].*$|^\/[^\/].*$/;
-    return re.exec(str)[0]===re.exec(str).input;
+    if(!isEmpty(str)){
+      let re = /^[^\/]+\/[^\/].*$|^\/[^\/].*$/;
+      return re.exec(str)[0]===re.exec(str).input;
+    }
+    else
+      throw Error("Empty URL"); 
   }
-
 
   let onChange = e => {
     // console.log('DEBUG:LiveCodeEditor:onchange:');

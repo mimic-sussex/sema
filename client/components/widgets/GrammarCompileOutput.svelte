@@ -15,7 +15,7 @@
 
   import { 
     grammarCompilationErrors
-  } from "../../store.js";
+  } from "../../stores/store.js";
   
   onMount(async () => {
     
