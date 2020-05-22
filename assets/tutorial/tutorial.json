@@ -29,25 +29,15 @@
     "chapter_dir": "02-live-coding",
     "section_dir": "01-introduction"
   }, {
-    "slug": "statements",
-    "title": "Statements",
+    "slug": "ins and outs",
+    "title": "Inputs and outputs",
     "chapter_dir": "02-live-coding",
-    "section_dir": "02-statements"
+    "section_dir": "02-inout"
   }, {
-    "slug": "declarations",
-    "title": "Declarations",
+    "slug": "variables",
+    "title": "Variables",
     "chapter_dir": "02-live-coding",
-    "section_dir": "03-declarations"
-  }, {
-    "slug": "assignments",
-    "title": "Assignments",
-    "chapter_dir": "02-live-coding",
-    "section_dir": "04-assignments"
-  }, {
-    "slug": "DSP-objects",
-    "title": "DSP objects",
-    "chapter_dir": "02-live-coding",
-    "section_dir": "05-DSP-objects"
+    "section_dir": "03-variables"
   }
   ]
 }, {

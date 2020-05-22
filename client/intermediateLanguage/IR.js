@@ -231,7 +231,7 @@ var jsFuncMap = {
 		loop:  (o, p) => `(${o}.isReady() ? ${ o}stretch.play(${p[0].loop},${p[1].loop},${p[2].loop},${p[3].loop},0.0) : 0.0)`
 	},
 	// 'adc': {"setup":(o,p)=>"", "loop":(o,p)=>`inputs[${p[0].loop}]`},
-	adc: { setup: (o, p) => "", loop: (o, p) => `inputs` },
+	adc: { setup: (o, p) => "", loop: (o, p) => `(inputs * ${p[0].loop})` },
 	sampler: {
 		setup: (o, p) => `${o} = new Maximilian.maxiSample();
                       ${o}.setSample(this.getSampleBuffer(${p[p.length-1].loop}));`,
