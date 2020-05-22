@@ -23,7 +23,7 @@ var jsFuncMap = {
 	pha: {
 		setup: (o, p) => `${o} = new Maximilian.maxiOsc();
                       ${o}.phaseReset(${p.length > 1 ? p[1].loop : 0.0});`,
-		loop:  (o, p) => `${o}.phasor(${p[0].loop})`
+		loop:  (o, p) => `${o}.phasor(${p[0].loop}, 0, 1)`
 	},
 	ph2: {
 		setup: (o, p) => `${o} = new Maximilian.maxiOsc();

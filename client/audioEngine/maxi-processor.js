@@ -119,7 +119,6 @@ class MaxiProcessor extends AudioWorkletProcessor {
     // let temp = new Maximilian.maxiNonlinearity();
     // console.log("TEST2", temp.asymclip(0.9,3,3));
 
-
     let q1 = Maximilian.maxiBits.sig(63);
 
     // this.sampleRate = 44100;

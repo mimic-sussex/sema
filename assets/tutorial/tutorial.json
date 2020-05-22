@@ -33,11 +33,24 @@
     "title": "Inputs and outputs",
     "chapter_dir": "02-live-coding",
     "section_dir": "02-inout"
-  }, {
+  },
+  {
     "slug": "variables",
     "title": "Variables",
     "chapter_dir": "02-live-coding",
     "section_dir": "03-variables"
+  },
+  {
+    "slug": "sampling",
+    "title": "Playing samples",
+    "chapter_dir": "02-live-coding",
+    "section_dir": "04-sampling"
+  },
+  {
+    "slug": "sequencing",
+    "title": "Sequencing and clocks",
+    "chapter_dir": "02-live-coding",
+    "section_dir": "05-sequencing"
   }
   ]
 }, {
