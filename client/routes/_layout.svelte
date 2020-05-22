@@ -203,7 +203,7 @@
   </div>
 
   <div class="actions-container">
-    <!-- <Dashboard {items} /> -->
+
 
     <AudioEngineStatus />
 
@@ -214,5 +214,5 @@
 {/if}
 
 
-
+<!-- <Dashboard {items} /> -->
 <slot></slot>

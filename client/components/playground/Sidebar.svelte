@@ -43,15 +43,6 @@
   let selectedGrammarOption;
   let selectedModelOption;
 
-  
-
-	function sendLanguageSelect() {
-    console.log("selectedLanguage: ", selectedLanguage);
-    dispatch('message', {
-			language: selectedLanguage.id
-		});
-	}
-
   function dispatchAdd(type, selected){
     // console.log(`DEBUG:Sidebar:dispatchAdd: /add/${type}/${selected.id}`);
     // console.log(selected.content);

@@ -16,6 +16,8 @@ function persist(key, value) {
 	sessionStorage.setItem(key, JSON.stringify(value));
 }
 
+
+// Use traditional function declaration to prevent Temporal Dead Zone issue
 export function writableSession(key, initialValue) {
 	const sessionValue = JSON.parse(sessionStorage.getItem(key));
 
@@ -38,9 +40,10 @@ export function writableSession(key, initialValue) {
 	};
 }
 
-export let createNewItem = (type, id, content) => {
-	console.log("DEBUG:playgroundStore:createNewItem:");
-	console.log(content);
+// Use traditional function declaration to prevent Temporal Dead Zone issue
+export function createNewItem (type, id, content){
+	// console.log("DEBUG:stores/common:createNewItem:");
+	// console.log(content);
 	let component;
 
 	switch (type) {
@@ -50,8 +53,8 @@ export let createNewItem = (type, id, content) => {
 				background: "#151515",
 				theme: "icecoder",
 				grammarSource: content.grammar,
-				liveCodeSource: content.livecode,
-				data: "",
+				// liveCodeSource: content.livecode,
+				data: ""
 			};
 			break;
 		case "grammarEditor":
@@ -111,7 +114,7 @@ export let createNewItem = (type, id, content) => {
 	};
 };
 
-
+// Use traditional function declaration to prevent Temporal Dead Zone issue
 export function hydrateJSONcomponent (item){
 	if (item != undefined) {
 		switch (item.type) {

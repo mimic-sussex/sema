@@ -1,6 +1,6 @@
 <script>
 
-  import { onMount } from 'svelte';
+  import { onMount, onDestroy } from 'svelte';
 
   import { PubSub } from "../messaging/pubSub.js";
   
@@ -30,6 +30,15 @@
   let rowHeight = 100;
   let gap = 1;
 
+  // Subscription tokens for messaging topic subscriptions
+  // must be kept for unsubscribe on each route component onMount/onDestroy
+  // (or navigations between tutorial/playground)
+  let addEditorSubscriptionToken;
+  let addDebuggerSubscriptionToken;
+  let addAnalyserSubscriptionToken; 
+  let envSaveSubscriptionToken;
+  let envLoadSubscriptionToken;
+  let resetSubscriptionToken;
 
 
   const addItem = (type, id, value) => {
@@ -39,7 +48,6 @@
     let findOutPosition = gridHelp.findSpaceForItem(newItem, $items, cols); // find out where to place
     $items = [...$items, ...[{ ...newItem, ...findOutPosition }]];
   }
-
 
   const clearItems = () => {
     // console.log("DEBUG:dashboard:clearItems:")
@@ -87,14 +95,26 @@
 
 
   onMount(() => {
-    messaging.subscribe('playground-add-editor', e => addItem(e.type, e.id, e.data) );
-    messaging.subscribe('playground-add-debugger', e => addItem(e.type, e.id) );
-    messaging.subscribe('playground-add-analyser', e => addItem(e.type, e.id) );
-		messaging.subscribe('playground-env-save', e => saveEnvironment(e) );
-    messaging.subscribe('playground-env-load', e => loadEnvironment(e) );
-		messaging.subscribe('playground-reset', e => clearItems() );
+    console.log("DEBUG:routes/playground:onMount")
+
+    addEditorSubscriptionToken = messaging.subscribe('playground-add-editor', e => addItem(e.type, e.id, e.data) ); 
+    addDebuggerSubscriptionToken = messaging.subscribe('playground-add-debugger', e => addItem(e.type, e.id) );
+    addAnalyserSubscriptionToken = messaging.subscribe('playground-add-analyser', e => addItem(e.type, e.id) );
+		envSaveSubscriptionToken = messaging.subscribe('playground-env-save', e => saveEnvironment(e) );
+    envLoadSubscriptionToken = messaging.subscribe('playground-env-load', e => loadEnvironment(e) );
+		resetSubscriptionToken = messaging.subscribe('playground-reset', e => clearItems() );
   });
 
+  onDestroy(() => {
+    console.log("DEBUG:routes/playground:onDestroy")
+
+    messaging.unsubscribe(addEditorSubscriptionToken);
+    messaging.unsubscribe(addDebuggerSubscriptionToken);
+    messaging.unsubscribe(addAnalyserSubscriptionToken);
+    messaging.unsubscribe(envSaveSubscriptionToken);
+    messaging.unsubscribe(envLoadSubscriptionToken);
+    messaging.unsubscribe(resetSubscriptionToken);
+  });
 
 </script>
 

@@ -45,10 +45,14 @@
   let grammarCompiledParser;
 
   // export let liveCodeEditorValue;
-  export let liveCodeParseErrors;
-  export let liveCodeParseResults;
-  export let liveCodeAbstractSyntaxTree; 
-  export let dspCode; // code generated from the liveCode AST traversal
+  // export 
+  let liveCodeParseErrors;
+  // export 
+  let liveCodeParseResults;
+  // export 
+  let liveCodeAbstractSyntaxTree; 
+  // export 
+  let dspCode; // code generated from the liveCode AST traversal
 
   // console.log("grammarCompiledParser");
   // console.log($grammarCompiledParser);
@@ -92,12 +96,11 @@
   }
 
   let isRelativeURL = str => {
-    if(!isEmpty(str)){
+    if(isEmpty(str)) return false;
+    else {
       let re = /^[^\/]+\/[^\/].*$|^\/[^\/].*$/;
       return re.exec(str)[0]===re.exec(str).input;
     }
-    else
-      throw Error("Empty URL"); 
   }
 
   let onChange = e => {
@@ -307,9 +310,9 @@
       // console.log(grammarCompiledParser) 
     }
     else{
-      subscribeTo(grammarSource);
-      // console.log('DEBUG:LiveCodeEditor:onMount:grammarSource')
-      // console.log(grammarSource)
+      // TODO: Dynamic subscription to messaging from sibling widgets
+      // Where grammar source will be an UUID
+      // subscribeTo(grammarSource);
     }
     log( id, name, type, lineNumbers, hasFocus, theme, background, data, responsive, resizable, resize, draggable, drag, min, max, x, y, w, h, component );
     log( grammarSource, grammarCompiledParser );

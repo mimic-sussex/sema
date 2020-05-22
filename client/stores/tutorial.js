@@ -30,8 +30,7 @@ const originalItems = [
 			theme: "icecoder",
 			component: LiveCodeEditor,
 			data: liveCode,
-			grammarSource: "/languages/defaultGrammar.ne",
-			grammarCompiledParser: "",
+			grammarSource: "/languages/defaultGrammar.ne"
 		},
 	},
 
@@ -73,7 +72,7 @@ const originalItems = [
 			theme: "shadowfox",
 			background: "#ebdeff",
 			component: LiveCodeParseOutput,
-			data: "",
+			data: ""
 		},
 	},
 
@@ -87,7 +86,7 @@ const originalItems = [
 			theme: "monokai",
 			background: "#AAAAAA",
 			component: GrammarEditor,
-			data: grammarCode,
+			data: grammarCode
 		},
 	},
 
@@ -133,8 +132,7 @@ const testItems = [
 			theme: "icecoder",
 			component: LiveCodeEditor,
 			data: "#lc-1",
-			grammarSource: "/languages/defaultGrammar.ne",
-			grammarCompiledParser: "",
+			grammarSource: "/languages/defaultGrammar.ne"
 		},
 	},
 

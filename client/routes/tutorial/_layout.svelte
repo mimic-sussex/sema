@@ -39,6 +39,15 @@
   }
 
 
+  onMount(() => {
+    console.log("DEBUG:routes/tutorial/_layout:onMount")
+  });
+
+  onDestroy(() => {
+    console.log("DEBUG:routes/tutorial/_layout:onDestroy")
+  });
+
+
 
 </script>
 
