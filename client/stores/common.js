@@ -103,7 +103,7 @@ export function createNewItem (type, id, content){
 
 	// return component template
 	return {
-		...gridHelp.item({ x: 0, y: 0, w: 2, h: 2, id: id }),
+		...gridHelp.item({ x: 0, y: 0, w: 7, h: 3, id: id }),
 		...{
 			type: type,
 			name: type + id,

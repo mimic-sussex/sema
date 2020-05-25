@@ -12,9 +12,9 @@ import compile from "../compiler/compiler";
 import default_grammar  from "../../assets/languages/default/grammar.ne";
 import gabber_grammar   from "../../assets/languages/gabber/grammar.ne";
 import nibble_grammar   from "../../assets/languages/nibble/grammar.ne";
-import default_liveCode from "../../assets/languages/default/livecode.sem";
-import gabber_liveCode from  "../../assets/languages/gabber/livecode.sem";
-import nibble_liveCode from  "../../assets/languages/nibble/livecode.sem";
+import default_liveCode from "../../assets/languages/default/code.sem";
+import gabber_liveCode from   "../../assets/languages/gabber/code.sem";
+import nibble_liveCode from   "../../assets/languages/nibble/code.sem";
 
 
 // Load tutorials from .ne files
@@ -147,15 +147,14 @@ export const sidebarLiveCodeOptions = writable([
 // Dashboard Store for Live Code Editor options in Sidebar component
 export const sidebarDebuggerOptions = writable([
 	{ id: 0, text: `Debuggers`, content: "" },
-	{ id: 1, text: `+ Grammar Compile Out`, content: "" },
-	{ id: 2, text: `+ Live Code Parse Out`, content: "" },
-  { id: 3, text: `+ DSP Code Out`,        content: "" },
-	{ id: 4, text: `+ Post-It Panel`,       content: "" },
-	{ id: 4, text: `+ Store Inspector`,     content: "" },
+	{ id: 1, text: `+ Grammar Compiler Output`, content: "" },
+	{ id: 2, text: `+ Live Code Parser Output`, content: "" },
+  { id: 3, text: `+ DSP Code Generated`,      content: "" },
+	{ id: 4, text: `+ Post-It Panel`,           content: "" },
+	{ id: 4, text: `+ Store Inspector`,         content: "" },
 ]);
 
 export let selectedDebuggerOption = writable({});
-
 
 // Dashboard Store for Grammar Editor options in Sidebar component
 export const sidebarGrammarOptions = writable([

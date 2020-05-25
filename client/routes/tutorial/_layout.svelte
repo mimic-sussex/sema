@@ -24,12 +24,14 @@
 
   let handleSelect = async e => {
 
-    await tick();
+    
     let json = await fetch(`/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/layout.json`)
                 .then( r => r.json());
 
     $items = json.map( item => hydrateJSONcomponent(item) );
 
+    await tick();
+    
     console.log(`DEBUG:tutorial:_layout[/${$selected.chapter_dir}]/[${$selected.section_dir}]:`);
 
     $goto(`/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/`);

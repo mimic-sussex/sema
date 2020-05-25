@@ -15,12 +15,12 @@ import Analyser from "../components/widgets/Analyser.svelte";
 import StoreDebugger from "../components/widgets/StoreDebugger.svelte";
 
 import default_grammar from "../../assets/languages/default/grammar.ne";
-// import gabber_grammar  from "../../assets/languages/gabber.ne";
-// import nibble_grammar  from "../../assets/languages/nibble.ne";
+import gabber_grammar from "../../assets/languages/gabber/grammar.ne";
+import nibble_grammar from "../../assets/languages/nibble/grammar.ne";
 
-import default_liveCode from "../../assets/languages/default/liveCode.sem";
-// import gabber_liveCode  from "../../assets/languages/gabber.sem";
-// import nibble_liveCode  from "../../assets/languages/nibble.sem";
+import default_liveCode from "../../assets/languages/default/code.sem";
+import gabber_liveCode from "../../assets/languages/gabber/code.sem";
+import nibble_liveCode from "../../assets/languages/nibble/code.sem";
 
 import hello_world_code_example from "../machineLearning/tfjs/hello-world/hello-world.tf";
 import two_layer_non_linear_code_example from "../machineLearning/tfjs/non-linear/two-layer-non-linear.tf";
@@ -36,62 +36,115 @@ export const cm_theme_shadowfox = writable("");
 // Dashboard Store for Live Code Editor options in Sidebar component
 export const sidebarLiveCodeOptions = writable([
 	{ id: 0, disabled: false, text: `LiveCode Editor`, content: "" },
-	// { id: 1, text: `+ default`, content: default_liveCode },
-	// { id: 2, text: `+ nibble`, content: nibble_liveCode },
-	// { id: 3, text: `+ gabber`, content: gabber_liveCode },
+	// { id: 0, disabled: true, text: `LiveCode Editor`, content: "" },
+	{ id: 1, disabled: false, text: `+ default`, content: default_liveCode },
+	{ id: 2, disabled: false, text: `+ nibble`, content: nibble_liveCode },
+	{ id: 3, disabled: false, text: `+ gabber`, content: gabber_liveCode }
 ]);
 
-// Dashboard Store for Grammar Editor options in Sidebar component
-export const sidebarGrammarOptions = writable([
-	{ id: 1, disabled: false, text: `Grammar Editor`, content: "" },
-	// { id: 1, text: `+ default`, content: default_grammar },
-	// { id: 2, text: `+ nibble`, content: nibble_grammar },
-	// { id: 3, text: `+ gabber`, content: gabber_grammar }
-]);
+export const selectedLiveCodeOption = writable(sidebarLiveCodeOptions[1]);
+export const isSelectLiveCodeEditorDisabled = writable(false);
+
 
 // Store for TFJS model options in Sidebar component
 export const sidebarModelOptions = writable([
 	{ id: 0, disabled: false, text: `Model Editor`, content: "" },
-	{ id: 1, text: `+ hello-world`, content: hello_world_code_example },
+	// { id: 0, disabled: true, text: `Model Editor`, content: "" },
+	{ id: 1, disabled: false, text: `+ hello-world`, content: hello_world_code_example },
 	{
 		id: 2,
+    disabled: false,
 		text: `+ two-layer-non-linear`,
 		content: two_layer_non_linear_code_example,
 	},
 	{
 		id: 3,
+    disabled: false,
 		text: `+ binary-classification`,
 		content: binary_classification_code_example,
 	},
 	{
 		id: 4,
+    disabled: false,
 		text: `+ echo-state-network`,
 		content: echo_state_network_code_example,
 	},
 	{
 		id: 5,
+    disabled: false,
 		text: `+ lstm-text-gen`,
 		content: lstm_txt_gen_code_example,
 	},
 ]);
 
-export const selectedModel = writable(sidebarModelOptions[1]);
+export const selectedModelOption = writable(sidebarModelOptions[1]);
+export const isSelectModelEditorDisabled = writable(false);
+
+// Dashboard Store for Grammar Editor options in Sidebar component
+// export const sidebarGrammarOptions = writable([
+// 	{ id: 0, disabled: true, text: `Grammar Editor`, content: "" },
+// 	{ id: 1, disabled: false, text: `+ default`, content: default_grammar },
+// 	{ id: 2, disabled: false, text: `+ nibble`, content: nibble_grammar },
+// 	{ id: 3, disabled: false, text: `+ gabber`, content: gabber_grammar }
+// ]);
+
+export const isAddGrammarEditorDisabled = writable(false);
+
 
 // Dashboard Store for Live Code Editor options in Sidebar component
-export const sidebarDebuggerOptions = [
-	{ id: 0, text: `Debuggers`, content: "" },
-	{ id: 1, text: `+ Grammar Compile Out`, content: "" },
-	{ id: 2, text: `+ Live Code Parse Out`, content: "" },
-	{ id: 3, text: `+ DSP Code Out`, content: "" },
-	{ id: 4, text: `+ Post-It Panel`, content: "" },
-	{ id: 4, text: `+ Store Inspector`, content: "" },
-];
+export const sidebarDebuggerOptions = writable([
+	{ id: 0, disabled: false, type: ``, text: `Debuggers`, content: "" },
+	{
+		id: 1,
+		disabled: false,
+		type: `grammarCompileOutput`,
+		text: `+ Grammar Compiler Output`,
+		content: "",
+	},
+	{
+		id: 2,
+		disabled: false,
+		type: `liveCodeParseOutput`,
+		text: `+ Live Code Parser Output`,
+		content: "",
+	},
+	{
+		id: 3,
+		disabled: false,
+		type: `dspCodeOutput`,
+		text: `+ DSP Code Generated`,
+		content: "",
+	},
+	{
+		id: 4,
+		disabled: false,
+		type: `postIt`,
+		text: `+ Post-It Panel`,
+		content: "",
+	},
+	{
+		id: 4,
+		disabled: false,
+		type: `storeInspector`,
+		text: `+ Store Inspector`,
+		content: "",
+	},
+]);
+
+
+
+export let selectedDebuggerOption = writable({});
+export let isSelectDebuggerDisabled = writable(false);
 
 // Dashboard Store for Live Code Editor options in Sidebar component
 export const sidebarVisualisationOptions = [
 	{ id: 0, text: `Visualisation`, content: "" },
 	{ id: 1, text: `+ Audio Analyser`, content: "" },
 ];
+
+
+
+export const isAddAnalyserDisabled = writable(false);
 
 const originalItems = [
 	{

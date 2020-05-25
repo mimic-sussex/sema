@@ -68,7 +68,7 @@
   }
 
   const loadEnvironment = e => {
-		// console.log('DEBUG:dashboard:loadEnvironment', e);
+		// console.log('DEBUG:playground:loadEnvironment', e);
 		
     clearItems();
     

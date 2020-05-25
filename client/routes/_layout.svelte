@@ -204,7 +204,6 @@
 
   <div class="actions-container">
 
-
     <AudioEngineStatus />
 
     <SignOut />

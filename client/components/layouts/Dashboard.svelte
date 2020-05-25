@@ -78,6 +78,8 @@
       messaging.publish('remove-engine-analyser', { id: item.id }); // notify audio engine to remove associated analyser
     }
 
+    messaging.publish("plaground-item-deletion", item.type);
+
     remove.bind(null, item); // remove dashboard item binding
     delete item.component;
     $items = $items.filter( i => i.id !== item.id);

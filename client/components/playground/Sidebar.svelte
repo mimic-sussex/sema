@@ -1,22 +1,42 @@
 <script>
+
+  import { onMount, onDestroy } from "svelte";
   import { 
     tutorialsActive,
     playgroundActive,
-    sidebarLiveCodeOptions,
-    sidebarGrammarOptions,
-    sidebarModelOptions,
-    selectedModel,
-    selectedLayout, 
-    layoutOptions, 
-    sidebarDebuggerOptions,
-    selectedDebuggerOption, 
+    // sidebarLiveCodeOptions,
+    // sidebarGrammarOptions,
+    // sidebarModelOptions,
+    // selectedModel,
+    // selectedLayout, 
+    // layoutOptions, 
+    // sidebarDebuggerOptions,
+    // , 
     editorThemes
   }  from '../../stores/store.js';
 
   import {
-    tutorialOptions,
-    selectedTutorial
-  } from '../../stores/tutorial.js'
+    sidebarLiveCodeOptions,
+    selectedLiveCodeOption,
+    isSelectLiveCodeEditorDisabled,
+    
+    sidebarModelOptions,
+    selectedModelOption,
+    isSelectModelEditorDisabled,
+
+    // sidebarGrammarOptions,
+    isAddGrammarEditorDisabled,
+
+    isAddAnalyserDisabled,
+
+    sidebarDebuggerOptions,
+    selectedDebuggerOption,
+    isSelectDebuggerDisabled, 
+    // sidebarVisualisationOptions,
+     
+    // editorThemes,
+    // selectedModel,
+  } from '../../stores/playground.js'
 
 
   import { id } from '../../utils/utils.js';
@@ -24,24 +44,20 @@
   import { PubSub } from "../../messaging/pubSub.js";
   const messaging = new PubSub();
 
+  let itemDeletionSubscriptionToken;
+
+
+
   // import Markdown from "./Markdown.svelte";
 
 	import { createEventDispatcher } from 'svelte';
 	const dispatch = createEventDispatcher();
 
-  let selectedLanguage = 1;
-
-  let languageOptions = [
-		{ id: 1, text: `Default` },
-		{ id: 2, text: `Bits` },
-		{ id: 3, text: `IXI` },
-		{ id: 4, text: `Maya` },
-	];
 
   // let selectModel;
-  let selectedLiveCodeOption;
   let selectedGrammarOption;
-  let selectedModelOption;
+  // let selectedModelOption;
+  let selectedVisualisationOption;
 
   function dispatchAdd(type, selected){
     // console.log(`DEBUG:Sidebar:dispatchAdd: /add/${type}/${selected.id}`);
@@ -50,32 +66,71 @@
     switch (type) {
       case 'live':
         messaging.publish("playground-add-editor", { id: id(), type: 'liveCodeEditor', data: selected.content });
-        selectedLiveCodeOption = $sidebarLiveCodeOptions[0];        
-        break;
-      case 'grammar':
-        messaging.publish("playground-add-editor", { id: id(), type: 'grammarEditor', data: selected.content });
-        selectedGrammarOption = sidebarGrammarOptions[0];        
+        $selectedLiveCodeOption = $sidebarLiveCodeOptions[0];
+        $isSelectLiveCodeEditorDisabled = true;         
         break;
       case 'model':
         messaging.publish("playground-add-editor", { id: id(), type: 'modelEditor', data: selected.content });
-        selectedModelOption = $sidebarModelOptions[0];        
+        $selectedModelOption = $sidebarModelOptions[0];
+        $isSelectModelEditorDisabled = true;        
+        break;
+      case 'grammar':
+        messaging.publish("playground-add-editor", { id: id(), type: 'grammarEditor', data: selected.content });
+        // selectedGrammarOption = sidebarGrammarOptions[0];
+        $isAddGrammarEditorDisabled = true;
         break;
       case 'debugger':
         messaging.publish("playground-add-debugger", { id: id(), type: 'liveCodeParseOutput', data: selected.content});
-        selectedDebuggerOption = sidebarDebuggerOptions[0];  
+        // $selectedDebuggerOption.disabled = true;
+        $selectedDebuggerOption = sidebarDebuggerOptions[0];  
         break;
       // case 'grammarCompileOutput':
       //   messaging.publish("playground-add-debugger", { id: id(), type: 'grammarCompileOutput'}, data: selected.content);
       //   break;
       case 'analyser':
         messaging.publish("playground-add-analyser", { id: id(), type: 'analyser' });
-        selectedVisualisationOption = sidebarVisualisationOptions[0];   
+        $isAddAnalyserDisabled = true;
+        // $selectedVisualisationOption = sidebarVisualisationOptions[0];   
         break;
       default:
         break;
     }
   }
 
+  function activateSelectOnItemDeletion(itemType){
+    // console.log("DEBUG:routes/playground:sidebar:activateSelectOnItemDeletion:")
+    
+    if(itemType !== null){
+      if(itemType === 'liveCodeEditor'){
+        $isSelectLiveCodeEditorDisabled = false;
+      }
+      else if(itemType === 'modelEditor'){
+        $isSelectModelEditorDisabled = false;
+      }
+      else if(itemType === 'grammarEditor'){
+        $isAddGrammarEditorDisabled = false;
+      }
+      else if(itemType === 'analyser'){
+        $isAddAnalyserDisabled = false;
+      }
+      else if(itemType === 'debugger'){
+        $isSelectDebuggerDisabled = false;
+      }
+    }
+  }
+
+
+  onMount(() => {
+    // console.log("DEBUG:routes/playground:sidebar:onMount")
+
+    itemDeletionSubscriptionToken = messaging.subscribe("plaground-item-deletion", activateSelectOnItemDeletion);
+  })
+
+  onDestroy(() => {
+    // console.log("DEBUG:routes/playground:sidebar:onDestroy")
+
+    messaging.unsubscribe(itemDeletionSubscriptionToken);
+  });
 
 </script>
 
@@ -132,8 +187,8 @@
     color: #fff;
     line-height: 1.3;
     padding: 0.7em 1em 0.7em 1em;
-    width: 100%;
-    max-width: 100%; 
+    width: 10em;
+    /* max-width: 100%;  */
     box-sizing: border-box;
     margin: 0;
     /* border: 1px solid #333; */
@@ -158,45 +213,6 @@
     box-shadow: 2px 2px 3px rgb(0, 0, 0), -1px -1px 3px #ffffff61;
   }
 
-  /* .combobox {
-    display: block;
-    font-size: 12px;
-    font-family: sans-serif;
-    font-weight: 400;
-    color: #444;
-    line-height: 1.3;
-    padding: .5em .5em .5em .6em;
-    width: 100%;
-    max-width: 100%; 
-    box-sizing: border-box;
-    margin: 0;
-    border: 1px solid #aaa;
-    box-shadow: 0 1px 0 1px rgba(0,0,0,.04);
-    border-radius: .4em;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    background-color: #fff;
-    background-position: right .7em top 50%, 0 0;
-    background-size: .65em auto, 100%;
-  } */
-  /* .combobox-dark::-ms-expand {
-      display: none;
-  } */
-  /* .combobox:hover {
-      border-color: #888;
-  } */
-  /* .combobox:focus {
-      border-color: #aaa;
-      box-shadow: 0 0 1px 3px rgba(59, 153, 252, .7);
-      box-shadow: 0 0 0 3px -moz-mac-focusring;
-      color: #222; 
-      outline: none;
-      border-radius: .4em;
-  } */
-  /* .combobox option {
-      font-weight:normal;
-  } */
 
   .button-dark {
     display: block;
@@ -208,12 +224,12 @@
     line-height: 1.3;
     padding: 0.7em 1em 0.7em 1em;
     /* width: 100%; */
+    width: 10em;
     max-width: 100%; 
     box-sizing: border-box;
     border: 0 solid #333;
     /* box-shadow: 0 1px 0 0px rgba(4, 4, 4, 0.04); */
     border-radius: .6em;
-
     /* border-right-color: rgba(34,37,45, 0.1);
     border-right-style: solid;
     border-right-width: 1px;
@@ -243,14 +259,15 @@
   <div class="layout-combobox-container">
     <!-- Live Code Combobox Selector -->
     <div class="controls">
-      <!-- <div>
-        <span class="whiteText">Add Live Code </span>
-      </div> -->
+      <!-- on:click={ () => $sidebarLiveCodeOptions[0].disabled = true }  -->
       <select class="combobox-dark" 
-              bind:value={selectedLiveCodeOption} 
-              on:change={() => dispatchAdd('live', selectedLiveCodeOption)} >
+              bind:value={ $selectedLiveCodeOption } 
+              on:change={ () => dispatchAdd('live', $selectedLiveCodeOption) }
+              on:click={ () => $sidebarLiveCodeOptions[0].disabled = true }
+              disabled={ $isSelectLiveCodeEditorDisabled }         
+              >
         {#each $sidebarLiveCodeOptions as liveCodeOption}
-          <option value={liveCodeOption}>
+          <option disabled={ liveCodeOption.disabled } value={liveCodeOption}>
             {liveCodeOption.text}
           </option>
         {/each}
@@ -260,11 +277,15 @@
     <!-- Model Combobox Selector -->
     <div class="controls">
       <!-- <select class="combobox" bind:value={$selectedTutorial} > -->
+      <!-- on:click={ () => $sidebarModelOptions[0].disabled = true }   -->
       <select class="combobox-dark"
-              bind:value={selectedModelOption} 
-              on:change={ () => dispatchAdd('model', selectedModelOption) } >
+              bind:value={ $selectedModelOption } 
+              on:change={ () => dispatchAdd('model', $selectedModelOption) } 
+              on:click={ () => $sidebarModelOptions[0].disabled = true }  
+              disabled={ $isSelectModelEditorDisabled }
+              >
         {#each $sidebarModelOptions as modelOption}
-          <option value={modelOption}>
+          <option disabled={modelOption.disabled} value={modelOption}>
             { modelOption.text }
           </option>
         {/each}
@@ -294,17 +315,19 @@
     <!-- Debuggers Combobox Selector -->
     <div class="controls">
       <select class="combobox-dark" 
-              bind:value={selectedDebuggerOption} 
-              on:change={ () => dispatchAdd('debugger', selectedDebuggerOption) } >
-        {#each sidebarDebuggerOptions as debuggerOption}
-          <option value={debuggerOption}>
+              bind:value={ $selectedDebuggerOption } 
+              on:change={ () => dispatchAdd('debugger', $selectedDebuggerOption) } 
+              on:click={ () => $sidebarDebuggerOptions[0].disabled = true  }  
+              >
+        {#each $sidebarDebuggerOptions as debuggerOption}
+          <option disabled={ debuggerOption.disabled } value={ debuggerOption }>
             { debuggerOption.text }
           </option>
         {/each}
       </select>    
     </div>
 
-
+<!-- 
     <div>
       <button class="button-dark controls"
               on:click={ () => dispatchAdd('grammarCompileOutput') }> 
@@ -317,12 +340,12 @@
               on:click={ () => dispatchAdd('liveCodeParseOutput') }> 
         Live Code Parse Out
       </button>
-    </div>
+    </div> -->
 
     <div>
       <button class="button-dark controls"
               on:click={ () => dispatchAdd('analyser') }> 
-        Analyser
+        Audio Analyser
       </button>
     </div>
 
@@ -333,25 +356,21 @@
       </button>
     </div>
 
-    <div>
+    <!-- <div>
       <label class="checkbox-container">Line Numbers
         <input type="checkbox" checked="checked" class="checkbox-input">
         <span  class="checkbox-span"></span>
       </label>
-    </div>
+    </div> -->
 
-      <div class="">
-        <!-- <div>
-          <span class="whiteText">Select Theme</span>
-        </div> -->
-        <!-- <select class="combobox" bind:value={$selectedTutorial} > -->
+      <!-- <div class="">
         <select class="combobox-dark" >
           {#each editorThemes as modelOption}
             <option value={ modelOption }>
-              {modelOption.text}
+              { modelOption.text }
             </option>
           {/each}
         </select>    
-      </div>
+      </div> -->
     </div>
 </div>
