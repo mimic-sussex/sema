@@ -131,8 +131,6 @@ export const sidebarDebuggerOptions = writable([
 	},
 ]);
 
-
-
 export let selectedDebuggerOption = writable({});
 export let isSelectDebuggerDisabled = writable(false);
 

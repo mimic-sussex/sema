@@ -59,6 +59,17 @@
   // let selectedModelOption;
   let selectedVisualisationOption;
 
+
+  function onReset(){
+    messaging.publish('playground-reset');
+
+    $isSelectLiveCodeEditorDisabled = false; 
+    $isSelectModelEditorDisabled = false; 
+    $isAddGrammarEditorDisabled = false;  
+    $isAddAnalyserDisabled = false; 
+    $sidebarDebuggerOptions.map( option => option.disabled = false );
+  }
+
   function dispatchAdd(type, selected){
     // console.log(`DEBUG:Sidebar:dispatchAdd: /add/${type}/${selected.id}`);
     // console.log(selected.content);
@@ -75,14 +86,14 @@
         $isSelectModelEditorDisabled = true;        
         break;
       case 'grammar':
-        messaging.publish("playground-add-editor", { id: id(), type: 'grammarEditor', data: selected.content });
+        messaging.publish("playground-add-editor", { id: id(), type: 'grammarEditor'});
         // selectedGrammarOption = sidebarGrammarOptions[0];
         $isAddGrammarEditorDisabled = true;
         break;
       case 'debugger':
         messaging.publish("playground-add-debugger", { id: id(), type: 'liveCodeParseOutput', data: selected.content});
         // $selectedDebuggerOption.disabled = true;
-        $selectedDebuggerOption = sidebarDebuggerOptions[0];  
+        $selectedDebuggerOption = $sidebarDebuggerOptions[0];  
         break;
       // case 'grammarCompileOutput':
       //   messaging.publish("playground-add-debugger", { id: id(), type: 'grammarCompileOutput'}, data: selected.content);
@@ -113,8 +124,20 @@
       else if(itemType === 'analyser'){
         $isAddAnalyserDisabled = false;
       }
-      else if(itemType === 'debugger'){
-        $isSelectDebuggerDisabled = false;
+      else if(itemType === 'grammarCompileOutput'){
+        $sidebarDebuggerOptions[1].disabled = false;
+      }
+      else if(itemType === 'liveCodeParseOutput'){
+        $sidebarDebuggerOptions[2].disabled = false;
+      }
+      else if(itemType === 'dspCodeOutput'){
+        $sidebarDebuggerOptions[3].disabled = false;
+      }
+      else if(itemType === 'postIt'){
+        $sidebarDebuggerOptions[4].disabled = false;
+      }
+      else if(itemType === 'storeInspector'){
+        $sidebarDebuggerOptions[5].disabled = false;
       }
     }
   }
@@ -148,31 +171,27 @@
     margin-right: 10px;
   }
 
-
-
-  .checkbox-span {
+  /* .checkbox-span {
     color: whitesmoke;
     margin-left: 20px; 
-  }
-  .checkbox-input {
+  } */
+  /* .checkbox-input {
     margin-left: 5px; 
-  }
+  } */
 
   /* The checkbox container */
-  .checkbox-container {
+  /* .checkbox-container {
     display: block;
     position: relative;
     color: whitesmoke;
-    /* padding-left: 25px; */
     margin-bottom: 10px;
     cursor: pointer;
-    /* font-size: 22px; */
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
     font-size: 12px;
-  }
+  } */
 
   .layout-combobox-container{
     margin-top: 5px;
@@ -228,6 +247,7 @@
     max-width: 100%; 
     box-sizing: border-box;
     border: 0 solid #333;
+    text-align: left;
     /* box-shadow: 0 1px 0 0px rgba(4, 4, 4, 0.04); */
     border-radius: .6em;
     /* border-right-color: rgba(34,37,45, 0.1);
@@ -267,7 +287,9 @@
               disabled={ $isSelectLiveCodeEditorDisabled }         
               >
         {#each $sidebarLiveCodeOptions as liveCodeOption}
-          <option disabled={ liveCodeOption.disabled } value={liveCodeOption}>
+          <option disabled={ liveCodeOption.disabled } 
+                  value={liveCodeOption}
+                  >
             {liveCodeOption.text}
           </option>
         {/each}
@@ -285,7 +307,9 @@
               disabled={ $isSelectModelEditorDisabled }
               >
         {#each $sidebarModelOptions as modelOption}
-          <option disabled={modelOption.disabled} value={modelOption}>
+          <option disabled={modelOption.disabled} 
+                  value={modelOption}
+                  >
             { modelOption.text }
           </option>
         {/each}
@@ -307,7 +331,9 @@
 
     <div>
       <button class="button-dark controls"
-              on:click={ () => dispatchAdd('grammar') }> 
+              on:click={ () => dispatchAdd('grammar') }
+              disabled={ $isAddGrammarEditorDisabled }
+              > 
         Grammar Editor
       </button>
     </div>
@@ -320,38 +346,27 @@
               on:click={ () => $sidebarDebuggerOptions[0].disabled = true  }  
               >
         {#each $sidebarDebuggerOptions as debuggerOption}
-          <option disabled={ debuggerOption.disabled } value={ debuggerOption }>
+          <option disabled={ debuggerOption.disabled } 
+                  value={ debuggerOption }>
             { debuggerOption.text }
           </option>
         {/each}
       </select>    
     </div>
 
-<!-- 
     <div>
       <button class="button-dark controls"
-              on:click={ () => dispatchAdd('grammarCompileOutput') }> 
-        Grammar Compile Out
-      </button>
-    </div>
-
-    <div>
-      <button class="button-dark controls"
-              on:click={ () => dispatchAdd('liveCodeParseOutput') }> 
-        Live Code Parse Out
-      </button>
-    </div> -->
-
-    <div>
-      <button class="button-dark controls"
-              on:click={ () => dispatchAdd('analyser') }> 
+              on:click={ () => dispatchAdd('analyser') }
+              disabled={ $isAddAnalyserDisabled }
+              > 
         Audio Analyser
       </button>
     </div>
 
     <div>
       <button class="button-dark controls"
-              on:click={ () => messaging.publish('playground-reset') }> 
+              on:click={ onReset }
+              > 
         Reset
       </button>
     </div>
