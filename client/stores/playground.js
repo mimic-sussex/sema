@@ -1,6 +1,8 @@
 import { writable, readable, get } from "svelte/store";
 // import { writable as internal, get } from "svelte/store";
 
+import compile from "../compiler/compiler";
+
 import { id } from "../utils/utils";
 import { hydrateJSONcomponent, storable } from "../stores/common";
 
@@ -37,9 +39,9 @@ export const cm_theme_shadowfox = writable("");
 export const sidebarLiveCodeOptions = writable([
 	{ id: 0, disabled: false, text: `LiveCode Editor`, content: "" },
 	// { id: 0, disabled: true, text: `LiveCode Editor`, content: "" },
-	{ id: 1, disabled: false, text: `+ default`, content: default_liveCode },
-	{ id: 2, disabled: false, text: `+ nibble`, content: nibble_liveCode },
-	{ id: 3, disabled: false, text: `+ gabber`, content: gabber_liveCode }
+	// { id: 1, disabled: false, text: `+ default`, content: default_liveCode },
+	// { id: 2, disabled: false, text: `+ nibble`, content: nibble_liveCode },
+	// { id: 3, disabled: false, text: `+ gabber`, content: gabber_liveCode }
 ]);
 
 export const selectedLiveCodeOption = writable(sidebarLiveCodeOptions[1]);
@@ -143,6 +145,20 @@ export const sidebarVisualisationOptions = [
 
 
 export const isAddAnalyserDisabled = writable(false);
+
+/*******                                        ********/
+/*******       Playground Sidebar Stores        ********/
+/*******                                        ********/
+/*******                                        ********/
+/*******                                        ********/
+/*******                                        ********/
+/*******                                        ********/
+/*******                                        ********/
+/*******                                        ********/
+/*******                                        ********/
+/*******   Playground Dashboard Items Stores    ********/
+/*******                                        ********/
+
 
 const originalItems = [
 	{
@@ -405,3 +421,54 @@ export const focusedItemProperties = writable({});
 
 // Dashboard SELECTED item which receives focus and has item controls loaded
 export const focusedItemControls = writable([]);
+
+
+
+
+/*******                                        ********/
+/*******   Playground Dashboard Items Stores    ********/
+/*******                                        ********/ 
+/*******                                        ********/
+/*******                                        ********/
+/*******                                        ********/
+/*******                                        ********/
+/*******                                        ********/
+/*******                                        ********/
+/*******                                        ********/
+/*******   Playground Language Design Stores    ********/
+/*******                                        ********/
+
+
+
+// export const grammarEditorValue = writable(initGrammarEditorValue());
+export const grammarEditorValue = writable("");
+
+// export const grammarCompiledParser = writable(compile(default_grammar).output);
+export const grammarCompiledParser = writable("");
+
+export const grammarCompilationErrors = writable("");
+
+
+
+
+
+// export const liveCodeEditorValue = writable(initLiveCodeEditorValue());
+export const liveCodeEditorValue = writable("");
+
+export const liveCodeParseResults = writable("");
+
+export const liveCodeParseErrors = writable("");
+
+export const liveCodeAbstractSyntaxTree = writable("");
+
+
+
+
+
+
+export const dspCode = writable("");
+
+// TFJS Model editor value, and IO channels' values
+
+// export const modelEditorValue = writable(initModelEditorValue());
+export const modelEditorValue = writable("");

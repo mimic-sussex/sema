@@ -135,34 +135,34 @@ export const modelEditorValue = writable(initModelEditorValue());
 // ];
 
 // Dashboard Store for Live Code Editor options in Sidebar component
-export const sidebarLiveCodeOptions = writable([
-	{ id: 1, disabled: false, text: `LiveCode Editor`, content: "" },
-	{ id: 2, text: `+ default`, content: default_liveCode },
-	{ id: 3, text: `+ nibble`, content: nibble_liveCode },
-	{ id: 4, text: `+ gabber`, content: gabber_liveCode },
-  { id: 5, text: `+ new`, content: "" },
-]);
+// export const sidebarLiveCodeOptions = writable([
+// 	{ id: 1, disabled: false, text: `LiveCode Editor`, content: "" },
+// 	{ id: 2, text: `+ default`, content: default_liveCode },
+// 	{ id: 3, text: `+ nibble`, content: nibble_liveCode },
+// 	{ id: 4, text: `+ gabber`, content: gabber_liveCode },
+//   { id: 5, text: `+ new`, content: "" },
+// ]);
 
 
 // Dashboard Store for Live Code Editor options in Sidebar component
-export const sidebarDebuggerOptions = writable([
-	{ id: 0, text: `Debuggers`, content: "" },
-	{ id: 1, text: `+ Grammar Compiler Output`, content: "" },
-	{ id: 2, text: `+ Live Code Parser Output`, content: "" },
-  { id: 3, text: `+ DSP Code Generated`,      content: "" },
-	{ id: 4, text: `+ Post-It Panel`,           content: "" },
-	{ id: 4, text: `+ Store Inspector`,         content: "" },
-]);
+// export const sidebarDebuggerOptions = writable([
+// 	{ id: 0, text: `Debuggers`, content: "" },
+// 	{ id: 1, text: `+ Grammar Compiler Output`, content: "" },
+// 	{ id: 2, text: `+ Live Code Parser Output`, content: "" },
+//   { id: 3, text: `+ DSP Code Generated`,      content: "" },
+// 	{ id: 4, text: `+ Post-It Panel`,           content: "" },
+// 	{ id: 4, text: `+ Store Inspector`,         content: "" },
+// ]);
 
-export let selectedDebuggerOption = writable({});
+// export let selectedDebuggerOption = writable({});
 
-// Dashboard Store for Grammar Editor options in Sidebar component
-export const sidebarGrammarOptions = writable([
-	{ id: 1, disabled: false, text: `Grammar Editor`, content: "" },
-	{ id: 1, text: `+ default`, content: default_grammar },
-	{ id: 2, text: `+ nibble`, content: nibble_grammar },
-	{ id: 3, text: `+ gabber`, content: gabber_grammar } 
-]);
+// // Dashboard Store for Grammar Editor options in Sidebar component
+// export const sidebarGrammarOptions = writable([
+// 	{ id: 1, disabled: false, text: `Grammar Editor`, content: "" },
+// 	{ id: 1, text: `+ default`, content: default_grammar },
+// 	{ id: 2, text: `+ nibble`, content: nibble_grammar },
+// 	{ id: 3, text: `+ gabber`, content: gabber_grammar } 
+// ]);
 
 
 // // Dashboard Store for Grammar Editor options in Sidebar component

@@ -1,19 +1,6 @@
 <script>
 
   import { onMount, onDestroy } from "svelte";
-  import { 
-    tutorialsActive,
-    playgroundActive,
-    // sidebarLiveCodeOptions,
-    // sidebarGrammarOptions,
-    // sidebarModelOptions,
-    // selectedModel,
-    // selectedLayout, 
-    // layoutOptions, 
-    // sidebarDebuggerOptions,
-    // , 
-    editorThemes
-  }  from '../../stores/store.js';
 
   import {
     sidebarLiveCodeOptions,
@@ -45,8 +32,6 @@
   const messaging = new PubSub();
 
   let itemDeletionSubscriptionToken;
-
-
 
   // import Markdown from "./Markdown.svelte";
 
@@ -97,7 +82,6 @@
         messaging.publish("playground-add-debugger", { id: id(), type: selected.type });
         disableSelectDebuggerOption(selected.type);       
         $selectedDebuggerOption = $sidebarDebuggerOptions[0];  
-        // disableSelectDebuggerOption(itemType);
         break;
       default:
         break;
@@ -107,41 +91,47 @@
 
   function disableSelectDebuggerOption(itemType){
 
-    if(itemType === 'grammarCompileOutput'){
-      $sidebarDebuggerOptions[1].disabled = true;
-    }
-    else if(itemType === 'liveCodeParseOutput'){
-      $sidebarDebuggerOptions[2].disabled = true;
-    }
-    else if(itemType === 'dspCodeOutput'){
-      $sidebarDebuggerOptions[3].disabled = true;
-    }
-    else if(itemType === 'postIt'){
-      $sidebarDebuggerOptions[4].disabled = true;
-    }
-    else if(itemType === 'storeInspector'){
-      $sidebarDebuggerOptions[5].disabled = true;
-    }
+    if(itemType !== undefined)
+      if(itemType === 'grammarCompileOutput'){
+        $sidebarDebuggerOptions[1].disabled = true;
+      }
+      else if(itemType === 'liveCodeParseOutput'){
+        $sidebarDebuggerOptions[2].disabled = true;
+      }
+      else if(itemType === 'dspCodeOutput'){
+        $sidebarDebuggerOptions[3].disabled = true;
+      }
+      else if(itemType === 'postIt'){
+        $sidebarDebuggerOptions[4].disabled = true;
+      }
+      else if(itemType === 'storeInspector'){
+        $sidebarDebuggerOptions[5].disabled = true;
+      }
+    else
+      throw new Error("Disable Select Debugger Option: itemType undefined")
   }
 
 
   function enableSelectDebuggerOptionOnItemDeletion(itemType){
 
-    if(itemType === 'grammarCompileOutput'){
-      $sidebarDebuggerOptions[1].disabled = false;
-    }
-    else if(itemType === 'liveCodeParseOutput'){
-      $sidebarDebuggerOptions[2].disabled = false;
-    }
-    else if(itemType === 'dspCodeOutput'){
-      $sidebarDebuggerOptions[3].disabled = false;
-    }
-    else if(itemType === 'postIt'){
-      $sidebarDebuggerOptions[4].disabled = false;
-    }
-    else if(itemType === 'storeInspector'){
-      $sidebarDebuggerOptions[5].disabled = false;
-    }
+    if(itemType !== undefined)
+      if(itemType === 'grammarCompileOutput'){
+        $sidebarDebuggerOptions[1].disabled = false;
+      }
+      else if(itemType === 'liveCodeParseOutput'){
+        $sidebarDebuggerOptions[2].disabled = false;
+      }
+      else if(itemType === 'dspCodeOutput'){
+        $sidebarDebuggerOptions[3].disabled = false;
+      }
+      else if(itemType === 'postIt'){
+        $sidebarDebuggerOptions[4].disabled = false;
+      }
+      else if(itemType === 'storeInspector'){
+        $sidebarDebuggerOptions[5].disabled = false;
+      }
+    else 
+      throw new Error("Enable Select Debugger Option On Item Deletion: itemType undefined"); 
   }
 
 
@@ -173,6 +163,7 @@
           break;
       }
     }
+    else throw new Error("Activate Select On Item Deletion: itemType undefined")
   }
 
 

@@ -21,9 +21,39 @@
     selected
   } from '../stores/tutorial.js';
 
-  $: load();
+  import {
+    sidebarLiveCodeOptions
+  } from '../stores/playground.js'
 
-  let load = () => {
+
+  $: loadPlayground();
+  $: loadTutorial();
+
+  let loadPlayground = () => {
+		fetch(`/languages/languages.json`)
+      .then(r => r.json())
+      .then(json => {
+        console.log("DEBUG:_layout:loadPlayground");
+        console.log(json)
+        $sidebarLiveCodeOptions = $sidebarLiveCodeOptions.concat(json.map( language => ({ 
+            id: 1, 
+            disabled: false, 
+            text: language.name, 
+            content : {
+              grammar:  `/languages/${language.name}/grammar.ne`,
+              livecode: `/languages/${language.name}/code.sem`
+            }
+          })
+        ));
+        console.log($sidebarLiveCodeOptions)
+        // $sidebarLiveCodeOptions
+        // $sidebarGrammarOptions
+        // $selected = $tutorials[0].sections[0];
+        $ready();
+      });
+	}
+
+  let loadTutorial = () => {
 		fetch(`/tutorial/tutorial.json`)
       .then(r => r.json())
       .then(json => {
