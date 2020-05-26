@@ -29,7 +29,7 @@
 
   <noscript> <%= htmlWebpackPlugin.options.noscriptHeader %> </noscript>
 
-	<input aria-hidden="true" id="hiddenCopyField2" style="position: absolute; left: -999em;" value="">
+	<textarea aria-hidden="true" id="hiddenCopyField2" style="position: absolute; left: -999em;" value=""></textarea>
 	<script>
 	function copyCode(codeID) {
 	  let copyField=document.getElementById("hiddenCopyField2");
@@ -39,7 +39,7 @@
 	    '<!doctype html><body>' + code,
 	    'text/html');
 		code = dom.body.textContent;
-		console.log(code);
+//		code = code.replace(String.fromCharCode(10), String.fromCharCode(10) + String.fromCharCode(13)) ;
 	  copyField.value = code;
 	  copyField.select();
 	  document.execCommand("Copy");
