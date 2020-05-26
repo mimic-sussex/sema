@@ -90,57 +90,91 @@
         // selectedGrammarOption = sidebarGrammarOptions[0];
         $isAddGrammarEditorDisabled = true;
         break;
-      case 'debugger':
-        messaging.publish("playground-add-debugger", { id: id(), type: 'liveCodeParseOutput', data: selected.content});
-        // $selectedDebuggerOption.disabled = true;
-        $selectedDebuggerOption = $sidebarDebuggerOptions[0];  
-        break;
-      // case 'grammarCompileOutput':
-      //   messaging.publish("playground-add-debugger", { id: id(), type: 'grammarCompileOutput'}, data: selected.content);
-      //   break;
       case 'analyser':
         messaging.publish("playground-add-analyser", { id: id(), type: 'analyser' });
         $isAddAnalyserDisabled = true;
-        // $selectedVisualisationOption = sidebarVisualisationOptions[0];   
+      case 'debugger':
+        messaging.publish("playground-add-debugger", { id: id(), type: selected.type });
+        disableSelectDebuggerOption(selected.type);       
+        $selectedDebuggerOption = $sidebarDebuggerOptions[0];  
+        // disableSelectDebuggerOption(itemType);
         break;
       default:
         break;
     }
   }
 
+
+  function disableSelectDebuggerOption(itemType){
+
+    if(itemType === 'grammarCompileOutput'){
+      $sidebarDebuggerOptions[1].disabled = true;
+    }
+    else if(itemType === 'liveCodeParseOutput'){
+      $sidebarDebuggerOptions[2].disabled = true;
+    }
+    else if(itemType === 'dspCodeOutput'){
+      $sidebarDebuggerOptions[3].disabled = true;
+    }
+    else if(itemType === 'postIt'){
+      $sidebarDebuggerOptions[4].disabled = true;
+    }
+    else if(itemType === 'storeInspector'){
+      $sidebarDebuggerOptions[5].disabled = true;
+    }
+  }
+
+
+  function enableSelectDebuggerOptionOnItemDeletion(itemType){
+
+    if(itemType === 'grammarCompileOutput'){
+      $sidebarDebuggerOptions[1].disabled = false;
+    }
+    else if(itemType === 'liveCodeParseOutput'){
+      $sidebarDebuggerOptions[2].disabled = false;
+    }
+    else if(itemType === 'dspCodeOutput'){
+      $sidebarDebuggerOptions[3].disabled = false;
+    }
+    else if(itemType === 'postIt'){
+      $sidebarDebuggerOptions[4].disabled = false;
+    }
+    else if(itemType === 'storeInspector'){
+      $sidebarDebuggerOptions[5].disabled = false;
+    }
+  }
+
+
   function activateSelectOnItemDeletion(itemType){
     // console.log("DEBUG:routes/playground:sidebar:activateSelectOnItemDeletion:")
     
     if(itemType !== null){
-      if(itemType === 'liveCodeEditor'){
-        $isSelectLiveCodeEditorDisabled = false;
-      }
-      else if(itemType === 'modelEditor'){
-        $isSelectModelEditorDisabled = false;
-      }
-      else if(itemType === 'grammarEditor'){
-        $isAddGrammarEditorDisabled = false;
-      }
-      else if(itemType === 'analyser'){
-        $isAddAnalyserDisabled = false;
-      }
-      else if(itemType === 'grammarCompileOutput'){
-        $sidebarDebuggerOptions[1].disabled = false;
-      }
-      else if(itemType === 'liveCodeParseOutput'){
-        $sidebarDebuggerOptions[2].disabled = false;
-      }
-      else if(itemType === 'dspCodeOutput'){
-        $sidebarDebuggerOptions[3].disabled = false;
-      }
-      else if(itemType === 'postIt'){
-        $sidebarDebuggerOptions[4].disabled = false;
-      }
-      else if(itemType === 'storeInspector'){
-        $sidebarDebuggerOptions[5].disabled = false;
+      switch (itemType) {
+        case 'liveCodeEditor':
+          $isSelectLiveCodeEditorDisabled = false 
+          break;
+        case 'modelEditor':
+          $isSelectModelEditorDisabled = false;
+          break;
+        case 'grammarEditor':
+          $isAddGrammarEditorDisabled = false;
+          break;
+        case 'analyser':
+          $isAddAnalyserDisabled = false; 
+          break;
+        case 'grammarCompileOutput':
+        case 'liveCodeParseOutput':
+        case 'dspCodeOutput':
+        case 'postIt':
+        case 'storeInspector':
+          enableSelectDebuggerOptionOnItemDeletion(itemType);
+          break;
+        default:
+          break;
       }
     }
   }
+
 
 
   onMount(() => {
