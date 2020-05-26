@@ -1,4 +1,4 @@
-# Sequencing and clocks
+# Basic sequencing and clocks
 
 For sequencing in the default language, there are 3 core function:
 
@@ -43,3 +43,17 @@ This example below let's you listen to the phasor as it controls the frequency a
 ```
 
 This function will become really useful when we get to more advanced sequencing.
+
+
+```clt``` and ```clp``` both have a second parameter: a phase offset, between 0 and 1. It delays the start of each trigger or phasor, as a percentage of the cycle length.
+
+For example:
+
+```
+{150,4}clk;
+:channel1: {{3,0.25}clt}\909open;
+:channel2: {{3}clt}\909b;
+> {:channel1:, :channel2:}mix;
+```
+
+The second parameter of the ```clt``` controlling the hihat is set to 0.25, so that it gets triggered part-way between each kick drum. Try varying this parameter to see the effect.

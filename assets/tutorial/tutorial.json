@@ -48,9 +48,15 @@
   },
   {
     "slug": "sequencing",
-    "title": "Sequencing and clocks",
+    "title": "Basic sequencing and clocks",
     "chapter_dir": "02-live-coding",
     "section_dir": "05-sequencing"
+  },
+  {
+    "slug": "sequencing",
+    "title": "The ratio sequencer",
+    "chapter_dir": "02-live-coding",
+    "section_dir": "06-ratioseq"
   }
   ]
 }, {
