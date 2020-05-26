@@ -290,4 +290,4 @@
     <!-- </div> -->
   <!-- </div> -->
 </div>
-<input aria-hidden="true" id="hiddenCopyField" style="position: absolute; left: -999em;" value="">
+<textarea aria-hidden="true" id="hiddenCopyField" style="position: absolute; left: -999em;" value="">
