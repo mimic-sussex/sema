@@ -65,7 +65,7 @@
     codeMirror.set(data, "js");
 
     subscriptionTokenMID = messaging.subscribe("model-input-data", e => postToModel(e) );
-    subscriptionTokenMODR = messaging.subscribe("model-output-data-request", e => postToModel(e) );
+    // subscriptionTokenMODR = messaging.subscribe("model-output-data-request", e => postToModel(e) );
 
     modelWorker = new ModelWorker();  // Creates one ModelWorker per ModelEditor lifetime
     modelWorker.onmessage = e =>  onModelWorkerMessageHandler(e);
@@ -79,7 +79,7 @@
     modelWorker.terminate();
     modelWorker = null; // make sure it is deleted by GC
     messaging.unsubscribe(subscriptionTokenMID);
-    messaging.unsubscribe(subscriptionTokenMODR);
+    // messaging.unsubscribe(subscriptionTokenMODR);
     messaging = null;
     // console.log('DEBUG:ModelEditor:onDestroy')
 	});

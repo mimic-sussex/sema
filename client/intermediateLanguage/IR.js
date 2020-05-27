@@ -473,6 +473,10 @@ var jsFuncMap = {
 				return `this.dacOut(${p[0].loop},${p[1].loop})`;
 			}
 		}
+	},
+	fft: {
+		setup: (o, p) => `${o} = new fft(${p[1].loop}, ${p[2].loop})`,
+		loop:  (o, p) => `${o}.play(${p[0].loop})`
 	}
 
 };

@@ -98,6 +98,26 @@ class pvshift {
   }
 }
 
+class fft {
+  constructor(fftsize, hopsize) {
+    this.fft = new Maximilian.maxiFFT();
+		this.fft.setup(fftsize,hopsize,fftsize);
+		this.mags = new Maximilian.VectorFloat();
+		this.phases = new Maximilian.VectorFloat();
+		this.mags.resize(fftsize/2,0);
+		this.phases.resize(fftsize/2,0);
+  }
+  play(sig) {
+    if (this.fft.process(sig, Maximilian.maxiFFTModes.WITH_POLAR_CONVERSION)) {
+      this.mags = this.fft.getMagnitudes();
+      this.phases = this.fft.getPhases();
+    }
+  //  let res = [vectorDoubleToF64Array(this.mags), vectorDoubleToF64Array(this.phases)];
+    //console.log(res);
+    return 0;
+  }
+}
+
 
 
 
@@ -119,6 +139,8 @@ class MaxiProcessor extends AudioWorkletProcessor {
     // let temp = new Maximilian.maxiNonlinearity();
     // console.log("TEST2", temp.asymclip(0.9,3,3));
 
+    let tmp = new Maximilian.VectorFloat();
+    console.log(tmp);
     let q1 = Maximilian.maxiBits.sig(63);
 
     // this.sampleRate = 44100;
@@ -260,6 +282,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
         console.log("aesendbuf", event.data);
         addSampleBuffer(event.data.name, event.data.data);
       } else if ('func' in event.data && 'data' == event.data.func) {
+        // console.log('ML', event.data);
         //this is from the ML window, map it on to any listening transducers
         let targetTransducers = this.matchTransducers('ML', event.data.ch);
         for(let idx in targetTransducers) {

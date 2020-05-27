@@ -63,15 +63,15 @@
   "title": "Machine Learning",
   "sections": [{
     "slug": "introduction",
-    "title": "Introduction",
+    "title": "Introduction ",
     "chapter_dir": "03-machine-learning",
     "section_dir": "01-introduction"
   },
   {
     "slug": "piping-data-streams",
-    "title": "Piping data streams",
+    "title": "Data streams",
     "chapter_dir": "03-machine-learning",
-    "section_dir": "02-piping-data-streams"
+    "section_dir": "02-streaming"
   }, {
     "slug": "pre-trained-models-i",
     "title": "Pre-trained model i",
