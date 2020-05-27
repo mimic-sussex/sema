@@ -335,25 +335,19 @@ These functions are paired with 'input' and 'output' in the machine learning win
 
 ### clp
 Phasor derived from constantly running clock phasor
-  1. Multiples of the clock base frequency
+  1. Number of cycles per bar
   2. Phase offset (0-1)
 
 ### clt
 Trigger derived from constantly running clock phasor
-  1. Multiples of the clock base frequency
+  1. Number of triggers per bar
   2. Phase offset (0-1)
 
-### clfreq
-Set the clock frequency (Hz)
- 1. Frequency
-
-### clbpm
-Set the clock speed in bpm
+### clk
+Set the clock 
  1. Beats per minute
+ 2. The number of beats in a bar
 
-### barfreq
-Set the number of times a bar occurs within a cycle of the clock.  New blocks of code are started at the beginning of a bar.
-1. Frequency
 
 ## Triggers
 
