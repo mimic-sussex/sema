@@ -26,10 +26,10 @@
   } from '../stores/playground.js'
 
 
-  $: loadPlayground();
-  $: loadTutorial();
+  $: loadSidebarLiveCodeOptions();
+  $: fetchAndLoadDefaultTutorial();
 
-  let loadPlayground = () => {
+  let loadSidebarLiveCodeOptions = () => {
 		fetch(`/languages/languages.json`)
       .then(r => r.json())
       .then(json => {
@@ -53,7 +53,7 @@
       });
 	}
 
-  let loadTutorial = () => {
+  let fetchAndLoadDefaultTutorial = () => {
 		fetch(`/tutorial/tutorial.json`)
       .then(r => r.json())
       .then(json => {

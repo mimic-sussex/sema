@@ -19,6 +19,10 @@
   import compile from '../../compiler/compiler';
 
   import { addToHistory } from "../../utils/history.js";
+  import { 
+    nil,
+    log
+  } from "../../utils/utils.js";
 
   import { PubSub } from '../../messaging/pubSub.js';
 
@@ -30,19 +34,25 @@
   import { blockTracker, blockData } from './liveCodeEditor.blockTracker.js';
 
   import {
-  //   grammarCompiledParser,
+    grammarCompiledParser,
   //   liveCodeEditorValue,
   //   liveCodeParseErrors,
   //   liveCodeParseResults,
   //   liveCodeAbstractSyntaxTree,
   //   dspCode
-      audioEngineStatus
+      // audioEngineStatus
+  } from "../../stores/playground.js";
+
+  import {
+    audioEngineStatus
   } from "../../stores/store.js";
   
+
+
   // export let grammarSource = "/languages/defaultGrammar.ne";
   export let grammarSource; 
-  let grammarSourceSubscriptionToken; 
-  let grammarCompiledParser;
+  // let grammarSourceSubscriptionToken; 
+  // let grammarCompiledParser;
 
   // export let liveCodeEditorValue;
   // export 
@@ -87,21 +97,7 @@
 
   let btrack;
 
-  let log = e => { /* console.log(...e); */ }
 
-  let nil = (e) => { }
-
-  let isEmpty = str => {
-    return (!str || 0 === str.length);
-  }
-
-  let isRelativeURL = str => {
-    if(isEmpty(str)) return false;
-    else {
-      let re = /^[^\/]+\/[^\/].*$|^\/[^\/].*$/;
-      return re.exec(str)[0]===re.exec(str).input;
-    }
-  }
 
   let onChange = e => {
     // console.log('DEBUG:LiveCodeEditor:onchange:');
@@ -126,8 +122,7 @@
 
         parserWorker.postMessage({ // Post code to worker for parsing
           liveCodeSource: e,
-          // parserSource: $grammarCompiledParser,
-          parserSource:  grammarCompiledParser,
+          parserSource:  $grammarCompiledParser,
           type:'parse'
         });
 
@@ -259,14 +254,7 @@
 
   }
 
-  let fetchGrammarFrom = async url => {
-    if(!isEmpty(url)){  
-      const res = await fetch(grammarSource);
-      return await res.text();
-    }
-    else
-      throw Error("Empty URL");    
-  }
+
 
   let compileParser = grammar => {
     if(!isEmpty(grammar)){
@@ -303,19 +291,19 @@
 
     btrack = new blockTracker(codeMirror);
 
-    if(isRelativeURL(grammarSource)){
-      let grammar = await fetchGrammarFrom(grammarSource);
-      grammarCompiledParser = compileParser(grammar);
-      // console.log('DEBUG:LiveCodeEditor:onMount:grammarCompiledParser')
-      // console.log(grammarCompiledParser) 
-    }
-    else{
-      // TODO: Dynamic subscription to messaging from sibling widgets
-      // Where grammar source will be an UUID
-      // subscribeTo(grammarSource);
-    }
+    // if(isRelativeURL(grammarSource)){
+    //   let grammar = await fetchGrammarFrom(grammarSource);
+    //   $grammarCompiledParser = compileParser(grammar);
+    //   // console.log('DEBUG:LiveCodeEditor:onMount:grammarCompiledParser')
+    //   // console.log(grammarCompiledParser) 
+    // }
+    // else{
+    //   // TODO: Dynamic subscription to messaging from sibling widgets
+    //   // Where grammar source will be an UUID
+    //   // subscribeTo(grammarSource);
+    // }
     log( id, name, type, lineNumbers, hasFocus, theme, background, data, responsive, resizable, resize, draggable, drag, min, max, x, y, w, h, component );
-    log( grammarSource, grammarCompiledParser );
+    log( grammarSource, $grammarCompiledParser );
 
     // console.log( grammarSource, grammarCompiledParser );
 	});

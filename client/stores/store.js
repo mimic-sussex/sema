@@ -105,22 +105,22 @@ let initModelEditorValue = () => {
 
 // Grammar and LiveCode Editors CURRENT TUTORIAL session's Values and dependencies, reactive
 
-export const grammarEditorValue = writable(initGrammarEditorValue());
+// export const grammarEditorValue = writable(initGrammarEditorValue());
 
-export const grammarCompiledParser = writable(compile(default_grammar).output);
+// export const grammarCompiledParser = writable(compile(default_grammar).output);
 
 
-export const grammarCompilationErrors = writable("");
+// export const grammarCompilationErrors = writable("");
 
-export const liveCodeEditorValue = writable(initLiveCodeEditorValue());
+// export const liveCodeEditorValue = writable(initLiveCodeEditorValue());
 
-export const liveCodeParseResults = writable("");
+// export const liveCodeParseResults = writable("");
 
-export const liveCodeParseErrors = writable("");
+// export const liveCodeParseErrors = writable("");
 
-export const liveCodeAbstractSyntaxTree = writable("");
+// export const liveCodeAbstractSyntaxTree = writable("");
 
-export const dspCode = writable("");
+// export const dspCode = writable("");
 
 // TFJS Model editor value, and IO channels' values
 

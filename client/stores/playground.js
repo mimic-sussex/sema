@@ -4,7 +4,7 @@ import { writable, readable, get } from "svelte/store";
 import compile from "../compiler/compiler";
 
 import { id } from "../utils/utils";
-import { hydrateJSONcomponent, storable } from "../stores/common";
+// import { hydrateJSONcomponent, storable } from "../stores/common";
 
 import gridHelp from "svelte-grid/build/helper/index.mjs";
 
@@ -14,7 +14,7 @@ import LiveCodeEditor from "../components/editors/LiveCodeEditor.svelte";
 import LiveCodeParseOutput from "../components/widgets/LiveCodeParseOutput.svelte";
 import GrammarCompileOutput from "../components/widgets/GrammarCompileOutput.svelte";
 import Analyser from "../components/widgets/Analyser.svelte";
-import StoreDebugger from "../components/widgets/StoreDebugger.svelte";
+import StoreInspector from "../components/widgets/StoreInspector.svelte";
 
 import default_grammar from "../../assets/languages/default/grammar.ne";
 import gabber_grammar from "../../assets/languages/gabber/grammar.ne";
@@ -38,6 +38,7 @@ export const cm_theme_shadowfox = writable("");
 // Dashboard Store for Live Code Editor options in Sidebar component
 export const sidebarLiveCodeOptions = writable([
 	{ id: 0, disabled: false, text: `LiveCode Editor`, content: "" },
+	{ id: 1, disabled: false, text: `new`, content: { }},
 	// { id: 0, disabled: true, text: `LiveCode Editor`, content: "" },
 	// { id: 1, disabled: false, text: `+ default`, content: default_liveCode },
 	// { id: 2, disabled: false, text: `+ nibble`, content: nibble_liveCode },
@@ -233,19 +234,19 @@ const originalItems = [
 		},
 	},
 
-	{
-		...gridHelp.item({ x: 7, y: 7, w: 4, h: 30, id: id() }),
-		...{
-			name: "hello world",
-			type: "storeDebugger",
-			lineNumbers: true,
-			hasFocus: false,
-			theme: "monokai",
-			background: "#f0f0f0",
-			component: StoreDebugger,
-			data: "",
-		},
-	},
+	// {
+	// 	...gridHelp.item({ x: 7, y: 7, w: 4, h: 30, id: id() }),
+	// 	...{
+	// 		name: "hello world",
+	// 		type: "storeInspector",
+	// 		lineNumbers: true,
+	// 		hasFocus: false,
+	// 		theme: "monokai",
+	// 		background: "#f0f0f0",
+	// 		component: StoreInspector,
+	// 		data: "",
+	// 	},
+	// },
 
 	{
 		...gridHelp.item({ x: 9, y: 6, w: 18, h: 1, id: id() }),
@@ -354,6 +355,9 @@ export const editorThemes = [
 // 	writable(createItemNestedStore()),
 // ];
 
+
+
+
 export const reset = () => {
 	items.set(layoutOriginal);
 };
@@ -382,6 +386,80 @@ export let createRandomItem = (type) => {
 
 	return item;
 };
+
+export function hydrateJSONcomponent (item){
+	if (item !== 'undefined' && item.type !== 'undefined') {
+		switch (item.type) {
+			case "liveCodeEditor":
+				item.component = LiveCodeEditor;
+				break;
+			case "grammarEditor":
+				item.component = GrammarEditor;
+				break;
+			case "modelEditor":
+				item.component = ModelEditor;
+				break;
+			case "liveCodeParseOutput":
+				item.component = LiveCodeParseOutput;
+				break;
+			case "grammarCompileOutput":
+				item.component = GrammarCompileOutput;
+				break;
+			case "storeInspector":
+				item.component = StoreInspector;
+				break;
+			case "analyser":
+				item.component = Analyser;
+				break;
+			default:
+				// item.component = StoreInspector;
+				break;
+		}
+		if(item.id !== 'undefined'){
+      item.id = id();
+		  item.name = item.name + item.id;
+    }
+		return item;
+  }
+  else
+    throw Error("hydrateJSONcomponent: undefined item");
+	// } else {
+	// 	createNewItem();
+	// }
+};
+
+/*
+ * Wraps writable store a
+ */
+export function storable(key, initialValue) {
+	const store = writable(initialValue); // create an underlying store
+	const { subscribe, set, update } = store;
+
+	let json = localStorage.getItem(key); // get the last value from localStorage
+	if (json) {
+		// set( JSON.parse(json));
+		set( JSON.parse(json).map( item => hydrateJSONcomponent(item) ) ); // use the value from localStorage if it exists
+	}
+
+	// return an object with the same interface as Svelte's writable() store interface
+	return {
+		set(value) {
+			localStorage.setItem(key, JSON.stringify(value));
+			set(value); // capture set and write to localStorage
+		},
+
+		update(cb) {
+			const value = cb(get(store)); // passes items to callback for invocation e.g items => items.concat(new)
+			this.set(value); // capture updates and write to localStore
+		},
+
+		get() {
+			return localStorage.getItem(key);
+		},
+
+		subscribe, // punt subscriptions to underlying store
+	};
+}
 
 
 

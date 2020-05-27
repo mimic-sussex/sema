@@ -8,7 +8,7 @@ import LiveCodeEditor from "../components/editors/LiveCodeEditor.svelte";
 import LiveCodeParseOutput from "../components/widgets/LiveCodeParseOutput.svelte";
 import GrammarCompileOutput from "../components/widgets/GrammarCompileOutput.svelte";
 import Analyser from "../components/widgets/Analyser.svelte";
-import StoreDebugger from "../components/widgets/StoreDebugger.svelte";
+import StoreInspector from "../components/widgets/StoreInspector.svelte";
 
 import gridHelp from "svelte-grid/build/helper/index.mjs";
 
@@ -53,8 +53,8 @@ export function createNewItem (type, id, content){
 				background: "#151515",
 				theme: "icecoder",
 				grammarSource: content.grammar,
-				// liveCodeSource: content.livecode,
-				data: ""
+				liveCodeSource: content.livecode,
+				data: content.code
 			};
 			break;
 		case "grammarEditor":
@@ -84,9 +84,9 @@ export function createNewItem (type, id, content){
 				background: "#d1d5ff",
 			};
 			break;
-		case "storeDebugger":
+		case "storeInspector":
 			component = {
-				component: StoreDebugger,
+				component: StoreInspector,
 				background: "#d1d5ff",
 			};
 			break;
@@ -115,74 +115,76 @@ export function createNewItem (type, id, content){
 };
 
 // Use traditional function declaration to prevent Temporal Dead Zone issue
-export function hydrateJSONcomponent (item){
-	if (item != undefined) {
-		switch (item.type) {
-			case "liveCodeEditor":
-				item.component = LiveCodeEditor;
-				break;
-			case "grammarEditor":
-				item.component = GrammarEditor;
-				break;
-			case "modelEditor":
-				item.component = ModelEditor;
-				break;
-			case "liveCodeParseOutput":
-				item.component = LiveCodeParseOutput;
-				break;
-			case "grammarCompileOutput":
-				item.component = GrammarCompileOutput;
-				break;
-			case "storeDebugger":
-				item.component = StoreDebugger;
-				break;
-			case "analyser":
-				item.component = Analyser;
-				break;
-			default:
-				item.component = StoreDebugger;
-				break;
-		}
-		item.id = id();
-		item.name = item.name + item.id;
-		return item;
-  }
-  else
-    throw Error("hydrateJSONcomponent: undefined item");
-	// } else {
-	// 	createNewItem();
-	// }
-};
+// export function hydrateJSONcomponent (item){
+// 	if (item !== 'undefined' && item.type !== 'undefined') {
+// 		switch (item.type) {
+// 			case "liveCodeEditor":
+// 				item.component = LiveCodeEditor;
+// 				break;
+// 			case "grammarEditor":
+// 				item.component = GrammarEditor;
+// 				break;
+// 			case "modelEditor":
+// 				item.component = ModelEditor;
+// 				break;
+// 			case "liveCodeParseOutput":
+// 				item.component = LiveCodeParseOutput;
+// 				break;
+// 			case "grammarCompileOutput":
+// 				item.component = GrammarCompileOutput;
+// 				break;
+// 			case "storeInspector":
+// 				item.component = StoreInspector;
+// 				break;
+// 			case "analyser":
+// 				item.component = Analyser;
+// 				break;
+// 			default:
+// 				// item.component = StoreInspector;
+// 				break;
+// 		}
+// 		if(item.id !== 'undefined'){
+//       item.id = id();
+// 		  item.name = item.name + item.id;
+//     }
+// 		return item;
+//   }
+//   else
+//     throw Error("hydrateJSONcomponent: undefined item");
+// 	// } else {
+// 	// 	createNewItem();
+// 	// }
+// };
 
-/*
- * Wraps writable store a
- */
-export function storable(key, initialValue) {
-	const store = writable(initialValue); // create an underlying store
-	const { subscribe, set, update } = store;
+// /*
+//  * Wraps writable store a
+//  */
+// export function storable(key, initialValue) {
+// 	const store = writable(initialValue); // create an underlying store
+// 	const { subscribe, set, update } = store;
 
-	let json = localStorage.getItem(key); // get the last value from localStorage
-	if (json) {
-		// set( JSON.parse(json));
-		set( JSON.parse(json).map( item => hydrateJSONcomponent(item) ) ); // use the value from localStorage if it exists
-	}
+// 	let json = localStorage.getItem(key); // get the last value from localStorage
+// 	if (json) {
+// 		// set( JSON.parse(json));
+// 		set( JSON.parse(json).map( item => hydrateJSONcomponent(item) ) ); // use the value from localStorage if it exists
+// 	}
 
-	// return an object with the same interface as Svelte's writable() store interface
-	return {
-		set(value) {
-			localStorage.setItem(key, JSON.stringify(value));
-			set(value); // capture set and write to localStorage
-		},
+// 	// return an object with the same interface as Svelte's writable() store interface
+// 	return {
+// 		set(value) {
+// 			localStorage.setItem(key, JSON.stringify(value));
+// 			set(value); // capture set and write to localStorage
+// 		},
 
-		update(cb) {
-			const value = cb(get(store)); // passes items to callback for invocation e.g items => items.concat(new)
-			this.set(value); // capture updates and write to localStore
-		},
+// 		update(cb) {
+// 			const value = cb(get(store)); // passes items to callback for invocation e.g items => items.concat(new)
+// 			this.set(value); // capture updates and write to localStore
+// 		},
 
-		get() {
-			return localStorage.getItem(key);
-		},
+// 		get() {
+// 			return localStorage.getItem(key);
+// 		},
 
-		subscribe, // punt subscriptions to underlying store
-	};
-}
+// 		subscribe, // punt subscriptions to underlying store
+// 	};
+// }

@@ -78,6 +78,7 @@
       case 'analyser':
         messaging.publish("playground-add-analyser", { id: id(), type: 'analyser' });
         $isAddAnalyserDisabled = true;
+        break;
       case 'debugger':
         messaging.publish("playground-add-debugger", { id: id(), type: selected.type });
         disableSelectDebuggerOption(selected.type);       

@@ -123,7 +123,7 @@
 		"h": 30,
 		"id": "_lrgjppobq",
 		"name": "hello world_2u9faflxp_lrgjppobq",
-		"type": "storeDebugger",
+		"type": "storeInspector",
 		"lineNumbers": true,
 		"hasFocus": false,
 		"theme": "monokai",
