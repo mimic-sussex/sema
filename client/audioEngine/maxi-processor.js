@@ -111,6 +111,25 @@ class fft {
   }
 }
 
+class mfcc {
+  constructor(fftsize, hopsize, numCoeffs) {
+    this.fft = new Maximilian.maxiFFTAdaptor();
+		this.fft.setup(fftsize,hopsize,fftsize);
+    this.mfcc = new Maximilian.maxiMFCCAdaptor();
+    this.mfcc.setup(fftsize/2, 40, numCoeffs, 20, 20000);
+    this.coeffs = new Float64Array(numCoeffs);
+  }
+
+  play(sig) {
+    let newVal=0;
+    if (this.fft.process(sig, Maximilian.maxiFFTModes.WITH_POLAR_CONVERSION)) {
+      newVal = 1;
+      this.coeffs = this.mfcc.mfcc(this.fft.getMagnitudesAsJSArray());
+    }
+    return [newVal, this.coeffs];
+  }
+}
+
 
 
 
