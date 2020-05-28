@@ -9,6 +9,8 @@ import LiveCodeParseOutput from "../components/widgets/LiveCodeParseOutput.svelt
 import GrammarCompileOutput from "../components/widgets/GrammarCompileOutput.svelte";
 import Analyser from "../components/widgets/Analyser.svelte";
 import StoreInspector from "../components/widgets/StoreInspector.svelte";
+import PostIt from "../components/widgets/PostIt.svelte";
+import DSPCodeOutput from "../components/widgets/DSPCodeOutput.svelte";
 
 import gridHelp from "svelte-grid/build/helper/index.mjs";
 
@@ -40,79 +42,6 @@ export function writableSession(key, initialValue) {
 	};
 }
 
-// Use traditional function declaration to prevent Temporal Dead Zone issue
-export function createNewItem (type, id, content){
-	// console.log("DEBUG:stores/common:createNewItem:");
-	// console.log(content);
-	let component;
-
-	switch (type) {
-		case "liveCodeEditor":
-			component = {
-				component: LiveCodeEditor,
-				background: "#151515",
-				theme: "icecoder",
-				grammarSource: content.grammar,
-				liveCodeSource: content.livecode,
-				data: content.code
-			};
-			break;
-		case "grammarEditor":
-			component = {
-				component: GrammarEditor,
-				background: "#AAAAAA",
-				theme: "monokai",
-			};
-			break;
-		case "modelEditor":
-			component = {
-				component: ModelEditor,
-				background: "#f0f0f0",
-				theme: "monokai",
-				data: content,
-			};
-			break;
-		case "liveCodeParseOutput":
-			component = {
-				component: LiveCodeParseOutput,
-				background: "#ebdeff",
-			};
-			break;
-		case "grammarCompileOutput":
-			component = {
-				component: GrammarCompileOutput,
-				background: "#d1d5ff",
-			};
-			break;
-		case "storeInspector":
-			component = {
-				component: StoreInspector,
-				background: "#d1d5ff",
-			};
-			break;
-		case "analyser":
-			component = {
-				component: Analyser,
-				background: "#ffffff",
-				mode: "spectrogram",
-			};
-			break;
-		default:
-			break;
-	}
-
-	// return component template
-	return {
-		...gridHelp.item({ x: 0, y: 0, w: 7, h: 3, id: id }),
-		...{
-			type: type,
-			name: type + id,
-			lineNumbers: true,
-			hasFocus: true,
-		},
-		...component,
-	};
-};
 
 // Use traditional function declaration to prevent Temporal Dead Zone issue
 // export function hydrateJSONcomponent (item){

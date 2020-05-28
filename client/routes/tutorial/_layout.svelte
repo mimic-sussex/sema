@@ -6,12 +6,15 @@
 
   import { goto, ready, url } from "@sveltech/routify";
 
-  import { hydrateJSONcomponent } from '../../stores/common.js';
+  // import { hydrateJSONcomponent } from '../../stores/common.js';
+  // import { hydrateJSONcomponent } from '../../stores/playground.js';
 
   import {
     tutorials,
     selected,
-    items
+    items,
+    hydrateJSONcomponent,
+    populateStoresWithFetchedProps
   } from '../../stores/tutorial.js';
 
 
@@ -28,7 +31,9 @@
     let json = await fetch(`/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/layout.json`)
                 .then( r => r.json());
 
-    $items = json.map( item => hydrateJSONcomponent(item) );
+    let hydratedComponents = json.map( item => hydrateJSONcomponent(item) ); // Deserialise components from localStorage JSON
+
+    $items = hydratedComponents.map( async item => await populateStoresWithFetchedProps(item) ); // Fetch and compile language contents from component URL props to stores 
 
     await tick();
     

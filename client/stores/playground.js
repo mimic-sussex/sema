@@ -1,10 +1,18 @@
 import { writable, readable, get } from "svelte/store";
-// import { writable as internal, get } from "svelte/store";
 
 import compile from "../compiler/compiler";
 
-import { id } from "../utils/utils";
-// import { hydrateJSONcomponent, storable } from "../stores/common";
+import { id, fetchFrom } from "../utils/utils";
+
+/** 
+ * These methods should be extracted in the future to common.js
+ * However there is more to understand about how Webpack builds JS modules
+ * there was a runtime error at hydrateJSONcomponent which I couldn't 
+ * figure out in time for the user study, so I rolled it back. 
+ * hence there is duplicate code in tutorial and playground stores
+ * [FB20200527]
+ */
+// import { hydrateJSONcomponent, storable } from "../stores/common"; 
 
 import gridHelp from "svelte-grid/build/helper/index.mjs";
 
@@ -15,6 +23,8 @@ import LiveCodeParseOutput from "../components/widgets/LiveCodeParseOutput.svelt
 import GrammarCompileOutput from "../components/widgets/GrammarCompileOutput.svelte";
 import Analyser from "../components/widgets/Analyser.svelte";
 import StoreInspector from "../components/widgets/StoreInspector.svelte";
+import DSPCodeOutput from "../components/widgets/DSPCodeOutput.svelte";
+import PostIt from "../components/widgets/PostIt.svelte";
 
 import default_grammar from "../../assets/languages/default/grammar.ne";
 import gabber_grammar from "../../assets/languages/gabber/grammar.ne";
@@ -83,14 +93,6 @@ export const sidebarModelOptions = writable([
 export const selectedModelOption = writable(sidebarModelOptions[1]);
 export const isSelectModelEditorDisabled = writable(false);
 
-// Dashboard Store for Grammar Editor options in Sidebar component
-// export const sidebarGrammarOptions = writable([
-// 	{ id: 0, disabled: true, text: `Grammar Editor`, content: "" },
-// 	{ id: 1, disabled: false, text: `+ default`, content: default_grammar },
-// 	{ id: 2, disabled: false, text: `+ nibble`, content: nibble_grammar },
-// 	{ id: 3, disabled: false, text: `+ gabber`, content: gabber_grammar }
-// ]);
-
 export const isAddGrammarEditorDisabled = writable(false);
 
 
@@ -143,9 +145,14 @@ export const sidebarVisualisationOptions = [
 	{ id: 1, text: `+ Audio Analyser`, content: "" },
 ];
 
-
-
 export const isAddAnalyserDisabled = writable(false);
+
+export const editorThemes = [
+	{ id: 0, text: `Change Theme...`, content: "" },
+	{ id: 1, text: `cobalt`, content: cm_theme_cobalt },
+	{ id: 2, text: `icecoder`, content: cm_theme_icecoder },
+	{ id: 3, text: `shadowfox`, content: cm_theme_shadowfox },
+];
 
 /*******                                        ********/
 /*******       Playground Sidebar Stores        ********/
@@ -156,9 +163,46 @@ export const isAddAnalyserDisabled = writable(false);
 /*******                                        ********/
 /*******                                        ********/
 /*******                                        ********/
+/*******   Playground Language Design Stores    ********/
+/*******                                        ********/
+
+// export const grammarEditorValue = writable(initGrammarEditorValue());
+export const grammarEditorValue = writable("");
+
+// export const grammarCompiledParser = writable(compile(default_grammar).output);
+export const grammarCompiledParser = writable("");
+
+export const grammarCompilationErrors = writable("");
+
+// export const liveCodeEditorValue = writable(initLiveCodeEditorValue());
+export const liveCodeEditorValue = writable("");
+
+export const liveCodeParseResults = writable("");
+
+export const liveCodeParseErrors = writable("");
+
+export const liveCodeAbstractSyntaxTree = writable("");
+
+export const dspCode = writable("");
+
+// TFJS Model editor value, and IO channels' values
+
+// export const modelEditorValue = writable(initModelEditorValue());
+export const modelEditorValue = writable("");
+
+/*******                                        ********/
+/*******   Playground Language Design Stores    ********/
+/*******                                        ********/
+/*******                                        ********/
+/*******                                        ********/
+/*******                                        ********/
+/*******                                        ********/
+/*******                                        ********/
+/*******                                        ********/
+/*******                                        ********/
 /*******                                        ********/
 /*******   Playground Dashboard Items Stores    ********/
-/*******                                        ********/
+/*******                                        ********/ 
 
 
 const originalItems = [
@@ -324,44 +368,6 @@ const testItems = [
 	},
 ];
 
-export const editorThemes = [
-	{ id: 0, text: `Change Theme...`, content: "" },
-	{ id: 1, text: `cobalt`, content: cm_theme_cobalt },
-	{ id: 2, text: `icecoder`, content: cm_theme_icecoder },
-	{ id: 3, text: `shadowfox`, content: cm_theme_shadowfox },
-];
-
-// let createItemNestedStore = () => {
-//   return	{
-// 		...gridHelp.item({ x: 7, y: 0, w: 7, h: 3, id: id() }),
-// 		...{
-// 			type: "liveCodeEditor",
-// 			name: "hello-world",
-// 			background: "#151515",
-// 			lineNumbers: true,
-// 			hasFocus: false,
-// 			background: "#151515",
-// 			theme: "icecoder",
-// 			component: LiveCodeEditor,
-// 			data: writable(default_liveCode)
-// 		}
-// 	}
-// };
-
-// let nestedStoresItems = [
-// 	writable(createItemNestedStore()),
-// 	writable(createItemNestedStore()),
-// 	writable(createItemNestedStore()),
-// 	writable(createItemNestedStore()),
-// ];
-
-
-
-
-export const reset = () => {
-	items.set(layoutOriginal);
-};
-
 export let createRandomItem = (type) => {
 	const i = 2;
 	const col = 2;
@@ -387,14 +393,123 @@ export let createRandomItem = (type) => {
 	return item;
 };
 
+
+export const populateStoresWithFetchedProps = async (newItem) => {
+  
+  if(newItem.type === 'liveCodeEditor')
+    try{
+      newItem.data = await fetchFrom(newItem.liveCodeSource);
+      liveCodeEditorValue.set(newItem.data);
+      let grammar = await fetchFrom(newItem.grammarSource);
+      grammarEditorValue.set(grammar);
+      let compileOutput = compile(grammar).output;
+      grammarCompiledParser.set(compileOutput);
+    }
+    catch(error){
+      console.error("Error Populating stores with fetched liveCode props")
+    }
+  
+}
+
+
+// Use traditional function declaration to prevent Temporal Dead Zone issue
+export async function createNewItem (type, id, content){
+	// console.log("DEBUG:stores/common:createNewItem:");
+	// console.log(content);
+	let component;
+
+	switch (type) {
+		case "liveCodeEditor":
+			component = {
+				component: LiveCodeEditor,
+				background: "#151515",
+				theme: "icecoder",
+				grammarSource: content.grammar,
+				liveCodeSource: content.livecode,
+				data: content.code,
+			};
+      // await populateStoresWithFetchedProps(component); 
+			break;
+		case "grammarEditor":
+			component = {
+				component: GrammarEditor,
+				background: "#AAAAAA",
+				theme: "monokai",
+			};
+      // component.data = get(grammarEditorValue); // Get the store value with Svelte's get
+			break;
+		case "modelEditor":
+			component = {
+				component: ModelEditor,
+				background: "#f0f0f0",
+				theme: "monokai",
+				data: content,
+			};
+			break;
+		case "liveCodeParseOutput":
+			component = {
+				component: LiveCodeParseOutput,
+				background: "#ebdeff",
+			};
+			break;
+		case "grammarCompileOutput":
+			component = {
+				component: GrammarCompileOutput,
+				background: "#d1d5ff",
+			};
+			break;
+		case "storeInspector":
+			component = {
+				component: StoreInspector,
+				background: "#d1d5ff",
+			};
+			break;
+		case "analyser":
+			component = {
+				component: Analyser,
+				background: "#ffffff",
+				mode: "spectrogram",
+			};
+			break;
+		case "postIt":
+			component = {
+				component: PostIt,
+				background: "#ffffff",
+			};
+			break;
+		case "dspCodeOutput":
+			component = {
+				component: DSPCodeOutput,
+				background: "#ffffff",
+			};
+			break;
+		default:
+			break;
+	}
+
+	// return component template
+	return {
+		...gridHelp.item({ x: 0, y: 0, w: 7, h: 3, id: id }),
+		...{
+			type: type,
+			name: type + id,
+			lineNumbers: true,
+			hasFocus: true,
+		},
+		...component,
+	};
+};
+
 export function hydrateJSONcomponent (item){
 	if (item !== 'undefined' && item.type !== 'undefined') {
 		switch (item.type) {
 			case "liveCodeEditor":
 				item.component = LiveCodeEditor;
+				// await populateStoresWithFetchedProps(item);
 				break;
 			case "grammarEditor":
 				item.component = GrammarEditor;
+				// grammarEditorValue.set(item.data); // Set the store value with grammar value deserialised from data
 				break;
 			case "modelEditor":
 				item.component = ModelEditor;
@@ -411,13 +526,19 @@ export function hydrateJSONcomponent (item){
 			case "analyser":
 				item.component = Analyser;
 				break;
+			case "postIt":
+				item.component = PostIt;
+				break;
+			case "dspCodeOutput":
+				item.component = DSPCodeOutput;
+				break;
 			default:
 				// item.component = StoreInspector;
 				break;
 		}
-		if(item.id !== 'undefined'){
+		if(item.id === 'undefined'){
       item.id = id();
-		  item.name = item.name + item.id;
+		  item.name = item.type + item.id;
     }
 		return item;
   }
@@ -427,6 +548,12 @@ export function hydrateJSONcomponent (item){
 	// 	createNewItem();
 	// }
 };
+
+export const reset = () => {
+	items.set(layoutOriginal);
+};
+
+
 
 /*
  * Wraps writable store a
@@ -438,7 +565,7 @@ export function storable(key, initialValue) {
 	let json = localStorage.getItem(key); // get the last value from localStorage
 	if (json) {
 		// set( JSON.parse(json));
-		set( JSON.parse(json).map( item => hydrateJSONcomponent(item) ) ); // use the value from localStorage if it exists
+		set(JSON.parse(json).map(item => hydrateJSONcomponent(item))); // use the value from localStorage if it exists
 	}
 
 	// return an object with the same interface as Svelte's writable() store interface
@@ -455,39 +582,12 @@ export function storable(key, initialValue) {
 
 		get() {
 			return localStorage.getItem(key);
+			// return get(store);
 		},
 
 		subscribe, // punt subscriptions to underlying store
 	};
 }
-
-
-
-/**
- * Populates dashboard on application load,
- * checks local Storage for items from previous session and loads
- * or otherwise, loads hardcoded layout configuration
- */
-// export const loadPlaygroundItems = () => {
-
-// 	if (typeof window !== "undefined") {
-
-// 		const playgroundItems = window.localStorage.getItem("items");
-
-// 		return ( playgroundItems === null ||
-// 			playgroundItems === undefined ||
-// 			playgroundItems === ""
-// 		) ? originalItems : JSON.parse(playgroundItems)
-
-// 	} else
-//     return originalItems;
-// };
-
-
-// export const items = writable(testItems); // base svelteStore
-// export const items = storable("items", testItems); // localStorageWrapper
-// export const items = writable(nestedStoresItems);
-// export const items = writable([ hydrateJSONcomponent(createRandomItem('liveCodeEditor'))]);
 
 // Dashboard layout in items list
 export const items = storable("playground", originalItems); // localStorageWrapper
@@ -503,50 +603,4 @@ export const focusedItemControls = writable([]);
 
 
 
-/*******                                        ********/
-/*******   Playground Dashboard Items Stores    ********/
-/*******                                        ********/ 
-/*******                                        ********/
-/*******                                        ********/
-/*******                                        ********/
-/*******                                        ********/
-/*******                                        ********/
-/*******                                        ********/
-/*******                                        ********/
-/*******   Playground Language Design Stores    ********/
-/*******                                        ********/
 
-
-
-// export const grammarEditorValue = writable(initGrammarEditorValue());
-export const grammarEditorValue = writable("");
-
-// export const grammarCompiledParser = writable(compile(default_grammar).output);
-export const grammarCompiledParser = writable("");
-
-export const grammarCompilationErrors = writable("");
-
-
-
-
-
-// export const liveCodeEditorValue = writable(initLiveCodeEditorValue());
-export const liveCodeEditorValue = writable("");
-
-export const liveCodeParseResults = writable("");
-
-export const liveCodeParseErrors = writable("");
-
-export const liveCodeAbstractSyntaxTree = writable("");
-
-
-
-
-
-
-export const dspCode = writable("");
-
-// TFJS Model editor value, and IO channels' values
-
-// export const modelEditorValue = writable(initModelEditorValue());
-export const modelEditorValue = writable("");

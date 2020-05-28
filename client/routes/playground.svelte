@@ -11,17 +11,14 @@
   import Sidebar from '../components/playground/Sidebar.svelte';
   import Dashboard from '../components/layouts/Dashboard.svelte';
   
-  import { 
-    createNewItem,
-    hydrateJSONcomponent
-  } from  "../stores/common.js"
-
   import {
     fetchFrom
-
   } from "../utils/utils.js"
 
   import { 
+    createNewItem,
+    hydrateJSONcomponent,
+    populateStoresWithFetchedProps,
     liveCodeEditorValue,
     // liveCodeParseErrors,
     // liveCodeParseResults,
@@ -55,33 +52,20 @@
   let resetSubscriptionToken;
 
 
-  const populateLanguageDesignStoresWithItemContent = async newItem => {
-
-    switch (newItem.type) {
-      case "liveCodeEditor":
-        $liveCodeEditorValue = newItem.data = await fetchFrom(newItem.liveCodeSource); 
-        $grammarEditorValue = await fetchFrom(newItem.grammarSource);
-        $grammarCompiledParser = compile($grammarEditorValue).output;
-        // $grammarCompilationError = 
-        break;
-      case "grammarEditor": 
-        newItem.data = $grammarEditorValue; 
-        break;
-    }
-  }
-
 
   const addItem = async (type, id, value) => {
 
-    let newItem = createNewItem(type, id, value);
+    let newItem = await createNewItem(type, id, value);
 
-    await populateLanguageDesignStoresWithItemContent(newItem);
+    await populateStoresWithFetchedProps(newItem);
+    
+    if(type === 'grammarEditor')
+      newItem.data = $grammarEditorValue;
 
-    // Append to playground Items stores
-    // $items = gridHelp.appendItem(newItem, $items, cols); // this appends to the head of the dashboard
-
+    // $items = gridHelp.appendItem(newItem, $items, cols); // adds to the head of the dashboard ??
     let findOutPosition = gridHelp.findSpaceForItem(newItem, $items, cols); // find out where to place
-    $items = [...$items, ...[{ ...newItem, ...findOutPosition }]];
+
+    $items =  [...$items, ...[{ ...newItem, ...findOutPosition }]]; // Append to playground Items stores
   }
 
   const clearItems = () => {

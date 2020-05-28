@@ -1,6 +1,6 @@
-import { writable, readable } from "svelte/store";
+import { writable, readable, get } from "svelte/store";
 
-import { id } from "../utils/utils";
+import { id, fetchFrom } from "../utils/utils";
 // import { storable } from "../stores/common";
 
 import gridHelp from "svelte-grid/build/helper/index.mjs";
@@ -12,10 +12,57 @@ import LiveCodeParseOutput from "../components/widgets/LiveCodeParseOutput.svelt
 import GrammarCompileOutput from "../components/widgets/GrammarCompileOutput.svelte";
 import Analyser from "../components/widgets/Analyser.svelte";
 import StoreInspector from "../components/widgets/StoreInspector.svelte";
+import DSPCodeOutput from "../components/widgets/DSPCodeOutput.svelte";
+import PostIt from "../components/widgets/PostIt.svelte";
 
 let liveCode = "";
 let modelCode = "";
 let grammarCode = "";
+
+/*******                                        ********/
+/*******                                        ********/
+/*******   Tutorial Language Design Stores    ********/
+/*******                                        ********/
+
+// export const grammarEditorValue = writable(initGrammarEditorValue());
+export const grammarEditorValue = writable("");
+
+// export const grammarCompiledParser = writable(compile(default_grammar).output);
+export const grammarCompiledParser = writable("");
+
+export const grammarCompilationErrors = writable("");
+
+// export const liveCodeEditorValue = writable(initLiveCodeEditorValue());
+export const liveCodeEditorValue = writable("");
+
+export const liveCodeParseResults = writable("");
+
+export const liveCodeParseErrors = writable("");
+
+export const liveCodeAbstractSyntaxTree = writable("");
+
+export const dspCode = writable("");
+
+// TFJS Model editor value, and IO channels' values
+
+// export const modelEditorValue = writable(initModelEditorValue());
+export const modelEditorValue = writable("");
+
+/*******                                        ********/
+/*******     Tutorial Language Design Stores    ********/
+/*******                                        ********/
+/*******                                        ********/
+/*******                                        ********/
+/*******                                        ********/
+/*******                                        ********/
+/*******                                        ********/
+/*******                                        ********/
+/*******                                        ********/
+/*******                                        ********/
+/*******     Tutorial Dashboard Items Stores    ********/
+/*******                                        ********/ 
+
+
 
 const originalItems = [
 	{
@@ -214,6 +261,19 @@ let tutorialOptions = [
 	},
 ];
 
+export const populateStoresWithFetchedProps = async (newItem) => {
+	if (newItem.type === "liveCodeEditor")
+		try {
+			newItem.data = await fetchFrom(newItem.liveCodeSource);
+			liveCodeEditorValue.set(newItem.data);
+			let grammar = await fetchFrom(newItem.grammarSource);
+			grammarEditorValue.set(grammar);
+			let compileOutput = compile(grammar).output;
+			grammarCompiledParser.set(compileOutput);
+		} catch (error) {
+			console.error("Error Populating stores with fetched liveCode props");
+		}
+};
 
 export function hydrateJSONcomponent (item){
 	if (item !== 'undefined' && item.type !== 'undefined') {
@@ -239,6 +299,12 @@ export function hydrateJSONcomponent (item){
 			case "analyser":
 				item.component = Analyser;
 				break;
+			case "postIt":
+				item.component = PostIt;
+				break;
+			case "dspCodeOutput":
+				item.component = DSPCodeOutput;
+				break;
 			default:
 				// item.component = StoreInspector;
 				break;
@@ -255,6 +321,57 @@ export function hydrateJSONcomponent (item){
 	// 	createNewItem();
 	// }
 };
+
+// export async function hydrateJSONcomponent (item){
+// 	if (item !== 'undefined' && item.type !== 'undefined') {
+// 		switch (item.type) {
+// 			case "liveCodeEditor":
+// 				item.component = LiveCodeEditor;
+// 				await populateStoresWithFetchedProps(item);
+// 				break;
+// 			case "grammarEditor":
+// 				item.component = GrammarEditor;
+// 				grammarEditorValue.set(item.data); // Set the store value with grammar value deserialised from data
+// 				break;
+// 			case "modelEditor":
+// 				item.component = ModelEditor;
+// 				break;
+// 			case "liveCodeParseOutput":
+// 				item.component = LiveCodeParseOutput;
+// 				break;
+// 			case "grammarCompileOutput":
+// 				item.component = GrammarCompileOutput;
+// 				break;
+// 			case "storeInspector":
+// 				item.component = StoreInspector;
+// 				break;
+// 			case "analyser":
+// 				item.component = Analyser;
+// 				break;
+// 			case "postIt":
+// 				item.component = PostIt;
+// 				break;
+// 			case "dspCodeOutput":
+// 				item.component = DSPCodeOutput;
+// 				break;
+// 			default:
+// 				// item.component = StoreInspector;
+// 				break;
+// 		}
+// 		if(item.id === 'undefined'){
+//       item.id = id();
+// 		  item.name = item.type + item.id;
+//     }
+// 		return item;
+//   }
+//   else
+//     throw Error("hydrateJSONcomponent: undefined item");
+// 	// } else {
+// 	// 	createNewItem();
+// 	// }
+// };
+
+
 
 /*
  * Wraps writable store a
