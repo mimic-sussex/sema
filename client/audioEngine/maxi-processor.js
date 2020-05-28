@@ -31,7 +31,7 @@ class OutputTransducer {
 
   send(data, channelID) {
     if (this.sendCounter >= this.sendPeriod) {
-      console.log(data);
+      // console.log(data);
       this.port.postMessage({
         rq: "send",
         value: data,
@@ -100,21 +100,14 @@ class pvshift {
 
 class fft {
   constructor(fftsize, hopsize) {
-    this.fft = new Maximilian.maxiFFT();
+    this.fft = new Maximilian.maxiFFTAdaptor();
 		this.fft.setup(fftsize,hopsize,fftsize);
-		this.mags = new Maximilian.VectorFloat();
-		this.phases = new Maximilian.VectorFloat();
-		this.mags.resize(fftsize/2,0);
-		this.phases.resize(fftsize/2,0);
   }
   play(sig) {
     if (this.fft.process(sig, Maximilian.maxiFFTModes.WITH_POLAR_CONVERSION)) {
-      this.mags = this.fft.getMagnitudes();
-      this.phases = this.fft.getPhases();
     }
-  //  let res = [vectorDoubleToF64Array(this.mags), vectorDoubleToF64Array(this.phases)];
-    //console.log(res);
-    return 0;
+    let res = [this.fft.getMagnitudesAsJSArray(), this.fft.getPhasesAsJSArray()];
+    return res;
   }
 }
 
@@ -139,8 +132,10 @@ class MaxiProcessor extends AudioWorkletProcessor {
     // let temp = new Maximilian.maxiNonlinearity();
     // console.log("TEST2", temp.asymclip(0.9,3,3));
 
-    let tmp = new Maximilian.VectorFloat();
-    console.log(tmp);
+    let tmp = new Maximilian.maxiFFTAdaptor();
+		tmp.setup(128,64,128);
+    console.log("MAGS", tmp.getMagnitudesAsJSArray());
+
     let q1 = Maximilian.maxiBits.sig(63);
 
     // this.sampleRate = 44100;

@@ -194,7 +194,7 @@ var jsFuncMap = {
 
 	toJS: { //freq, data, channel
 		setup: (o, p) => `${o} = this.createMLOutputTransducer(${p[0].loop})`,
-		loop:  (o, p) => `${o}.send(this.ifListThenToArray(${p[1].loop}), ${p[2].loop})`
+		loop:  (o, p) => `${o}.send(${p[1].loop}, ${p[2].loop})`
 	},
 
 	fromJS: { //channel
