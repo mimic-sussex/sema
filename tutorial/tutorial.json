@@ -1,0 +1,167 @@
+[{
+  "title": "Basics",
+  "sections": [{
+    "slug": "introduction",
+    "title": "Introduction",
+    "chapter_dir": "01-basics",
+    "section_dir": "01-introduction"
+  }, {
+    "slug": "layout",
+    "title": "Layout",
+    "chapter_dir": "01-basics",
+    "section_dir": "02-layout"
+  }, {
+    "slug": "editors",
+    "title": "Editors",
+    "chapter_dir": "01-basics",
+    "section_dir": "03-editors"
+  }, {
+    "slug": "widgets",
+    "title": "Widgets",
+    "chapter_dir": "01-basics",
+    "section_dir": "04-widgets"
+  }]
+}, {
+  "title": "Live Coding with the Default Language",
+  "sections": [{
+    "slug": "introduction",
+    "title": "Introduction",
+    "chapter_dir": "02-live-coding",
+    "section_dir": "01-introduction"
+  }, {
+    "slug": "statements",
+    "title": "Statements",
+    "chapter_dir": "02-live-coding",
+    "section_dir": "02-statements"
+  }, {
+    "slug": "declarations",
+    "title": "Declarations",
+    "chapter_dir": "02-live-coding",
+    "section_dir": "03-declarations"
+  }, {
+    "slug": "assignments",
+    "title": "Assignments",
+    "chapter_dir": "02-live-coding",
+    "section_dir": "04-assignments"
+  }, {
+    "slug": "DSP-objects",
+    "title": "DSP objects",
+    "chapter_dir": "02-live-coding",
+    "section_dir": "05-DSP-objects"
+  }
+  ]
+}, {
+  "title": "Machine Learning",
+  "sections": [{
+    "slug": "introduction",
+    "title": "Introduction",
+    "chapter_dir": "03-machine-learning",
+    "section_dir": "01-introduction"
+  },
+  {
+    "slug": "piping-data-streams",
+    "title": "Piping data streams",
+    "chapter_dir": "03-machine-learning",
+    "section_dir": "02-piping-data-streams"
+  }, {
+    "slug": "pre-trained-models-i",
+    "title": "Pre-trained model i",
+    "chapter_dir": "03-machine-learning",
+    "section_dir": "03-pre-trained-model-i"
+  }, {
+    "slug": "pre-trained-models-ii",
+    "title": "Pre-trained model ii",
+    "chapter_dir": "03-machine-learning",
+    "section_dir": "04-pre-trained-model-ii"
+  }, {
+    "slug": "linear-regression",
+    "title": "Linear regression",
+    "chapter_dir": "03-machine-learning",
+    "section_dir": "05-linear-regression"
+  }, {
+    "slug": "binary-classification",
+    "title": "Binary classification",
+    "chapter_dir": "03-machine-learning",
+    "section_dir": "06-binary-classification"
+  }, {
+    "slug": "non-linear",
+    "title": "Non linear",
+    "chapter_dir": "03-machine-learning",
+    "section_dir": "07-non-linear"
+  }, {
+    "slug": "LSTM-for-text-generation",
+    "title": "LSTM for text generation",
+    "chapter_dir": "03-machine-learning",
+    "section_dir": "08-LSTM-for-text-generation"
+  }, {
+    "slug": "echo-state-networks",
+    "title": "Echo state networks",
+    "chapter_dir": "03-machine-learning",
+    "section_dir": "09-echo-state-network"
+  }
+
+  ]
+}, {
+  "title": "Language Design",
+  "sections": [{
+    "slug": "introduction",
+    "title": "Introduction",
+    "chapter_dir": "04-language-design",
+    "section_dir": "01-introduction"
+  },
+  {
+    "slug": "regular-expressions",
+    "title": "Regular expressions",
+    "chapter_dir": "04-language-design",
+    "section_dir": "02-regular-expressions"
+  }, {
+    "slug": "grammar-rules",
+    "title": "Grammar rules",
+    "chapter_dir": "04-language-design",
+    "section_dir": "03-grammar-rules"
+  }, {
+    "slug": "1-token-grammar",
+    "title": "1-token grammar",
+    "chapter_dir": "04-language-design",
+    "section_dir": "04-1-token-grammar"
+  }, {
+    "slug": "multi-token-grammar",
+    "title": "Multi-token grammar",
+    "chapter_dir": "04-language-design",
+    "section_dir": "05-multi-token-grammar"
+  }, {
+    "slug": "separators",
+    "title": "Separators",
+    "chapter_dir": "04-language-design",
+    "section_dir": "06-separators"
+  }, {
+    "slug": "recursion",
+    "title": "Recursion",
+    "chapter_dir": "04-language-design",
+    "section_dir": "07-recursion"
+  }, {
+    "slug": "lists",
+    "title": "Lists",
+    "chapter_dir": "04-language-design",
+    "section_dir": "08-lists"
+  },
+  {
+		"slug": "semantic-actions",
+		"title": "Semantic actions",
+		"chapter_dir": "04-language-design",
+		"section_dir": "09-semantic-actions"
+	},
+  {
+		"slug": "intermediate-language",
+		"title": "Intermediate Language",
+		"chapter_dir": "04-language-design",
+		"section_dir": "10-intermediate-language"
+	},
+  {
+		"slug": "building-the-Sema-AST",
+		"title": "Building the Sema Abstract Syntax Tree",
+		"chapter_dir": "04-language-design",
+		"section_dir": "11-building-the-Sema-AST"
+	}
+  ]
+}]
