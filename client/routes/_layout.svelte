@@ -63,7 +63,10 @@
       });
 	}
   
-  let defaults = { chapter: '01-basics', section: '01-introduction' };
+
+  let persistentParams = { chapter: '01-basics', section: '01-introduction' };
+  // update url parameters only when navigating tutorials
+  $: if($params.chapter && $params.section) persistentParams = $params
 
 
 </script>
@@ -192,9 +195,10 @@
         <!-- <li><a href="/tutorial/">Tutorial</a></li> -->
         <!-- <li><a href="/tutorial/{chapter_dir}/{section_dir}/">Tutorial</a></li> -->
        
-        <li><a href="/tutorial/{$selected.chapter_dir}/{$selected.section_dir}/">Tutorial</a></li>
-        
-        <!-- <li><a href={ $url('/tutorial/:chapter/:section/', { ...defaults, ...$params } )}>Tutorial</a></li> -->
+        <!-- <li><a href="/tutorial/{$selected.chapter_dir}/{$selected.section_dir}/">Tutorial</a></li> -->
+
+        <li><a href={ $url('/tutorial/:chapter/:section/', persistentParams ) }>Tutorial</a></li>
+
 
         <!-- <li><a href={$url('/tutorial/:chapter/:section/', {chapter: '01-basics', section: '01-introduction'};)}>Tutorial</a></li> -->
         <!-- <li><a href="/tutorial/[chapter]/[section]/">Tutorial</a></li> -->

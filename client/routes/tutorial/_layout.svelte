@@ -33,7 +33,9 @@
 
     let hydratedComponents = json.map( item => hydrateJSONcomponent(item) ); // Deserialise components from localStorage JSON
 
-    $items = hydratedComponents.map( async item => await populateStoresWithFetchedProps(item) ); // Fetch and compile language contents from component URL props to stores 
+    $items = json.map( item => hydrateJSONcomponent(item) ); 
+
+    // $items = await hydratedComponents.map( async item => await populateStoresWithFetchedProps(item) ); // Fetch and compile language contents from component URL props to stores 
 
     await tick();
     

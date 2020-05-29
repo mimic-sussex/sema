@@ -34,6 +34,10 @@
   import { blockTracker, blockData } from './liveCodeEditor.blockTracker.js';
 
   import {
+    audioEngineStatus
+  } from "../../stores/store.js";
+  
+  import {
     grammarCompiledParser,
   //   liveCodeEditorValue,
   //   liveCodeParseErrors,
@@ -43,10 +47,6 @@
       // audioEngineStatus
   } from "../../stores/playground.js";
 
-  import {
-    audioEngineStatus
-  } from "../../stores/store.js";
-  
 
 
   // export let grammarSource = "/languages/defaultGrammar.ne";
@@ -313,6 +313,8 @@
     // console.log('DEBUG:LiveCodeEditor:onDestroy:')
     parserWorker.terminate();
     parserWorker = null; // cannot delete in strict mode
+
+    
 	});
 
 
