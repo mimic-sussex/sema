@@ -61,26 +61,26 @@
 
     switch (type) {
       case 'live':
-        messaging.publish("playground-add-editor", { id: id(), type: 'liveCodeEditor', data: selected.content });
+        messaging.publish("playground-add", { type: 'liveCodeEditor', data: selected.content });
         $selectedLiveCodeOption = $sidebarLiveCodeOptions[0];
         $isSelectLiveCodeEditorDisabled = true;         
         break;
       case 'model':
-        messaging.publish("playground-add-editor", { id: id(), type: 'modelEditor', data: selected.content });
+        messaging.publish("playground-add", { type: 'modelEditor', data: selected.content });
         $selectedModelOption = $sidebarModelOptions[0];
         $isSelectModelEditorDisabled = true;        
         break;
       case 'grammar':
-        messaging.publish("playground-add-editor", { id: id(), type: 'grammarEditor'});
+        messaging.publish("playground-add", { type: 'grammarEditor'});
         // selectedGrammarOption = sidebarGrammarOptions[0];
         $isAddGrammarEditorDisabled = true;
         break;
       case 'analyser':
-        messaging.publish("playground-add-analyser", { id: id(), type: 'analyser' });
+        messaging.publish("playground-add", { type: 'analyser' });
         $isAddAnalyserDisabled = true;
         break;
       case 'debugger':
-        messaging.publish("playground-add-debugger", { id: id(), type: selected.type });
+        messaging.publish("playground-add", { type: selected.type });
         disableSelectDebuggerOption(selected.type);       
         $selectedDebuggerOption = $sidebarDebuggerOptions[0];  
         break;

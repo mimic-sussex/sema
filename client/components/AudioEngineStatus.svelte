@@ -5,7 +5,7 @@
   import MediumVolumeAudio   from '../../assets/img/medium-volume-audio.svg';
   import LowVolumeAudio      from '../../assets/img/low-volume-audio.svg';
 
-  import { audioEngineStatus } from '../stores/store.js';
+  import { audioEngineStatus } from '../stores/common.js';
 
 
   let handleClick = () => {

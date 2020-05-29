@@ -18,17 +18,22 @@
   import { 
     createNewItem,
     hydrateJSONcomponent,
-    populateStoresWithFetchedProps,
-    liveCodeEditorValue,
+    items 
+  } from  "../stores/playground.js"
+
+  import {
+    populateCommonStoresWithFetchedProps,
+    updateItemPropsWithCommonStoreValues,
+    resetStores,
+    // liveCodeEditorValue,
     // liveCodeParseErrors,
     // liveCodeParseResults,
     // liveCodeAbstractSyntaxTree,
     // dspCode,
-    grammarEditorValue,
-    grammarCompiledParser,
-    grammarCompilationError,
-    items 
-  } from  "../stores/playground.js"
+    // grammarEditorValue,
+    // grammarCompiledParser,
+    // grammarCompilationError,
+  } from  "../stores/common.js"
 
   const messaging = new PubSub();
 
@@ -44,28 +49,37 @@
   // Subscription tokens for messaging topic subscriptions
   // must be kept for unsubscribe on each route component onMount/onDestroy
   // (or navigations between tutorial/playground)
-  let addEditorSubscriptionToken;
-  let addDebuggerSubscriptionToken;
-  let addAnalyserSubscriptionToken; 
+  let addSubscriptionToken;
   let envSaveSubscriptionToken;
   let envLoadSubscriptionToken;
   let resetSubscriptionToken;
 
+  let unsubscribeItemsChangeCallback;
 
+  // const unsubscribePlaygroundItemsCallback = items.subscribe(value => {
+  //   console.log('Playground items changed');
+  //   // await populateStoresWithFetchedProps(newItem); 
+  // });
 
-  const addItem = async (type, id, value) => {
+  const addItem = async (type, value) => {
 
-    let newItem = await createNewItem(type, id, value);
+    if(type !== undefined){
+      try {
+        let newItem = await createNewItem(type, value);
 
-    await populateStoresWithFetchedProps(newItem);
-    
-    if(type === 'grammarEditor')
-      newItem.data = $grammarEditorValue;
+        await populateCommonStoresWithFetchedProps(newItem);
 
-    // $items = gridHelp.appendItem(newItem, $items, cols); // adds to the head of the dashboard ??
-    let findOutPosition = gridHelp.findSpaceForItem(newItem, $items, cols); // find out where to place
+        updateItemPropsWithCommonStoreValues(newItem)        
 
-    $items =  [...$items, ...[{ ...newItem, ...findOutPosition }]]; // Append to playground Items stores
+        let findOutPosition = gridHelp.findSpaceForItem(newItem, $items, cols); // find out where to place
+        $items =  [...$items, ...[{ ...newItem, ...findOutPosition }]]; // Append to playground Items stores
+      }
+      catch (error){
+        console.error("Error on routes/Playground.AddItem")
+      }
+    }  
+    else
+      console.error("Error on routes/Playground.AddItem: undefined parameter") 
   }
 
   const clearItems = () => {
@@ -113,12 +127,19 @@
   }
 
 
-  onMount(() => {
+  onMount( async () => {
     console.log("DEBUG:routes/playground:onMount")
 
-    addEditorSubscriptionToken = messaging.subscribe('playground-add-editor', e => addItem(e.type, e.id, e.data) ); 
-    addDebuggerSubscriptionToken = messaging.subscribe('playground-add-debugger', e => addItem(e.type, e.id) );
-    addAnalyserSubscriptionToken = messaging.subscribe('playground-add-analyser', e => addItem(e.type, e.id) );
+    // Sequentially fetch data from individual items' properties into language design workflow stores
+    for (const item of $items) 
+      await populateCommonStoresWithFetchedProps(item); 
+
+    unsubscribeItemsChangeCallback = items.subscribe(value => {
+      console.log('Playground items changed');
+      
+    });
+
+    addSubscriptionToken = messaging.subscribe('playground-add', e => addItem(e.type, e.data) ); 
 		envSaveSubscriptionToken = messaging.subscribe('playground-env-save', e => saveEnvironment(e) );
     envLoadSubscriptionToken = messaging.subscribe('playground-env-load', e => loadEnvironment(e) );
 		resetSubscriptionToken = messaging.subscribe('playground-reset', e => clearItems() );
@@ -127,12 +148,14 @@
   onDestroy(() => {
     console.log("DEBUG:routes/playground:onDestroy")
 
-    messaging.unsubscribe(addEditorSubscriptionToken);
-    messaging.unsubscribe(addDebuggerSubscriptionToken);
-    messaging.unsubscribe(addAnalyserSubscriptionToken);
+    messaging.unsubscribe(addSubscriptionToken);
     messaging.unsubscribe(envSaveSubscriptionToken);
     messaging.unsubscribe(envLoadSubscriptionToken);
     messaging.unsubscribe(resetSubscriptionToken);
+
+    unsubscribeItemsChangeCallback();
+
+    resetStores();
   });
 
 </script>

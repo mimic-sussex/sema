@@ -34,18 +34,14 @@
   import { blockTracker, blockData } from './liveCodeEditor.blockTracker.js';
 
   import {
-    audioEngineStatus
-  } from "../../stores/store.js";
-  
-  import {
     grammarCompiledParser,
-  //   liveCodeEditorValue,
-  //   liveCodeParseErrors,
-  //   liveCodeParseResults,
-  //   liveCodeAbstractSyntaxTree,
-  //   dspCode
-      // audioEngineStatus
-  } from "../../stores/playground.js";
+    liveCodeEditorValue,
+    liveCodeParseErrors,
+    liveCodeParseResults,
+    liveCodeAbstractSyntaxTree,
+    dspCode,
+    audioEngineStatus
+  } from "../../stores/common.js";
 
 
 
@@ -56,13 +52,13 @@
 
   // export let liveCodeEditorValue;
   // export 
-  let liveCodeParseErrors;
-  // export 
-  let liveCodeParseResults;
-  // export 
-  let liveCodeAbstractSyntaxTree; 
-  // export 
-  let dspCode; // code generated from the liveCode AST traversal
+  // let liveCodeParseErrors;
+  // // export 
+  // let liveCodeParseResults;
+  // // export 
+  // let liveCodeAbstractSyntaxTree; 
+  // // export 
+  // let dspCode; // code generated from the liveCode AST traversal
 
   // console.log("grammarCompiledParser");
   // console.log($grammarCompiledParser);
@@ -140,36 +136,36 @@
         console.log(outputs);
         const { parserOutputs, parserResults } = outputs;
         if( parserOutputs && parserResults ){
-          // $liveCodeParseResults = parserResults;
-          // $liveCodeAbstractSyntaxTree = parserOutputs;  //Deep clone created in the worker for AST visualization
-          // $liveCodeParseErrors = "";
-          liveCodeParseResults = parserResults;
-          liveCodeAbstractSyntaxTree = parserOutputs;  //Deep clone created in the worker for AST visualization
-          liveCodeParseErrors = "";
+          $liveCodeParseResults = parserResults;
+          $liveCodeAbstractSyntaxTree = parserOutputs;  //Deep clone created in the worker for AST visualization
+          $liveCodeParseErrors = "";
+          // liveCodeParseResults = parserResults;
+          // liveCodeAbstractSyntaxTree = parserOutputs;  //Deep clone created in the worker for AST visualization
+          // liveCodeParseErrors = "";
           // Tree traversal in the main tree.
-          // let dspCode = IRToJavascript.treeToCode($liveCodeParseResults, 0);
-          let dspCode = IRToJavascript.treeToCode(liveCodeParseResults, 0);
+          $dspCode = IRToJavascript.treeToCode($liveCodeParseResults, 0);
+          // let dspCode = IRToJavascript.treeToCode(liveCodeParseResults, 0);
           console.log("code generated");
 
           // publish eval message with code to audio engine
-          messaging.publish("eval-dsp", dspCode);
+          messaging.publish("eval-dsp", $dspCode);
         }
         else {
           // console.log('DEBUG:LiveCodeEditor:parseLiveCode:then2');
           // console.dir(outputs);
          
-          // $liveCodeParseErrors = outputs;
-          // $liveCodeAbstractSyntaxTree = $liveCodeParseResults = '';
-          liveCodeParseErrors = outputs;
-          liveCodeAbstractSyntaxTree = liveCodeParseResults = '';
+          $liveCodeParseErrors = outputs;
+          $liveCodeAbstractSyntaxTree = $liveCodeParseResults = '';
+          // liveCodeParseErrors = outputs;
+          // liveCodeAbstractSyntaxTree = liveCodeParseResults = '';
         }
       })
       .catch(e => {
         // console.log('DEBUG:parserEditor:parseLiveCode:catch')
         // console.log(e);
 
-        // $liveCodeParseErrors = e;
-        liveCodeParseErrors = e;
+        $liveCodeParseErrors = e;
+        // liveCodeParseErrors = e;
       });
     }
   }
@@ -314,7 +310,7 @@
     parserWorker.terminate();
     parserWorker = null; // cannot delete in strict mode
 
-    
+
 	});
 
 

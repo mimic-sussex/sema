@@ -17,7 +17,7 @@
     grammarCompilationErrors, 
     liveCodeParseErrors,
     liveCodeAbstractSyntaxTree  
-  } from "../../stores/playground.js";
+  } from "../../stores/common.js";
   
   onMount(async () => {
     

@@ -17,6 +17,9 @@
     populateStoresWithFetchedProps
   } from '../../stores/tutorial.js';
 
+  import {
+    resetStores
+  } from "../../stores/common.js";
 
   // Tutorial dashboard configuration
   let cols = 15;
@@ -53,6 +56,7 @@
   });
 
   onDestroy(() => {
+    resetStores();
     console.log("DEBUG:routes/tutorial/_layout:onDestroy")
   });
 

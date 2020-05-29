@@ -9,12 +9,12 @@ import compile from "../compiler/compiler";
 // import gabber_liveCode from  "../assets/language/gabber.sem";
 // import nibble_liveCode from  "../assets/language/nibble.sem";
 
-import default_grammar  from "../../assets/languages/default/grammar.ne";
-import gabber_grammar   from "../../assets/languages/gabber/grammar.ne";
-import nibble_grammar   from "../../assets/languages/nibble/grammar.ne";
-import default_liveCode from "../../assets/languages/default/code.sem";
-import gabber_liveCode from   "../../assets/languages/gabber/code.sem";
-import nibble_liveCode from   "../../assets/languages/nibble/code.sem";
+// import default_grammar  from "../../assets/languages/default/grammar.ne";
+// import gabber_grammar   from "../../assets/languages/gabber/grammar.ne";
+// import nibble_grammar   from "../../assets/languages/nibble/grammar.ne";
+// import default_liveCode from "../../assets/languages/default/code.sem";
+// import gabber_liveCode from   "../../assets/languages/gabber/code.sem";
+// import nibble_liveCode from   "../../assets/languages/nibble/code.sem";
 
 
 // Load tutorials from .ne files
@@ -76,7 +76,7 @@ export const cm_theme_shadowfox = writable("");
 
 // SplashScreen visibility
 
-export const audioEngineStatus = writable('stopped');
+// export const audioEngineStatus = writable('stopped');
 
 
 // Grammar and LiveCode Editors previous sessions' Values, store in LocalStorage
@@ -124,7 +124,7 @@ let initModelEditorValue = () => {
 
 // TFJS Model editor value, and IO channels' values
 
-export const modelEditorValue = writable(initModelEditorValue());
+// export const modelEditorValue = writable(initModelEditorValue());
 
 // // Dashboard Store for Live Code Editor options in Sidebar component
 // export const sidebarLiveCodeOptions = [
@@ -174,59 +174,59 @@ export const modelEditorValue = writable(initModelEditorValue());
 // ];
 
 // Store for TFJS model options in Sidebar component
-export const sidebarModelOptions = writable([
-	{ id: 0, text: `Model Editor`, content: "" },
-	{ id: 1, text: `+ hello-world`, content: hello_world_code_example },
-	{
-		id: 2,
-		text: `+ two-layer-non-linear`,
-		content: two_layer_non_linear_code_example
-	},
-	{
-		id: 3,
-		text: `+ binary-classification`,
-		content: binary_classification_code_example
-	},
-	{
-		id: 4,
-		text: `+ echo-state-network`,
-		content: echo_state_network_code_example
-	},
-	{
-		id: 5,
-		text: `+ lstm-text-gen`,
-		content: lstm_txt_gen_code_example
-	},
-  {
-		id: 6,
-		text: `+ new`,
-		content: ''
-	}
-]);
+// export const sidebarModelOptions = writable([
+// 	{ id: 0, text: `Model Editor`, content: "" },
+// 	{ id: 1, text: `+ hello-world`, content: hello_world_code_example },
+// 	{
+// 		id: 2,
+// 		text: `+ two-layer-non-linear`,
+// 		content: two_layer_non_linear_code_example
+// 	},
+// 	{
+// 		id: 3,
+// 		text: `+ binary-classification`,
+// 		content: binary_classification_code_example
+// 	},
+// 	{
+// 		id: 4,
+// 		text: `+ echo-state-network`,
+// 		content: echo_state_network_code_example
+// 	},
+// 	{
+// 		id: 5,
+// 		text: `+ lstm-text-gen`,
+// 		content: lstm_txt_gen_code_example
+// 	},
+//   {
+// 		id: 6,
+// 		text: `+ new`,
+// 		content: ''
+// 	}
+// ]);
 
-export const selectedModel = writable(sidebarModelOptions[1]);
+// export const selectedModel = writable(sidebarModelOptions[1]);
 
-function createSelectedLayout(){
-  const { subscribe, set } = writable(2);
+// function createSelectedLayout(){
+//   const { subscribe, set } = writable(2);
 
-  return {
-    subscribe,
-    reset: (n) => set(n)
-  };
-}
-
-
-// Dashboard layout SELECTED item which receives focus and has item controls loaded
-export const selectedItem = writable({});
-
-// Dashboard layout SELECTED item which receives focus and has item controls loaded
-export const selectedItemControls = writable([]);
+//   return {
+//     subscribe,
+//     reset: (n) => set(n)
+//   };
+// }
 
 
-// Dashboard Store for Grammar Editor options in Sidebar component
-export const editorThemes = [
-	{ id: 0, text: `Change Theme...`, content: "" },
-	{ id: 1, text: `cobalt`, content: cm_theme_cobalt },
-	{ id: 2, text: `icecoder`, content: cm_theme_icecoder },
-	{ id: 3, text: `shadowfox`, content: cm_theme_shadowfox },
-];
+// // Dashboard layout SELECTED item which receives focus and has item controls loaded
+// export const selectedItem = writable({});
+
+// // Dashboard layout SELECTED item which receives focus and has item controls loaded
+// export const selectedItemControls = writable([]);
+
+
+// // Dashboard Store for Grammar Editor options in Sidebar component
+// export const editorThemes = [
+// 	{ id: 0, text: `Change Theme...`, content: "" },
+// 	{ id: 1, text: `cobalt`, content: cm_theme_cobalt },
+// 	{ id: 2, text: `icecoder`, content: cm_theme_icecoder },
+// 	{ id: 3, text: `shadowfox`, content: cm_theme_shadowfox },
+// ];

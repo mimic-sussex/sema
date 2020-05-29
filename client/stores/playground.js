@@ -166,29 +166,27 @@ export const editorThemes = [
 /*******   Playground Language Design Stores    ********/
 /*******                                        ********/
 
-// export const grammarEditorValue = writable(initGrammarEditorValue());
-export const grammarEditorValue = writable("");
+// // export const grammarEditorValue = writable(initGrammarEditorValue());
+// export const grammarEditorValue = writable("");
 
-// export const grammarCompiledParser = writable(compile(default_grammar).output);
-export const grammarCompiledParser = writable("");
+// // export const grammarCompiledParser = writable(compile(default_grammar).output);
+// export const grammarCompiledParser = writable("");
 
-export const grammarCompilationErrors = writable("");
+// export const grammarCompilationErrors = writable("");
 
-// export const liveCodeEditorValue = writable(initLiveCodeEditorValue());
-export const liveCodeEditorValue = writable("");
+// // export const liveCodeEditorValue = writable(initLiveCodeEditorValue());
+// export const liveCodeEditorValue = writable("");
 
-export const liveCodeParseResults = writable("");
+// export const liveCodeParseResults = writable("");
 
-export const liveCodeParseErrors = writable("");
+// export const liveCodeParseErrors = writable("");
 
-export const liveCodeAbstractSyntaxTree = writable("");
+// export const liveCodeAbstractSyntaxTree = writable("");
 
-export const dspCode = writable("");
+// export const dspCode = writable("");
 
-// TFJS Model editor value, and IO channels' values
-
-// export const modelEditorValue = writable(initModelEditorValue());
-export const modelEditorValue = writable("");
+// // export const modelEditorValue = writable(initModelEditorValue());
+// export const modelEditorValue = writable("");
 
 /*******                                        ********/
 /*******   Playground Language Design Stores    ********/
@@ -394,26 +392,27 @@ export let createRandomItem = (type) => {
 };
 
 
-export const populateStoresWithFetchedProps = async (newItem) => {
+// export const populateStoresWithFetchedProps = async (newItem) => {
   
-  if(newItem.type === 'liveCodeEditor')
-    try{
-      newItem.data = await fetchFrom(newItem.liveCodeSource);
-      liveCodeEditorValue.set(newItem.data);
-      let grammar = await fetchFrom(newItem.grammarSource);
-      grammarEditorValue.set(grammar);
-      let compileOutput = compile(grammar).output;
-      grammarCompiledParser.set(compileOutput);
-    }
-    catch(error){
-      console.error("Error Populating stores with fetched liveCode props")
-    }
-  
-}
+//   if(newItem.type === 'liveCodeEditor')
+//     try{
+//       newItem.data = await fetchFrom(newItem.liveCodeSource);
+//       liveCodeEditorValue.set(newItem.data);
+//       let grammar = await fetchFrom(newItem.grammarSource);
+//       grammarEditorValue.set(grammar);
+//       let compileOutput = compile(grammar).output;
+//       grammarCompiledParser.set(compileOutput);
+//     }
+//     catch(error){
+//       console.error("Error Populating stores with fetched liveCode props")
+//     }
+//   else if (newItem.type === 'grammarEditor')
+//     grammarEditorValue.set(item.data);    
+// }
 
 
 // Use traditional function declaration to prevent Temporal Dead Zone issue
-export async function createNewItem (type, id, content){
+export async function createNewItem (type, content){
 	// console.log("DEBUG:stores/common:createNewItem:");
 	// console.log(content);
 	let component;
@@ -487,12 +486,14 @@ export async function createNewItem (type, id, content){
 			break;
 	}
 
+  let itemId = id();
+
 	// return component template
 	return {
-		...gridHelp.item({ x: 0, y: 0, w: 7, h: 3, id: id }),
+		...gridHelp.item({ x: 0, y: 0, w: 7, h: 3, id: itemId }),
 		...{
 			type: type,
-			name: type + id,
+			name: type + itemId,
 			lineNumbers: true,
 			hasFocus: true,
 		},

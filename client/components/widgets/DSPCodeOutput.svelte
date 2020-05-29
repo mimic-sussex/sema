@@ -1,5 +1,5 @@
 <script>
-import { items } from '../../stores/playground.js'
+import { dspCode } from '../../stores/common.js'
 
 // export let items;
 
@@ -22,8 +22,18 @@ import { items } from '../../stores/playground.js'
 		overflow-y: auto;
 	}
 
+  pre {
+    /* position: relative;
+    width: 100%;
+    height: auto;
+    overflow-y: auto; */
+  }
+
 </style>
 
 <div class='container scrollable'>
-  <pre> { JSON.stringify($items, null, 2) } </pre>
+  {#if $dspCode}
+  <pre> { JSON.stringify($dspCode.setup, null, 2) } </pre>
+  <!-- <pre> { JSON.stringify($dspCode.loop, null, 2) } </pre> -->
+  {/if}
 </div>

@@ -2,7 +2,7 @@
 	import { onDestroy } from 'svelte';
 
   import SplashScreen from './SplashScreen.svelte';
-  import { audioEngineStatus } from '../stores/store.js';
+  import { audioEngineStatus } from '../stores/common.js';
 
   import { AudioEngine } from '../audioEngine/audioEngine.js';
 

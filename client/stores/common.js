@@ -1,6 +1,8 @@
 import { get, writable } from "svelte/store";
 
-import { id } from "../utils/utils";
+import compile from "../compiler/compiler";
+
+import { id, fetchFrom } from "../utils/utils";
 
 import ModelEditor from "../components/editors/ModelEditor.svelte";
 import GrammarEditor from "../components/editors/GrammarEditor.svelte";
@@ -14,36 +16,38 @@ import DSPCodeOutput from "../components/widgets/DSPCodeOutput.svelte";
 
 import gridHelp from "svelte-grid/build/helper/index.mjs";
 
-function persist(key, value) {
-	sessionStorage.setItem(key, JSON.stringify(value));
-}
+
+export const audioEngineStatus = writable('stopped');
+
+// function persist(key, value) {
+// 	sessionStorage.setItem(key, JSON.stringify(value));
+// }
+
+// // Use traditional function declaration to prevent Temporal Dead Zone issue
+// export function writableSession(key, initialValue) {
+// 	const sessionValue = JSON.parse(sessionStorage.getItem(key));
+
+// 	if (!sessionValue) persist(key, initialValue);
+
+// 	const store = writable(sessionValue || initialValue);
+
+// 	const { set: realSet, subscribe, update: realUpdate } = store;
+
+// 	return {
+// 		set(value) {
+// 			realSet(value);
+// 			persist(key, value);
+// 		},
+// 		subscribe,
+// 		update(fn) {
+// 			realUpdate(fn);
+// 			persist(key, get(store));
+// 		},
+// 	};
+// }
 
 
-// Use traditional function declaration to prevent Temporal Dead Zone issue
-export function writableSession(key, initialValue) {
-	const sessionValue = JSON.parse(sessionStorage.getItem(key));
-
-	if (!sessionValue) persist(key, initialValue);
-
-	const store = writable(sessionValue || initialValue);
-
-	const { set: realSet, subscribe, update: realUpdate } = store;
-
-	return {
-		set(value) {
-			realSet(value);
-			persist(key, value);
-		},
-		subscribe,
-		update(fn) {
-			realUpdate(fn);
-			persist(key, get(store));
-		},
-	};
-}
-
-
-// Use traditional function declaration to prevent Temporal Dead Zone issue
+// // [NOTE] Use traditional function declaration to prevent Temporal Dead Zone issue
 // export function hydrateJSONcomponent (item){
 // 	if (item !== 'undefined' && item.type !== 'undefined') {
 // 		switch (item.type) {
@@ -117,3 +121,64 @@ export function writableSession(key, initialValue) {
 // 		subscribe, // punt subscriptions to underlying store
 // 	};
 // }
+
+// export const grammarEditorValue = writable(initGrammarEditorValue());
+export const grammarEditorValue = writable("");
+
+// export const grammarCompiledParser = writable(compile(default_grammar).output);
+export const grammarCompiledParser = writable("");
+
+export const grammarCompilationErrors = writable("");
+
+// export const liveCodeEditorValue = writable(initLiveCodeEditorValue());
+export const liveCodeEditorValue = writable("");
+
+export const liveCodeParseResults = writable("");
+
+export const liveCodeParseErrors = writable("");
+
+export const liveCodeAbstractSyntaxTree = writable("");
+
+export const dspCode = writable("");
+
+// export const modelEditorValue = writable(initModelEditorValue());
+export const modelEditorValue = writable("");
+
+
+// export const populateStoresWithFetchedProps = async (newItem) => {
+  
+export const populateCommonStoresWithFetchedProps = async (item) => {
+  
+  try{
+    if(item.type === 'liveCodeEditor'){
+      item.data = await fetchFrom(item.liveCodeSource);
+      liveCodeEditorValue.set(item.data);
+      let grammar = await fetchFrom(item.grammarSource);
+      grammarEditorValue.set(grammar);
+      let compileOutput = compile(grammar).output;
+      grammarCompiledParser.set(compileOutput);
+    }
+  }
+  catch(error){
+    console.error("Error Populating stores from fetched LiveCode props", error);
+  }
+}
+
+export const updateItemPropsWithCommonStoreValues = (item) => {
+  
+  if (item.type === 'grammarEditor')
+    item.data = get(grammarEditorValue);
+}
+
+export const resetStores = () => {
+
+  grammarEditorValue.set("");
+  grammarCompiledParser.set("");
+  grammarCompilationErrors.set("");
+  liveCodeEditorValue.set("");
+  liveCodeParseResults.set("");
+  liveCodeParseErrors.set("");
+  liveCodeAbstractSyntaxTree.set("");
+  dspCode.set("");
+  modelEditorValue.set("");
+}

@@ -660,9 +660,9 @@ class IRToJavascript {
     // code.loop = `(q, inputs, mem) => {${code.loop} return q.sigOut;}`
 		code.setup = `() => {let q=this.newq(); ${code.setup}; return q;}`;
     code.loop = `(q, inputs, mem) => {${code.loop}}`
-    console.log("DEBUG:treeToCode");
-		console.log(code.setup);
-		console.log(code.loop);
+    // console.log("DEBUG:treeToCode");
+		// console.log(code.setup);
+		// console.log(code.loop);
     return code;
   }
 }
