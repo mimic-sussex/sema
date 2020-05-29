@@ -28,7 +28,8 @@
   import { addToHistory } from "../../utils/history.js";
   import "../../machineLearning/lalolib.js";
   import "../../machineLearning/svd.js";
-  import "../../machineLearning/lodash.js";
+  import "../../utils/ringbuf.js";
+  // import "../../machineLearning/lodash.js";  //why is this causing a problem?
 
   export let id;
   export let name;

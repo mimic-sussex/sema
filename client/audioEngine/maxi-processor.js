@@ -147,6 +147,7 @@ class SABOutputTransducer {
 
   send(trig, channel, value) {
     if (this.zx.onZX(trig)) {
+      console.log("tr", this.ringbuf.available_write());
       if (this.ringbuf.available_write() > 1) {
         this.ringbuf.push(value);
       }
