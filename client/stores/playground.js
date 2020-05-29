@@ -217,6 +217,7 @@ const originalItems = [
 			component: LiveCodeEditor,
 			data: default_liveCode,
 			grammarSource: "/languages/default/grammar.ne",
+			liveCodeSource: "/languages/default/code.sem",
 		},
 	},
 

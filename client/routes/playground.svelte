@@ -134,15 +134,16 @@
     for (const item of $items) 
       await populateCommonStoresWithFetchedProps(item); 
 
-    unsubscribeItemsChangeCallback = items.subscribe(value => {
-      console.log('Playground items changed');
-      
-    });
+    for (const item of $items) 
+      updateItemPropsWithCommonStoreValues(item); 
 
     addSubscriptionToken = messaging.subscribe('playground-add', e => addItem(e.type, e.data) ); 
 		envSaveSubscriptionToken = messaging.subscribe('playground-env-save', e => saveEnvironment(e) );
     envLoadSubscriptionToken = messaging.subscribe('playground-env-load', e => loadEnvironment(e) );
 		resetSubscriptionToken = messaging.subscribe('playground-reset', e => clearItems() );
+    unsubscribeItemsChangeCallback = items.subscribe(value => {
+      console.log('Playground items changed');
+    });
   });
 
   onDestroy(() => {

@@ -148,26 +148,55 @@ export const modelEditorValue = writable("");
 // export const populateStoresWithFetchedProps = async (newItem) => {
   
 export const populateCommonStoresWithFetchedProps = async (item) => {
-  
-  try{
-    if(item.type === 'liveCodeEditor'){
-      item.data = await fetchFrom(item.liveCodeSource);
-      liveCodeEditorValue.set(item.data);
-      let grammar = await fetchFrom(item.grammarSource);
-      grammarEditorValue.set(grammar);
-      let compileOutput = compile(grammar).output;
-      grammarCompiledParser.set(compileOutput);
+
+  if(item !== null){  
+    try{
+      switch (item.type) {
+				case "liveCodeEditor":
+          let code = await fetchFrom(item.liveCodeSource);
+          liveCodeEditorValue.set(code);
+          let grammar = await fetchFrom(item.grammarSource);
+          grammarEditorValue.set(grammar);
+          let compileOutput = compile(grammar).output;
+          grammarCompiledParser.set(compileOutput);
+					break;
+				case "grammarEditor":
+					break;
+				default:
+					break;
+			}
+    }
+    catch(error){
+      console.error("Error Populating stores from fetched LiveCode props", error);
     }
   }
-  catch(error){
-    console.error("Error Populating stores from fetched LiveCode props", error);
-  }
+  else
+    console.error("Error Populating stores from fetched LiveCode props: item null");
 }
 
 export const updateItemPropsWithCommonStoreValues = (item) => {
-  
-  if (item.type === 'grammarEditor')
-    item.data = get(grammarEditorValue);
+
+  if(item !== null){  
+    try{
+      switch (item.type) {
+        case "liveCodeEditor":
+          item.data = get(liveCodeEditorValue);
+          break;
+        case "grammarEditor":
+          item.data = get(grammarEditorValue);      
+          break;
+        default:
+          break;
+      }
+    }
+    catch(error){
+      console.error("Error updating item's props with common store values.", error);
+    } 
+  }
+  else
+    console.error(
+			"Error updating item's props with common store values: item null."
+		); 
 }
 
 export const resetStores = () => {

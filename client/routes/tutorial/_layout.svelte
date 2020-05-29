@@ -18,6 +18,8 @@
   } from '../../stores/tutorial.js';
 
   import {
+    populateCommonStoresWithFetchedProps,
+    updateItemPropsWithCommonStoreValues,
     resetStores
   } from "../../stores/common.js";
 
@@ -30,28 +32,33 @@
 
   let handleSelect = async e => {
 
-    
-    let json = await fetch(`/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/layout.json`)
-                .then( r => r.json());
+    try{
+      let json = await fetch(`/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/layout.json`)
+                  .then( r => r.json());
+      
+      $items = json.map( item => hydrateJSONcomponent(item) ); 
 
-    let hydratedComponents = json.map( item => hydrateJSONcomponent(item) ); // Deserialise components from localStorage JSON
+      for (const item of $items){ 
+        await populateCommonStoresWithFetchedProps(item);
+        updateItemPropsWithCommonStoreValues(item)   
+      }
 
-    $items = json.map( item => hydrateJSONcomponent(item) ); 
+      await tick();
 
-    // $items = await hydratedComponents.map( async item => await populateStoresWithFetchedProps(item) ); // Fetch and compile language contents from component URL props to stores 
+      console.log(`DEBUG:tutorial:_layout[/${$selected.chapter_dir}]/[${$selected.section_dir}]:`);
 
-    await tick();
-    
-    console.log(`DEBUG:tutorial:_layout[/${$selected.chapter_dir}]/[${$selected.section_dir}]:`);
-
-    $goto(`/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/`);
-
-
-    // slug: "editors", title: "Editors", chapter_dir: "01-introduction", section_dir: "03-editors"
+      $goto(`/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/`);
+    }
+    catch(error){
+      console.error("Error Selecting and loading tutorial environment", error);
+    }
   }
 
 
-  onMount(() => {
+  onMount( async () => {
+    for (const item of $items) 
+      await populateCommonStoresWithFetchedProps(item); 
+
     console.log("DEBUG:routes/tutorial/_layout:onMount")
   });
 
@@ -108,7 +115,6 @@
       <!-- <Markdown /> -->
       <slot scoped={ $selected }>
       </slot>
-
 
     </div>
   </div>
