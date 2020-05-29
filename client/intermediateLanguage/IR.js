@@ -192,9 +192,13 @@ var jsFuncMap = {
 		loop:  (o, p) => `${o}.hires(${p[0].loop},${p[1].loop},${p[2].loop})`
 	},
 
+	// toJS: { //freq, data, channel
+	// 	setup: (o, p) => `${o} = this.createMLOutputTransducer(${p[0].loop})`,
+	// 	loop:  (o, p) => `${o}.send(${p[1].loop}, ${p[2].loop})`
+	// },
 	toJS: { //freq, data, channel
-		setup: (o, p) => `${o} = this.createMLOutputTransducer(${p[0].loop})`,
-		loop:  (o, p) => `${o}.send(${p[1].loop}, ${p[2].loop})`
+		setup: (o, p) => `${o} = new SABOutputTransducer(this.port, 'ML')`,
+		loop:  (o, p) => `${o}.send(${p[0].loop}, ${p[1].loop}, ${p[2].loop})`
 	},
 
 	fromJS: { //channel
@@ -202,23 +206,24 @@ var jsFuncMap = {
 		loop:  (o, p) => `${o}.getValue()`
 	},
 
-	toPeer: { //value, dest, channel, frequency
-    setup: (o, p) => `${o} = this.createNetOutputTransducer(${p[3].loop})`,
-		loop:  (o, p) => `${o}.send(${p[0].loop},[${p[1].loop},${p[2].loop}])`
-  },
-	fromPeer: { //source, channel
-		setup: (o, p) => `${o} = this.registerInputTransducer('NET', [${p[0].loop}, ${p[1].loop}])`,
-		loop:  (o, p) => `${o}.getValue()`
-  },
+	// toPeer: { //value, dest, channel, frequency
+  //   setup: (o, p) => `${o} = this.createNetOutputTransducer(${p[3].loop})`,
+	// 	loop:  (o, p) => `${o}.send(${p[0].loop},[${p[1].loop},${p[2].loop}])`
+  // },
+	// fromPeer: { //source, channel
+	// 	setup: (o, p) => `${o} = this.registerInputTransducer('NET', [${p[0].loop}, ${p[1].loop}])`,
+	// 	loop:  (o, p) => `${o}.getValue()`
+  // },
 
-	oscin: {
-		setup: (o, p) => "",
-		loop:  (o, p) => `this.OSCTransducer(${p[0].loop},${p[1].loop})`
-	},
-	oscout: {
-		setup: (o, p) => "",
-		loop:  (o, p) => `this.OSCTransducer(${p[0].loop},${p[1].loop})`
-	},
+	// oscin: {
+	// 	setup: (o, p) => "",
+	// 	loop:  (o, p) => `this.OSCTransducer(${p[0].loop},${p[1].loop})`
+	// },
+	// oscout: {
+	// 	setup: (o, p) => "",
+	// 	loop:  (o, p) => `this.OSCTransducer(${p[0].loop},${p[1].loop})`
+	// },
+
 	sah: {
 		setup: (o, p) => `${o} = new Maximilian.maxiSampleAndHold();`,
 		loop:  (o, p) => `${o}.sah(${p[0].loop},${p[1].loop})`

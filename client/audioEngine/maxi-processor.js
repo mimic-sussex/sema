@@ -1,4 +1,5 @@
 import Maximilian from './maximilian.wasmmodule.js';
+import RingBuffer from "./ringbuf.js";  //thanks padenot
 // import Open303 from './open303.wasmmodule.js';
 
 
@@ -131,7 +132,27 @@ class mfcc {
 }
 
 
+class SABOutputTransducer {
+  constructor(port, bufferType) {
+    this.port=port;
+    this.zx =  new Maximilian.maxiTrigger();
+   this.sab = RingBuffer.getStorageForCapacity(1000, Float64Array);
+   this.ringbuf = new RingBuffer(this.sab, Float64Array);
+    const sharedArray = new Int32Array(this.sab)
+    for (let i = 1; i < sharedArray.length; i++) sharedArray[i] = i && sharedArray[i - 1] + 2
 
+    console.log(this.sab);
+    this.port.postMessage({rq:'buf', value:this.sab, ttype:bufferType});
+  }
+
+  send(trig, channel, value) {
+    if (this.zx.onZX(trig)) {
+      if (this.ringbuf.available_write() > 1) {
+        this.ringbuf.push(value);
+      }
+    }
+  }
+}
 
 
 /**
@@ -151,9 +172,6 @@ class MaxiProcessor extends AudioWorkletProcessor {
     // let temp = new Maximilian.maxiNonlinearity();
     // console.log("TEST2", temp.asymclip(0.9,3,3));
 
-    let tmp = new Maximilian.maxiFFTAdaptor();
-		tmp.setup(128,64,128);
-    console.log("MAGS", tmp.getMagnitudesAsJSArray());
 
     let q1 = Maximilian.maxiBits.sig(63);
 
@@ -470,6 +488,11 @@ class MaxiProcessor extends AudioWorkletProcessor {
       let channelCount = output.length;
 
       for (let i = 0; i < output[0].length; ++i) {
+
+        for (let channel = 0; channel < channelCount; channel++) {
+          this.DAC[channel] = 0.0;
+        }
+
         //this needs decoupling?
         this.bitTime = Maximilian.maxiBits.inc(this.bitTime);
 

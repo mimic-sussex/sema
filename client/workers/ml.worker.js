@@ -1,7 +1,6 @@
 "use strict";
 // import * as tf from "@tensorflow/tfjs";  // Can not use it this way, only through import scripts
 importScripts("https://cdn.jsdelivr.net/npm/@tensorflow/tfjs");
-// importScripts("http://mlweb.loria.fr/lalolib.js");
 importScripts("./lalolib.js");
 importScripts("./svd.js");
 importScripts("./lodash.js");
@@ -12,6 +11,7 @@ var geval = eval; // puts eval into global scope https://developer.mozilla.org/e
 geval("var input = (value, channel) => {}");
 geval("var output = (value,channel) => {postMessage({func:'data', val:value, ch:channel});}");
 geval(`
+var sab=0;
 var loadResponders = {};
 var sema = {
   saveF32Array: (name, val) => {
@@ -135,6 +135,10 @@ onmessage = m => {
 	}
   else if (m.data.type === "model-input-data") {
     input(m.data.value, m.data.ch);
+  }
+  else if (m.data.type === "model-input-buffer") {
+    console.log("buf received", m);
+    sab = m.data;
   }
   // else if(m.data.type === "model-output-data-request"){
 	// 	postMessage({

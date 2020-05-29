@@ -57,7 +57,7 @@
 
   let messaging = new PubSub();
   let subscriptionTokenMID;
-  let subscriptionTokenMODR;
+  let subscriptionTokenMIB;
 
   let log = e => { /* console.log(...e); */ }
 
@@ -65,6 +65,7 @@
     codeMirror.set(data, "js");
 
     subscriptionTokenMID = messaging.subscribe("model-input-data", e => postToModel(e) );
+    subscriptionTokenMIB = messaging.subscribe("model-input-buffer", e => postToModel(e) );
     // subscriptionTokenMODR = messaging.subscribe("model-output-data-request", e => postToModel(e) );
 
     modelWorker = new ModelWorker();  // Creates one ModelWorker per ModelEditor lifetime
@@ -79,6 +80,7 @@
     modelWorker.terminate();
     modelWorker = null; // make sure it is deleted by GC
     messaging.unsubscribe(subscriptionTokenMID);
+    messaging.unsubscribe(subscriptionTokenMIB);
     // messaging.unsubscribe(subscriptionTokenMODR);
     messaging = null;
     // console.log('DEBUG:ModelEditor:onDestroy')

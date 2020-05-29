@@ -1,6 +1,7 @@
 import Module from "./maximilian.wasmmodule.js"; //NOTE:FB We need this import here for webpack to emit maximilian.wasmmodule.js
 import Open303 from "./open303.wasmmodule.js"; //NOTE:FB We need this import here for webpack to emit maximilian.wasmmodule.js
 import CustomProcessor from "./maxi-processor";
+import RingBuffer from "../utils/ringbuf.js";  //thanks padenot
 import {
   loadSampleToArray
 } from "./maximilian.util";
@@ -133,6 +134,16 @@ class AudioEngine {
            case 'NET':
              this.peerNet.send(event.data.ch[0], event.data.value, event.data.ch[1]);
              break;
+         }
+       } else if (event.data.rq && event.data.rq === "buf") {
+         console.log("buf", event.data);
+         switch(event.data.ttype) {
+           case 'ML':
+           this.messaging.publish("model-input-buffer", {
+             type: "model-input-buffer",
+             value: event.data.value
+           });
+           break;
          }
        }
        // else if (event.data.rq != undefined && event.data.rq === "receive") {
