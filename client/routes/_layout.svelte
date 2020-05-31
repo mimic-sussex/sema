@@ -14,11 +14,14 @@
 	import UserObserver from '../components/user/UserObserver.svelte';
 	import SignOut from '../components/user/SignOut.svelte';
 	import AudioEngineStatus from '../components/AudioEngineStatus.svelte';
+
   import { currentUser } from '../stores/user.js'
-  
+
   import {
     tutorials,
-    selected
+    selected,
+    hydrateJSONcomponent,
+    items
   } from '../stores/tutorial.js';
 
   import {
@@ -28,6 +31,7 @@
 
   $: loadSidebarLiveCodeOptions();
   $: fetchAndLoadDefaultTutorial();
+  $: fetchAndLoadDefaultTutorialItems();
 
   let loadSidebarLiveCodeOptions = () => {
 		fetch(`/languages/languages.json`)
@@ -45,15 +49,12 @@
             }
           })
         ));
-        console.log($sidebarLiveCodeOptions)
-        // $sidebarLiveCodeOptions
-        // $sidebarGrammarOptions
-        // $selected = $tutorials[0].sections[0];
         $ready();
       });
 	}
 
   let fetchAndLoadDefaultTutorial = () => {
+
 		fetch(`/tutorial/tutorial.json`)
       .then(r => r.json())
       .then(json => {
@@ -62,12 +63,26 @@
         $ready();
       });
 	}
-  
+
+  let fetchAndLoadDefaultTutorialItems = () => {
+
+    fetch(`/tutorial/01-basics/01-introduction/layout.json`)
+      .then( r => r.json())
+      .then(json => {
+        $items = json.map( item => hydrateJSONcomponent(item) );
+        $ready(); 
+      });
+
+  }
 
   let persistentParams = { chapter: '01-basics', section: '01-introduction' };
   // update url parameters only when navigating tutorials
   $: if($params.chapter && $params.section) persistentParams = $params
 
+  onMount( async () => {
+
+    console.log("DEBUG:routes/_layout:onMount")
+  });
 
 </script>
 

@@ -322,57 +322,6 @@ export function hydrateJSONcomponent (item){
 	// }
 };
 
-// export async function hydrateJSONcomponent (item){
-// 	if (item !== 'undefined' && item.type !== 'undefined') {
-// 		switch (item.type) {
-// 			case "liveCodeEditor":
-// 				item.component = LiveCodeEditor;
-// 				await populateStoresWithFetchedProps(item);
-// 				break;
-// 			case "grammarEditor":
-// 				item.component = GrammarEditor;
-// 				grammarEditorValue.set(item.data); // Set the store value with grammar value deserialised from data
-// 				break;
-// 			case "modelEditor":
-// 				item.component = ModelEditor;
-// 				break;
-// 			case "liveCodeParseOutput":
-// 				item.component = LiveCodeParseOutput;
-// 				break;
-// 			case "grammarCompileOutput":
-// 				item.component = GrammarCompileOutput;
-// 				break;
-// 			case "storeInspector":
-// 				item.component = StoreInspector;
-// 				break;
-// 			case "analyser":
-// 				item.component = Analyser;
-// 				break;
-// 			case "postIt":
-// 				item.component = PostIt;
-// 				break;
-// 			case "dspCodeOutput":
-// 				item.component = DSPCodeOutput;
-// 				break;
-// 			default:
-// 				// item.component = StoreInspector;
-// 				break;
-// 		}
-// 		if(item.id === 'undefined'){
-//       item.id = id();
-// 		  item.name = item.type + item.id;
-//     }
-// 		return item;
-//   }
-//   else
-//     throw Error("hydrateJSONcomponent: undefined item");
-// 	// } else {
-// 	// 	createNewItem();
-// 	// }
-// };
-
-
-
 /*
  * Wraps writable store a
  */
