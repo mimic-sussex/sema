@@ -6,29 +6,67 @@
 
   import { goto, ready, url } from "@sveltech/routify";
 
+  // import { hydrateJSONcomponent } from '../../stores/common.js';
+  // import { hydrateJSONcomponent } from '../../stores/playground.js';
+
   import {
     tutorials,
     selected,
+    items,
     hydrateJSONcomponent,
-    items
+    populateStoresWithFetchedProps
   } from '../../stores/tutorial.js';
+
+  import {
+    populateCommonStoresWithFetchedProps,
+    updateItemPropsWithCommonStoreValues,
+    resetStores
+  } from "../../stores/common.js";
+
+  // Tutorial dashboard configuration
+  let cols = 15;
+  let breakpoints = [[1000, 10], [700, 5], [500, 3], [400, 1]];
+  let rowHeight = 100;
+  let gap = 1;
+
 
   let handleSelect = async e => {
 
+    try{
+      let json = await fetch(`/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/layout.json`)
+                  .then( r => r.json());
+      
+      $items = json.map( item => hydrateJSONcomponent(item) ); 
 
-    await tick();
-    let json = await fetch(`/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/layout.json`)
-                .then( r => r.json());
+      for (const item of $items){ 
+        await populateCommonStoresWithFetchedProps(item);
+        updateItemPropsWithCommonStoreValues(item)   
+      }
 
-    $items = json.map( item => hydrateJSONcomponent(item) );
+      await tick();
 
-    console.log(`DEBUG:tutorial:_layout[/${$selected.chapter_dir}]/[${$selected.section_dir}]:`);
+      console.log(`DEBUG:tutorial:_layout[/${$selected.chapter_dir}]/[${$selected.section_dir}]:`);
 
-    $goto(`/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/`);
-
-
-    // slug: "editors", title: "Editors", chapter_dir: "01-introduction", section_dir: "03-editors"
+      $goto(`/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/`);
+    }
+    catch(error){
+      console.error("Error Selecting and loading tutorial environment", error);
+    }
   }
+
+
+  onMount( async () => {
+    for (const item of $items) 
+      await populateCommonStoresWithFetchedProps(item); 
+
+    console.log("DEBUG:routes/tutorial/_layout:onMount")
+  });
+
+  onDestroy(() => {
+    resetStores();
+    console.log("DEBUG:routes/tutorial/_layout:onDestroy")
+  });
+
 
 
 </script>
@@ -78,11 +116,15 @@
       <slot scoped={ $selected }>
       </slot>
 
-
     </div>
   </div>
   <div class="dashboard-container">
-    <Dashboard {items} />
+    <Dashboard  {items}
+                {breakpoints}
+                {cols}
+                {rowHeight}
+                {gap}
+                />
   </div>
 </div>
 

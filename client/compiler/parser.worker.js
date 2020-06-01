@@ -11,7 +11,7 @@
 import * as nearley from 'nearley/lib/nearley.js';
 import * as compiled from './defaultParser.js';
 
- import { grammarCompiled, parser } from "../store.js";
+ import { grammarCompiled, parser } from "../stores/store.js";
 
 
 import IRToJavascript from '../IR/IR.js';

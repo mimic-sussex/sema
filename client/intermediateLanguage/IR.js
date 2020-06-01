@@ -231,7 +231,10 @@ var jsFuncMap = {
 		loop:  (o, p) => `(${o}.isReady() ? ${ o}stretch.play(${p[0].loop},${p[1].loop},${p[2].loop},${p[3].loop},0.0) : 0.0)`
 	},
 	// 'adc': {"setup":(o,p)=>"", "loop":(o,p)=>`inputs[${p[0].loop}]`},
-	adc: { setup: (o, p) => "", loop: (o, p) => `inputs` },
+	adc: { 
+    setup: (o, p) => "", 
+    loop: (o, p) => `inputs` 
+  },
 	sampler: {
 		setup: (o, p) => `${o} = new Maximilian.maxiSample();
                       ${o}.setSample(this.getSampleBuffer(${p[p.length-1].loop}));`,
@@ -375,7 +378,6 @@ var jsFuncMap = {
 		setup: (o, p) => "",
 		loop:  (o, p) => `this.clockTrig(${p[0].loop},${p.length > 1 ? p[1].loop : 0})`
 	},
-
 	//clock meta
 	clk: {
 		setup: (o, p) => "",
@@ -420,16 +422,15 @@ var jsFuncMap = {
 	},
 	o303: {
 		setup: (o, p) => `${o} = new Open303.Open303();
-		${o}.setSampleRate(this.sampleRate);
-		${o}_tnote = new Maximilian.maxiTrigger();
-		${o}_twf = new Maximilian.maxiTrigger();
-		${o}_tcut = new Maximilian.maxiTrigger();
-		${o}_tres = new Maximilian.maxiTrigger();
-		${o}_tenvm = new Maximilian.maxiTrigger();
-		${o}_tdec = new Maximilian.maxiTrigger();
-		${o}_tnoteoff = new Maximilian.maxiTrigger();
-		${o}_tatt = new Maximilian.maxiTrigger();
-		`,
+                      ${o}.setSampleRate(this.sampleRate);
+                      ${o}_tnote = new Maximilian.maxiTrigger();
+                      ${o}_twf = new Maximilian.maxiTrigger();
+                      ${o}_tcut = new Maximilian.maxiTrigger();
+                      ${o}_tres = new Maximilian.maxiTrigger();
+                      ${o}_tenvm = new Maximilian.maxiTrigger();
+                      ${o}_tdec = new Maximilian.maxiTrigger();
+                      ${o}_tnoteoff = new Maximilian.maxiTrigger();
+                      ${o}_tatt = new Maximilian.maxiTrigger();`,
 		loop:  (o, p) => `(()=>{
 			let newNote = ${o}_tnote.onZX(${p[0].loop});
 			let accent = ${p[3].loop};
@@ -474,7 +475,6 @@ var jsFuncMap = {
 			}
 		}
 	}
-
 };
 
 // if (${o}_twf.onChanged(${p[2].loop}, 1e-5)) {${o}.setWaveform(${p[2].loop})};
@@ -660,9 +660,9 @@ class IRToJavascript {
     // code.loop = `(q, inputs, mem) => {${code.loop} return q.sigOut;}`
 		code.setup = `() => {let q=this.newq(); ${code.setup}; return q;}`;
     code.loop = `(q, inputs, mem) => {${code.loop}}`
-    console.log("DEBUG:treeToCode");
-		console.log(code.setup);
-		console.log(code.loop);
+    // console.log("DEBUG:treeToCode");
+		// console.log(code.setup);
+		// console.log(code.loop);
     return code;
   }
 }

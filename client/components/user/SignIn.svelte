@@ -7,7 +7,7 @@
 
   import { goto } from "@sveltech/routify";
 
-  import { audioEngineStatus } from '../../store.js';
+  import { audioEngineStatus } from '../../stores/common.js';
 
   let handleClick = () => {
     $audioEngineStatus = "hidden";

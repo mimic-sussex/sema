@@ -16,7 +16,7 @@
 
   // import {
   //   modelEditorValue
-  // } from "../../store.js";
+  // } from "../../stores/store.js";
 
   var modelEditorValue = window.localStorage.modelEditorValue;
 

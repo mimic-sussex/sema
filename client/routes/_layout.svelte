@@ -14,16 +14,47 @@
 	import UserObserver from '../components/user/UserObserver.svelte';
 	import SignOut from '../components/user/SignOut.svelte';
 	import AudioEngineStatus from '../components/AudioEngineStatus.svelte';
+
   import { currentUser } from '../stores/user.js'
-  
+
   import {
     tutorials,
-    selected
+    selected,
+    hydrateJSONcomponent,
+    items
   } from '../stores/tutorial.js';
 
-  $: load();
+  import {
+    sidebarLiveCodeOptions
+  } from '../stores/playground.js'
 
-  let load = () => {
+
+  $: loadSidebarLiveCodeOptions();
+  $: fetchAndLoadDefaultTutorial();
+  $: fetchAndLoadDefaultTutorialItems();
+
+  let loadSidebarLiveCodeOptions = () => {
+		fetch(`/languages/languages.json`)
+      .then(r => r.json())
+      .then(json => {
+        console.log("DEBUG:_layout:loadPlayground");
+        console.log(json)
+        $sidebarLiveCodeOptions = $sidebarLiveCodeOptions.concat(json.map( language => ({ 
+            id: 1, 
+            disabled: false, 
+            text: language.name, 
+            content : {
+              grammar:  `/languages/${language.name}/grammar.ne`,
+              livecode: `/languages/${language.name}/code.sem`
+            }
+          })
+        ));
+        $ready();
+      });
+	}
+
+  let fetchAndLoadDefaultTutorial = () => {
+
 		fetch(`/tutorial/tutorial.json`)
       .then(r => r.json())
       .then(json => {
@@ -32,9 +63,26 @@
         $ready();
       });
 	}
-  
-  let defaults = { chapter: '01-basics', section: '01-introduction' };
 
+  let fetchAndLoadDefaultTutorialItems = () => {
+
+    fetch(`/tutorial/01-basics/01-introduction/layout.json`)
+      .then( r => r.json())
+      .then(json => {
+        $items = json.map( item => hydrateJSONcomponent(item) );
+        $ready(); 
+      });
+
+  }
+
+  let persistentParams = { chapter: '01-basics', section: '01-introduction' };
+  // update url parameters only when navigating tutorials
+  $: if($params.chapter && $params.section) persistentParams = $params
+
+  onMount( async () => {
+
+    console.log("DEBUG:routes/_layout:onMount")
+  });
 
 </script>
 
@@ -162,9 +210,10 @@
         <!-- <li><a href="/tutorial/">Tutorial</a></li> -->
         <!-- <li><a href="/tutorial/{chapter_dir}/{section_dir}/">Tutorial</a></li> -->
        
-        <li><a href="/tutorial/{$selected.chapter_dir}/{$selected.section_dir}/">Tutorial</a></li>
-        
-        <!-- <li><a href={ $url('/tutorial/:chapter/:section/', { ...defaults, ...$params } )}>Tutorial</a></li> -->
+        <!-- <li><a href="/tutorial/{$selected.chapter_dir}/{$selected.section_dir}/">Tutorial</a></li> -->
+
+        <li><a href={ $url('/tutorial/:chapter/:section/', persistentParams ) }>Tutorial</a></li>
+
 
         <!-- <li><a href={$url('/tutorial/:chapter/:section/', {chapter: '01-basics', section: '01-introduction'};)}>Tutorial</a></li> -->
         <!-- <li><a href="/tutorial/[chapter]/[section]/">Tutorial</a></li> -->
@@ -203,7 +252,6 @@
   </div>
 
   <div class="actions-container">
-    <!-- <Dashboard {items} /> -->
 
     <AudioEngineStatus />
 
@@ -214,5 +262,5 @@
 {/if}
 
 
-
+<!-- <Dashboard {items} /> -->
 <slot></slot>

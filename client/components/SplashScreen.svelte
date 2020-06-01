@@ -1,6 +1,6 @@
 <script>
 
-  import { audioEngineStatus } from '../store.js';
+  import { audioEngineStatus } from '../stores/common.js';
   import src from '../../assets/img/sema.svg';
 
   let handleClick = () => {
