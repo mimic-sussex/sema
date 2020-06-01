@@ -43,8 +43,7 @@ If you decide to use NPM, use:
 cd sema
 npm install
 npm run build
-npm run dev
-npm run serve (go to [http://localhost:5001](http://localhost:5001)  on your browser)
+npm run dev OR npm run serve 
 ```
 
 If you decide to go with Yarn (our preferred package manager), to install it: 
@@ -57,9 +56,13 @@ To use Yarn:
 cd sema
 yarn
 yarn build
-yarn dev
-npm run serve (go to [http://localhost:5001](http://localhost:5001) on your browser)
+yarn dev OR yarn serve 
 ```
+
+Once you have the node application running, open Sema onn your browser on the following ports
+- yarn dev, go to [http://localhost:8080](http://localhost:8080) on your browser
+- yarn serve, go to [http://localhost:5001](http://localhost:5001) on your browser
+
 
 ## Linux Users
 
