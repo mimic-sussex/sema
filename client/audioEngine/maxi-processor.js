@@ -11,14 +11,6 @@ import RingBuffer from "./ringbuf.js";  //thanks padenot
 
 
 
-function vectorDoubleToF64Array(x) {
-  let ar = new Float64Array(x.size());
-  for(let i=0; i < ar.length; i++) {
-    ar[i] = x.get(i);
-  }
-  return ar;
-}
-
 class OutputTransducer {
   constructor(port, sampleRate, sendFrequency = 2, transducerType) {
     if (sendFrequency == 0)
@@ -437,15 +429,6 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
     this.createNetOutputTransducer= (sendFrequency) => {
       return new OutputTransducer(this.port, sampleRate, sendFrequency, 'NET');
-    }
-
-    this.ifListThenToArray = (x) => {
-      let val = x;
-      // console.log(typeof(x));
-      if (typeof(x) != 'number') {
-        val = vectorDoubleToF64Array(x);
-      }
-      return val;
     }
 
     this.dacOut = (x, ch) => {
