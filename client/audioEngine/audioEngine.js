@@ -128,7 +128,7 @@ class AudioEngine {
              this.messaging.publish("model-input-data", {
                type: "model-input-data",
                value: event.data.value,
-               ch: event.data.ch, //channel ID
+               ch: event.data.ch
              });
              break;
            case 'NET':
@@ -141,7 +141,9 @@ class AudioEngine {
            case 'ML':
            this.messaging.publish("model-input-buffer", {
              type: "model-input-buffer",
-             value: event.data.value
+             value: event.data.value,
+             channelID: event.data.channelID, //channel ID
+             blocksize: event.data.blocksize
            });
            break;
          }
@@ -204,6 +206,7 @@ class AudioEngine {
 	 * Polls data from connected WAAPI analyser return structured object with data and time data in arrays
 	 * @param {*} analyser
 	 */
+
 	pollAnalyserData(analyser) {
 		if (analyser !== undefined) {
 			const timeDataArray = new Uint8Array(analyser.fftSize); // Uint8Array should be the same length as the fftSize

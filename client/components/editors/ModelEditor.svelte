@@ -11,7 +11,7 @@
 
 <script>
 	import { onMount, onDestroy, createEventDispatcher } from 'svelte';
-	const dispatch = createEventDispatcher();;
+	const dispatch = createEventDispatcher();  
   import {copyToPasteBuffer} from '../../utils/pasteBuffer.js';
 
   // import {

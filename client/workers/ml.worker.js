@@ -176,9 +176,8 @@ var geval = eval; // puts eval into global scope https://developer.mozilla.org/e
 geval("var input = (value, channel) => {}");
 geval("var output = (value,channel) => {postMessage({func:'data', val:value, ch:channel});}");
 geval(`
-var sab=0;
-var rb=0;
 var loadResponders = {};
+var SABs={};
 var sema = {
   saveF32Array: (name, val) => {
     postMessage({
@@ -304,9 +303,10 @@ onmessage = m => {
   }
   else if (m.data.type === "model-input-buffer") {
     console.log("buf received", m);
-    sab = m.data.value;
-    rb =  new RingBuffer(sab, Float64Array);
-
+    let sab = m.data.value;
+    let rb =  new RingBuffer(sab, Float64Array);
+    SABs[m.data.channelID] = {sab:sab, rb:rb, blocksize: m.data.blocksize};
+    console.log("ML", rb);
   }
   // else if(m.data.type === "model-output-data-request"){
 	// 	postMessage({
@@ -319,10 +319,25 @@ onmessage = m => {
 };
 
 function sabChecker() {
-  if (rb) {
-    console.log(rb.available_read());
+  // console.log(SABs);
+  for (let v in Object.keys(SABs)) {
+    let avail = SABs[v].rb.available_read();
+    // console.log(avail, SABs[v].rb.capacity);
+    if (avail != SABs[v].rb.capacity && avail > 0) {
+        for (let i=0; i < avail; i++) {
+          let val = new Float64Array(SABs[v].blocksize);
+          SABs[v].rb.pop(val);
+          input(v, val);
+        }
+    }
   }
-  setTimeout(sabChecker, 500);
+  // if (rb) {
+  //   console.log("ML", rb.available_read());
+  //   let tmp = new Float64Array(1);
+  //   rb.pop(tmp);
+  //   console.log(tmp);
+  // }
+  setTimeout(sabChecker, 10); 
 }
 
 sabChecker();
