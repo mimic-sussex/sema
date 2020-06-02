@@ -7,7 +7,7 @@
     liveCodeEditorValue, 
     modelEditorValue, 
     grammarEditorValue 
-  } from "../../store.js";
+  } from "../../stores/store.js";
 
   const is_browser = typeof window !== "undefined";
   if (is_browser) {

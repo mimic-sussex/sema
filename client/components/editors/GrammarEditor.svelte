@@ -17,7 +17,7 @@
     grammarEditorValue,
     grammarCompiledParser,
     grammarCompilationErrors
-  } from "../../store.js";
+  } from "../../stores/common.js";
 
   import * as nearley from 'nearley/lib/nearley.js'
   import compile from '../../compiler/compiler';

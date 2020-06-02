@@ -11,7 +11,7 @@
     // tutorialOptions,
     selectedTutorial,
     selectedTutorialGrammar
-  } from "../../store.js"
+  } from "../../stores/store.js"
 
  
   let container;

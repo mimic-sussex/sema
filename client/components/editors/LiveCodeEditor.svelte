@@ -19,6 +19,10 @@
   import compile from '../../compiler/compiler';
 
   import { addToHistory } from "../../utils/history.js";
+  import { 
+    nil,
+    log
+  } from "../../utils/utils.js";
 
   import { PubSub } from '../../messaging/pubSub.js';
 
@@ -30,25 +34,31 @@
   import { blockTracker, blockData } from './liveCodeEditor.blockTracker.js';
 
   import {
-  //   grammarCompiledParser,
-  //   liveCodeEditorValue,
-  //   liveCodeParseErrors,
-  //   liveCodeParseResults,
-  //   liveCodeAbstractSyntaxTree,
-  //   dspCode
-      audioEngineStatus
-  } from "../../store.js";
-  
+    grammarCompiledParser,
+    liveCodeEditorValue,
+    liveCodeParseErrors,
+    liveCodeParseResults,
+    liveCodeAbstractSyntaxTree,
+    dspCode,
+    audioEngineStatus
+  } from "../../stores/common.js";
+
+
+
   // export let grammarSource = "/languages/defaultGrammar.ne";
   export let grammarSource; 
-  let grammarSourceSubscriptionToken; 
-  let grammarCompiledParser;
+  // let grammarSourceSubscriptionToken; 
+  // let grammarCompiledParser;
 
   // export let liveCodeEditorValue;
-  export let liveCodeParseErrors;
-  export let liveCodeParseResults;
-  export let liveCodeAbstractSyntaxTree; 
-  export let dspCode; // code generated from the liveCode AST traversal
+  // export 
+  // let liveCodeParseErrors;
+  // // export 
+  // let liveCodeParseResults;
+  // // export 
+  // let liveCodeAbstractSyntaxTree; 
+  // // export 
+  // let dspCode; // code generated from the liveCode AST traversal
 
   // console.log("grammarCompiledParser");
   // console.log($grammarCompiledParser);
@@ -83,18 +93,6 @@
 
   let btrack;
 
-  let log = e => { /* console.log(...e); */ }
-
-  let nil = (e) => { }
-
-  let isEmpty = str => {
-    return (!str || 0 === str.length);
-  }
-
-  let isRelativeURL = str => {
-    let re = /^[^\/]+\/[^\/].*$|^\/[^\/].*$/;
-    return re.exec(str)[0]===re.exec(str).input;
-  }
 
 
   let onChange = e => {
@@ -120,8 +118,7 @@
 
         parserWorker.postMessage({ // Post code to worker for parsing
           liveCodeSource: e,
-          // parserSource: $grammarCompiledParser,
-          parserSource:  grammarCompiledParser,
+          parserSource:  $grammarCompiledParser,
           type:'parse'
         });
 
@@ -139,36 +136,36 @@
         console.log(outputs);
         const { parserOutputs, parserResults } = outputs;
         if( parserOutputs && parserResults ){
-          // $liveCodeParseResults = parserResults;
-          // $liveCodeAbstractSyntaxTree = parserOutputs;  //Deep clone created in the worker for AST visualization
-          // $liveCodeParseErrors = "";
-          liveCodeParseResults = parserResults;
-          liveCodeAbstractSyntaxTree = parserOutputs;  //Deep clone created in the worker for AST visualization
-          liveCodeParseErrors = "";
+          $liveCodeParseResults = parserResults;
+          $liveCodeAbstractSyntaxTree = parserOutputs;  //Deep clone created in the worker for AST visualization
+          $liveCodeParseErrors = "";
+          // liveCodeParseResults = parserResults;
+          // liveCodeAbstractSyntaxTree = parserOutputs;  //Deep clone created in the worker for AST visualization
+          // liveCodeParseErrors = "";
           // Tree traversal in the main tree.
-          // let dspCode = IRToJavascript.treeToCode($liveCodeParseResults, 0);
-          let dspCode = IRToJavascript.treeToCode(liveCodeParseResults, 0);
+          $dspCode = IRToJavascript.treeToCode($liveCodeParseResults, 0);
+          // let dspCode = IRToJavascript.treeToCode(liveCodeParseResults, 0);
           console.log("code generated");
 
           // publish eval message with code to audio engine
-          messaging.publish("eval-dsp", dspCode);
+          messaging.publish("eval-dsp", $dspCode);
         }
         else {
           // console.log('DEBUG:LiveCodeEditor:parseLiveCode:then2');
           // console.dir(outputs);
          
-          // $liveCodeParseErrors = outputs;
-          // $liveCodeAbstractSyntaxTree = $liveCodeParseResults = '';
-          liveCodeParseErrors = outputs;
-          liveCodeAbstractSyntaxTree = liveCodeParseResults = '';
+          $liveCodeParseErrors = outputs;
+          $liveCodeAbstractSyntaxTree = $liveCodeParseResults = '';
+          // liveCodeParseErrors = outputs;
+          // liveCodeAbstractSyntaxTree = liveCodeParseResults = '';
         }
       })
       .catch(e => {
         // console.log('DEBUG:parserEditor:parseLiveCode:catch')
         // console.log(e);
 
-        // $liveCodeParseErrors = e;
-        liveCodeParseErrors = e;
+        $liveCodeParseErrors = e;
+        // liveCodeParseErrors = e;
       });
     }
   }
@@ -253,14 +250,7 @@
 
   }
 
-  let fetchGrammarFrom = async url => {
-    if(!isEmpty(url)){  
-      const res = await fetch(grammarSource);
-      return await res.text();
-    }
-    else
-      throw Error("Empty URL");    
-  }
+
 
   let compileParser = grammar => {
     if(!isEmpty(grammar)){
@@ -297,19 +287,19 @@
 
     btrack = new blockTracker(codeMirror);
 
-    if(isRelativeURL(grammarSource)){
-      let grammar = await fetchGrammarFrom(grammarSource);
-      grammarCompiledParser = compileParser(grammar);
-      // console.log('DEBUG:LiveCodeEditor:onMount:grammarCompiledParser')
-      // console.log(grammarCompiledParser) 
-    }
-    else{
-      subscribeTo(grammarSource);
-      // console.log('DEBUG:LiveCodeEditor:onMount:grammarSource')
-      // console.log(grammarSource)
-    }
+    // if(isRelativeURL(grammarSource)){
+    //   let grammar = await fetchGrammarFrom(grammarSource);
+    //   $grammarCompiledParser = compileParser(grammar);
+    //   // console.log('DEBUG:LiveCodeEditor:onMount:grammarCompiledParser')
+    //   // console.log(grammarCompiledParser) 
+    // }
+    // else{
+    //   // TODO: Dynamic subscription to messaging from sibling widgets
+    //   // Where grammar source will be an UUID
+    //   // subscribeTo(grammarSource);
+    // }
     log( id, name, type, lineNumbers, hasFocus, theme, background, data, responsive, resizable, resize, draggable, drag, min, max, x, y, w, h, component );
-    log( grammarSource, grammarCompiledParser );
+    log( grammarSource, $grammarCompiledParser );
 
     // console.log( grammarSource, grammarCompiledParser );
 	});
@@ -319,6 +309,8 @@
     // console.log('DEBUG:LiveCodeEditor:onDestroy:')
     parserWorker.terminate();
     parserWorker = null; // cannot delete in strict mode
+
+
 	});
 
 

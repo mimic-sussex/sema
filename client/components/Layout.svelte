@@ -27,7 +27,7 @@
             layoutOptions,
             helloWorld,
             selectedTutorialGrammar
-  } from "../store.js";
+  } from "../stores/store.js";
   // } from "../stores/tutorialsStores.js";
 
   // import {
