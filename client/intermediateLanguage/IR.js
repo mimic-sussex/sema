@@ -206,6 +206,11 @@ var jsFuncMap = {
 		loop:  (o, p) => `${o}.getValue()`
 	},
 
+	at: {
+		setup: (o, p) => ``,
+		loop:  (o, p) => `${p[0].loop}[Math.min(${p[1].loop}, ${p[0].loop}.length-1)]`
+	},
+
 	// toPeer: { //value, dest, channel, frequency
   //   setup: (o, p) => `${o} = this.createNetOutputTransducer(${p[3].loop})`,
 	// 	loop:  (o, p) => `${o}.send(${p[0].loop},[${p[1].loop},${p[2].loop}])`

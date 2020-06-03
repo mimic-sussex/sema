@@ -159,6 +159,7 @@ class SABOutputTransducer {
   send(trig, value) {
     //TODO: adapt for array input
     if (this.zx.onZX(trig)) {
+      console.log(value);
       // console.log("tr", this.ringbuf.available_write());
       if (this.ringbuf.available_write() > 1) {
         if (typeof(value) == "number") {
