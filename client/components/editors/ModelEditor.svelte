@@ -11,7 +11,7 @@
 
 <script>
 	import { onMount, onDestroy, createEventDispatcher } from 'svelte';
-	const dispatch = createEventDispatcher();  
+	const dispatch = createEventDispatcher();
   import {copyToPasteBuffer} from '../../utils/pasteBuffer.js';
 
   // import {
@@ -28,7 +28,8 @@
   import { addToHistory } from "../../utils/history.js";
   import "../../machineLearning/lalolib.js";
   import "../../machineLearning/svd.js";
-  import "../../utils/ringbuf.js";
+  // import "../../utils/ringbuf.js";
+  import "../../workers/mlworkerscripts.js";
   // import "../../machineLearning/lodash.js";  //why is this causing a problem?
 
   export let id;
@@ -123,10 +124,14 @@
 
     if(m.data.func !== undefined){
       let responders = {
-        data: data => {
+        sab: data => {
           // Publish data to audio engine
           messaging.publish("model-output-data", data)
         },
+        // data: data => {
+        //   // Publish data to audio engine
+        //   messaging.publish("model-output-data", data)
+        // },
         save: data => {
           // console.log("save");
           window.localStorage.setItem(data.name, data.val);

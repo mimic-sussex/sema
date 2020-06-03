@@ -200,10 +200,11 @@ var jsFuncMap = {
 		setup: (o, p) => `${o} = new SABOutputTransducer(this.port, 'ML', ${p[1].loop}, this.currentSample, ${p.length==3 ? 1: p[3].loop})`,
 		loop:  (o, p) => `${o}.send(${p[0].loop}, ${p[2].loop})`
 	},
-
 	fromJS: { //channel
-		setup: (o, p) => `${o} = this.registerInputTransducer('ML', ${p[0].loop})`,
-		loop:  (o, p) => `${o}.getValue()`
+		// setup: (o, p) => `${o} = this.registerInputTransducer('ML', ${p[0].loop})`,
+		// loop:  (o, p) => `${o}.getValue()`
+		setup: (o, p) => ``,
+		loop:  (o, p) => `this.getSABValue(${p[0].loop})`
 	},
 
 	at: {

@@ -122,7 +122,8 @@ class mfcc {
   }
 }
 
-var SABs = {};
+var inputSABs = {};
+var outputSABs = {};
 
 class SABOutputTransducer {
   constructor(port, bufferType, channel, now, blocksize) {
@@ -132,14 +133,14 @@ class SABOutputTransducer {
     this.blocksize = blocksize;
 
     //check for existing channels
-    if (channel in SABs && SABs[channel].blocksize == blocksize) {
+    if (channel in outputSABs && outputSABs[channel].blocksize == blocksize) {
       //reuse existing
-      this.ringbuf = SABs[channel].rb;
+      this.ringbuf = outputSABs[channel].rb;
     }else{
       //create a new SAB and notify the receiver
-      this.sab = RingBuffer.getStorageForCapacity(64, Float64Array);
+      this.sab = RingBuffer.getStorageForCapacity(32 * blocksize, Float64Array);
       this.ringbuf = new RingBuffer(this.sab, Float64Array);
-      SABs[channel] = {rb:this.ringbuf, sab:this.sab, created:now, blocksize:blocksize};
+      outputSABs[channel] = {rb:this.ringbuf, sab:this.sab, created:now, blocksize:blocksize};
 
       this.port.postMessage({
         rq: 'buf',
@@ -152,10 +153,9 @@ class SABOutputTransducer {
   }
 
   send(trig, value) {
-    //TODO: adapt for array input
     if (this.zx.onZX(trig)) {
-      // console.log("tr", this.ringbuf.available_write());
-      if (this.ringbuf.available_write() > 1) {
+      // console.log("tr", this.ringbuf.available_write(), value, this);
+      if (this.ringbuf.available_write() > this.blocksize) {
         if (typeof(value) == "number") {
           this.ringbuf.push(new Float64Array([value]));
         }else{
@@ -351,6 +351,11 @@ class MaxiProcessor extends AudioWorkletProcessor {
         for (let idx in targetTransducers) {
           targetTransducers[idx].setValue(event.data.val);
         }
+      } else if ('func' in event.data && 'sab' == event.data.func) {
+        console.log("buf received", event.data);
+        let sab = event.data.value;
+        let rb =  new RingBuffer(sab, Float64Array);
+        inputSABs[event.data.channelID] = {sab:sab, rb:rb, blocksize: event.data.blocksize, value: event.data.blocksize > 1 ? new Float64Array(event.data.blocksize) : 0};
       } else if ('peermsg' in event.data) {
         console.log('peer', event);
         //this is from peer streaming, map it on to any listening transducers
@@ -480,6 +485,29 @@ class MaxiProcessor extends AudioWorkletProcessor {
       return x;
     }
 
+    this.updateSABInputs = (id) => {
+      for (let v in inputSABs) {
+        let avail = inputSABs[v].rb.available_read();
+        // console.log(avail, SABs[v].rb.capacity);
+        if (avail != inputSABs[v].rb.capacity && avail > 0) {
+            for (let i=0; i < avail; i+=inputSABs[v].blocksize) {
+              let val = new Float64Array(inputSABs[v].blocksize);
+              inputSABs[v].rb.pop(val);
+              inputSABs[v].value = val.length ==1 ? val[0] : val;
+            }
+        }
+      }
+    }
+
+    this.getSABValue = (id) => {
+      let res=0;
+      let sab= inputSABs[id];
+      if (sab != undefined) {
+        res = sab.value;
+      }
+      return res;
+    }
+
 
   }
 
@@ -504,6 +532,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
       let channelCount = output.length;
 
       for (let i = 0; i < output[0].length; ++i) {
+        this.updateSABInputs();
 
         for (let channel = 0; channel < channelCount; channel++) {
           this.DAC[channel] = 0.0;
