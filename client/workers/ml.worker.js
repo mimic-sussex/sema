@@ -324,9 +324,10 @@ function sabChecker() {
     let avail = SABs[v].rb.available_read();
     // console.log(avail, SABs[v].rb.capacity);
     if (avail != SABs[v].rb.capacity && avail > 0) {
-        for (let i=0; i < avail; i++) {
+        for (let i=0; i < avail; i+=SABs[v].blocksize) {
           let val = new Float64Array(SABs[v].blocksize);
           SABs[v].rb.pop(val);
+          // console.log(val);
           input(v, val);
         }
     }

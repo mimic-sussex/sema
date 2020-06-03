@@ -132,7 +132,7 @@ class SABOutputTransducer {
     this.blocksize = blocksize;
 
     //check for existing channels
-    if (channel in SABs) {
+    if (channel in SABs && SABs[channel].blocksize == blocksize) {
       //reuse existing
       this.ringbuf = SABs[channel].rb;
     }else{
@@ -140,11 +140,6 @@ class SABOutputTransducer {
       this.sab = RingBuffer.getStorageForCapacity(64, Float64Array);
       this.ringbuf = new RingBuffer(this.sab, Float64Array);
       SABs[channel] = {rb:this.ringbuf, sab:this.sab, created:now, blocksize:blocksize};
-      //hack alert, seems to reset the read/write availability to correct values?
-      // let tmp = new Float64Array([0]);
-      // this.ringbuf.push(tmp);
-      // this.ringbuf.pop(tmp);
-      ////////
 
       this.port.postMessage({
         rq: 'buf',
@@ -159,7 +154,6 @@ class SABOutputTransducer {
   send(trig, value) {
     //TODO: adapt for array input
     if (this.zx.onZX(trig)) {
-      console.log(value);
       // console.log("tr", this.ringbuf.available_write());
       if (this.ringbuf.available_write() > 1) {
         if (typeof(value) == "number") {
