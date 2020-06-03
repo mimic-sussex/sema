@@ -331,13 +331,7 @@ function sabChecker() {
         }
     }
   }
-  // if (rb) {
-  //   console.log("ML", rb.available_read());
-  //   let tmp = new Float64Array(1);
-  //   rb.pop(tmp);
-  //   console.log(tmp);
-  // }
-  setTimeout(sabChecker, 10); 
+  setTimeout(sabChecker, 10);
 }
 
 sabChecker();

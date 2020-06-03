@@ -196,8 +196,8 @@ var jsFuncMap = {
 	// 	setup: (o, p) => `${o} = this.createMLOutputTransducer(${p[0].loop})`,
 	// 	loop:  (o, p) => `${o}.send(${p[1].loop}, ${p[2].loop})`
 	// },
-	toJS: { //freq, data, channel
-		setup: (o, p) => `${o} = new SABOutputTransducer(this.port, 'ML', ${p[1].loop}, this.currentSample, 1)`,
+	toJS: { //freq, data, channel, [blocksize]
+		setup: (o, p) => `${o} = new SABOutputTransducer(this.port, 'ML', ${p[1].loop}, this.currentSample, ${p.length==3 ? 1: p[3].loop})`,
 		loop:  (o, p) => `${o}.send(${p[0].loop}, ${p[2].loop})`
 	},
 

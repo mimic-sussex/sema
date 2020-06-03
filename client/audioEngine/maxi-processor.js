@@ -230,7 +230,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
       }
     };
     this.newmem = () => {
-      return new Float64Array(512)
+      return new Array(512)
     };
     this._q = [this.newq(), this.newq()];
     this._mems = [this.newmem(), this.newmem()];
