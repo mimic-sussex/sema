@@ -165,7 +165,15 @@ class SABOutputTransducer {
         if (typeof(value) == "number") {
           this.ringbuf.push(new Float64Array([value]));
         }else{
-          this.ringbuf.push(value);
+          if (value.length == this.blocksize) {
+            this.ringbuf.push(value);
+          }else if (value.length < this.blocksize) {
+            let newVal = new Float64Array(this.blocksize);
+            for(let i in value) newVal[i] = value[i];
+            this.ringbuf.push(newVal);
+          }else{
+            this.ringbuf.push(value.slice(0,this.blocksize));
+          }
         }
         // console.log('val written', value);
       }
@@ -449,12 +457,6 @@ class MaxiProcessor extends AudioWorkletProcessor {
     this.clockTrig = (multiples, phase) => {
       return (this.clockPhase(multiples, phase) - (1.0 / sampleRate * multiples)) <= 0 ? 1 : 0;
     };
-
-
-    // this.setClockFreq = (freq) => {
-    //   this.clockFreq = freq;
-    //   return 0;
-    // };
 
     this.bitTime = Maximilian.maxiBits.sig(0); //this needs to be decoupled from the audio engine? or not... maybe a 'permenant block' with each grammar?
     this.dt = 0;
