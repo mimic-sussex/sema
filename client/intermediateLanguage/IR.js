@@ -487,6 +487,10 @@ var jsFuncMap = {
 		setup: (o, p) => `${o} = new fft(${p[1].loop}, ${p[2].loop})`,
 		loop:  (o, p) => `${o}.play(${p[0].loop})`
 	},
+	ifft: {
+		setup: (o, p) => `${o} = new ifft(${p[3].loop}, ${p[4].loop})`,
+		loop:  (o, p) => `${o}.play(${p[0].loop}, ${p[1].loop}, ${p[2].loop})`
+	},
 	mfcc: {
 		setup: (o, p) => `${o} = new mfcc(${p[1].loop}, ${p[2].loop}, ${p[3].loop})`,
 		loop:  (o, p) => `${o}.play(${p[0].loop})`

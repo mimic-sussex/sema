@@ -10,7 +10,7 @@ import RingBuffer from "./ringbuf.js"; //thanks padenot
 //
 
 
-
+//DEPRECATED
 class OutputTransducer {
   constructor(port, sampleRate, sendFrequency = 2, transducerType) {
     if (sendFrequency == 0)
@@ -39,6 +39,7 @@ class OutputTransducer {
   }
 }
 
+//DEPRECATED
 class InputTransducer {
   constructor(transducerType, channelID) {
     this.transducerType = transducerType;
@@ -59,37 +60,37 @@ class InputTransducer {
 
 
 
-class pvshift {
-  constructor() {
-    this.fft = new Maximilian.maxiFFT();
-    this.fft.setup(1024, 256, 1024);
-    this.ifft = new Maximilian.maxiIFFT();
-    this.ifft.setup(1024, 256, 1024);
-    this.mags = new Maximilian.VectorFloat();
-    this.phases = new Maximilian.VectorFloat();
-    this.mags.resize(512, 0);
-    this.phases.resize(512, 0);
-  }
-
-  play(sig, shift) {
-    if (this.fft.process(sig, Maximilian.maxiFFTModes.WITH_POLAR_CONVERSION)) {
-      this.mags = this.fft.getMagnitudes();
-      this.phases = this.fft.getPhases();
-      //shift bins up
-      for (let i = 511; i > 0; i--) {
-        if (i > shift) {
-          this.mags.set(i, this.mags.get(i - shift));
-          this.phases.set(i, this.phases.get(i - shift));
-        } else {
-          this.mags.set(i, 0);
-          this.phases.set(i, 0);
-        }
-      }
-    }
-    sig = this.ifft.process(this.mags, this.phases, Maximilian.maxiIFFTModes.SPECTRUM);
-    return sig;
-  }
-}
+// class pvshift {
+//   constructor() {
+//     this.fft = new Maximilian.maxiFFT();
+//     this.fft.setup(1024, 256, 1024);
+//     this.ifft = new Maximilian.maxiIFFT();
+//     this.ifft.setup(1024, 256, 1024);
+//     this.mags = new Maximilian.VectorFloat();
+//     this.phases = new Maximilian.VectorFloat();
+//     this.mags.resize(512, 0);
+//     this.phases.resize(512, 0);
+//   }
+//
+//   play(sig, shift) {
+//     if (this.fft.process(sig, Maximilian.maxiFFTModes.WITH_POLAR_CONVERSION)) {
+//       this.mags = this.fft.getMagnitudes();
+//       this.phases = this.fft.getPhases();
+//       //shift bins up
+//       for (let i = 511; i > 0; i--) {
+//         if (i > shift) {
+//           this.mags.set(i, this.mags.get(i - shift));
+//           this.phases.set(i, this.phases.get(i - shift));
+//         } else {
+//           this.mags.set(i, 0);
+//           this.phases.set(i, 0);
+//         }
+//       }
+//     }
+//     sig = this.ifft.process(this.mags, this.phases, Maximilian.maxiIFFTModes.SPECTRUM);
+//     return sig;
+//   }
+// }
 
 class fft {
   constructor(bins, hopPercentage) {
@@ -107,6 +108,16 @@ class fft {
     }
     let res = [newVal, this.mags, this.phases];
     return res;
+  }
+}
+
+class ifft {
+  constructor(bins, hopPercentage) {
+    this.ifft = new Maximilian.maxiIFFTAdaptor();
+    this.ifft.setup(bins*2, Math.floor(bins*2*hopPercentage), bins*2);
+  }
+  play(trig, mags, phases) {
+    return this.ifft.process(trig, mags, phases, Maximilian.maxiIFFTModes.SPECTRUM);
   }
 }
 
