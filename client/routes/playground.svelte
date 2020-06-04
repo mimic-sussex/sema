@@ -128,7 +128,7 @@
 
 
   onMount( async () => {
-    console.log("DEBUG:routes/playground:onMount")
+    // console.log("DEBUG:routes/playground:onMount")
 
     // Sequentially fetch data from individual items' properties into language design workflow stores
     for (const item of $items) 
@@ -142,12 +142,12 @@
     envLoadSubscriptionToken = messaging.subscribe('playground-env-load', e => loadEnvironment(e) );
 		resetSubscriptionToken = messaging.subscribe('playground-reset', e => clearItems() );
     unsubscribeItemsChangeCallback = items.subscribe(value => {
-      console.log('Playground items changed');
+      // console.log('Playground items changed');
     });
   });
 
   onDestroy(() => {
-    console.log("DEBUG:routes/playground:onDestroy")
+    // console.log("DEBUG:routes/playground:onDestroy")
 
     messaging.unsubscribe(addSubscriptionToken);
     messaging.unsubscribe(envSaveSubscriptionToken);

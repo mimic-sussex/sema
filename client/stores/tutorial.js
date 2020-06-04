@@ -325,34 +325,35 @@ export function hydrateJSONcomponent (item){
 /*
  * Wraps writable store a
  */
-export function storable(key, initialValue) {
+export function storable(key, initialValue, hydrateComponents) {
 	const store = writable(initialValue); // create an underlying store
 	const { subscribe, set, update } = store;
 
 	let json = localStorage.getItem(key); // get the last value from localStorage
-	if (json) {
-		// set( JSON.parse(json));
-		set( JSON.parse(json).map( item => hydrateJSONcomponent(item) ) ); // use the value from localStorage if it exists
+	if (json && hydrateComponents) {
+		set(JSON.parse(json).map((item) => hydrateJSONcomponent(item))); // use the value from localStorage if it exists
 	}
+	else if (json)
+    set( JSON.parse(json));
 
 	// return an object with the same interface as Svelte's writable() store interface
-	return {
-		set(value) {
-			localStorage.setItem(key, JSON.stringify(value));
-			set(value); // capture set and write to localStorage
-		},
+		return {
+			set(value) {
+				localStorage.setItem(key, JSON.stringify(value));
+				set(value); // capture set and write to localStorage
+			},
 
-		update(cb) {
-			const value = cb(get(store)); // passes items to callback for invocation e.g items => items.concat(new)
-			this.set(value); // capture updates and write to localStore
-		},
+			update(cb) {
+				const value = cb(get(store)); // passes items to callback for invocation e.g items => items.concat(new)
+				this.set(value); // capture updates and write to localStore
+			},
 
-		get() {
-			return localStorage.getItem(key);
-		},
+			get() {
+				return localStorage.getItem(key);
+			},
 
-		subscribe, // punt subscriptions to underlying store
-	};
+			subscribe, // punt subscriptions to underlying store
+		};
 }
 
 
@@ -361,7 +362,8 @@ export let tutorials = writable(tutorialOptions);
 // export let tutorials = writable([]);
 
 // Store for SELECTED tutorial options in Sidebar component
-// export let selected = writable({});
 export let selected = writable({});
+// export let selected = storable("selectedTutorial", {}, false) ;
 
-export let items = storable("tutorial", testItems); // localStorageWrapper
+export let items = writable(testItems); // localStorageWrapper
+// export let items = storable("tutorial", testItems, true); // localStorageWrapper

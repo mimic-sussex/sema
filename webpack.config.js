@@ -6,11 +6,31 @@ const prod = mode === 'production';
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const LinkTypePlugin = require("html-webpack-link-type-plugin").HtmlWebpackLinkTypePlugin;
 const WorkerPlugin = require("worker-plugin");
-const { CleanPlugin } = require("clean-webpack-plugin");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const CopyWebpackPlugin = require("copy-webpack-plugin");
+const LiveReloadPlugin = require("webpack-livereload-plugin");
+
+// "watch:webpack": "webpack --watch --info-verbosity verbose --progress",
+// "watch:webpack": "webpack-dev-server --content-base public",
+// const { WebpackPluginServe: Serve } = require("webpack-plugin-serve");
+// const serveOptions = {
+// 	client: {
+// 		address: "localhost:8080",
+// 	},
+// 	log: { level: "error" },
+// 	liveReload: true,
+// 	host: "localhost",
+// 	port: 8080,
+// 	open: true,
+// 	static: path.join(__dirname, "public"),
+// };
+
 
 module.exports = {
+  // entry: {
+  //   bundle: ['./client/main.js', 'webpack-plugin-serve/client'],
+  // },
 	entry: {
 		bundle: ["./client/main.js"],
 		// parser: ["./workers/parser.worker.js"],
@@ -29,7 +49,7 @@ module.exports = {
 		path: path.join(__dirname, "public"),
 		filename: "[name].js",
 		chunkFilename: "[name].[id].js",
-		publicPath: "/",
+		publicPath: "/", // this is required for the client-side router to set relative paths from '/'
 		globalObject: `(typeof self !== 'undefined' ? self : this)`,
 	},
 	module: {
@@ -217,6 +237,13 @@ module.exports = {
 	mode,
 	plugins: [
 		new webpack.ProgressPlugin(),
+		// new Serve(serveOptions), // alternative to webpack-dev-server
+		new LiveReloadPlugin({
+			protocol: "http",
+			port: 5001,
+			hostname: "localhost",
+			appendScriptTag: true,
+		}),
 		new CopyWebpackPlugin([
 			{
 				context: "./assets",
@@ -246,11 +273,29 @@ module.exports = {
 		}),
 		// new WorkerPlugin(),
 
-		// new CleanWebpackPlugin()
+		new CleanWebpackPlugin(),
 
 		// new webpack.HotModuleReplacementPlugin(),
 		// new webpack.NoEmitOnErrorsPlugin(),
 	],
+	devServer: {
+		stats: "errors-only",
+		host: `localhost`, // Defaults to `localhost`
+		port: 8080, // Defaults to 8080
+		open: true, // Open the page in browser
+		overlay: true, // overlay for capturing compilation related warnings and errors
+		publicPath: "/",
+		watchContentBase: true,
+		hot: false,
+		liveReload: true,
+    historyApiFallback: {
+      rewrites: [
+        { from: /\/playground/, to: '/'},
+        { from: /^\/tutorial\/.*$/, to: '/' },
+        { from: /./, to: '/404.html' }
+      ]
+    }
+	},
 	devtool: prod ? false : "source-map",
 	// Issue pointed out by Surma on the following gist – https://gist.github.com/surma/b2705b6cca29357ebea1c9e6e15684cc
 	// This is necessary due to the fact that emscripten puts both Node and web
@@ -264,4 +309,5 @@ module.exports = {
 	node: {
 		fs: "empty",
 	},
+	// watch: true, // ← important: webpack and the server will continue to run in watch mode
 };

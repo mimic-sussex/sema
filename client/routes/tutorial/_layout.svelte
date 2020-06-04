@@ -4,7 +4,7 @@
   import Dashboard from '../../components/layouts/Dashboard.svelte';
   import Markdown from "../../components/tutorial/Markdown.svelte";
 
-  import { goto, ready, url } from "@sveltech/routify";
+  import { goto, ready, url, params } from "@sveltech/routify";
 
   // import { hydrateJSONcomponent } from '../../stores/common.js';
   // import { hydrateJSONcomponent } from '../../stores/playground.js';
@@ -30,22 +30,13 @@
   let gap = 1;
 
 
-  let handleSelect = async e => {
+  let handleSelect = e => {
 
     try{
-      let json = await fetch(`/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/layout.json`)
-                  .then( r => r.json());
-      
-      $items = json.map( item => hydrateJSONcomponent(item) ); 
 
-      for (const item of $items){ 
-        await populateCommonStoresWithFetchedProps(item);
-        updateItemPropsWithCommonStoreValues(item)   
-      }
-
-      await tick();
-
-      console.log(`DEBUG:tutorial:_layout[/${$selected.chapter_dir}]/[${$selected.section_dir}]:`);
+      // await tick();
+      // console.log(`DEBUG:tutorial:_layout[/${$params.chapter}]/[${$params.section}]:`);
+      // console.log(`DEBUG:tutorial:_layout[/${$selected.chapter_dir}]/[${$selected.section_dir}]:`);
 
       $goto(`/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/`);
     }
@@ -56,18 +47,12 @@
 
 
   onMount( async () => {
-    for (const item of $items) 
-      await populateCommonStoresWithFetchedProps(item); 
-
-    console.log("DEBUG:routes/tutorial/_layout:onMount")
+    // console.log("DEBUG:routes/tutorial/_layout:onMount")
   });
 
   onDestroy(() => {
-    resetStores();
-    console.log("DEBUG:routes/tutorial/_layout:onDestroy")
+    // console.log("DEBUG:routes/tutorial/_layout:onDestroy")
   });
-
-
 
 </script>
 

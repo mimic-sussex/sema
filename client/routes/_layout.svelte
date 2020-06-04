@@ -66,7 +66,7 @@
 
   let fetchAndLoadDefaultTutorialItems = () => {
 
-    fetch(`/tutorial/01-basics/01-introduction/layout.json`)
+    fetch(`/tutorial/${$params.chapter_dir}/${$params.section_dir}/layout.json`)
       .then( r => r.json())
       .then(json => {
         $items = json.map( item => hydrateJSONcomponent(item) );
@@ -81,7 +81,9 @@
 
   onMount( async () => {
 
-    console.log("DEBUG:routes/_layout:onMount")
+    console.log("DEBUG:routes/_layout:onMount");
+    console.log($params);
+
   });
 
 </script>
