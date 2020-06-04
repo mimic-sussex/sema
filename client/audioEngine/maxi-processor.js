@@ -92,13 +92,20 @@ class pvshift {
 }
 
 class fft {
-  constructor(fftsize, hopsize) {
+  constructor(bins, hopPercentage) {
     this.fft = new Maximilian.maxiFFTAdaptor();
-    this.fft.setup(fftsize, hopsize, fftsize);
+    this.fft.setup(bins*2, Math.floor(bins*2*hopPercentage), bins*2);
+    this.mags = this.fft.getMagnitudesAsJSArray();
+    this.phases = this.fft.getPhasesAsJSArray();
   }
   play(sig) {
-    if (this.fft.process(sig, Maximilian.maxiFFTModes.WITH_POLAR_CONVERSION)) {}
-    let res = [this.fft.getMagnitudesAsJSArray(), this.fft.getPhasesAsJSArray()];
+    let newVal = 0;
+    if (this.fft.process(sig, Maximilian.maxiFFTModes.WITH_POLAR_CONVERSION)) {
+      newVal = 1;
+      this.mags = this.fft.getMagnitudesAsJSArray();
+      this.phases = this.fft.getPhasesAsJSArray();
+    }
+    let res = [newVal, this.mags, this.phases];
     return res;
   }
 }
