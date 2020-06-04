@@ -92,7 +92,7 @@
 
   .main-container {
     display: grid;
-    grid-template-rows: 3rem 3rem auto;
+    grid-template-rows: 3rem 2rem auto;
     width: 100%;
     height: 100%;
     background: linear-gradient(150deg, rgba(0,18,1,1) 0%, rgba(7,5,17,1) 33%, rgba(16,12,12,1) 67%, rgba(18,16,16,1) 100%);
@@ -123,6 +123,7 @@
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
+    margin-left: 20px;
     background: linear-gradient(150deg, rgba(0,18,1,1) 0%, rgba(7,5,17,1) 33%, rgba(16,12,12,1) 67%, rgba(18,16,16,1) 100%);
   }
 
