@@ -479,6 +479,10 @@ var jsFuncMap = {
 		setup: (o, p) => ``,
 		loop:  (o, p) => `${p[0].loop}`
 	},
+	poll: {
+		setup: (o, p) => `${o} = new poll()`,
+		loop:  (o, p) => `${o}.play(${p[0].loop})`
+	},
 	dac: {
 		setup: (o, p) => ``,
 		loop:  (o, p) => {
@@ -605,7 +609,7 @@ class IRToJavascript {
           vars[el.value] = memIdx;
         }
         // ccode.loop += `this.getvar(q, '${el.value}')`;
-        ccode.loop += `mem[${memIdx}]`;
+        ccode.loop += `(mem[${memIdx}] | 0)`;
         return ccode;
       },
       '@string': (ccode, el) => {

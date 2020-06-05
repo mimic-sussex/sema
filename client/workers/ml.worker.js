@@ -166,64 +166,69 @@ onmessage = m => {
   // console.log('DEBUG:ml.worker:onmessage');
   // console.log(m);
 
-	if (m.data.eval !== undefined) {
+  if (m.data.eval !== undefined) {
     try {
-  		let evalRes = geval(m.data.eval);
-  		if (evalRes != undefined) {
+      let evalRes = geval(m.data.eval);
+      if (evalRes != undefined) {
         console.log(evalRes);
-      }
-  		else
+      } else
         console.log("done");
-    }catch(e) {
+    } catch (e) {
       console.log(`Code eval exception: ${e}`);
     }
-	}
-  else if ("val" in m.data) {
+  } else if ("val" in m.data) {
     // console.log("DEBUG:ml.worker:onmessage:val");
-		let val = m.data.val;
-		// console.log(val);
-		val = JSON.parse(`[${val}]`);
-		// console.log(val);
-		// console.log(loadResponders);
-		loadResponders[m.data.name](val);
-		delete loadResponders[m.data.name];
-	}
-  else if (m.data.type === "model-input-data") {
+    let val = m.data.val;
+    // console.log(val);
+    val = JSON.parse(`[${val}]`);
+    // console.log(val);
+    // console.log(loadResponders);
+    loadResponders[m.data.name](val);
+    delete loadResponders[m.data.name];
+  } else if (m.data.type === "model-input-data") {
     input(m.data.value, m.data.ch);
-  }
-  else if (m.data.type === "model-input-buffer") {
+  } else if (m.data.type === "model-input-buffer") {
     console.log("buf received", m);
     let sab = m.data.value;
-    let rb =  new RingBuffer(sab, Float64Array);
-    inputSABs[m.data.channelID] = {sab:sab, rb:rb, blocksize: m.data.blocksize};
+    let rb = new RingBuffer(sab, Float64Array);
+    inputSABs[m.data.channelID] = {
+      sab: sab,
+      rb: rb,
+      blocksize: m.data.blocksize
+    };
     console.log("ML", inputSABs);
   }
   // else if(m.data.type === "model-output-data-request"){
-	// 	postMessage({
-	// 		func: "data",
-	// 		worker: "testmodel",
-	// 		value: output(m.data.value),
-	// 		tranducerName: m.data.transducerName
-	// 	});
-	// }
+  // 	postMessage({
+  // 		func: "data",
+  // 		worker: "testmodel",
+  // 		value: output(m.data.value),
+  // 		tranducerName: m.data.transducerName
+  // 	});
+  // }
 };
 
 function sabChecker() {
-  // console.log(SABs);
-  for (let v in inputSABs) {
-    // console.log(v);
-    let avail = inputSABs[v].rb.available_read();
-    // console.log(avail, SABs[v].rb.capacity);
-    if (avail != inputSABs[v].rb.capacity && avail > 0) {
-        for (let i=0; i < avail; i+=inputSABs[v].blocksize) {
+  try {
+    // console.log(SABs);
+    for (let v in inputSABs) {
+      // console.log(v);
+      let avail = inputSABs[v].rb.available_read();
+      // console.log(avail, SABs[v].rb.capacity);
+      if (avail != inputSABs[v].rb.capacity && avail > 0) {
+        for (let i = 0; i < avail; i += inputSABs[v].blocksize) {
           let val = new Float64Array(inputSABs[v].blocksize);
           inputSABs[v].rb.pop(val);
           // console.log(val);
           input(v, val);
         }
+      }
     }
+    setTimeout(sabChecker, 10);
+  } catch (error) {
+    console.log(error);
+    setTimeout(sabChecker, 100);
   }
-  setTimeout(sabChecker, 10);
 }
 
 sabChecker();

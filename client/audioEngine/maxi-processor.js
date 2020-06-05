@@ -194,6 +194,18 @@ class SABOutputTransducer {
 }
 
 
+class poll {
+  constructor() {
+    this.clock = new Maximilian.maxiOsc();
+  }
+
+  play(val) {
+    if (this.clock.impulse(0.5)) {
+      console.log(val);
+    }
+  }
+};
+
 /**
  * The main Maxi Audio wrapper with a WASM-powered AudioWorkletProcessor.
  *
