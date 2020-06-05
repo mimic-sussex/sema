@@ -53,7 +53,6 @@ let source = `
 
 `;
 let markdown = marked(source);
-
 </script>
 
 <style>

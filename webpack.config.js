@@ -145,6 +145,13 @@ module.exports = {
 				},
 			},
 			{
+				test: /mlworkerscripts.js/,
+				loader: "file-loader", // files should NOT get processed, only emitted
+				options: {
+					name: "mlworkerscripts.js",
+				},
+			},
+			{
 				test: /lodash.js/,
 				loader: "file-loader", // files should NOT get processed, only emitted
 				options: {
@@ -152,10 +159,17 @@ module.exports = {
 				},
 			},
 			{
-				test: /tfjs.js/,
+				test: /lodash.js/,
 				loader: "file-loader", // files should NOT get processed, only emitted
 				options: {
-					name: "tfjs.js",
+					name: "lodash.js",
+				},
+			},
+			{
+				test: /ringbuf.js/,
+				loader: "file-loader", // files should NOT get processed, only emitted
+				options: {
+					name: "ringbuf.js",
 				},
 			},
 			{

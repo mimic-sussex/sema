@@ -3,22 +3,22 @@
   import { onMount, onDestroy } from 'svelte';
 
   import { PubSub } from "../messaging/pubSub.js";
-  
+
   import gridHelp from "svelte-grid/build/helper";
 
   import compile from '../compiler/compiler';
 
   import Sidebar from '../components/playground/Sidebar.svelte';
   import Dashboard from '../components/layouts/Dashboard.svelte';
-  
+
   import {
     fetchFrom
   } from "../utils/utils.js"
 
-  import { 
+  import {
     createNewItem,
     hydrateJSONcomponent,
-    items 
+    items
   } from  "../stores/playground.js"
 
   import {
@@ -58,7 +58,7 @@
 
   // const unsubscribePlaygroundItemsCallback = items.subscribe(value => {
   //   console.log('Playground items changed');
-  //   // await populateStoresWithFetchedProps(newItem); 
+  //   // await populateStoresWithFetchedProps(newItem);
   // });
 
   const addItem = async (type, value) => {
@@ -69,7 +69,7 @@
 
         await populateCommonStoresWithFetchedProps(newItem);
 
-        updateItemPropsWithCommonStoreValues(newItem)        
+        updateItemPropsWithCommonStoreValues(newItem)
 
         let findOutPosition = gridHelp.findSpaceForItem(newItem, $items, cols); // find out where to place
         $items =  [...$items, ...[{ ...newItem, ...findOutPosition }]]; // Append to playground Items stores
@@ -77,9 +77,9 @@
       catch (error){
         console.error("Error on routes/Playground.AddItem")
       }
-    }  
+    }
     else
-      console.error("Error on routes/Playground.AddItem: undefined parameter") 
+      console.error("Error on routes/Playground.AddItem: undefined parameter")
   }
 
   const clearItems = () => {
@@ -102,14 +102,14 @@
 
   const loadEnvironment = e => {
 		// console.log('DEBUG:playground:loadEnvironment', e);
-		
+
     clearItems();
-    
+
 		if (e.storage === 'local') {
 			let json = localStorage.getItem(`env--${e.name}`);
-			if (json) { 
+			if (json) {
         let envItems = JSON.parse(json).map( item => hydrateJSONcomponent(item) );
-        items.set( envItems ); 
+        items.set( envItems );
         items.update( items => gridHelp.resizeItems(items, 4, 100) ); // Align items
         // items.update( items => items.concat(envItems));
 			}
@@ -131,13 +131,13 @@
     // console.log("DEBUG:routes/playground:onMount")
 
     // Sequentially fetch data from individual items' properties into language design workflow stores
-    for (const item of $items) 
-      await populateCommonStoresWithFetchedProps(item); 
+    for (const item of $items)
+      await populateCommonStoresWithFetchedProps(item);
 
-    for (const item of $items) 
-      updateItemPropsWithCommonStoreValues(item); 
+    for (const item of $items)
+      updateItemPropsWithCommonStoreValues(item);
 
-    addSubscriptionToken = messaging.subscribe('playground-add', e => addItem(e.type, e.data) ); 
+    addSubscriptionToken = messaging.subscribe('playground-add', e => addItem(e.type, e.data) );
 		envSaveSubscriptionToken = messaging.subscribe('playground-env-save', e => saveEnvironment(e) );
     envLoadSubscriptionToken = messaging.subscribe('playground-env-load', e => loadEnvironment(e) );
 		resetSubscriptionToken = messaging.subscribe('playground-reset', e => clearItems() );
@@ -189,7 +189,7 @@
   		"sidebar layout"
   		"sidebar layout";
   	/* background-color: #6f7262; */
-	  background-color: #212121; 
+	  background-color: #212121;
     overflow: hidden;
   }
   .sidebar-container {

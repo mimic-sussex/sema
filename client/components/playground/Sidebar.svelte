@@ -184,7 +184,7 @@
 </script>
 
 <style>
-  
+
   .sidebar {
     /* width: 160px; */
     height: 100%;
@@ -294,7 +294,7 @@
     -webkit-box-shadow: 2px 2px 5px rgba(0,0,0),-1px -1px 1px rgb(34, 34, 34);
     -moz-box-shadow: 2px 2px 5px rgba(0,0,0), -1px -1px 1px rgb(34, 34, 34);;
     box-shadow: 2px 2px 3px rgb(0, 0, 0), -1px -1px 3px #ffffff61;
-    
+
   }
 
 </style>
@@ -319,7 +319,7 @@
             {liveCodeOption.text}
           </option>
         {/each}
-      </select>    
+      </select>
     </div>
 
     <!-- Model Combobox Selector -->
@@ -377,7 +377,7 @@
             { debuggerOption.text }
           </option>
         {/each}
-      </select>    
+      </select>
     </div>
 
     <div>

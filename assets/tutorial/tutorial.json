@@ -29,40 +29,49 @@
     "chapter_dir": "02-live-coding",
     "section_dir": "01-introduction"
   }, {
-    "slug": "statements",
-    "title": "Statements",
+    "slug": "ins and outs",
+    "title": "Inputs and outputs",
     "chapter_dir": "02-live-coding",
-    "section_dir": "02-statements"
-  }, {
-    "slug": "declarations",
-    "title": "Declarations",
+    "section_dir": "02-inout"
+  },
+  {
+    "slug": "variables",
+    "title": "Variables",
     "chapter_dir": "02-live-coding",
-    "section_dir": "03-declarations"
-  }, {
-    "slug": "assignments",
-    "title": "Assignments",
+    "section_dir": "03-variables"
+  },
+  {
+    "slug": "sampling",
+    "title": "Playing samples",
     "chapter_dir": "02-live-coding",
-    "section_dir": "04-assignments"
-  }, {
-    "slug": "DSP-objects",
-    "title": "DSP objects",
+    "section_dir": "04-sampling"
+  },
+  {
+    "slug": "sequencing",
+    "title": "Basic sequencing and clocks",
     "chapter_dir": "02-live-coding",
-    "section_dir": "05-DSP-objects"
+    "section_dir": "05-sequencing"
+  },
+  {
+    "slug": "sequencing",
+    "title": "The ratio sequencer",
+    "chapter_dir": "02-live-coding",
+    "section_dir": "06-ratioseq"
   }
   ]
 }, {
   "title": "Machine Learning",
   "sections": [{
     "slug": "introduction",
-    "title": "Introduction",
+    "title": "Introduction ",
     "chapter_dir": "03-machine-learning",
     "section_dir": "01-introduction"
   },
   {
     "slug": "piping-data-streams",
-    "title": "Piping data streams",
+    "title": "Data streams",
     "chapter_dir": "03-machine-learning",
-    "section_dir": "02-piping-data-streams"
+    "section_dir": "02-streaming"
   }, {
     "slug": "pre-trained-models-i",
     "title": "Pre-trained model i",

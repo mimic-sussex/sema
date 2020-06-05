@@ -34,7 +34,7 @@
   } from '../audioEngine/audioEngineController.js';
 
   import IRToJavascript from "../intermediateLanguage/IR.js";
-  
+
   import * as nearley from 'nearley/lib/nearley.js'
   import compile from '../compiler/compiler';
 
@@ -167,13 +167,13 @@
       .then(outputs => {
 
         // console.log('DEBUG:Layout:parseLiveCode:then')
-        // console.log(outputs); 
+        // console.log(outputs);
         const {parserOutputs, parserResults} = outputs;
 
         // $liveCodeParseResults = outputs;
         $liveCodeParseResults = parserResults;
 
-        // console.log(outputs); 
+        // console.log(outputs);
         $liveCodeAbstractSyntaxTree = parserOutputs;
 
 
@@ -192,33 +192,33 @@
   }
 
 
-  let compileGrammarOnChange = e => { 
+  let compileGrammarOnChange = e => {
 
-    let grammarEditorValue = null; 
+    let grammarEditorValue = null;
 
     if(e !== undefined && e.detail !== undefined && e.detail.value !== undefined)
-      grammarEditorValue = e.detail.value; 
-    else 
-      grammarEditorValue = $grammarEditorValue; 
+      grammarEditorValue = e.detail.value;
+    else
+      grammarEditorValue = $grammarEditorValue;
 
     try {
       window.localStorage.grammarEditorValue = grammarEditorValue;
 
       let {errors, output} = compile(grammarEditorValue);
-      $grammarCompiledParser = output; 
+      $grammarCompiledParser = output;
       $grammarCompilationErrors = errors;
 
       // console.log('DEBUG:Layout:compileGrammarOnChange');
-      // console.log($grammarCompiledParser); 
+      // console.log($grammarCompiledParser);
 
       if($grammarCompiledParser && ( $liveCodeEditorValue && $liveCodeEditorValue !== "") ){
         $liveCodeEditorValue = e.detail.value;
 
         // console.log('DEBUG:Layout:compileGrammarOnChange');
-        // console.log($liveCodeEditorValue); 
+        // console.log($liveCodeEditorValue);
 
         parseLiveCode();
-  
+
       }
     }
     catch (e) {
@@ -233,7 +233,7 @@
 
   let parseLiveCodeOnChange = e => {
     // console.log('DEBUG:Layout:parseLiveCodeOnChange');
-    // console.log($liveCodeEditorValue); 
+    // console.log($liveCodeEditorValue);
     if($grammarCompiledParser){
       $liveCodeEditorValue = e.detail.value;
       window.localStorage.liveCodeEditorValue = e.detail.value;
@@ -245,12 +245,12 @@
   }
 
   let translateILtoDSP = e => {
-    
+
     $dspCode = IRToJavascript.treeToCode($liveCodeParseResults);
-    
-    evalDSP($dspCode); 
+
+    evalDSP($dspCode);
   }
- 
+
   let translateILtoDSPasync = e => {  // [NOTE:FB] Note the 'async'
 
     if(window.Worker){
@@ -301,9 +301,9 @@
     // console.log('DEBUG:Layout:cmdEnter')
     // console.log($liveCodeAbstractSyntaxTree);
     if($grammarCompiledParser && $liveCodeEditorValue && $liveCodeAbstractSyntaxTree){
-      
+
       translateILtoDSPasync();
-      
+
       // translateILtoDSP();
     }
   }
@@ -374,20 +374,20 @@
   /* .codemirror-linenumber :global(.CodeMirror-linenumbers) {
     width: 15px;
   } */
-/* 
+/*
   .codemirror-linenumber :global(.CodeMirror-linenumber) {
     left: 2px; width: 21px;
     width: 15px;
   } */
-/* 
+/*
   .codemirror-gutter :global(.CodeMirror-gutters) {
     width: 20px;
   } */
-  
+
   /* .CodeMirror-linenumbers :global(.Codemirror-linenumber){
 
   } */
-/* 
+/*
   .codemirror-container.flex :global(.CodeMirror) {
     height: auto;
   }
@@ -426,22 +426,22 @@
 
     <Tutorial>
       <div slot="grammarEditor" class="codemirror-container flex scrollable codemirror-gutter codemirror-linenumber">
-        <CodeMirror bind:this={codeMirror1}  
-                    bind:value={$grammarEditorValue} 
-                    tab={true} 
-                    lineNumbers={true}  
-                    on:change={compileGrammarOnChange}  /> 
+        <CodeMirror bind:this={codeMirror1}
+                    bind:value={$grammarEditorValue}
+                    tab={true}
+                    lineNumbers={true}
+                    on:change={compileGrammarOnChange}  />
       </div>
-      
+
       <div slot="liveCodeEditor" class="codemirror-container flex scrollable codemirror-container-live-code codemirror-cursor codemirror-linenumber codemirror-gutter">
-        <CodeMirror bind:this={codeMirror2}  
-                    bind:value={$liveCodeEditorValue} 
-                    tab={true} 
-                    lineNumbers={true} 
-                    on:change={parseLiveCodeOnChange} 
-                    cmdEnter={cmdEnter} 
-                    ctrlEnter={ctrlEnter} 
-                    cmdPeriod={cmdPeriod} /> 
+        <CodeMirror bind:this={codeMirror2}
+                    bind:value={$liveCodeEditorValue}
+                    tab={true}
+                    lineNumbers={true}
+                    on:change={parseLiveCodeOnChange}
+                    cmdEnter={cmdEnter}
+                    ctrlEnter={ctrlEnter}
+                    cmdPeriod={cmdPeriod} />
       </div>
 
       <div slot="liveCodeCompilerOutput" class="codemirror-container flex scrollable">

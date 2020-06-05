@@ -10,8 +10,10 @@
 </script>
 
 <script>
+
+
 	import { onMount, onDestroy, createEventDispatcher } from 'svelte';
-	const dispatch = createEventDispatcher();;
+	const dispatch = createEventDispatcher();
   import {copyToPasteBuffer} from '../../utils/pasteBuffer.js';
 
   // import {
@@ -20,7 +22,7 @@
 
   var modelEditorValue = window.localStorage.modelEditorValue;
 
-  console.log(modelEditorValue);
+  // console.log(modelEditorValue);
   import { PubSub } from '../../messaging/pubSub.js';
 
   import ModelWorker from "worker-loader!../../workers/ml.worker.js";
@@ -28,7 +30,8 @@
   import { addToHistory } from "../../utils/history.js";
   import "../../machineLearning/lalolib.js";
   import "../../machineLearning/svd.js";
-  import "../../machineLearning/lodash.js";
+  import "../../workers/mlworkerscripts.js";
+  // import "../../machineLearning/lodash.js";  //why is this causing a problem?
 
   export let id;
   export let name;
@@ -57,7 +60,7 @@
 
   let messaging = new PubSub();
   let subscriptionTokenMID;
-  let subscriptionTokenMODR;
+  let subscriptionTokenMIB;
 
   let log = e => { /* console.log(...e); */ }
 
@@ -65,7 +68,8 @@
     codeMirror.set(data, "js");
 
     subscriptionTokenMID = messaging.subscribe("model-input-data", e => postToModel(e) );
-    subscriptionTokenMODR = messaging.subscribe("model-output-data-request", e => postToModel(e) );
+    subscriptionTokenMIB = messaging.subscribe("model-input-buffer", e => postToModel(e) );
+    // subscriptionTokenMODR = messaging.subscribe("model-output-data-request", e => postToModel(e) );
 
     modelWorker = new ModelWorker();  // Creates one ModelWorker per ModelEditor lifetime
     modelWorker.onmessage = e =>  onModelWorkerMessageHandler(e);
@@ -73,13 +77,15 @@
     log( id, name, type, lineNumbers, hasFocus, theme, background, data, responsive, resizable, resize, draggable, drag, min, max, x, y, w, h, component );
     // console.log('DEBUG:ModelEditor:onMount:');
     // console.log(data);    // console.log(name + ' ' + type + ' ' + lineNumbers +' ' + hasFocus +' ' + theme + ' ' + background /*+  ' ' + data */ );
+
 	});
 
   onDestroy(async () => {
     modelWorker.terminate();
     modelWorker = null; // make sure it is deleted by GC
     messaging.unsubscribe(subscriptionTokenMID);
-    messaging.unsubscribe(subscriptionTokenMODR);
+    messaging.unsubscribe(subscriptionTokenMIB);
+    // messaging.unsubscribe(subscriptionTokenMODR);
     messaging = null;
     // console.log('DEBUG:ModelEditor:onDestroy')
 	});
@@ -120,10 +126,14 @@
 
     if(m.data.func !== undefined){
       let responders = {
-        data: data => {
+        sab: data => {
           // Publish data to audio engine
           messaging.publish("model-output-data", data)
         },
+        // data: data => {
+        //   // Publish data to audio engine
+        //   messaging.publish("model-output-data", data)
+        // },
         save: data => {
           // console.log("save");
           window.localStorage.setItem(data.name, data.val);
@@ -229,6 +239,7 @@
     }
   }
 
+
 </script>
 
 
@@ -290,4 +301,4 @@
     <!-- </div> -->
   <!-- </div> -->
 </div>
-<input aria-hidden="true" id="hiddenCopyField" style="position: absolute; left: -999em;" value="">
+<textarea aria-hidden="true" id="hiddenCopyField" style="position: absolute; left: -999em;" value=""></textarea>

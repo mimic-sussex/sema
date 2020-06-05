@@ -9,7 +9,6 @@
 	<link rel='icon' type='image/png' href='/favicon.ico'>
 	<link href='/global.css' type="text/css" rel='stylesheet'> <!-- rel='stylesheet' -->
 	<!-- <script src="//cdnjs.cloudflare.com/ajax/libs/three.js/103/three.min.js"></script> -->
-  	
 </head>
 
 <body>
@@ -29,6 +28,21 @@
 
   <noscript> <%= htmlWebpackPlugin.options.noscriptHeader %> </noscript>
 
-  <!-- <script src="http://localhost:5001/livereload.js"></script> -->
+	<textarea aria-hidden="true" id="hiddenCopyField2" style="position: absolute; left: -999em;" value=""></textarea>
+	<script>
+	function copyCode(codeID) {
+	  let copyField=document.getElementById("hiddenCopyField2");
+		let code = document.getElementById(codeID).innerHTML;
+		var parser = new DOMParser;
+		var dom = parser.parseFromString(
+	    '<!doctype html><body>' + code,
+	    'text/html');
+		code = dom.body.textContent;
+//		code = code.replace(String.fromCharCode(10), String.fromCharCode(10) + String.fromCharCode(13)) ;
+	  copyField.value = code;
+	  copyField.select();
+	  document.execCommand("Copy");
+	}
+	</script>
 </body>
 </html>

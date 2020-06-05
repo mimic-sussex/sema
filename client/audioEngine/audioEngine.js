@@ -1,6 +1,8 @@
 import Module from "./maximilian.wasmmodule.js"; //NOTE:FB We need this import here for webpack to emit maximilian.wasmmodule.js
 import Open303 from "./open303.wasmmodule.js"; //NOTE:FB We need this import here for webpack to emit maximilian.wasmmodule.js
 import CustomProcessor from "./maxi-processor";
+import "../utils/ringbuf.js";  //thanks padenot
+import {RingBuffer} from "../utils/ringbuf-alt.js";  //thanks padenot
 import {
   loadSampleToArray
 } from "./maximilian.util";
@@ -14,6 +16,7 @@ import {
   PeerStreaming
 } from "../interfaces/peerStreaming.js";
 import {copyToPasteBuffer} from '../utils/pasteBuffer.js';
+
 
 
 /**
@@ -64,6 +67,10 @@ class AudioEngine {
 		// NOTE: analysers from localStorage are loaded from local Storage before user-started audioContext init
 		this.analysers = {};
 
+    //shared array buffers for sharing client side data to the audio engine- e.g. mouse coords
+    this.sabs = {};
+
+
 		// Sema's Publish-Subscribe pattern object with "lowercase-lowercase" format convention for subscription topic
 		this.messaging = new PubSub();
 		this.messaging.subscribe("eval-dsp", e => this.evalDSP(e));
@@ -83,9 +90,14 @@ class AudioEngine {
 		this.messaging.subscribe("add-engine-analyser", e =>
 			this.createAnalyser(e)
 		);
-		this.messaging.subscribe("remove-engine-analyser", e =>
+    this.messaging.subscribe("remove-engine-analyser", e =>
 			this.removeAnalyser(e)
 		);
+    this.messaging.subscribe("mouse-xy", e => {
+      if (this.sabs.mxy) {
+        this.sabs.mxy.rb.push(e);
+      }
+    });
 		// this.messaging.subscribe("osc", e => console.log(`DEBUG:AudioEngine:OSC: ${e}`));
 
 		this.kuraClock = new kuramotoNetClock();
@@ -104,6 +116,7 @@ class AudioEngine {
       console.log(this.peerNet.peerID);
       copyToPasteBuffer(this.peerNet.peerID);
     });
+
 
 	}
 
@@ -127,12 +140,24 @@ class AudioEngine {
              this.messaging.publish("model-input-data", {
                type: "model-input-data",
                value: event.data.value,
-               ch: event.data.ch, //channel ID
+               ch: event.data.ch
              });
              break;
            case 'NET':
              this.peerNet.send(event.data.ch[0], event.data.value, event.data.ch[1]);
              break;
+         }
+       } else if (event.data.rq && event.data.rq === "buf") {
+         console.log("buf", event.data);
+         switch(event.data.ttype) {
+           case 'ML':
+           this.messaging.publish("model-input-buffer", {
+             type: "model-input-buffer",
+             value: event.data.value,
+             channelID: event.data.channelID, //channel ID
+             blocksize: event.data.blocksize
+           });
+           break;
          }
        }
        // else if (event.data.rq != undefined && event.data.rq === "receive") {
@@ -193,6 +218,7 @@ class AudioEngine {
 	 * Polls data from connected WAAPI analyser return structured object with data and time data in arrays
 	 * @param {*} analyser
 	 */
+
 	pollAnalyserData(analyser) {
 		if (analyser !== undefined) {
 			const timeDataArray = new Uint8Array(analyser.fftSize); // Uint8Array should be the same length as the fftSize
@@ -259,6 +285,23 @@ class AudioEngine {
 		}
 	}
 
+  //make a shared array buffer for communicating with the audio engine
+  createSAB(chID, ttype, blocksize, port) {
+    let sab = RingBuffer.getStorageForCapacity(32 * blocksize, Float64Array);
+    let ringbuf = new RingBuffer(sab, Float64Array);
+
+    port.postMessage({
+      func: 'sab',
+      value: sab,
+      ttype: ttype,
+      channelID: chID,
+      blocksize:blocksize
+    });
+    this.sabs[chID] = {sab:sab, rb:ringbuf};
+    console.log(this.sabs);
+  }
+
+
 	/**
 	 * Initialises audio context and sets worklet processor code
 	 * @play
@@ -295,11 +338,16 @@ class AudioEngine {
 			//   this.audioWorkletNode.port.postMessage({ phase: phase, i: idx });
 			// });
 
-			if (this.kuraClock.connected()) {
-				this.kuraClock.queryPeers(async numClockPeers => {
-					console.log(`DEBUG:AudioEngine:init:numClockPeers: ${numClockPeers}`);
-				});
-			}
+      //temporarily disabled
+			// if (this.kuraClock.connected()) {
+			// 	this.kuraClock.queryPeers(async numClockPeers => {
+			// 		console.log(`DEBUG:AudioEngine:init:numClockPeers: ${numClockPeers}`);
+			// 	});
+			// }
+
+      this.createSAB("mxy", "mouseXY", 2, this.audioWorkletNode.port);
+
+
 		}
 	}
 

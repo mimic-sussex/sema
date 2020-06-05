@@ -23,7 +23,7 @@ var jsFuncMap = {
 	pha: {
 		setup: (o, p) => `${o} = new Maximilian.maxiOsc();
                       ${o}.phaseReset(${p.length > 1 ? p[1].loop : 0.0});`,
-		loop:  (o, p) => `${o}.phasor(${p[0].loop})`
+		loop:  (o, p) => `${o}.phasor(${p[0].loop}, 0, 1)`
 	},
 	ph2: {
 		setup: (o, p) => `${o} = new Maximilian.maxiOsc();
@@ -192,33 +192,51 @@ var jsFuncMap = {
 		loop:  (o, p) => `${o}.hires(${p[0].loop},${p[1].loop},${p[2].loop})`
 	},
 
-	toJS: { //freq, data, channel
-		setup: (o, p) => `${o} = this.createMLOutputTransducer(${p[0].loop})`,
-		loop:  (o, p) => `${o}.send(this.ifListThenToArray(${p[1].loop}), ${p[2].loop})`
+	// `toJS`: { //freq, data, channel
+	// 	setup: (o, p) => `${o} = this.createMLOutputTransducer(${p[0].loop})`,
+	// 	loop:  (o, p) => `${o}.send(${p[1].loop}, ${p[2].loop})`
+	// },
+	toJS: { //freq, data, channel, [blocksize]
+		setup: (o, p) => `${o} = new SABOutputTransducer(this.port, 'ML', ${p[1].loop}, this.currentSample, ${p.length==3 ? 1: p[3].loop})`,
+		loop:  (o, p) => `${o}.send(${p[0].loop}, ${p[2].loop})`
 	},
-
 	fromJS: { //channel
-		setup: (o, p) => `${o} = this.registerInputTransducer('ML', ${p[0].loop})`,
-		loop:  (o, p) => `${o}.getValue()`
+		// setup: (o, p) => `${o} = this.registerInputTransducer('ML', ${p[0].loop})`,
+		// loop:  (o, p) => `${o}.getValue()`
+		setup: (o, p) => ``,
+		loop:  (o, p) => `this.getSABValue(${p[0].loop})`
+	},
+	mouseX: {
+		setup: (o, p) => ``,
+		loop:  (o, p) => `this.getSABValue('mxy')[0]`
+	},
+	mouseY: {
+		setup: (o, p) => ``,
+		loop:  (o, p) => `this.getSABValue('mxy')[1]`
+	},
+	at: {
+		setup: (o, p) => ``,
+		loop:  (o, p) => `${p[0].loop}[Math.min(${p[1].loop}, ${p[0].loop}.length-1)]`
 	},
 
-	toPeer: { //value, dest, channel, frequency
-    setup: (o, p) => `${o} = this.createNetOutputTransducer(${p[3].loop})`,
-		loop:  (o, p) => `${o}.send(${p[0].loop},[${p[1].loop},${p[2].loop}])`
-  },
-	fromPeer: { //source, channel
-		setup: (o, p) => `${o} = this.registerInputTransducer('NET', [${p[0].loop}, ${p[1].loop}])`,
-		loop:  (o, p) => `${o}.getValue()`
-  },
+	// toPeer: { //value, dest, channel, frequency
+  //   setup: (o, p) => `${o} = this.createNetOutputTransducer(${p[3].loop})`,
+	// 	loop:  (o, p) => `${o}.send(${p[0].loop},[${p[1].loop},${p[2].loop}])`
+  // },
+	// fromPeer: { //source, channel
+	// 	setup: (o, p) => `${o} = this.registerInputTransducer('NET', [${p[0].loop}, ${p[1].loop}])`,
+	// 	loop:  (o, p) => `${o}.getValue()`
+  // },
 
-	oscin: {
-		setup: (o, p) => "",
-		loop:  (o, p) => `this.OSCTransducer(${p[0].loop},${p[1].loop})`
-	},
-	oscout: {
-		setup: (o, p) => "",
-		loop:  (o, p) => `this.OSCTransducer(${p[0].loop},${p[1].loop})`
-	},
+	// oscin: {
+	// 	setup: (o, p) => "",
+	// 	loop:  (o, p) => `this.OSCTransducer(${p[0].loop},${p[1].loop})`
+	// },
+	// oscout: {
+	// 	setup: (o, p) => "",
+	// 	loop:  (o, p) => `this.OSCTransducer(${p[0].loop},${p[1].loop})`
+	// },
+
 	sah: {
 		setup: (o, p) => `${o} = new Maximilian.maxiSampleAndHold();`,
 		loop:  (o, p) => `${o}.sah(${p[0].loop},${p[1].loop})`
@@ -231,10 +249,7 @@ var jsFuncMap = {
 		loop:  (o, p) => `(${o}.isReady() ? ${ o}stretch.play(${p[0].loop},${p[1].loop},${p[2].loop},${p[3].loop},0.0) : 0.0)`
 	},
 	// 'adc': {"setup":(o,p)=>"", "loop":(o,p)=>`inputs[${p[0].loop}]`},
-	adc: { 
-    setup: (o, p) => "", 
-    loop: (o, p) => `inputs` 
-  },
+	adc: { setup: (o, p) => "", loop: (o, p) => `(inputs * ${p[0].loop})` },
 	sampler: {
 		setup: (o, p) => `${o} = new Maximilian.maxiSample();
                       ${o}.setSample(this.getSampleBuffer(${p[p.length-1].loop}));`,
@@ -464,6 +479,10 @@ var jsFuncMap = {
 		setup: (o, p) => ``,
 		loop:  (o, p) => `${p[0].loop}`
 	},
+	poll: {
+		setup: (o, p) => `${o} = new poll()`,
+		loop:  (o, p) => `${o}.play(${p[0].loop})`
+	},
 	dac: {
 		setup: (o, p) => ``,
 		loop:  (o, p) => {
@@ -474,6 +493,18 @@ var jsFuncMap = {
 				return `this.dacOut(${p[0].loop},${p[1].loop})`;
 			}
 		}
+	},
+	fft: {
+		setup: (o, p) => `${o} = new fft(${p[1].loop}, ${p[2].loop})`,
+		loop:  (o, p) => `${o}.play(${p[0].loop})`
+	},
+	ifft: {
+		setup: (o, p) => `${o} = new ifft(${p[3].loop}, ${p[4].loop})`,
+		loop:  (o, p) => `${o}.play(${p[0].loop}, ${p[1].loop}, ${p[2].loop})`
+	},
+	mfcc: {
+		setup: (o, p) => `${o} = new mfcc(${p[1].loop}, ${p[2].loop}, ${p[3].loop})`,
+		loop:  (o, p) => `${o}.play(${p[0].loop})`
 	}
 };
 
@@ -578,7 +609,7 @@ class IRToJavascript {
           vars[el.value] = memIdx;
         }
         // ccode.loop += `this.getvar(q, '${el.value}')`;
-        ccode.loop += `mem[${memIdx}]`;
+        ccode.loop += `(mem[${memIdx}] ? mem[${memIdx}] : 0)`;
         return ccode;
       },
       '@string': (ccode, el) => {

@@ -52,7 +52,13 @@
   
     // await tick();    
     if (res.ok) {
+			let tag = 'script';
       markdown = marked(text);
+			let codeID=0;
+			while(markdown.indexOf("<pre><code>")>-1) {
+				markdown = markdown.replace("<pre><code>", `<pre><button style="font-size:70%" type="button" onclick="copyCode('code${codeID}')">copy</button><br><code id='code${codeID++}'>`);
+			};
+						// markdown="test";
     } else {
       console.error("Error on markdown conversion", error);;
     } 
@@ -85,6 +91,10 @@
     border-radius: 5px;
     height: 85vh;
     background: #aaaaaa;
+		-webkit-user-select: all;  /* Chrome 49+ */
+	  -moz-user-select: all;     /* Firefox 43+ */
+	  -ms-user-select: all;      /* No support yet */
+	  user-select: all;          /* Likely future */
   }
 
   .markdown-output {
@@ -93,7 +103,6 @@
   }
 
 </style>
-
 <div class="markdown-container">
 {#await promise}
 	<p>...waiting</p>
