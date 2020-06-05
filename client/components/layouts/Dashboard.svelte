@@ -186,7 +186,6 @@
         {rowHeight}
         {gap}
         useTransform
-        bind:items={$items}
         let:item
         on:adjust={onAdjust}
         on:mount={onChildMount}
