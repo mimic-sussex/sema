@@ -520,7 +520,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
     this.getSABValue = (id) => {
       let res=0;
       let sab= inputSABs[id];
-      if (sab != undefined) {
+      if (sab) {
         res = sab.value;
       }
       return res;
@@ -559,7 +559,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
         //this needs decoupling?
         this.bitTime = Maximilian.maxiBits.inc(this.bitTime);
 
-        //leave this here - we'll bring it back in one day?s
+        //leave this here - we'll bring it back in one day?
         //net clocks
         // if (this.kuraPhase != -1) {
         //   // this.netClock.setPhase(this.kuraPhase, this.kuraPhaseIdx);

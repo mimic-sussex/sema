@@ -1,7 +1,8 @@
 import Module from "./maximilian.wasmmodule.js"; //NOTE:FB We need this import here for webpack to emit maximilian.wasmmodule.js
 import Open303 from "./open303.wasmmodule.js"; //NOTE:FB We need this import here for webpack to emit maximilian.wasmmodule.js
 import CustomProcessor from "./maxi-processor";
-import RingBuffer from "../utils/ringbuf.js";  //thanks padenot
+import "../utils/ringbuf.js";  //thanks padenot
+import {RingBuffer} from "../utils/ringbuf-alt.js";  //thanks padenot
 import {
   loadSampleToArray
 } from "./maximilian.util";
@@ -15,6 +16,7 @@ import {
   PeerStreaming
 } from "../interfaces/peerStreaming.js";
 import {copyToPasteBuffer} from '../utils/pasteBuffer.js';
+
 
 
 /**
@@ -84,9 +86,11 @@ class AudioEngine {
 		this.messaging.subscribe("add-engine-analyser", e =>
 			this.createAnalyser(e)
 		);
-		this.messaging.subscribe("remove-engine-analyser", e =>
+    this.messaging.subscribe("remove-engine-analyser", e =>
 			this.removeAnalyser(e)
 		);
+    this.messaging.subscribe("mouse-xy", e => {
+    });
 		// this.messaging.subscribe("osc", e => console.log(`DEBUG:AudioEngine:OSC: ${e}`));
 
 		this.kuraClock = new kuramotoNetClock();
@@ -309,11 +313,30 @@ class AudioEngine {
 			//   this.audioWorkletNode.port.postMessage({ phase: phase, i: idx });
 			// });
 
-			if (this.kuraClock.connected()) {
-				this.kuraClock.queryPeers(async numClockPeers => {
-					console.log(`DEBUG:AudioEngine:init:numClockPeers: ${numClockPeers}`);
-				});
-			}
+      //temporarily disabled
+			// if (this.kuraClock.connected()) {
+			// 	this.kuraClock.queryPeers(async numClockPeers => {
+			// 		console.log(`DEBUG:AudioEngine:init:numClockPeers: ${numClockPeers}`);
+			// 	});
+			// }
+
+      function createSAB(chID, ttype, blocksize, port) {
+        let sab = RingBuffer.getStorageForCapacity(32 * blocksize, Float64Array);
+        let ringbuf = new RingBuffer(sab, Float64Array);
+
+        port.postMessage({
+          func: 'sab',
+          value: sab,
+          ttype: ttype,
+          channelID: chID,
+          blocksize:blocksize
+        });
+        return {sab:sab, rb:ringbuf};
+      }
+      this.sabs = {};
+      this.sabs.mousexy = createSAB("mxy", "mouseXY", 2, this.audioWorkletNode.port);
+
+
 		}
 	}
 

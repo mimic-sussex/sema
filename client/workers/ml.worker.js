@@ -196,7 +196,7 @@ onmessage = m => {
     let sab = m.data.value;
     let rb =  new RingBuffer(sab, Float64Array);
     inputSABs[m.data.channelID] = {sab:sab, rb:rb, blocksize: m.data.blocksize};
-    console.log("ML", rb);
+    console.log("ML", inputSABs);
   }
   // else if(m.data.type === "model-output-data-request"){
 	// 	postMessage({
@@ -210,7 +210,8 @@ onmessage = m => {
 
 function sabChecker() {
   // console.log(SABs);
-  for (let v in Object.keys(inputSABs)) {
+  for (let v in inputSABs) {
+    // console.log(v);
     let avail = inputSABs[v].rb.available_read();
     // console.log(avail, SABs[v].rb.capacity);
     if (avail != inputSABs[v].rb.capacity && avail > 0) {

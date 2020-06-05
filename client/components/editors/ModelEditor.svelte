@@ -10,6 +10,8 @@
 </script>
 
 <script>
+
+
 	import { onMount, onDestroy, createEventDispatcher } from 'svelte';
 	const dispatch = createEventDispatcher();
   import {copyToPasteBuffer} from '../../utils/pasteBuffer.js';
@@ -20,7 +22,7 @@
 
   var modelEditorValue = window.localStorage.modelEditorValue;
 
-  console.log(modelEditorValue);
+  // console.log(modelEditorValue);
   import { PubSub } from '../../messaging/pubSub.js';
 
   import ModelWorker from "worker-loader!../../workers/ml.worker.js";
@@ -28,7 +30,6 @@
   import { addToHistory } from "../../utils/history.js";
   import "../../machineLearning/lalolib.js";
   import "../../machineLearning/svd.js";
-  // import "../../utils/ringbuf.js";
   import "../../workers/mlworkerscripts.js";
   // import "../../machineLearning/lodash.js";  //why is this causing a problem?
 
@@ -76,6 +77,7 @@
     log( id, name, type, lineNumbers, hasFocus, theme, background, data, responsive, resizable, resize, draggable, drag, min, max, x, y, w, h, component );
     // console.log('DEBUG:ModelEditor:onMount:');
     // console.log(data);    // console.log(name + ' ' + type + ' ' + lineNumbers +' ' + hasFocus +' ' + theme + ' ' + background /*+  ' ' + data */ );
+
 	});
 
   onDestroy(async () => {
@@ -236,6 +238,7 @@
       addToHistory("model-history-", modelCode);
     }
   }
+
 
 </script>
 
