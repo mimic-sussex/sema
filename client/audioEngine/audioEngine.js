@@ -67,6 +67,10 @@ class AudioEngine {
 		// NOTE: analysers from localStorage are loaded from local Storage before user-started audioContext init
 		this.analysers = {};
 
+    //shared array buffers for sharing client side data to the audio engine- e.g. mouse coords
+    this.sabs = {};
+
+
 		// Sema's Publish-Subscribe pattern object with "lowercase-lowercase" format convention for subscription topic
 		this.messaging = new PubSub();
 		this.messaging.subscribe("eval-dsp", e => this.evalDSP(e));
@@ -90,6 +94,9 @@ class AudioEngine {
 			this.removeAnalyser(e)
 		);
     this.messaging.subscribe("mouse-xy", e => {
+      if (this.sabs.mxy) {
+        this.sabs.mxy.rb.push(e);
+      }
     });
 		// this.messaging.subscribe("osc", e => console.log(`DEBUG:AudioEngine:OSC: ${e}`));
 
@@ -109,6 +116,7 @@ class AudioEngine {
       console.log(this.peerNet.peerID);
       copyToPasteBuffer(this.peerNet.peerID);
     });
+
 
 	}
 
@@ -277,6 +285,23 @@ class AudioEngine {
 		}
 	}
 
+  //make a shared array buffer for communicating with the audio engine
+  createSAB(chID, ttype, blocksize, port) {
+    let sab = RingBuffer.getStorageForCapacity(32 * blocksize, Float64Array);
+    let ringbuf = new RingBuffer(sab, Float64Array);
+
+    port.postMessage({
+      func: 'sab',
+      value: sab,
+      ttype: ttype,
+      channelID: chID,
+      blocksize:blocksize
+    });
+    this.sabs[chID] = {sab:sab, rb:ringbuf};
+    console.log(this.sabs);
+  }
+
+
 	/**
 	 * Initialises audio context and sets worklet processor code
 	 * @play
@@ -320,21 +345,7 @@ class AudioEngine {
 			// 	});
 			// }
 
-      function createSAB(chID, ttype, blocksize, port) {
-        let sab = RingBuffer.getStorageForCapacity(32 * blocksize, Float64Array);
-        let ringbuf = new RingBuffer(sab, Float64Array);
-
-        port.postMessage({
-          func: 'sab',
-          value: sab,
-          ttype: ttype,
-          channelID: chID,
-          blocksize:blocksize
-        });
-        return {sab:sab, rb:ringbuf};
-      }
-      this.sabs = {};
-      this.sabs.mousexy = createSAB("mxy", "mouseXY", 2, this.audioWorkletNode.port);
+      this.createSAB("mxy", "mouseXY", 2, this.audioWorkletNode.port);
 
 
 		}
