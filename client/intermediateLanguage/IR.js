@@ -206,13 +206,14 @@ var jsFuncMap = {
 		setup: (o, p) => ``,
 		loop:  (o, p) => `this.getSABValue(${p[0].loop})`
 	},
-	mouseX: { //channel
-		// setup: (o, p) => `${o} = this.registerInputTransducer('ML', ${p[0].loop})`,
-		// loop:  (o, p) => `${o}.getValue()`
+	mouseX: {
 		setup: (o, p) => ``,
 		loop:  (o, p) => `this.getSABValue('mxy')[0]`
 	},
-
+	mouseY: {
+		setup: (o, p) => ``,
+		loop:  (o, p) => `this.getSABValue('mxy')[1]`
+	},
 	at: {
 		setup: (o, p) => ``,
 		loop:  (o, p) => `${p[0].loop}[Math.min(${p[1].loop}, ${p[0].loop}.length-1)]`
