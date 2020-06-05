@@ -370,3 +370,12 @@ Index into a list
 1. Trigger input - output a value when triggered
 2. The index of the value to be output when a trigger is received (normalised to between 0 and 1)
 3. A list of values
+
+## Mouse
+
+### mouseX
+Mouse X coordinate in the sema client window, normalised to between 0 and 1
+
+### mouseY
+Mouse Y coordinate in the sema client window, normalised to between 0 and 1
+
