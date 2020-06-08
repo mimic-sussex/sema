@@ -57,15 +57,17 @@
       console.log(markdown);
 			let codeID=0;
 			while(markdown.indexOf("<pre><code>")>-1) {
-				// markdown = markdown.replace(
-        //   "<pre><code>", 
-        //   `<pre><button style="font-size:70%" type="button" onclick="copyCode('code${codeID}')">copy</button><br><code id='code${codeID++}'>`
-        //   );
-
-        markdown = markdown.replace(
+				markdown = markdown.replace(
           "<pre><code>", 
-          `<pre><code style="-moz-user-select: text; -khtml-user-select: text; -webkit-user-select: text; -ms-user-select: text; user-select: text; white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word;" id='code${codeID++}'>`
-        );
+          `<pre>
+            <button style="font-size:70%; text-align: center; float: right; z-index: 1000; top: 30px; position: relative;" type="button" onclick="copyCode('code${codeID}')">copy</button>
+            <code style="-moz-user-select: text; -html-user-select: text; -webkit-user-select: text; -ms-user-select: text; user-select: text; white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word;" id='code${codeID++}'>`
+          );
+
+        // markdown = markdown.replace(
+        //   "<pre><code>", 
+        //   `<pre><code style="-moz-user-select: text; -khtml-user-select: text; -webkit-user-select: text; -ms-user-select: text; user-select: text; white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word;" id='code${codeID++}'>`
+        // );
 
 			};
 						// markdown="test";
@@ -109,7 +111,7 @@
 
   .markdown-output {
     /* width: 100%; */
-    padding: 0em 0.5em 0em 0.5em;
+    padding: 0em 0.9em 0em 0.9em;
   }
 
 </style>

@@ -69,6 +69,7 @@ code {
 	color: black;
 	padding: 2px 4px 2px 4px;
 	border: 1px solid #CCCCCC;
+
 }
 
 pre code {
@@ -79,6 +80,7 @@ pre code {
 	color: black;
 	padding: 5px;
 	border: 1px solid #CCCCCC;
+  margin: 0px 0px 0px 0px;
 }
 
 .cm-s-default .cm-bracket {

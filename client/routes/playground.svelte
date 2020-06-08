@@ -165,11 +165,11 @@
 	<title>Sema – Playground</title>
 </svelte:head>
 
-<div class="container scrollable">
+<div class="container">
   <div class="sidebar-container">
     <Sidebar />
   </div>
-  <div class="dashboard-container">
+  <div class="dashboard-container scrollable">
     <Dashboard  {items}
                 {breakpoints}
                 {cols}
@@ -204,7 +204,7 @@
   .dashboard-container {
     grid-area: layout;
     grid-row: 0 / 2;
-    height: 100%;
+    height: 100vh;
     overflow: hidden;
   }
 

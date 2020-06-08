@@ -193,8 +193,8 @@
 
   .controls {
     margin-bottom: 20px;
-    margin-left: 10px;
-    margin-right: 10px;
+    margin-left: 3px;
+    margin-right: 5px;
   }
 
   /* .checkbox-span {
