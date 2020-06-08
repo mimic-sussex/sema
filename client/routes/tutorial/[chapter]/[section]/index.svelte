@@ -54,9 +54,19 @@
     if (res.ok) {
 			let tag = 'script';
       markdown = marked(text);
+      console.log(markdown);
 			let codeID=0;
 			while(markdown.indexOf("<pre><code>")>-1) {
-				markdown = markdown.replace("<pre><code>", `<pre><button style="font-size:70%" type="button" onclick="copyCode('code${codeID}')">copy</button><br><code id='code${codeID++}'>`);
+				// markdown = markdown.replace(
+        //   "<pre><code>", 
+        //   `<pre><button style="font-size:70%" type="button" onclick="copyCode('code${codeID}')">copy</button><br><code id='code${codeID++}'>`
+        //   );
+
+        markdown = markdown.replace(
+          "<pre><code>", 
+          `<pre><code style="-moz-user-select: text; -khtml-user-select: text; -webkit-user-select: text; -ms-user-select: text; user-select: text; white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word;" id='code${codeID++}'>`
+        );
+
 			};
 						// markdown="test";
     } else {
@@ -84,10 +94,10 @@
 
   .markdown-container {
     overflow: auto;
-    margin-left: 10px;
-    margin-right: 10px;
-    margin-bottom: 10px;
-    border: solid 5px #aaaaaa;
+    margin-left: 1px;
+    /* margin-right: 2px;
+    margin-bottom: 2px; */
+    /* border: solid 5px #aaaaaa; */
     border-radius: 5px;
     height: 85vh;
     background: #aaaaaa;
@@ -99,7 +109,7 @@
 
   .markdown-output {
     /* width: 100%; */
-    padding: 0 1em;
+    padding: 0em 0.5em 0em 0.5em;
   }
 
 </style>

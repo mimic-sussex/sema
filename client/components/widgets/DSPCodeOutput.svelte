@@ -13,6 +13,7 @@ import { dspCode } from '../../stores/common.js'
     width: 100%;
     height: 100%;
     border: none;
+    font-family: monospace;
   }
 
 	.scrollable {
@@ -22,18 +23,37 @@ import { dspCode } from '../../stores/common.js'
 		overflow-y: auto;
 	}
 
-  pre {
-    /* position: relative;
+
+  .prewrap {
+    display: inline-flexbox;
     width: 100%;
-    height: auto;
-    overflow-y: auto; */
+    overflow-x: auto;
+    white-space: pre-wrap;
+    white-space: -moz-pre-wrap;
+    white-space: -pre-wrap;
+    white-space: -o-pre-wrap;
+    word-wrap: break-word;
+    margin:5px 0px 15px 5px;
+
+    -moz-user-select: text;
+    -khtml-user-select: text;
+    -webkit-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+  }
+  .error-state {
+    color:red; 
+    margin:15px 10px 5px 5px;
   }
 
 </style>
 
 <div class='container scrollable'>
   {#if $dspCode}
-  <pre> { JSON.stringify($dspCode.setup, null, 2) } </pre>
+  <strong class="error-state">Setup:</strong>
+  <pre class='prewrap'> { JSON.stringify($dspCode.setup, null, 2) } </pre>
+  <strong class="error-state">Loop:</strong>
+  <pre class='prewrap'> { JSON.stringify($dspCode.loop, null, 2) } </pre>
   <!-- <pre> { JSON.stringify($dspCode.loop, null, 2) } </pre> -->
   {/if}
 </div>

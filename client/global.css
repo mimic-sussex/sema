@@ -63,20 +63,24 @@ button:focus {
 }
 
 code {
-	border-radius: 5px;
-	font-size: 110%;
+	border-radius: 4px;
+	font-size: 100%;
 	background-color: white;
 	color: black;
-	padding: 2px;
-	border: 1px solid #454541;
+	padding: 2px 4px 2px 4px;
+	border: 1px solid #CCCCCC;
 }
 
 pre code {
 	display: block;
-	border-radius: 5px;
+	border-radius: 4px;
 	font-size: 110%;
 	background-color: white;
 	color: black;
-	padding: 10px;
-	border: 1px solid #454541;
+	padding: 5px;
+	border: 1px solid #CCCCCC;
+}
+
+.cm-s-default .cm-bracket {
+  color: black;
 }

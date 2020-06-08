@@ -220,7 +220,7 @@
   } */
 
   .layout-combobox-container{
-    margin-top: 5px;
+    margin-top: 3px;
   }
 
   .combobox-dark {

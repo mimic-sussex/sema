@@ -53,16 +53,17 @@ let source = `
 
 `;
 let markdown = marked(source);
+console.log(markdown);
 </script>
 
 <style>
 
   .markdown-container {
     overflow: auto;
-    margin-left: 10px;
-    margin-right: 10px;
-    margin-bottom: 10px;
-    border: solid 5px #aaaaaa;
+    margin-left: 2px;
+    margin-right: 2px;
+    margin-bottom: 2px;
+    border: solid 2px #aaaaaa;
     border-radius: 5px;
     height: 85vh;
     background: #aaaaaa;
@@ -70,7 +71,12 @@ let markdown = marked(source);
 
   .markdown-output {
     /* width: 100%; */
-    padding: 0 1em;
+    padding: 0 0.2em;
+    -moz-user-select: text;
+    -khtml-user-select: text;
+    -webkit-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
   }
 
 </style>
