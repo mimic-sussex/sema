@@ -1,7 +1,7 @@
 
 
 # Sema – Live Code Language Design Playground #
-![version](https://img.shields.io/badge/version-0.4-red)
+![version](https://img.shields.io/badge/version-0.5.0-red)
 [![stability-experimental](https://img.shields.io/badge/stability-experimental-orange.svg)](https://github.com/emersion/stability-badges#experimental)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-yellow.svg)](https://github.com/mimic-sussex/eppEditor/blob/master/CONTRIBUTING.md)
 [![Build Status](https://travis-ci.com/mimic-sussex/sema.svg?branch=master)](https://travis-ci.com/mimic-sussex/sema)
@@ -43,7 +43,7 @@ If you decide to use NPM, use:
 cd sema
 npm install
 npm run build
-npm run dev
+npm run dev OR npm run serve 
 ```
 
 If you decide to go with Yarn (our preferred package manager), to install it: 
@@ -56,8 +56,13 @@ To use Yarn:
 cd sema
 yarn
 yarn build
-yarn dev
+yarn dev OR yarn serve 
 ```
+
+Once you have the node application running, open Sema onn your browser on the following ports
+- yarn dev, go to [http://localhost:8080](http://localhost:8080) on your browser
+- yarn serve, go to [http://localhost:5001](http://localhost:5001) on your browser
+
 
 ## Linux Users
 

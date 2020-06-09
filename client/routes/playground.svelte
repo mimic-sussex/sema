@@ -128,7 +128,7 @@
 
 
   onMount( async () => {
-    console.log("DEBUG:routes/playground:onMount")
+    // console.log("DEBUG:routes/playground:onMount")
 
     // Sequentially fetch data from individual items' properties into language design workflow stores
     for (const item of $items)
@@ -147,7 +147,7 @@
   });
 
   onDestroy(() => {
-    console.log("DEBUG:routes/playground:onDestroy")
+    // console.log("DEBUG:routes/playground:onDestroy")
 
     messaging.unsubscribe(addSubscriptionToken);
     messaging.unsubscribe(envSaveSubscriptionToken);
@@ -165,11 +165,11 @@
 	<title>Sema – Playground</title>
 </svelte:head>
 
-<div class="container scrollable">
+<div class="container">
   <div class="sidebar-container">
     <Sidebar />
   </div>
-  <div class="dashboard-container">
+  <div class="dashboard-container scrollable">
     <Dashboard  {items}
                 {breakpoints}
                 {cols}
@@ -204,7 +204,7 @@
   .dashboard-container {
     grid-area: layout;
     grid-row: 0 / 2;
-    height: 100%;
+    height: 100vh;
     overflow: hidden;
   }
 

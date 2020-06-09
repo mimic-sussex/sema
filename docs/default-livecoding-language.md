@@ -314,3 +314,16 @@ This receives data from peer 'i6etfg8bcx000000' on channel 0.
 `input = (id,x) => {console.log([id,x])};`
 
 `x` will be an array of values
+
+
+# mouse input
+
+use `{}mouseX` and `{}mouseY`
+
+e.g. this is an FM synthesis with mouse control
+```
+:freq:{{}mouseX,100,1000}uexp;
+:freq2:{{}mouseY,1000}mul;
+:mod:{{:freq2:}sin,100}mul;
+>{{:freq:,:mod:}add}sin;
+```

@@ -66,7 +66,7 @@
 
   let fetchAndLoadDefaultTutorialItems = () => {
 
-    fetch(`/tutorial/01-basics/01-introduction/layout.json`)
+    fetch(`/tutorial/${$params.chapter_dir}/${$params.section_dir}/layout.json`)
       .then( r => r.json())
       .then(json => {
         $items = json.map( item => hydrateJSONcomponent(item) );
@@ -81,22 +81,43 @@
 
   onMount( async () => {
 
-    console.log("DEBUG:routes/_layout:onMount")
+    console.log("DEBUG:routes/_layout:onMount");
+    console.log($params);
+
   });
 
 </script>
 
 <style>
+
+  .main-container {
+    display: grid;
+    grid-template-rows: 5em 1fr;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(150deg, rgba(0,18,1,1) 0%, rgba(7,5,17,1) 33%, rgba(16,12,12,1) 67%, rgba(18,16,16,1) 100%);
+  }
+
+
   .header-container {
+    grid-row: 1;
     display: grid;
     grid-template-columns: 40px auto auto;
+    grid-template-rows: 3em fr;
     width: 100%;
     background: linear-gradient(150deg, rgba(0,18,1,1) 0%, rgba(7,5,17,1) 33%, rgba(16,12,12,1) 67%, rgba(18,16,16,1) 100%);
   }
   
+  .logo {
+    grid-row: 1;
+    grid-column: 1;
+    
+  }
 
   .nav-container {
-    grid-column: 3 / span 2;
+    grid-column: 2 / span 2;
+    grid-row: 1; 
+    
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
@@ -105,11 +126,20 @@
   }
 
   .actions-container {
-    display: grid;
+    grid-row: 2;
+    grid-column: 2 / span 2;;
+    /* display: grid; */
     display: flex;
-    flex-direction: row;
+    /* flex-direction: row; */
     justify-content: flex-end;
+    margin-right: 8px;
     background: linear-gradient(150deg, rgba(0,18,1,1) 0%, rgba(7,5,17,1) 33%, rgba(16,12,12,1) 67%, rgba(18,16,16,1) 100%);
+  }
+
+  .slot-container {
+    height: 100%;
+    grid-row: 2;
+
   }
 
 	h1 {
@@ -129,41 +159,13 @@
     list-style-type: none;
     margin-bottom: 0px;
     margin-top: 10px;
+    margin-right: 5px;
   }
 
   li {
-    margin-right: 15px;
+    margin-left: 15px;
   }
 
-
-  /* .sign-out {
-    grid-column: 3 / span 2; 
-  } */
-
-  /* unvisited link */
-  /* span:link {
-    color: white;
-  } */
-
-  /* visited link */
-  /* span:visited {
-    color: white;
-  }
-
-  span:hover {
-    color: rgb(0, 94, 255);
-    text-decoration: none;
-    cursor: pointer;
-  }
-
-  span:active {
-    color: rgb(0, 94, 255);
-  }
-
-  .whiteText {
-    color: whitesmoke;
-    
-  } */
 
   a, a:hover {
     color: whitesmoke;
@@ -189,41 +191,22 @@
 
 <UserObserver />
 
-{#if $currentUser}
-<div>
+<div class="main-container">
+
+  {#if $currentUser}
   <div class="header-container" >
-    
-    <h1>sema</h1>
-
-    <!-- <AudioEngineStatus /> -->
-
+    <h1 class="logo">sema</h1>
     <div class="nav-container">
       <ul>
       <!-- <li>
         <span style="color:white" on:click={handleCClick}>Canvas</span>
       </li> -->  
         <li><a href="/">Home</a></li>
-
-        <li><a href="/playground/">Playground</a></li>
-
         <!-- Note: need to keep the slash after tutorial path-->
-        <!-- <li><a href="/tutorial/">Tutorial</a></li> -->
-        <!-- <li><a href="/tutorial/{chapter_dir}/{section_dir}/">Tutorial</a></li> -->
-       
-        <!-- <li><a href="/tutorial/{$selected.chapter_dir}/{$selected.section_dir}/">Tutorial</a></li> -->
-
+        <li><a href="/playground/">Playground</a></li>
         <li><a href={ $url('/tutorial/:chapter/:section/', persistentParams ) }>Tutorial</a></li>
-
-
-        <!-- <li><a href={$url('/tutorial/:chapter/:section/', {chapter: '01-basics', section: '01-introduction'};)}>Tutorial</a></li> -->
-        <!-- <li><a href="/tutorial/[chapter]/[section]/">Tutorial</a></li> -->
-        <!-- <li><a href="/tutorial/01-basics/01-introduction/">Tutorial</a></li> -->
-
-
         <li><a href='https://github.com/mimic-sussex/sema/tree/master/docs' target="_blank">Docs</a></li>
-
         <!-- <li><a href="/blog/">Blog</a></li> -->
-
         <li>
           <a href='https://forum.toplap.org/c/communities/sema' target="_blank">
             <svg class="icon svelte-5yec39" width="25" height="20">
@@ -232,7 +215,6 @@
             </svg>
           </a>
         </li>
-
         <li>
           <a href='https://github.com/mimic-sussex/sema' target="_blank">
             <svg class="icon svelte-5yec89" width="25" height="20">
@@ -241,26 +223,21 @@
             </svg>
           </a>
         </li>
-
-
-
       </ul>
     </div>
 
-    <!-- <SignOut class='sign-out' /> -->
+    <div class="actions-container">
+      <AudioEngineStatus />
+
+      <SignOut />
+    </div>
 
   </div>
+  {/if}
 
-  <div class="actions-container">
-
-    <AudioEngineStatus />
-
-    <SignOut />
+  <!-- Dashboard {items} -->
+  <div class="slot-container">
+    <slot></slot>
   </div>
+
 </div>
-
-{/if}
-
-
-<!-- <Dashboard {items} /> -->
-<slot></slot>

@@ -4,7 +4,7 @@
   import Dashboard from '../../components/layouts/Dashboard.svelte';
   import Markdown from "../../components/tutorial/Markdown.svelte";
 
-  import { goto, ready, url } from "@sveltech/routify";
+  import { goto, ready, url, params } from "@sveltech/routify";
 
   // import { hydrateJSONcomponent } from '../../stores/common.js';
   // import { hydrateJSONcomponent } from '../../stores/playground.js';
@@ -30,22 +30,13 @@
   let gap = 1;
 
 
-  let handleSelect = async e => {
+  let handleSelect = e => {
 
     try{
-      let json = await fetch(`/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/layout.json`)
-                  .then( r => r.json());
-      
-      $items = json.map( item => hydrateJSONcomponent(item) ); 
 
-      for (const item of $items){ 
-        await populateCommonStoresWithFetchedProps(item);
-        updateItemPropsWithCommonStoreValues(item)   
-      }
-
-      await tick();
-
-      console.log(`DEBUG:tutorial:_layout[/${$selected.chapter_dir}]/[${$selected.section_dir}]:`);
+      // await tick();
+      // console.log(`DEBUG:tutorial:_layout[/${$params.chapter}]/[${$params.section}]:`);
+      // console.log(`DEBUG:tutorial:_layout[/${$selected.chapter_dir}]/[${$selected.section_dir}]:`);
 
       $goto(`/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/`);
     }
@@ -56,18 +47,12 @@
 
 
   onMount( async () => {
-    for (const item of $items) 
-      await populateCommonStoresWithFetchedProps(item); 
-
-    console.log("DEBUG:routes/tutorial/_layout:onMount")
+    // console.log("DEBUG:routes/tutorial/_layout:onMount")
   });
 
   onDestroy(() => {
-    resetStores();
-    console.log("DEBUG:routes/tutorial/_layout:onDestroy")
+    // console.log("DEBUG:routes/tutorial/_layout:onDestroy")
   });
-
-
 
 </script>
 
@@ -75,16 +60,16 @@
 	<title>Sema – Tutorial</title>
 </svelte:head>
 
-<div class="container scrollable">
+<div class="container">
   <div class="sidebar-container">
     <div class="sidebar">
 
       <div class="tutorial-navigator">
-        <button class="button-dark">
+        <button class="button-dark left">
           ◄
         </button>
 
-        <div class="combobox-dark">
+        <div class="combobox-dark middle">
         <select
                 bind:value={ $selected }
                 on:change={ e => handleSelect(e) }
@@ -104,13 +89,11 @@
         </select>
         </div>
 
-        <button class="button-dark">
+        <button class="button-dark right">
           ►
         </button>
 
       </div>
-
-      <br/>
 
       <!-- <Markdown /> -->
       <slot scoped={ $selected }>
@@ -140,6 +123,7 @@
   	/* background-color: #6f7262; */
 	  background-color: #212121;
     overflow: hidden;
+    background: linear-gradient(150deg, rgba(0,18,1,1) 0%, rgba(7,5,17,1) 33%, rgba(16,12,12,1) 67%, rgb(12, 12, 12) 100%);
   }
 
   .sidebar-container {
@@ -150,6 +134,8 @@
     height: 100%;
     /* width: auto; width is defined by child */
     width: 26em;
+    margin-left: 3px;
+    margin-right: 2px;
   }
 
   .dashboard-container {
@@ -239,14 +225,28 @@
 
   }
 
+  
   .tutorial-navigator {
-    display: inline-flex;
-    width: 25em;
-    max-width: 25em;
-    margin-top: 5px;
-    margin-bottom: 5px;
-    margin-left: 10px;
-    margin-right: 10px;
+    display: grid;
+    grid-template-columns: 2em auto 2em;
+    width: 100%;
+    /* max-width: 25em; */
+    margin-top: 3px;
+    /* margin-bottom: 5px; */
+    /* margin-left: 2px; */
+    /* margin-right: 20px; */
+  }
+
+  .left {
+    grid-column: 1;
+  }
+
+  .middle {
+    grid-column: 2;
+  }
+
+  .right {
+    grid-column: 3;
   }
 
 </style>

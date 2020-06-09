@@ -22,8 +22,25 @@ import { items } from '../../stores/playground.js'
 		overflow-y: auto;
 	}
 
+  .error-state {
+    color:red; 
+    margin:15px 0px 15px 25px;
+  }
+
+  .prewrap {
+    display: inline-flexbox;
+    width: 100%;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    white-space: -moz-pre-wrap;
+    white-space: -pre-wrap;
+    white-space: -o-pre-wrap;
+    word-wrap: break-word;
+  }
+
 </style>
 
 <div class='container scrollable'>
-  <pre> { JSON.stringify($items, null, 2) } </pre>
+  <!-- <textarea class='prewrap'> { JSON.stringify($items, null, 2) } </textarea> -->
+  <pre class='prewrap'> { JSON.stringify($items, null, 2) } </pre>
 </div>

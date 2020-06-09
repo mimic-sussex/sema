@@ -1,73 +1,92 @@
-<script context="module">
+<!-- <script context="module">
 	export async function preload() {
 		// '/' absolute URL
 		return await fetch(`/tutorial/01-basics/01-introduction/`).then(r => r.json());
 	}
-</script>
+</script> -->
 
 
 <script>
-
-  import { tick, onMount } from 'svelte';
+  import { tick, onMount, onDestroy } from 'svelte';
   import { url, params } from "@sveltech/routify";
   import marked from 'marked';
   import {
-    selected
+    hydrateJSONcomponent,
+    selected,
+    items
   } from '../../../../stores/tutorial.js';
+
+  import {
+    populateCommonStoresWithFetchedProps,
+    updateItemPropsWithCommonStoreValues,
+    resetStores
+  } from "../../../../stores/common.js";
 
   // export let section; // we are grabbing this export variable value from Routify's file structure variable mechanism [chapter]/[section]
 
   let markdown;
 
-  $: promise = fetchMarkdown($selected.chapter_dir, $selected.section_dir); // Reactive statement, var 'promise' reacts to 'section' changes
+  $: promise = fetchMarkdown($params.chapter, $params.section); // Reactive statement, var 'promise' reacts to 'section' changes
 
   let fetchMarkdown = async (chapter, section) => {
 
     let res, text;
 
-    // if(chapter != undefined && section != undefined){ // There is a call with undefined value when navigating to Playground
+    try{
       res = await fetch(`/tutorial/${chapter}/${section}/index.md`)
       text = await res.text();
-    // }
-    // else
-    // {
-    //   res = await fetch(`/tutorial/01-basics/01-introduction/index.md`)
-    //   text = await res.text();
-    // }
 
-    // console.log(`DEBUG:tutorial/${$params.chapter}/${$params.chapter}/ index`);
-    // console.log($selected)
-    console.log(`DEBUG:/[${chapter}]/[${section}]:fetchMarkdown: `);
+      let json = await fetch(`/tutorial/${$params.chapter}/${$params.section}/layout.json`)
+                        .then( r => r.json());
+        
+      $items = json.map( item => hydrateJSONcomponent(item) ); 
 
-    // await tick();
+      for (const item of $items){ 
+        await populateCommonStoresWithFetchedProps(item);
+        updateItemPropsWithCommonStoreValues(item)   
+      }
+    }
+    catch(error){
+      console.error("Error loading tutorial environment", error);
+    }
+  
+    // await tick();    
     if (res.ok) {
 			let tag = 'script';
       markdown = marked(text);
+      console.log(markdown);
 			let codeID=0;
 			while(markdown.indexOf("<pre><code>")>-1) {
-				markdown = markdown.replace("<pre><code>", `<pre><button style="font-size:70%" type="button" onclick="copyCode('code${codeID}')">copy</button><br><code id='code${codeID++}'>`);
+				markdown = markdown.replace(
+          "<pre><code>", 
+          `<pre>
+            <button style="font-size:70%; text-align: center; float: right; z-index: 1000; top: 30px; position: relative;" type="button" onclick="copyCode('code${codeID}')">copy</button>
+            <code style="-moz-user-select: text; -html-user-select: text; -webkit-user-select: text; -ms-user-select: text; user-select: text; white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word;" id='code${codeID++}'>`
+          );
+
+        // markdown = markdown.replace(
+        //   "<pre><code>", 
+        //   `<pre><code style="-moz-user-select: text; -khtml-user-select: text; -webkit-user-select: text; -ms-user-select: text; user-select: text; white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word;" id='code${codeID++}'>`
+        // );
+
 			};
 						// markdown="test";
     } else {
-      throw new Error(text);
-    }
+      console.error("Error on markdown conversion", error);;
+    } 
   }
 
-
-
-  // $: source = `${$params.chapter} ${section}`;
-  // $: markdown = source; // Reactive expression, 'markdown' reacts to 'source' changes
-
-
   onMount( async () => {
+    for (const item of $items) 
+      await populateCommonStoresWithFetchedProps(item)
 
-		//add in copy button dynamically
-		let el = document.getElementsByClassName('markdown-output');
-
-    // console.log(`DEBUG:tutorial/${$params.chapter}/${$params.chapter}/ index`);
-    // console.log($selected)
+    console.log(`DEBUG:tutorial/${$params.chapter}/${$params.section}/ index`);
     // promise = fetchMarkdown($selected.chapter_dir, $selected.section_dir); // Reactive statement, var 'promise' reacts to 'section' changes
+  });  
 
+  onDestroy(() => {
+    resetStores();
+    // console.log("DEBUG:routes/tutorial/_layout:onDestroy")
   });
 
 
@@ -77,10 +96,10 @@
 
   .markdown-container {
     overflow: auto;
-    margin-left: 10px;
-    margin-right: 10px;
-    margin-bottom: 10px;
-    border: solid 5px #aaaaaa;
+    margin-left: 1px;
+    /* margin-right: 2px;
+    margin-bottom: 2px; */
+    /* border: solid 5px #aaaaaa; */
     border-radius: 5px;
     height: 85vh;
     background: #aaaaaa;
@@ -92,7 +111,7 @@
 
   .markdown-output {
     /* width: 100%; */
-    padding: 0 1em;
+    padding: 0em 0.9em 0em 0.9em;
   }
 
 </style>

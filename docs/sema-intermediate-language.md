@@ -49,18 +49,24 @@ Get a variable
 ```
 It needs a function name, and an array of parameters.   You can use any of the options below:
 
+## Audio inputs
+
+### adc
+Get a signal from the system default input
+Parameters:
+  1. Gain
+
 ## Audio outputs
 
 ### dac
-Output a signal - copy a single signal to all output channels
-Parameters:
-  1. Signal
+Output a signal to the system default audio interface
 
-### dacx
-Output a signal to a single channel
 Parameters:
   1. Signal
-  2. Channel number (starting from 0)
+  2. (optional) Channel number (starting from 0)
+
+If parameter 2 is to given, then the signal is copied to all the outputs
+
 
 ## Oscillators
 
@@ -329,25 +335,19 @@ These functions are paired with 'input' and 'output' in the machine learning win
 
 ### clp
 Phasor derived from constantly running clock phasor
-  1. Multiples of the clock base frequency
+  1. Number of cycles per bar
   2. Phase offset (0-1)
 
 ### clt
 Trigger derived from constantly running clock phasor
-  1. Multiples of the clock base frequency
+  1. Number of triggers per bar
   2. Phase offset (0-1)
 
-### clfreq
-Set the clock frequency (Hz)
- 1. Frequency
-
-### clbpm
-Set the clock speed in bpm
+### clk
+Set the clock 
  1. Beats per minute
+ 2. The number of beats in a bar
 
-### barfreq
-Set the number of times a bar occurs within a cycle of the clock.  New blocks of code are started at the beginning of a bar.
-1. Frequency
 
 ## Triggers
 
@@ -370,3 +370,12 @@ Index into a list
 1. Trigger input - output a value when triggered
 2. The index of the value to be output when a trigger is received (normalised to between 0 and 1)
 3. A list of values
+
+## Mouse
+
+### mouseX
+Mouse X coordinate in the sema client window, normalised to between 0 and 1
+
+### mouseY
+Mouse Y coordinate in the sema client window, normalised to between 0 and 1
+

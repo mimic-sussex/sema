@@ -57,7 +57,8 @@
 
   .markdown-output {
     /* width: 100%; */
-    padding: 0 1em;
+    padding: 0 0.2em;
+
   }
 
 </style>
