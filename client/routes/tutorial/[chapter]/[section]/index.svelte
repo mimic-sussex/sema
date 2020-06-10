@@ -17,6 +17,7 @@
   } from '../../../../stores/tutorial.js';
 
   import {
+    updateItemPropsWithFetchedValues,
     populateCommonStoresWithFetchedProps,
     updateItemPropsWithCommonStoreValues,
     resetStores
@@ -41,7 +42,8 @@
         
       $items = json.map( item => hydrateJSONcomponent(item) ); 
 
-      for (const item of $items){ 
+      for (const item of $items){
+        await updateItemPropsWithFetchedValues(item); 
         await populateCommonStoresWithFetchedProps(item);
         updateItemPropsWithCommonStoreValues(item)   
       }
@@ -54,7 +56,7 @@
     if (res.ok) {
 			let tag = 'script';
       markdown = marked(text);
-      console.log(markdown);
+      // console.log(markdown);
 			let codeID=0;
 			while(markdown.indexOf("<pre><code>")>-1) {
 				markdown = markdown.replace(

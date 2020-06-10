@@ -28,7 +28,7 @@
   "hasFocus": false,
   "theme": "icecoder",
   "data": "",
-  "grammarSource": "/languages/defaultGrammar.ne"
+  "grammarSource": "/languages/default/grammar.ne"
 }, {
   "drag": {
     "dragging": false,

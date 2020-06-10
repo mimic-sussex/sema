@@ -107,9 +107,7 @@
     "title": "Echo state networks",
     "chapter_dir": "03-machine-learning",
     "section_dir": "09-echo-state-network"
-  }
-
-  ]
+  }]
 }, {
   "title": "Language Design",
   "sections": [{
