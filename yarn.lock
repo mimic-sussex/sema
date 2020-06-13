@@ -6069,7 +6069,7 @@ supports-color@^7.1.0:
 
 "svelte-codemirror@https://github.com/mimic-sussex/svelte-codemirror.git":
   version "1.2.1"
-  resolved "https://github.com/mimic-sussex/svelte-codemirror.git#2191b16ee2798b5ccf5289027f55b44cbf908b55"
+  resolved "https://github.com/mimic-sussex/svelte-codemirror.git#ae8ecec2d2e34b939ba87d28a14e0161b5c0a6dd"
   dependencies:
     codemirror "^5.49.2"
     rollup-plugin-node-resolve "^5.0.3"

@@ -118,7 +118,7 @@
     <span class='move' >+</span>
 
     <div  class="content"
-          style="background: { item.static ? '#ccccee' : item.background }"
+          style="background: { item.static ? '#bka' : item.background }"
           on:mousedown={ e => e.stopPropagation() } >
 
       <span class='close'
@@ -151,6 +151,7 @@
     border-radius: 6px;
     border-top-left-radius: 0px;
     border-bottom-right-radius: 3px;
+    background: black;
 
   }
 
