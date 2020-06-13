@@ -68,10 +68,10 @@ main -> _ Statement _
 {% d => ( { '@lang' : d[1] } )  %}
 
 Statement ->
- 	null 
-	|
-	%comment _ Statement
-	{% d => d[2] %}
+  null 
+  |
+  %comment _ Statement
+  {% d => d[2] %}
 	|
   Expression _ %semicolon _ Statement
   {% d => [ { '@spawn': d[0] } ].concat(d[4]) %}
