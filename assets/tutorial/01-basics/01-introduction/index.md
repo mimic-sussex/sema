@@ -12,7 +12,7 @@ Sema is a playground for designing and performing with live coding scoding langu
 
 It is similar to other live coding environments and domain-specific languages for sound and music, such as Supercollider, TidalCycles or Gibber.
 
-Uniquely, Sema provides an integrated experience to machine learning and language design. It has a real-time, interactive interpreter for machine learning libraries and a compiler for BNF grammars as first-class citizens of a client-side web application.
+Uniquely, Sema provides an integrated experience to machine learning and language design. Sema has a real-time, interactive interpreter for machine learning libraries (e.g. [tensorflow.js](https://github.com/mimic-sussex/sema/tree/master/docs)) and a compiler for [BNF grammars](http://hardmath123.github.io/earley.html) as first-class citizens and running client-side.
 
 ### How to use this tutorial
 
@@ -20,12 +20,12 @@ This tutorial aims to provide a lightweight introduction and gradual learning ex
 
 * Part 1 starts with the basics of the playground interface, including layouts, the live coding editors and the all the available widgets.  
 
-* Part 2 will get you going with live coding with the default language.
+* Part 2 will get you started on live coding with the default language.
 
-* Part 3 will show you machine learning wizardry with custom neural networks architecture. 
+* Part 3 will show you some machine learning wizardry with custom neural networks architecture. 
 
-* Part 4 will introduce you to language design concepts, terminology, and workflow to help you design your own custom language. 
+* Part 4 will introduce you to language design concepts and workflow, to help you get started designing your own custom language. 
 
-As you progress through the tutorial, you'll be presented code and comments designed to illustrate how to use Sema's features. You can copy and paste this code in the editors and tweak it to explore the possibilities. 
+As you progress through the tutorial, you'll be presented with code and comments designed to illustrate how to use Sema's features. You can copy and paste code in the editors and tweak it to explore the possibilities. 
 
-Although we recommend that you type it all manually, the <em>live coding</em> way. And most importantly, have fun!!!
+We recommend that you type it all in manually, the <em>live coding</em> way. And most importantly, have fun!!!
