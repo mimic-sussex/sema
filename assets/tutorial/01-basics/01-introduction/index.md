@@ -16,7 +16,7 @@ Uniquely, Sema provides an integrated experience to machine learning and languag
 
 ### How to use this tutorial
 
-This tutorial aims to provide a lightweight introduction and gradual learning experience for you to get going with Sema. We recommended that you go from start to finish. You can navigate via the dropdown menu above (click 'Introduction').
+This tutorial aims to provide a lightweight introduction and gradual learning experience for you to get going with Sema. We recommended that you go from start to finish. You can navigate the Table of Contents via the dropdown menu above (click 'Introduction').
 
 * Part 1 starts with the basics of the playground interface, including layouts, the live coding editors and the all the available widgets.  
 
