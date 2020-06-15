@@ -12,40 +12,41 @@ s+0.5 1,2;
 
 
 const lexer = moo.compile({
-  separator:      /,/,
-  semicolon:      /;/,
+  separator:  /,/,
+  semicolon:  /;/,
   colon:      /\:/,
-  parenl:      /\(/,
-  parenr:      /\)/,
-	bpm: /bpm/,
+  parenl:     /\(/,
+  parenr:     /\)/,
+	bpm:        /bpm/,
 	effectDist: /dist/,
-	effectHPF: /hpf/,
-	effectLPF: /lpf/,
-	effectAmp: /amp/,
-	mousex: /mousex/,
-	mousey: /_mousey/,
-	cut: /cut/,
-	res: /res/,
-	env: /env/,
-	kick:	/kick/,
-	snare:	/snare/,
-	hatopen:	/openhat/,
-	hatclosed:	/closedhat/,
-	bass:	/bass/,
-	lead:	/lead/,
-	speedop: /\*/,
-	offsetop: /\+/,
-	number:         /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?\b/,
-  funcName:       /[a-zA-Z][a-zA-Z0-9]*/,
-  comment:        /\/\/[^\n]*/,
-  ws:             { match: /\s+/, lineBreaks: true},
+	effectHPF:  /hpf/,
+	effectLPF:  /lpf/,
+	effectAmp:  /amp/,
+	mousex:     /mousex/,
+	mousey:     /_mousey/,
+	cut:        /cut/,
+	res:        /res/,
+	env:        /env/,
+	kick:       /kick/,
+	snare:      /snare/,
+	hatopen:    /openhat/,
+	hatclosed:  /closedhat/,
+	bass:       /bass/,
+	lead:       /lead/,
+	speedop:    /\*/,
+	offsetop:   /\+/,
+	number:     /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?\b/,
+  funcName:   /[a-zA-Z][a-zA-Z0-9]*/,
+  comment:    /\/\/[^\n]*/,
+  ws:         { match: /\s+/, lineBreaks: true},
 });
 
 function doEffects(effects, tree) {
 	if (effects.length >0) {
 		for(let e in effects) {
 			switch(effects[e][0]) {
-				case 'dist':		tree = sema.synth('hardclip', [sema.synth('mul', [tree,sema.num(effects[e][1])]) ]); break;
+				case 'dist':
+        	tree = sema.synth('hardclip', [sema.synth('mul', [tree,sema.num(effects[e][1])]) ]); break;
 				case 'hpf':
 					tree = sema.synth('hpz', [tree, sema.num(effects[e][1]), sema.num(0.5)]);
 				break;
@@ -57,7 +58,7 @@ function doEffects(effects, tree) {
 				break;
 			}
 		}
-		}
+	}
 	return tree;
 }
 
@@ -107,8 +108,9 @@ function mix() {
 @lexer lexer
 
 # Grammar definition in the Extended Backus Naur Form (EBNF)
-main -> _ Statement _
-{% d => ( { '@lang' : d[1].concat([sema.synth( 'dac', [mix()] )]) } )  %}
+main -> 
+  _ Statement _
+  {% d => ( { '@lang' : d[1].concat([sema.synth( 'dac', [mix()] )]) } )  %}
 
 Statement ->
   Expression _ %semicolon _ Statement
@@ -122,73 +124,83 @@ Statement ->
 
 
 Expression ->
-Instrument Speed:? Offset:? _ Numberlist:? _ Effects:?
- {% d => {
- 		let channelName = d[0][0];
- 		let sampleName = d[0][1];
-		let speed = d[1] ? d[1] : 1;
-		let ratios = d[4] ? d[4] : [sema.num(1)];
-		let offset = d[2] ? d[2] : 0;
-		let effects = d[6] ? d[6] : [];
- 		return sema.setvar({value:channelName}, sequencer(speed, sampleName, ratios, offset, effects ))
-	}
-	%}
-| Synth Speed:? _ Numberlist _ Numberlist (_ Cutoff):? (_ Resonance):? (_ EnvDepth):? _ Effects:? {% d=>
-	{
-		let speed = d[1] ? d[1] : 1;
-		let ratios = d[3] ? d[3] : [sema.num(1)];
-		let freqs = d[5] ? d[5] : [sema.num(40)];
-		let cutoff = d[6] ? d[6][1] : sema.num(1000);
-		let res = d[7] ? d[7][1].value : 50;
-		let envd = d[8] ? d[8][1].value : 50;
-		let effects = d[10] ? d[10] : [];
-		return sema.setvar({value:d[0]}, synth(speed, ratios, freqs, cutoff, res, envd,effects))
-	}
-%}
-| %bpm _ %number
-{% d => sema.synth('clk', [sema.num(d[2].value), sema.num(4)])%}
+  Instrument Speed:? Offset:? _ Numberlist:? _ Effects:?
+  {% d => {
+      let channelName = d[0][0];
+      let sampleName = d[0][1];
+      let speed = d[1] ? d[1] : 1;
+      let ratios = d[4] ? d[4] : [sema.num(1)];
+      let offset = d[2] ? d[2] : 0;
+      let effects = d[6] ? d[6] : [];
+      return sema.setvar({value:channelName}, sequencer(speed, sampleName, ratios, offset, effects ))
+    }
+  %}
+  | Synth Speed:? _ Numberlist _ Numberlist (_ Cutoff):? (_ Resonance):? (_ EnvDepth):? _ Effects:? 
+  {% d => {
+      let speed = d[1] ? d[1] : 1;
+      let ratios = d[3] ? d[3] : [sema.num(1)];
+      let freqs = d[5] ? d[5] : [sema.num(40)];
+      let cutoff = d[6] ? d[6][1] : sema.num(1000);
+      let res = d[7] ? d[7][1].value : 50;
+      let envd = d[8] ? d[8][1].value : 50;
+      let effects = d[10] ? d[10] : [];
+      return sema.setvar({value:d[0]}, synth(speed, ratios, freqs, cutoff, res, envd,effects))
+    }
+  %}
+  | %bpm _ %number
+  {% d => sema.synth('clk', [sema.num(d[2].value), sema.num(4)]) %}
 
 Cutoff -> %cut MouseCtl {% d=>d[1]%}
+
 Resonance -> %res %number {%d => d[1]%}
+
 EnvDepth -> %env %number {%d => d[1]%}
 
-MouseCtl -> %number  {%d => sema.num(d[0].value) %}
-| %mousey {%d => sema.synth('uexp', [sema.synth('mouseY', []), sema.num(20), sema.num(5000)]) %}
+MouseCtl -> 
+  %number  {% d => sema.num(d[0].value) %}
+  | %mousey {% d => sema.synth('uexp', [sema.synth('mouseY', []), sema.num(20), sema.num(5000)]) %}
 
 SynthParam => %number
 
 Synth ->
-%bass {%d=>'bass'%} | %lead {%d=>'lead'%}
+  %bass 
+  {% d =>'bass' %} 
+  | %lead 
+  {% d => 'lead' %}
 
 
 Instrument ->
-%kick {% d=>['kick', '909b'] %}
-|
-%snare {% d=> ['snare', '909']%}
-|
-%hatopen {% d=> ['hato', '909open']%}
-|
-%hatclosed {% d=> ['hatc', '909closed']%}
+  %kick {% d => ['kick', '909b'] %}
+  |
+  %snare {% d => ['snare', '909'] %}
+  |
+  %hatopen {% d => ['hato', '909open'] %}
+  |
+  %hatclosed {% d => ['hatc', '909closed'] %}
 
 Effects ->
-%parenl _ EffectList _ %parenr {%d=>d[2]%}
+  %parenl _ EffectList _ %parenr 
+  {% d => d[2] %}
 
 EffectList ->
-Effect {% d => [d[0]] %}
-|
-Effect _ %separator _ EffectList {% d => [d[0]].concat(d[4]) %}
+  Effect 
+  {% d => [d[0]] %}
+  |
+  Effect _ %separator _ EffectList 
+  {% d => [d[0]].concat(d[4]) %}
 
 
-Effect -> EffectName %colon %number {%d=>[d[0],d[2].value]%}
+Effect -> 
+  EffectName %colon %number {% d=> [d[0],d[2].value] %}
 
 EffectName ->
-%effectDist {%d=>'dist'%}
-|
-%effectHPF {%d=>'hpf'%}
-|
-%effectLPF {%d=>'lpf'%}
-|
-%effectAmp {%d=>'amp'%}
+  %effectDist {% d => 'dist' %}
+  |
+  %effectHPF {% d=>'hpf' %}
+  |
+  %effectLPF {% d=>'lpf' %}
+  |
+  %effectAmp {% d=>'amp' %}
 
 Numberlist ->
   %number
@@ -200,11 +212,11 @@ Numberlist ->
 
 Speed ->
  %speedop _ %number
- {%d => d[2].value%}
+ {% d => d[2].value %}
 
 Offset ->
  %offsetop _ %number
- {%d => d[2].value%}
+ {% d => d[2].value %}
 
 # Whitespace
 
