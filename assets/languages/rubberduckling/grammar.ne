@@ -10,7 +10,6 @@ s+0.5 1,2;
 
 */
 
-
 const lexer = moo.compile({
   separator:  /,/,
   semicolon:  /;/,
@@ -40,6 +39,7 @@ const lexer = moo.compile({
   comment:    /\/\/[^\n]*/,
   ws:         { match: /\s+/, lineBreaks: true},
 });
+
 
 function doEffects(effects, tree) {
 	if (effects.length >0) {
