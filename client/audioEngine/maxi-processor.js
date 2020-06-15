@@ -1,6 +1,6 @@
 import Maximilian from './maximilian.wasmmodule.js';
 import RingBuffer from "./ringbuf.js"; //thanks padenot
-// import Open303 from './open303.wasmmodule.js';
+import Open303 from './open303.wasmmodule.js';
 
 
 // import {PostMsgTransducer} from './transducer.js'
@@ -225,6 +225,10 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
 
     let q1 = Maximilian.maxiBits.sig(63);
+
+    let o3 = new Open303.Open303()
+    console.log("303", o3);
+    console.log("303", o3.allNotesOff());
 
     // this.sampleRate = 44100;
     console.log("SAMPLERATE", sampleRate);
