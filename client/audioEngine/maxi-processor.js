@@ -429,7 +429,6 @@ class MaxiProcessor extends AudioWorkletProcessor {
           this.xfadeControl.prepare(xfadeBegin, xfadeEnd, 2, true); // short xfade across signals
           this.xfadeControl.triggerEnable(true); //enable the trigger straight away
           this.codeSwapState = this.codeSwapStates.QUEUD;
-          console.log("setup2");
         } catch (err) {
           if (err instanceof TypeError) {
             console.log("TypeError in worklet evaluation: " + err.name + " – " + err.message);
@@ -620,8 +619,15 @@ class MaxiProcessor extends AudioWorkletProcessor {
           //   this.codeSwapState = this.codeSwapStates.NONE;
           //   console.log("xfade complete", xf);
           // }
-          this.signals[0](this._q[0], inputs[0][0][i], this._mems[0]);
-          this.signals[1](this._q[1], inputs[0][0][i], this._mems[1]);
+          try {
+            this.signals[0](this._q[0], inputs[0][0][i], this._mems[0]);
+            this.signals[1](this._q[1], inputs[0][0][i], this._mems[1]);
+          } catch (err) {
+            console.log("EVAL ERROR", err);
+            console.log(this.currentSignalFunction);
+            console.log(this._q[this.currentSignalFunction]);
+            this.signals[this.currentSignalFunction] = (x,y,z) => {return 0};
+          }
           // let xf = this.xfadeControl.play(i == 0 ? 1 : 0);
           // let xf = this.xfadeControl.play(barTrig);
           // if (i==0) console.log(xf);
@@ -640,6 +646,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
             console.log("EVAL ERROR", err);
             console.log(this.currentSignalFunction);
             console.log(this._q[this.currentSignalFunction]);
+            this.signals[this.currentSignalFunction] = (x,y,z) => {return 0};
           }
         }
 
