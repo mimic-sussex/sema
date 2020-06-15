@@ -26,6 +26,6 @@ This tutorial aims to provide a lightweight introduction and gradual learning ex
 
 * Part 4 will introduce you to language design concepts, terminology, and workflow to help you design your own custom language. 
 
-As you progress through the tutorial, you'll be presented code and comments designed to illustrate how to use Sema's features. You can copy and paste this code in the editors, although we recommend that you type it all manually  and explore the possibilities, the <em>live coding</em> way.
+As you progress through the tutorial, you'll be presented code and comments designed to illustrate how to use Sema's features. You can copy and paste this code in the editors and tweak it to explore the possibilities. 
 
-But most importantly, have fun!!!
+Although we recommend that you type it all manually, the <em>live coding</em> way. And most importantly, have fun!!!
