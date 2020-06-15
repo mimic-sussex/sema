@@ -623,7 +623,7 @@ class IRToJavascript {
         return ccode;
       },
       '@num': (ccode, el) => {
-        if (el.value) {
+        if (el.value != undefined) {
           ccode.loop += `${el.value}`;
         }
         //  else {
