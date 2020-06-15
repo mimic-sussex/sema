@@ -437,7 +437,7 @@ var jsFuncMap = {
 	},
 	o303: {
 		setup: (o, p) => `${o} = new Open303.Open303();
-                      ${o}.setSampleRate(this.sampleRate);
+                      ${o}.setSampleRate(sampleRate);
                       ${o}_tnote = new Maximilian.maxiTrigger();
                       ${o}_twf = new Maximilian.maxiTrigger();
                       ${o}_tcut = new Maximilian.maxiTrigger();
@@ -623,7 +623,7 @@ class IRToJavascript {
         return ccode;
       },
       '@num': (ccode, el) => {
-        if (el.value) {
+        if (el.value != undefined) {
           ccode.loop += `${el.value}`;
         }
         //  else {
