@@ -52,6 +52,18 @@ let source = `
 
 
 `;
+
+let renderer = new marked.Renderer();
+renderer.link = function(href, title, text) {
+    let link = marked.Renderer.prototype.link.apply(this, arguments);
+    return link.replace("<a","<a target='_blank'");
+};
+
+marked.setOptions({
+    renderer: renderer
+});
+
+
 let markdown = marked(source);
 console.log(markdown);
 </script>

@@ -18,7 +18,7 @@
 		"lineNumbers": true,
 		"hasFocus": false,
 		"theme": "icecoder",
-		"data": "// Place the cursor on this panel and press cmd-Enter [Mac] OR ctrl-Enter [Win/Linux] to evaluate this code and playback sound! \n\n// Press cmd-. [Mac] OR ctrl-. [Win/Linux] to stop sound! \n\n> :x:{{{{4}clp, [3,2]}rsq}\\909b,2,0.1}asymclip;\n> :z:{{{8}clp,[1,0]}rsq}\\909;\n> {:x:,:z:}sum;\n\n\n",
+		"data": "// Place the cursor on this panel \n\n// Press cmd-Enter [Mac] OR ctrl-Enter [Win/Linux] to evaluate this code and playback sound! \n\n:x:{{{{4}clp, [3,2]}rsq}\\909b,2,0.1}asymclip;\n:z:{{{8}clp,[1,0]}rsq}\\909;\n\n> {:x:,:z:}sum;\n\n\n// Press cmd-. [Mac] OR ctrl-. [Win/Linux] to stop sound! ",
 		"grammarSource": "/languages/default/grammar.ne",
 		"liveCodeSource": "/languages/default/code.sem"
 	},

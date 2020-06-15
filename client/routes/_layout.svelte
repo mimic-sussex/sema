@@ -139,7 +139,7 @@
   .slot-container {
     height: 100%;
     grid-row: 2;
-
+    width: 100%;
   }
 
 	h1 {
