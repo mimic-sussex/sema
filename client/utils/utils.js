@@ -40,5 +40,5 @@ export async function fetchFrom(url){
     catch(error){ 
       throw Error(error);
     }
-  } else throw Error("Empty URL");
+  } else throw Error("Error fetchFrom: Empty URL");
 };

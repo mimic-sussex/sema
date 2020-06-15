@@ -296,7 +296,7 @@ module.exports = {
 		stats: "errors-only",
 		host: `localhost`, // Defaults to `localhost`
 		port: 8080, // Defaults to 8080
-		open: true, // Open the page in browser
+		open: false, // Open the page in browser
 		overlay: true, // overlay for capturing compilation related warnings and errors
 		publicPath: "/",
 		watchContentBase: true,

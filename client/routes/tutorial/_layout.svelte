@@ -233,7 +233,7 @@
     /* max-width: 25em; */
     margin-top: 3px;
     /* margin-bottom: 5px; */
-    /* margin-left: 2px; */
+    margin-left: 3px;
     /* margin-right: 20px; */
   }
 

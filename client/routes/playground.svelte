@@ -22,6 +22,7 @@
   } from  "../stores/playground.js"
 
   import {
+    updateItemPropsWithFetchedValues,
     populateCommonStoresWithFetchedProps,
     updateItemPropsWithCommonStoreValues,
     resetStores,
@@ -66,6 +67,8 @@
     if(type !== undefined){
       try {
         let newItem = await createNewItem(type, value);
+
+        await updateItemPropsWithFetchedValues(newItem);
 
         await populateCommonStoresWithFetchedProps(newItem);
 
@@ -131,6 +134,9 @@
     // console.log("DEBUG:routes/playground:onMount")
 
     // Sequentially fetch data from individual items' properties into language design workflow stores
+    for (const item of $items)
+      await updateItemPropsWithFetchedValues(item);
+
     for (const item of $items)
       await populateCommonStoresWithFetchedProps(item);
 

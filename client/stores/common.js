@@ -146,21 +146,66 @@ export const modelEditorValue = writable("");
 
 
 // export const populateStoresWithFetchedProps = async (newItem) => {
+
+
+async function updateLiveCodeEditorPropsWithFetchedValues(item){
   
+  if(item !== undefined){
+    try{
+      if(item.data === undefined && item.liveCodeSource !== ``){ // liveCodeEditor with language source 
+        item.data = await fetchFrom(item.liveCodeSource);
+      }
+      
+      if(item.grammarSource !== ``){ // liveCodeEditor with language source 
+        item.grammar = await fetchFrom(item.grammarSource);
+      }
+    }
+    catch(error){
+      console.error("Error fetching props for Live Code Editor item");
+    }
+  }
+}  
+
+
+export async function updateItemPropsWithFetchedValues(item){
+
+  if(item && item !== undefined ){  
+    try{
+      switch (item.type) {
+        case "liveCodeEditor":
+          await updateLiveCodeEditorPropsWithFetchedValues(item);
+          break;
+        case "grammarEditor":
+          break;
+        default:
+          break;
+      }
+    }
+    catch(error){
+      console.error("Error updating item's props with fetched values.", error);
+    } 
+  }
+  else
+    console.error(
+			"Error updating item's props with fetched values: item null."
+		); 
+}
+        
+
 export const populateCommonStoresWithFetchedProps = async (item) => {
 
   if(item !== null){  
     try{
       switch (item.type) {
 				case "liveCodeEditor":
-          let code = await fetchFrom(item.liveCodeSource);
-          liveCodeEditorValue.set(code);
-          let grammar = await fetchFrom(item.grammarSource);
-          grammarEditorValue.set(grammar);
-          let compileOutput = compile(grammar).output;
-          grammarCompiledParser.set(compileOutput);
+					liveCodeEditorValue.set(item.data);
+					grammarEditorValue.set(item.grammar);
+					let compileOutput = compile(item.grammar).output;
+					grammarCompiledParser.set(compileOutput);
 					break;
 				case "grammarEditor":
+					
+
 					break;
 				default:
 					break;
@@ -174,20 +219,21 @@ export const populateCommonStoresWithFetchedProps = async (item) => {
     console.error("Error Populating stores from fetched LiveCode props: item null");
 }
 
+
 export const updateItemPropsWithCommonStoreValues = (item) => {
 
   if(item !== null){  
     try{
       switch (item.type) {
-        case "liveCodeEditor":
-          item.data = get(liveCodeEditorValue);
-          break;
-        case "grammarEditor":
-          item.data = get(grammarEditorValue);      
-          break;
-        default:
-          break;
-      }
+				case "liveCodeEditor":
+					item.data = get(liveCodeEditorValue);
+					break;
+				case "grammarEditor":
+					item.data = get(grammarEditorValue);
+					break;
+				default:
+					break;
+			}
     }
     catch(error){
       console.error("Error updating item's props with common store values.", error);

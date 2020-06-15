@@ -74,7 +74,7 @@ Take a look at the sequencing tutorial for more examples of how to use samples.
 
 ### Looping and slicing samples
 
-Samples can be looped and sliced using the slicer functions.  To use this, replace the ```\``` at the beginning of the sample name with a bar symbol ```|```.  The slicer continually loops a sample.  It takes two parameters: the first is a trigger, which retriggers the sample. The second is a position is the position within the sample that the slicer starts from when it receives a trigger.
+Samples can be looped and sliced using the slicer functions.  To use this, replace the ```\``` at the beginning of the sample name with a bar symbol ```|```.  The slicer continually loops a sample.  It takes two parameters: the first is a trigger, which retriggers the sample. The second is the position within the sample that the slicer starts from when it receives a trigger.
 
 This code simply loops a samples
 ```
@@ -87,7 +87,7 @@ We can add a trigger to the first parameter. Try varying the frequency of the im
 > {{1}imp,0.3}|patterndrone2;
 ```
 
-The second parameter could be controlled be an oscillator. Here, a phasor slowly moves the offset point in a 10 second cycle
+The second parameter could be controlled by an oscillator. Here, a phasor slowly moves the offset point in a 10 second cycle
 
 ```
 > {{3}imp,{0.1}pha}|patterndrone2;

@@ -102,6 +102,37 @@
 </script>
 
 
+<div class="layout-template-container scrollable">
+  <!-- Notice that were passing items as a store here ($)   -->
+  <Grid items={$items}
+        {breakpoints}
+        {cols}
+        {rowHeight}
+        {gap}
+        useTransform
+        let:item
+        on:adjust={onAdjust}
+        on:mount={onChildMount}
+        >
+
+    <span class='move' >+</span>
+
+    <div  class="content"
+          style="background: { item.static ? '#bka' : item.background }"
+          on:mousedown={ e => e.stopPropagation() } >
+
+      <span class='close'
+            on:click={ () => remove(item) } >✕</span>
+
+  		<svelte:component this={item.component}
+                        {...item}
+                        on:change={ e => update(item, e.detail.prop, e.detail.value) } />
+
+    </div>
+  </Grid>
+</div>
+
+
 <style>
   /* .layout-template-container {
     height: 100vh;
@@ -120,6 +151,7 @@
     border-radius: 6px;
     border-top-left-radius: 0px;
     border-bottom-right-radius: 3px;
+    background: black;
 
   }
 
@@ -177,33 +209,3 @@
 	}
 
 </style>
-
-<div class="layout-template-container scrollable">
-  <!-- Notice that were passing items as a store here ($)   -->
-  <Grid items={$items}
-        {breakpoints}
-        {cols}
-        {rowHeight}
-        {gap}
-        useTransform
-        let:item
-        on:adjust={onAdjust}
-        on:mount={onChildMount}
-        >
-
-    <span class='move' >+</span>
-
-    <div  class="content"
-          style="background: { item.static ? '#ccccee' : item.background }"
-          on:mousedown={ e => e.stopPropagation() } >
-
-      <span class='close'
-            on:click={ () => remove(item) } >✕</span>
-
-  		<svelte:component this={item.component}
-                        {...item}
-                        on:change={ e => update(item, e.detail.prop, e.detail.value) } />
-
-    </div>
-  </Grid>
-</div>

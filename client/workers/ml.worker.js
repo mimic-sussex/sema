@@ -174,7 +174,7 @@ onmessage = m => {
       } else
         console.log("done");
     } catch (e) {
-      console.log(`Code eval exception: ${e}`);
+      console.log(`Code eval exception: ${e} `, m.data.eval);
     }
   } else if ("val" in m.data) {
     // console.log("DEBUG:ml.worker:onmessage:val");

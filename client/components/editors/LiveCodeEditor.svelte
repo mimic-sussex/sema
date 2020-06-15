@@ -108,6 +108,34 @@
     });
   }
 
+  let onFocus = e => {
+
+
+  }
+
+  let onBlur = e => {
+
+
+    
+  }
+
+
+  let onRefresh = e =>  {
+
+
+  }
+
+  let onGutterCick = e => {
+
+
+  }
+
+  let onViewportChange = e => {
+
+
+  }   
+
+
   let parseLiveCodeAsync = async e => {
     // console.log('DEBUG:LiveCodeEditor:parseLiveCode:');
     // console.log(e);
@@ -309,8 +337,6 @@
     // console.log('DEBUG:LiveCodeEditor:onDestroy:')
     parserWorker.terminate();
     parserWorker = null; // cannot delete in strict mode
-
-
 	});
 
 
@@ -367,6 +393,11 @@
   <CodeMirror bind:this={codeMirror}
               bind:value={data}
               on:change={ e => onChange(e) }
+              on:focus={ e => onFocus(e) }
+              on:blur={ e => onBlur(e) }
+              on:refresh={ e => onRefresh(e) }
+              on:gutterClick={ e => onGutterCick(e) }
+              on:viewportChange={ e => onViewportChange(e) }   
               {tab}
               {lineNumbers}
               ctrlEnter={evalLiveCodeOnEditorCommand}

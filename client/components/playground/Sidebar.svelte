@@ -221,6 +221,7 @@
 
   .layout-combobox-container{
     margin-top: 3px;
+    margin-left:3px;
   }
 
   .combobox-dark {
