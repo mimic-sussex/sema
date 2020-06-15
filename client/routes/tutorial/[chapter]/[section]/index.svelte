@@ -25,6 +25,19 @@
 
   // export let section; // we are grabbing this export variable value from Routify's file structure variable mechanism [chapter]/[section]
 
+
+  let renderer = new marked.Renderer();
+  renderer.link = function(href, title, text) {
+    let link = marked.Renderer.prototype.link.apply(this, arguments);
+    return link.replace("<a","<a target='_blank'");
+  };
+
+  marked.setOptions({
+    renderer: renderer
+  });
+
+
+
   let markdown;
 
   $: promise = fetchMarkdown($params.chapter, $params.section); // Reactive statement, var 'promise' reacts to 'section' changes
