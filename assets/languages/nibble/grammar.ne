@@ -289,7 +289,8 @@ main -> _ Statement _                                         {% d => ({ "@lang"
 Statement ->
       Expression _ %semicolon _ Statement            {% d => [{ "@spawn": d[0] }].concat(d[4]) %}
       |
-      Expression                                      {% d => [{"@sigOut": { "@spawn": bitToSig(d[0]) }}] %}
+      Expression
+		{% d => [{ "@spawn": sema.synth('dac',[ bitToSig(d[0]) ]) }] %}
 
 Expression ->
 
