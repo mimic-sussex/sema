@@ -226,10 +226,6 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
     let q1 = Maximilian.maxiBits.sig(63);
 
-    let o3 = new Open303.Open303()
-    console.log("303", o3);
-    console.log("303", o3.allNotesOff());
-
     // this.sampleRate = 44100;
     console.log("SAMPLERATE", sampleRate);
     //indicate audio settings in WASM and JS domains
