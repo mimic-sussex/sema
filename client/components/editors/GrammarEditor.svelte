@@ -52,8 +52,8 @@
   let log = e => { /* console.log(...e); */ }
 
   onMount(async () => {
-    // console.log('DEBUG:GrammarCodeEditor:onMount:')
-    // console.log(data);
+    console.log('DEBUG:GrammarCodeEditor:onMount:')
+    console.log(data);
     codeMirror.set(data, "ebnf");
 
     log( id, name, type, lineNumbers, hasFocus, theme, background, data, responsive, resizable, resize, draggable, drag, min, max, x, y, w, h, component );
@@ -101,32 +101,33 @@
   //   }
   // }
   //
-  let compileGrammarOnChange = e => {
+  let onChange = e => {
 
-    let grammarEditorValue = null;
+    // let grammarEditorValue = null;
+
+
 
     // if(e !== undefined && e.detail !== undefined && e.detail.value !== undefined)
     //   grammarEditorValue = e.detail.value;
     if(e !== undefined){
-      grammarEditorValue = codeMirror.getValue();
-    }
-    else
-      grammarEditorValue = $grammarEditorValue;
+      try {
+        $grammarEditorValue = codeMirror.getValue();
+      
+        // window.localStorage.grammarEditorValue = $grammarEditorValue;
+        let {errors, output} = compile($grammarEditorValue);
+        $grammarCompiledParser = output;
+        $grammarCompilationErrors = errors;
 
-    try {
-      window.localStorage.grammarEditorValue = grammarEditorValue;
-      let {errors, output} = compile(grammarEditorValue);
-      $grammarCompiledParser = output;
-      $grammarCompilationErrors = errors;
-      dispatch('change', { prop:'data', value: grammarEditorValue });
+        dispatch('change', { prop:'data', value: codeMirror.getValue() });
 
-      // console.log('DEBUG:GrammarEditor:compileGrammarOnChange');
-      // console.log($grammarCompiledParser);
-      // console.log($grammarCompilationErrors);
-    }
-    catch (e) {
+        // console.log('DEBUG:GrammarEditor:compileGrammarOnChange');
+        // console.log($grammarCompiledParser);
+        // console.log($grammarCompilationErrors);
+      }
+      catch (e) {
 
 
+      }
     }
   }
 
@@ -187,5 +188,5 @@ bind:value={item.value} -->
               bind:value={data}
               tab={true}
               lineNumbers={true}
-              on:change={compileGrammarOnChange} />
+              on:change={ e => onChange(e)} />
 </div>

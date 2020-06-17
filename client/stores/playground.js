@@ -216,7 +216,6 @@ const originalItems = [
 			background: "#151515",
 			lineNumbers: true,
 			hasFocus: false,
-			background: "#151515",
 			theme: "icecoder",
 			component: LiveCodeEditor,
 			data: default_liveCode,
@@ -277,7 +276,9 @@ const originalItems = [
 			theme: "monokai",
 			background: "#AAAAAA",
 			component: GrammarEditor,
-			data: default_grammar,
+			// data: default_grammar,
+			data: "",
+			grammarSource: "/languages/default/grammar.ne",
 		},
 	},
 
@@ -439,6 +440,7 @@ export async function createNewItem (type, content){
 				component: GrammarEditor,
 				background: "#AAAAAA",
 				theme: "monokai",
+				grammarSource
 			};
       // component.data = get(grammarEditorValue); // Get the store value with Svelte's get
 			break;
@@ -472,7 +474,7 @@ export async function createNewItem (type, content){
 			component = {
 				component: Analyser,
 				background: "#ffffff",
-				mode: "spectrogram",
+				mode: "",
 			};
 			break;
 		case "postIt":

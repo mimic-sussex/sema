@@ -1,5 +1,6 @@
 <script>
-	import { onMount } from 'svelte';
+	import { onMount, createEventDispatcher } from 'svelte';
+	
   import { get } from 'svelte/store';
 
   import Grid from "svelte-grid";
@@ -16,6 +17,7 @@
 
   // import { hydrateJSONcomponent } from '../../stores/common.js'
 
+  const dispatch = createEventDispatcher();
 
   const messaging = new PubSub();
 
@@ -63,11 +65,11 @@
   };
 
 	const update = (item, prop, value) => {
-    if( prop !== undefined || value !== undefined ){
-      // item[prop] = value;
-      // $items = $items; // force an update
-      $items = $items.map(i => i === item ? { ...i, [prop]: value } : i);
-    }
+    dispatch('update', { 
+      item,
+      prop, 
+      value
+    });
 	}
 
 

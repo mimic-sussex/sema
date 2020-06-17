@@ -151,20 +151,49 @@ export const modelEditorValue = writable("");
 async function updateLiveCodeEditorPropsWithFetchedValues(item){
   
   if(item !== undefined){
-    try{
-      if(item.data === undefined && item.liveCodeSource !== ``){ // liveCodeEditor with language source 
-        item.data = await fetchFrom(item.liveCodeSource);
+    if(item.data === undefined && item.liveCodeSource !== ``){ // liveCodeEditor with language source, FIRST load 
+      try{
+        item.data = await fetchFrom(item.liveCodeSource); 
+        item.liveCodeSource = ``; // set RELOAD from local storage;
+
+        if (item.grammarSource !== ``) {
+          // liveCodeEditor with language source
+          item.grammar = await fetchFrom(item.grammarSource);
+        }
       }
-      
-      if(item.grammarSource !== ``){ // liveCodeEditor with language source 
-        item.grammar = await fetchFrom(item.grammarSource);
+      catch(error){
+        console.error("Error fetching props for Live Code Editor item");
       }
     }
-    catch(error){
-      console.error("Error fetching props for Live Code Editor item");
+    else if (item.liveCodeSource === ``){ // reloads fetch data from localStorage
+      if (localStorage.liveCodeEditorValue && localStorage.liveCodeEditorValue !== ``){
+				item.data = localStorage.liveCodeEditorValue;
+      }
+      else
+        console.error("Error fetching props for Live Code Editor item: Local store empty");
     }
+    // else if(item.data !== undefined && item.liveCodeSource) return; // first load, hardcoded defaults 
   }
 }  
+
+async function updateGrammarEditorPropsWithFetchedValues(item) {
+	if (item !== undefined) {
+		if (item.data === "" && item.grammarSource !== ``) {
+      try {
+			  // liveCodeEditor with language source
+        item.data = await fetchFrom(item.grammarSource);
+        item.grammarSource = ``; // set next RELOAD from local storage;
+		  } catch (error) {
+		    console.error("Error fetching props for Grammar Editor item", error);
+      }
+    }
+    else if (item.grammarSource == ``) { // reloads fetch data from localStorage
+			// liveCodeEditor with language source
+			item.grammar = localStorage.grammarEditorValue;
+		}
+	}
+  // else if(item.data !== undefined && item.grammarSource) return; // first load, hardcoded defaults  
+}
 
 
 export async function updateItemPropsWithFetchedValues(item){
@@ -176,6 +205,7 @@ export async function updateItemPropsWithFetchedValues(item){
           await updateLiveCodeEditorPropsWithFetchedValues(item);
           break;
         case "grammarEditor":
+          await updateGrammarEditorPropsWithFetchedValues(item);
           break;
         default:
           break;
@@ -186,9 +216,7 @@ export async function updateItemPropsWithFetchedValues(item){
     } 
   }
   else
-    console.error(
-			"Error updating item's props with fetched values: item null."
-		); 
+    console.error("Error updating item's props with fetched values: item null."); 
 }
         
 
@@ -200,8 +228,7 @@ export const populateCommonStoresWithFetchedProps = async (item) => {
 				case "liveCodeEditor":
 					liveCodeEditorValue.set(item.data);
 					grammarEditorValue.set(item.grammar);
-					let compileOutput = compile(item.grammar).output;
-					grammarCompiledParser.set(compileOutput);
+					grammarCompiledParser.set(compile(item.grammar).output);
 					break;
 				case "grammarEditor":
 					
@@ -229,7 +256,7 @@ export const updateItemPropsWithCommonStoreValues = (item) => {
 					item.data = get(liveCodeEditorValue);
 					break;
 				case "grammarEditor":
-					item.data = get(grammarEditorValue);
+					// item.data = get(grammarEditorValue);
 					break;
 				default:
 					break;
@@ -246,7 +273,6 @@ export const updateItemPropsWithCommonStoreValues = (item) => {
 }
 
 export const resetStores = () => {
-
   grammarEditorValue.set("");
   grammarCompiledParser.set("");
   grammarCompilationErrors.set("");

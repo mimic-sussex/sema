@@ -25,15 +25,7 @@
     updateItemPropsWithFetchedValues,
     populateCommonStoresWithFetchedProps,
     updateItemPropsWithCommonStoreValues,
-    resetStores,
-    // liveCodeEditorValue,
-    // liveCodeParseErrors,
-    // liveCodeParseResults,
-    // liveCodeAbstractSyntaxTree,
-    // dspCode,
-    // grammarEditorValue,
-    // grammarCompiledParser,
-    // grammarCompilationError,
+    resetStores
   } from  "../stores/common.js"
 
   const messaging = new PubSub();
@@ -78,12 +70,42 @@
         $items =  [...$items, ...[{ ...newItem, ...findOutPosition }]]; // Append to playground Items stores
       }
       catch (error){
-        console.error("Error on routes/Playground.AddItem")
+        console.error("Error on routes/Playground.addItem")
       }
     }
     else
-      console.error("Error on routes/Playground.AddItem: undefined parameter")
+      console.error("Error on routes/Playground.addItem: undefined parameter")
   }
+
+	const update = e => {
+    if( e.detail.item && e.detail.prop && e.detail.value ){
+      try{
+        switch (e.detail.item.type) {
+          case "liveCodeEditor":
+            localStorage.liveCodeEditorValue = e.detail.value;
+            break;
+          case "grammarEditor":
+            localStorage.grammarEditorValue = e.detail.value;            
+            break;
+          case "modelEditor":
+            localStorage.modelEditorValue = e.detail.value;            
+            break;              
+          default:
+            break;
+        }
+
+        // Filter out item, update it and refresh items's list
+        // item[prop] = value;
+        // $items = $items; // force an update
+        $items = $items.map(i => i === e.detail.item ? { ...i, [e.detail.prop]: e.detail.value } : i);
+      }
+      catch(error){
+        console.error("Error on routes/Playground.update: updating Playground items");
+      }
+    }
+	}
+
+
 
   const clearItems = () => {
     // console.log("DEBUG:dashboard:clearItems:")
@@ -91,6 +113,8 @@
     $items = $items.slice($items.length);
     // items.set([]);
   }
+
+
 
 
   const saveEnvironment = e => {
@@ -148,13 +172,12 @@
     envLoadSubscriptionToken = messaging.subscribe('playground-env-load', e => loadEnvironment(e) );
 		resetSubscriptionToken = messaging.subscribe('playground-reset', e => clearItems() );
     unsubscribeItemsChangeCallback = items.subscribe(value => {
-      // console.log('Playground items changed');
+      console.log('Playground items changed: ', value );
     });
   });
 
   onDestroy(() => {
     // console.log("DEBUG:routes/playground:onDestroy")
-
     messaging.unsubscribe(addSubscriptionToken);
     messaging.unsubscribe(envSaveSubscriptionToken);
     messaging.unsubscribe(envLoadSubscriptionToken);
@@ -181,6 +204,7 @@
                 {cols}
                 {rowHeight}
                 {gap}
+                on:update={ e => update(e) }
                 />
   </div>
 </div>
