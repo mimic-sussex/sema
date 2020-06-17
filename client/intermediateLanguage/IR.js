@@ -618,8 +618,8 @@ class IRToJavascript {
       },
       '@string': (ccode, el) => {
         // console.log(el.value);
-        if (typeof el.value === 'string' || el.value instanceof String) {
-          ccode.loop += `'${el.value}'`;
+        if (typeof el === 'string' || el instanceof String) {
+          ccode.loop += `'${el}'`;
         }
         // else {
         //   ccode = IRToJavascript.traverseTree(el, ccode, level, vars, blockIdx);

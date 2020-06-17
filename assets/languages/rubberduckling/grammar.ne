@@ -67,7 +67,7 @@ function sequencer(speed, sample, ratios, offset, effects) {
 	let clk = sema.synth('clp', [sema.num(speed), sema.num(offset)]);
 	let seq = sema.synth('rsq', [clk, { '@list': ratios } ])
 //	let triggers = sema.synth('imp', [sema.num(speed)]);
-	tree = sema.synth( 'sampler', [seq, { "@string": {value:sample} }] )
+	tree = sema.synth( 'sampler', [seq, { "@string": sample }] )
 	tree = doEffects(effects, tree);
 	return tree;
 }

@@ -50,13 +50,13 @@ Expression ->
   {% d => sema.synth( d[2].value, d[0]['@params'] ) %}
   |
   ParameterList _ %sample
-  {% d => sema.synth( 'sampler', d[0]['@params'].concat( [ sema.str( d[2] ) ] ) ) %}
+  {% d => sema.synth( 'sampler', d[0]['@params'].concat( [ sema.str( d[2].value ) ] ) ) %}
   |
   ParameterList _ %slice
-  {% d => sema.synth( 'slice', d[0]['@params'].concat( [ sema.str( d[2] ) ] ) ) %}
+  {% d => sema.synth( 'slice', d[0]['@params'].concat( [ sema.str( d[2].value ) ] ) ) %}
   |
   ParameterList _ %stretch
-  {% d => sema.synth( 'stretch', d[0]['@params'].concat( [ sema.str( d[2] ) ] ) ) %}
+  {% d => sema.synth( 'stretch', d[0]['@params'].concat( [ sema.str( d[2].value ) ] ) ) %}
   |
   %variable _ Expression
   {% d => sema.setvar( d[0].value, d[2] ) %}
@@ -87,7 +87,7 @@ ParamElement ->
   {% d => ( { '@num': d[0] } ) %}
 	|
 	%string
-  {% d => ( { '@string': d[0] } ) %}
+  {% d => ( { '@string': d[0].value } ) %}
   |
   Expression
   {% id %}
