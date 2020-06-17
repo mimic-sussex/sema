@@ -33,7 +33,7 @@ main -> _ Statement _
 {% d => ( { '@lang' : d[1] } )  %}
 
 Statement ->
-  null 
+  null
   |
   %comment _ Statement
   {% d => d[2] %}
@@ -43,7 +43,7 @@ Statement ->
   |
   Expression _ %semicolon
   {% d => [ { '@spawn': d[0] } ] %}
-	
+
 
 Expression ->
   ParameterList _ %funcName
@@ -93,7 +93,7 @@ ParamElement ->
   {% id %}
   |
   %variable
-  {% d => sema.getvar( d[0] ) %}
+  {% d => sema.getvar( d[0].value ) %}
   |
   %listBegin Params  %listEnd
   {% d => ( { '@list': d[1] } )%}

@@ -75,7 +75,6 @@ function sequencer(speed, sample, ratios, offset, effects) {
 function synth(speed, ratios, freqs, cutoff, resonance, envd, effects) {
 	let clk = sema.synth('clp', [sema.num(speed), sema.num(0)]);
 	let seq = sema.synth('rsq', [clk, { '@list': ratios } ]);
-	//let pitch = sema.num(40);
 	let pitch = sema.synth('rsq', [clk, { '@list': ratios }, { '@list': freqs }  ]);
 	let slide = sema.num(0);
 	let accent = sema.num(0);
@@ -93,12 +92,12 @@ function synth(speed, ratios, freqs, cutoff, resonance, envd, effects) {
 }
 
 function mix() {
- 	return sema.synth('mix', [sema.getvar( {value:'kick'} )
-	,sema.getvar( {value:'snare'})
-	,sema.getvar( {value:'hato'})
-	,sema.getvar( {value:'hatc'})
-	,sema.getvar( {value:'bass'})
-	,sema.getvar( {value:'lead'})
+ 	return sema.synth('mix', [sema.getvar('kick')
+	,sema.getvar( 'snare')
+	,sema.getvar( 'hato')
+	,sema.getvar( 'hatc')
+	,sema.getvar( 'bass')
+	,sema.getvar( 'lead')
 	]);
 }
 
@@ -108,7 +107,7 @@ function mix() {
 @lexer lexer
 
 # Grammar definition in the Extended Backus Naur Form (EBNF)
-main -> 
+main ->
   _ Statement _
   {% d => ( { '@lang' : d[1].concat([sema.synth( 'dac', [mix()] )]) } )  %}
 
@@ -135,7 +134,7 @@ Expression ->
       return sema.setvar({value:channelName}, sequencer(speed, sampleName, ratios, offset, effects ))
     }
   %}
-  | Synth Speed:? _ Numberlist _ Numberlist (_ Cutoff):? (_ Resonance):? (_ EnvDepth):? _ Effects:? 
+  | Synth Speed:? _ Numberlist _ Numberlist (_ Cutoff):? (_ Resonance):? (_ EnvDepth):? _ Effects:?
   {% d => {
       let speed = d[1] ? d[1] : 1;
       let ratios = d[3] ? d[3] : [sema.num(1)];
@@ -156,16 +155,16 @@ Resonance -> %res %number {%d => d[1]%}
 
 EnvDepth -> %env %number {%d => d[1]%}
 
-MouseCtl -> 
+MouseCtl ->
   %number  {% d => sema.num(d[0].value) %}
   | %mousey {% d => sema.synth('uexp', [sema.synth('mouseY', []), sema.num(20), sema.num(5000)]) %}
 
 SynthParam => %number
 
 Synth ->
-  %bass 
-  {% d =>'bass' %} 
-  | %lead 
+  %bass
+  {% d =>'bass' %}
+  | %lead
   {% d => 'lead' %}
 
 
@@ -179,18 +178,18 @@ Instrument ->
   %hatclosed {% d => ['hatc', '909closed'] %}
 
 Effects ->
-  %parenl _ EffectList _ %parenr 
+  %parenl _ EffectList _ %parenr
   {% d => d[2] %}
 
 EffectList ->
-  Effect 
+  Effect
   {% d => [d[0]] %}
   |
-  Effect _ %separator _ EffectList 
+  Effect _ %separator _ EffectList
   {% d => [d[0]].concat(d[4]) %}
 
 
-Effect -> 
+Effect ->
   EffectName %colon %number {% d=> [d[0],d[2].value] %}
 
 EffectName ->
