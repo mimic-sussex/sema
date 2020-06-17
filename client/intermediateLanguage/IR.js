@@ -417,10 +417,14 @@ var jsFuncMap = {
   },
   svf: {
     //set cutoff and resonance only when params change to save CPU
-		setup: (o, p) => `${o} = new Maximilian.maxiSVF(); ${o}_p1 = new Maximilian.maxiTrigger(); ${o}_p2 = new Maximilian.maxiTrigger();`,
-		loop:  (o, p) => `(()=>{${o}_cutoff = ${p[1].loop}; if (${o}_p1.onChanged(${o}_cutoff, 1e-5)) {${o}.setCutoff(${o}_cutoff)};
-                            ${o}_res = ${p[2].loop}; if (${o}_p2.onChanged(${o}_res, 1e-5)) {${o}.setResonance(${o}_res)};
-                        return ${o}.play(${p[0].loop},${p[3].loop},${p[4].loop},${p[5].loop},${p[6].loop})})()`
+		setup: (o, p) => `${o} = new Maximilian.maxiSVF(); 
+                      ${o}_p1 = new Maximilian.maxiTrigger(); 
+                      ${o}_p2 = new Maximilian.maxiTrigger();`,
+		loop:  (o, p) => `( () => { ${o}_cutoff = ${p[1].loop}; 
+                                if (${o}_p1.onChanged(${o}_cutoff, 1e-5)) {${o}.setCutoff(${o}_cutoff)};
+                                ${o}_res = ${p[2].loop}; 
+                                if (${o}_p2.onChanged(${o}_res, 1e-5)) {${o}.setResonance(${o}_res)};
+                                return ${o}.play(${p[0].loop},${p[3].loop},${p[4].loop},${p[5].loop},${p[6].loop})})()`
   },
   bitclock: {
     setup: (o, p) => "",

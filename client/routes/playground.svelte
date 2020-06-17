@@ -188,6 +188,7 @@
 <style>
   .container {
   	height: 100%;
+    width: 100%;
   	display: grid;
   	grid-template-columns: auto 1fr;
   	grid-template-rows: 50% 50%;
@@ -211,7 +212,9 @@
     grid-area: layout;
     grid-row: 0 / 2;
     height: 100vh;
+    width: 100%;
     overflow: hidden;
+
   }
 
 </style>
