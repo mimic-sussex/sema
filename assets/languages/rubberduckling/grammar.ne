@@ -131,7 +131,7 @@ Expression ->
       let ratios = d[4] ? d[4] : [sema.num(1)];
       let offset = d[2] ? d[2] : 0;
       let effects = d[6] ? d[6] : [];
-      return sema.setvar({value:channelName}, sequencer(speed, sampleName, ratios, offset, effects ))
+      return sema.setvar(channelName, sequencer(speed, sampleName, ratios, offset, effects ))
     }
   %}
   | Synth Speed:? _ Numberlist _ Numberlist (_ Cutoff):? (_ Resonance):? (_ EnvDepth):? _ Effects:?
@@ -143,7 +143,7 @@ Expression ->
       let res = d[7] ? d[7][1].value : 50;
       let envd = d[8] ? d[8][1].value : 50;
       let effects = d[10] ? d[10] : [];
-      return sema.setvar({value:d[0]}, synth(speed, ratios, freqs, cutoff, res, envd,effects))
+      return sema.setvar(d[0], synth(speed, ratios, freqs, cutoff, res, envd,effects))
     }
   %}
   | %bpm _ %number

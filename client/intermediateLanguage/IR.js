@@ -590,7 +590,7 @@ class IRToJavascript {
         // console.log("DEBUG:traverseTree:@setvar");
         // console.log(vars);
         // console.log(el['@varname']);
-        let variableName = el['@varname'].value;
+        let variableName = el['@varname'];
         // console.log(variableName);
         let memIdx = vars[variableName];
         // console.log(memIdx);

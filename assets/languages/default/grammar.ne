@@ -59,7 +59,7 @@ Expression ->
   {% d => sema.synth( 'stretch', d[0]['@params'].concat( [ sema.str( d[2] ) ] ) ) %}
   |
   %variable _ Expression
-  {% d => sema.setvar( d[0], d[2] ) %}
+  {% d => sema.setvar( d[0].value, d[2] ) %}
   |
   %dacout _ Expression
   {% d => sema.synth( 'dac', [d[2]] ) %}
