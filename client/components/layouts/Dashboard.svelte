@@ -118,9 +118,10 @@
         >
 
     <span class='move' >+</span>
+          <!-- style="background: { item.static ? '#bka' : item.background }; border: { item.hasFocus ? '5px solid red': '5px solid blue' } ;" -->
 
     <div  class="content"
-          style="background: { item.static ? '#bka' : item.background }"
+          style="background: { item.static ? '#bka' : item.background }; border: { item.hasFocus ? '1px solid rgba(100, 100, 100, 0.5)': '1px solid rgba(25, 25, 25, 1)' }; border-width: 1px 0px 0px 1px;"
           on:mousedown={ e => e.stopPropagation() } >
 
       <span class='close'

@@ -440,7 +440,7 @@ export async function createNewItem (type, content){
 				component: GrammarEditor,
 				background: "#AAAAAA",
 				theme: "monokai",
-				grammarSource
+				grammarSource: ""
 			};
       // component.data = get(grammarEditorValue); // Get the store value with Svelte's get
 			break;
@@ -604,11 +604,64 @@ export const items = storable("playground", originalItems); // localStorageWrapp
 export const focusedItem = writable({});
 
 
-export const focusedItemProperties = writable({});
+export const focusedItemProperties = writable([]);
 
 // Dashboard SELECTED item which receives focus and has item controls loaded
 export const focusedItemControls = writable([]);
 
+
+export function setFocused(item){
+  try {
+    let itemProperties = [];
+    if( item.type === "liveCodeEditor" || item.type === "grammarEditor" || item.type === 'modelEditor' ){
+      itemProperties = [ item.lineNumbers, item.theme ];     
+
+      if( item.type === "liveCodeEditor" ){
+        // itemProperties.push(item.grammar);
+      } 
+    }
+    else if(item.type === 'analyser'){
+      itemProperties.push(item.mode)
+    } 
+    focusedItemProperties.set(itemProperties);    
+
+    items.update(
+			(itemsToUpdate) => { 
+        itemsToUpdate.map( 
+          itemToUnfocus => ({ 
+            ...itemToUnfocus,
+            ...{ hasFocus: false } 
+          })
+        )
+      }
+		);
+
+    console.log(get(items));
+
+    //set unfocused items through the rest of the list
+    // let itemsUnfocused = get(items);
+
+    // itemsUnfocused = itemsUnfocused.map( itemToUnfocus => itemToUnfocus.hasFocus = false );
+
+    // items.set(itemsUnfocused);
+    // items = itemsUnfocused);
+    
+    //set focused item
+    item.hasFocus = true;
+  	focusedItem.set(item);
+  }
+  catch(error){
+    console.error("Error Playground.setFocused: setting item focusesd" );
+  };
+} 
+
+
+export function clearFocused(){
+
+  focusedItem.set({});
+  focusedItemProperties.set([]);
+
+}
 
 
 

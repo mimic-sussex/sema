@@ -1,5 +1,6 @@
 <script>
-	import { onMount, onDestroy } from 'svelte';
+	import { onMount, onDestroy, createEventDispatcher } from 'svelte';
+	const dispatch = createEventDispatcher();
 
   import { PubSub } from '../../messaging/pubSub.js';
 
@@ -40,6 +41,8 @@
   
 	let frame;
   let isRendering = true; 
+
+
 
   
 
@@ -116,15 +119,24 @@
       frame = requestAnimationFrame(renderLoop);  
     }
     isRendering = !isRendering;
+
+    hasFocus = true;
+    console.log("click");
+    dispatch('change', { 
+      prop:'hasFocus', 
+      value: true 
+    });
   }
 
   let log = e => { /* console.log(...e); */ }
 
   onMount(async () => {
     // Request the creation of an WAAPI analyser to the Audio Engine
+    
     messaging.publish("add-engine-analyser", { id } );
 
-    canvas.addEventListener('onclick', () => toggleRendering(), false);
+    canvas.addEventListener('click', () => toggleRendering(), false);
+
     messaging.subscribe('analyser-data', e => updateAnalyserByteData(e) );
     log( id, name, type, lineNumbers, hasFocus, theme, background, data, responsive, resizable, resize, draggable, drag, min, max, x, y, w, h, component );
     renderLoop();
@@ -173,5 +185,6 @@
 
 <canvas bind:this={canvas} 
         class="canvas"
-        onclick={ () => toggleRendering() } ></canvas>
+        >
+        </canvas>
 

@@ -2,6 +2,8 @@
 
   import { onMount, onDestroy } from "svelte";
 
+  import ItemProps from './ItemProps.svelte';
+
   import {
     sidebarLiveCodeOptions,
     selectedLiveCodeOption,
@@ -20,7 +22,9 @@
     selectedDebuggerOption,
     isSelectDebuggerDisabled, 
     // sidebarVisualisationOptions,
-     
+
+    focusedItemProperties,
+
     // editorThemes,
     // selectedModel,
   } from '../../stores/playground.js'
@@ -222,6 +226,7 @@
   .layout-combobox-container{
     margin-top: 3px;
     margin-left:3px;
+    margin-right:2px;
   }
 
   .combobox-dark {
@@ -311,7 +316,8 @@
               bind:value={ $selectedLiveCodeOption } 
               on:change={ () => dispatchAdd('live', $selectedLiveCodeOption) }
               on:click={ () => $sidebarLiveCodeOptions[0].disabled = true }
-              disabled={ $isSelectLiveCodeEditorDisabled }         
+              disabled={ $isSelectLiveCodeEditorDisabled }   
+              cursor={ () => ( $isSelectLiveCodeEditorDisabled ? 'not-allowed' : 'pointer') }      
               >
         {#each $sidebarLiveCodeOptions as liveCodeOption}
           <option disabled={ liveCodeOption.disabled } 
@@ -332,6 +338,7 @@
               on:change={ () => dispatchAdd('model', $selectedModelOption) } 
               on:click={ () => $sidebarModelOptions[0].disabled = true }  
               disabled={ $isSelectModelEditorDisabled }
+              cursor={ () => ( $isSelectModelEditorDisabled ? 'not-allowed' : 'pointer' )}
               >
         {#each $sidebarModelOptions as modelOption}
           <option disabled={modelOption.disabled} 
@@ -356,14 +363,14 @@
       </select>    
     </div> -->
 
-    <div>
+    <!-- <div>
       <button class="button-dark controls"
               on:click={ () => dispatchAdd('grammar') }
               disabled={ $isAddGrammarEditorDisabled }
               > 
         Grammar Editor
       </button>
-    </div>
+    </div> -->
 
     <!-- Debuggers Combobox Selector -->
     <div class="controls">
@@ -404,6 +411,12 @@
         <span  class="checkbox-span"></span>
       </label>
     </div> -->
+
+    <hr style="width: 85%; border-bottom: 1px solid black;">
+
+    <div style='margin-top: 20px;'>
+      <ItemProps></ItemProps>
+    </div>
 
       <!-- <div class="">
         <select class="combobox-dark" >

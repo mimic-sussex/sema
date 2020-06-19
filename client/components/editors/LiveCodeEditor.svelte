@@ -110,29 +110,52 @@
 
   let onFocus = e => {
 
+    // console.log("onfocus")
+    hasFocus = true;
+    dispatch('change', { 
+      prop:'hasFocus', 
+      value: true 
+    });
 
   }
 
   let onBlur = e => {
 
-
+    hasFocus = false;
+    // console.log("onBlur")
+    dispatch('change', { 
+      prop:'hasFocus', 
+      value: false 
+    });
     
   }
 
 
   let onRefresh = e =>  {
 
-
+    // console.log("onRefresh")
+    // dispatch('change', { 
+    //   prop:'hasFocus', 
+    //   value: true 
+    // });
   }
 
   let onGutterCick = e => {
 
-
+    // console.log("onGutterCick")
+    // dispatch('change', { 
+    //   prop:'hasFocus', 
+    //   value: true 
+    // });
   }
 
   let onViewportChange = e => {
 
-
+    // console.log("onViewportChange")
+    // dispatch('change', { 
+    //   prop:'hasFocus', 
+    //   value: true 
+    // });
   }   
 
 

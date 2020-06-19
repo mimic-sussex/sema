@@ -17,7 +17,11 @@
 
   import {
     createNewItem,
+    // setFocused,
+    clearFocused,
     hydrateJSONcomponent,
+    focusedItem,
+    focusedItemProperties,
     items
   } from  "../stores/playground.js"
 
@@ -54,6 +58,50 @@
   //   // await populateStoresWithFetchedProps(newItem);
   // });
 
+
+  const setFocused = item => {
+
+    if(item){
+      try {
+        let itemProperties = [];
+        if( item.type === "liveCodeEditor" || item.type === "grammarEditor" || item.type === 'modelEditor' ){
+          itemProperties = [ { lineNumbers: item.lineNumbers}, { theme: item.theme } ];     
+
+          // Order in item properties determines final order in interface
+          // if( item.type === "liveCodeEditor" || item.type === "grammarEditor" ){
+          //   itemProperties.push({ debug: true });
+          // }    
+
+          if( item.type === "liveCodeEditor" ){
+            itemProperties.push({ grammar: item.grammar });
+          }
+
+          if( item.type === "modelEditor" ){
+            itemProperties.push({ restart: true });
+          }  
+        }
+        else if(item.type === 'analyser'){
+          itemProperties.push( { mode: item.mode } )
+        }
+
+        item.hasFocus = true;
+        $focusedItem = item;
+        $focusedItemProperties = itemProperties;    
+        // set unfocused items through the rest of the list
+        $items = $items.map(i => i === item ? ({ ...i, ['hasFocus']: true }) : ({ ...i, ['hasFocus']: false }) );
+        // $items = $items.map(i => i === item ? { ...i, [e.detail.prop]: e.detail.value } : i)
+        //set focused item
+
+      }
+      catch(error){
+        console.error("Error Playground.setFocused: setting item focuses" );
+      };
+    }
+    else 
+      console.error("Error Playground.setFocused: setting item focuses: empty item" ); 
+  } 
+
+
   const addItem = async (type, value) => {
 
     if(type !== undefined){
@@ -66,11 +114,14 @@
 
         updateItemPropsWithCommonStoreValues(newItem)
 
+        setFocused(newItem);
+
         let findOutPosition = gridHelp.findSpaceForItem(newItem, $items, cols); // find out where to place
         $items =  [...$items, ...[{ ...newItem, ...findOutPosition }]]; // Append to playground Items stores
+
       }
       catch (error){
-        console.error("Error on routes/Playground.addItem")
+        console.error("Error on routes/Playground.addItem", error);
       }
     }
     else
@@ -78,29 +129,43 @@
   }
 
 	const update = e => {
-    if( e.detail.item && e.detail.prop && e.detail.value ){
+
+    if( e.detail.item && e.detail.prop ){
       try{
-        switch (e.detail.item.type) {
-          case "liveCodeEditor":
-            localStorage.liveCodeEditorValue = e.detail.value;
-            break;
-          case "grammarEditor":
-            localStorage.grammarEditorValue = e.detail.value;            
-            break;
-          case "modelEditor":
-            localStorage.modelEditorValue = e.detail.value;            
-            break;              
-          default:
-            break;
+        if( e.detail.prop === 'data' ){ 
+          switch (e.detail.item.type) {
+            case "liveCodeEditor":
+              localStorage.liveCodeEditorValue = e.detail.value;
+              break;
+            case "grammarEditor":
+              localStorage.grammarEditorValue = e.detail.value;
+              break;
+            case "modelEditor":
+              localStorage.modelEditorValue = e.detail.value;
+              break;              
+            default:
+              break;
+          }
+
+          $items = $items.map(i => i === e.detail.item ? { ...i, [e.detail.prop]: e.detail.value } : i);
+        }
+        else {
+          setFocused(e.detail.item);
         }
 
-        // Filter out item, update it and refresh items's list
-        // item[prop] = value;
-        // $items = $items; // force an update
-        $items = $items.map(i => i === e.detail.item ? { ...i, [e.detail.prop]: e.detail.value } : i);
+        // if( e.detail.item.type === 'analyser' && e.detail.prop === 'hasFocus' && e.detail.value ){
+        //   setFocused(e.detail.item);
+        //   // $items = $items;
+        // } 
+        // else{
+          // Filter out item, update it and refresh items's list
+          // item[prop] = value;
+          // $items = $items; // force an update
+        
+        // }
       }
       catch(error){
-        console.error("Error on routes/Playground.update: updating Playground items");
+        console.error("Error on routes/Playground.update: updating Playground items", error);
       }
     }
 	}
@@ -111,6 +176,8 @@
     // console.log("DEBUG:dashboard:clearItems:")
     // items.update( items => items.map( item => remove(item) ) );
     $items = $items.slice($items.length);
+
+    clearFocused();
     // items.set([]);
   }
 
