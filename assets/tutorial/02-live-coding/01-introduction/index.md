@@ -1,6 +1,8 @@
 # Introduction to live coding with the default language
 
-Sema allows you to make or customise your own livecoding languages.  We provide the default language, which allows you to access all the functions in the signal engine. We call this the 'default language' because it's malleable and you might customise it, we don't want to fix it in one place by giving it a name,  This set of tutorials guides you through the basic features.  In this tutorial, you can copy and paste the code examples into the live coding window.
+Sema allows you to make or customise your own livecoding languages.  We provide the default language, which allows you to access all the functions in the signal engine. We call this the 'default language' because it's malleable and you might customise it, we don't want to fix it in one place by giving it a name. 
+
+This set of tutorials guides you through the basic features. In this tutorial, you can copy and paste the code examples into the live coding window.
 
 In the default language, commands take the format
 

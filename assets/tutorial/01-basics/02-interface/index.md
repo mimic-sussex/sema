@@ -59,4 +59,4 @@ Additionally there are commands dependent on the selected widget
 
 * **Restart**  – restart you ML model training workflow (ML dependent)
 
-The specific interactions of each widget *type* are covered on the following tutorials. 
+The specific interactions with each widget *type* are covered on the following tutorials. 
