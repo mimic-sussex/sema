@@ -102,10 +102,13 @@
 
     // this event notifies the parent (Dashboard) to update this items on the items collection, because of the 'data' property change 
     // CHECK <svelte:component on:change={ e => update(item, e.detail.prop, e.detail.value) }
-    dispatch('change', { 
-      prop:'data', 
-      value: codeMirror.getValue() 
-    });
+
+    try{
+      let value = codeMirror.getValue();
+      dispatch('change', { prop:'data', value });
+    }catch(error){
+      console.error("Error Live Code Editor get value from code Mirror")
+    }
   }
 
   let onFocus = e => {

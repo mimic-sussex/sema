@@ -50,7 +50,7 @@ export const sidebarLiveCodeOptions = writable([
 	{ id: 0, disabled: false, text: `LiveCode Editor`, content: "" },
   { id: 1, disabled: false, text: `new`, content: {
       grammar:  `/languages/default/grammar.ne`,
-      livecode: ``
+      livecode: undefined
     }
   },
 	// { id: 0, disabled: true, text: `LiveCode Editor`, content: "" },
@@ -440,9 +440,9 @@ export async function createNewItem (type, content){
 				component: GrammarEditor,
 				background: "#AAAAAA",
 				theme: "monokai",
-				grammarSource: ""
+				grammarSource: content.grammarSource,
 			};
-      // component.data = get(grammarEditorValue); // Get the store value with Svelte's get
+      component.data = content.grammar; // Get the store value with Svelte's get
 			break;
 		case "modelEditor":
 			component = {

@@ -108,24 +108,21 @@
     // if(e !== undefined && e.detail !== undefined && e.detail.value !== undefined)
     //   grammarEditorValue = e.detail.value;
     if(e !== undefined){
-      try {
-        $grammarEditorValue = codeMirror.getValue();
+
+      try{
+        let value = codeMirror.getValue();
+        $grammarEditorValue = value;
       
         // window.localStorage.grammarEditorValue = $grammarEditorValue;
-        let {errors, output} = compile($grammarEditorValue);
+        let {errors, output} = compile(value);
         $grammarCompiledParser = output;
         $grammarCompilationErrors = errors;
 
-        dispatch('change', { prop:'data', value: codeMirror.getValue() });
-
-        // console.log('DEBUG:GrammarEditor:compileGrammarOnChange');
-        // console.log($grammarCompiledParser);
-        // console.log($grammarCompilationErrors);
+        dispatch('change', { prop:'data', value });
+      }catch(error){
+        console.error("Error Live Code Editor get value from code Mirror")
       }
-      catch (e) {
 
-
-      }
     }
   }
 

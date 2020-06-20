@@ -93,7 +93,13 @@
   let nil = (e) => { }
 
   let onChange = e => {
-    dispatch('change', { prop:'data', value: codeMirror.getValue() });
+    
+    try{
+      let value = codeMirror.getValue();
+      dispatch('change', { prop:'data', value });
+    }catch(error){
+      console.error("Error Model Editor get value from code Mirror")
+    }
   }
 
 

@@ -151,28 +151,35 @@ export const modelEditorValue = writable("");
 async function updateLiveCodeEditorPropsWithFetchedValues(item){
   
   if(item !== undefined){
-    if(item.data === undefined && item.liveCodeSource !== ``){ // liveCodeEditor with language source, FIRST load 
+    if(item.data === undefined && item.liveCodeSource && item.liveCodeSource !== ``){ // liveCodeEditor with language source, FIRST load 
       try{
         item.data = await fetchFrom(item.liveCodeSource); 
         item.liveCodeSource = ``; // set RELOAD from local storage;
-
-        if (item.grammarSource !== ``) {
-          // liveCodeEditor with language source
-          item.grammar = await fetchFrom(item.grammarSource);
-        }
       }
       catch(error){
         console.error("Error fetching props for Live Code Editor item");
       }
     }
-    else if (item.liveCodeSource === ``){ // reloads fetch data from localStorage
+    else if (item.liveCodeSource === ``){ // if liveCodeSource is empty string "", reload fetch data from localStorage
       if (localStorage.liveCodeEditorValue && localStorage.liveCodeEditorValue !== ``){
 				item.data = localStorage.liveCodeEditorValue;
       }
       else
         console.error("Error fetching props for Live Code Editor item: Local store empty");
     }
+    else if (!item.liveCodeSource){ // if liveCodeSource is undefined, it is a 'new' live code editor, set data empty
+				item.data = "";
+    }
     // else if(item.data !== undefined && item.liveCodeSource) return; // first load, hardcoded defaults 
+
+    if (item.grammarSource !== ``) {
+      try {
+     		// liveCodeEditor with language source
+  			item.grammar = await fetchFrom(item.grammarSource);
+			} catch (error) {
+				console.error("Error fetching props for Live Code Editor item");
+			}
+		}
   }
 }  
 
