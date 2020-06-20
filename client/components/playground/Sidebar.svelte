@@ -25,6 +25,7 @@
 
     focusedItemProperties,
 
+    items
     // editorThemes,
     // selectedModel,
   } from '../../stores/playground.js'
@@ -47,6 +48,8 @@
   let selectedGrammarOption;
   // let selectedModelOption;
   let selectedVisualisationOption;
+
+
 
 
   function onReset(){
@@ -74,11 +77,11 @@
         $selectedModelOption = $sidebarModelOptions[0];
         $isSelectModelEditorDisabled = true;        
         break;
-      case 'grammar':
-        messaging.publish("playground-add", { type: 'grammarEditor'});
-        // selectedGrammarOption = sidebarGrammarOptions[0];
-        $isAddGrammarEditorDisabled = true;
-        break;
+      // case 'grammar':
+      //   messaging.publish("playground-add", { type: 'grammarEditor'});
+      //   // selectedGrammarOption = sidebarGrammarOptions[0];
+      //   $isAddGrammarEditorDisabled = true;
+      //   break;
       case 'analyser':
         messaging.publish("playground-add", { type: 'analyser' });
         $isAddAnalyserDisabled = true;
@@ -117,23 +120,23 @@
   }
 
 
-  function enableSelectDebuggerOptionOnItemDeletion(itemType){
+  function setDisabledOnSelectDebuggerOption(itemType, state){
 
     if(itemType !== undefined)
       if(itemType === 'grammarCompileOutput'){
-        $sidebarDebuggerOptions[1].disabled = false;
+        $sidebarDebuggerOptions[1].disabled = state;
       }
       else if(itemType === 'liveCodeParseOutput'){
-        $sidebarDebuggerOptions[2].disabled = false;
+        $sidebarDebuggerOptions[2].disabled = state;
       }
       else if(itemType === 'dspCodeOutput'){
-        $sidebarDebuggerOptions[3].disabled = false;
+        $sidebarDebuggerOptions[3].disabled = state;
       }
       else if(itemType === 'postIt'){
-        $sidebarDebuggerOptions[4].disabled = false;
+        $sidebarDebuggerOptions[4].disabled = state;
       }
       else if(itemType === 'storeInspector'){
-        $sidebarDebuggerOptions[5].disabled = false;
+        $sidebarDebuggerOptions[5].disabled = state;
       }
     else 
       throw new Error("Enable Select Debugger Option On Item Deletion: itemType undefined"); 
@@ -146,7 +149,7 @@
     if(itemType !== null){
       switch (itemType) {
         case 'liveCodeEditor':
-          $isSelectLiveCodeEditorDisabled = false 
+          $isSelectLiveCodeEditorDisabled = false;
           break;
         case 'modelEditor':
           $isSelectModelEditorDisabled = false;
@@ -162,20 +165,53 @@
         case 'dspCodeOutput':
         case 'postIt':
         case 'storeInspector':
-          enableSelectDebuggerOptionOnItemDeletion(itemType);
+          setDisabledOnSelectDebuggerOption(itemType, false);
           break;
         default:
           break;
       }
     }
-    else throw new Error("Activate Select On Item Deletion: itemType undefined")
+    else 
+      throw new Error("Activate Select On Item Deletion: itemType undefined")
   }
 
+
+  function setButtonsStateOnLoad(){
+
+    if($items.length > 0){
+      for (const item of $items){
+        switch (item.type) {
+          case 'liveCodeEditor':
+            $isSelectLiveCodeEditorDisabled = true; 
+            break;
+          case 'modelEditor':
+            $isSelectModelEditorDisabled = true;
+            break;
+          case 'grammarEditor':
+            $isAddGrammarEditorDisabled = true;
+            break;
+          case 'analyser':
+            $isAddAnalyserDisabled = true; 
+            break;
+          case 'grammarCompileOutput':
+          case 'liveCodeParseOutput':
+          case 'dspCodeOutput':
+          case 'postIt':
+          case 'storeInspector':
+            setDisabledOnSelectDebuggerOption(item.type, true);
+            break;
+          default:
+            break;
+        }
+      }
+    }
+  }
 
 
   onMount(() => {
     // console.log("DEBUG:routes/playground:sidebar:onMount")
 
+    setButtonsStateOnLoad(); 
     itemDeletionSubscriptionToken = messaging.subscribe("plaground-item-deletion", activateSelectOnItemDeletion);
   })
 
