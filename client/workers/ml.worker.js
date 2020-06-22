@@ -5,7 +5,7 @@ importScripts("./lalolib.js");
 importScripts("./svd.js");
 importScripts("./mlworkerscripts.js");
 // importScripts("./ringbuf.js");
-// importScripts("./lodash.js");
+//importScripts("https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.15/lodash.js");
 // import "./magenta/magentamusic.js";
 
 
@@ -169,10 +169,10 @@ onmessage = m => {
   if (m.data.eval !== undefined) {
     try {
       let evalRes = geval(m.data.eval);
-      if (evalRes != undefined) {
+      // if (evalRes != undefined) { //you need to see when things are undefined
         console.log(evalRes);
-      } else
-        console.log("done");
+      // } else
+        // console.log("done");
     } catch (e) {
       console.log(`Code eval exception: ${e} `, m.data.eval);
     }
@@ -212,9 +212,8 @@ function sabChecker() {
   try {
     // console.log(SABs);
     for (let v in inputSABs) {
-      // console.log(v);
       let avail = inputSABs[v].rb.available_read();
-      // console.log(avail, SABs[v].rb.capacity);
+      // console.log(avail, inputSABs[v].rb.capacity, inputSABs[v].blocksize);
       if (avail != inputSABs[v].rb.capacity && avail > 0) {
         for (let i = 0; i < avail; i += inputSABs[v].blocksize) {
           let val = new Float64Array(inputSABs[v].blocksize);
@@ -224,7 +223,7 @@ function sabChecker() {
         }
       }
     }
-    setTimeout(sabChecker, 10);
+    setTimeout(sabChecker, 100);
   } catch (error) {
     console.log(error);
     setTimeout(sabChecker, 100);

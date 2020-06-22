@@ -159,13 +159,6 @@ module.exports = {
 				},
 			},
 			{
-				test: /lodash.js/,
-				loader: "file-loader", // files should NOT get processed, only emitted
-				options: {
-					name: "lodash.js",
-				},
-			},
-			{
 				test: /ringbuf.js/,
 				loader: "file-loader", // files should NOT get processed, only emitted
 				options: {

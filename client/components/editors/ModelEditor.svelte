@@ -31,7 +31,7 @@
   import "../../machineLearning/lalolib.js";
   import "../../machineLearning/svd.js";
   import "../../workers/mlworkerscripts.js";
-  // import "../../machineLearning/lodash.js";  //why is this causing a problem?
+  import "../../machineLearning/lodash.js";  //why is this causing a problem?
 
   export let id;
   export let name;

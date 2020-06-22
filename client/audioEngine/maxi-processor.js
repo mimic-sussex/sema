@@ -177,6 +177,7 @@ class SABOutputTransducer {
         if (typeof(value) == "number") {
           this.ringbuf.push(new Float64Array([value]));
         }else{
+          // console.log("SAB", value.length, this.blocksize);
           if (value.length == this.blocksize) {
             this.ringbuf.push(value);
           }else if (value.length < this.blocksize) {
