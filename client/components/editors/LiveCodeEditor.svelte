@@ -215,8 +215,8 @@
         }
       })
       .catch(e => {
-        // console.log('DEBUG:parserEditor:parseLiveCode:catch')
-        // console.log(e);
+        console.log('DEBUG:parserEditor:parseLiveCode:catch')
+        console.log(e);
 
         $liveCodeParseErrors = e;
         // liveCodeParseErrors = e;

@@ -278,16 +278,16 @@
 
 <style>
   .container {
-  	height: 100%;
+    height: 100%;
     width: 100%;
-  	display: grid;
-  	grid-template-columns: auto 1fr;
-  	grid-template-rows: 50% 50%;
-  	grid-template-areas:
-  		"sidebar layout"
-  		"sidebar layout";
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: 50% 50%;
+    grid-template-areas:
+      "sidebar layout"
+      "sidebar layout";
   	/* background-color: #6f7262; */
-	  background-color: #212121;
+    background-color: #212121;
     overflow: hidden;
   }
   .sidebar-container {
