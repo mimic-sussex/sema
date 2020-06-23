@@ -194,6 +194,30 @@ class SABOutputTransducer {
   }
 }
 
+class SABInputTransducer {
+  constructor(id, triggered=0) {
+    this.value = 0;
+    this.id=id;
+    this.triggered = triggered;
+    this.zx = new Maximilian.maxiTrigger();
+  }
+
+  getSABValue(inputBuffers, trigger) {
+    let reading = 1;
+    if (this.triggered) {
+      reading = this.zx.onZX(trigger);
+    }
+    if (reading) {
+      let sab= inputBuffers[this.id];
+      if (sab) {
+        this.value = sab.value;
+      }
+    }
+    return this.value;
+  }
+
+}
+
 
 class poll {
   constructor() {
