@@ -143,7 +143,6 @@
 
     if(window.Worker){
       let parserWorkerAsync = new Promise( (res, rej) => {
-        console.log("ToNearley", e);
         parserWorker.postMessage({ // Post code to worker for parsing
           liveCodeSource: e,
           parserSource:  $grammarCompiledParser,
