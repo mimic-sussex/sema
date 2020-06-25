@@ -77,6 +77,11 @@
     "title": "Sending data from the ML window",
     "chapter_dir": "03-machine-learning",
     "section_dir": "03-streaming-ml-lc"
+  }, {
+    "slug": "streaming both ways",
+    "title": "Streaming in both directions",
+    "chapter_dir": "03-machine-learning",
+    "section_dir": "04-streaming-both-ways"
   }]
 }, {
   "title": "Language Design",
