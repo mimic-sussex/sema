@@ -20,13 +20,13 @@ This tutorial aims to provide a lightweight introduction and a gradual learning 
 
 We recommended that you go from start to finish. You can navigate the Table of Contents via the dropdown menu above (click 'Introduction').
 
-* Part 1 starts with the basics of the playground interface, including layouts, the live coding editors and the all the available widgets.  
+* Part 1, *Basics* starts with the basics of the playground interface, including layouts, the live coding editors and the all the available widgets.  
 
-* Part 2 will get you started on live coding with the default language.
+* Part 2, *Live Coding with the default language* will get you started with the basic element and syntax of Sema's default language.
 
-* Part 3 will show you some machine learning wizardry with custom neural networks architecture. 
+* Part 3, *Machine Learning* will show you some machine learning wizardry with custom neural networks architecture. 
 
-* Part 4 will introduce you to language design concepts and workflow, to help you get started designing your own custom language. 
+* Part 4 *Language Design* will introduce you to the concepts and workflow to help you get started designing your own custom language. 
 
 As you progress through the tutorial, you'll be presented with code and comments designed to illustrate how to use Sema's features. 
 
