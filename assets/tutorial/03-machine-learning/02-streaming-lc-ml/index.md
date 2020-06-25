@@ -1,4 +1,4 @@
-# Data Streams: Sharing Data between the Machine Learning and Live Coding Window
+# Data Streams: Sending data from the livecoding window to the machine learning window
 
 In this tutorial, you will need to open the Javascript console to look at logging data.  You can do this in Chrome by opening the 'Developer Tools' (F12 key) and choosing the console tab.
 

@@ -3,6 +3,7 @@ var environment = {
   saveEnvironment: (name, data, storage) => {
     switch (storage) {
       "local":
+      console.log("load env");
         //save to local storage
       break;
       "pb":
@@ -14,6 +15,7 @@ var environment = {
   loadEnvironment: (name, data, storage) => {
     switch (storage) {
       "local":
+      console.log("save env");
         //load from local storage
       break;
       "pb":

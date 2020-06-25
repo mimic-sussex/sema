@@ -73,40 +73,10 @@
     "chapter_dir": "03-machine-learning",
     "section_dir": "02-streaming-lc-ml"
   }, {
-    "slug": "pre-trained-models-i",
-    "title": "Pre-trained model i",
+    "slug": "streaming from ML to LC",
+    "title": "Sending data from the ML window",
     "chapter_dir": "03-machine-learning",
-    "section_dir": "03-pre-trained-model-i"
-  }, {
-    "slug": "pre-trained-models-ii",
-    "title": "Pre-trained model ii",
-    "chapter_dir": "03-machine-learning",
-    "section_dir": "04-pre-trained-model-ii"
-  }, {
-    "slug": "linear-regression",
-    "title": "Linear regression",
-    "chapter_dir": "03-machine-learning",
-    "section_dir": "05-linear-regression"
-  }, {
-    "slug": "binary-classification",
-    "title": "Binary classification",
-    "chapter_dir": "03-machine-learning",
-    "section_dir": "06-binary-classification"
-  }, {
-    "slug": "non-linear",
-    "title": "Non linear",
-    "chapter_dir": "03-machine-learning",
-    "section_dir": "07-non-linear"
-  }, {
-    "slug": "LSTM-for-text-generation",
-    "title": "LSTM for text generation",
-    "chapter_dir": "03-machine-learning",
-    "section_dir": "08-LSTM-for-text-generation"
-  }, {
-    "slug": "echo-state-networks",
-    "title": "Echo state networks",
-    "chapter_dir": "03-machine-learning",
-    "section_dir": "09-echo-state-network"
+    "section_dir": "03-streaming-ml-lc"
   }]
 }, {
   "title": "Language Design",
