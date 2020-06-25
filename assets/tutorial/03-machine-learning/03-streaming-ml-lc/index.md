@@ -22,6 +22,8 @@ In the ML window:
 ```
 var channel0 = createOutputChannel(0, 1);
 
+____
+
 channel0.send(200)
 ```
 
@@ -33,6 +35,38 @@ The function ```createOutputChannel``` takes two arguments:
 In this case we're sending one number at a time, so we choose a block size of 1.
 
 When you run the `channel0.send(200)` it sends the number 200 to the LC window, which becomes the frequency of the saw wave.  Try sending some other numbers.
+
+### Triggered reading of values
+
+The second argument of ```fromJS``` is a trigger to determine when a value is read. It's optional; if you leave it out, the value will update whenever it's received from the ML window.  If you send a trigger signal as the second argument, the value updates on each trigger.  For example:
+
+LC:
+```
+:freq1:{{4}clt,[1],[50,100,200]}rsq;
+:osc1:{:freq1:}sawn;
+
+:freq:{0,{1}clt}fromJS;
+:osc2:{:freq:}sawn;
+
+>{:osc1:,:osc2:}mix;
+```
+
+ML:
+```
+var channel0 = createOutputChannel(0, 1);
+___
+
+channel0.send(300)
+```
+
+When you send a new value, it gets quantised to the start of a bar because it's triggered by ```{1}clt```.
+
+
+
+### Sending more than one channel
+
+
+
 
 This example shows three concurrent channels.
 
