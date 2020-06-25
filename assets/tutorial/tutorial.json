@@ -68,10 +68,10 @@
     "section_dir": "01-introduction"
   },
   {
-    "slug": "piping-data-streams",
-    "title": "Data streams",
+    "slug": "streaming from LC to ML",
+    "title": "Sending data to the ML window",
     "chapter_dir": "03-machine-learning",
-    "section_dir": "02-streaming"
+    "section_dir": "02-streaming-lc-ml"
   }, {
     "slug": "pre-trained-models-i",
     "title": "Pre-trained model i",
