@@ -33,6 +33,9 @@
   $: fetchAndLoadDefaultTutorial();
   $: fetchAndLoadDefaultTutorialItems();
 
+  /** 
+   * Loads language options from language service and set grammar and default code sources
+  */
   let loadSidebarLiveCodeOptions = () => {
 		fetch(`/languages/languages.json`)
       .then(r => r.json())
@@ -53,6 +56,10 @@
       });
 	}
 
+
+  /** 
+   * Fetches Tutorial table of contents and sets default tutorial (Basics/Introduction)
+  */
   let fetchAndLoadDefaultTutorial = () => {
 
 		fetch(`/tutorial/tutorial.json`)
@@ -64,6 +71,9 @@
       });
 	}
 
+  /** 
+   * Fetches and sets the contents of the default tutorial (Basics/Introduction)
+  */
   let fetchAndLoadDefaultTutorialItems = () => {
 
     fetch(`/tutorial/${$params.chapter_dir}/${$params.section_dir}/layout.json`)
@@ -80,7 +90,6 @@
   $: if($params.chapter && $params.section) persistentParams = $params
 
   onMount( async () => {
-
     console.log("DEBUG:routes/_layout:onMount");
     console.log($params);
 

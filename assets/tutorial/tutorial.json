@@ -6,10 +6,10 @@
     "chapter_dir": "01-basics",
     "section_dir": "01-introduction"
   }, {
-    "slug": "layout",
-    "title": "Layout",
+    "slug": "interface",
+    "title": "Interface",
     "chapter_dir": "01-basics",
-    "section_dir": "02-layout"
+    "section_dir": "02-interface"
   }, {
     "slug": "editors",
     "title": "Editors",

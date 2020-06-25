@@ -50,7 +50,7 @@ export const sidebarLiveCodeOptions = writable([
 	{ id: 0, disabled: false, text: `LiveCode Editor`, content: "" },
   { id: 1, disabled: false, text: `new`, content: {
       grammar:  `/languages/default/grammar.ne`,
-      livecode: ``
+      livecode: undefined
     }
   },
 	// { id: 0, disabled: true, text: `LiveCode Editor`, content: "" },
@@ -107,35 +107,35 @@ export const sidebarDebuggerOptions = writable([
 		id: 1,
 		disabled: false,
 		type: `grammarCompileOutput`,
-		text: `+ Grammar Compiler Output`,
+		text: `Grammar Compiler Output`,
 		content: "",
 	},
 	{
 		id: 2,
 		disabled: false,
 		type: `liveCodeParseOutput`,
-		text: `+ Live Code Parser Output`,
+		text: `Live Code Parser Output`,
 		content: "",
 	},
 	{
 		id: 3,
 		disabled: false,
 		type: `dspCodeOutput`,
-		text: `+ DSP Code Generated`,
+		text: `DSP Code Generated`,
 		content: "",
 	},
 	{
 		id: 4,
 		disabled: false,
 		type: `postIt`,
-		text: `+ Post-It Panel`,
+		text: `Post-It Panel`,
 		content: "",
 	},
 	{
 		id: 4,
 		disabled: false,
 		type: `storeInspector`,
-		text: `+ Store Inspector`,
+		text: `Store Inspector`,
 		content: "",
 	},
 ]);
@@ -216,7 +216,6 @@ const originalItems = [
 			background: "#151515",
 			lineNumbers: true,
 			hasFocus: false,
-			background: "#151515",
 			theme: "icecoder",
 			component: LiveCodeEditor,
 			data: default_liveCode,
@@ -277,7 +276,9 @@ const originalItems = [
 			theme: "monokai",
 			background: "#AAAAAA",
 			component: GrammarEditor,
-			data: default_grammar,
+			// data: default_grammar,
+			data: "",
+			grammarSource: "/languages/default/grammar.ne",
 		},
 	},
 
@@ -439,8 +440,9 @@ export async function createNewItem (type, content){
 				component: GrammarEditor,
 				background: "#AAAAAA",
 				theme: "monokai",
+				grammarSource: content.grammarSource,
 			};
-      // component.data = get(grammarEditorValue); // Get the store value with Svelte's get
+      component.data = content.grammar; // Get the store value with Svelte's get
 			break;
 		case "modelEditor":
 			component = {
@@ -472,7 +474,7 @@ export async function createNewItem (type, content){
 			component = {
 				component: Analyser,
 				background: "#ffffff",
-				mode: "spectrogram",
+				mode: "",
 			};
 			break;
 		case "postIt":
@@ -602,11 +604,64 @@ export const items = storable("playground", originalItems); // localStorageWrapp
 export const focusedItem = writable({});
 
 
-export const focusedItemProperties = writable({});
+export const focusedItemProperties = writable([]);
 
 // Dashboard SELECTED item which receives focus and has item controls loaded
 export const focusedItemControls = writable([]);
 
+
+export function setFocused(item){
+  try {
+    let itemProperties = [];
+    if( item.type === "liveCodeEditor" || item.type === "grammarEditor" || item.type === 'modelEditor' ){
+      itemProperties = [ item.lineNumbers, item.theme ];     
+
+      if( item.type === "liveCodeEditor" ){
+        // itemProperties.push(item.grammar);
+      } 
+    }
+    else if(item.type === 'analyser'){
+      itemProperties.push(item.mode)
+    } 
+    focusedItemProperties.set(itemProperties);    
+
+    items.update(
+			(itemsToUpdate) => { 
+        itemsToUpdate.map( 
+          itemToUnfocus => ({ 
+            ...itemToUnfocus,
+            ...{ hasFocus: false } 
+          })
+        )
+      }
+		);
+
+    console.log(get(items));
+
+    //set unfocused items through the rest of the list
+    // let itemsUnfocused = get(items);
+
+    // itemsUnfocused = itemsUnfocused.map( itemToUnfocus => itemToUnfocus.hasFocus = false );
+
+    // items.set(itemsUnfocused);
+    // items = itemsUnfocused);
+    
+    //set focused item
+    item.hasFocus = true;
+  	focusedItem.set(item);
+  }
+  catch(error){
+    console.error("Error Playground.setFocused: setting item focusesd" );
+  };
+} 
+
+
+export function clearFocused(){
+
+  focusedItem.set({});
+  focusedItemProperties.set([]);
+
+}
 
 
 

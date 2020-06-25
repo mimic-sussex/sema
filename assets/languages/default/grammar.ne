@@ -39,7 +39,7 @@ Statement ->
   Expression _ %semicolon _ Statement
   {% d => [ { '@spawn': d[0] } ].concat(d[4]) %}
   |
-  Expression _ %semicolon
+  Expression _ %semicolon (_ %comment):*
   {% d => [ { '@spawn': d[0] } ] %}
 
 

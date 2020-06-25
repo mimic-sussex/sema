@@ -102,38 +102,64 @@
 
     // this event notifies the parent (Dashboard) to update this items on the items collection, because of the 'data' property change
     // CHECK <svelte:component on:change={ e => update(item, e.detail.prop, e.detail.value) }
-    dispatch('change', {
-      prop:'data',
-      value: codeMirror.getValue()
-    });
+
+    try{
+      let value = codeMirror.getValue();
+      dispatch('change', { prop:'data', value });
+    }catch(error){
+      console.error("Error Live Code Editor get value from code Mirror")
+    }
   }
 
   let onFocus = e => {
 
+    // console.log("onfocus")
+    hasFocus = true;
+    dispatch('change', { 
+      prop:'hasFocus', 
+      value: true 
+    });
 
   }
 
   let onBlur = e => {
 
-
-
+    hasFocus = false;
+    // console.log("onBlur")
+    dispatch('change', { 
+      prop:'hasFocus', 
+      value: false 
+    });
+    
   }
 
 
   let onRefresh = e =>  {
 
-
+    // console.log("onRefresh")
+    // dispatch('change', { 
+    //   prop:'hasFocus', 
+    //   value: true 
+    // });
   }
 
   let onGutterCick = e => {
 
-
+    // console.log("onGutterCick")
+    // dispatch('change', { 
+    //   prop:'hasFocus', 
+    //   value: true 
+    // });
   }
 
   let onViewportChange = e => {
 
-
-  }
+    // console.log("onViewportChange")
+    // dispatch('change', { 
+    //   prop:'hasFocus', 
+    //   value: true 
+    // });
+  }   
 
 
   let parseLiveCodeAsync = async e => {
@@ -188,8 +214,8 @@
         }
       })
       .catch(e => {
-        // console.log('DEBUG:parserEditor:parseLiveCode:catch')
-        // console.log(e);
+        console.log('DEBUG:parserEditor:parseLiveCode:catch')
+        console.log(e);
 
         $liveCodeParseErrors = e;
         // liveCodeParseErrors = e;

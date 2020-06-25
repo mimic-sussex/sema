@@ -52,8 +52,8 @@
   let log = e => { /* console.log(...e); */ }
 
   onMount(async () => {
-    // console.log('DEBUG:GrammarCodeEditor:onMount:')
-    // console.log(data);
+    console.log('DEBUG:GrammarCodeEditor:onMount:')
+    console.log(data);
     codeMirror.set(data, "ebnf");
 
     log( id, name, type, lineNumbers, hasFocus, theme, background, data, responsive, resizable, resize, draggable, drag, min, max, x, y, w, h, component );
@@ -101,34 +101,81 @@
   //   }
   // }
   //
-  let compileGrammarOnChange = e => {
+  let onChange = e => {
 
-    let grammarEditorValue = null;
+    // let grammarEditorValue = null;
 
     // if(e !== undefined && e.detail !== undefined && e.detail.value !== undefined)
     //   grammarEditorValue = e.detail.value;
     if(e !== undefined){
-      grammarEditorValue = codeMirror.getValue();
-    }
-    else
-      grammarEditorValue = $grammarEditorValue;
 
-    try {
-      window.localStorage.grammarEditorValue = grammarEditorValue;
-      let {errors, output} = compile(grammarEditorValue);
-      $grammarCompiledParser = output;
-      $grammarCompilationErrors = errors;
-      dispatch('change', { prop:'data', value: grammarEditorValue });
+      try{
+        let value = codeMirror.getValue();
+        $grammarEditorValue = value;
+      
+        // window.localStorage.grammarEditorValue = $grammarEditorValue;
+        let {errors, output} = compile(value);
+        $grammarCompiledParser = output;
+        $grammarCompilationErrors = errors;
 
-      // console.log('DEBUG:GrammarEditor:compileGrammarOnChange');
-      // console.log($grammarCompiledParser);
-      // console.log($grammarCompilationErrors);
-    }
-    catch (e) {
-
+        dispatch('change', { prop:'data', value });
+      }catch(error){
+        console.error("Error Live Code Editor get value from code Mirror")
+      }
 
     }
   }
+
+
+  let onFocus = e => {
+
+    // console.log("onfocus")
+    hasFocus = true;
+    dispatch('change', { 
+      prop:'hasFocus', 
+      value: true 
+    });
+
+  }
+
+  let onBlur = e => {
+
+    hasFocus = false;
+    // console.log("onBlur")
+    dispatch('change', { 
+      prop:'hasFocus', 
+      value: false 
+    });
+    
+  }
+
+
+  let onRefresh = e =>  {
+
+    // console.log("onRefresh")
+    // dispatch('change', { 
+    //   prop:'hasFocus', 
+    //   value: true 
+    // });
+  }
+
+  let onGutterCick = e => {
+
+    // console.log("onGutterCick")
+    // dispatch('change', { 
+    //   prop:'hasFocus', 
+    //   value: true 
+    // });
+  }
+
+  let onViewportChange = e => {
+
+    // console.log("onViewportChange")
+    // dispatch('change', { 
+    //   prop:'hasFocus', 
+    //   value: true 
+    // });
+  }   
 
 
 
@@ -187,5 +234,11 @@ bind:value={item.value} -->
               bind:value={data}
               tab={true}
               lineNumbers={true}
-              on:change={compileGrammarOnChange} />
+              on:change={ e => onChange(e)}
+              on:focus={ e => onFocus(e) }
+              on:blur={ e => onBlur(e) }
+              on:refresh={ e => onRefresh(e) }
+              on:gutterClick={ e => onGutterCick(e) }
+              on:viewportChange={ e => onViewportChange(e) }  
+              />
 </div>

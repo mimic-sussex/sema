@@ -17,7 +17,11 @@
 
   import {
     createNewItem,
+    // setFocused,
+    clearFocused,
     hydrateJSONcomponent,
+    focusedItem,
+    focusedItemProperties,
     items
   } from  "../stores/playground.js"
 
@@ -25,15 +29,7 @@
     updateItemPropsWithFetchedValues,
     populateCommonStoresWithFetchedProps,
     updateItemPropsWithCommonStoreValues,
-    resetStores,
-    // liveCodeEditorValue,
-    // liveCodeParseErrors,
-    // liveCodeParseResults,
-    // liveCodeAbstractSyntaxTree,
-    // dspCode,
-    // grammarEditorValue,
-    // grammarCompiledParser,
-    // grammarCompilationError,
+    resetStores
   } from  "../stores/common.js"
 
   const messaging = new PubSub();
@@ -62,6 +58,50 @@
   //   // await populateStoresWithFetchedProps(newItem);
   // });
 
+
+  const setFocused = item => {
+
+    if(item){
+      try {
+        let itemProperties = [];
+        if( item.type === "liveCodeEditor" || item.type === "grammarEditor" || item.type === 'modelEditor' ){
+          itemProperties = [ { lineNumbers: item.lineNumbers}, { theme: item.theme } ];     
+
+          // Order in item properties determines final order in interface
+          // if( item.type === "liveCodeEditor" || item.type === "grammarEditor" ){
+          //   itemProperties.push({ debug: true });
+          // }    
+
+          if( item.type === "liveCodeEditor" ){
+            itemProperties.push({ grammar: item.grammar });
+          }
+
+          if( item.type === "modelEditor" ){
+            itemProperties.push({ restart: true });
+          }  
+        }
+        else if(item.type === 'analyser'){
+          itemProperties.push( { mode: item.mode } )
+        }
+
+        item.hasFocus = true;
+        $focusedItem = item;
+        $focusedItemProperties = itemProperties;    
+        // set unfocused items through the rest of the list
+        $items = $items.map(i => i === item ? ({ ...i, ['hasFocus']: true }) : ({ ...i, ['hasFocus']: false }) );
+        // $items = $items.map(i => i === item ? { ...i, [e.detail.prop]: e.detail.value } : i)
+        //set focused item
+
+      }
+      catch(error){
+        console.error("Error Playground.setFocused: setting item focuses" );
+      };
+    }
+    else 
+      console.error("Error Playground.setFocused: setting item focuses: empty item" ); 
+  } 
+
+
   const addItem = async (type, value) => {
 
     if(type !== undefined){
@@ -74,23 +114,74 @@
 
         updateItemPropsWithCommonStoreValues(newItem)
 
+        setFocused(newItem);
+
         let findOutPosition = gridHelp.findSpaceForItem(newItem, $items, cols); // find out where to place
         $items =  [...$items, ...[{ ...newItem, ...findOutPosition }]]; // Append to playground Items stores
+
       }
       catch (error){
-        console.error("Error on routes/Playground.AddItem")
+        console.error("Error on routes/Playground.addItem", error);
       }
     }
     else
-      console.error("Error on routes/Playground.AddItem: undefined parameter")
+      console.error("Error on routes/Playground.addItem: undefined parameter")
   }
+
+	const update = e => {
+
+    if( e.detail.item && e.detail.prop ){
+      try{
+        if( e.detail.prop === 'data' ){ 
+          switch (e.detail.item.type) {
+            case "liveCodeEditor":
+              localStorage.liveCodeEditorValue = e.detail.value;
+              break;
+            case "grammarEditor":
+              localStorage.grammarEditorValue = e.detail.value;
+              break;
+            case "modelEditor":
+              localStorage.modelEditorValue = e.detail.value;
+              break;              
+            default:
+              break;
+          }
+
+          $items = $items.map(i => i === e.detail.item ? { ...i, [e.detail.prop]: e.detail.value } : i);
+        }
+        else {
+          setFocused(e.detail.item);
+        }
+
+        // if( e.detail.item.type === 'analyser' && e.detail.prop === 'hasFocus' && e.detail.value ){
+        //   setFocused(e.detail.item);
+        //   // $items = $items;
+        // } 
+        // else{
+          // Filter out item, update it and refresh items's list
+          // item[prop] = value;
+          // $items = $items; // force an update
+        
+        // }
+      }
+      catch(error){
+        console.error("Error on routes/Playground.update: updating Playground items", error);
+      }
+    }
+	}
+
+
 
   const clearItems = () => {
     // console.log("DEBUG:dashboard:clearItems:")
     // items.update( items => items.map( item => remove(item) ) );
     $items = $items.slice($items.length);
+
+    clearFocused();
     // items.set([]);
   }
+
+
 
 
   const saveEnvironment = e => {
@@ -148,13 +239,12 @@
     envLoadSubscriptionToken = messaging.subscribe('playground-env-load', e => loadEnvironment(e) );
 		resetSubscriptionToken = messaging.subscribe('playground-reset', e => clearItems() );
     unsubscribeItemsChangeCallback = items.subscribe(value => {
-      // console.log('Playground items changed');
+      console.log('Playground items changed: ', value );
     });
   });
 
   onDestroy(() => {
     // console.log("DEBUG:routes/playground:onDestroy")
-
     messaging.unsubscribe(addSubscriptionToken);
     messaging.unsubscribe(envSaveSubscriptionToken);
     messaging.unsubscribe(envLoadSubscriptionToken);
@@ -181,22 +271,23 @@
                 {cols}
                 {rowHeight}
                 {gap}
+                on:update={ e => update(e) }
                 />
   </div>
 </div>
 
 <style>
   .container {
-  	height: 100%;
+    height: 100%;
     width: 100%;
-  	display: grid;
-  	grid-template-columns: auto 1fr;
-  	grid-template-rows: 50% 50%;
-  	grid-template-areas:
-  		"sidebar layout"
-  		"sidebar layout";
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: 50% 50%;
+    grid-template-areas:
+      "sidebar layout"
+      "sidebar layout";
   	/* background-color: #6f7262; */
-	  background-color: #212121;
+    background-color: #212121;
     overflow: hidden;
   }
   .sidebar-container {

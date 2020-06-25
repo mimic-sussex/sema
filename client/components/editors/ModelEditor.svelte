@@ -93,8 +93,70 @@
   let nil = (e) => { }
 
   let onChange = e => {
-    dispatch('change', { prop:'data', value: codeMirror.getValue() });
+    
+    try{
+      let value = codeMirror.getValue();
+      dispatch('change', { prop:'data', value });
+    }catch(error){
+      console.error("Error Model Editor get value from code Mirror")
+    }
   }
+
+
+  let onFocus = e => {
+
+    hasFocus = true;
+    // console.log("onfocus")
+
+    dispatch('change', { 
+      prop:'hasFocus', 
+      value: true 
+    });
+
+  }
+
+  let onBlur = e => {
+
+    hasFocus = false;
+    // console.log("onBlur")
+
+    dispatch('change', { 
+      prop:'hasFocus', 
+      value: false 
+    });
+    
+  }
+
+
+  let onRefresh = e =>  {
+
+    // console.log("onRefresh")
+    // dispatch('change', { 
+    //   prop:'hasFocus', 
+    //   value: true 
+    // });
+  }
+
+  let onGutterCick = e => {
+
+    // console.log("onGutterCick")
+    // dispatch('change', { 
+    //   prop:'hasFocus', 
+    //   value: true 
+    // });
+  }
+
+  let onViewportChange = e => {
+
+    // console.log("onViewportChange")
+    // dispatch('change', { 
+    //   prop:'hasFocus', 
+    //   value: true 
+    // });
+  }   
+
+
+
 
   let postToModel = e => {
     // console.log(`DEBUG:ModelEditor:postToModel:${e}`);
@@ -293,7 +355,12 @@
               bind:value={data}
               tab={true}
               lineNumbers={true}
-              on:change={onChange}
+              on:change={ e => onChange(e) }
+              on:focus={ e => onFocus(e) }
+              on:blur={ e => onBlur(e) }
+              on:refresh={ e => onRefresh(e) }
+              on:gutterClick={ e => onGutterCick(e) }
+              on:viewportChange={ e => onViewportChange(e) } 
               ctrlEnter={evalModelEditorExpressionBlock}
               cmdEnter={evalModelEditorExpressionBlock}
               shiftEnter={evalModelEditorExpression}
