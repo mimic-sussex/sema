@@ -18,7 +18,7 @@
 		"lineNumbers": true,
 		"hasFocus": false,
 		"theme": "icecoder",
-   	"data": "// LIVE CODE EDITOR \n\n// Press cmd-Enter [Mac] OR ctrl-Enter [Win/Linux] to evaluate this code and playback sound! \n\n:b:{{1,0.25}imp}909b;\n:saw:{4}saw;\n{50,0,{1}sin}toJS;\n:x:{{50,1}fromJS}saw;\n>{:b:, :saw:, :x:}mix\n\n// Press cmd-. [Mac] OR ctrl-. [Win/Linux] to stop sound! ",
+    "data": "// LIVE CODE EDITOR \n\n// Press cmd-Enter [Mac] OR ctrl-Enter [Win/Linux] to evaluate this code and playback sound! \n\n:b:{{1,0.25}imp}909b;\n:saw:{4}saw;\n{50,0,{1}sin}toJS;\n:x:{{50,1}fromJS}saw;\n>{:b:, :saw:, :x:}mix\n\n// Press cmd-. [Mac] OR ctrl-. [Win/Linux] to stop sound! ",
 		"grammarSource": "/languages/default/grammar.ne",
 		"liveCodeSource": "/languages/default/code.sem"
 	},
