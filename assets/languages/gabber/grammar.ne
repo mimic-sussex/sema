@@ -205,7 +205,6 @@ function str(val) {
   };
 }
 
-
 function sampler(trig, sampleName) {
   var samplerTree = {
     '@sigp': {
@@ -316,96 +315,94 @@ main -> _ Statement _
 {% d => ({ "@lang": d[1] }) %}
 
 Statement ->
-  Expression _ %semicolon _ Statement 
-  {% d => [{ "@spawn": d[0] }].concat(d[4]) %}
+  %comment _ Statement
+  {% d => d[2] %}
+	|
+  Expression _ %semicolon _ Statement
+  {% d => [ { '@spawn': d[0] } ].concat(d[4]) %}
   |
-  Expression { % d => [{
-      "@sigOut": {
-        "@spawn": bitToSig(d[0])
-      }
-    }] %
-  }
+  Expression _ %semicolon (_ %comment):*
+  {% d => [ { '@spawn': d[0] } ] %}
+
 
 Expression ->
-  Expression _ % operator _ Term {
-    % d => binop(d[2], d[0], d[4]) %
-  } |
-  Expression _ % assignOperator _ % variable {
-    % d => assignvar(d[0], d[4]) %
-  } |
-  Expression _ % assignOperator _ % sampleName {
-    % d => sampler(d[0], d[4].value) %
-  }# | Term _ % operator _ Term# {
-    % d => binop(d[2], d[0], d[4]) %
-  } |
-  Term {
-    % id %
-  }
+  Expression _ %operator _ Term
+  {% d => binop(d[2], d[0], d[4]) %}
+  |
+  Expression _ %assignOperator _ %variable 
+  {% d => assignvar(d[0], d[4]) %} 
+  |
+  Expression _ %assignOperator _ %sampleName 
+  {% d => sampler(d[0], d[4].value) %}
+  | 
+  Term _ %operator _ Term
+  {% d => binop(d[2], d[0], d[4]) %}
+  |
+  Term {% id %}
 
 Term ->
-  NumericElement {
-    % id %
-  } |
-  NumericElement _ % binRangeBegin _ Expression _ % binRangeEnd {
-    % (d) => binElement(d[0], d[4]) %
-  }
+  NumericElement {% id %}
+  |
+  NumericElement _ %binRangeBegin _ Expression _ %binRangeEnd 
+  {% (d) => binElement(d[0], d[4]) %}
 
+NumericElement -> 
+  %paramBegin _ Expression _ %paramEnd 
+  {% d => d[2] %}
+  |
+  Number {% id %}
+  |
+  %time 
+  {% d => timeOp() %} 
+  |
+  %clock 
+  {% d => clockOp() %}
+  |
+  %noise
+  {% d => noiseOp() %}
+  |
+  %variable 
+  {% d => getvar(d[0]) %}
 
-
-NumericElement -> % paramBegin _ Expression _ % paramEnd {
-    % d => d[2] %
-  } |
-  Number {
-    % id %
-  } |
-  % time {
-    % d => timeOp() %
-  } |
-  % clock {
-    % d => clockOp() %
-  } |
-  % noise {
-    % d => noiseOp() %
-  } |
-  % variable {
-    % d => getvar(d[0]) %
-  }
-
-
+NumericElement -> %paramBegin _ Expression _ %paramEnd 
+  {% d => d[2] %} 
+  |
+  Number {% id %}
+  |
+  %time {% d => timeOp() %}
+  |
+  %clock
+  {% d => clockOp() %}
+  |
+  %noise {% d => noiseOp() %} 
+  |
+  %variable 
+  {% d => getvar(d[0]) %}
 
 Number ->
-  IntOrBin {
-    % id %
-  }
+  IntOrBin
+  {% id %}
 
-IntOrBin - >
-  %
-  integer {
-    % (d) => ({
-      "@num": d[0]
-    }) %
-  } |
-  BinaryNumber {
-    % id %
-  }
+IntOrBin ->
+  %integer 
+  {% (d) => ({ "@num": d[0] }) %} 
+  |
+  BinaryNumber {% id %}
 
-BinaryNumber - > % binarynumber {
-  % (d) => binStrToNum(d[0]) %
-}
+BinaryNumber -> 
+  %binarynumber
+  {% (d) => binStrToNum(d[0]) %}
 
 # Whitespace
 
-_ - > wschar: * {
-  % function (d) {
-    return null;
-  } %
-}
-__ - > wschar: +{
-  % function (d) {
-    return null;
-  } %
-}
+_ -> 
+  wschar:*
+  {% function (d) {  return null; } %}
 
-wschar - > % ws {
-  % id %
-}
+__ -> 
+  wschar:+
+  {% function (d) { return null; } %}
+
+wschar -> 
+  %ws
+  {% id %}
