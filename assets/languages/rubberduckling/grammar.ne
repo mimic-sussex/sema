@@ -46,7 +46,7 @@ function doEffects(effects, tree) {
 		for(let e in effects) {
 			switch(effects[e][0]) {
 				case 'dist':
-        	tree = sema.synth('hardclip', [sema.synth('mul', [tree,sema.num(effects[e][1])]) ]); 
+        	tree = sema.synth('hardclip', [sema.synth('mul', [tree,sema.num(effects[e][1])]) ]);
           break;
 				case 'hpf':
 					tree = sema.synth('hpz', [tree, sema.num(effects[e][1]), sema.num(0.5)]);
@@ -94,12 +94,12 @@ function synth(speed, ratios, freqs, cutoff, resonance, envd, effects) {
 
 function mix() {
  	return sema.synth('mix', [
-    sema.getvar( { value: 'kick' } ),
-	  sema.getvar( { value: 'snare' } ) ,
-	  sema.getvar( { value: 'hato' } ),
-	  sema.getvar( { value: 'hatc' } ),
-	  sema.getvar( { value: 'bass' } ),
-	  sema.getvar( { value: 'lead' } )
+    sema.getvar( 'kick'),
+	  sema.getvar( 'snare') ,
+	  sema.getvar( 'hato' ),
+	  sema.getvar( 'hatc' ),
+	  sema.getvar( 'bass' ),
+	  sema.getvar( 'lead' )
 	]);
 }
 
@@ -191,8 +191,8 @@ EffectList ->
   {% d => [d[0]].concat(d[4]) %}
 
 
-Effect -> 
-  EffectName %colon %number 
+Effect ->
+  EffectName %colon %number
   {% d => [d[0],d[2].value] %}
 
 EffectName ->
