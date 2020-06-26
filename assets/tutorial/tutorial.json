@@ -82,6 +82,11 @@
     "title": "Streaming in both directions",
     "chapter_dir": "03-machine-learning",
     "section_dir": "04-streaming-both-ways"
+  }, {
+    "slug": "creating buffers",
+    "title": "Creating buffers in the ML window",
+    "chapter_dir": "03-machine-learning",
+    "section_dir": "05-creating-buffers"
   }]
 }, {
   "title": "Language Design",
