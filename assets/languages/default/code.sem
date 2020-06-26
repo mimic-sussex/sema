@@ -1,3 +1,11 @@
-> :x:{{{{4}clp, [3,2]}rsq}\909b,2,0.1}asymclip;
-> :z:{{{8}clp,[1,0]}rsq}\909;
+// Make sure the audio engine is ON (click on top right button with RED speaker) 
+
+// Place the cursor on this panel 
+
+// Press cmd-Enter [Mac] OR ctrl-Enter [Win/Linux] to evaluate this code and playback sound! 
+
+:x:{{{{4}clp, [3,2]}rsq}\909b,2,0.1}asymclip;
+:z:{{{8}clp,[1,0]}rsq}\909closed;
 > {:x:,:z:}sum;
+
+// Press cmd-. [Mac] OR ctrl-. [Win/Linux] to stop sound! 

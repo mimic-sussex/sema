@@ -44,51 +44,53 @@
 
   let fetchMarkdown = async (chapter, section) => {
 
-    let res, text;
+    if(chapter !== undefined &&  section !== undefined ){ 
+      let res, text;
 
-    try{
-      res = await fetch(`/tutorial/${chapter}/${section}/index.md`)
-      text = await res.text();
+      try{
+        res = await fetch(`/tutorial/${chapter}/${section}/index.md`)
+        text = await res.text();
 
-      let json = await fetch(`/tutorial/${$params.chapter}/${$params.section}/layout.json`)
-                        .then( r => r.json());
-        
-      $items = json.map( item => hydrateJSONcomponent(item) ); 
+        let json = await fetch(`/tutorial/${$params.chapter}/${$params.section}/layout.json`)
+                          .then( r => r.json());
+          
+        $items = json.map( item => hydrateJSONcomponent(item) ); 
 
-      for (const item of $items){
-        await updateItemPropsWithFetchedValues(item); 
-        await populateCommonStoresWithFetchedProps(item);
-        updateItemPropsWithCommonStoreValues(item)   
+        for (const item of $items){
+          await updateItemPropsWithFetchedValues(item); 
+          await populateCommonStoresWithFetchedProps(item);
+          updateItemPropsWithCommonStoreValues(item)   
+        }
       }
-    }
-    catch(error){
-      console.error("Error loading tutorial environment", error);
-    }
-  
-    // await tick();    
-    if (res.ok) {
-			let tag = 'script';
-      markdown = marked(text);
-      // console.log(markdown);
-			let codeID=0;
-			while(markdown.indexOf("<pre><code>")>-1) {
-				markdown = markdown.replace(
-          "<pre><code>", 
-          `<pre style="margin-top:-25px">
-            <button style="font-size:70%; text-align: center; float: right; z-index: 1000; top: 30px; position: relative;" type="button" onclick="copyCode('code${codeID}')">copy</button>
-            <code style="-moz-user-select: text; -html-user-select: text; -webkit-user-select: text; -ms-user-select: text; user-select: text; white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word;" id='code${codeID++}'>`
-          );
+      catch(error){
+        console.error("Error loading tutorial environment", error);
+      }
+    
+      // await tick();    
+      if (res.ok) {
+        let tag = 'script';
+        markdown = marked(text);
+        // console.log(markdown);
+        let codeID=0;
+        while(markdown.indexOf("<pre><code>")>-1) {
+          markdown = markdown.replace(
+            "<pre><code>", 
+            `<pre style="margin-top:-25px">
+              <button style="font-size:70%; text-align: center; float: right; z-index: 1000; top: 30px; position: relative;" type="button" onclick="copyCode('code${codeID}')">copy</button>
+              <code style="-moz-user-select: text; -html-user-select: text; -webkit-user-select: text; -ms-user-select: text; user-select: text; white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word;" id='code${codeID++}'>`
+            );
 
-        // markdown = markdown.replace(
-        //   "<pre><code>", 
-        //   `<pre><code style="-moz-user-select: text; -khtml-user-select: text; -webkit-user-select: text; -ms-user-select: text; user-select: text; white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word;" id='code${codeID++}'>`
-        // );
+          // markdown = markdown.replace(
+          //   "<pre><code>", 
+          //   `<pre><code style="-moz-user-select: text; -khtml-user-select: text; -webkit-user-select: text; -ms-user-select: text; user-select: text; white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word;" id='code${codeID++}'>`
+          // );
 
-			};
-						// markdown="test";
-    } else {
-      console.error("Error on markdown conversion", error);;
-    } 
+        };
+              // markdown="test";
+      } else {
+        console.error("Error on markdown conversion", error);;
+      } 
+    }
   }
 
   onMount( async () => {
