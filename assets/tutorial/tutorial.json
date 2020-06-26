@@ -92,6 +92,11 @@
     "title": "Using external libraries",
     "chapter_dir": "03-machine-learning",
     "section_dir": "06-ml-libraries"
+  }, {
+    "slug": "regression with FM synthesis",
+    "title": "FM synthesis, controlled by a neural network",
+    "chapter_dir": "03-machine-learning",
+    "section_dir": "07-fm-regression"
   }]
 }, {
   "title": "Language Design",
