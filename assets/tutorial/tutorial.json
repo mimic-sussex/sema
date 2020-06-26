@@ -87,6 +87,11 @@
     "title": "Creating buffers in the ML window",
     "chapter_dir": "03-machine-learning",
     "section_dir": "05-creating-buffers"
+  }, {
+    "slug": "libraries",
+    "title": "Using external libraries",
+    "chapter_dir": "03-machine-learning",
+    "section_dir": "06-ml-libraries"
   }]
 }, {
   "title": "Language Design",
