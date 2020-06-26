@@ -7,19 +7,19 @@
   if (is_browser) {
     import("../../utils/codeMirrorPlugins");
   }
-</script> 
+</script>
 
 <script>
 
 	import { onMount, onDestroy, createEventDispatcher } from 'svelte';
-	
+
   const dispatch = createEventDispatcher();
 
   import * as nearley from 'nearley/lib/nearley.js'
   import compile from '../../compiler/compiler';
 
   import { addToHistory } from "../../utils/history.js";
-  import { 
+  import {
     nil,
     log
   } from "../../utils/utils.js";
@@ -46,18 +46,18 @@
 
 
   // export let grammarSource = "/languages/defaultGrammar.ne";
-  export let grammarSource; 
-  // let grammarSourceSubscriptionToken; 
+  export let grammarSource;
+  // let grammarSourceSubscriptionToken;
   // let grammarCompiledParser;
 
   // export let liveCodeEditorValue;
-  // export 
+  // export
   // let liveCodeParseErrors;
-  // // export 
+  // // export
   // let liveCodeParseResults;
-  // // export 
-  // let liveCodeAbstractSyntaxTree; 
-  // // export 
+  // // export
+  // let liveCodeAbstractSyntaxTree;
+  // // export
   // let dspCode; // code generated from the liveCode AST traversal
 
   // console.log("grammarCompiledParser");
@@ -100,7 +100,7 @@
     // console.log(e);
     btrack.onEditChange(e.detail.changeObj);
 
-    // this event notifies the parent (Dashboard) to update this items on the items collection, because of the 'data' property change 
+    // this event notifies the parent (Dashboard) to update this items on the items collection, because of the 'data' property change
     // CHECK <svelte:component on:change={ e => update(item, e.detail.prop, e.detail.value) }
 
     try{
@@ -169,7 +169,6 @@
 
     if(window.Worker){
       let parserWorkerAsync = new Promise( (res, rej) => {
-
         parserWorker.postMessage({ // Post code to worker for parsing
           liveCodeSource: e,
           parserSource:  $grammarCompiledParser,
@@ -207,7 +206,7 @@
         else {
           // console.log('DEBUG:LiveCodeEditor:parseLiveCode:then2');
           // console.dir(outputs);
-         
+
           $liveCodeParseErrors = outputs;
           $liveCodeAbstractSyntaxTree = $liveCodeParseResults = '';
           // liveCodeParseErrors = outputs;
@@ -298,7 +297,7 @@
   const stopAudioOnEditorCommand = () => {
     // publish eval message with code to audio engine
     messaging.publish("stop-audio");
-    
+
     // set audio engine status on store to change audioEngineStatus indicator/button
     $audioEngineStatus = 'paused';
 
@@ -309,9 +308,9 @@
   let compileParser = grammar => {
     if(!isEmpty(grammar)){
       let { errors, output } = compile(grammar);
-      if ( errors != null ) 
+      if ( errors != null )
         return output;
-      else 
+      else
         throw Error("Grammar Malformed");
     }
     else
@@ -326,7 +325,7 @@
         // Receive notification from "model-output-data" topic
         console.log("DEBUG:LiveCodeEditor:subscribeTo:");
         console.log(event);
-        // grammarCompiledParser =     
+        // grammarCompiledParser =
 			}
 		});
   }
@@ -345,7 +344,7 @@
     //   let grammar = await fetchGrammarFrom(grammarSource);
     //   $grammarCompiledParser = compileParser(grammar);
     //   // console.log('DEBUG:LiveCodeEditor:onMount:grammarCompiledParser')
-    //   // console.log(grammarCompiledParser) 
+    //   // console.log(grammarCompiledParser)
     // }
     // else{
     //   // TODO: Dynamic subscription to messaging from sibling widgets
@@ -423,7 +422,7 @@
               on:blur={ e => onBlur(e) }
               on:refresh={ e => onRefresh(e) }
               on:gutterClick={ e => onGutterCick(e) }
-              on:viewportChange={ e => onViewportChange(e) }   
+              on:viewportChange={ e => onViewportChange(e) }
               {tab}
               {lineNumbers}
               ctrlEnter={evalLiveCodeOnEditorCommand}

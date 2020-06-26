@@ -68,7 +68,7 @@ function sequencer(speed, sample, ratios, offset, effects) {
 	let clk = sema.synth('clp', [sema.num(speed), sema.num(offset)]);
 	let seq = sema.synth('rsq', [clk, { '@list': ratios } ])
 //	let triggers = sema.synth('imp', [sema.num(speed)]);
-	tree = sema.synth( 'sampler', [seq, { "@string": {value:sample} }] )
+	tree = sema.synth( 'sampler', [seq, { "@string": sample }] )
 	tree = doEffects(effects, tree);
 	return tree;
 }
@@ -76,7 +76,6 @@ function sequencer(speed, sample, ratios, offset, effects) {
 function synth(speed, ratios, freqs, cutoff, resonance, envd, effects) {
 	let clk = sema.synth('clp', [sema.num(speed), sema.num(0)]);
 	let seq = sema.synth('rsq', [clk, { '@list': ratios } ]);
-	//let pitch = sema.num(40);
 	let pitch = sema.synth('rsq', [clk, { '@list': ratios }, { '@list': freqs }  ]);
 	let slide = sema.num(0);
 	let accent = sema.num(0);
@@ -110,7 +109,7 @@ function mix() {
 @lexer lexer
 
 # Grammar definition in the Extended Backus Naur Form (EBNF)
-main -> 
+main ->
   _ Statement _
   {% d => ( { '@lang' : d[1].concat([sema.synth( 'dac', [mix()] )]) } )  %}
 
@@ -134,10 +133,10 @@ Expression ->
       let ratios = d[4] ? d[4] : [sema.num(1)];
       let offset = d[2] ? d[2] : 0;
       let effects = d[6] ? d[6] : [];
-      return sema.setvar({value:channelName}, sequencer(speed, sampleName, ratios, offset, effects ))
+      return sema.setvar(channelName, sequencer(speed, sampleName, ratios, offset, effects ))
     }
   %}
-  | Synth Speed:? _ Numberlist _ Numberlist (_ Cutoff):? (_ Resonance):? (_ EnvDepth):? _ Effects:? 
+  | Synth Speed:? _ Numberlist _ Numberlist (_ Cutoff):? (_ Resonance):? (_ EnvDepth):? _ Effects:?
   {% d => {
       let speed = d[1] ? d[1] : 1;
       let ratios = d[3] ? d[3] : [sema.num(1)];
@@ -146,7 +145,7 @@ Expression ->
       let res = d[7] ? d[7][1].value : 50;
       let envd = d[8] ? d[8][1].value : 50;
       let effects = d[10] ? d[10] : [];
-      return sema.setvar({value:d[0]}, synth(speed, ratios, freqs, cutoff, res, envd,effects))
+      return sema.setvar(d[0], synth(speed, ratios, freqs, cutoff, res, envd,effects))
     }
   %}
   | %bpm _ %number
@@ -158,16 +157,16 @@ Resonance -> %res %number {%d => d[1]%}
 
 EnvDepth -> %env %number {%d => d[1]%}
 
-MouseCtl -> 
+MouseCtl ->
   %number  {% d => sema.num(d[0].value) %}
   | %mousey {% d => sema.synth('uexp', [sema.synth('mouseY', []), sema.num(20), sema.num(5000)]) %}
 
 SynthParam => %number
 
 Synth ->
-  %bass 
-  {% d =>'bass' %} 
-  | %lead 
+  %bass
+  {% d =>'bass' %}
+  | %lead
   {% d => 'lead' %}
 
 
@@ -181,14 +180,14 @@ Instrument ->
   %hatclosed {% d => ['hatc', '909closed'] %}
 
 Effects ->
-  %parenl _ EffectList _ %parenr 
+  %parenl _ EffectList _ %parenr
   {% d => d[2] %}
 
 EffectList ->
-  Effect 
+  Effect
   {% d => [d[0]] %}
   |
-  Effect _ %separator _ EffectList 
+  Effect _ %separator _ EffectList
   {% d => [d[0]].concat(d[4]) %}
 
 

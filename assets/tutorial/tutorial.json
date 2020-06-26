@@ -68,45 +68,25 @@
     "section_dir": "01-introduction"
   },
   {
-    "slug": "piping-data-streams",
-    "title": "Data streams",
+    "slug": "streaming from LC to ML",
+    "title": "Sending data to the ML window",
     "chapter_dir": "03-machine-learning",
-    "section_dir": "02-streaming"
+    "section_dir": "02-streaming-lc-ml"
   }, {
-    "slug": "pre-trained-models-i",
-    "title": "Pre-trained model i",
+    "slug": "streaming from ML to LC",
+    "title": "Sending data from the ML window",
     "chapter_dir": "03-machine-learning",
-    "section_dir": "03-pre-trained-model-i"
+    "section_dir": "03-streaming-ml-lc"
   }, {
-    "slug": "pre-trained-models-ii",
-    "title": "Pre-trained model ii",
+    "slug": "streaming both ways",
+    "title": "Streaming in both directions",
     "chapter_dir": "03-machine-learning",
-    "section_dir": "04-pre-trained-model-ii"
+    "section_dir": "04-streaming-both-ways"
   }, {
-    "slug": "linear-regression",
-    "title": "Linear regression",
+    "slug": "creating buffers",
+    "title": "Creating buffers in the ML window",
     "chapter_dir": "03-machine-learning",
-    "section_dir": "05-linear-regression"
-  }, {
-    "slug": "binary-classification",
-    "title": "Binary classification",
-    "chapter_dir": "03-machine-learning",
-    "section_dir": "06-binary-classification"
-  }, {
-    "slug": "non-linear",
-    "title": "Non linear",
-    "chapter_dir": "03-machine-learning",
-    "section_dir": "07-non-linear"
-  }, {
-    "slug": "LSTM-for-text-generation",
-    "title": "LSTM for text generation",
-    "chapter_dir": "03-machine-learning",
-    "section_dir": "08-LSTM-for-text-generation"
-  }, {
-    "slug": "echo-state-networks",
-    "title": "Echo state networks",
-    "chapter_dir": "03-machine-learning",
-    "section_dir": "09-echo-state-network"
+    "section_dir": "05-creating-buffers"
   }]
 }, {
   "title": "Language Design",

@@ -177,6 +177,7 @@ class SABOutputTransducer {
         if (typeof(value) == "number") {
           this.ringbuf.push(new Float64Array([value]));
         }else{
+          // console.log("SAB", value.length, this.blocksize);
           if (value.length == this.blocksize) {
             this.ringbuf.push(value);
           }else if (value.length < this.blocksize) {
@@ -191,6 +192,30 @@ class SABOutputTransducer {
       }
     }
   }
+}
+
+class SABInputTransducer {
+  constructor(id, triggered=0) {
+    this.value = 0;
+    this.id=id;
+    this.triggered = triggered;
+    this.zx = new Maximilian.maxiTrigger();
+  }
+
+  getSABValue(inputBuffers, trigger) {
+    let reading = 1;
+    if (this.triggered) {
+      reading = this.zx.onZX(trigger);
+    }
+    if (reading) {
+      let sab= inputBuffers[this.id];
+      if (sab) {
+        this.value = sab.value;
+      }
+    }
+    return this.value;
+  }
+
 }
 
 
@@ -303,42 +328,43 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
     this.transducers = [];
 
-    this.matchTransducers = (ttype, channel) => {
-      return this.transducers.filter(x => {
-        let testEqChannels = (chID, channel) => {
-          let eq = true;
-          let keys = Object.keys(channel);
-          if (keys.length == 0) {
-            eq = channel == chID;
-          } else {
-            for (let v in keys) {
-              if (chID[v] != undefined) {
-                if (chID[v] != channel[v]) {
-                  eq = false;
-                  break;
-                }
-              } else {
-                eq = false;
-                break;
-              }
-            }
-          }
-          return eq;
-        }
-        return x.transducerType == ttype && testEqChannels(x.channelID, channel);
-      });
-    }
+    //DEPRECATED - things that used this need updating to the new SAB system
+    // this.matchTransducers = (ttype, channel) => {
+    //   return this.transducers.filter(x => {
+    //     let testEqChannels = (chID, channel) => {
+    //       let eq = true;
+    //       let keys = Object.keys(channel);
+    //       if (keys.length == 0) {
+    //         eq = channel == chID;
+    //       } else {
+    //         for (let v in keys) {
+    //           if (chID[v] != undefined) {
+    //             if (chID[v] != channel[v]) {
+    //               eq = false;
+    //               break;
+    //             }
+    //           } else {
+    //             eq = false;
+    //             break;
+    //           }
+    //         }
+    //       }
+    //       return eq;
+    //     }
+    //     return x.transducerType == ttype && testEqChannels(x.channelID, channel);
+    //   });
+    // }
 
-    this.registerInputTransducer = (ttype, channelID) => {
-      let transducer = new InputTransducer(ttype, channelID);
-      let existingTransducers = this.matchTransducers(ttype, channelID);
-      if (existingTransducers.length > 0) {
-        transducer.setValue(existingTransducers[0].getValue());
-      }
-      this.transducers.push(transducer);
-      // console.log(this.transducers);
-      return transducer;
-    };
+    // this.registerInputTransducer = (ttype, channelID) => {
+    //   let transducer = new InputTransducer(ttype, channelID);
+    //   let existingTransducers = this.matchTransducers(ttype, channelID);
+    //   if (existingTransducers.length > 0) {
+    //     transducer.setValue(existingTransducers[0].getValue());
+    //   }
+    //   this.transducers.push(transducer);
+    //   // console.log(this.transducers);
+    //   return transducer;
+    // };
 
     this.getSampleBuffer = (bufferName) => {
       let sample = this.sampleVectorBuffers['defaultEmptyBuffer']; //defailt - silence
@@ -374,26 +400,28 @@ class MaxiProcessor extends AudioWorkletProcessor {
       } else if ('func' in event.data && 'sendbuf' == event.data.func) {
         console.log("aesendbuf", event.data);
         addSampleBuffer(event.data.name, event.data.data);
-      } else if ('func' in event.data && 'data' == event.data.func) {
-        // console.log('ML', event.data);
-        //this is from the ML window, map it on to any listening transducers
-        let targetTransducers = this.matchTransducers('ML', event.data.ch);
-        for (let idx in targetTransducers) {
-          targetTransducers[idx].setValue(event.data.val);
-        }
+      //DEPRECATED
+      // } else if ('func' in event.data && 'data' == event.data.func) {
+      //   // console.log('ML', event.data);
+      //   //this is from the ML window, map it on to any listening transducers
+      //   let targetTransducers = this.matchTransducers('ML', event.data.ch);
+      //   for (let idx in targetTransducers) {
+      //     targetTransducers[idx].setValue(event.data.val);
+      //   }
       } else if ('func' in event.data && 'sab' == event.data.func) {
         console.log("buf received", event.data);
         let sab = event.data.value;
         let rb =  new RingBuffer(sab, Float64Array);
         inputSABs[event.data.channelID] = {sab:sab, rb:rb, blocksize: event.data.blocksize, value: event.data.blocksize > 1 ? new Float64Array(event.data.blocksize) : 0};
-      } else if ('peermsg' in event.data) {
-        console.log('peer', event);
-        //this is from peer streaming, map it on to any listening transducers
-        let targetTransducers = this.matchTransducers('NET', [event.data.src, event.data.ch]);
-        // console.log(targetTransducers.length);
-        for (let idx in targetTransducers) {
-          targetTransducers[idx].setValue(event.data.val);
-        }
+      //TEMP DEPRECATED
+      // } else if ('peermsg' in event.data) {
+      //   console.log('peer', event);
+      //   //this is from peer streaming, map it on to any listening transducers
+      //   let targetTransducers = this.matchTransducers('NET', [event.data.src, event.data.ch]);
+      //   // console.log(targetTransducers.length);
+      //   for (let idx in targetTransducers) {
+      //     targetTransducers[idx].setValue(event.data.val);
+      //   }
       } else if ('sample' in event.data) { //from a worker
         // console.log("sample received");
         // console.log(event.data);

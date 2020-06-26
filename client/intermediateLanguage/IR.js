@@ -203,8 +203,8 @@ var jsFuncMap = {
 	fromJS: { //channel
 		// setup: (o, p) => `${o} = this.registerInputTransducer('ML', ${p[0].loop})`,
 		// loop:  (o, p) => `${o}.getValue()`
-		setup: (o, p) => ``,
-		loop:  (o, p) => `this.getSABValue(${p[0].loop})`
+		setup: (o, p) => `${o} = new SABInputTransducer(${p[0].loop}, ${p.length==2 ? 1 : 0})`,
+		loop:  (o, p) => `${o}.getSABValue(inputSABs, ${p.length==2 ? p[1].loop: 0})`
 	},
 	mouseX: {
 		setup: (o, p) => ``,
@@ -417,12 +417,12 @@ var jsFuncMap = {
   },
   svf: {
     //set cutoff and resonance only when params change to save CPU
-		setup: (o, p) => `${o} = new Maximilian.maxiSVF(); 
-                      ${o}_p1 = new Maximilian.maxiTrigger(); 
+		setup: (o, p) => `${o} = new Maximilian.maxiSVF();
+                      ${o}_p1 = new Maximilian.maxiTrigger();
                       ${o}_p2 = new Maximilian.maxiTrigger();`,
-		loop:  (o, p) => `( () => { ${o}_cutoff = ${p[1].loop}; 
+		loop:  (o, p) => `( () => { ${o}_cutoff = ${p[1].loop};
                                 if (${o}_p1.onChanged(${o}_cutoff, 1e-5)) {${o}.setCutoff(${o}_cutoff)};
-                                ${o}_res = ${p[2].loop}; 
+                                ${o}_res = ${p[2].loop};
                                 if (${o}_p2.onChanged(${o}_res, 1e-5)) {${o}.setResonance(${o}_res)};
                                 return ${o}.play(${p[0].loop},${p[3].loop},${p[4].loop},${p[5].loop},${p[6].loop})})()`
   },
@@ -590,7 +590,7 @@ class IRToJavascript {
         // console.log("DEBUG:traverseTree:@setvar");
         // console.log(vars);
         // console.log(el['@varname']);
-        let variableName = el['@varname'].value;
+        let variableName = el['@varname'];
         // console.log(variableName);
         let memIdx = vars[variableName];
         // console.log(memIdx);
@@ -607,10 +607,10 @@ class IRToJavascript {
         return ccode;
       },
       '@getvar': (ccode, el) => {
-        let memIdx = vars[el.value];
+        let memIdx = vars[el];
         if (memIdx == undefined) {
 					memIdx = Object.keys(vars).length;
-          vars[el.value] = memIdx;
+          vars[el] = memIdx;
         }
         // ccode.loop += `this.getvar(q, '${el.value}')`;
         ccode.loop += `(mem[${memIdx}] ? mem[${memIdx}] : 0)`;
@@ -618,8 +618,8 @@ class IRToJavascript {
       },
       '@string': (ccode, el) => {
         // console.log(el.value);
-        if (typeof el.value === 'string' || el.value instanceof String) {
-          ccode.loop += `'${el.value}'`;
+        if (typeof el === 'string' || el instanceof String) {
+          ccode.loop += `'${el}'`;
         }
         // else {
         //   ccode = IRToJavascript.traverseTree(el, ccode, level, vars, blockIdx);
