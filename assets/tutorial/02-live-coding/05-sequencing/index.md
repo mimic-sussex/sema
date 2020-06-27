@@ -31,7 +31,7 @@ Try varying the frequencies of the two ```clt``` functions.
 
 ```clp``` is also used for sequencing.  It outputs a phasor, i.e. a signal that rises from 0 to 1 and repeats.   The first parameter is a frequency, just like for ```clt```.
 
-This example below let's you listen to the phasor as it controls the frequency a saw wave.
+This example below lets you listen to the phasor as it controls the frequency a saw wave.
 
 ```
 {150,4}clk;
