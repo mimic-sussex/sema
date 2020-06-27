@@ -62,25 +62,34 @@
 
   .error-state {
     color:red; 
-    margin:15px 0px 15px 25px;
+    margin:25px 0px 15px 5px;
   }
 
   .correct-state {
     color:green; 
-    margin:15px 0px 15px 25px;
+    margin:25px 0px 15px 5px;
 
   }
+
+
+  .headline {
+    overflow-y: scroll; height:auto; margin-top:6px; margin-left:20px; 
+  }
+
 
 </style>
 
 
 <div id="liveCodeCompilerOutput" class="codemirror-container flex scrollable">
-  {#if $grammarCompilationErrors != ""}
   <div class="headline">
+    <strong>LIVE CODE PARSER OUTPUT</strong> 
+  </div>
+  {#if $grammarCompilationErrors != ""}
+  <div>
     <strong class="error-state">Go work on your grammar!</strong>
   </div>
   {:else if $liveCodeParseErrors !=='' }
-  <div class="headline">
+  <div>
     <strong class="error-state">Live Code Syntax Error</strong>
     <br>
     <div style="margin-left:5px">

@@ -486,7 +486,7 @@ export async function createNewItem (type, content){
 		case "dspCodeOutput":
 			component = {
 				component: DSPCodeOutput,
-				background: "#ffffff",
+				background: "#fdbd9a",
 			};
 			break;
 		default:
