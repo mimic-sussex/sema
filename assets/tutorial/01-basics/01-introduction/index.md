@@ -20,7 +20,7 @@ This tutorial aims to provide a lightweight introduction and a gradual learning 
 
 We recommended that you go from start to finish. You can navigate the Table of Contents via the dropdown menu above (click 'Introduction').
 
-* Part 1, *Basics* starts with the basics of the playground interface, including layouts, the live coding editors and the all the available widgets.  
+* Part 1, *Basics* starts with the basics of the playground interface, including layouts, the live coding editors and all the available widgets.  
 
 * Part 2, *Live Coding with the default language* will get you started with the basic element and syntax of Sema's default language.
 

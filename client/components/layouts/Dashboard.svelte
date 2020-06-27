@@ -195,11 +195,11 @@
     padding: 5px 10px;
     cursor: pointer;
     z-index: 1500;
-    text-shadow: 1px 1px #000000;
+    text-shadow: 1px 1px 1px #000000;
   }
 
   .move {
-    text-shadow: 1px 1px #000000;
+    text-shadow: 1px 1px 1px #000000;
     font-size: 1.2em;
     position: absolute;
     padding: 1px 5px;

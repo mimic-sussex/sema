@@ -1,19 +1,27 @@
-# Other widgets
+# Introduction to Language Design
+ 
+In this part of the tutorial, we are going develop some intuition about the language design workflow in Sema.
 
-There are other types of widgets that co-exist with the editors on Sema's dashboard. They provide visualization and feedback on the live coding and language design workflows. 
+For that, we will be focusing on the *Grammar Editor* and: 
 
-This tutorial introduces the basics of these widgets. It also provides a simple exercise for you to understand their interplay. 
+* how it interacts with the *Live Coding Editor* and the debugging widgets, and how use these to test out our custom language as we go.
 
-## Audio Analyser
+* the notation that it accepts and the structure of this notation.
 
-The *Audio Analyser* provides visualizations that can help you understand the signal that your live code is generating. It has three modes: 
-* Oscilloscope
-* Spectrogram
-* Oscilloscope and Spectrogram overlaid
+* understand how to tweak an existing language and to create a new one. 
 
-## Grammar Compiler Output
+The first thing that might be useful to develop some intuition is to develop 
 
-The *Grammar Compiler* provides feedback on the compilation of the grammar and parser generation for your custom-language. 
+## Interaction(s) of Grammar Editor
+
+This editor is *context-dependent* and bound to the language of the LiveCode editor. So give focus to you LiveCode editor to show the button to create the grammar Editor.
+
+
+## Lexical Analysis
+
+## Syntax Analysis
+
+The *Grammar Compiler Output* provides feedback on the compilation of the grammar and parser generation for your custom-language. 
 
 It will give compilation errors if your grammar: 
  
@@ -23,7 +31,7 @@ It will give compilation errors if your grammar:
 
 Otherwise, it shows that the "grammar was validated and the parser was generated".
 
-## Live Code Parser Output
+
 
 The *Live Code Parser Output* provides feedback on your custom-language compilation. It will give parsing errors if your language has a syntax error. 
 
