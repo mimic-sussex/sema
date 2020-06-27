@@ -1,3 +1,5 @@
+// MODEL EDITOR
+
 //js - Echo state network (tfjs)
 var esn = {};
 esn.N = 10;

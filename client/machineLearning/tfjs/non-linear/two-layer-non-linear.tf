@@ -1,3 +1,5 @@
+// MODEL EDITOR
+
 //js – Two-layer non linear model for regression (tfjs)
 var model = tf.sequential();
 model.add(tf.layers.dense({

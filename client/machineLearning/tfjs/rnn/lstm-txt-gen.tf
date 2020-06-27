@@ -1,3 +1,5 @@
+// MODEL EDITOR
+
 //js - Long-short-term-memory (LSTM) model for text generation (tfjs)
 
 // Hyperparameters of LSTM model 
