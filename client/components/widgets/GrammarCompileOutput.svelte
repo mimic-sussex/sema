@@ -68,7 +68,11 @@
 
 
   .headline {
-    overflow-y: scroll; height:auto; margin-top:6px; margin-left:20px; 
+    overflow-y: scroll; 
+    height:auto; 
+    margin-top:6px; 
+    margin-left:20px; 
+    margin-bottom: 10px;
   }
 
 </style>

@@ -43,11 +43,14 @@ import { dspCode } from '../../stores/common.js'
   }
   .error-state {
     color:red; 
-    margin:15px 10px 5px 5px;
+    margin: 25px 10px 5px 10px;
   }
 
   .headline {
-    overflow-y: scroll; height:auto; margin-top:6px; margin-left:20px; 
+    overflow-y: scroll; height:auto; 
+    margin-top: 6px; 
+    margin-left: 20px; 
+    margin-bottom: 10px;
   }
 
 

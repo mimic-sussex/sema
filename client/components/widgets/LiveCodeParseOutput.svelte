@@ -56,10 +56,6 @@
 		overflow-y: auto;
 	}
 
-  .headline {
-    overflow-y: scroll; height:auto; margin-top:6px 
-  }
-
   .error-state {
     color:red; 
     margin:25px 0px 15px 5px;
@@ -73,7 +69,11 @@
 
 
   .headline {
-    overflow-y: scroll; height:auto; margin-top:6px; margin-left:20px; 
+    overflow-y: scroll; 
+    height:auto; 
+    margin-top: 6px; 
+    margin-left: 20px;
+    margin-bottom: 10px; 
   }
 
 
