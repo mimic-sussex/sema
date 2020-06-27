@@ -19,7 +19,7 @@ or, to open external resources in a new tab:
 
 ## Dashboard ## 
 
-The dashboard is the main area of interaction in Sema. It arranges widgets in grid layout enables you to view and interact with the information which matters most. 
+The dashboard is the main area of interaction in Sema. By arranging widgets in the grid layout, you can view and interact with the information that matters most. 
 
 All widgets share a few common interactions denoted by the following icons:
 

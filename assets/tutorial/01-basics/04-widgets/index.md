@@ -1,4 +1,4 @@
-# Other widgets
+# Other Widgets
 
 There are other types of widgets that co-exist with the editors on Sema's dashboard. They provide visualization and feedback on the live coding and language design workflows. 
 
@@ -21,7 +21,7 @@ It will give compilation errors if your grammar:
 2. the rules are ill-defined
 3. is ambiguous
 
-Otherwise, it shows that the "grammar was validated and the parser was generated".
+Otherwise, it displays a message saying: "grammar was validated and the parser was generated".
 
 ## Live Code Parser Output
 
@@ -31,7 +31,7 @@ Otherwise it shows the Abstract Syntax Tree (AST) that results from parsing your
 
 ## DSP Code Output 
 
-The *DSP Code Output* widget shows the code which Sema generates (Maximilian DSP Javascript) when you evaluate your live code. 
+The *DSP Code Output* widget shows the code that Sema generates (Maximilian DSP JavaScript) when you evaluate your live code. 
 
 This DSP code is injected into and runs in the Sema audio engine.  
 
