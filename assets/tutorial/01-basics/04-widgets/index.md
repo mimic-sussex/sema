@@ -1,6 +1,8 @@
 # Other widgets
 
-In Sema, there are other types of widgets that co-exist with the editors on the dashboard. They provide visualization and feedback on the live coding and language design process. 
+There are other types of widgets that co-exist with the editors on Sema's dashboard. They provide visualization and feedback on the live coding and language design workflows.
+
+This tutorial introduces the basics of these widgets, and a simple exercise for you to understand their interplay.
 
 ## Audio Analyser
 
@@ -23,9 +25,9 @@ Otherwise, it shows that the "grammar was validated and the parser was generated
 
 The *Live Code Parser Output* provides feedback on your custom-language compilation. It will give parsing errors if your language has a syntax error. Otherwise it shows the abstract syntax tree that results from parsing your live code.
 
-## DSP Code generated
+## DSP Code Output 
 
-The *DSP Code generated* widget shows the Maximilian Javascript DSP code which Sema generates when you evaluate of your live code. This DSP is injected into and run in the Sema audio engine.  
+The *DSP Code Outpu* widget shows the code which Sema generates (Maximilian DSP Javascript) when you evaluate your live code. This DSP code is injected into and runs in the Sema audio engine.  
 
 <!-- the Maximilian DSP -->
 
