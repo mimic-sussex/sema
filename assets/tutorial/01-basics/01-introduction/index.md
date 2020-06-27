@@ -1,14 +1,16 @@
 
 ## Getting Started with Sema!
 
-Welcome to the Sema tutorial! In this tutorial you will learn everything you need to know to start live coding audio and music with machine learning and designing your own live coding language.
+Welcome to the Sema tutorial! In this tutorial you will learn everything you need to know to start live coding music and audio with machine learning and designing your own live coding language.
 
 You can also consult the [API docs](https://github.com/mimic-sussex/sema/tree/master/docs) for further information. If you're impatient to start hacking Sema free-style, use the playground or explore the source code on Github, you will find buttons for that in the top banner of this page.
 
 
 ### What is Sema?
 
-Sema is a playground for designing and performing with live coding languages.
+Sema is a live coding environment for performing and composing music in realtime using simple live coding languages. 
+
+It is also a playground for designing and training machine learning networks and creating your own languages.
 
 It is similar to other live coding environments and domain-specific languages for sound and music, such as SuperCollider, TidalCycles and Gibber.
 
