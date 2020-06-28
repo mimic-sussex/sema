@@ -65,12 +65,12 @@
       try {
         let itemProperties = [];
         if( item.type === "liveCodeEditor" || item.type === "grammarEditor" || item.type === 'modelEditor' ){
-          itemProperties = [ { lineNumbers: item.lineNumbers}, { theme: item.theme } ];     
+          itemProperties = [ { lineNumbers: item.lineNumbers}, { theme: item.theme } ];
 
           // Order in item properties determines final order in interface
           // if( item.type === "liveCodeEditor" || item.type === "grammarEditor" ){
           //   itemProperties.push({ debug: true });
-          // }    
+          // }
 
           if( item.type === "liveCodeEditor" ){
             itemProperties.push({ grammar: item.grammar });
@@ -78,7 +78,7 @@
 
           if( item.type === "modelEditor" ){
             itemProperties.push({ restart: true });
-          }  
+          }
         }
         else if(item.type === 'analyser'){
           itemProperties.push( { mode: item.mode } )
@@ -86,7 +86,7 @@
 
         item.hasFocus = true;
         $focusedItem = item;
-        $focusedItemProperties = itemProperties;    
+        $focusedItemProperties = itemProperties;
         // set unfocused items through the rest of the list
         $items = $items.map(i => i === item ? ({ ...i, ['hasFocus']: true }) : ({ ...i, ['hasFocus']: false }) );
         // $items = $items.map(i => i === item ? { ...i, [e.detail.prop]: e.detail.value } : i)
@@ -97,9 +97,9 @@
         console.error("Error Playground.setFocused: setting item focuses" );
       };
     }
-    else 
-      console.error("Error Playground.setFocused: setting item focuses: empty item" ); 
-  } 
+    else
+      console.error("Error Playground.setFocused: setting item focuses: empty item" );
+  }
 
 
   const addItem = async (type, value) => {
@@ -132,7 +132,7 @@
 
     if( e.detail.item && e.detail.prop ){
       try{
-        if( e.detail.prop === 'data' ){ 
+        if( e.detail.prop === 'data' ){
           switch (e.detail.item.type) {
             case "liveCodeEditor":
               localStorage.liveCodeEditorValue = e.detail.value;
@@ -142,7 +142,7 @@
               break;
             case "modelEditor":
               localStorage.modelEditorValue = e.detail.value;
-              break;              
+              break;
             default:
               break;
           }
@@ -156,12 +156,12 @@
         // if( e.detail.item.type === 'analyser' && e.detail.prop === 'hasFocus' && e.detail.value ){
         //   setFocused(e.detail.item);
         //   // $items = $items;
-        // } 
+        // }
         // else{
           // Filter out item, update it and refresh items's list
           // item[prop] = value;
           // $items = $items; // force an update
-        
+
         // }
       }
       catch(error){
@@ -239,7 +239,7 @@
     envLoadSubscriptionToken = messaging.subscribe('playground-env-load', e => loadEnvironment(e) );
 		resetSubscriptionToken = messaging.subscribe('playground-reset', e => clearItems() );
     unsubscribeItemsChangeCallback = items.subscribe(value => {
-      console.log('Playground items changed: ', value );
+      //console.log('Playground items changed: ', value );
     });
   });
 

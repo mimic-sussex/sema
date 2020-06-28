@@ -7,8 +7,12 @@
 /*
 Examples:
 
-kick*2 1,1,1,1;
-s+0.5 1,2;
+bpm 155;
+kick*1 2,2,4,3,3,2 (dist:10);
+snare*2+0.5 3,1 (dist:2);
+closedhat*2 3,5,4,4 (dist:2);
+openhat*1 1,3,4,4,4 (dist:3, hpf:2000);
+lead*4 3,1,4,4,4 32,0,44 cut_mousey res99 env9 (hpf:1000, dist:100,amp:1);
 
 */
 
@@ -48,7 +52,7 @@ function doEffects(effects, tree) {
 		for(let e in effects) {
 			switch(effects[e][0]) {
 				case 'dist':
-        	tree = sema.synth('hardclip', [sema.synth('mul', [tree,sema.num(effects[e][1])]) ]); 
+        	tree = sema.synth('hardclip', [sema.synth('mul', [tree,sema.num(effects[e][1])]) ]);
           break;
 				case 'hpf':
 					tree = sema.synth('hpz', [tree, sema.num(effects[e][1]), sema.num(0.5)]);
@@ -96,12 +100,12 @@ function synth(speed, ratios, freqs, cutoff, resonance, envd, effects) {
 
 function mix() {
  	return sema.synth('mix', [
-    sema.getvar( { value: 'kick' } ),
-	  sema.getvar( { value: 'snare' } ) ,
-	  sema.getvar( { value: 'hato' } ),
-	  sema.getvar( { value: 'hatc' } ),
-	  sema.getvar( { value: 'bass' } ),
-	  sema.getvar( { value: 'lead' } )
+    sema.getvar( 'kick'),
+	  sema.getvar( 'snare') ,
+	  sema.getvar( 'hato' ),
+	  sema.getvar( 'hatc' ),
+	  sema.getvar( 'bass' ),
+	  sema.getvar( 'lead' )
 	]);
 }
 
@@ -193,8 +197,8 @@ EffectList ->
   {% d => [d[0]].concat(d[4]) %}
 
 
-Effect -> 
-  EffectName %colon %number 
+Effect ->
+  EffectName %colon %number
   {% d => [d[0],d[2].value] %}
 
 EffectName ->
