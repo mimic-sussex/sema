@@ -141,11 +141,11 @@ var jsFuncMap = {
 	},
 	linlin: {
 		setup: (o, p) => "",
-		loop:  (o, p) => `Maximilian.maxiMap.linlin(${p[0].loop}, ${p[1].loop}, ${p[2].loop}),${p[3].loop}, ${p[4].loop})`
+		loop:  (o, p) => `Maximilian.maxiMap.linlin(${p[0].loop}, ${p[1].loop}, ${p[2].loop},${p[3].loop}, ${p[4].loop})`
 	},
 	linexp: {
 		setup: (o, p) => "",
-		loop:  (o, p) => `Maximilian.maxiMap.linexp(${p[0].loop}, ${p[1].loop}, ${p[2].loop}), ${p[3].loop}, ${p[4].loop})`
+		loop:  (o, p) => `Maximilian.maxiMap.linexp(${p[0].loop}, ${p[1].loop}, ${p[2].loop}, ${p[3].loop}, ${p[4].loop})`
 	},
 	dist: {
 		setup: (o, p) => `${o} = new Maximilian.maxiNonlinearity()`,
