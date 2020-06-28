@@ -1,10 +1,10 @@
-# Data Streams: Sending data from the machine learning window to the livecoding window
+# Data Streams: Sending data from the machine learning window to the live coding window
 
-In this tutorial, you will need to open the Javascript console.  You can do this in Chrome by opening the 'Developer Tools' (F12 key) and choosing the console tab.
+In this tutorial, you will need to open the JavaScript console.  You can do this in Chrome by opening the 'Developer Tools' (F12 key) and choosing the console tab.
 
 
-In the default language, you can use ```fromJS``` to receive data from the ML window.  You can also use this in the Sema type system for custom languages.
-The first argument is the channel number on which to receive data. A second optional argument controls timing, we'll look at that later.
+In the default language, you can use ```fromJS``` to receive data from the ML window.  You can also use this in the Sema type system for your custom languages.
+The first argument is the channel number on which to receive data. A second optional argument controls timing, but we'll look at that later.
 
 ## Sending single value streams
 
