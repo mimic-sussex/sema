@@ -282,40 +282,6 @@ Note: to separate the two functions in the model window you use three or more un
 ```
 __________
 ```
-<--
-# Peer to peer communication using `fromPeer` and `toPeer`
-
-You will need to find out your Peer ID: run `sema.peerinfo()` in the ML window, and the ID will be copied to the paste bufferName. Share this ID with others who you will communicate with.
-
-```
-:sig:{{1.9}pha,200}mul;
-{:sig:,'1q18023vvt300000',0, 10}toPeer
-```
-
-This will stream the signal in variable :sig: to peer '1q18023vvt300000' on channel 0 at frequency 10Hz
-
-```
-{{'i6etfg8bcx000000', 0}fromPeer}sqr
-```
-
-This receives data from peer 'i6etfg8bcx000000' on channel 0.
-
-# osc communication
-
-??? how to select data from incoming osc to use in signal chain???
-
-// forward data coming at the osc address `/minibee/data` to the model fifty times per second with ID 2
-
-`{50,2,/minibee/data}toModel`
-
-// receive it in the lower editor
-
-`input = (id,x) => {console.log([id,x])};`
-
-`x` will be an array of values
-
--->
-
 # mouse input
 
 use `{}mouseX` and `{}mouseY`
