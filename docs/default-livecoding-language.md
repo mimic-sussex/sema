@@ -11,23 +11,23 @@ to route a signal to the outputs on your soundcard, there are the following opti
 1. Route a single signal to all outputs, by putting an asterisk at the point in the signal chain where you want to output e.g.
 
 ```
-*{50}saw;
+>{50}saw;
 ```
 
 ```
-{*{{50}saw, {51}saw}add, 500,3}hpz;
+{>{{50}saw, {51}saw}add, 500,3}hpz;
 ```
 In the above example, the soundcard will monitor the saw waves, but not the hpz.
 
 2. Route a single signal to a single channel, using an asterisk and a channel number.
 
 ```
-*0 {40}sqr;
-*1 {40.4}sqr;
+>0 {40}sqr;
+>1 {40.4}sqr;
 ```
 
 
-To change channel numbers programmatically, use the `dacx` function.
+To change channel numbers programmatically, use the `dac` function.
 
 ```
 //alternate noise between left and right channels
@@ -246,16 +246,15 @@ Multiply signals:
 - `linexp` : arbitrary exponential map from range between arg 2 and 3, to range between arg 4 and arg 5
 
 
-# communication to the model (lower editor window)
+# communication to the JS window
 
+### Send data:
 
-### Send data to model:
-
-10 times per second (argument 1) on channel 0 (argument 3). The second argument is signal to send (in this case the output of `{1}sin`).
+10 times per second (argument 1) on channel 0 (argument 2). The third argument is signal to send (in this case the output of `{1}sin`).
 
 In the live code editor:
 
-`{10,{1}sin,0}toJS`
+`{{10}imp,0, {1}sin}toJS`
 
 In the model/js editor:
 
@@ -278,12 +277,12 @@ In the model/js editor:
 output(100,0)
 ```
 
-Note: to separate the two functions in the model window you use 10 underscores:
+Note: to separate the two functions in the model window you use three or more underscores:
 
 ```
 __________
 ```
-
+<--
 # Peer to peer communication using `fromPeer` and `toPeer`
 
 You will need to find out your Peer ID: run `sema.peerinfo()` in the ML window, and the ID will be copied to the paste bufferName. Share this ID with others who you will communicate with.
@@ -315,6 +314,7 @@ This receives data from peer 'i6etfg8bcx000000' on channel 0.
 
 `x` will be an array of values
 
+-->
 
 # mouse input
 
