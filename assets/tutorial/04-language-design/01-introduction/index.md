@@ -1,6 +1,6 @@
 # Introduction to Language Design
  
-In this part of the tutorial, we are going develop some intuition about the language design workflow in Sema.
+In this part of the tutorial, we are going develop some knowledge about the language design workflow in Sema.
 
 For that, we will be focusing on the *Grammar Editor* and: 
 
@@ -10,7 +10,7 @@ For that, we will be focusing on the *Grammar Editor* and:
 
 * understand how to tweak an existing language and to create a new one. 
 
-The first thing that might be useful to develop some intuition is to develop 
+Creating a new language is no small task! It requires design, philosophy and logic. However, it ranges from modifying existing language (for example by changing its syntax) to actually creating a brand new language. For this work we need to understand a few key features of Sema and its language design concepts:
 
 ## Interaction(s) of Grammar Editor
 
@@ -39,13 +39,13 @@ Otherwise it shows the Abstract Syntax Tree (AST) that results from parsing your
 
 ## DSP Code Output 
 
-The *DSP Code Output* widget shows the code which Sema generates (Maximilian DSP Javascript) when you evaluate your live code. 
+The *DSP Code Output* widget shows the code which Sema generates (Maximilian DSP JavaScript) when you evaluate your live code. 
 
 This DSP code is injected into and runs in the Sema audio engine.  
 
 ## *The exercise* 
 
-There is an error preventing the live coding to be evaluated. What do you need change?
+There is an error preventing the language to be compiled. What do you need change?
 
 <!-- the Maximilian DSP -->
 

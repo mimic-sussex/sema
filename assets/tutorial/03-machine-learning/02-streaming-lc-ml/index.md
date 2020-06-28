@@ -1,12 +1,10 @@
-# Data Streams: Sending data from the livecoding window to the machine learning window
+# Data Streams: Sending data from the live coding window to the machine learning window
 
-In this tutorial, you will need to open the Javascript console to look at logging data.  You can do this in Chrome by opening the 'Developer Tools' (F12 key) and choosing the console tab.
-
-In Sema, the code from the live coding window is run in the audio engine, and the code that you run in the machine learning window is run in a separate JavaScript thread.  These two systems do not by default share data together (they probably run on separate CPUs). However, it is possible to share data between them by setting up data streaming channels.  This tutorial shows you how to send data from the audio engine to the machine learning system.
+In Sema, the code from the live coding window is run in the signal engine, and the code that you run in the machine learning window is run in a separate JavaScript thread. These two systems do not by default share data together (they probably run on separate CPUs). However, it is possible to share data between them by setting up data streaming channels. This tutorial shows you how to send data from the signal engine to the machine learning system.
 
 ## Streaming single values
 
-To send data from code in the livecode window (let's call this LC) to code in the machine learining window (let's call this ML), we use the command ```toJS``` in the default language.  This is also available in other custom languages using Sema's type system.
+To send data from code in the live code window (let's call this LC) to code in the machine learining window (let's call this ML), we use the command ```toJS``` in the default language.  This is also available in other custom languages using Sema's type system.
 
 ```toJS``` has three required parameters:
 
@@ -28,7 +26,7 @@ input = (id,x) => {
 };
 ```
 
-After running both pieces of code, you should see the values of the saw wave (cycling from -1 to 1) in the console.  This signal is being sent 25 times a second, triggered by the ```{25}imp```.  Try changing this number; it will change the speed at which data is sent.
+After running both pieces of code, you should see the values of the saw wave (cycling from -1 to 1) in the console (remember to start the signal engine at the top).  This signal is being sent 25 times a second, triggered by the ```{25}imp```.  Try changing this number; it will change the speed at which data is sent.
 
 If you change the channel number, this will send data on a different channel, reflected in the first number output in the console.
 
