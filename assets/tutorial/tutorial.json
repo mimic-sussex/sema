@@ -98,9 +98,9 @@
   },
   {
     "slug": "regular-expressions",
-    "title": "Regular Expressions",
+    "title": "Lexer and Regular Expressions",
     "chapter_dir": "04-language-design",
-    "section_dir": "02-regular-expressions"
+    "section_dir": "02-lexer-regular-expressions"
   }, {
     "slug": "grammar-rules",
     "title": "Grammar Rules",
