@@ -57,6 +57,12 @@
     "title": "The ratio sequencer",
     "chapter_dir": "02-live-coding",
     "section_dir": "06-ratioseq"
+  },
+  {
+    "slug": "mapping",
+    "title": "Mapping",
+    "chapter_dir": "02-live-coding",
+    "section_dir": "07-mapping"
   }
   ]
 }, {
