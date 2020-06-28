@@ -613,7 +613,7 @@ class IRToJavascript {
           vars[el] = memIdx;
         }
         // ccode.loop += `this.getvar(q, '${el.value}')`;
-        ccode.loop += `(mem[${memIdx}] ? mem[${memIdx}] : 0)`;
+        ccode.loop += `(mem[${memIdx}] != undefined ? mem[${memIdx}] : 0)`;
         return ccode;
       },
       '@string': (ccode, el) => {

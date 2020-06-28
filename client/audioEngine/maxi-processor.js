@@ -172,7 +172,7 @@ class SABOutputTransducer {
 
   send(trig, value) {
     if (this.zx.onZX(trig)) {
-      // console.log("tr", this.ringbuf.available_write(), value, this);
+      //console.log("tr", this.ringbuf.available_write(), value, this);
       if (this.ringbuf.available_write() > this.blocksize) {
         if (typeof(value) == "number") {
           this.ringbuf.push(new Float64Array([value]));
@@ -191,6 +191,7 @@ class SABOutputTransducer {
         // console.log('val written', value);
       }
     }
+    return value;
   }
 }
 
@@ -633,7 +634,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
           if (barTrig) {
             this.codeSwapState = this.codeSwapStates.XFADING;
             this.currentSignalFunction = 1 - this.currentSignalFunction;
-            console.log("xfade start", this.currentSignalFunction);
+            //console.log("xfade start", this.currentSignalFunction);
           }
         }
         if (this.codeSwapState == this.codeSwapStates.XFADING) {
