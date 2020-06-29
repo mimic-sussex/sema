@@ -57,7 +57,7 @@ However, there is an error preventing the language to be compiled!
 
 **What do you need to change?** 
 
-On the second part of the exercise, we are going to create a new language by tweak the default one.
+On the second part of the exercise, we are going to create a new language by tweaking the default one.
 
 
 Copy and replace lines 9 and 10 on the grammar editor with this code:
@@ -72,6 +72,8 @@ But... what happens if you now evaluate the code on the LiveCode Editor?
 All you have to do is to update the code in LiveCode Editor to reflect the new syntax!
 
 🥁🥁🥁 You have just created a new default-language-derived language! 🍾 🎉🎉
+
+Next we are going to understand how to do this bottom up. Stay tuned!
 
 
 

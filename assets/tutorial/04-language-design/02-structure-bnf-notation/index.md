@@ -1,20 +1,37 @@
 # BNF Structure and Notation
  
-In this part of the tutorial, we are going understand the code structure and notations we to use in the *Grammar Editor*. 
+In this part of the tutorial, we are going to understand the code structure and notations used in the *Grammar Editor*. 
 
 We are also going to understand some of the underlying concepts that are necessary to the language design workflow in Sema.
 
-* the notation that it accepts and the structure of this notation.
+In the previous tutorial section we've had a look to the full-fledged grammar of Sema's default language. What a hard knock! 😵
 
-We will finish this section with an exercise, in which you will create a new language from the default language which you have been learning previously, just by changing one element only.
+Not to worry! In this tutorial we are starting from the ground up with an empty grammar template on the *Grammar Editor*.
 
-Creating a new language is no small task! It requires design, philosophy and logic. However, it ranges from modifying existing language (for example by changing its syntax) to actually creating a brand new language. 
+## Decoding the template...
 
-For this work we need to understand a few key features of Sema and its language design concepts:
+If you look closely to the *Grammar Editor* you might notice a few things:
 
-## Grammars in a nutshell
+*  there are code comments which begin with ```#```
 
-If you think back to your language lessons you might remember that a grammar defines the rules of a language. Basically, a grammar says what is what in the elements of a sentence (e.g. a noun, a verb, an adjective) and how they relate.  
+*  there are code blocks delimited by ```{%``` and ```%}```
+
+*  there seems to be code comments inside the code blocks that begin with ```//``` 
+
+*  there are lines which follow a pattern of SOMETHING ```->``` SOMETHING, 
+
+*  these line are also followed by code blocks ```{%``` ```%}```
+
+Also notice that the *Grammar Compiler Output* says the grammar is valid, but if you evaluate your code on the *LiveCode Editor*, the *LiveCode Parser Output* says there is a syntax error.
+
+
+
+## The Lexer definition
+
+
+
+## The Grammar definition
+
 
 The *Grammar Editor* gives you the capability to create and edit a grammar, which specifies how a live language is. The grammar, which is specified in a special notation—or language, i.e. the [Backus Naur Form](http://hardmath123.github.io/earley.html)—is compiled to generate a parser.
 
