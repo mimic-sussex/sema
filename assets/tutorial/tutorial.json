@@ -114,57 +114,32 @@
   },
   {
     "slug": "regular-expressions",
-    "title": "Regular expressions",
+    "title": "Lexer and Regular Expressions",
     "chapter_dir": "04-language-design",
-    "section_dir": "02-regular-expressions"
+    "section_dir": "02-lexer-regular-expressions"
   }, {
     "slug": "grammar-rules",
-    "title": "Grammar rules",
+    "title": "Grammar Rules",
     "chapter_dir": "04-language-design",
     "section_dir": "03-grammar-rules"
   }, {
-    "slug": "1-token-grammar",
-    "title": "1-token grammar",
+    "slug": "recursion and lists",
+    "title": "Recursion and Lists",
     "chapter_dir": "04-language-design",
-    "section_dir": "04-1-token-grammar"
-  }, {
-    "slug": "multi-token-grammar",
-    "title": "Multi-token grammar",
-    "chapter_dir": "04-language-design",
-    "section_dir": "05-multi-token-grammar"
-  }, {
-    "slug": "separators",
-    "title": "Separators",
-    "chapter_dir": "04-language-design",
-    "section_dir": "06-separators"
-  }, {
-    "slug": "recursion",
-    "title": "Recursion",
-    "chapter_dir": "04-language-design",
-    "section_dir": "07-recursion"
-  }, {
-    "slug": "lists",
-    "title": "Lists",
-    "chapter_dir": "04-language-design",
-    "section_dir": "08-lists"
+    "section_dir": "04-recursion-lists"
   },
   {
 		"slug": "semantic-actions",
-		"title": "Semantic actions",
+		"title": "Semantic Actions with Intermediate Language",
 		"chapter_dir": "04-language-design",
-		"section_dir": "09-semantic-actions"
+		"section_dir": "05-semantic-actions-intermediate-language"
 	},
+
   {
-		"slug": "intermediate-language",
-		"title": "Intermediate Language",
+		"slug": "building-the-AST",
+		"title": "Building the Abstract Syntax Tree",
 		"chapter_dir": "04-language-design",
-		"section_dir": "10-intermediate-language"
-	},
-  {
-		"slug": "building-the-Sema-AST",
-		"title": "Building the Sema Abstract Syntax Tree",
-		"chapter_dir": "04-language-design",
-		"section_dir": "11-building-the-Sema-AST"
+		"section_dir": "06-building-the-AST"
 	}
   ]
 }]

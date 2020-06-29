@@ -31,18 +31,18 @@ The LiveCode Editor also gives you commands through key combinations:
 
 ## Model Editor
 
-In the *Model Editor* (white background), you can use Javascript to edit and create new machine learning models.
+In the *Model Editor* (white background), you can use JavaScript to edit and create new machine learning models.
 
-Part 3 of this tutorial will provide a more detailed walkthrough on how to use this editor to work with your neural networks and communicate with the LiveCode Editor.
+Part 3 of this tutorial provides a more detailed walkthrough on how to use this editor to work with your neural networks and communicate with the LiveCode Editor.
 
 
 ## Grammar Editor
 
-The *Grammar Editor* (grey backgroud) enables you to customize and create new language by defining and editing grammars. 
+The *Grammar Editor* (grey backgroud) enables you to customize and create a new language by defining and editing grammars. 
 
 This editor is *context-dependent* and bound to the language of the LiveCode editor. So give focus to you LiveCode editor to show the button to create the grammar Editor.
 
-Grammar editing and language design will be explained in more detail in part 4 of this tutorial.
+Grammar editing and language design will be explained in more detail in Part 4 of this tutorial.
 
 
 <!-- You can also use Javascript to define regular expressions and  https://regex101.com/ -->

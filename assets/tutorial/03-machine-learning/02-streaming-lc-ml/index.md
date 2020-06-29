@@ -28,7 +28,7 @@ input = (id,x) => {
 };
 ```
 
-After running both pieces of code, you should see the values of the saw wave (cycling from -1 to 1) in the console.  This signal is being sent 25 times a second, triggered by the ```{25}imp```.  Try changing this number; it will change the speed at which data is sent.
+After running both pieces of code, you should see the values of the saw wave (cycling from -1 to 1) in the console (remember to start the signal engine at the top).  This signal is being sent 25 times a second, triggered by the ```{25}imp```.  Try changing this number; it will change the speed at which data is sent.
 
 If you change the channel number, this will send data on a different channel, reflected in the first number output in the console.
 

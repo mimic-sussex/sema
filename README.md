@@ -39,26 +39,26 @@ Sema requires the following dependencies to be installed:
 If you decide to use NPM, use:
 
 ```sh
-cd sema
-npm install
-npm run build
-npm run dev OR npm run serve 
+$ cd sema
+$ npm install
+$ npm run build
+$ npm run dev OR npm run serve 
 ```
 
 If you decide to go with Yarn (our preferred package manager), to install it: 
 ```
-npm install -g yarn
+$ npm install -g yarn
 ```
 
 To use Yarn:
 ```sh
-cd sema
-yarn
-yarn build
-yarn dev OR yarn serve 
+$ cd sema
+$ yarn
+$ yarn build
+$ yarn dev OR yarn serve 
 ```
 
-Once you have the node application running, open Sema onn your browser on the following ports
+Once you have the node application running, open Sema on your browser on the following ports
 - yarn dev, go to [http://localhost:8080](http://localhost:8080) on your browser
 - yarn serve, go to [http://localhost:5001](http://localhost:5001) on your browser
 
@@ -67,7 +67,7 @@ Once you have the node application running, open Sema onn your browser on the fo
 
 Sema uses Web Audio API Audio Worklets. Their performance seems very sensitive to CPU power scaling. If you are experiencing sound quality issues, try setting the CPU governor to *performance* mode. e.g on Ubuntu,
 
-```cpupower frequency-set --governor performance```
+```$ cpupower frequency-set --governor performance```
 
 
 ## Documentation

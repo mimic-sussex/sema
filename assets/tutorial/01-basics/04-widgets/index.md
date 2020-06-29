@@ -1,6 +1,8 @@
-# Other widgets
+# Other Widgets
 
-In Sema, there are other types of widgets that co-exist with the editors on the dashboard. They provide visualization and feedback on the live coding and language design process. 
+There are other types of widgets that co-exist with the editors on Sema's dashboard. They provide visualization and feedback on the live coding and language design workflows. 
+
+This tutorial introduces the basics of these widgets. It also provides a simple exercise for you to understand their interplay. 
 
 ## Audio Analyser
 
@@ -11,21 +13,29 @@ The *Audio Analyser* provides visualizations that can help you understand the si
 
 ## Grammar Compiler Output
 
-The *Grammar Compiler* provides feedback on the compilation of the grammar and parser generation for your custom-language. It will give compilation errors if your grammar: 
- 
-1. has a syntax error specification
-2. the rules are ill-defined
-3. is ambiguous
+The *Grammar Compiler* provides feedback on the compilation of the grammar and parser generation for your custom-language. 
 
-Otherwise, it shows that the "grammar was validated and the parser was generated".
+It will give compilation errors if your grammar specification has a syntax error or ill-defined rules.
+
+Otherwise, it displays a message saying: "grammar was validated and the parser was generated".
 
 ## Live Code Parser Output
 
-The *Live Code Parser Output* provides feedback on your custom-language compilation. It will give parsing errors if your language has a syntax error. Otherwise it shows the abstract syntax tree that results from parsing your live code.
+The *Live Code Parser Output* provides feedback on your custom-language compilation. It will give parsing errors if your language has a syntax error. 
 
-## DSP Code generated
+Otherwise it shows the Abstract Syntax Tree (AST) that results from parsing your live code. You can unfold the AST branches by click on them.
 
-The *DSP Code generated* widget shows the Maximilian Javascript DSP code which Sema generates when you evaluate of your live code. This DSP is injected into and run in the Sema audio engine.  
+## DSP Code Output 
+
+The *DSP Code Output* widget shows the code that Sema generates (Maximilian DSP JavaScript) when you evaluate your live code. 
+
+This DSP code is injected into and runs in the Sema audio engine.  
+
+## *The exercise* 
+
+You might see that the *Grammar Compiler Output* is showing an error. This error is preventing the live code to be evaluated. 
+
+What do you need to change?
 
 <!-- the Maximilian DSP -->
 

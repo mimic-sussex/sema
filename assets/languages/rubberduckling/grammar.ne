@@ -1,5 +1,7 @@
+# GRAMMAR EDITOR
 
 # Lexer [or tokenizer] definition with language lexemes [or tokens]
+
 @{%
 
 /*

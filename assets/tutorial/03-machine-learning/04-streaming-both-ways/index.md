@@ -2,7 +2,7 @@
 
 In this tutorial, you will need to open the JavaScript console.  You can do this in Chrome by opening the 'Developer Tools' (F12 key) and choosing the console tab.
 
-As we move towards our first example using machine learning models, we need to think about how to process data from the audio engine with JavaScript and send it back to control sound.  Let's start with simple example:
+As we move towards our first example using machine learning models, we need to think about how to process data from the signal engine with JavaScript and send it back to control sound.  Let's start with simple example:
 
 LC:
 ```

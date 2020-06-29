@@ -43,12 +43,23 @@ import { dspCode } from '../../stores/common.js'
   }
   .error-state {
     color:red; 
-    margin:15px 10px 5px 5px;
+    margin: 25px 10px 5px 10px;
   }
+
+  .headline {
+    overflow-y: scroll; height:auto; 
+    margin-top: 6px; 
+    margin-left: 20px; 
+    margin-bottom: 10px;
+  }
+
 
 </style>
 
 <div class='container scrollable'>
+  <div class="headline">
+    <strong>DSP CODE OUTPUT</strong> 
+  </div>
   {#if $dspCode}
   <strong class="error-state">Setup:</strong>
   <pre class='prewrap'> { JSON.stringify($dspCode.setup, null, 2) } </pre>

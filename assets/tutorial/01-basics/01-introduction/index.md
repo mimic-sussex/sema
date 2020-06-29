@@ -1,18 +1,21 @@
 
 ## Getting Started with Sema!
 
-Welcome to the Sema tutorial! This will teach you everything you need to know to start live coding audio and music with machine learning and designing your own live coding language.
+Welcome to the Sema tutorial! In this tutorial you will learn everything you need to know to start live coding music and audio with machine learning and designing your own live coding language. 
 
-You can also consult the [API docs](https://github.com/mimic-sussex/sema/tree/master/docs)—if you're impatient to start hacking Sema free-style, use the playground or the source code on github—in the links above.
+You can also consult the [API docs](https://github.com/mimic-sussex/sema/tree/master/docs) for further information. If you're impatient to start hacking Sema free-style, use the playground or explore the source code on Github. You will find links for that in the top banner of this page.
 
+When you have explored this tutorial and want to start to make your music, you will exit this *Tutorial* and do all your work in the *Playground*.
 
 ### What is Sema?
 
-Sema is a playground for designing and performing with live coding languages.
+Sema is a live coding environment for performing and composing music in realtime using simple live coding languages. 
 
-It is similar to other live coding environments and domain-specific languages for sound and music, such as Supercollider, TidalCycles or Gibber.
+It is also a playground for designing and training machine learning networks and creating your own languages.
 
-Uniquely, Sema provides a integrated experience to machine learning and language design in your Web browser. It has a real-time, interactive interpreter for machine learning libraries (e.g. [tensorflow.js](https://www.tensorflow.org/js/)) and a compiler for [BNF grammars](http://hardmath123.github.io/earley.html) as first-class citizens running client-side.
+It is similar to other live coding environments and domain-specific languages for sound and music, such as SuperCollider, TidalCycles and Gibber.
+
+Uniquely, Sema provides an integrated experience to machine learning and language design in your Web browser. It has a real-time, interactive interpreter for machine learning libraries (e.g. [tensorflow.js](https://www.tensorflow.org/js/)) and a compiler for [BNF grammars](http://hardmath123.github.io/earley.html) working in the browser in real-time.
 
 ### How to use this tutorial
 
@@ -20,7 +23,7 @@ This tutorial aims to provide a lightweight introduction and a gradual learning 
 
 We recommended that you go from start to finish. You can navigate the Table of Contents via the dropdown menu above (click 'Introduction').
 
-* Part 1, *Basics* starts with the basics of the playground interface, including layouts, the live coding editors and the all the available widgets.  
+* Part 1, *Basics* starts with the basics of the playground interface, including layouts, the live coding editors and all the available widgets.  
 
 * Part 2, *Live Coding with the default language* will get you started with the basic element and syntax of Sema's default language.
 

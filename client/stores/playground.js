@@ -276,8 +276,8 @@ const originalItems = [
 			theme: "monokai",
 			background: "#AAAAAA",
 			component: GrammarEditor,
-			// data: default_grammar,
-			data: "",
+			data: default_grammar,
+			// data: "",
 			grammarSource: "/languages/default/grammar.ne",
 		},
 	},
@@ -486,7 +486,7 @@ export async function createNewItem (type, content){
 		case "dspCodeOutput":
 			component = {
 				component: DSPCodeOutput,
-				background: "#ffffff",
+				background: "#fdbd9a",
 			};
 			break;
 		default:

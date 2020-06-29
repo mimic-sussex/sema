@@ -54,27 +54,36 @@
 		overflow-y: auto;
 	}
 
-  .headline {
-    overflow-y: scroll; height:auto; margin-top:6px 
-  }
 
   .error-state {
     color:red; 
-    margin:15px 0px 15px 25px;
+    margin:25px 0px 15px 5px;
   }
 
   .correct-state {
     color:green; 
-    margin:15px 0px 15px 25px;
+    margin:25px 0px 15px 5px;
 
+  }
+
+
+  .headline {
+    overflow-y: scroll; 
+    height:auto; 
+    margin-top:6px; 
+    margin-left:20px; 
+    margin-bottom: 10px;
   }
 
 </style>
 
 <div id="grammarOutput" class="codemirror-container flex scrollable">
-  {#if $grammarCompilationErrors !== ""}
   <div class="headline">
-    <strong class="error-state">Grammar compilation errors:</strong>
+    <strong>GRAMMAR COMPILER OUTPUT</strong> 
+  </div>
+  {#if $grammarCompilationErrors !== ""}
+  <div>
+    <strong class="error-state">Grammar compilation errors!</strong>
     <br>
     <div style="margin-left:5px">
     <!-- <div style="overflow-y: scroll; height:auto;"> -->

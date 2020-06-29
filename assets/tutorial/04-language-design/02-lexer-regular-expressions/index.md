@@ -1,6 +1,6 @@
 # Other widgets
 
-There are other types of widgets that co-exist with the editors on Sema's dashboard. They provide visualization and feedback on the live coding and language design workflows. 
+As you will see when you start to work in the Playground, there are other types of widgets that co-exist with the editors on Sema's dashboard. They provide visualization and feedback on the live coding and language design workflows. 
 
 This tutorial introduces the basics of these widgets. It also provides a simple exercise for you to understand their interplay. 
 
