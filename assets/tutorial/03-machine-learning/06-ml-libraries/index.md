@@ -1,6 +1,6 @@
 # External Libraries in the Machine Learning Window
 
-Sema comes pre-loaded with some Javascript libaries for machine learning
+Sema comes pre-loaded with some JavaScript libaries for machine learning
 
 Tensorflow.js is great for our purposes here. It's a really flexible library, and it can use you GPU for really fast processing.
 All tfjs functions are prefixed with 'tf'
@@ -40,7 +40,7 @@ model.predict(tf.tensor2d([9], [1, 1])).print();
 Lalolib is also available.
 https://mlweb.loria.fr/lalolab/lalolib.html
 
-Lalolib supplies useful linear algebra functions that aren't present in tensorflow.js.  You can see examples of how it's use in the conceptor and echo state network examples.
+Lalolib supplies useful linear algebra functions that aren't present in tensorflow.js.  You can see examples of how it's used in the conceptor and echo state network examples.
 
 ```
 let a = ones(10);

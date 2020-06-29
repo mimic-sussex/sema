@@ -1,6 +1,6 @@
-# Introduction: The Machine Learning Window
+# Introduction: The JavaScript Window
 
-Machine learning is managed in the *Machine Learning* Editor in Sema. This is a live coding window, programmed with Javascript.  
+Machine learning is managed in the *JavaScript* Editor in Sema.   
 
 In this window, you can use a selection of machine learning libraries to train and run machine learning models.  
 

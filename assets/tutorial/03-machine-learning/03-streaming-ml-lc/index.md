@@ -1,9 +1,9 @@
-# Data Streams: Sending data from the machine learning window to the livecoding window
+# Data Streams: Sending data from the JavaScript window to the livecoding window
 
-In this tutorial, you will need to open the Javascript console.  You can do this in Chrome by opening the 'Developer Tools' (F12 key) and choosing the console tab.
+In this tutorial, you will need to open the JavaScript console.  You can do this in Chrome by opening the 'Developer Tools' (F12 key) and choosing the console tab.
 
 
-In the default language, you can use ```fromJS``` to receive data from the ML window.  You can also use this in the Sema type system for custom languages.
+In the default language, you can use ```fromJS``` to receive data from the JS window.  You can also use this in the Sema type system for custom languages.
 The first argument is the channel number on which to receive data. A second optional argument controls timing, we'll look at that later.
 
 ## Sending single value streams
@@ -18,7 +18,7 @@ In the LC window:
 
 This receives data on channel 0 into the ```:freq``` variable, to control the frequency of a saw oscillator.
 
-In the ML window:
+In the JS window:
 ```
 var channel0 = createOutputChannel(0, 1);
 
@@ -34,11 +34,11 @@ The function ```createOutputChannel``` takes two arguments:
 
 In this case we're sending one number at a time, so we choose a block size of 1.
 
-When you run the `channel0.send(200)` it sends the number 200 to the LC window, which becomes the frequency of the saw wave.  Try sending some other numbers.
+When you run the `channel0.send(200)` it sends the number 200 to the JS window, which becomes the frequency of the saw wave.  Try sending some other numbers.
 
 ### Triggered reading of values
 
-The second argument of ```fromJS``` is a trigger to determine when a value is read. It's optional; if you leave it out, the value will update whenever it's received from the ML window.  If you send a trigger signal as the second argument, the value updates on each trigger.  For example:
+The second argument of ```fromJS``` is a trigger to determine when a value is read. It's optional; if you leave it out, the value will update whenever it's received from the JS window.  If you send a trigger signal as the second argument, the value updates on each trigger.  For example:
 
 LC:
 ```
@@ -51,7 +51,7 @@ LC:
 >{:osc1:,:osc2:}mix;
 ```
 
-ML:
+JS:
 ```
 var channel0 = createOutputChannel(0, 1);
 ___
@@ -86,7 +86,7 @@ LC:
 >{:osc:,{:lfo:,100,4000}bexp,:res:}lpz;
 ```
 
-ML:
+JS:
 ```
 var lfo = createOutputChannel(0, 1);
 var detune = createOutputChannel(1, 1);
@@ -112,6 +112,8 @@ resonance.send(50);
 
 
 You could even set up a sequencer controlled from JavaScript:
+
+(replace the code in JS with the code below)
 
 ```
 var channel0 = createOutputChannel(0, 1);
@@ -156,7 +158,7 @@ LC:
 >{:osc:,{:lfo:,100,4000}bexp,:res:}lpz;
 ```
 
-ML:
+JS:
 ```
 var params = createOutputChannel(0, 3);
 ___

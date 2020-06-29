@@ -74,13 +74,13 @@
     "section_dir": "01-introduction"
   },
   {
-    "slug": "streaming from LC to ML",
-    "title": "Sending data to the ML window",
+    "slug": "streaming from LC to JS",
+    "title": "Sending data to the JS window",
     "chapter_dir": "03-machine-learning",
     "section_dir": "02-streaming-lc-ml"
   }, {
-    "slug": "streaming from ML to LC",
-    "title": "Sending data from the ML window",
+    "slug": "streaming from JS to LC",
+    "title": "Sending data from the JS window",
     "chapter_dir": "03-machine-learning",
     "section_dir": "03-streaming-ml-lc"
   }, {
@@ -90,7 +90,7 @@
     "section_dir": "04-streaming-both-ways"
   }, {
     "slug": "creating buffers",
-    "title": "Creating buffers in the ML window",
+    "title": "Creating buffers in the JS window",
     "chapter_dir": "03-machine-learning",
     "section_dir": "05-creating-buffers"
   }, {
