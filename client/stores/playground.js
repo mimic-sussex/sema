@@ -48,11 +48,11 @@ export const cm_theme_shadowfox = writable("");
 // Dashboard Store for Live Code Editor options in Sidebar component
 export const sidebarLiveCodeOptions = writable([
 	{ id: 0, disabled: false, text: `LiveCode Editor`, content: "" },
-  { id: 1, disabled: false, text: `new`, content: {
-      grammar:  `/languages/default/grammar.ne`,
-      livecode: undefined
-    }
-  },
+  // { id: 1, disabled: false, text: `new`, content: {
+  //     grammar:  `/languages/default/grammar.ne`,
+  //     livecode: undefined
+  //   }
+  // },
 	// { id: 0, disabled: true, text: `LiveCode Editor`, content: "" },
 	// { id: 1, disabled: false, text: `+ default`, content: default_liveCode },
 	// { id: 2, disabled: false, text: `+ nibble`, content: nibble_liveCode },

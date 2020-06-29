@@ -12,9 +12,11 @@ We will be focusing on the *Grammar Editor*, and more specifically, in:
 
 We will finish this section with an exercise, in which you will create a new language from the default language which you have been learning previously, just by changing one element only.
 
-Creating a new language is no small task! It requires design, philosophy and logic. However, it ranges from modifying existing language (for example by changing its syntax) to actually creating a brand new language. For this work we need to understand a few key features of Sema and its language design concepts:
+For this work we need to understand a few key features of Sema and its language design concepts:
 
 ## Grammars in a nutshell
+
+Creating a new language is no small task! It requires design, philosophy and logic. However, it ranges from modifying existing language (for example by changing its syntax) to actually creating a brand new language. 
 
 If you think back to your language lessons you might remember that a grammar defines the rules of a language. Basically, a grammar says what is what in the elements of a sentence (e.g. a noun, a verb, an adjective) and how they relate.  
 
@@ -36,21 +38,32 @@ If the grammar specification is correct, the *Grammar Compiler Output* shows tha
 2. has ill-defined rules
 3. is ambiguous
 
-
-
-
-
 The *Live Code Parser Output* provides feedback on your custom-language compilation. It will give parsing errors if your language has a syntax error. 
 
 Otherwise it shows the Abstract Syntax Tree (AST) that results from parsing your live code. You can unfold the AST branches by clicking on them.
 
 The *DSP Code Output* widget shows the code which Sema generates (Maximilian DSP JavaScript) when you evaluate your live code. 
 
-The first thing that might be useful to develop some intuition is 
+The first thing that might be useful to develop some intuition is to correct a basic syntax error on a grammar. 
 
-## *The exercise* 
+## *A simple exercise* 
 
-There is an error preventing the language to be compiled. What do you need change?
+You will find the grammar of Sema's default language of the Grammar Editor widget. 
+However, there is an error preventing the language to be compiled! 
+
+What do you need to change? 
+
+On the second part of the exercise, we are going to create a new language by tweak the default one.
+Copy and replace lines 11 and 12 on the grammar editor with this code:
+
+```
+	paramEnd:    /\)/,
+	paramBegin:  /\(/, 
+```
+
+Now, all you have to do is to change the code in LiveCode Editor to reflect the new syntax!
+
+
 
 <!-- the Maximilian DSP -->
 
