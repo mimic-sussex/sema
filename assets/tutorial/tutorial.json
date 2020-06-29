@@ -113,33 +113,39 @@
     "section_dir": "01-introduction"
   },
   {
+    "slug": "structure-bnf-notation",
+    "title": "BNF Structure and Notation",
+    "chapter_dir": "04-language-design",
+    "section_dir": "02-structure-bnf-notation"
+  },
+  {
     "slug": "regular-expressions",
     "title": "Lexer and Regular Expressions",
     "chapter_dir": "04-language-design",
-    "section_dir": "02-lexer-regular-expressions"
-  }, {
+    "section_dir": "03-lexer-regular-expressions"
+  }, 
+  {
     "slug": "grammar-rules",
     "title": "Grammar Rules",
     "chapter_dir": "04-language-design",
-    "section_dir": "03-grammar-rules"
+    "section_dir": "04-grammar-rules"
   }, {
     "slug": "recursion and lists",
     "title": "Recursion and Lists",
     "chapter_dir": "04-language-design",
-    "section_dir": "04-recursion-lists"
+    "section_dir": "05-recursion-lists"
   },
   {
 		"slug": "semantic-actions",
 		"title": "Semantic Actions with Intermediate Language",
 		"chapter_dir": "04-language-design",
-		"section_dir": "05-semantic-actions-intermediate-language"
+		"section_dir": "06-semantic-actions-intermediate-language"
 	},
-
   {
 		"slug": "building-the-AST",
 		"title": "Building the Abstract Syntax Tree",
 		"chapter_dir": "04-language-design",
-		"section_dir": "06-building-the-AST"
+		"section_dir": "07-building-the-AST"
 	}
   ]
 }]
