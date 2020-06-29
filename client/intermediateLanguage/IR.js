@@ -396,7 +396,7 @@ var jsFuncMap = {
 	//clock meta
 	clk: {
 		setup: (o, p) => "",
-		loop:  (o, p) => `(()=>{this.setBPM(${p[0].loop}); this.setBeatsPerBar(${p[0].loop});})()`
+		loop:  (o, p) => `(()=>{this.setBPM(${p[0].loop}); this.setBeatsPerBar(${p[1].loop});})()`
 	},
 
   onzx: {
