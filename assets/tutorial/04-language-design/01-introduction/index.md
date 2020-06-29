@@ -33,14 +33,18 @@ There is a lot that could be said about grammars, parsers and compilers, but you
 
 When editing the content in the *Grammar Editor*, you don't need to hit **cmd-Enter**/**ctrl-Enter** to evaluate changes. Rather, this editor does continuous evaluation, which means that on every keystroke, every change, a new parser is generated and immediately applied to analyse the content of the LiveCode Editor.  
 
-If the grammar specification is correct, the *Grammar Compiler Output* shows that the "grammar was validated and the parser was generated". Otherwise it will give compilation errors if your grammar specification: 
+If the grammar specification is correct, the *Grammar Compiler Output* will show "*grammar validated and the parser generated!*" in green. 
+
+However, it will give compilation errors if your grammar specification: 
 1. has a syntax error 
 2. has ill-defined rules
 3. is ambiguous
 
-The *Live Code Parser Output* provides feedback on your custom-language compilation. It will give parsing errors if your language has a syntax error. 
+We will be looking into these problems in more detail. 
 
-Otherwise it shows the Abstract Syntax Tree (AST) that results from parsing your live code. You can unfold the AST branches by clicking on them.
+Once the parser is operational, the *Live Code Parser Output* will provide feedback on the compilation of your custom-language. It will give parsing errors if your language has a syntax error. 
+
+Otherwise it will show the *Abstract Syntax Tree* (AST) that results from parsing your live code. You can unfold the AST branches by clicking on them.
 
 The *DSP Code Output* widget shows the code which Sema generates (Maximilian DSP JavaScript) when you evaluate your live code. 
 
@@ -51,17 +55,23 @@ The first thing that might be useful to develop some intuition is to correct a b
 You will find the grammar of Sema's default language of the Grammar Editor widget. 
 However, there is an error preventing the language to be compiled! 
 
-What do you need to change? 
+**What do you need to change?** 
 
 On the second part of the exercise, we are going to create a new language by tweak the default one.
-Copy and replace lines 11 and 12 on the grammar editor with this code:
+
+
+Copy and replace lines 9 and 10 on the grammar editor with this code:
 
 ```
 	paramEnd:    /\)/,
 	paramBegin:  /\(/, 
 ```
 
-Now, all you have to do is to change the code in LiveCode Editor to reflect the new syntax!
+But... what happens if you now evaluate the code on the LiveCode Editor? 
+
+All you have to do is to update the code in LiveCode Editor to reflect the new syntax!
+
+🥁🥁🥁 You have just created a new default-language-derived language! 🍾 🎉🎉
 
 
 

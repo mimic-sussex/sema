@@ -38,7 +38,7 @@ If the grammar specification is correct, the *Grammar Compiler Output* shows tha
 2. has ill-defined rules
 3. is ambiguous
 
-## *The exercise* 
+## *A simple exercise* 
 
 There is an error preventing the language to be compiled. What do you need change?
 
