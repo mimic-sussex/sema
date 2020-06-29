@@ -47,22 +47,22 @@
     "section_dir": "04-sampling"
   },
   {
+    "slug": "mapping",
+    "title": "Mapping",
+    "chapter_dir": "02-live-coding",
+    "section_dir": "05-mapping"
+  },
+  {
     "slug": "sequencing",
     "title": "Basic sequencing and clocks",
     "chapter_dir": "02-live-coding",
-    "section_dir": "05-sequencing"
+    "section_dir": "06-sequencing"
   },
   {
     "slug": "sequencing",
     "title": "The ratio sequencer",
     "chapter_dir": "02-live-coding",
-    "section_dir": "06-ratioseq"
-  },
-  {
-    "slug": "mapping",
-    "title": "Mapping",
-    "chapter_dir": "02-live-coding",
-    "section_dir": "07-mapping"
+    "section_dir": "07-ratioseq"
   }
   ]
 }, {
