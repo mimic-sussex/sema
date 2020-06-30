@@ -527,6 +527,16 @@ class AudioEngine {
 		return importAll(r);
 	}
 
+  getSampleUrlsFromQueryString() {
+    const params = (new URL(document.location)).searchParams;
+    const sampleUrlsString = params.get('samples');
+    let sampleUrls;
+    if( sampleUrlsString ) {
+      sampleUrls = sampleUrlsString.split(',');
+    }
+    return sampleUrls;
+  }
+
 	loadSample(objectName, url) {
 		if (this.audioContext !== undefined) {
 			loadSampleToArray(
@@ -539,13 +549,26 @@ class AudioEngine {
 	}
 
 	lazyLoadSample(sampleName) {
-		import(/* webpackMode: "lazy" */ `../../assets/samples/${sampleName}`)
-			.then(() => this.loadSample(sampleName, `/samples/${sampleName}`))
-			.catch(err => console.error(`DEBUG:AudioEngine:lazyLoadSample: ` + err));
+    if( sampleName.startsWith('http') ) {
+      const objectName = sampleName.substring(sampleName.lastIndexOf('/')+1);
+      const url = sampleName;
+      this.loadSample( objectName, url );
+    } else {
+      import(/* webpackMode: "lazy" */ `../../assets/samples/${sampleName}`)
+        .then(() => this.loadSample(sampleName, `/samples/${sampleName}`))
+        .catch(err => console.error(`DEBUG:AudioEngine:lazyLoadSample: ` + err));
+    }
+
 	}
 
 	loadImportedSamples() {
 		let samplesNames = this.getSamplesNames();
+
+    const sampleUrls = this.getSampleUrlsFromQueryString();
+    if( sampleUrls && sampleUrls.length ) {
+      samplesNames.push( ...sampleUrls );
+    }
+
 		// console.log("DEBUG:AudioEngine:getSamplesNames: " + samplesNames);
 		samplesNames.forEach(sampleName => {
 			this.lazyLoadSample(sampleName);
