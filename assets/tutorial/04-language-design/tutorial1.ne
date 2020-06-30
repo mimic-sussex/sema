@@ -4,8 +4,8 @@
 @{%
 	// write the Regular Expressions for your tokens here 
 	const lexer = moo.compile({ 
-		click: /click/,
-		ws: 	 { match: /\s+/, lineBreaks: true }
+		click:  /click/,
+		ws: 	  { match: /\s+/, lineBreaks: true }
 	});
 %}
 

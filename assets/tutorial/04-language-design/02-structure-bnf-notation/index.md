@@ -4,13 +4,13 @@ In this part of the tutorial, we are going to understand the code structure and 
 
 We are also going to understand some of the underlying concepts that are necessary to the language design workflow in Sema.
 
-In the previous tutorial section we've had a look to the full-fledged grammar of Sema's default language. What a hard knock! 😵
+In the previous tutorial section, we had a look to the fully-fledged grammar of Sema's default language. What a hard knock! 😵
 
-Not to worry! In this tutorial we are starting from the ground up with an empty grammar template on the *Grammar Editor*.
+Not to worry! In this tutorial we will start from the ground up with an empty grammar template on the *Grammar Editor*.
 
 ## Decoding the template...
 
-If you look closely to the *Grammar Editor* you might notice a few things:
+If you look closely to the *Grammar Editor* content you might notice a few things:
 
 *  there are code comments which begin with ```#```
 
@@ -24,55 +24,77 @@ If you look closely to the *Grammar Editor* you might notice a few things:
 
 Also notice that the *Grammar Compiler Output* says the grammar is valid, but if you evaluate your code on the *LiveCode Editor*, the *LiveCode Parser Output* says there is a syntax error.
 
+This means that the grammar template is well-formed, but needs to be developed to generate a usefull parser for the content of *LiveCode Editor*. 
+
+Now that we have the scaffolding, we are going to fill it in with the grammar for the simplest language as possible, 1-token live coding language! 
+
+This language will not be useful for much, but it will help us understand how to use the main blocks and the notation.   
+
 
 
 ## The Lexer definition
 
+The *Lexer* or *Tokeniser* definition is the first code block delimited by ```@{%``` and ```%}```. This code does *lexical analysis* of textual content, which means that the *Lexer* is responsible for chopping up all the text in the *LiveCode Editor* into its smallest units (i.e. lexemes or tokens).
+
+However, we do need to define how these units should be recognised. We will do that by adding Javascript code with Regular Expressions (RegEx) to define the pattern to recognise these units. There are many [tutorials](https://www.w3schools.com/jsref/jsref_obj_regexp.asp) and even specialised interactive [tools](https://regex101.com/) available that can you help test your RegEx.
+
+Our 1-token language will have precisely one specific token, and we can only use that token in the *LiveCode Editor* and nothing else. 
+
+Copy this code snippet and paste it on line 10 of the Grammar Editor.
+
+```
+	click: /click/,
+	ws: { match: /\s+/, lineBreaks: true }
+```
+
+Given that the *Grammar Editor* does continuous evaluation, this code will be compiled on every change and incorporated into the grammar —using the macro `@lexer lexer`— before the parser is generated.
 
 
-## The Grammar definition
+## The Grammar definition
+
+The *Grammar Editor* gives you the ability to create and edit a grammar needs to be specified in a special notation—or language, i.e. the [Backus Naur Form](http://hardmath123.github.io/earley.html)—and  compiled to generate a parser.
+
+BNF defines a set of rules in the form SOMETHING ```->``` SOMETHING 
+
+```
+main -> _ Statement _
+{%
+  function(d){ return { "@lang": d[1] } } 
+%}
+```
+
+```
+Statement -> %click
+{% 
+  // JS 'arrow' function definition 
+  d => [{
+    '@spawn': {
+      '@sigp': {
+        '@params': [{        
+          '@sigp': { 
+            '@params': [{
+                '@num': { value: 1 }
+              },
+              {
+                '@string': 'click'
+              }
+            ],
+            '@func': { value: 'loop'  }
+          }
+        }],
+        '@func' : {
+          value: "dac"
+        }
+      }
+    }
+  }]
+%}
+```
 
 
-The *Grammar Editor* gives you the capability to create and edit a grammar, which specifies how a live language is. The grammar, which is specified in a special notation—or language, i.e. the [Backus Naur Form](http://hardmath123.github.io/earley.html)—is compiled to generate a parser.
-
-A parser is nothing more than a process which breaks down the text that you enter in the *LiveCode Editor* and organises it in a way which makes it easier to understand what the text means. 
-
-The result is a tree-like structure called Abstract Syntax Tree, which keeps the broken-down bits of text organised and labeled, and that you can see in the *Live Code Parser Output*. 
-
-There is a lot that could be said about grammars, parsers and compilers, but you can find a few simple and user-friendly tutorials to start with [here](https://medium.com/@gajus/parsing-absolutely-anything-in-javascript-using-earley-algorithm-886edcc31e5e) and in the link above.
-
-
-## Grammar Editor Interaction(s)
-
-When editing the content in the *Grammar Editor*, you don't need to hit **cmd-Enter**/**ctrl-Enter** to evaluate changes. Rather, this editor does continuous evaluation, which means that on every keystroke, every change, a new parser is generated and immediately applied to analyse the content of the LiveCode Editor.  
-
-If the grammar specification is correct, the *Grammar Compiler Output* shows that the "grammar was validated and the parser was generated". Otherwise it will give compilation errors if your grammar specification: 
-1. has a syntax error 
-2. has ill-defined rules
-3. is ambiguous
-
-## *A simple exercise* 
-
-There is an error preventing the language to be compiled. What do you need change?
+There is a lot that could be said about grammars, parsers and compilers, but you can find a few simple and user-friendly tutorials to start with and in the link above.
 
 
 
-The *Live Code Parser Output* provides feedback on your custom-language compilation. It will give parsing errors if your language has a syntax error. 
-
-Otherwise it shows the Abstract Syntax Tree (AST) that results from parsing your live code. You can unfold the AST branches by clicking on them.
-
-The *DSP Code Output* widget shows the code which Sema generates (Maximilian DSP JavaScript) when you evaluate your live code. 
-
-The first thing that might be useful to develop some intuition is 
 
 
-
-<!-- the Maximilian DSP -->
-
-<!-- ## Post-It Window -->
-
-<!-- The *Post-It* widget  -->
-
-<!-- ## Store Inspector
-
-The *Store Inspector* widget  -->
