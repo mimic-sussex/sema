@@ -108,6 +108,11 @@
     "title": "FM synthesis, controlled by a neural network",
     "chapter_dir": "03-machine-learning",
     "section_dir": "08-fm-regression"
+  }, {
+    "slug": "regression with FM synthesis",
+    "title": "Parameter space exploration",
+    "chapter_dir": "03-machine-learning",
+    "section_dir": "09-regression2"
   }]
 }, {
   "title": "Language Design",
