@@ -2,7 +2,7 @@
 
 There are other types of widgets that co-exist with the editors on Sema's dashboard. They provide visualization and feedback on the live coding and language design workflows. 
 
-This tutorial introduces the basics of these widgets. It also provides a simple exercise for you to understand their interplay. 
+This tutorial introduces the basics of these widgets and their interplay. We will be looking in more detail to the last three widgets in Part 4.
 
 ## Audio Analyser
 
@@ -30,12 +30,6 @@ Otherwise it shows the Abstract Syntax Tree (AST) that results from parsing your
 The *DSP Code Output* widget shows the code that Sema generates (Maximilian DSP JavaScript) when you evaluate your live code. 
 
 This DSP code is injected into and runs in the Sema audio engine.  
-
-## *The exercise* 
-
-You might see that the *Grammar Compiler Output* is showing an error. This error is preventing the live code to be evaluated. 
-
-What do you need to change?
 
 <!-- the Maximilian DSP -->
 

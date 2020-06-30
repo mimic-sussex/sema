@@ -428,6 +428,7 @@
               ctrlEnter={evalLiveCodeOnEditorCommand}
               cmdEnter={evalLiveCodeOnEditorCommand}
               cmdPeriod={stopAudioOnEditorCommand}
+              ctrlPeriod={stopAudioOnEditorCommand}
               cmdForwardSlash={nil}
               />
 </div>

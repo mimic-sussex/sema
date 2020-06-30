@@ -246,6 +246,26 @@ Multiply signals:
 - `linexp` : arbitrary exponential map from range between arg 2 and 3, to range between arg 4 and arg 5
 
 
+# lists
+
+Some functions have lists as arguments, or return lists.  Lists are enclosed in square brackets, and contain signals, separated by commas, e.g.
+
+```
+[1,2,3]
+
+[1, {100}saw]
+
+[{}mouseX, {}mouseY]
+
+```
+
+Individual list elements can be accessed with the ```at``` function, with two arguments: a list and an index.
+
+```
+{[1,2,3],1}at;
+```
+
+
 # communication to the JS window
 
 ### Send data:
@@ -293,3 +313,6 @@ e.g. this is an FM synthesis with mouse control
 :mod:{{:freq2:}sin,100}mul;
 >{{:freq:,:mod:}add}sin;
 ```
+
+
+

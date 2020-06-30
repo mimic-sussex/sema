@@ -1,5 +1,5 @@
 [
-	{
+  {
 		"name": "default"
 	},
 	{
@@ -7,5 +7,8 @@
 	},
 	{
 		"name": "nibble"
+	},
+ 	{
+		"name": "new"
 	}
 ]
