@@ -1,11 +1,10 @@
 # Data Streams: Sending data in both directions
 
-In this tutorial, you will need to open the Javascript console.  You can do this in Chrome by opening the 'Developer Tools' (F12 key) and choosing the console tab.
+In this tutorial, you will need to open the JavaScript console.  You can do this in Chrome by opening the 'Developer Tools' (F12 key) and choosing the console tab.
 
 As we move towards our first example using machine learning models, we need to think about how to process data from the signal engine with JavaScript and send it back to control sound.  Let's start with simple example:
 
 LC:
-
 ```
 //8-bit style synthesis
 :baseFreq:{{2}clt,[1],[50,100,200,150]}rsq;
@@ -17,7 +16,7 @@ LC:
 
 ```
 
-ML:
+JS:
 
 ```
 var channel0 = createOutputChannel(0, 1);
@@ -33,10 +32,10 @@ input = (id,x) => {
 ____
 
 ```
-The base frequency is sent to the ML window, where it is processed and sent back to the LC window. You can change it manually here, or later, perhaps get a machine learning model to learn how to change it.
+The base frequency is sent to the JS window, where it is processed and sent back to the LC window. You can change it manually here, or later, perhaps get a machine learning model to learn how to change it.
 
 
-## Spectral processing in the ML window
+## Spectral processing in the JS window
 
 LC:
 ```
@@ -49,16 +48,16 @@ LC:
 :trig:{:m:,0}at;
 :freqs:{:m:,1}at;
 :phases:{:m:,2}at;
-//send the fft data to the ML window
+//send the fft data to the JS window
 {:trig:, 0, :freqs:, 512}toJS;
 
 //receive the processed spectrum and play it
 >{:trig:, {1, :trig:}fromJS, :phases:, 512, 0.25}ifft;
 ```
 
-ML:
+JS:
 ```
-//run this code in this window first
+//evaluate the first two blocks in this window before starting the live code window code
 
 var ch = createOutputChannel(1, 512);
 

@@ -1,8 +1,8 @@
-# Creating Buffers in the ML Window
+# Creating Buffers in the JS Window
 
 In this tutorial, you will need to open the JavaScript console.  You can do this in Chrome by opening the 'Developer Tools' (F12 key) and choosing the console tab.
 
-Copy the code below into the LC and ML windows.  The LC code plays a buffer.  If it hasn't created yet, the code will still comppile but you won't hear anything.  Run the code in the ML window to fill the buffer with a sound, and then re-run the code in the LC window.
+Copy the code below into the LC and JS windows.  The LC code plays a buffer.  If it hasn't created yet, the code will still comppile but you won't hear anything.  Run the code in the JS window to fill the buffer with a sound, and then re-run the code in the LC window.
 
 LC:
 
@@ -10,7 +10,7 @@ LC:
 >{{4}clt}\newbuf;
 ```
 
-ML:
+JS:
 ```
 //create a blank array
 a = new Float32Array(1000);
@@ -37,5 +37,4 @@ sema.sendBuffer("newbuf",a)
 
 You can experiment with different ways of creating buffers; try varying the parameters in the code above, or make something new.  
 
-This mechanism let's you take raw audio output from a machine learning model, for example a VAE, GAN or CCRNN, and use it as material for live coding performance.
- 
+This mechanism let's you take raw audio output from a machine learning model, and use it as material for live coding performance.

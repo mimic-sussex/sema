@@ -12,7 +12,7 @@ In the livecoding window, there's code that creates sound using a technique call
 
 ## Creating a model
 
-Run the code in the LC window, and then follow the steps in the ML window.  They will guide you through collecting data, training the model, and then using the model to explore sounds. During this process, you will create a dataset that associates areas of the screen with sounds from the synthesiser, and then create a neural network model that performs these mouse-to-sound mappings, and also estimates the mappings in-between.
+Run the code in the LC window, and then follow the steps in the JS window.  They will guide you through collecting data, training the model, and then using the model to explore sounds. During this process, you will create a dataset that associates areas of the screen with sounds from the synthesiser, and then create a neural network model that performs these mouse-to-sound mappings, and also estimates the mappings in-between.
 
 ## Further tasks
 

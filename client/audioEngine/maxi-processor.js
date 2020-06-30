@@ -480,10 +480,11 @@ class MaxiProcessor extends AudioWorkletProcessor {
     this.beatsPerBar = 4;
     this.maxTimeLength = sampleRate * 60 * 60 * 24; //24 hours
 
+
     this.clockUpdate = () => {
       this.beatLengthInSamples = 60 / this.bpm * sampleRate;
       this.barPhaseMultiplier = this.maxTimeLength / this.beatLengthInSamples / this.beatsPerBar;
-      console.log("CLOCK: ", this.barPhaseMultiplier, this.maxTimeLength);
+      console.log("CLOCK: ", this.barPhaseMultiplier, this.maxTimeLength, this.beatsPerBar);
     };
 
     this.setBPM = (bpm) => {
@@ -495,8 +496,8 @@ class MaxiProcessor extends AudioWorkletProcessor {
     };
 
     this.setBeatsPerBar = (bpb) => {
-      if (this.bearsPerBar != bpb) {
-        this.bearsPerBar = bpb;
+      if (this.beatsPerBar != bpb) {
+        this.beatsPerBar = bpb;
         this.clockUpdate();
       }
       return 0;
@@ -512,7 +513,8 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
     //@CLT
     this.clockTrig = (multiples, phase) => {
-      return (this.clockPhase(multiples, phase) - (1.0 / sampleRate * multiples)) <= 0 ? 1 : 0;
+      let clphase = this.clockPhase(multiples, phase);
+      return (clphase - ((1.0 / sampleRate) * multiples)) <= 0 ? 1 : 0;
     };
 
     this.bitTime = Maximilian.maxiBits.sig(0); //this needs to be decoupled from the audio engine? or not... maybe a 'permenant block' with each grammar?
