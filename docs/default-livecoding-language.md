@@ -33,60 +33,92 @@ To change channel numbers programmatically, use the `dac` function.
 {{1}noiz,{{{0.1}pha,10}mul}sqr}dac;
 ```
 
-# oscillators
+# Oscillators
 
 first argument is always the frequency, the last argument the phase.
 
-// sine
+Sine wave
 
-`{500}sin`
-`{500,0.2}sin`
+```
+>{500}sin;
+```
+```
+>{500,0.2}sin;
+```
 
-// saw
+Saw wave
 
-`{500}saw`
+```
+>{500}saw;
+```
 
-// triangle
+Triangle wave
 
-`{500}tri`
-
-// phasor
-
-`{500}pha`
-
-// phasor with start and end phase
-
-`{500,0.3,0.8}ph2`
-
-// square
-
-`{500}sqr`
-
-// pulse (second argument is pulsewidth)
-
-`{500,0.7}pul`
-
-// impulse (single impulse, useful for triggering)
-
-`{2}imp`
-`{2,0.2}imp`
+```
+>{500}tri;
+```
 
 
-// saw negative
+Phasor (a ramp that rises from 0 to 1)
 
-`{500}sawn`
+```
+>{500}pha;
+```
+
+Phasor with start and end phase
+
+```
+>{500,0.3,0.8}ph2;
+```
+
+Square
+
+```
+>{500}sqr;
+```
+
+Pulse (the second argument is pulsewidth)
+
+```
+>{500,0.7}pul;
+```
+
+Impulse (single impulse, useful for triggering)
+
+```
+>{2}imp;
+```
+```
+`>{2,0.2}imp;
+```
+
+Anti-aliased saw wave
+
+```
+>{500}sawn;
+```
+
 
 # noise
 
 the argument is the amplitude
 
-`{0.8}noiz`
+```
+>{0.8}noiz;
+```
 
 # control
 
-//sample and hold
+Sample and hold
 
-`{{{{0.1}pha,40,1000}ulin,500}sah}saw`
+Arguments:
+1. Input signal
+2. Sampling period length (milliseconds)
+
+```
+:frequency:{{0.1}pha,40,1000}uexp;
+>{{:frequency:,500}sah}saw;
+```
 
 # envelope
 
