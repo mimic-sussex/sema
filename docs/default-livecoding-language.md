@@ -3,7 +3,7 @@
 The code examples below work for *one* sematic language, the default demo language. To run these commands, paste them in the top window and hit cmd+enter. That will evaluate the line. To evaluate many lines, you need to separate them with a semicolon ";" after every line.
 
 
-# audio outputs
+# Audio Outputs
 
 to route a signal to the outputs on your soundcard, there are the following options:
 
@@ -31,6 +31,20 @@ To change channel numbers programmatically, use the `dac` function.
 ```
 //alternate noise between left and right channels
 {{1}noiz,{{{0.1}pha,10}mul}sqr}dac;
+```
+
+# Audio Input
+Arguments:
+1. Amplitude
+
+```
+//wear headphones!
+>{1}adc;
+```
+
+```
+//inevitable Dalek effect
+>{{1}adc, {200}sin}mul;
 ```
 
 # Oscillators
@@ -124,58 +138,100 @@ Arguments:
 
 The envelope is an adsr envelope, so the arguments are "input signal", attack (in ms), decay (in ms), sustain level (0-1), release (in ms). So here with a square wave as input:
 
-`{{1}sqr,10,200,0.05,200}env`
+```
+>{{1}sqr,10,200,0.05,200}env;
+```
 
 multiplied with a sine wave:
 
-`{{500}sin,{{1}sqr,10,200,0.05,200}env}mul`
+```
+>{{500}sin,{{1}sqr,10,200,0.05,200}env}mul;
+```
 
 With a pulse wave as trigger:
 
-`{{500}sin,{{1,0.8}pul,10,200,0.05,200}env}mul`
+```
+>{{500}sin,{{1,0.8}pul,10,200,0.05,200}env}mul;
+```
 
 Note that the pulse starts at -1, so higher pulse widths give shorter envelopes (gate is open shorter), and they start after the low level of the pulse. You can solve this by multiplying the pulse with -1.
 
-`{{500}sin,{{{1,0.8}pul,-1}mul,10,200,0.05,200}env}mul`
+```
+>{{500}sin,{{{1,0.8}pul,-1}mul,10,200,0.05,200}env}mul;
+```
 
 
-# audio input
 
-`{1}adc`
+# Sample playback
 
-# sample playback
+Samples are preloaded when the audio engine starts up. A list of samples can be found in https://github.com/mimic-sussex/sema/tree/master/assets/samples
 
-Play a sample:
+Play a sample once with a trigger, using ```\``` followed by the sample name.
 
-`{1}\909open`
+Arguments:
+1. A trigger (positive zero crossing)
+2. Speed (1=normal, 2=double etc)
+3. Offset
 
-These are preloaded when the audio engine starts up. A list of samples can be found in /assets/samples in this repository.
+Play once:
+
+```
+>{1}\909open;
+```
+
 
 Repeat:
-
-`{{1}sqr}\909open`
+```
+>{{1}imp}\909open;
+```
 
 With some rhythm:
 
-`{{{1}sqr,{5}saw}add}\909open`
+```
+>{{{1}sqr,{5}saw}add}\909open;
+```
 
-# sample slicing
+Changing speed:
 
-`{{1}imp,0.5}|kernel`
+```
+:speed:{{0.01}pha,3}mul;
+>{{1}imp, :speed:}\InsectBee;
+```
+
+Playing in reverse:
+```
+>>{{1}imp, -1, 1}\909;
+```
+
+Changing offset:
+```
+:offset:{0.2}pha;
+>{{8}imp, 1, :offset:}\909b;
+```
+
+# Sample Slicing
+
+```
+>{{1}imp,0.5}|kernel;
+```
 
 This sample player can be used for slicing up breaks etc. When there's a zero crossing in the first parameter, the sample position is set to the second parameter; otherwise the sample just loops.  Put a '|' before the sample name to use this player.
 
-`{{2}imp,{{0.3}pha,0.1,0.9}ulin}|kernel`
+```
+>{{2}imp,{{0.3}pha,0.1,0.9}ulin}|kernel;
+```
 
 Set the position with a phasor - change the impulse and phasor speeds to vary the patterns.
 
-{{32}imp,{0.1}pha}|kernel
+```
+>{{32}imp,{0.1}pha}|kernel;
+```
 
-This is kind of like timestretching
+This is kind of like (noisy) timestretching
 
-# filters
+# Filters
 
-// lowpass: arguments are "input signal" and a cutoff factor between 0 and 1. The function implemented internally is: `output=outputs[0] + cutoff*(input-outputs[0]);`
+One poll low pass: arguments are "input signal" and a cutoff factor between 0 and 1. The function implemented internally is: `output=outputs[0] + cutoff*(input-outputs[0]);`
 
 `{{500}saw,0.1}lpf`
 
