@@ -55,7 +55,7 @@ You can read this as "*something on the left side of -> may be replaced by some 
 
 In our template there are four default production rules which can be changed. 
 
-* **main -> _ | __** 
+* **main -> __** 
 
 * **_  -> wschar:**
 
@@ -63,11 +63,9 @@ In our template there are four default production rules which can be changed.
 
 * **wschar -> %ws**
 
-
 Altogether they define a very simple and valid grammar, although not very usefull.
 
-
-So we are now going to add two production rules to our grammar. Copy and replace the current 
+So we are now going to add two production rules to our grammar. Copy and replace the current rule
 
 ``` main -> __ ```
 
@@ -110,8 +108,18 @@ Statement -> %click
 %}
 ```
 
+So we just added two basic rules which specify that a valid sentence in this language:
+
+1.  `main -> _ Statement _` – has one statement surronded by whitespace
+
+2.  `Statement -> %click` – a statement is the word 'click' 
+
+There are more elements of these rules that require explanation, such as the code blocks `{%` and `%}` with Javascript, how to they depend on each other, and why they contain to tokens `%click` and `%ws`. We will cover that in detail on the following "Grammar Rules" section. 
+
 
 Now you can test out your new 1-token live coding language in the *LiveCode Editor*.
+
+
 
 ### Exercise 
 
