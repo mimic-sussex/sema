@@ -109,10 +109,15 @@
     "chapter_dir": "03-machine-learning",
     "section_dir": "08-fm-regression"
   }, {
-    "slug": "regression with FM synthesis",
+    "slug": "exploring parameter spaces",
     "title": "Parameter space exploration",
     "chapter_dir": "03-machine-learning",
     "section_dir": "09-regression2"
+  }, {
+    "slug": "sequencing with reinforcement learning",
+    "title": "Interactive reinforcement learning",
+    "chapter_dir": "03-machine-learning",
+    "section_dir": "10-rl-sequencing"
   }]
 }, {
   "title": "Language Design",
@@ -133,7 +138,7 @@
     "title": "Lexer and Regular Expressions",
     "chapter_dir": "04-language-design",
     "section_dir": "03-lexer-regular-expressions"
-  }, 
+  },
   {
     "slug": "grammar-rules",
     "title": "Grammar Rules",
