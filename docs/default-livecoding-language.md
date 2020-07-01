@@ -2,13 +2,12 @@
 
 The code examples below work for *one* sematic language, the default demo language. To run these commands, paste them in the top window and hit cmd+enter. That will evaluate the line. To evaluate many lines, you need to separate them with a semicolon ";" after every line.
 
-There are two windows in the sema system. The top one is the sematic window for the unique language. The bottom one is a window for JavaScript code, where we, for example, run machine learning models.
 
 # audio outputs
 
 to route a signal to the outputs on your soundcard, there are the following options:
 
-1. Route a single signal to all outputs, by putting an asterisk at the point in the signal chain where you want to output e.g.
+1. Route a single signal to all outputs, by putting an ```>``` at the point in the signal chain where you want to output e.g.
 
 ```
 >{50}saw;
@@ -31,7 +30,7 @@ To change channel numbers programmatically, use the `dac` function.
 
 ```
 //alternate noise between left and right channels
-{{1}noiz,{{{0.1}pha,10}mul}sqr}dacx;
+{{1}noiz,{{{0.1}pha,10}mul}sqr}dac;
 ```
 
 # oscillators
@@ -79,7 +78,7 @@ first argument is always the frequency, the last argument the phase.
 
 # noise
 
-argument is the amplitude
+the argument is the amplitude
 
 `{0.8}noiz`
 
@@ -110,8 +109,7 @@ Note that the pulse starts at -1, so higher pulse widths give shorter envelopes 
 
 # audio input
 
-
-`{0}adc`
+`{1}adc`
 
 # sample playback
 
@@ -119,7 +117,7 @@ Play a sample:
 
 `{1}\909open`
 
-These are preloaded when the audio engine starts up, look at the filenames at the top of the console window to see what is there.
+These are preloaded when the audio engine starts up. A list of samples can be found in /assets/samples in this repository.
 
 Repeat:
 
