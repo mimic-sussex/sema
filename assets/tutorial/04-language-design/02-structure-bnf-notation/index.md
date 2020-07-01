@@ -4,9 +4,9 @@ In this part of the tutorial, we are going to understand the code structure and 
 
 We are also going to understand some of the underlying concepts that are necessary to the language design workflow in Sema.
 
-In the previous tutorial section, we had a look to the fully-fledged grammar of Sema's default language. What a hard knock! 😵
+In the previous tutorial section, we had a look to the fully-fledged grammar of Sema's default language.
 
-Not to worry! In this tutorial we will start from the ground up with an empty grammar template on the *Grammar Editor*.
+In this tutorial we will start from the ground up with an empty grammar template on the *Grammar Editor*.
 
 ## Decoding the template...
 
@@ -28,17 +28,9 @@ This means that the grammar template is well-formed, but needs to be developed t
 
 Now that we have the scaffolding, we are going to fill it in with the grammar for the simplest language as possible, 1-token live coding language! 
 
-This language will not be useful for much, but it will help us understand how to use the main blocks and the notation.   
-
-
-
-## The Lexer definition
-
-The *Lexer* or *Tokeniser* definition is the first code block delimited by ```@{%``` and ```%}```. This code does *lexical analysis* of textual content, which means that the *Lexer* is responsible for chopping up all the text in the *LiveCode Editor* into its smallest units (i.e. lexemes or tokens).
-
-However, we do need to define how these units should be recognised. We will do that by adding Javascript code with Regular Expressions (RegEx) to define the pattern to recognise these units. There are many [tutorials](https://www.w3schools.com/jsref/jsref_obj_regexp.asp) and even specialised interactive [tools](https://regex101.com/) available that can you help test your RegEx.
-
 Our 1-token language will have precisely one specific token, and we can only use that token in the *LiveCode Editor* and nothing else. 
+
+This language will not be useful for much, except for playing one sample and most importantly, help us understand how to use the main blocks and the notation.  
 
 Copy this code snippet and paste it on line 10 of the Grammar Editor.
 
@@ -52,9 +44,34 @@ Given that the *Grammar Editor* does continuous evaluation, this code will be co
 
 ## The Grammar definition
 
-The *Grammar Editor* gives you the ability to create and edit a grammar needs to be specified in a special notation—or language, i.e. the [Backus Naur Form](http://hardmath123.github.io/earley.html)—and  compiled to generate a parser.
+The *Grammar Editor* gives you the ability to create and edit a grammar, which needs to be specified in a special notation—or language, i.e. the [Backus Naur Form (BNF)](http://hardmath123.github.io/earley.html)—and compiled to generate a parser.
 
-BNF defines a set of rules in the form SOMETHING ```->``` SOMETHING 
+BNF defines a set of grammar rules, called *Production Rules*, which take the form of 
+
+**A -> B**
+
+You can read this as "*something on the left side of -> may be replaced by some something-else on the right-side of ->*". 
+
+
+In our template there are four default production rules which can be changed. 
+
+* **main -> _ | __** 
+
+* **_  -> wschar:**
+
+* **__ -> wschar:+**
+
+* **wschar -> %ws**
+
+
+Altogether they define a very simple and valid grammar, although not very usefull.
+
+
+So we are now going to add two production rules to our grammar. Copy and replace the current 
+
+``` main -> __ ```
+
+with this rule
 
 ```
 main -> _ Statement _
@@ -62,6 +79,8 @@ main -> _ Statement _
   function(d){ return { "@lang": d[1] } } 
 %}
 ```
+
+Now add this rule right afterwards.
 
 ```
 Statement -> %click
@@ -92,7 +111,21 @@ Statement -> %click
 ```
 
 
-There is a lot that could be said about grammars, parsers and compilers, but you can find a few simple and user-friendly tutorials to start with and in the link above.
+Now you can test out your new 1-token live coding language in the *LiveCode Editor*.
+
+### Exercise 
+
+How will you test your grammar with language? What will you write in the *LiveCode Editor*?
+
+What would you have to do to change the one token of the language? How would you change it?
+
+
+Next we are going to understand in more detail the elements of the lexer and grammar definitions you have just used and build a more sophisticated language.
+
+
+
+
+
 
 
 

@@ -1,65 +1,292 @@
-# Introduction to Language Design
+# Lexer and Regular Expressions
+
  
-In this part of the tutorial, we are going develop some knowledge about the language design workflow in Sema.
+In this part of the tutorial, we are going to understand the Lexer definition of the *Grammar Editor* template in more detail. We are going to use it to scale up the expressive power of our live code languages in terms of the vocabulary they allow. 
 
-We will be focusing on the *Grammar Editor*, and more specifically, in: 
+## The Lexer definition
 
-* how it can help you customise or create a new language from scratch.
+The *Lexer* or *Tokeniser* definition is the first code block delimited by ```@{%``` and ```%}```. This code does *lexical analysis* of textual content, which means that the *Lexer* is responsible for recognising all the smallest units (i.e. lexemes or tokens, such as nouns, verbs ) in the text of the  *LiveCode Editor* and chopping it all up.
 
-* how it interacts with the *Live Coding Editor* and the debugging widgets, and how to use these to test out our custom language as we go.
+However, we do need to define how these units should be recognised. We will do that by adding Regular Expressions (RegEx) in Javascript to define the patterns to recognise these units. 
 
-* the notation that it accepts and the structure of this notation.
+There are many [tutorials](https://www.w3schools.com/jsref/jsref_obj_regexp.asp) and even specialised interactive [tools](https://regex101.com/) available that can you help test your RegExs and we will be looking into them.
+  
+Our previuous 1-token language had one specific token, the word *click*. Now we want to add up more patterns to make a more sophisticated language, a 3-token language.
 
-We will finish this section with an exercise, in which you will create a new language from the default language which you have been learning previously, just by changing one element only.
+Copy this code snippet and paste it on line 10 of the Grammar Editor.
 
-Creating a new language is no small task! It requires design, philosophy and logic. However, it ranges from modifying existing language (for example by changing its syntax) to actually creating a brand new language. 
+```
+    convol1:  /convol1/, 
+    heart:    /heart/,
+    click:    /click/,
+	ws: { match: /\s+/, lineBreaks: true }
+```
 
-For this work we need to understand a few key features of Sema and its language design concepts:
-
-## Grammars in a nutshell
-
-If you think back to your language lessons you might remember that a grammar defines the rules of a language. Basically, a grammar says what is what in the elements of a sentence (e.g. a noun, a verb, an adjective) and how they relate.  
-
-The *Grammar Editor* gives you the capability to create and edit a grammar, which specifies how a live language is. The grammar, which is specified in a special notation—or language, i.e. the [Backus Naur Form](http://hardmath123.github.io/earley.html)—is compiled to generate a parser.
-
-A parser is nothing more than a process which breaks down the text that you enter in the *LiveCode Editor* and organises it in a way which makes it easier to understand what the text means. 
-
-The result is a tree-like structure called Abstract Syntax Tree, which keeps the broken-down bits of text organised and labeled, and that you can see in the *Live Code Parser Output*. 
-
-There is a lot that could be said about grammars, parsers and compilers, but you can find a few simple and user-friendly tutorials to start with [here](https://medium.com/@gajus/parsing-absolutely-anything-in-javascript-using-earley-algorithm-886edcc31e5e) and in the link above.
+Given that the *Grammar Editor* does continuous evaluation, this code will be compiled on every change and incorporated into the grammar —using the macro `@lexer lexer`— before the parser is generated.
 
 
-## Grammar Editor Interaction(s)
+## The Grammar definition
 
-When editing the content in the *Grammar Editor*, you don't need to hit **cmd-Enter**/**ctrl-Enter** to evaluate changes. Rather, this editor does continuous evaluation, which means that on every keystroke, every change, a new parser is generated and immediately applied to analyse the content of the LiveCode Editor.  
+We are also going to advance our knowledge of the grammar a little bit more, although some of the details will be presented in more detail in the next section.
 
-If the grammar specification is correct, the *Grammar Compiler Output* shows that the "grammar was validated and the parser was generated". Otherwise it will give compilation errors if your grammar specification: 
-1. has a syntax error 
-2. has ill-defined rules
-3. is ambiguous
+In our previous 1-token language we wrote as first rule 
 
-## *A simple exercise* 
+`main -> _ Statement _`
 
-There is an error preventing the language to be compiled. What do you need change?
+which means that the parser, generated from our grammar, will accept text that:
+
+* starts with white space `_`
+
+* followed by a statement 
+
+* followed by more white space 
+
+The second rule defined Statement as such:
+
+`Statement -> %click`
+
+This rule means that a statement in our language, has the token `click`.
+
+This ruled uses a token defined in the Lexer with the RegEx `/click/` to match the string `click`. 
+
+We are now going to expand our 1-token language to a 3-token language in the grammar, by adding a two more rules that bind the new tokens to the grammar.
+
+`Statement -> %convol1`
+
+`Statement -> %click`
+
+Note that all these grammar rules define the alternatives for what a Statement is in our new language, and what the parser will accept.
+
+We still haven't looked into the code blocks that follow the definition of each rule. We will be doing that in the next section where we will focus more on the the grammar rules. For now pay attention to pattern in the code block and what changes. 
+
+Copy these blocks and paste them sequentially to the grammar definition section in the Grammar Editor, just before `# Whitespace`
+
+```
+Statement -> %convol1
+{% 
+  // JS 'arrow' function definition 
+  d => [{
+    '@spawn': {
+      '@sigp': {
+        '@params': [{        
+          '@sigp': { 
+            '@params': [{
+                '@num': { value: 1 }
+              },
+              {
+                '@string': 'convol1'
+              }
+            ],
+            '@func': { value: 'loop'  }
+          }
+        }],
+        '@func' : {
+          value: "dac"
+        }
+      }
+    }
+  }]
+%}
+```
+
+```
+Statement -> %heart
+{% 
+  // JS 'arrow' function definition 
+  d => [{
+    '@spawn': {
+      '@sigp': {
+        '@params': [{        
+          '@sigp': { 
+            '@params': [{
+                '@num': { value: 1 }
+              },
+              {
+                '@string': 'heart'
+              }
+            ],
+            '@func': { value: 'loop'  }
+          }
+        }],
+        '@func' : {
+          value: "dac"
+        }
+      }
+    }
+  }]
+%}
+```
+
+```
+Statement -> %click
+{% 
+  // JS 'arrow' function definition 
+  d => [{
+    '@spawn': {
+      '@sigp': {
+        '@params': [{        
+          '@sigp': { 
+            '@params': [{
+                '@num': { value: 1 }
+              },
+              {
+                '@string': 'click'
+              }
+            ],
+            '@func': { value: 'loop'  }
+          }
+        }],
+        '@func' : {
+          value: "dac"
+        }
+      }
+    }
+  }]
+%}
+```
+
+
+So, now we have a grammar which generates a parser that recognises fixed strings of a 3-token language, which match sample names in our sample set.
+
+## Adding oscillators
+
+Let's add another feature to our language, an oscillator. We need to a RegEx to our Lexer definition, like so:
+
+```
+    saw:      /saw/,
+    heart:    /heart/,
+    click:    /click/,
+    ws: { match: /\s+/, lineBreaks: true }
+```
+
+And now were are going to add the respective rule to the grammar definition section.
+
+
+```
+Statement -> %saw
+{% 
+  // JS 'arrow' function definition 
+  d => [{
+    '@spawn': {
+      '@sigp': {
+        '@params': [{        
+          '@sigp': { 
+            '@params': [{
+                '@num': { value: 10 }
+              },
+            ],
+            '@func': { value: 'saw'  }
+          }
+        }],
+        '@func' : {
+          value: "dac"
+        }
+      }
+    }
+  }]
+%}
+```
+
+Notice what changes between the samples and the sawtooth grammar rules
+
+What happens if you change the value of `@func` from `saw` to `sin`?
+
+`'@func': { value: 'saw'  }`
 
 
 
-The *Live Code Parser Output* provides feedback on your custom-language compilation. It will give parsing errors if your language has a syntax error. 
+## Adding more expressive tokens
 
-Otherwise it shows the Abstract Syntax Tree (AST) that results from parsing your live code. You can unfold the AST branches by clicking on them.
+So far our the tokens in the lexer definition were fixed RegExs which recognised a limited set of strings. They served the purpose of helping us understand how to orchestrate the recognition of a token with a grammar rule. 
 
-The *DSP Code Output* widget shows the code which Sema generates (Maximilian DSP JavaScript) when you evaluate your live code. 
-
-The first thing that might be useful to develop some intuition is 
+However, now we want to tap into the power of RegExs to recognise more complex tokens.
 
 
+```
+    heart:    /heart/,
+    click:    /click/,
+    osc:      /[a-z]+/,
+    ws: { match: /\s+/, lineBreaks: true }
+```
 
-<!-- the Maximilian DSP -->
+Notice that rather than hardcoding the value of `@func` with the kind of oscillator, we are now setting it with the value recognised by the token `osc`.  
 
-<!-- ## Post-It Window -->
+```
+Statement -> %osc 
+{% 
+  // JS 'arrow' function definition 
+  d => [{
+    '@spawn': {
+      '@sigp': {
+        '@params': [{        
+          '@sigp': { 
+            '@params': [{
+                '@num': { 
+                  value: 100 
+                }
+              },
+            ],
+            '@func': { value: d[0].value  }
+          }
+        }],
+        '@func' : {
+          value: "dac"
+        }
+      }
+    }
+  }]
+%}
+```
 
-<!-- The *Post-It* widget  -->
 
-<!-- ## Store Inspector
 
-The *Store Inspector* widget  -->
+What happens if you change the `@num` value on both the rules ?
+
+
+## Adding numbers
+
+In order to the give our language the ability to control the numerical parameter in the sample and in the oscillator, we are now going to extend it to recognize a kind of token: a *number*
+
+```
+    saw:      /saw/,                         
+    heart:    /heart/,
+    click:    /click/,
+    number:   /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?\b/,
+	ws: { match: /\s+/, lineBreaks: true }
+```
+
+Now we need to bubble up the recognised numerical value into our grammar rule
+
+	
+```
+Statement -> %saw __ %number
+{% 
+  // JS 'arrow' function definition 
+  d => [{
+    '@spawn': {
+      '@sigp': {
+        '@params': [{        
+          '@sigp': { 
+            '@params': [{
+                '@num': {
+                  value: d[2].value 
+                }
+              },
+            ],
+            '@func': { value: 'saw'  }
+          }
+        }],
+        '@func' : {
+          value: "dac"
+        }
+      }
+    }
+  }]
+%}
+```
+
+Now you that you can control a parameter of the sawtooth oscillator, how would you go about making this rule generic for all types of oscillators?
+
+Did you face an issue doing that? Try changing the order of the RegExs in the Lexer definition so that the more specific token definitions come before the more generic ones.
+
+Next, we will be looking at increasing the complexitiy of our grammar rules to make our language even more powerful.
