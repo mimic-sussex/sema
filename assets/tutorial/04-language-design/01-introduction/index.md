@@ -2,7 +2,7 @@
  
 In this part of the tutorial, we are going develop some knowledge about the language design workflow in Sema.
 
-We will be focusing on the *Grammar Editor*, and more specifically, in: 
+We will be focusing on the *Grammar Editor* and more specifically on: 
 
 * how it can help you customise or create a new language from scratch.
 
@@ -10,30 +10,30 @@ We will be focusing on the *Grammar Editor*, and more specifically, in:
 
 * the notation that it accepts and the structure of this notation.
 
-We will finish this section with an exercise, in which you will create a new language from the default language which you have been learning previously, just by changing one element only.
+We will finish this section with an exercise where you will create a new language from the default language which you have been learning previously, just by changing one element only.
 
 For this work we need to understand a few key features of Sema and its language design concepts:
 
 ## Grammars in a nutshell
 
-Creating a new language is no small task! It requires design, philosophy and logic. However, it ranges from modifying existing language (for example by changing its syntax) to actually creating a brand new language. 
+Creating a new language is no small task! It requires design, philosophy and logic. However, it ranges from modifying existing language (for example by changing its syntax), through defining a mini-language, to actually creating a brand new language. 
 
-If you think back to your language lessons you might remember that a grammar defines the rules of a language. Basically, a grammar says what is what in the elements of a sentence (e.g. a noun, a verb, an adjective) and how they relate.  
+If you think back to your language lessons, you might remember that a grammar defines the rules of a language. Basically, a grammar says what is what in the elements of a sentence (e.g. a noun, a verb, an adjective) and how they relate.  
 
-The *Grammar Editor* gives you the capability to create and edit a grammar, which specifies how a live language is. The grammar, which is specified in a special notation—or language, i.e. the [Backus Naur Form](http://hardmath123.github.io/earley.html)—is compiled to generate a parser.
+The *Grammar Editor* gives you the capability to create and edit a grammar, which specifies how a live language is. The **grammar**, which is specified by a special notation—and we use the famous [Backus Naur Form](http://hardmath123.github.io/earley.html) for this—is compiled to generate a **parser**.
 
 A parser is nothing more than a process which breaks down the text that you enter in the *LiveCode Editor* and organises it in a way which makes it easier to understand what the text means. 
 
-The result is a tree-like structure called Abstract Syntax Tree, which keeps the broken-down bits of text organised and labeled, and that you can see in the *Live Code Parser Output*. 
+The result is a tree-like structure called **Abstract Syntax Tree**, which keeps the broken-down bits of text organised and labelled, and that you can see in the *Live Code Parser Output* window. 
 
-There is a lot that could be said about grammars, parsers and compilers, but you can find a few simple and user-friendly tutorials to start with [here](https://medium.com/@gajus/parsing-absolutely-anything-in-javascript-using-earley-algorithm-886edcc31e5e) and in the link above.
+There is a lot that could be said about grammars, compilers and parsers, but you can find a few simple and user-friendly tutorials to start with [here](https://medium.com/@gajus/parsing-absolutely-anything-in-javascript-using-earley-algorithm-886edcc31e5e) and in the link above.
 
 
 ## Grammar Editor Interaction(s)
 
 When editing the content in the *Grammar Editor*, you don't need to hit **cmd-Enter**/**ctrl-Enter** to evaluate changes. Rather, this editor does continuous evaluation, which means that on every keystroke, every change, a new parser is generated and immediately applied to analyse the content of the LiveCode Editor.  
 
-If the grammar specification is correct, the *Grammar Compiler Output* will show "*grammar validated and the parser generated!*" in green. 
+If the grammar specification is correct, the *Grammar Compiler Output* will show "*Grammar validated and the parser generated!*" in green. 
 
 However, it will give compilation errors if your grammar specification: 
 1. has a syntax error 
@@ -42,9 +42,7 @@ However, it will give compilation errors if your grammar specification:
 
 We will be looking into these problems in more detail. 
 
-Once the parser is operational, the *Live Code Parser Output* will provide feedback on the compilation of your custom-language. It will give parsing errors if your language has a syntax error. 
-
-Otherwise it will show the *Abstract Syntax Tree* (AST) that results from parsing your live code. You can unfold the AST branches by clicking on them.
+Once the parser is operational, the *Live Code Parser Output* will provide feedback on the compilation of your custom-language. It will show the *Abstract Syntax Tree* (AST) that results from parsing your live code. You can unfold the AST branches by clicking on them. The output window will show parsing errors if your language has a syntax error. 
 
 The *DSP Code Output* widget shows the code which Sema generates (Maximilian DSP JavaScript) when you evaluate your live code. 
 
