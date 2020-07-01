@@ -231,27 +231,49 @@ This is kind of like (noisy) timestretching
 
 # Filters
 
-One poll low pass: arguments are "input signal" and a cutoff factor between 0 and 1. The function implemented internally is: `output=outputs[0] + cutoff*(input-outputs[0]);`
+One pole low pass: 
 
-`{{500}saw,0.1}lpf`
+Arguments:
+1. Input signal
+2. Cutoff (0-1)
 
-
-// hipass: arguments are "input signal" and a cutoff factor between 0 and 1. The function implemented internally is: `output=input-(outputs[0] + cutoff*(input-outputs[0]));`
-
-
-`{{500}saw,0.1}hpf`
-
-// lowpass with resonance: first argument is input, then cuttof freq in Hz. res is between 1 and whatever.
-
-`{{500}saw,800,10}lpz`
+```
+>{{500}saw,0.1}lpf;
+```
 
 
-// hipass with resonance: first argument is input, then cuttof freq in Hz. res is between 1 and whatever.
+One pole high pass:
+Arguments:
+1. Input signal
+2. Cutoff (0-1)
 
-`{{500}saw,3000,20}hpz`
+```
+>{{500}saw,0.1}hpf;
+```
+
+Lowpass with resonance: 
+Arguments:
+1. Input signal
+2. Cutoff (20-20000)
+3. Resonance (1 upwards)
+
+```
+>{{500}saw,800,10}lpz;
+```
 
 
-# effects
+
+High pass with resonance: 
+1. Input signal
+2. Cutoff (20-20000)
+3. Resonance (1 upwards)
+
+```
+>{{500}saw,3000,20}hpz;
+```
+
+
+# Effects
 
 // distortion: arguments: input, and shape: from 1 (soft clipping) to infinity (hard clipping)
 atan distortion, see [atan distortion on musicdsp.org](http://www.musicdsp.org/showArchiveComment.php?ArchiveID=104)
@@ -288,7 +310,7 @@ atan distortion, see [atan distortion on musicdsp.org](http://www.musicdsp.org/s
 `{{5}sqr,20000,0.9}dl`
 
 
-# operators
+# Operators
 
 - `gt` : greater than
 - `lt` : less than
@@ -300,7 +322,7 @@ atan distortion, see [atan distortion on musicdsp.org](http://www.musicdsp.org/s
 - `pow` : power of
 - `abs` : absolute value
 
-# operators over lists:
+# Operators over lists:
 
 Sum signals: (this will clip in this example:)
 
@@ -390,7 +412,7 @@ __________
 ```
 # mouse input
 
-use `{}mouseX` and `{}mouseY`
+Use `{}mouseX` and `{}mouseY`
 
 e.g. this is an FM synthesis with mouse control
 ```
@@ -401,4 +423,27 @@ e.g. this is an FM synthesis with mouse control
 ```
 
 
+
+# Machine Listening
+
+FFT - fast fourier transform
+Arguments:
+1. A signal
+2. The number of bins
+3. Hop size, as a percentage of the FFT period
+
+Outputs: an array with three elements
+1. A trigger signal, which triggers every time the FFT updates
+2. An array of frequency strengths (same size as the number of bins)
+3. An array of phases (same size as the number of bins)
+
+```
+//fft analysis of the microphone
+:fftdata:{{1}adc, 512, 0.25}fft;
+:trig:{:fftdata:,0}at;
+:frequencies:{:fftdata:,1}at;
+:phases:{:fftdata:,2}at;
+
+//map bin 5 of the fft to the frequency of a saw wave
+>{{{:frequencies:,5}at,1000}mul}saw;
 
