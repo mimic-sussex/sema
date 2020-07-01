@@ -2,13 +2,12 @@
 
 The code examples below work for *one* sematic language, the default demo language. To run these commands, paste them in the top window and hit cmd+enter. That will evaluate the line. To evaluate many lines, you need to separate them with a semicolon ";" after every line.
 
-There are two windows in the sema system. The top one is the sematic window for the unique language. The bottom one is a window for JavaScript code, where we, for example, run machine learning models.
 
-# audio outputs
+# Audio Outputs
 
 to route a signal to the outputs on your soundcard, there are the following options:
 
-1. Route a single signal to all outputs, by putting an asterisk at the point in the signal chain where you want to output e.g.
+1. Route a single signal to all outputs, by putting an ```>``` at the point in the signal chain where you want to output e.g.
 
 ```
 >{50}saw;
@@ -31,141 +30,250 @@ To change channel numbers programmatically, use the `dac` function.
 
 ```
 //alternate noise between left and right channels
-{{1}noiz,{{{0.1}pha,10}mul}sqr}dacx;
+{{1}noiz,{{{0.1}pha,10}mul}sqr}dac;
 ```
 
-# oscillators
+# Audio Input
+Arguments:
+1. Amplitude
+
+```
+//wear headphones!
+>{1}adc;
+```
+
+```
+//inevitable Dalek effect
+>{{1}adc, {200}sin}mul;
+```
+
+# Oscillators
 
 first argument is always the frequency, the last argument the phase.
 
-// sine
+Sine wave
 
-`{500}sin`
-`{500,0.2}sin`
+```
+>{500}sin;
+```
+```
+>{500,0.2}sin;
+```
 
-// saw
+Saw wave
 
-`{500}saw`
+```
+>{500}saw;
+```
 
-// triangle
+Triangle wave
 
-`{500}tri`
-
-// phasor
-
-`{500}pha`
-
-// phasor with start and end phase
-
-`{500,0.3,0.8}ph2`
-
-// square
-
-`{500}sqr`
-
-// pulse (second argument is pulsewidth)
-
-`{500,0.7}pul`
-
-// impulse (single impulse, useful for triggering)
-
-`{2}imp`
-`{2,0.2}imp`
+```
+>{500}tri;
+```
 
 
-// saw negative
+Phasor (a ramp that rises from 0 to 1)
 
-`{500}sawn`
+```
+>{500}pha;
+```
+
+Phasor with start and end phase
+
+```
+>{500,0.3,0.8}ph2;
+```
+
+Square
+
+```
+>{500}sqr;
+```
+
+Pulse (the second argument is pulsewidth)
+
+```
+>{500,0.7}pul;
+```
+
+Impulse (single impulse, useful for triggering)
+
+```
+>{2}imp;
+```
+```
+`>{2,0.2}imp;
+```
+
+Anti-aliased saw wave
+
+```
+>{500}sawn;
+```
+
 
 # noise
 
-argument is the amplitude
+the argument is the amplitude
 
-`{0.8}noiz`
+```
+>{0.8}noiz;
+```
 
 # control
 
-//sample and hold
+Sample and hold
 
-`{{{{0.1}pha,40,1000}ulin,500}sah}saw`
+Arguments:
+1. Input signal
+2. Sampling period length (milliseconds)
+
+```
+:frequency:{{0.1}pha,40,1000}uexp;
+>{{:frequency:,500}sah}saw;
+```
 
 # envelope
 
 The envelope is an adsr envelope, so the arguments are "input signal", attack (in ms), decay (in ms), sustain level (0-1), release (in ms). So here with a square wave as input:
 
-`{{1}sqr,10,200,0.05,200}env`
+```
+>{{1}sqr,10,200,0.05,200}env;
+```
 
 multiplied with a sine wave:
 
-`{{500}sin,{{1}sqr,10,200,0.05,200}env}mul`
+```
+>{{500}sin,{{1}sqr,10,200,0.05,200}env}mul;
+```
 
 With a pulse wave as trigger:
 
-`{{500}sin,{{1,0.8}pul,10,200,0.05,200}env}mul`
+```
+>{{500}sin,{{1,0.8}pul,10,200,0.05,200}env}mul;
+```
 
 Note that the pulse starts at -1, so higher pulse widths give shorter envelopes (gate is open shorter), and they start after the low level of the pulse. You can solve this by multiplying the pulse with -1.
 
-`{{500}sin,{{{1,0.8}pul,-1}mul,10,200,0.05,200}env}mul`
+```
+>{{500}sin,{{{1,0.8}pul,-1}mul,10,200,0.05,200}env}mul;
+```
 
 
-# audio input
 
+# Sample playback
 
-`{0}adc`
+Samples are preloaded when the audio engine starts up. A list of samples can be found in https://github.com/mimic-sussex/sema/tree/master/assets/samples
 
-# sample playback
+Play a sample once with a trigger, using ```\``` followed by the sample name.
 
-Play a sample:
+Arguments:
+1. A trigger (positive zero crossing)
+2. Speed (1=normal, 2=double etc)
+3. Offset
 
-`{1}\909open`
+Play once:
 
-These are preloaded when the audio engine starts up, look at the filenames at the top of the console window to see what is there.
+```
+>{1}\909open;
+```
+
 
 Repeat:
-
-`{{1}sqr}\909open`
+```
+>{{1}imp}\909open;
+```
 
 With some rhythm:
 
-`{{{1}sqr,{5}saw}add}\909open`
+```
+>{{{1}sqr,{5}saw}add}\909open;
+```
 
-# sample slicing
+Changing speed:
 
-`{{1}imp,0.5}|kernel`
+```
+:speed:{{0.01}pha,3}mul;
+>{{1}imp, :speed:}\InsectBee;
+```
+
+Playing in reverse:
+```
+>>{{1}imp, -1, 1}\909;
+```
+
+Changing offset:
+```
+:offset:{0.2}pha;
+>{{8}imp, 1, :offset:}\909b;
+```
+
+# Sample Slicing
+
+```
+>{{1}imp,0.5}|kernel;
+```
 
 This sample player can be used for slicing up breaks etc. When there's a zero crossing in the first parameter, the sample position is set to the second parameter; otherwise the sample just loops.  Put a '|' before the sample name to use this player.
 
-`{{2}imp,{{0.3}pha,0.1,0.9}ulin}|kernel`
+```
+>{{2}imp,{{0.3}pha,0.1,0.9}ulin}|kernel;
+```
 
 Set the position with a phasor - change the impulse and phasor speeds to vary the patterns.
 
-{{32}imp,{0.1}pha}|kernel
+```
+>{{32}imp,{0.1}pha}|kernel;
+```
 
-This is kind of like timestretching
+This is kind of like (noisy) timestretching
 
-# filters
+# Filters
 
-// lowpass: arguments are "input signal" and a cutoff factor between 0 and 1. The function implemented internally is: `output=outputs[0] + cutoff*(input-outputs[0]);`
+One pole low pass: 
 
-`{{500}saw,0.1}lpf`
+Arguments:
+1. Input signal
+2. Cutoff (0-1)
 
-
-// hipass: arguments are "input signal" and a cutoff factor between 0 and 1. The function implemented internally is: `output=input-(outputs[0] + cutoff*(input-outputs[0]));`
-
-
-`{{500}saw,0.1}hpf`
-
-// lowpass with resonance: first argument is input, then cuttof freq in Hz. res is between 1 and whatever.
-
-`{{500}saw,800,10}lpz`
+```
+>{{500}saw,0.1}lpf;
+```
 
 
-// hipass with resonance: first argument is input, then cuttof freq in Hz. res is between 1 and whatever.
+One pole high pass:
+Arguments:
+1. Input signal
+2. Cutoff (0-1)
 
-`{{500}saw,3000,20}hpz`
+```
+>{{500}saw,0.1}hpf;
+```
+
+Lowpass with resonance: 
+Arguments:
+1. Input signal
+2. Cutoff (20-20000)
+3. Resonance (1 upwards)
+
+```
+>{{500}saw,800,10}lpz;
+```
 
 
-# effects
+
+High pass with resonance: 
+1. Input signal
+2. Cutoff (20-20000)
+3. Resonance (1 upwards)
+
+```
+>{{500}saw,3000,20}hpz;
+```
+
+
+# Effects
 
 // distortion: arguments: input, and shape: from 1 (soft clipping) to infinity (hard clipping)
 atan distortion, see [atan distortion on musicdsp.org](http://www.musicdsp.org/showArchiveComment.php?ArchiveID=104)
@@ -202,7 +310,7 @@ atan distortion, see [atan distortion on musicdsp.org](http://www.musicdsp.org/s
 `{{5}sqr,20000,0.9}dl`
 
 
-# operators
+# Operators
 
 - `gt` : greater than
 - `lt` : less than
@@ -214,7 +322,7 @@ atan distortion, see [atan distortion on musicdsp.org](http://www.musicdsp.org/s
 - `pow` : power of
 - `abs` : absolute value
 
-# operators over lists:
+# Operators over lists:
 
 Sum signals: (this will clip in this example:)
 
@@ -304,7 +412,7 @@ __________
 ```
 # mouse input
 
-use `{}mouseX` and `{}mouseY`
+Use `{}mouseX` and `{}mouseY`
 
 e.g. this is an FM synthesis with mouse control
 ```
@@ -315,4 +423,27 @@ e.g. this is an FM synthesis with mouse control
 ```
 
 
+
+# Machine Listening
+
+FFT - fast fourier transform
+Arguments:
+1. A signal
+2. The number of bins
+3. Hop size, as a percentage of the FFT period
+
+Outputs: an array with three elements
+1. A trigger signal, which triggers every time the FFT updates
+2. An array of frequency strengths (same size as the number of bins)
+3. An array of phases (same size as the number of bins)
+
+```
+//fft analysis of the microphone
+:fftdata:{{1}adc, 512, 0.25}fft;
+:trig:{:fftdata:,0}at;
+:frequencies:{:fftdata:,1}at;
+:phases:{:fftdata:,2}at;
+
+//map bin 5 of the fft to the frequency of a saw wave
+>{{{:frequencies:,5}at,1000}mul}saw;
 

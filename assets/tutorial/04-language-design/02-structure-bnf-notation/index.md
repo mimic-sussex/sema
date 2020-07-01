@@ -26,7 +26,7 @@ Also notice that the *Grammar Compiler Output* says the grammar is valid, but if
 
 This means that the grammar template is well-formed, but needs to be developed to generate a usefull parser for the content of *LiveCode Editor*. 
 
-Now that we have the scaffolding, we are going to fill it in with the grammar for the simplest language as possible, 1-token live coding language! 
+Now that we have the scaffolding, we are going to fill it in with the grammar for the simplest language as possible, 1-token live coding language! (Tokens are a core ingredient of a programming langauge: constants, identifiers, operators, reserved words and separators)
 
 Our 1-token language will have precisely one specific token, and we can only use that token in the *LiveCode Editor* and nothing else. 
 
