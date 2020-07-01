@@ -21,7 +21,7 @@ onmessage = m => {
 			dspCode.paramMarkers = JSON.stringify(dspCode.paramMarkers);
 			postMessage(dspCode);
 		} catch (err) {
-      console.log("DEBUG:il.worker:onmessage:catch");
+      // console.log("DEBUG:il.worker:onmessage:catch");
 			console.log(err);
 		}
 	}

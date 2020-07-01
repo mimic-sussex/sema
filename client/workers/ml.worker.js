@@ -225,7 +225,7 @@ function sabChecker() {
     }
     setTimeout(sabChecker, 20);
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     setTimeout(sabChecker, 100);
   }
 }
