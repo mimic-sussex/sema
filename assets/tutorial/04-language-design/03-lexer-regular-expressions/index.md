@@ -1,6 +1,5 @@
 # Lexer and Regular Expressions
 
- 
 In this part of the tutorial, we are going to understand the Lexer definition of the *Grammar Editor* template in more detail. We are going to use it to scale up the expressive power of our live code languages in terms of the vocabulary they allow. 
 
 ## The Lexer definition

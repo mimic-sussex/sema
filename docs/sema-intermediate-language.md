@@ -1,7 +1,7 @@
 
 # **Sema Intermediate Representation**
 
-The following are the **types** of our intermediate Sema language
+The following are the **types** of the Sema intermediate representation
 
 # @lang
 This is the top level node of the tree, and contains an array of branches
@@ -9,13 +9,7 @@ This is the top level node of the tree, and contains an array of branches
 ```
 { "@lang" : [branches]}
   ```
-# @sigOut  
-
-Output a signal from the signal engine
-```
-{"@sigOut": <branch>}
-```
-
+  
 # @spawn
 Execute a branch of a tree
 ```
@@ -30,13 +24,12 @@ Execute a branch of a tree
 {"@string":val}
 ```
 # @setvar
-Set a variable, with the output from a branch of the tree.
+Set a variable.
 ```
-{"@setvar": {"@varname":<string>,"@varvalue":<branch>}};
+{"@setvar": {"@varname":<string>,"@varvalue":value}};
 ```
 # @getvar
 Get a variable
-
 ```
 {"@getvar":<string>}
 ```
@@ -205,6 +198,11 @@ Parameters:
  3. Decay   (ms)
  4. Sustain (0-1)
  5. Release (ms)
+### line
+Triggered line generator
+Parameters:
+1. Trigger
+2. Time (ms) to rise from 0 to 1
 
 ## Mapping
 ### blin
@@ -253,6 +251,12 @@ Parameters:
 Tanh distortion
  1. Input signal
  2. Distortion level (0 upwards)
+ 
+### asymclip
+Asymmetric wave shaping
+1. Input signal
+2. The curve shape for values below zero (e.g. 2 = squared, 3 = cubed, 0.5 = square root)
+3. The curve shape for values above zero
 ### dl
 Delay
  1. Input signal
@@ -272,6 +276,12 @@ Flanger
  3. Feedback (0-1)
  4. Speed (Hz)
  5. Depth (0-1)
+### freeverb
+Reverb
+Arguments:
+1. Input signal
+2. Room size (0-1)
+3. Absorption (0-1)
 
 ## Filters
 ### lpf
@@ -302,32 +312,19 @@ State variable filter
 4. High pass filter amount (0-1)
 5. Notch filter amount (0-1)
 
-## Networking
-
-### oscin
-Receive and open sound control signal
- 1. OSC address
- 2. Index of the OSC data element to observe (-1 means all elements)
-
-### toPeer
- 1. Signal
- 2. Destination (peer ID) (see sema.peerinfo())
- 3. Channel number
- 4. Frequency
-
-### fromPeer
- 1. Source (peer ID) (see sema.peerinfo())
- 2. Channel number
 
 ## Machine Learning
 ### toJS
 Creates a transducer for sending a signal to a javascript model
- 1. Polling frequency
- 2. Data value (this can be a list or a number)
- 3. Channel
+ 1. A trigger, on which to send data
+ 2. The channel number
+ 3. Data value (this can be a list or a number)
+ 4. The block size of the data
+
 ### fromJS
 Creates a transducer for receiving a signal from a javascript model
   1. Channel (a number)
+  2. A trigger, indicating when to read from the channel.  A zero here indicates that the channel will be read whenever data is available.
 
 These functions are paired with 'input' and 'output' in the machine learning window
 

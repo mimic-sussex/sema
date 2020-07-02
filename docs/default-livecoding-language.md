@@ -1,13 +1,14 @@
 # Sema's Default Live Coding Language
 
-The code examples below work for *one* sematic language, the default demo language. To run these commands, paste them in the top window and hit cmd+enter. That will evaluate the line. To evaluate many lines, you need to separate them with a semicolon ";" after every line.
-
+The code examples below work for *one* language, the default demo language. To run these commands, paste them in the top window and hit cmd+enter. That will evaluate the line.
 
 # Audio Outputs
 
-to route a signal to the outputs on your soundcard, there are the following options:
+To route a signal to the outputs on your soundcard, there are the following options:
 
-1. Route a single signal to all outputs, by putting an ```>``` at the point in the signal chain where you want to output e.g.
+### The ```>``` operator
+
+Route a single signal to all outputs, by putting an ```>``` at the point in the signal chain where you want to output e.g.
 
 ```
 >{50}saw;
@@ -18,13 +19,16 @@ to route a signal to the outputs on your soundcard, there are the following opti
 ```
 In the above example, the soundcard will monitor the saw waves, but not the hpz.
 
-2. Route a single signal to a single channel, using an asterisk and a channel number.
+
+To route a single signal to a single channel, using an asterisk and a channel number.
 
 ```
 >0 {40}sqr;
 >1 {40.4}sqr;
 ```
 
+
+### dac
 
 To change channel numbers programmatically, use the `dac` function.
 
@@ -51,6 +55,8 @@ Arguments:
 
 first argument is always the frequency, the last argument the phase.
 
+### sin
+
 Sine wave
 
 ```
@@ -60,11 +66,15 @@ Sine wave
 >{500,0.2}sin;
 ```
 
+### saw
+
 Saw wave
 
 ```
 >{500}saw;
 ```
+
+## tri
 
 Triangle wave
 
@@ -72,12 +82,14 @@ Triangle wave
 >{500}tri;
 ```
 
+### pha 
 
 Phasor (a ramp that rises from 0 to 1)
 
 ```
 >{500}pha;
 ```
+### ph2
 
 Phasor with start and end phase
 
@@ -85,17 +97,22 @@ Phasor with start and end phase
 >{500,0.3,0.8}ph2;
 ```
 
-Square
+### sqr
+
+Square wave
 
 ```
 >{500}sqr;
 ```
+
+### pul
 
 Pulse (the second argument is pulsewidth)
 
 ```
 >{500,0.7}pul;
 ```
+### imp 
 
 Impulse (single impulse, useful for triggering)
 
@@ -106,14 +123,17 @@ Impulse (single impulse, useful for triggering)
 `>{2,0.2}imp;
 ```
 
+### sawn 
+
 Anti-aliased saw wave
 
 ```
 >{500}sawn;
 ```
 
+# noiz
 
-# noise
+White noise
 
 the argument is the amplitude
 
@@ -121,7 +141,9 @@ the argument is the amplitude
 >{0.8}noiz;
 ```
 
-# control
+# Control
+
+### sah
 
 Sample and hold
 
@@ -134,7 +156,9 @@ Arguments:
 >{{:frequency:,500}sah}saw;
 ```
 
-# envelope
+# Envelopes
+
+### env
 
 The envelope is an adsr envelope, so the arguments are "input signal", attack (in ms), decay (in ms), sustain level (0-1), release (in ms). So here with a square wave as input:
 
@@ -160,9 +184,22 @@ Note that the pulse starts at -1, so higher pulse widths give shorter envelopes 
 >{{500}sin,{{{1,0.8}pul,-1}mul,10,200,0.05,200}env}mul;
 ```
 
+### line
 
+Triggered line generator
+
+Arguments:
+1. Trigger
+2. Time (ms) to rise from 0 to 1
+
+```
+:line:{{1}clt, 100}line;
+>{{1}noiz, :line:}mul;
+```
 
 # Sample playback
+
+### The ```\```operator
 
 Samples are preloaded when the audio engine starts up. A list of samples can be found in https://github.com/mimic-sussex/sema/tree/master/assets/samples
 
@@ -211,6 +248,9 @@ Changing offset:
 
 # Sample Slicing
 
+
+### The ```|``` operator
+
 ```
 >{{1}imp,0.5}|kernel;
 ```
@@ -229,7 +269,10 @@ Set the position with a phasor - change the impulse and phasor speeds to vary th
 
 This is kind of like (noisy) timestretching
 
+
 # Filters
+
+### lpf
 
 One pole low pass: 
 
@@ -241,6 +284,7 @@ Arguments:
 >{{500}saw,0.1}lpf;
 ```
 
+### hpf
 
 One pole high pass:
 Arguments:
@@ -250,6 +294,7 @@ Arguments:
 ```
 >{{500}saw,0.1}hpf;
 ```
+### lpz
 
 Lowpass with resonance: 
 Arguments:
@@ -261,7 +306,7 @@ Arguments:
 >{{500}saw,800,10}lpz;
 ```
 
-
+### hpz
 
 High pass with resonance: 
 1. Input signal
@@ -271,43 +316,129 @@ High pass with resonance:
 ```
 >{{500}saw,3000,20}hpz;
 ```
+### svf
 
+State variable filter
+Arguments:
+
+1. Input signal
+2. Cutoff frequency (Hz)
+3. Resonance
+4. Low pass filter amount (0-1)
+4. Band pass filter amount (0-1)
+4. High pass filter amount (0-1)
+5. Notch filter amount (0-1)
+
+```
+:osc:{50}saw;
+:lfo:{{1}tri, 100, 400}bexp;
+>{:osc:, :lfo:, 10, 0, 0.8, 1, 0.9}svf;
+```
+
+```
+:freqStart:{{}mouseX, 1, 3000}uexp;
+:freq:{{16}clp, [1],[50,100,200]}rsq;
+:freq:{:freqStart:, :freq:}add;
+:env:{{16}clt, 50,300,0.2,40}env;
+:osc:{:freq:}saw;
+:fenv:{:env:,100,1000}uexp;
+:fmod:{{}mouseY,1,3000}uexp;
+>{:osc:, {:fenv:, :fmod:}add, 3, 1, 0, 0, 0}svf;
+```
 
 # Effects
+
+### dist
 
 // distortion: arguments: input, and shape: from 1 (soft clipping) to infinity (hard clipping)
 atan distortion, see [atan distortion on musicdsp.org](http://www.musicdsp.org/showArchiveComment.php?ArchiveID=104)
 
 ```
-{{200}saw,10}dist
-{{200}saw,100}dist
-{{200}saw,1000}dist
+>{{200}saw,10}dist;
+```
+```
+>{{200}saw,100}dist;
+```
+```
+>{{200}saw,1000}dist;
 ```
 
-// flanger: arguments:
+### asymclip
 
-- input signal
-- delay = delay time - ~800 sounds good
-- feedback = 0 - 1
-- speed = lfo speed in Hz, 0.0001 - 10 sounds good
-- depth = 0 - 1
+Asymmetric wave shaping
 
-`{{200}sqr,200,0.8,2,0.2}flange`
+Arguments:
+1. Input signal
+2. The curve shape for values below zero (e.g. 2 = squared, 3 = cubed, 0.5 = square root)
+3. The curve shape for values above zero
 
-// chorus: arguments:
-
-- input signal
-- delay = delay time - ~800 sounds good
-- feedback = 0 - 1
-- speed = lfo speed in Hz, 0.0001 - 10 sounds good
-- depth = 0 - 1
-
-`{{200}sqr,1000,0.9,0.2,0.4}chor`
+```
+:kick:{{4}clt}\909b;
+:curvebelowzero:{{0.14}tri,0.1,3}blin;
+:curveabovezero:{{0.1}tri,0.1,3}blin;
+>{:kick:, :curvebelowzero:, :curveabovezero:}asymclip;
+```
 
 
-// delayline: input, delay time in samples, amount of feedback (between 0 and 1)
+### flange
 
-`{{5}sqr,20000,0.9}dl`
+Flanger
+
+Arguments:
+
+1.input signal
+2. delay = delay time (ms)
+3. Feedback = 0 - 1
+4. Speed = lfo speed in Hz
+5. Depth = 0 - 1
+
+```
+>{{80}sqr,200,1, 0.1,0.9}flange;
+```
+
+### chor
+
+Chorus
+
+Arguments:
+
+1.input signal
+2. delay = delay time (ms)
+3. Feedback = 0 - 1
+4. Speed = lfo speed in Hz
+5. Depth = 0 - 1
+
+```
+>{{80}sqr,400,0.9, 2,0.9}chor;
+```
+
+### dl
+
+Delay line 
+
+Arguments:
+1. input signal 
+2. delay time in samples
+3. amount of feedback (between 0 and 1)
+
+```
+>{{5}sqr,20000,0.9}dl;
+```
+
+### freeverb
+
+Reverb
+
+Arguments:
+1. Input signal
+2. Room size (0-1)
+3. Absorption (0-1)
+
+```
+:click:{{1}clt,8}\boom2;
+:verb:{:click:, 0.9, 0.1}freeverb;
+>{:click:,{:verb:,0.1}mul}add;
+```
 
 
 # Operators
@@ -426,7 +557,10 @@ e.g. this is an FM synthesis with mouse control
 
 # Machine Listening
 
+### fft
+
 FFT - fast fourier transform
+
 Arguments:
 1. A signal
 2. The number of bins
@@ -446,4 +580,109 @@ Outputs: an array with three elements
 
 //map bin 5 of the fft to the frequency of a saw wave
 >{{{:frequencies:,5}at,1000}mul}saw;
+```
 
+
+# Triggers
+
+### onzx
+
+Positive zero-crossing detection
+
+Arguments:
+1. A signal
+
+```
+:osc:{1}sqr;
+:zerocrossing:{:osc:}onzx;
+:env:{:zerocrossing:,10,500,0.1,1000}env;
+>{{50}saw,:env:}mul;
+```
+
+
+### onchange
+
+Create a trigger when a change occurs in the input signal
+
+Arguments:
+1. A signal
+2. Tolerance (a trigger will be generated if the change is more than +/- this value)
+
+### count
+
+Counts up when receiving a trigger
+
+Arguments:
+1. Input trigger
+2. Reset trigger
+
+### idx
+
+Index into a list
+
+Arguments:
+1. Trigger input - output a value when triggered
+2. The index of the value to be output when a trigger is received (normalised to between 0 and 1)
+3. A list of values
+
+
+
+# Conversion
+
+### MIDI to frequency
+
+For now, you can do the conversion directly using math functions.
+
+```
+:freq:{{2,{{:midinote:,69}sub,12}div}pow,440}mul;
+```
+
+```
+:midinote:{{12}clp, [1],[32,33,34,35,36,37,38,39,40,41,42,43]}rsq;
+:freq:{{2,{{:midinote:,69}sub,12}div}pow,440}mul;
+:osc:{:freq:}saw;
+>{:osc:, 200, 1, 0, 0, 1, 0}svf;
+```
+
+# Sequencing
+
+### rsq
+
+Ratio sequencer
+
+Arguments:
+1. A phasor
+2. An array of time ratios.  The phasor period is divided into these ratios, and a trigger is emitted at the beginning or each division
+3. (optional) An array of values. At the start of each time division, a value is read from the list. Successive values are read, in a loop.
+
+```
+:control:{1}clp;
+:seq:{:control:, [3,3,2,1]}rsq;
+>{:seq:,0.5, 0.9}\click;
+```
+```
+:control:{2}clp;
+:mod:{:control:, [2,4,2], [0,0.5,0.75]}rsq;
+>{{80}saw, 800, 1, 0.03, :mod:}flange;
+```
+
+
+# Data
+
+### const
+
+Assign a value directy to a variable
+
+```
+:beats:{17}const;
+```
+
+# Debugging
+
+### poll
+
+Send a value to the javascript console, once per second
+
+```
+{{0.1}pha}poll;
+```
