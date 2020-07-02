@@ -246,6 +246,12 @@ Parameters:
 Tanh distortion
  1. Input signal
  2. Distortion level (0 upwards)
+ 
+### asymclip
+Asymmetric wave shaping
+1. Input signal
+2. The curve shape for values below zero (e.g. 2 = squared, 3 = cubed, 0.5 = square root)
+3. The curve shape for values above zero
 ### dl
 Delay
  1. Input signal
@@ -265,6 +271,12 @@ Flanger
  3. Feedback (0-1)
  4. Speed (Hz)
  5. Depth (0-1)
+### freeverb
+Reverb
+Arguments:
+1. Input signal
+2. Room size (0-1)
+3. Absorption (0-1)
 
 ## Filters
 ### lpf
