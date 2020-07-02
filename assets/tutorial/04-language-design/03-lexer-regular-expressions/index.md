@@ -27,7 +27,7 @@ Given that the *Grammar Editor* does continuous evaluation, this code will be co
 
 ## The Grammar definition
 
-We are also going to advance our knowledge of the grammar a little bit more, although some of the details will be presented in more detail in the next section.
+We are also going to advance our knowledge of the grammar a little bit more, although a more detailed will be presented in the Grammar rules section.
 
 <!-- In our previous 1-token language we wrote as first rule 
 
@@ -145,148 +145,10 @@ Statement -> %click
 %}
 ```
 
-
 So, now we have a grammar which generates a parser that recognises fixed strings of a 3-token language, which match sample names in our sample set.
 
-## Adding oscillators
+If you examine the code blocks `{%` `%}` after each rule, what are the similaries between them? And what are the differences?
 
-Let's add another feature to our language, an oscillator. We need to a RegEx to our Lexer definition, like so:
-
-```
-    saw:      /saw/,
-    heart:    /heart/,
-    click:    /click/,
-    ws: { match: /\s+/, lineBreaks: true }
-```
-
-And now were are going to add the respective rule to the grammar definition section.
+In the next section we are going to look at the aspects of grammar rules in more detail.
 
 
-```
-Statement -> %saw
-{% 
-  // JS 'arrow' function definition 
-  d => [{
-    '@spawn': {
-      '@sigp': {
-        '@params': [{        
-          '@sigp': { 
-            '@params': [{
-                '@num': { value: 10 }
-              },
-            ],
-            '@func': { value: 'saw'  }
-          }
-        }],
-        '@func' : {
-          value: "dac"
-        }
-      }
-    }
-  }]
-%}
-```
-
-Notice what changes between the samples and the sawtooth grammar rules
-
-What happens if you change the value of `@func` from `saw` to `sin`?
-
-`'@func': { value: 'saw'  }`
-
-
-
-## Adding more expressive tokens
-
-So far our the tokens in the lexer definition were fixed RegExs which recognised a limited set of strings. They served the purpose of helping us understand how to orchestrate the recognition of a token with a grammar rule. 
-
-However, now we want to tap into the power of RegExs to recognise more complex tokens.
-
-
-```
-    heart:    /heart/,
-    click:    /click/,
-    osc:      /[a-z]+/,
-    ws: { match: /\s+/, lineBreaks: true }
-```
-
-Notice that rather than hardcoding the value of `@func` with the kind of oscillator, we are now setting it with the value recognised by the token `osc`.  
-
-```
-Statement -> %osc 
-{% 
-  // JS 'arrow' function definition 
-  d => [{
-    '@spawn': {
-      '@sigp': {
-        '@params': [{        
-          '@sigp': { 
-            '@params': [{
-                '@num': { 
-                  value: 100 
-                }
-              },
-            ],
-            '@func': { value: d[0].value  }
-          }
-        }],
-        '@func' : {
-          value: "dac"
-        }
-      }
-    }
-  }]
-%}
-```
-
-
-
-What happens if you change the `@num` value on both the rules ?
-
-
-## Adding numbers
-
-In order to the give our language the ability to control the numerical parameter in the sample and in the oscillator, we are now going to extend it to recognize a kind of token: a *number*
-
-```
-    saw:      /saw/,                         
-    heart:    /heart/,
-    click:    /click/,
-    number:   /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?\b/,
-	ws: { match: /\s+/, lineBreaks: true }
-```
-
-Now we need to bubble up the recognised numerical value into our grammar rule
-
-	
-```
-Statement -> %saw __ %number
-{% 
-  // JS 'arrow' function definition 
-  d => [{
-    '@spawn': {
-      '@sigp': {
-        '@params': [{        
-          '@sigp': { 
-            '@params': [{
-                '@num': {
-                  value: d[2].value 
-                }
-              },
-            ],
-            '@func': { value: 'saw'  }
-          }
-        }],
-        '@func' : {
-          value: "dac"
-        }
-      }
-    }
-  }]
-%}
-```
-
-Now you that you can control a parameter of the sawtooth oscillator, how would you go about making this rule generic for all types of oscillators?
-
-Did you face an issue doing that? Try changing the order of the RegExs in the Lexer definition so that the more specific token definitions come before the more generic ones.
-
-Next, we will be looking at increasing the complexitiy of our grammar rules to make our language even more powerful.

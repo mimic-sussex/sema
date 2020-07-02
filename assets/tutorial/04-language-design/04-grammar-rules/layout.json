@@ -40,7 +40,7 @@
 		"hasFocus": false,
 		"theme": "monokai",
 		"background": "#AAAAAA",
-    "data": "# GRAMMAR EDITOR\n\n\n# Lexer [or tokenizer] definition with language lexemes [or tokens]\n\n@{%\n\t\n\tconst lexer = moo.compile({\n\t\t// Write the Regular Expressions for your tokens here  \n\t\t\n\t});\n\n%}\n\n\n\n# Pass your lexer object using the @lexer option\n\n@lexer lexer\n\n\n\n\n# Grammar definition in the Extended Backus Naur Form (EBNF)\n\nmain -> _ | __ \n\n\n# Whitespace\n\n_  -> wschar:*\n{%  \n\t// Anonymous JS function declaration \n\tfunction(d) {return null;} \n%}\n\n__ -> wschar:+\n{% \n\t// Anonymous JS function declaration \n\tfunction(d) { return null; } \n%}\n\nwschar -> %ws\n{% id %}\n"
+    "data": "# GRAMMAR EDITOR\n\n# Lexer [or tokenizer] definition with language lexemes [or tokens]\n@{%\n\n\tconst lexer = moo.compile({ \n   \t// write the Regular Expressions for your tokens here \n    convol1:  /convol1/,                         \n    heart:    /heart/,   \n    click:    /click/,\n\t\tws: { match: /\\s+/, lineBreaks: true }\n\t});\n\n%}\n\n\n\n# Pass your lexer object using the @lexer option\n@lexer lexer\n\n\n\n# Grammar definition in the Extended Backus Naur Form (EBNF)\n\nmain -> _ Statement _\n{%\n\t// JS `arrow` function declaration\n\td => ( { \"@lang\": d[1] } )\n%}\n\nStatement -> %convol1\n{% \n  d => [{\n    '@spawn': {\n      '@sigp': {\n        '@params': [{        \n          '@sigp': { \n            '@params': [{\n                '@num': { value: 1 }\n              },\n              {\n                '@string': 'convol1'\n              }\n            ],\n            '@func': { value: 'loop'  }\n          }\n        }],\n        '@func' : {\n          value: \"dac\"\n        }\n      }\n    }\n  }]\n%}\n|\n%heart\n{% \n  d => [{\n    '@spawn': {\n      '@sigp': {\n        '@params': [{        \n          '@sigp': { \n            '@params': [{\n                '@num': { value: 1 }\n              },\n              {\n                '@string': 'heart'\n              }\n            ],\n            '@func': { value: 'loop'  }\n          }\n        }],\n        '@func' : {\n          value: \"dac\"\n        }\n      }\n    }\n  }]\n%}\n|\n%click\n{% \n  d => [{\n    '@spawn': {\n      '@sigp': {\n        '@params': [{        \n          '@sigp': { \n            '@params': [{\n                '@num': { value: 1 }\n              },\n              {\n                '@string': 'click'\n              }\n            ],\n            '@func': { value: 'loop'  }\n          }\n        }],\n        '@func' : {\n          value: \"dac\"\n        }\n      }\n    }\n  }]\n%}\n\n# Whitespace\n\n_  -> wschar:*\n{%\n\t// JS anonymous function declaration  \n\tfunction(d) { return null; } \n%}\n\n__ -> wschar:+\n{% \nfunction(d) { return null; } \n%}\n\nwschar -> %ws\n{% id %}\n"
 	},
 	{
 		"drag": { "top": null, "left": null, "dragging": false },
@@ -61,7 +61,7 @@
 		"lineNumbers": true,
 		"hasFocus": false,
 		"theme": "icecoder",
-		"data": "// LIVE CODE EDITOR\n\n// Press cmd-Enter [Mac] OR ctrl-Enter [Win/Linux] to evaluate this code and playback sound! \n\n>{{300}sin, {1000}sin}mul;\n\n// Press cmd-. [Mac] OR ctrl-. [Win/Linux] to stop sound! ",
+		"data": "click",
 		"grammarSource": "/languages/default/grammar.ne",
 		"liveCodeSource": "/languages/default/code.sem"
 	},
