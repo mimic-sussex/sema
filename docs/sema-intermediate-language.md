@@ -24,9 +24,9 @@ Execute a branch of a tree
 {"@string":val}
 ```
 # @setvar
-Set a variable, with the output from a branch of the tree.
+Set a variable.
 ```
-{"@setvar": {"@varname":<string>,"@varvalue":<branch>}};
+{"@setvar": {"@varname":<string>,"@varvalue":value}};
 ```
 # @getvar
 Get a variable
