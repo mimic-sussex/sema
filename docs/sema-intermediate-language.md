@@ -1,7 +1,7 @@
 
 # **Sema Intermediate Representation**
 
-The following are the **types** of our intermediate Sema language
+The following are the **types** of the Sema intermediate representation
 
 # @lang
 This is the top level node of the tree, and contains an array of branches
