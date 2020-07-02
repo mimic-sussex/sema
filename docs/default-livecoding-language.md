@@ -338,39 +338,97 @@ Arguments:
 
 # Effects
 
+### dist
+
 // distortion: arguments: input, and shape: from 1 (soft clipping) to infinity (hard clipping)
 atan distortion, see [atan distortion on musicdsp.org](http://www.musicdsp.org/showArchiveComment.php?ArchiveID=104)
 
 ```
-{{200}saw,10}dist
-{{200}saw,100}dist
-{{200}saw,1000}dist
+>{{200}saw,10}dist;
+```
+```
+>{{200}saw,100}dist;
+```
+```
+>{{200}saw,1000}dist;
 ```
 
-// flanger: arguments:
+### asymclip
 
-- input signal
-- delay = delay time - ~800 sounds good
-- feedback = 0 - 1
-- speed = lfo speed in Hz, 0.0001 - 10 sounds good
-- depth = 0 - 1
+Asymmetric wave shaping
 
-`{{200}sqr,200,0.8,2,0.2}flange`
+Arguments:
+1. Input signal
+2. The curve shape for values below zero (e.g. 2 = squared, 3 = cubed, 0.5 = square root)
+3. The curve shape for values above zero
 
-// chorus: arguments:
-
-- input signal
-- delay = delay time - ~800 sounds good
-- feedback = 0 - 1
-- speed = lfo speed in Hz, 0.0001 - 10 sounds good
-- depth = 0 - 1
-
-`{{200}sqr,1000,0.9,0.2,0.4}chor`
+```
+:kick:{{4}clt}\909b;
+:curvebelowzero:{{0.14}tri,0.1,3}blin;
+:curveabovezero:{{0.1}tri,0.1,3}blin;
+>{:kick:, :curvebelowzero:, :curveabovezero:}asymclip;
+```
 
 
-// delayline: input, delay time in samples, amount of feedback (between 0 and 1)
+### flange
 
-`{{5}sqr,20000,0.9}dl`
+Flanger
+
+Arguments:
+
+1.input signal
+2. delay = delay time (ms)
+3. Feedback = 0 - 1
+4. Speed = lfo speed in Hz
+5. Depth = 0 - 1
+
+```
+>{{80}sqr,200,1, 0.1,0.9}flange;
+```
+
+### chor
+
+Chorus
+
+Arguments:
+
+1.input signal
+2. delay = delay time (ms)
+3. Feedback = 0 - 1
+4. Speed = lfo speed in Hz
+5. Depth = 0 - 1
+
+```
+>{{80}sqr,400,0.9, 2,0.9}chor;
+```
+
+### dl
+
+Delay line 
+
+Arguments:
+1. input signal 
+2. delay time in samples
+3. amount of feedback (between 0 and 1)
+
+```
+>{{5}sqr,20000,0.9}dl;
+```
+
+### freeverb
+
+Reverb
+
+Arguments:
+1. Input signal
+2. Room size (0-1)
+3. Absorption (0-1)
+
+```
+:click:{{1}clt,8}\boom2;
+:verb:{:click:, 0.9, 0.1}freeverb;
+>{:click:,{:verb:,0.1}mul}add;
+```
 
 
 # Operators
