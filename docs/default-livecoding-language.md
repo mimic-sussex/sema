@@ -1,7 +1,6 @@
 # Sema's Default Live Coding Language
 
-The code examples below work for *one* sematic language, the default demo language. To run these commands, paste them in the top window and hit cmd+enter. That will evaluate the line. To evaluate many lines, you need to separate them with a semicolon ";" after every line.
-
+The code examples below work for *one* language, the default demo language. To run these commands, paste them in the top window and hit cmd+enter. That will evaluate the line.
 
 # Audio Outputs
 
