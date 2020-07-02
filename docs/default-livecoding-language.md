@@ -645,6 +645,29 @@ For now, you can do the conversion directly using math functions.
 >{:osc:, 200, 1, 0, 0, 1, 0}svf;
 ```
 
+# Sequencing
+
+### rsq
+
+Ratio sequencer
+
+Arguments:
+1. A phasor
+2. An array of time ratios.  The phasor period is divided into these ratios, and a trigger is emitted at the beginning or each division
+3. (optional) An array of values. At the start of each time division, a value is read from the list. Successive values are read, in a loop.
+
+```
+:control:{1}clp;
+:seq:{:control:, [3,3,2,1]}rsq;
+>{:seq:,0.5, 0.9}\click;
+```
+```
+:control:{2}clp;
+:mod:{:control:, [2,4,2], [0,0.5,0.75]}rsq;
+>{{80}saw, 800, 1, 0.03, :mod:}flange;
+```
+
+
 # Data
 
 ### const
