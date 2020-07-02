@@ -288,6 +288,12 @@ Arguments:
 4. High pass filter amount (0-1)
 5. Notch filter amount (0-1)
 
+```
+:osc:{50}saw;
+:lfo:{{1}tri, 100, 400}bexp;
+>{:osc:, :lfo:, 10, 0, 0.8, 1, 0.9}svf;
+```
+
 # Effects
 
 // distortion: arguments: input, and shape: from 1 (soft clipping) to infinity (hard clipping)
