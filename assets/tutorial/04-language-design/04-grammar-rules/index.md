@@ -6,7 +6,7 @@ In this part of the tutorial, we are going to understand the grammar definition 
 ## The Lexer definition
 
 
-Our previuos 3-token language had 3 tokens, *click*, *convol1* and *heart*. We are adding up more patterns and give our language  sophisticated language, a 3-token language.
+Our previous 3-token language had 3 tokens, *click*, *convol1* and *heart*. We are adding up more patterns and give our language  sophisticated language, a 3-token language.
 
 Copy this code snippet and paste it on line 10 of the Grammar Editor.
 

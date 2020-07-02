@@ -40,7 +40,7 @@
 		"hasFocus": false,
 		"theme": "monokai",
 		"background": "#AAAAAA",
-    "data": "# GRAMMAR EDITOR\n\n\n# Lexer [or tokenizer] definition with language lexemes [or tokens]\n\n@{%\n\t\n\tconst lexer = moo.compile({\n\t\t// Write the Regular Expressions for your tokens here  \n\t\t\n\t});\n\n%}\n\n\n\n# Pass your lexer object using the @lexer option\n\n@lexer lexer\n\n\n\n\n# Grammar definition in the Extended Backus Naur Form (EBNF)\n\nmain -> _ Statement _\n{%\n\tfunction(d){ return { \"@lang\": d[1] } }\n%}\n\n\n# Whitespace\n\n_  -> wschar:*\n{%  \n\t// Anonymous JS function declaration \n\tfunction(d) {return null;} \n%}\n\n__ -> wschar:+\n{% \n\t// Anonymous JS function declaration \n\tfunction(d) { return null; } \n%}\n\nwschar -> %ws\n{% id %}\n"
+    "data": "# GRAMMAR EDITOR\n\n\n# Lexer [or tokenizer] definition with language lexemes [or tokens]\n\n@{%\n\t\n\tconst lexer = moo.compile({\n\t\t// Write the Regular Expressions for your tokens here  \n\t\t\n\t});\n\n%}\n\n\n\n# Pass your lexer object using the @lexer option\n\n@lexer lexer\n\n\n\n\n# Grammar definition in the Extended Backus Naur Form (EBNF)\n\nmain -> _ Statement _\n{%\n\t// Anonymous JS `arrow` function\n\td => ( { \"@lang\": d[1] } )\n%}\n\nStatement -> _\n\n\n# Whitespace\n\n_  -> wschar:*\n{%  \n\t// Anonymous JS function declaration \n\tfunction(d) {return null;} \n%}\n\n__ -> wschar:+\n{% \n\t// Anonymous JS function declaration \n\tfunction(d) { return null; } \n%}\n\nwschar -> %ws\n{% id %}\n"
 	},
 	{
 		"drag": { "top": null, "left": null, "dragging": false },
@@ -61,7 +61,7 @@
 		"lineNumbers": true,
 		"hasFocus": false,
 		"theme": "icecoder",
-		"data": "// LIVE CODE EDITOR\n\n// Press cmd-Enter [Mac] OR ctrl-Enter [Win/Linux] to evaluate this code and playback sound! \n\n>{{300}sin, {1000}sin}mul;\n\n// Press cmd-. [Mac] OR ctrl-. [Win/Linux] to stop sound! ",
+		"data": "",
 		"grammarSource": "/languages/default/grammar.ne",
 		"liveCodeSource": "/languages/default/code.sem"
 	},

@@ -231,6 +231,8 @@ This is kind of like (noisy) timestretching
 
 # Filters
 
+### lpf
+
 One pole low pass: 
 
 Arguments:
@@ -241,6 +243,7 @@ Arguments:
 >{{500}saw,0.1}lpf;
 ```
 
+### hpf
 
 One pole high pass:
 Arguments:
@@ -250,6 +253,7 @@ Arguments:
 ```
 >{{500}saw,0.1}hpf;
 ```
+### lpz
 
 Lowpass with resonance: 
 Arguments:
@@ -261,7 +265,7 @@ Arguments:
 >{{500}saw,800,10}lpz;
 ```
 
-
+### hpz
 
 High pass with resonance: 
 1. Input signal
@@ -271,7 +275,35 @@ High pass with resonance:
 ```
 >{{500}saw,3000,20}hpz;
 ```
+### svf
 
+State variable filter
+Arguments:
+
+1. Input signal
+2. Cutoff frequency (Hz)
+3. Resonance
+4. Low pass filter amount (0-1)
+4. Band pass filter amount (0-1)
+4. High pass filter amount (0-1)
+5. Notch filter amount (0-1)
+
+```
+:osc:{50}saw;
+:lfo:{{1}tri, 100, 400}bexp;
+>{:osc:, :lfo:, 10, 0, 0.8, 1, 0.9}svf;
+```
+
+```
+:freqStart:{{}mouseX, 1, 3000}uexp;
+:freq:{{16}clp, [1],[50,100,200]}rsq;
+:freq:{:freqStart:, :freq:}add;
+:env:{{16}clt, 50,300,0.2,40}env;
+:osc:{:freq:}saw;
+:fenv:{:env:,100,1000}uexp;
+:fmod:{{}mouseY,1,3000}uexp;
+>{:osc:, {:fenv:, :fmod:}add, 3, 1, 0, 0, 0}svf;
+```
 
 # Effects
 
@@ -426,7 +458,24 @@ e.g. this is an FM synthesis with mouse control
 
 # Machine Listening
 
+### onzx
+
+Positive zero-crossing detection
+
+Arguments:
+1. A signal
+
+```
+:osc:{1}sqr;
+:zerocrossing:{:osc:}onzx;
+:env:{:zerocrossing:,10,500,0.1,1000}env;
+>{{50}saw,:env:}mul;
+```
+
+### fft
+
 FFT - fast fourier transform
+
 Arguments:
 1. A signal
 2. The number of bins
@@ -446,4 +495,22 @@ Outputs: an array with three elements
 
 //map bin 5 of the fft to the frequency of a saw wave
 >{{{:frequencies:,5}at,1000}mul}saw;
+```
+
+# Conversion
+
+### MIDI to frequency
+
+For now, you can do the conversion directly using math functions.
+
+```
+:freq:{{2,{{:midinote:,69}sub,12}div}pow,440}mul;
+```
+
+```
+:midinote:{{12}clp, [1],[32,33,34,35,36,37,38,39,40,41,42,43]}rsq;
+:freq:{{2,{{:midinote:,69}sub,12}div}pow,440}mul;
+:osc:{:freq:}saw;
+>{:osc:, 200, 1, 0, 0, 1, 0}svf;
+```
 

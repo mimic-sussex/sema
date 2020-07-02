@@ -6,11 +6,11 @@ In this part of the tutorial, we are going to understand the Lexer definition of
 
 The *Lexer* or *Tokeniser* definition is the first code block delimited by ```@{%``` and ```%}```. This code does *lexical analysis* of textual content, which means that the *Lexer* is responsible for recognising all the smallest units (i.e. lexemes or tokens, such as nouns, verbs ) in the text of the  *LiveCode Editor* and chopping it all up.
 
-However, we do need to define how these units should be recognised. We will do that by adding Regular Expressions (RegEx) in Javascript to define the patterns to recognise these units. 
+However, we do need to define how these tokens should be recognised. We will do that by adding Regular Expressions (RegEx) in Javascript to define the patterns to recognise these tokens in a string. 
 
 There are many [tutorials](https://www.w3schools.com/jsref/jsref_obj_regexp.asp) and even specialised interactive [tools](https://regex101.com/) available that can you help test your RegExs and we will be looking into them.
   
-Our previuous 1-token language had one specific token, the word *click*. Now we want to add up more patterns to make a more sophisticated language, a 3-token language.
+Our previous 1-token language had one specific token, the word *click*. Now we want to add up more patterns to make a more sophisticated language, a 3-token language.
 
 Copy this code snippet and paste it on line 10 of the Grammar Editor.
 
@@ -28,7 +28,7 @@ Given that the *Grammar Editor* does continuous evaluation, this code will be co
 
 We are also going to advance our knowledge of the grammar a little bit more, although some of the details will be presented in more detail in the next section.
 
-In our previous 1-token language we wrote as first rule 
+<!-- In our previous 1-token language we wrote as first rule 
 
 `main -> _ Statement _`
 
@@ -46,17 +46,17 @@ The second rule defined Statement as such:
 
 This rule means that a statement in our language, has the token `click`.
 
-This ruled uses a token defined in the Lexer with the RegEx `/click/` to match the string `click`. 
+This ruled uses a token defined in the Lexer with the RegEx `/click/` to match the string `click`.  -->
 
-We are now going to expand our 1-token language to a 3-token language in the grammar, by adding a two more rules that bind the new tokens to the grammar.
+Let's expand our 1-token language to a 3-token language in the grammar, by adding a two more rules that bind the new tokens to the grammar.
 
 `Statement -> %convol1`
 
-`Statement -> %click`
+`Statement -> %heart`
 
 Note that all these grammar rules define the alternatives for what a Statement is in our new language, and what the parser will accept.
 
-We still haven't looked into the code blocks that follow the definition of each rule. We will be doing that in the next section where we will focus more on the the grammar rules. For now pay attention to pattern in the code block and what changes. 
+We still haven't looked into the code blocks that follow the definition of each rule. We will be doing that in the next section where we will focus on the the grammar rules. For now, let's pay attention to patterns in the code blocks and what changes. 
 
 Copy these blocks and paste them sequentially to the grammar definition section in the Grammar Editor, just before `# Whitespace`
 

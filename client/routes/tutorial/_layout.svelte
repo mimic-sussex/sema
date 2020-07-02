@@ -116,10 +116,10 @@
   	height: 100%;
   	display: grid;
   	grid-template-columns: auto 1fr;
-  	grid-template-rows: 50% 50%;
+  	grid-template-rows: 100%;
   	grid-template-areas:
-  		"sidebar layout"
   		"sidebar layout";
+  		/* "sidebar layout"; */
   	/* background-color: #6f7262; */
 	  background-color: #212121;
     overflow: hidden;
@@ -140,7 +140,7 @@
 
   .dashboard-container {
     grid-area: layout;
-    grid-row: 0 / 2;
+    /* grid-row: 0 / 2; */
     height: 100%;
     overflow: hidden;
   }

@@ -22,6 +22,8 @@ If you look closely to the *Grammar Editor* content you might notice a few thing
 
 *  these line are also followed by code blocks ```{%``` ```%}```
 
+*  a line with `@lexer lexer`
+
 Also notice that the *Grammar Compiler Output* says the grammar is valid, but if you evaluate your code on the *LiveCode Editor*, the *LiveCode Parser Output* says there is a syntax error.
 
 This means that the grammar template is well-formed, but needs to be developed to generate a usefull parser for the content of *LiveCode Editor*. 
@@ -46,16 +48,19 @@ Given that the *Grammar Editor* does continuous evaluation, this code will be co
 
 The *Grammar Editor* gives you the ability to create and edit a grammar, which needs to be specified in a special notation—or language, i.e. the [Backus Naur Form (BNF)](http://hardmath123.github.io/earley.html)—and compiled to generate a parser.
 
+Just out of curiosity, BNF was developed by John Backus et al, who applied it for the first time to a language called ALGOL-60, a derivative language from Fortran, which was the first high-level programming language. BNF is standardly used to write compilers and with many other parser generators.
+
 BNF defines a set of grammar rules, called *Production Rules*, which take the form of 
 
 **A -> B**
 
-You can read this as "*something on the left side of -> may be replaced by some something-else on the right-side of ->*". 
+You can read this as: 
 
+"*something on the left side of* **->** *may be replaced by some something-else on the right-side of* **->**". 
 
 In our template there are four default production rules which can be changed. 
 
-* **main -> _ | __** 
+* **main -> __** 
 
 * **_  -> wschar:**
 
@@ -63,11 +68,9 @@ In our template there are four default production rules which can be changed.
 
 * **wschar -> %ws**
 
-
 Altogether they define a very simple and valid grammar, although not very usefull.
 
-
-So we are now going to add two production rules to our grammar. Copy and replace the current 
+So we are now going to add two production rules to our grammar. Copy and replace the current rule
 
 ``` main -> __ ```
 
@@ -110,8 +113,18 @@ Statement -> %click
 %}
 ```
 
+So we just added two basic rules which specify that a valid sentence in this language:
 
-Now you can test out your new 1-token live coding language in the *LiveCode Editor*.
+1.  `main -> _ Statement _` – has one statement surronded by whitespace
+
+2.  `Statement -> %click` – a statement is the word 'click' 
+
+There are more elements of these rules that require explanation, such as the code blocks `{%` and `%}` with Javascript, how to they depend on each other, and why they contain to tokens `%click` and `%ws`. We will cover that in detail on the following "Grammar Rules" section. 
+
+
+For now you can test out your new 1-token live coding language in the *LiveCode Editor*.
+
+
 
 ### Exercise 
 
@@ -120,7 +133,7 @@ How will you test your grammar with language? What will you write in the *LiveCo
 What would you have to do to change the one token of the language? How would you change it?
 
 
-Next we are going to understand in more detail the elements of the lexer and grammar definitions you have just used and build a more sophisticated language.
+Next, we are going to understand in more detail the elements of the lexer and grammar definitions you have just used, and develop out scaffolding to build a more sophisticated language.
 
 
 
