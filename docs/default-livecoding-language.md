@@ -5,9 +5,11 @@ The code examples below work for *one* sematic language, the default demo langua
 
 # Audio Outputs
 
-to route a signal to the outputs on your soundcard, there are the following options:
+To route a signal to the outputs on your soundcard, there are the following options:
 
-1. Route a single signal to all outputs, by putting an ```>``` at the point in the signal chain where you want to output e.g.
+### The ```>``` operator
+
+Route a single signal to all outputs, by putting an ```>``` at the point in the signal chain where you want to output e.g.
 
 ```
 >{50}saw;
@@ -18,13 +20,16 @@ to route a signal to the outputs on your soundcard, there are the following opti
 ```
 In the above example, the soundcard will monitor the saw waves, but not the hpz.
 
-2. Route a single signal to a single channel, using an asterisk and a channel number.
+
+To route a single signal to a single channel, using an asterisk and a channel number.
 
 ```
 >0 {40}sqr;
 >1 {40.4}sqr;
 ```
 
+
+### dac
 
 To change channel numbers programmatically, use the `dac` function.
 
@@ -51,6 +56,8 @@ Arguments:
 
 first argument is always the frequency, the last argument the phase.
 
+### sin
+
 Sine wave
 
 ```
@@ -60,11 +67,15 @@ Sine wave
 >{500,0.2}sin;
 ```
 
+### saw
+
 Saw wave
 
 ```
 >{500}saw;
 ```
+
+## tri
 
 Triangle wave
 
@@ -72,12 +83,14 @@ Triangle wave
 >{500}tri;
 ```
 
+### pha 
 
 Phasor (a ramp that rises from 0 to 1)
 
 ```
 >{500}pha;
 ```
+### ph2
 
 Phasor with start and end phase
 
@@ -85,17 +98,22 @@ Phasor with start and end phase
 >{500,0.3,0.8}ph2;
 ```
 
-Square
+### sqr
+
+Square wave
 
 ```
 >{500}sqr;
 ```
+
+### pul
 
 Pulse (the second argument is pulsewidth)
 
 ```
 >{500,0.7}pul;
 ```
+### imp 
 
 Impulse (single impulse, useful for triggering)
 
@@ -106,14 +124,17 @@ Impulse (single impulse, useful for triggering)
 `>{2,0.2}imp;
 ```
 
+### sawn 
+
 Anti-aliased saw wave
 
 ```
 >{500}sawn;
 ```
 
+# noiz
 
-# noise
+White noise
 
 the argument is the amplitude
 
@@ -121,7 +142,9 @@ the argument is the amplitude
 >{0.8}noiz;
 ```
 
-# control
+# Control
+
+### sah
 
 Sample and hold
 
@@ -134,7 +157,9 @@ Arguments:
 >{{:frequency:,500}sah}saw;
 ```
 
-# envelope
+# Envelopes
+
+### env
 
 The envelope is an adsr envelope, so the arguments are "input signal", attack (in ms), decay (in ms), sustain level (0-1), release (in ms). So here with a square wave as input:
 
@@ -163,6 +188,8 @@ Note that the pulse starts at -1, so higher pulse widths give shorter envelopes 
 
 
 # Sample playback
+
+### The ```\```operator
 
 Samples are preloaded when the audio engine starts up. A list of samples can be found in https://github.com/mimic-sussex/sema/tree/master/assets/samples
 
@@ -211,6 +238,9 @@ Changing offset:
 
 # Sample Slicing
 
+
+### The ```|``` operator
+
 ```
 >{{1}imp,0.5}|kernel;
 ```
@@ -228,6 +258,7 @@ Set the position with a phasor - change the impulse and phasor speeds to vary th
 ```
 
 This is kind of like (noisy) timestretching
+
 
 # Filters
 
