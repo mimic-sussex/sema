@@ -231,6 +231,8 @@ This is kind of like (noisy) timestretching
 
 # Filters
 
+### lpf
+
 One pole low pass: 
 
 Arguments:
@@ -241,6 +243,7 @@ Arguments:
 >{{500}saw,0.1}lpf;
 ```
 
+### hpf
 
 One pole high pass:
 Arguments:
@@ -250,6 +253,7 @@ Arguments:
 ```
 >{{500}saw,0.1}hpf;
 ```
+### lpz
 
 Lowpass with resonance: 
 Arguments:
@@ -261,7 +265,7 @@ Arguments:
 >{{500}saw,800,10}lpz;
 ```
 
-
+### hpz
 
 High pass with resonance: 
 1. Input signal
@@ -271,7 +275,18 @@ High pass with resonance:
 ```
 >{{500}saw,3000,20}hpz;
 ```
+### svf
 
+State variable filter
+Arguments:
+
+1. Input signal
+2. Cutoff frequency (Hz)
+3. Resonance
+4. Low pass filter amount (0-1)
+4. Band pass filter amount (0-1)
+4. High pass filter amount (0-1)
+5. Notch filter amount (0-1)
 
 # Effects
 
