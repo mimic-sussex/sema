@@ -547,20 +547,6 @@ e.g. this is an FM synthesis with mouse control
 
 # Machine Listening
 
-### onzx
-
-Positive zero-crossing detection
-
-Arguments:
-1. A signal
-
-```
-:osc:{1}sqr;
-:zerocrossing:{:osc:}onzx;
-:env:{:zerocrossing:,10,500,0.1,1000}env;
->{{50}saw,:env:}mul;
-```
-
 ### fft
 
 FFT - fast fourier transform
@@ -585,6 +571,49 @@ Outputs: an array with three elements
 //map bin 5 of the fft to the frequency of a saw wave
 >{{{:frequencies:,5}at,1000}mul}saw;
 ```
+
+
+# Triggers
+
+### onzx
+
+Positive zero-crossing detection
+
+Arguments:
+1. A signal
+
+```
+:osc:{1}sqr;
+:zerocrossing:{:osc:}onzx;
+:env:{:zerocrossing:,10,500,0.1,1000}env;
+>{{50}saw,:env:}mul;
+```
+
+
+### onchange
+
+Create a trigger when a change occurs in the input signal
+
+Arguments:
+1. A signal
+2. Tolerance (a trigger will be generated if the change is more than +/- this value)
+
+### count
+
+Counts up when receiving a trigger
+
+Arguments:
+1. Input trigger
+2. Reset trigger
+
+### idx
+
+Index into a list
+
+Arguments:
+1. Trigger input - output a value when triggered
+2. The index of the value to be output when a trigger is received (normalised to between 0 and 1)
+3. A list of values
 
 # Conversion
 
