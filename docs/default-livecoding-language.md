@@ -461,6 +461,7 @@ e.g. this is an FM synthesis with mouse control
 ### onzx
 
 Positive zero-crossing detection
+
 Arguments:
 1. A signal
 
@@ -471,7 +472,9 @@ Arguments:
 >{{50}saw,:env:}mul;
 ```
 
-### FFT - fast fourier transform
+### fft
+
+FFT - fast fourier transform
 
 Arguments:
 1. A signal
@@ -492,4 +495,22 @@ Outputs: an array with three elements
 
 //map bin 5 of the fft to the frequency of a saw wave
 >{{{:frequencies:,5}at,1000}mul}saw;
+```
+
+# Conversion
+
+### MIDI to frequency
+
+For now, you can do the conversion directly using math functions.
+
+```
+:freq:{{2,{{:midinote:,69}sub,12}div}pow,440}mul;
+```
+
+```
+:midinote:{{12}clp, [1],[32,33,34,35,36,37,38,39,40,41,42,43]}rsq;
+:freq:{{2,{{:midinote:,69}sub,12}div}pow,440}mul;
+:osc:{:freq:}saw;
+>{:osc:, 200, 1, 0, 0, 1, 0}svf;
+```
 
