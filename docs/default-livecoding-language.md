@@ -185,7 +185,18 @@ Note that the pulse starts at -1, so higher pulse widths give shorter envelopes 
 >{{500}sin,{{{1,0.8}pul,-1}mul,10,200,0.05,200}env}mul;
 ```
 
+### line
 
+Triggered line generator
+
+Arguments:
+1. Trigger
+2. Time (ms) to rise from 0 to 1
+
+```
+:line:{{1}clt, 100}line;
+>{{1}noiz, :line:}mul;
+```
 
 # Sample playback
 
@@ -615,6 +626,8 @@ Arguments:
 2. The index of the value to be output when a trigger is received (normalised to between 0 and 1)
 3. A list of values
 
+
+
 # Conversion
 
 ### MIDI to frequency
@@ -632,3 +645,22 @@ For now, you can do the conversion directly using math functions.
 >{:osc:, 200, 1, 0, 0, 1, 0}svf;
 ```
 
+# Data
+
+### const
+
+Assign a value directy to a variable
+
+```
+:beats:{17}const;
+```
+
+# Debugging
+
+### poll
+
+Send a value to the javascript console, once per second
+
+```
+{{0.1}pha}poll;
+```
