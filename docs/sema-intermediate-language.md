@@ -198,6 +198,11 @@ Parameters:
  3. Decay   (ms)
  4. Sustain (0-1)
  5. Release (ms)
+### line
+Triggered line generator
+Parameters:
+1. Trigger
+2. Time (ms) to rise from 0 to 1
 
 ## Mapping
 ### blin
