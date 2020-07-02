@@ -294,6 +294,17 @@ Arguments:
 >{:osc:, :lfo:, 10, 0, 0.8, 1, 0.9}svf;
 ```
 
+```
+:freqStart:{{}mouseX, 1, 3000}uexp;
+:freq:{{16}clp, [1],[50,100,200]}rsq;
+:freq:{:freqStart:, :freq:}add;
+:env:{{16}clt, 50,300,0.2,40}env;
+:osc:{:freq:}saw;
+:fenv:{:env:,100,1000}uexp;
+:fmod:{{}mouseY,1,3000}uexp;
+>{:osc:, {:fenv:, :fmod:}add, 3, 1, 0, 0, 0}svf;
+```
+
 # Effects
 
 // distortion: arguments: input, and shape: from 1 (soft clipping) to infinity (hard clipping)
