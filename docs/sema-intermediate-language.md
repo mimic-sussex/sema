@@ -9,13 +9,7 @@ This is the top level node of the tree, and contains an array of branches
 ```
 { "@lang" : [branches]}
   ```
-# @sigOut  
-
-Output a signal from the signal engine
-```
-{"@sigOut": <branch>}
-```
-
+  
 # @spawn
 Execute a branch of a tree
 ```
@@ -36,7 +30,6 @@ Set a variable, with the output from a branch of the tree.
 ```
 # @getvar
 Get a variable
-
 ```
 {"@getvar":<string>}
 ```
@@ -302,32 +295,19 @@ State variable filter
 4. High pass filter amount (0-1)
 5. Notch filter amount (0-1)
 
-## Networking
-
-### oscin
-Receive and open sound control signal
- 1. OSC address
- 2. Index of the OSC data element to observe (-1 means all elements)
-
-### toPeer
- 1. Signal
- 2. Destination (peer ID) (see sema.peerinfo())
- 3. Channel number
- 4. Frequency
-
-### fromPeer
- 1. Source (peer ID) (see sema.peerinfo())
- 2. Channel number
 
 ## Machine Learning
 ### toJS
 Creates a transducer for sending a signal to a javascript model
- 1. Polling frequency
- 2. Data value (this can be a list or a number)
- 3. Channel
+ 1. A trigger, on which to send data
+ 2. The channel number
+ 3. Data value (this can be a list or a number)
+ 4. The block size of the data
+
 ### fromJS
 Creates a transducer for receiving a signal from a javascript model
   1. Channel (a number)
+  2. A trigger, indicating when to read from the channel.  A zero here indicates that the channel will be read whenever data is available.
 
 These functions are paired with 'input' and 'output' in the machine learning window
 
