@@ -426,7 +426,21 @@ e.g. this is an FM synthesis with mouse control
 
 # Machine Listening
 
-FFT - fast fourier transform
+### onzx
+
+Positive zero-crossing detection
+Arguments:
+1. A signal
+
+```
+:osc:{1}sqr;
+:zerocrossing:{:osc:}onzx;
+:env:{:zerocrossing:,10,500,0.1,1000}env;
+>{{50}saw,:env:}mul;
+```
+
+### FFT - fast fourier transform
+
 Arguments:
 1. A signal
 2. The number of bins
