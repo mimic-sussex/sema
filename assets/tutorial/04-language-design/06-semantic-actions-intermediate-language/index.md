@@ -155,18 +155,18 @@ You can define your own functions in the top part of the script between ```@{%``
 # drone++
 # Lexer [or tokenizer] definition with language lexemes [or tokens]
 @{%
-    const lexer = moo.compile({
-        // Write the Regular Expressions for your tokens here  
-        number: /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?\b/,
-                separator: /,/
-    });
+  const lexer = moo.compile({
+    // Write the Regular Expressions for your tokens here  
+    number: /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?\b/,
+    separator: /,/
+  });
 
-function mixOscillators(oscList) {
-		let mixer = sema.synth('mix', oscList);
-		let dac = sema.synth('dac', [mixer]);
+  function mixOscillators(oscList) {
+    let mixer = sema.synth('mix', oscList);
+    let dac = sema.synth('dac', [mixer]);
     let tree = [{'@spawn': dac}];
-		return tree;
-}
+    return tree;
+  }
 %}
 
 # Pass your lexer object using the @lexer option
@@ -179,7 +179,7 @@ main -> _ Statement _
 %}
 
 Statement -> OscillatorList
-{% d=> mixOscillators(d[0]) %}
+{% d => mixOscillators(d[0]) %}
 
 OscillatorList ->
 Oscillator
@@ -192,18 +192,20 @@ Oscillator _ %separator _ OscillatorList
 Oscillator -> %number
 {%
   function(d){
-		let frequency = sema.num(d[0].value);
-		let sawosc = sema.synth('saw', [frequency]);
+    let frequency = sema.num(d[0].value);
+    let sawosc = sema.synth('saw', [frequency]);
     return sawosc;
-    }
+  }
 %}
 
 # Whitespace
-_  -> wschar:* {%  d => null%}
-__ -> wschar:+ {% d=> null%}
+_  -> wschar:* {% d => null %}
+__ -> wschar:+ {% d => null %}
 wschar -> %ws {% id %}
 ```
 
 The `mixOscillators` function is separated into the top portion of the script.  This kind of formatting helps to keep the grammar more readable, and therefore easier to edit.
 
-These helper functions are documented along with the rest of the Sema Intermediate Representation: https://github.com/mimic-sussex/sema/blob/master/docs/sema-intermediate-language.md
+These helper functions are documented along with the rest of the Sema Intermediate Representation: 
+
+https://github.com/mimic-sussex/sema/blob/master/docs/sema-intermediate-language.md
