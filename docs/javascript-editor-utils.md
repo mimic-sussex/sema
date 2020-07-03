@@ -40,15 +40,6 @@ sema.loadF32Array(fn,
 sema.pbcopy("some text to copy to the clipboard")
 ```
 
-# Peer networking information
-
-Find out your peer ID, to use with ```fromNet``` and ```toNet```
-
-```
-sema.peerinfo()
-```
-This will copy your peerID to the paste buffer
-
 # create a buffer and send it to the audio engine
 
 in the ML window:
@@ -70,25 +61,6 @@ in the live code window (default language):
 ```
 
 
-# record data from osc to a variable
-
-Send data 20 times per second to the model, with id 0:
-
-```
-{20,0,/minibee/data}toModel
-```
-
-Receive in model and record to an array:
-
-```
-minibeedata = []
-idx=0
-record=1
-input = (id,x) => {
-    console.log("v: " + x);
-    if (record) b[idx++] = x;
-}
-```
 
 # graphics
 
