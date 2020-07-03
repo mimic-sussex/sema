@@ -1,124 +1,205 @@
-# BNF Structure and Notation
- 
-In this part of the tutorial, we are going to understand the code structure and notations used in the *Grammar Editor*. 
+# Semantic Actions in the Intermediate language
 
-We are also going to understand some of the underlying concepts that are necessary to the language design workflow in Sema.
-
-In the previous tutorial section, we had a look to the fully-fledged grammar of Sema's default language.
-
-In this tutorial we will start from the ground up with an empty grammar template on the *Grammar Editor*.
-
-## Decoding the template...
-
-If you look closely to the *Grammar Editor* content you might notice a few things:
-
-*  there are code comments which begin with ```#```
-
-*  there are code blocks delimited by ```{%``` and ```%}```
-
-*  there seems to be code comments inside the code blocks that begin with ```//``` 
-
-*  there are lines which follow a pattern of SOMETHING ```->``` SOMETHING, 
-
-*  these line are also followed by code blocks ```{%``` ```%}```
-
-Also notice that the *Grammar Compiler Output* says the grammar is valid, but if you evaluate your code on the *LiveCode Editor*, the *LiveCode Parser Output* says there is a syntax error.
-
-This means that the grammar template is well-formed, but needs to be developed to generate a usefull parser for the content of *LiveCode Editor*. 
-
-Now that we have the scaffolding, we are going to fill it in with the grammar for the simplest language as possible, 1-token live coding language! 
-
-This language will not be useful for much, but it will help us understand how to use the main blocks and the notation.   
-
-
-
-## The Lexer definition
-
-The *Lexer* or *Tokeniser* definition is the first code block delimited by ```@{%``` and ```%}```. This code does *lexical analysis* of textual content, which means that the *Lexer* is responsible for chopping up all the text in the *LiveCode Editor* into its smallest units (i.e. lexemes or tokens).
-
-However, we do need to define how these units should be recognised. We will do that by adding Javascript code with Regular Expressions (RegEx) to define the pattern to recognise these units. There are many [tutorials](https://www.w3schools.com/jsref/jsref_obj_regexp.asp) and even specialised interactive [tools](https://regex101.com/) available that can you help test your RegEx.
-
-Our 1-token language will have precisely one specific token, and we can only use that token in the *LiveCode Editor* and nothing else. 
-
-Copy this code snippet and paste it on line 10 of the Grammar Editor.
+Up until this point in the tutorials we have built abstract syntax trees by putting together arrays of raw objects.  This was important to demonstrate how things are working in the background, but it also has some disadvantages that it can make the grammar difficult to read as the objects are quite verbose.  The parser system that we use, *nearley*, also allows you to create your own JavaScript functions to aid putting together trees.  Sema provides some simple utility functions to help with this. You can also make your own functions. Let's look at the provided functions first.
 
 ```
-	click: /click/,
-	ws: { match: /\s+/, lineBreaks: true }
+sema.num(number)
 ```
 
-Given that the *Grammar Editor* does continuous evaluation, this code will be compiled on every change and incorporated into the grammar —using the macro `@lexer lexer`— before the parser is generated.
-
-
-## The Grammar definition
-
-The *Grammar Editor* gives you the ability to create and edit a grammar, which needs to be specified in a special notation—or language, i.e. the [Backus Naur Form](http://hardmath123.github.io/earley.html)—and compiled to generate a parser.
-
-BNF defines a set of grammar rules, called *Production Rules*, which take the form of 
-
-**A -> B**
-
-You can read this as "*something on the left side of -> may be replaced by some something-else on the right-side of ->*". 
-
-
-In our template there are four default production rules which can be changed. 
-
-* **main -> _ | __** 
-
-* **_  -> wschar:**
-
-* **__ -> wschar:+**
-
-* **wschar -> %ws**
-
-
-Altogether they define a very simple and valid grammar, although not very usefull.
-
-
-So we are now going to add two production rules to our grammar. Copy and replace the current 
-
-``` main -> __ ```
-
-with this rule
+This creates the tree structure for a number.
 
 ```
+sema.string(string)
+```
+
+creates the tree structure for a string.
+
+```
+sema.synth(functionname, [param1, param2,...])
+```
+
+creates the structure for a ```@SIGP``` function.
+
+For example, here's the *drone++* language from the previous tutorial:
+
+```
+# drone++
+# Lexer [or tokenizer] definition with language lexemes [or tokens]
+@{%
+    const lexer = moo.compile({
+        // Write the Regular Expressions for your tokens here  
+        number: /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?\b/,
+                separator: /,/
+    });
+%}
+
+# Pass your lexer object using the @lexer option
+@lexer lexer
+
+# Grammar definition in the Extended Backus Naur Form (EBNF)
 main -> _ Statement _
 {%
-  function(d){ return { "@lang": d[1] } } 
+  function(d){ return { "@lang": d[1] } }
 %}
-```
 
-```
-Statement -> %click
-{% 
-  // JS 'arrow' function definition 
-  d => [{
-    '@spawn': {
-      '@sigp': {
-        '@params': [{        
-          '@sigp': { 
-            '@params': [{
-                '@num': { value: 1 }
-              },
-              {
-                '@string': 'click'
-              }
-            ],
-            '@func': { value: 'loop'  }
-          }
-        }],
-        '@func' : {
-          value: "dac"
-        }
-      }
+Statement -> OscillatorList
+{%
+  function(d){
+        let mixer =
+        {'@sigp': {
+        '@params': d[0],
+        '@func': { value: "mix"  }
+        }};
+
+        let tree = [{
+        '@spawn': {
+            '@sigp': {
+                '@params': [mixer],
+                '@func' : {value: "dac"}}}
+            }];
+        return tree;
     }
-  }]
 %}
+
+
+OscillatorList ->
+Oscillator
+{% d => [d[0]] %}
+|
+Oscillator _ %separator _ OscillatorList
+{% d => d[4].concat(d[0]) %}
+
+
+Oscillator -> %number
+{%
+  function(d){
+        let sawosc =
+        {'@sigp': {
+        '@params': [{'@num': { value: d[0].value }}],
+        '@func': { value: "saw"  }
+        }};
+        return sawosc;
+    }
+%}
+
+# Whitespace
+_  -> wschar:* {%  d => null%}
+__ -> wschar:+ {% d=> null%}
+wschar -> %ws {% id %}
 ```
 
-Next we are going to 
+Applying these helper functions results in this more readable grammar.
+
+```
+# drone++
+# Lexer [or tokenizer] definition with language lexemes [or tokens]
+@{%
+    const lexer = moo.compile({
+        // Write the Regular Expressions for your tokens here  
+        number: /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?\b/,
+                separator: /,/
+    });
+%}
+
+# Pass your lexer object using the @lexer option
+@lexer lexer
+
+# Grammar definition in the Extended Backus Naur Form (EBNF)
+main -> _ Statement _
+{%
+  function(d){ return { "@lang": d[1] } }
+%}
+
+Statement -> OscillatorList
+{%
+  function(d){
+		let mixer = sema.synth('mix', d[0]);
+		let dac = sema.synth('dac', [mixer]);
+    let tree = [{'@spawn': dac}];
+		return tree;
+  }
+%}
+
+OscillatorList ->
+Oscillator
+{% d => [d[0]] %}
+|
+Oscillator _ %separator _ OscillatorList
+{% d => d[4].concat(d[0]) %}
 
 
+Oscillator -> %number
+{%
+  function(d){
+		let frequency = sema.num(d[0].value);
+		let sawosc = sema.synth('saw', [frequency]);
+    return sawosc;
+    }
+%}
+
+# Whitespace
+_  -> wschar:* {%  d => null%}
+__ -> wschar:+ {% d=> null%}
+wschar -> %ws {% id %}
+```
+
+Important points to note above:  the frequency is converted to a number using ```sema.num``` and the `sigp` structures are all converted to ```sema.synth```.
+
+You can define your own functions in the top part of the script between ```@{%``` and ```%}```.  For example, in the above script, you could move the code for the ```Statement``` rule to the top.
+
+```
+# drone++
+# Lexer [or tokenizer] definition with language lexemes [or tokens]
+@{%
+    const lexer = moo.compile({
+        // Write the Regular Expressions for your tokens here  
+        number: /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?\b/,
+                separator: /,/
+    });
+
+function mixOscillators(oscList) {
+		let mixer = sema.synth('mix', oscList);
+		let dac = sema.synth('dac', [mixer]);
+    let tree = [{'@spawn': dac}];
+		return tree;
+}
+%}
+
+# Pass your lexer object using the @lexer option
+@lexer lexer
+
+# Grammar definition in the Extended Backus Naur Form (EBNF)
+main -> _ Statement _
+{%
+  function(d){ return { "@lang": d[1] } }
+%}
+
+Statement -> OscillatorList
+{% d=> mixOscillators(d[0]) %}
+
+OscillatorList ->
+Oscillator
+{% d => [d[0]] %}
+|
+Oscillator _ %separator _ OscillatorList
+{% d => d[4].concat(d[0]) %}
 
 
+Oscillator -> %number
+{%
+  function(d){
+		let frequency = sema.num(d[0].value);
+		let sawosc = sema.synth('saw', [frequency]);
+    return sawosc;
+    }
+%}
 
+# Whitespace
+_  -> wschar:* {%  d => null%}
+__ -> wschar:+ {% d=> null%}
+wschar -> %ws {% id %}
+```
+
+The `mixOscillators` function is separated into the top portion of the script.  This kind of formatting helps to keep the grammar more readable, and therefore easier to edit.
+
+These helper functions are documented along with the rest of the Sema Intermediate Representation: https://github.com/mimic-sussex/sema/blob/master/docs/sema-intermediate-language.md
