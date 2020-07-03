@@ -232,6 +232,10 @@ class poll {
   }
 };
 
+function mtof(midinote) {
+  return Math.pow(2,(midinote-69)/12) * 440.0;
+}
+
 /**
  * The main Maxi Audio wrapper with a WASM-powered AudioWorkletProcessor.
  *
