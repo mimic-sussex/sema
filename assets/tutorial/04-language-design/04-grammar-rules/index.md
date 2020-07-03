@@ -17,7 +17,7 @@ Statement -> %click
 |
 %convol1
 |
-%click
+%heart
 
 _  -> wschar:*
 
@@ -33,7 +33,7 @@ But what the heck are these code blocks?!
 
 ### Semantic Actions 
 
-*Nearley*, the parser generator system we use in Sema, allows you to create your own JavaScript functions to aid building syntax trees. The code blocks that come after each rule `{%` `%}` are called *semantic actions*, and is where you write these functions.
+[*Nearley*](http://nearley.js.org/), the parser generator system we use in Sema, allows you to create your own JavaScript functions to aid building syntax trees. The code blocks that come after each rule `{%` `%}` are called *semantic actions*, and is where you write these functions.
 
 To understand how these semantic actions work, you should first know when they are applied. They are applied when a token is recognised in a string being evaluated.
 
@@ -186,10 +186,10 @@ What happens if you change the `@num` value on both the rules ?
 In order to the give our language the ability to control the numerical parameter in the sample and in the oscillator, we are now going to extend it to recognize a kind of token: a *number*
 
 ```
-    saw:      /saw/,                         
-    heart:    /heart/,
-    click:    /click/,
-    number:   /(?:[0-9]|[1-9][0-9]+)\b/,
+  saw:      /saw/,
+  heart:    /heart/,
+  click:    /click/,
+  number:   /(?:[0-9]|[1-9][0-9]+)\b/,
 	ws: { match: /\s+/, lineBreaks: true }
 ```
 

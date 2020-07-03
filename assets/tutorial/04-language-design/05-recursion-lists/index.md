@@ -55,7 +55,8 @@ You could look at the trees that these code snippets create, using the *live cod
 @{%
   const lexer = moo.compile({
     // Write the Regular Expressions for your tokens here
-    number: /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?\b/
+    number: /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?\b/,
+    ws: { match: /\s+/, lineBreaks: true }
   });
 %}
 
@@ -96,7 +97,7 @@ wschar -> %ws {% id %}
 This is the first step in making our language.  Points to note in this language:
 
 1. the number token in the lexer.  This looks complicated!  It's a *regex* to match numbers. It will match whole numbers and floating point numbers.
-2. The tree which ```Statement``` translates into.  This creates a saw wave which is sent through an audio output.
+2. The tree which `Statement` translates into.  This creates a saw wave which is sent through an audio output.
 
 To use this language, type in any number and evaluate it. Try typing in something that's not a number - you'll get an error. Whatever number you type, it will play a 100Hz saw wave. The next step then is clear...
 
@@ -110,7 +111,8 @@ Firstly, we can express the grammar in a slightly longer form, but which will be
 @{%
   const lexer = moo.compile({
     // Write the Regular Expressions for your tokens here  
-    number: /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?\b/        
+    number: /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?\b/,
+    ws: { match: /\s+/, lineBreaks: true }     
   });
 %}
 
@@ -159,10 +161,10 @@ We can use this number to control the frequency of the saw wave by modifying the
 
 ```
 let sawosc =
-{'@sigp': {
-  '@params': [{'@num': { value: d[0].value }}],
-  '@func': { value: "saw"  }
-}};
+  {'@sigp': {
+    '@params': [{'@num': { value: d[0].value }}],
+    '@func': { value: "saw"  }
+  }};
 ```
 
 so now, the whole code looks like this
@@ -172,7 +174,8 @@ so now, the whole code looks like this
 @{%
   const lexer = moo.compile({
     // Write the Regular Expressions for your tokens here  
-    number: /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?\b/        
+    number: /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?\b/,
+    ws: { match: /\s+/, lineBreaks: true }        
   });
 %}
 
@@ -231,7 +234,8 @@ We need to define a separator - by adding it to the lexer
   const lexer = moo.compile({
     // Write the Regular Expressions for your tokens here  
     number: /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?\b/,
-    separator: /,/
+    separator: /,/,
+    ws: { match: /\s+/, lineBreaks: true }
   });
 %}
 ```
@@ -250,7 +254,8 @@ And an expanded function, for turning this rule into the IR format - this is the
   const lexer = moo.compile({
     // Write the Regular Expressions for your tokens here  
     number: /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?\b/,
-		separator: /,/
+		separator: /,/,
+    ws: { match: /\s+/, lineBreaks: true }
   });
 %}
 
@@ -316,9 +321,10 @@ This language is fixed to two oscillators.  We could go on adding oscillators to
 # Lexer [or tokenizer] definition with language lexemes [or tokens]
 @{%
     const lexer = moo.compile({
-        // Write the Regular Expressions for your tokens here  
-        number: /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?\b/,
-                separator: /,/
+      // Write the Regular Expressions for your tokens here  
+      number: /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?\b/,
+      separator: /,/,
+      ws: { match: /\s+/, lineBreaks: true } 
     });
 %}
 
@@ -339,7 +345,7 @@ Statement -> OscillatorList
         '@params': d[0],
         '@func': { value: "mix"  }
       }};
-      
+
     let tree = [{
     '@spawn': {
       '@sigp': {
@@ -487,7 +493,8 @@ t100,t120,s50
         number: /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?\b/,
         separator: /,/,
 				saw: /s/,
-				tri: /t/
+				tri: /t/,
+        ws: { match: /\s+/, lineBreaks: true } 
     });
 %}
 
@@ -560,12 +567,13 @@ This variation adds a high pass filter to any oscillator with an 'f' in front of
 # drone++
 # Lexer [or tokenizer] definition with language lexemes [or tokens]
 @{%
-    const lexer = moo.compile({
-        // Write the Regular Expressions for your tokens here  
-        number: /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?\b/,
-                separator: /,/,
-				filter: /f/
-    });
+  const lexer = moo.compile({
+    // Write the Regular Expressions for your tokens here  
+    number: /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?\b/,
+    separator: /,/,
+    filter: /f/,
+    ws: { match: /\s+/, lineBreaks: true }  
+  });
 %}
 
 # Pass your lexer object using the @lexer option
@@ -580,20 +588,21 @@ main -> _ Statement _
 Statement -> OscillatorList
 {%
   function(d){
-        let mixer =
-        {'@sigp': {
+    let mixer = {
+      '@sigp': {
         '@params': d[0],
         '@func': { value: "mix"  }
-        }};
+    }};
 
-        let tree = [{
-        '@spawn': {
-            '@sigp': {
-                '@params': [mixer],
-                '@func' : {value: "dac"}}}
-            }];
-        return tree;
+  let tree = [{
+    '@spawn': {
+      '@sigp': {
+        '@params': [mixer],
+        '@func' : {value: "dac"}}
     }
+  }];
+  return tree;
+  }
 %}
 
 
@@ -608,28 +617,33 @@ Oscillator _ %separator _ OscillatorList
 Oscillator -> %filter:? %number
 {%
   function(d){
-
-        let tree =
-        {'@sigp': {
-        '@params': [{'@num': { value: d[1].value }}],
+    let tree = {
+      '@sigp': {
+        '@params': [{
+          '@num': { value: d[1].value }}],
         '@func': { value: "saw"  }
-        }};
+      }
+    };
 
-				if (d[0] != null) {
-					tree =
-						{'@sigp': {
-						'@params': [tree, {'@num': { value: 500}}, {'@num': { value: 2}}],
-						'@func': { value: 'hpz'  }
-						}};
-				}
-        return tree;
+    if (d[0] != null) {
+      tree = {
+        '@sigp': {
+    	    '@params': [tree, {
+              '@num': { value: 500}},{
+              '@num': { value: 2}
+            }],
+    	    '@func': { value: 'hpz'  }
+        }
+      };
     }
+    return tree;
+  }
 %}
 
 
 
 # Whitespace
-_  -> wschar:* {%  d => null%}
-__ -> wschar:+ {% d=> null%}
+_  -> wschar:* {% d => null %}
+__ -> wschar:+ {% d => null %}
 wschar -> %ws {% id %}
 ```

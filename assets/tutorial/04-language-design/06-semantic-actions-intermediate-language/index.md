@@ -1,4 +1,4 @@
-# Semantic Actions in the Intermediate language
+# Semantic Actions with Intermediate language
 
 Up until this point in the tutorials we have built abstract syntax trees by putting together arrays of raw objects.  This was important to demonstrate how things are working in the background, but it also has some disadvantages that it can make the grammar difficult to read as the objects are quite verbose.  
 
