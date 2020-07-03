@@ -105,7 +105,6 @@ And now were are going to add a rule with the `saw` token to the grammar definit
 |
 %saw
 {% 
-  // JS 'arrow' function definition 
   d => [{
     '@spawn': {
       '@sigp': {
@@ -154,7 +153,6 @@ Notice that rather than hardcoding the value of `@func` with the kind of oscilla
 ```
 Statement -> %osc 
 {% 
-  // JS 'arrow' function definition 
   d => [{
     '@spawn': {
       '@sigp': {
@@ -191,7 +189,7 @@ In order to the give our language the ability to control the numerical parameter
     saw:      /saw/,                         
     heart:    /heart/,
     click:    /click/,
-    number:   /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?\b/,
+    number:   /(?:[0-9]|[1-9][0-9]+)\b/,
 	ws: { match: /\s+/, lineBreaks: true }
 ```
 
