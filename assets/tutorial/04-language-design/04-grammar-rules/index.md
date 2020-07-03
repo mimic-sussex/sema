@@ -33,9 +33,9 @@ But what the heck are these code blocks?!
 
 ### Semantic Actions 
 
-The code blocks that come after each rule `{%` `%}` are called *semantic actions*. 
+*Nearley*, the parser generator system we use in Sema, allows you to create your own JavaScript functions to aid building syntax trees. The code blocks that come after each rule `{%` `%}` are called *semantic actions*, and is where you write these functions.
 
-To understand what these semantic actions do, you should first know when they are applied. They are applied when a token is recognised in a string being evaluated.
+To understand how these semantic actions work, you should first know when they are applied. They are applied when a token is recognised in a string being evaluated.
 
 A parser analysing a string to find a token is driven by the rules of the grammar. To find the token the parser drills down the rules until it finds the token.
 

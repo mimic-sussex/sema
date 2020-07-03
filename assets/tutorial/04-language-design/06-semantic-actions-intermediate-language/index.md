@@ -1,6 +1,10 @@
 # Semantic Actions in the Intermediate language
 
-Up until this point in the tutorials we have built abstract syntax trees by putting together arrays of raw objects.  This was important to demonstrate how things are working in the background, but it also has some disadvantages that it can make the grammar difficult to read as the objects are quite verbose.  The parser system that we use, *nearley*, also allows you to create your own JavaScript functions to aid putting together trees.  Sema provides some simple utility functions to help with this. You can also make your own functions. Let's look at the provided functions first.
+Up until this point in the tutorials we have built abstract syntax trees by putting together arrays of raw objects.  This was important to demonstrate how things are working in the background, but it also has some disadvantages that it can make the grammar difficult to read as the objects are quite verbose.  
+
+As we've seen before, the parser system that we use, *nearley*, also allows you to create your own JavaScript functions to aid putting together trees.  Sema provides some simple utility functions to help with this. You can also make your own functions. 
+
+Let's look at the provided functions first.
 
 ```
 sema.num(number)
