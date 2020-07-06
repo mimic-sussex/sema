@@ -12,7 +12,7 @@ Sound files will be loaded over a http connection, so they need to be hosted on 
 
 When you run ```live-server``` it will open the url of the server in your browser. It will look something like ```http://127.0.0.1:35643/```
 
-##
+## Load and decode 
 
 Let's say you want to load a file called 'spoon.wav'. In the JS window:
 
@@ -26,13 +26,15 @@ var asset = AV.Asset.fromURL('http://127.0.0.1:35643/spoon.wav');
 var mysample;
 asset.decodeToBuffer(function(buffer) {
   // buffer is now a Float32Array containing the entire decoded audio file
-	mysample = buffer;
+  mysample = buffer;
   //send the buffer to the signal engine if required
   sema.sendBuffer('mysample', mysample);
   console.log("Sample loaded");
 });
 
 ```
+
+## Play
 
 In the livecoding window (using the default language):
 
