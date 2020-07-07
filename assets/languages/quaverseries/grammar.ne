@@ -9,7 +9,8 @@
 		name:  /[a-zA-Z][a-zA-Z0-9]*/,
 		num: /[0-9]?.?[0-9]+/,
 		next: />>/,
-		lineSep: /;\n*/
+		lineSep: /;\n*/,
+		comment: /\/\/[^\n]+/
 	})
 %}
 
@@ -57,14 +58,14 @@ return d[0]
 }
 %}
 
-Block -> Ref _ Chain _ lineSep 
+Block -> (%comment _):* Ref _ Chain _ lineSep _ %comment:*
 
 {%
 d => {
 
 	console.log(d, "***Block******");
-	let name = d[0].value;
-	let value = d[2][0];
+	let name = d[1].value;
+	let value = d[3][0];
 	let setval = sema.setvar(name, value)
 	return setval
 }

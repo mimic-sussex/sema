@@ -1,5 +1,6 @@
+// with #: to play
+// with ~: to mod
 #a: saw 50;
-
 #b: saw 51;
 
 ~mod: saw ~modb >> blin 100 8000;
