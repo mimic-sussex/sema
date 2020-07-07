@@ -3,7 +3,7 @@
 # Lexer [or tokenizer] definition with language lexemes [or tokens]
 @{%
 	const lexer = moo.compile({
-		ref: /~[a-z]+>?/,
+		ref:  /~[a-zA-Z0-9]+|#[a-zA-Z0-9]+/,
 		colon: /:/,
 		ws: { match: /\s/, lineBreaks: true},
 		name:  /[a-zA-Z][a-zA-Z0-9]*/,
@@ -25,7 +25,7 @@ d => {
 console.log(d[1], "main")
 
 	let tracks = d[1].filter(
-		v =>v["@setvar"]["@varname"].includes(">")
+		v =>v["@setvar"]["@varname"].includes("#")
 	).map( (varObj) => {
 		console.log("***name***", varObj)
 		return sema.getvar(varObj["@setvar"]["@varname"])
