@@ -98,11 +98,12 @@ Applying these helper functions results in this more readable grammar.
 # drone++
 # Lexer [or tokenizer] definition with language lexemes [or tokens]
 @{%
-    const lexer = moo.compile({
-        // Write the Regular Expressions for your tokens here  
-        number: /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?\b/,
-                separator: /,/
-    });
+  const lexer = moo.compile({
+    // Write the Regular Expressions for your tokens here  
+    number: /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?\b/,
+    separator: /,/
+    ws: { match: /\s+/, lineBreaks: true } 
+  });
 %}
 
 # Pass your lexer object using the @lexer option
@@ -158,7 +159,8 @@ You can define your own functions in the top part of the script between ```@{%``
   const lexer = moo.compile({
     // Write the Regular Expressions for your tokens here  
     number: /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?\b/,
-    separator: /,/
+    separator: /,/,
+    ws: { match: /\s+/, lineBreaks: true } 
   });
 
   function mixOscillators(oscList) {
@@ -182,11 +184,11 @@ Statement -> OscillatorList
 {% d => mixOscillators(d[0]) %}
 
 OscillatorList ->
-Oscillator
-{% d => [d[0]] %}
-|
-Oscillator _ %separator _ OscillatorList
-{% d => d[4].concat(d[0]) %}
+  Oscillator
+  {% d => [d[0]] %}
+  |
+  Oscillator _ %separator _ OscillatorList
+  {% d => d[4].concat(d[0]) %}
 
 
 Oscillator -> %number
