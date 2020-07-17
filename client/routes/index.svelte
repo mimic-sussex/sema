@@ -131,9 +131,9 @@
   </div>
   {:else}
   <div class='login'>
-    <p><strong style="font-size:150%; color: red; margin:15px 0 10px 5px">Unsupported browser!</strong></p>
-    <p><strong style="color: red; margin:15px 0 10px 5px">Sema requires a Chromium-based browser to load successfully</strong></p>
-    <p><strong style="color: red; margin:15px 0 10px 5px">(e.g. Chrome, Brave, Microsoft Edge, Opera)</strong></p>
+    <p><strong style="font-size:150%; color: white; margin:15px 0 10px 5px">Sorry, this browser does not work for Sema...</strong></p>
+    <p><strong style="color: white; margin:15px 0 10px 5px">Sema requires a Chromium-based browser as it uses the latest Web Audio API technology</strong></p>
+    <p><strong style="color: white; margin:15px 0 10px 5px">(we recommend Chrome, but also possible are Brave, Microsoft Edge, Opera, Vivaldi)</strong></p>
     
   </div>
   {/if}
