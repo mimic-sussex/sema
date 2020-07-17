@@ -101,7 +101,7 @@
 
   .main-container {
     display: grid;
-    grid-template-rows: 5em 1fr;
+    grid-template-rows: auto 1fr;
     width: 100%;
     height: 100%;
     background: linear-gradient(150deg, rgba(0,18,1,1) 0%, rgba(7,5,17,1) 33%, rgba(16,12,12,1) 67%, rgba(18,16,16,1) 100%);
@@ -112,20 +112,20 @@
     grid-row: 1;
     display: grid;
     grid-template-columns: 40px auto auto;
-    grid-template-rows: 3em fr;
+    /* grid-template-rows: 3em fr; */
     width: 100%;
-    background: linear-gradient(150deg, rgba(0,18,1,1) 0%, rgba(7,5,17,1) 33%, rgba(16,12,12,1) 67%, rgba(18,16,16,1) 100%);
+    /* background: linear-gradient(150deg, rgba(0,18,1,1) 0%, rgba(7,5,17,1) 33%, rgba(16,12,12,1) 67%, rgba(18,16,16,1) 100%); */
   }
   
   .logo {
-    grid-row: 1;
+    /* grid-row: 1; */
     grid-column: 1;
     
   }
 
   .nav-container {
-    grid-column: 2 / span 2;
-    grid-row: 1; 
+    grid-column: 2 / span 1;
+    /* grid-row: 1;  */
     
     display: flex;
     flex-direction: row;
@@ -135,14 +135,14 @@
   }
 
   .actions-container {
-    grid-row: 2;
-    grid-column: 2 / span 2;;
+    /* grid-row: 1; */
+    grid-column: 3 / span 1;
     /* display: grid; */
     display: flex;
     /* flex-direction: row; */
     justify-content: flex-end;
     margin-right: 8px;
-    background: linear-gradient(150deg, rgba(0,18,1,1) 0%, rgba(7,5,17,1) 33%, rgba(16,12,12,1) 67%, rgba(18,16,16,1) 100%);
+    /* background: linear-gradient(150deg, rgba(0,18,1,1) 0%, rgba(7,5,17,1) 33%, rgba(16,12,12,1) 67%, rgba(18,16,16,1) 100%); */
   }
 
   .slot-container {
