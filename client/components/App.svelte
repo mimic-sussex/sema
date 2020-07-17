@@ -4,7 +4,16 @@
   import SplashScreen from './SplashScreen.svelte';
   import { audioEngineStatus } from '../stores/common.js';
 
-  import { AudioEngine } from '../audioEngine/audioEngine.js';
+
+  let audioEngine;
+  // Need a dynamic import to prevent the AudioWorkletNode inside the audioEngine module from loading [Safari fix]
+  ( async () => {
+    import('../audioEngine/audioEngine.js')
+      .then( module => {
+        audioEngine = new module.AudioEngine()
+      })
+      .catch( err => console.error('import') );      
+  })();
 
 	import { environment } from "../utils/history.js";
 
@@ -16,8 +25,6 @@
   import { PubSub } from '../messaging/pubSub.js';
 
   let messaging = new PubSub();
-
-  let audioEngine = new AudioEngine();
 
   const unsubscribe = audioEngineStatus.subscribe( value => {
     if(value === 'running') audioEngine.init(1);

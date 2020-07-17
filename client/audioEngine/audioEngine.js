@@ -2,7 +2,7 @@ import Module from "./maximilian.wasmmodule.js"; //NOTE:FB We need this import h
 import Open303 from "./open303.wasmmodule.js"; //NOTE:FB We need this import here for webpack to emit maximilian.wasmmodule.js
 import CustomProcessor from "./maxi-processor";
 import "../utils/ringbuf.js";  //thanks padenot
-import {RingBuffer} from "../utils/ringbuf-alt.js";  //thanks padenot
+import { RingBuffer } from "../utils/ringbuf-alt.js";  //thanks padenot
 import {
   loadSampleToArray
 } from "./maximilian.util";
@@ -15,7 +15,7 @@ import {
 import {
   PeerStreaming
 } from "../interfaces/peerStreaming.js";
-import {copyToPasteBuffer} from '../utils/pasteBuffer.js';
+import { copyToPasteBuffer } from '../utils/pasteBuffer.js';
 
 
 
@@ -25,18 +25,20 @@ import {copyToPasteBuffer} from '../utils/pasteBuffer.js';
  * @class CustomAudioNode
  * @extends AudioWorkletNode
  */
-class MaxiNode extends AudioWorkletNode {
-  constructor(audioContext, processorName) {
-    // super(audioContext, processorName);
-    console.log();
-    let options = {
-      numberOfInputs: 1,
-      numberOfOutputs: 1,
-      outputChannelCount: [audioContext.destination.maxChannelCount]
-    };
-    super(audioContext, processorName, options);
+// if(true){
+  class MaxiNode extends AudioWorkletNode {
+    constructor(audioContext, processorName) {
+      // super(audioContext, processorName);
+      console.log();
+      let options = {
+        numberOfInputs: 1,
+        numberOfOutputs: 1,
+        outputChannelCount: [audioContext.destination.maxChannelCount]
+      };
+      super(audioContext, processorName, options);
+    }
   }
-}
+// }
 
 /**
  * The AudioEngine is a singleton class that encapsulates the AudioContext
