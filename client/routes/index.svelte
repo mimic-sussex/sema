@@ -15,6 +15,11 @@
   } from '../stores/tutorial.js'
 
   import {
+    unsupportedBrowser
+  } from '../stores/common.js';
+
+
+  import {
     currentUser
   } from '../stores/user.js'
 
@@ -119,14 +124,17 @@
       <!-- <figcaption>Sema Logo</figcaption> -->
     </figure>
   </div>
-  
-  <div class='login'>
 
-    <!-- <button class='sign-in-guest-button' 
-            on:click={ handleClick } 
-            > Sign in as Guest </button>  -->
-  
+  {#if !$unsupportedBrowser}
+  <div class='login'>
     <SignIn />
-  
   </div>
+  {:else}
+  <div class='login'>
+    <p><strong style="font-size:150%; color: red; margin:15px 0 10px 5px">Unsupported browser!</strong></p>
+    <p><strong style="color: red; margin:15px 0 10px 5px">Sema requires a Chromium-based browser to load successfully</strong></p>
+    <p><strong style="color: red; margin:15px 0 10px 5px">(e.g. Chrome, Brave, Microsoft Edge, Opera)</strong></p>
+    
+  </div>
+  {/if}
 </div>

@@ -2,17 +2,27 @@
 	import { onDestroy } from 'svelte';
 
   import SplashScreen from './SplashScreen.svelte';
-  import { audioEngineStatus } from '../stores/common.js';
+  import {
+    unsupportedBrowser,
+    audioEngineStatus
+  } from '../stores/common.js';
+
 
 
   let audioEngine;
-  // Need a dynamic import to prevent the AudioWorkletNode inside the audioEngine module from loading [Safari fix]
+
   ( async () => {
-    import('../audioEngine/audioEngine.js')
-      .then( module => {
-        audioEngine = new module.AudioEngine()
-      })
-      .catch( err => console.error('import') );      
+
+    // Detect Firefox early otherwise audio engine needs to be initialised for a fail to be detected [Firefox fix]
+    if( /firefox/i.test(navigator.userAgent) ) $unsupportedBrowser = true
+    else{
+      // Need a dynamic import to prevent the AudioWorkletNode inside the audioEngine module from loading [Safari fix]
+      import('../audioEngine/audioEngine.js')
+        .then( module => {
+          audioEngine = new module.AudioEngine()
+        })
+        .catch( err => $unsupportedBrowser = true );     
+    } 
   })();
 
 	import { environment } from "../utils/history.js";
