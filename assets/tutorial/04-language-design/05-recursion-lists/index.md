@@ -53,10 +53,11 @@ You could look at the trees that these code snippets create, using the *live cod
 # drone++
 # Lexer [or tokenizer] definition with language lexemes [or tokens]
 @{%
-    const lexer = moo.compile({
-        // Write the Regular Expressions for your tokens here  
-        number: /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?\b/        
-    });
+  const lexer = moo.compile({
+    // Write the Regular Expressions for your tokens here
+    number: /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?\b/,
+    ws: { match: /\s+/, lineBreaks: true }
+  });
 %}
 
 # Pass your lexer object using the @lexer option
@@ -76,30 +77,27 @@ Statement -> %number
         '@params': [{        
           '@sigp': {
             '@params': [{
-                '@num': { value: 100 }
-              }
-            ],
+              '@num': { value: 100 }
+            }],
             '@func': { value: "saw"  }
           }
         }],
-        '@func' : {value: "dac"}
+        '@func' : { value: "dac" }
       }
     }
   }]
 %}
 
-
-
 # Whitespace
-_  -> wschar:* {%  d => null%}
-__ -> wschar:+ {% d=> null%}
+_  -> wschar:* {% d => null %}
+__ -> wschar:+ {% d => null %}
 wschar -> %ws {% id %}
 ```
 
 This is the first step in making our language.  Points to note in this language:
 
 1. the number token in the lexer.  This looks complicated!  It's a *regex* to match numbers. It will match whole numbers and floating point numbers.
-2. The tree which ```Statement``` translates into.  This creates a saw wave which is sent through an audio output.
+2. The tree which `Statement` translates into.  This creates a saw wave which is sent through an audio output.
 
 To use this language, type in any number and evaluate it. Try typing in something that's not a number - you'll get an error. Whatever number you type, it will play a 100Hz saw wave. The next step then is clear...
 
@@ -111,10 +109,11 @@ Firstly, we can express the grammar in a slightly longer form, but which will be
 # drone++
 # Lexer [or tokenizer] definition with language lexemes [or tokens]
 @{%
-    const lexer = moo.compile({
-        // Write the Regular Expressions for your tokens here  
-        number: /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?\b/        
-    });
+  const lexer = moo.compile({
+    // Write the Regular Expressions for your tokens here  
+    number: /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?\b/,
+    ws: { match: /\s+/, lineBreaks: true }     
+  });
 %}
 
 # Pass your lexer object using the @lexer option
@@ -129,42 +128,48 @@ main -> _ Statement _
 Statement -> %number
 {%
   function(d){
-		let sawosc =
-		{'@sigp': {
-		'@params': [{'@num': { value: 100 }}],
-		'@func': { value: "saw"  }
-		}};
+    let sawosc =
+      {'@sigp': {
+        '@params': [{
+          '@num': { value: 100 }}],
+        '@func': { value: "saw"  }
+      }};
 
-		let tree = [{
-		'@spawn': {
-			'@sigp': {
-				'@params': [sawosc],
-				'@func' : {value: "dac"}}}
-			}];
-		return tree;
-	}
+    let tree = [{
+      '@spawn': {
+        '@sigp': {
+          '@params': [ sawosc ],
+          '@func' : {value: "dac"}}}
+    }];
+    return tree;
+  }
 %}
 
 
 
 # Whitespace
-_  -> wschar:* {%  d => null%}
-__ -> wschar:+ {% d=> null%}
+_  -> wschar:* {% d => null %}
+__ -> wschar:+ {% d => null %}
 wschar -> %ws {% id %}
 ```
 
 Here, the structure for the saw oscillator is separated from the rest of the tree structure,  put into the variable sawosc, and then integrated into the main tree in the ```@params``` object in the ```dac``` structure.  This code uses the slightly longer format of a full javascript function.
 
-It might be useful to review at this point - we're specifying a simple language that recognises a single number, and then converting that number into a structure that will tell Sema to make a saw wave oscillator. Now we want to vary the frequency of the saw wave.  When the rule ```Statement -> %number``` is parsed, we receive the data in the variable ```d```, passed into our function that is processing the rule.  The rule has a single element, ```%number```, so it's contents will be contained in the first element: ```d[0]```.
+It might be useful to review at this point - we're specifying a simple language that recognises a single number, and then converting that number into a structure that will tell Sema to make a saw wave oscillator. 
+
+Now we want to vary the frequency of the saw wave.  When the rule ```Statement -> %number``` is parsed, we receive the data in the variable ```d```, passed into our function that is processing the rule.  The rule has a single element, ```%number```, so it's contents will be contained in the first element: ```d[0]```.
 
 We can use this number to control the frequency of the saw wave by modifying the ```sawosc``` object:
 
 ```
 let sawosc =
-{'@sigp': {
-'@params': [{'@num': { value: d[0].value }}],
-'@func': { value: "saw"  }
-}};
+  {
+    '@sigp': {
+      '@params': [{
+        '@num': { value: d[0].value }
+      }],
+      '@func': { value: "saw"  }
+  }};
 ```
 
 so now, the whole code looks like this
@@ -172,10 +177,11 @@ so now, the whole code looks like this
 # drone++
 # Lexer [or tokenizer] definition with language lexemes [or tokens]
 @{%
-    const lexer = moo.compile({
-        // Write the Regular Expressions for your tokens here  
-        number: /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?\b/        
-    });
+  const lexer = moo.compile({
+    // Write the Regular Expressions for your tokens here  
+    number: /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?\b/,
+    ws: { match: /\s+/, lineBreaks: true }        
+  });
 %}
 
 # Pass your lexer object using the @lexer option
@@ -190,20 +196,21 @@ main -> _ Statement _
 Statement -> %number
 {%
   function(d){
-        let sawosc =
-        {'@sigp': {
-        '@params': [{'@num': { value: d[0].value }}],
+    let sawosc =
+      {'@sigp': {
+        '@params': [{
+          '@num': { value: d[0].value }}],
         '@func': { value: "saw"  }
-        }};
-
-        let tree = [{
-        '@spawn': {
-            '@sigp': {
-                '@params': [sawosc],
-                '@func' : {value: "dac"}}}
-            }];
-        return tree;
-    }
+      }};
+    let tree = [{
+    '@spawn': {
+      '@sigp': {
+        '@params': [ sawosc ],
+        '@func' : { value: "dac" }
+      }}
+    }];
+    return tree;
+  }
 %}
 
 # Whitespace
@@ -229,18 +236,19 @@ Two numbers separated by a comma.
 We need to define a separator - by adding it to the lexer
 ```
 @{%
-    const lexer = moo.compile({
-        // Write the Regular Expressions for your tokens here  
-        number: /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?\b/,
-				separator: /,/
-    });
+  const lexer = moo.compile({
+    // Write the Regular Expressions for your tokens here  
+    number: /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?\b/,
+    separator: /,/,
+    ws: { match: /\s+/, lineBreaks: true }
+  });
 %}
 ```
 
 A new rule for statement:
-```
+`
 Statement -> %number %separator %number
-```
+`
 
 And an expanded function, for turning this rule into the IR format - this is the complete grammar:
 
@@ -248,11 +256,12 @@ And an expanded function, for turning this rule into the IR format - this is the
 # drone++
 # Lexer [or tokenizer] definition with language lexemes [or tokens]
 @{%
-    const lexer = moo.compile({
-        // Write the Regular Expressions for your tokens here  
-        number: /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?\b/,
-				separator: /,/
-    });
+  const lexer = moo.compile({
+    // Write the Regular Expressions for your tokens here  
+    number: /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?\b/,
+    separator: /,/,
+    ws: { match: /\s+/, lineBreaks: true }
+  });
 %}
 
 # Pass your lexer object using the @lexer option
@@ -267,32 +276,36 @@ main -> _ Statement _
 Statement -> %number %separator %number
 {%
   function(d){
-        let sawosc =
-        {'@sigp': {
-        '@params': [{'@num': { value: d[0].value }}],
+    let sawosc = {
+      '@sigp': {
+        '@params': [{
+          '@num': { value: d[0].value }
+        }],
         '@func': { value: "saw"  }
-        }};
+      }};
 
-        let sawosc2 =
-        {'@sigp': {
-        '@params': [{'@num': { value: d[2].value }}],
+    let sawosc2 = {
+      '@sigp': {
+        '@params': [{
+          '@num': { value: d[2].value }
+        }],
         '@func': { value: "saw"  }
-        }};
+    }};
 
-        let mixer =
-        {'@sigp': {
-        '@params': [sawosc, sawosc2],
+    let mixer = {
+      '@sigp': {
+        '@params': [ sawosc, sawosc2 ],
         '@func': { value: "mix"  }
-        }};
+    }};
 
-        let tree = [{
-        '@spawn': {
-            '@sigp': {
-                '@params': [mixer],
-                '@func' : {value: "dac"}}}
-            }];
-        return tree;
-    }
+    let tree = [{
+      '@spawn': {
+        '@sigp': {
+          '@params': [ mixer ],
+          '@func' : {value: "dac"}}}
+        }];
+      return tree;
+  }
 %}
 
 
@@ -314,11 +327,12 @@ This language is fixed to two oscillators.  We could go on adding oscillators to
 # drone++
 # Lexer [or tokenizer] definition with language lexemes [or tokens]
 @{%
-    const lexer = moo.compile({
-        // Write the Regular Expressions for your tokens here  
-        number: /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?\b/,
-                separator: /,/
-    });
+  const lexer = moo.compile({
+    // Write the Regular Expressions for your tokens here  
+    number: /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?\b/,
+    separator: /,/,
+    ws: { match: /\s+/, lineBreaks: true } 
+  });
 %}
 
 # Pass your lexer object using the @lexer option
@@ -333,46 +347,47 @@ main -> _ Statement _
 Statement -> OscillatorList
 {%
   function(d){
-        let mixer =
-        {'@sigp': {
+    let mixer = {
+      '@sigp': {
         '@params': d[0],
         '@func': { value: "mix"  }
-        }};
+      }};
 
-        let tree = [{
-        '@spawn': {
-            '@sigp': {
-                '@params': [mixer],
-                '@func' : {value: "dac"}}}
-            }];
-        return tree;
-    }
+    let tree = [{
+    '@spawn': {
+      '@sigp': {
+        '@params': [ mixer ],
+        '@func' : {value: "dac"}}}
+      }];
+    return tree;
+  }
 %}
 
 
 OscillatorList ->
-Oscillator
-{% d => [d[0]] %}
-|
-Oscillator _ %separator _ OscillatorList
-{% d => d[4].concat(d[0]) %}
+  Oscillator
+  {% d => [d[0]] %}
+  |
+  Oscillator _ %separator _ OscillatorList
+  {% d => d[4].concat(d[0]) %}
 
 
 Oscillator -> %number
 {%
   function(d){
-		let sawosc =
-		{'@sigp': {
-		'@params': [{'@num': { value: d[0].value }}],
-		'@func': { value: "saw"  }
-		}};
-		return sawosc;
-    }
+    let sawosc = {
+      '@sigp': {
+        '@params': [{
+          '@num': { value: d[0].value }}],
+        '@func': { value: "saw" }
+      }};
+    return sawosc;
+  }
 %}
 
 # Whitespace
-_  -> wschar:* {%  d => null%}
-__ -> wschar:+ {% d=> null%}
+_  -> wschar:* {% d => null %}
+__ -> wschar:+ {% d => null %}
 wschar -> %ws {% id %}
 ```
 Firstly, try livecoding this language. Now you can make a list of frequencies that is as long as you wish, and they will play as saw oscillators. e.g.
@@ -387,20 +402,21 @@ Let's look at some individual parts so we can try and understand how we got from
 Statement -> OscillatorList
 {%
   function(d){
-        let mixer =
-        {'@sigp': {
+    let mixer = {
+      '@sigp': {
         '@params': d[0],
         '@func': { value: "mix"  }
-        }};
+      }};
 
-        let tree = [{
-        '@spawn': {
-            '@sigp': {
-                '@params': [mixer],
-                '@func' : {value: "dac"}}}
-            }];
-        return tree;
-    }
+    let tree = [{
+      '@spawn': {
+        '@sigp': {
+          '@params': [mixer],
+          '@func' : {value: "dac"}}}
+    }];
+
+    return tree;
+  }
 %}
 ```
 
@@ -412,13 +428,13 @@ Towards the end of the code, we have a rule for defining an oscillator:
 Oscillator -> %number
 {%
   function(d){
-		let sawosc =
-		{'@sigp': {
-		'@params': [{'@num': { value: d[0].value }}],
-		'@func': { value: "saw"  }
+    let sawosc = {
+      '@sigp': {
+        '@params': [{'@num': { value: d[0].value }}],
+      '@func': { value: "saw" }
 		}};
 		return sawosc;
-    }
+  }
 %}
 ```
 
@@ -426,25 +442,27 @@ Like in the previous example, we take a number and turn it onto an oscillator st
 
 ```
 OscillatorList ->
-Oscillator
-{% d => [d[0]] %}
-|
-Oscillator _ %separator _ OscillatorList
-{% d => d[4].concat(d[0]) %}
+  Oscillator
+  {% d => [d[0]] %}
+  |
+  Oscillator _ %separator _ OscillatorList
+  {% d => d[4].concat(d[0]) %}
 ```
 
 The function of this rule is to collect one or more of the oscillators and compile them into a list, which will get sent to the mixer.  Let's look at this first without the data conversion functions.
 
 ```
 OscillatorList ->
-Oscillator
-|
-Oscillator _ %separator _ OscillatorList
+  Oscillator
+  |
+  Oscillator _ %separator _ OscillatorList
 ```
 
-This is the recursive rule. Generally, we use grammar rules to tell the parser about the structures it expects to find in our language, so that it can match to them, and turn them into the tree structure that Sema can understand.  In this case we have a structure: ```OscillatorList``` which can either be a single ```Oscillator```, or an ```Oscillator``` followed by more oscillators. It's recursive because the pattern contains itself. It is repeatedly applied to a list of ```Oscillator``` elements until it has processed them all.  This means that it can match to as many ```Oscillator``` elements as there are present in the code.
+This is the recursive rule. Generally, we use grammar rules to tell the parser about the structures it expects to find in our language, so that it can match to them, and turn them into the tree structure that Sema can understand.  In this case we have a structure: ```OscillatorList``` which can either be a single ```Oscillator```, or an ```Oscillator``` followed by more oscillators. 
 
-You can look at this another way,  thinking about how this rule has a fixed part and a recursive part.  The recursive part is applied repeatedly to the list until there is only one element left to process, in which case it matches the fixed part of the rule and completes.
+It's a recursive pattern because it contains itself. It is repeatedly applied to a list of ```Oscillator``` elements until it has processed them all.  This means that it can match to as many ```Oscillator``` elements as there are present in the code.
+
+You can look at this another way, thinking about how this rule has a fixed part and a recursive part.  The recursive part is applied repeatedly to the list until there is only one element left to process, in which case it matches the fixed part of the rule and completes.
 
 How about the data conversion functions? The first element is this:
 
@@ -486,7 +504,8 @@ t100,t120,s50
         number: /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?\b/,
         separator: /,/,
 				saw: /s/,
-				tri: /t/
+				tri: /t/,
+        ws: { match: /\s+/, lineBreaks: true } 
     });
 %}
 
@@ -502,48 +521,53 @@ main -> _ Statement _
 Statement -> OscillatorList
 {%
   function(d){
-        let mixer =
-        {'@sigp': {
+    let mixer = {
+      '@sigp': {
         '@params': d[0],
-        '@func': { value: "mix"  }
-        }};
-
-        let tree = [{
-        '@spawn': {
-            '@sigp': {
-                '@params': [mixer],
-                '@func' : {value: "dac"}}}
-            }];
-        return tree;
-    }
+      '@func': { value: "mix"  }
+    }};
+    let tree = [{
+    '@spawn': {
+      '@sigp': {
+        '@params': [mixer],
+        '@func' : {value: "dac"}}}
+    }];
+    return tree;
+  }
 %}
 
 
 OscillatorList ->
-Oscillator
-{% d => [d[0]] %}
-|
-Oscillator _ %separator _ OscillatorList
-{% d => d[4].concat(d[0]) %}
+  Oscillator
+  {% d => [d[0]] %}
+  |
+  Oscillator _ %separator _ OscillatorList
+  {% d => d[4].concat(d[0]) %}
 
 
 Oscillator -> OscillatorType %number
 {%
   function(d){
-        let sawosc =
-        {'@sigp': {
-        '@params': [{'@num': { value: d[1].value }}],
-        '@func': { value: d[0]  }
+    let sawosc = {
+      '@sigp': {
+        '@params': [{
+          '@num': { value: d[1].value }}],
+          '@func': { value: d[0]  }
         }};
-        return sawosc;
-    }
+    return sawosc;
+  }
 %}
 
-OscillatorType -> %saw {%d=>'saw'%}| %tri {%d=>'tri'%}
+OscillatorType -> 
+  %saw 
+  {% d => 'saw' %}
+  | 
+  %tri 
+  {%d => 'tri' %}
 
 # Whitespace
-_  -> wschar:* {%  d => null%}
-__ -> wschar:+ {% d=> null%}
+_  -> wschar:* {% d => null%}
+__ -> wschar:+ {% d => null%}
 wschar -> %ws {% id %}
 ```
 
@@ -559,12 +583,13 @@ This variation adds a high pass filter to any oscillator with an 'f' in front of
 # drone++
 # Lexer [or tokenizer] definition with language lexemes [or tokens]
 @{%
-    const lexer = moo.compile({
-        // Write the Regular Expressions for your tokens here  
-        number: /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?\b/,
-                separator: /,/,
-				filter: /f/
-    });
+  const lexer = moo.compile({
+    // Write the Regular Expressions for your tokens here  
+    number: /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?\b/,
+    separator: /,/,
+    filter: /f/,
+    ws: { match: /\s+/, lineBreaks: true }  
+  });
 %}
 
 # Pass your lexer object using the @lexer option
@@ -579,20 +604,21 @@ main -> _ Statement _
 Statement -> OscillatorList
 {%
   function(d){
-        let mixer =
-        {'@sigp': {
+    let mixer = {
+      '@sigp': {
         '@params': d[0],
         '@func': { value: "mix"  }
-        }};
-
-        let tree = [{
-        '@spawn': {
-            '@sigp': {
-                '@params': [mixer],
-                '@func' : {value: "dac"}}}
-            }];
-        return tree;
+    }};
+    
+  let tree = [{
+    '@spawn': {
+      '@sigp': {
+        '@params': [mixer],
+        '@func' : {value: "dac"}}
     }
+  }];
+  return tree;
+  }
 %}
 
 
@@ -607,28 +633,36 @@ Oscillator _ %separator _ OscillatorList
 Oscillator -> %filter:? %number
 {%
   function(d){
-
-        let tree =
-        {'@sigp': {
-        '@params': [{'@num': { value: d[1].value }}],
+    let tree = {
+      '@sigp': {
+        '@params': [{
+          '@num': { value: d[1].value }
+        }],
         '@func': { value: "saw"  }
-        }};
+      }
+    };
 
-				if (d[0] != null) {
-					tree =
-						{'@sigp': {
-						'@params': [tree, {'@num': { value: 500}}, {'@num': { value: 2}}],
-						'@func': { value: 'hpz'  }
-						}};
-				}
-        return tree;
+    if (d[0] != null) {
+      tree = {
+        '@sigp': {
+    	    '@params': [
+            tree, {
+              '@num': { value: 500}
+            },{
+              '@num': { value: 2}
+          }],
+    	    '@func': { value: 'hpz' }
+        }
+      };
     }
+    return tree;
+  }
 %}
 
 
 
 # Whitespace
-_  -> wschar:* {%  d => null%}
-__ -> wschar:+ {% d=> null%}
+_  -> wschar:* {% d => null %}
+__ -> wschar:+ {% d => null %}
 wschar -> %ws {% id %}
 ```

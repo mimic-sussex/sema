@@ -2,10 +2,9 @@
 
 # Lexer [or tokenizer] definition with language lexemes [or tokens]
 @{%
-	
-	// write the Regular Expressions for your tokens here 
 	const lexer = moo.compile({ 
-		
+    	// write the Regular Expressions for your tokens here 
+
 	});
 
 %}
@@ -14,15 +13,15 @@
 @lexer lexer
 
 # Grammar definition in the Extended Backus Naur Form (EBNF)
-# main -> _ Statement _
+main -> _
 
 # Whitespace
 
 _  -> wschar:*
-{% function(d) {return null;} %}
+{% function(d) { return null; } %}
 
 __ -> wschar:+
-{% function(d) {return null;} %}
+{% function(d) { return null; } %}
 
 wschar -> %ws
 {% id %}

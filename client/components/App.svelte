@@ -2,9 +2,28 @@
 	import { onDestroy } from 'svelte';
 
   import SplashScreen from './SplashScreen.svelte';
-  import { audioEngineStatus } from '../stores/common.js';
+  import {
+    unsupportedBrowser,
+    audioEngineStatus
+  } from '../stores/common.js';
 
-  import { AudioEngine } from '../audioEngine/audioEngine.js';
+
+
+  let audioEngine;
+
+  ( async () => {
+
+    // Detect Firefox early otherwise audio engine needs to be initialised for a fail to be detected [Firefox fix]
+    if( /firefox/i.test(navigator.userAgent) ) $unsupportedBrowser = true
+    else{
+      // Need a dynamic import to prevent the AudioWorkletNode inside the audioEngine module from loading [Safari fix]
+      import('../audioEngine/audioEngine.js')
+        .then( module => {
+          audioEngine = new module.AudioEngine()
+        })
+        .catch( err => $unsupportedBrowser = true );     
+    } 
+  })();
 
 	import { environment } from "../utils/history.js";
 
@@ -16,8 +35,6 @@
   import { PubSub } from '../messaging/pubSub.js';
 
   let messaging = new PubSub();
-
-  let audioEngine = new AudioEngine();
 
   const unsubscribe = audioEngineStatus.subscribe( value => {
     if(value === 'running') audioEngine.init(1);

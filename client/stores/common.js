@@ -18,7 +18,8 @@ import gridHelp from "svelte-grid/build/helper/index.mjs";
 
 
 export const audioEngineStatus = writable('stopped');
-
+export const unsupportedBrowser = writable(false);
+;
 // function persist(key, value) {
 // 	sessionStorage.setItem(key, JSON.stringify(value));
 // }

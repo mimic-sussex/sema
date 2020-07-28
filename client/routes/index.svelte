@@ -15,6 +15,11 @@
   } from '../stores/tutorial.js'
 
   import {
+    unsupportedBrowser
+  } from '../stores/common.js';
+
+
+  import {
     currentUser
   } from '../stores/user.js'
 
@@ -119,14 +124,17 @@
       <!-- <figcaption>Sema Logo</figcaption> -->
     </figure>
   </div>
-  
-  <div class='login'>
 
-    <!-- <button class='sign-in-guest-button' 
-            on:click={ handleClick } 
-            > Sign in as Guest </button>  -->
-  
+  {#if !$unsupportedBrowser}
+  <div class='login'>
     <SignIn />
-  
   </div>
+  {:else}
+  <div class='login'>
+    <p><strong style="font-size:150%; color: white; margin:15px 0 10px 5px">Sorry, this browser does not work for Sema...</strong></p>
+    <p><strong style="color: white; margin:15px 0 10px 5px">Sema requires a Chromium-based browser as it uses the latest Web Audio API technology</strong></p>
+    <p><strong style="color: white; margin:15px 0 10px 5px">(we recommend Chrome, but also possible are Brave, Microsoft Edge, Opera, Vivaldi)</strong></p>
+    
+  </div>
+  {/if}
 </div>
