@@ -113,16 +113,17 @@
 
 <style>
   .container {
-  	height: 100%;
+  	height: 100vh;
   	display: grid;
   	grid-template-columns: auto 1fr;
-  	grid-template-rows: 100%;
+  	/* grid-template-rows: 100%; */
   	grid-template-areas:
   		"sidebar layout";
   		/* "sidebar layout"; */
   	/* background-color: #6f7262; */
 	  background-color: #212121;
     overflow: hidden;
+    /* position: absolute; */
     background: linear-gradient(150deg, rgba(0,18,1,1) 0%, rgba(7,5,17,1) 33%, rgba(16,12,12,1) 67%, rgb(12, 12, 12) 100%);
   }
 
@@ -131,9 +132,10 @@
     /* margin-left: 10px; */
     grid-area: sidebar;
     grid-row: 0 / 1;
-    height: 100%;
+    height: 100vh;
     /* width: auto; width is defined by child */
     width: 26em;
+    /* position: absolute; */
     margin-left: 3px;
     margin-right: 2px;
   }
@@ -141,7 +143,8 @@
   .dashboard-container {
     grid-area: layout;
     /* grid-row: 0 / 2; */
-    height: 100%;
+    height: 100vh;
+    /* position: absolute; */
     overflow: hidden;
   }
 
