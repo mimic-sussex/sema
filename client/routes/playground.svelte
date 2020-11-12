@@ -39,7 +39,12 @@
 
   // Playground dashboard configuration
   let cols = 15;
-  let breakpoints = [[1000, 10], [700, 5], [500, 3], [400, 1]];
+  let breakpoints = [
+    [1000, 10], 
+    [700, 5], 
+    [500, 3], 
+    [400, 1]
+  ];
   let rowHeight = 100;
   let gap = 1;
 
@@ -116,7 +121,7 @@
 
         setFocused(newItem);
 
-        let findOutPosition = gridHelp.findSpaceForItem(newItem, $items, cols); // find out where to place
+        let findOutPosition = gridHelp.findSpace(newItem, $items, cols); // find out where to place
         $items =  [...$items, ...[{ ...newItem, ...findOutPosition }]]; // Append to playground Items stores
 
       }

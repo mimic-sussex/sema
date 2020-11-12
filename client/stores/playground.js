@@ -222,6 +222,12 @@ const originalItems = [
 			grammarSource: "/languages/default/grammar.ne",
 			liveCodeSource: "/languages/default/code.sem",
 		},
+		...{
+			breakpoints: {
+				15: { x: 0, y: 0, w: 2, h: 2 },
+				2: { x: 0, y: 0, w: 1, h: 2 },
+			},
+		},
 	},
 
 	{
@@ -235,6 +241,12 @@ const originalItems = [
 			background: "#f0f0f0",
 			component: Analyser,
 			mode: "both",
+		},
+		...{
+			breakpoints: {
+				15: { x: 0, y: 0, w: 2, h: 2 },
+				2: { x: 0, y: 0, w: 1, h: 2 },
+			},
 		},
 	},
 
@@ -250,6 +262,12 @@ const originalItems = [
 			component: ModelEditor,
 			data: hello_world_code_example,
 		},
+		...{
+			breakpoints: {
+				15: { x: 0, y: 0, w: 2, h: 2 },
+				2: { x: 0, y: 0, w: 1, h: 2 },
+			},
+		},
 	},
 
 	{
@@ -263,6 +281,12 @@ const originalItems = [
 			background: "#ebdeff",
 			component: LiveCodeParseOutput,
 			data: "",
+		},
+		...{
+			breakpoints: {
+				15: { x: 0, y: 0, w: 2, h: 2 },
+				// 2: { x: 0, y: 0, w: 1, h: 2 },
+			},
 		},
 	},
 
@@ -279,6 +303,11 @@ const originalItems = [
 			data: default_grammar,
 			// data: "",
 			grammarSource: "/languages/default/grammar.ne",
+		},
+		...{
+			breakpoints: {
+				15: { x: 0, y: 0, w: 2, h: 2 },
+			},
 		},
 	},
 
@@ -308,6 +337,11 @@ const originalItems = [
 			component: GrammarCompileOutput,
 			data: "",
 		},
+		...{
+			breakpoints: {
+				15: { x: 0, y: 0, w: 2, h: 2 },
+			},
+		},
 	},
 ];
 
@@ -326,6 +360,12 @@ const testItems = [
 			data: "#lc-1",
 			grammarSource: "/languages/defaultGrammar.ne",
 		},
+		...{
+			breakpoints: {
+				15: { x: 0, y: 0, w: 2, h: 2 },
+				// 2: { x: 0, y: 0, w: 1, h: 2 },
+			},
+		},
 	},
 
 	{
@@ -339,6 +379,12 @@ const testItems = [
 			background: "#AAAAAA",
 			component: GrammarEditor,
 			data: "#g-1",
+		},
+		...{
+			breakpoints: {
+				15: { x: 0, y: 0, w: 2, h: 2 },
+				2: { x: 0, y: 0, w: 1, h: 2 },
+			},
 		},
 	},
 
@@ -354,6 +400,12 @@ const testItems = [
 			component: ModelEditor,
 			data: "//m-1\nsema.env.saveLocal('1')",
 		},
+		...{
+			breakpoints: {
+				15: { x: 0, y: 0, w: 2, h: 2 },
+				// 2: { x: 0, y: 0, w: 1, h: 2 },
+			},
+		},
 	},
 
 	{
@@ -368,6 +420,12 @@ const testItems = [
 			component: Analyser,
 			mode: "spectrogram",
 			data: "1",
+		},
+		...{
+			breakpoints: {
+				15: { x: 0, y: 0, w: 2, h: 2 },
+				// 2: { x: 0, y: 0, w: 1, h: 2 },
+			},
 		},
 	},
 ];
@@ -392,6 +450,12 @@ export let createRandomItem = (type) => {
 			theme: "monokai",
 			data: "value",
 		}),
+		...{
+			breakpoints: {
+				15: { x: 0, y: 0, w: 2, h: 2 },
+				// 2: { x: 0, y: 0, w: 1, h: 2 },
+			},
+		},
 	};
 
 	return item;
