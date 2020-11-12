@@ -49,7 +49,7 @@ var jsFuncMap = {
 		setup: (o, p) => `${o} = new Maximilian.maxiOsc();
                       ${o}.phaseReset(${p.length > 1 ? p[1].loop : 0.0});`,
 		loop:  (o, p) => `${o}.sawn(${p[0].loop})`
-	},
+  },
 	noiz: {
 		setup: (o, p) => `${o} = new Maximilian.maxiOsc()`,
 		loop:  (o, p) => `${o}.noise()*${p[0].loop}`
