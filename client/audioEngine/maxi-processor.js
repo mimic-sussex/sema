@@ -243,6 +243,75 @@ function mtof(midinote) {
   return Math.pow(2, (midinote - 69) / 12) * 440.0;
 }
 
+class Clock {
+  
+  constructor() {
+		// this.tempo = 120.0; // tempo (in beats per minute);
+		// this.secondsPerBeat = 60.0 / this.tempo;
+		// this.counterTimeValue = this.secondsPerBeat / 4; //___16th note
+
+		this.clockPhaseSharingInterval = 0; //counter for emiting clock phase over the network
+		this.bpm = 120;
+		this.beatsPerBar = 4;
+		this.maxTimeLength = sampleRate * 60 * 60 * 24; //24 hours
+
+		this.update();
+	}
+
+	update() {
+		this.beatLengthInSamples = (60 / this.bpm) * sampleRate;
+		this.barPhaseMultiplier =
+			this.maxTimeLength / this.beatLengthInSamples / this.beatsPerBar;
+
+		console.log(
+			"CLOCK: ",
+			this.barPhaseMultiplier,
+			this.maxTimeLength,
+			this.beatsPerBar
+		);
+	};
+
+	setBPM = (bpm) => {
+		if (this.bpm != bpm) {
+			this.bpm = bpm;
+			this.clockUpdate();
+		}
+		return 0;
+	};
+
+	setBeatsPerBar = (bpb) => {
+		if (this.beatsPerBar != bpb) {
+			this.beatsPerBar = bpb;
+			this.clockUpdate();
+		}
+		return 0;
+	};
+
+	//@CLP
+	//phasor over one bar length
+	clockPhase = (multiples, phase) => {
+		return (
+			(((this.clockPhasor * this.barPhaseMultiplier * multiples) % 1.0) +
+				phase) %
+			1.0
+		);
+	};
+
+	//@CLT
+	clockTrig = (multiples, phase) => {
+		let clphase = this.clockPhase(multiples, phase);
+		return clphase - (1.0 / sampleRate) * multiples <= 0 ? 1 : 0;
+	};
+
+	createMLOutputTransducer = (sendFrequency) => {
+		return new OutputTransducer(this.port, sampleRate, sendFrequency, "ML");
+	};
+
+	createNetOutputTransducer = (sendFrequency) => {
+		return new OutputTransducer(this.port, sampleRate, sendFrequency, "NET");
+	};
+}
+
 /**
  * The main Maxi Audio wrapper with a WASM-powered AudioWorkletProcessor.
  *
@@ -254,125 +323,121 @@ class MaxiProcessor extends AudioWorkletProcessor {
    * @constructor
    */
   constructor() {
-    super();
-    // console.log("TEST", Maximilian.maxiMap.linlin(0.5,0,1,10,50));
-    // let temp = new Maximilian.maxiNonlinearity();
-    // console.log("TEST2", temp.asymclip(0.9,3,3));
+		super();
+		// console.log("TEST", Maximilian.maxiMap.linlin(0.5,0,1,10,50));
+		// let temp = new Maximilian.maxiNonlinearity();
+		// console.log("TEST2", temp.asymclip(0.9,3,3));
 
-    // let q1 = Maximilian.maxiBits.sig(63);
+		// let q1 = Maximilian.maxiBits.sig(63);
 
-    // this.sampleRate = 44100;
-    console.log("SAMPLERATE", sampleRate);
-    //indicate audio settings in WASM and JS domains
-    // console.log();
-    Maximilian.maxiSettings.setup(sampleRate, 1, 512);
-    Maximilian.maxiJSSettings.setup(sampleRate, 1, 512);
+		// this.sampleRate = 44100;
+		console.log("SAMPLERATE", sampleRate);
+		//indicate audio settings in WASM and JS domains
+		// console.log();
+		Maximilian.maxiSettings.setup(sampleRate, 1, 512);
+		Maximilian.maxiJSSettings.setup(sampleRate, 1, 512);
 
-    //we don't know the number of channels at this stage, so reserve lots for the DAC
-    this.DAC = [];
-    this.DACChannelsInitalised = false;
+		//we don't know the number of channels at this stage, so reserve lots for the DAC
+		this.DAC = [];
+		this.DACChannelsInitalised = false;
 
-    this.tempo = 120.0; // tempo (in beats per minute);
-    this.secondsPerBeat = 60.0 / this.tempo;
-    this.counterTimeValue = this.secondsPerBeat / 4; //___16th note
+		// this.oldClock = 0;
+		// this.phase = 0;
 
-    // this.oldClock = 0;
-    // this.phase = 0;
+		this.numPeers = 1;
 
-    this.numPeers = 1;
+		this.initialised = false;
 
-    this.clock = new Maximilian.maxiOsc();
-    this.currentSample = 0;
+		this._q = [this.newq(), this.newq()];
+		this._mems = [this.newmem(), this.newmem()];
+		this._cleanup = [0, 0];
 
-    this.initialised = false;
+		this.signals = [this.silence, this.silence];
+		this.currentSignalFunction = 0;
+		this.xfadeControl = new Maximilian.maxiLine();
 
+		this.OSCMessages = {};
 
-    this._q = [this.newq(), this.newq()];
-    this._mems = [this.newmem(), this.newmem()];
-    this._cleanup = [0, 0];
+		this.incoming = {};
 
-    this.signals = [this.silence, this.silence];
-    this.currentSignalFunction = 0;
-    this.xfadeControl = new Maximilian.maxiLine();
+		this.currentSample = 0;
+		this.sampleBuffers = {};
+		this.sampleVectorBuffers = {};
+		this.sampleVectorBuffers["defaultEmptyBuffer"] = new Float32Array(1);
 
-    this.OSCMessages = {};
+		this.transducers = [];
 
-    this.incoming = {};
+		//DEPRECATED - things that used this need updating to the new SAB system
+		// this.matchTransducers = (ttype, channel) => {
+		//   return this.transducers.filter(x => {
+		//     let testEqChannels = (chID, channel) => {
+		//       let eq = true;
+		//       let keys = Object.keys(channel);
+		//       if (keys.length == 0) {
+		//         eq = channel == chID;
+		//       } else {
+		//         for (let v in keys) {
+		//           if (chID[v] != undefined) {
+		//             if (chID[v] != channel[v]) {
+		//               eq = false;
+		//               break;
+		//             }
+		//           } else {
+		//             eq = false;
+		//             break;
+		//           }
+		//         }
+		//       }
+		//       return eq;
+		//     }
+		//     return x.transducerType == ttype && testEqChannels(x.channelID, channel);
+		//   });
+		// }
 
-    this.sampleBuffers = {};
-    this.sampleVectorBuffers = {};
-    this.sampleVectorBuffers["defaultEmptyBuffer"] = new Float32Array(1);
+		// this.registerInputTransducer = (ttype, channelID) => {
+		//   let transducer = new InputTransducer(ttype, channelID);
+		//   let existingTransducers = this.matchTransducers(ttype, channelID);
+		//   if (existingTransducers.length > 0) {
+		//     transducer.setValue(existingTransducers[0].getValue());
+		//   }
+		//   this.transducers.push(transducer);
+		//   // console.log(this.transducers);
+		//   return transducer;
+		// };
 
-    this.transducers = [];
+		this.netClock = new Maximilian.maxiAsyncKuramotoOscillator(3); //TODO: this should be the same as numpeers
+		this.kuraPhase = -1;
+		this.kuraPhaseIdx = 1;
 
-    //DEPRECATED - things that used this need updating to the new SAB system
-    // this.matchTransducers = (ttype, channel) => {
-    //   return this.transducers.filter(x => {
-    //     let testEqChannels = (chID, channel) => {
-    //       let eq = true;
-    //       let keys = Object.keys(channel);
-    //       if (keys.length == 0) {
-    //         eq = channel == chID;
-    //       } else {
-    //         for (let v in keys) {
-    //           if (chID[v] != undefined) {
-    //             if (chID[v] != channel[v]) {
-    //               eq = false;
-    //               break;
-    //             }
-    //           } else {
-    //             eq = false;
-    //             break;
-    //           }
-    //         }
-    //       }
-    //       return eq;
-    //     }
-    //     return x.transducerType == ttype && testEqChannels(x.channelID, channel);
-    //   });
-    // }
+		this.codeSwapStates = {
+			QUEUD: 0,
+			XFADING: 1,
+			NONE: 2,
+		};
+		this.codeSwapState = this.codeSwapStates.NONE;
 
-    // this.registerInputTransducer = (ttype, channelID) => {
-    //   let transducer = new InputTransducer(ttype, channelID);
-    //   let existingTransducers = this.matchTransducers(ttype, channelID);
-    //   if (existingTransducers.length > 0) {
-    //     transducer.setValue(existingTransducers[0].getValue());
-    //   }
-    //   this.transducers.push(transducer);
-    //   // console.log(this.transducers);
-    //   return transducer;
-    // };
+		this.port.onmessage = this.onAudioWorkletNodeMessageEventHandler;
 
+		this.port.postMessage("giveMeSomeSamples");
 
+		// CLOCK VARIABLES
 
-    this.netClock = new Maximilian.maxiAsyncKuramotoOscillator(3); //TODO: this should be the same as numpeers
-    this.kuraPhase = -1;
-    this.kuraPhaseIdx = 1;
-
-    this.codeSwapStates = {
-      QUEUD: 0,
-      XFADING: 1,
-      NONE: 2,
-    };
-    this.codeSwapState = this.codeSwapStates.NONE;
-
-    this.port.onmessage = this.onAudioWorkletNodeMessageEventHandler;
-
-    this.port.postMessage("giveMeSomeSamples");
-
-    // CLOCK VARIABLES
+		// this.clock = new Maximilian.maxiOsc();
+		// this.tempo = 120.0; // tempo (in beats per minute);
+		// this.secondsPerBeat = 60.0 / this.tempo;
+		// this.counterTimeValue = this.secondsPerBeat / 4; //___16th note
     
-    this.clockPhaseSharingInterval = 0; //counter for emiting clock phase over the network
-    this.bpm = 120;
-    this.beatsPerBar = 4;
-    this.maxTimeLength = sampleRate * 60 * 60 * 24; //24 hours
+    this.clockPhasor;
+		this.clockPhaseSharingInterval = 0; //counter for emiting clock phase over the network
+		this.bpm = 120;
+		this.beatsPerBar = 4;
+		this.maxTimeLength = sampleRate * 60 * 60 * 24; //24 hours
+		
+		this.clockUpdate();
 
-    this.clockUpdate();
-
-    this.bitTime = Maximilian.maxiBits.sig(0); //this needs to be decoupled from the audio engine? or not... maybe a 'permenant block' with each grammar?
-    this.dt = 0;
-
-  }
+		this.bitTime = Maximilian.maxiBits.sig(0); //this needs to be decoupled from the audio engine? or not... maybe a 'permenant block' with each grammar?
+		this.dt = 0;
+	}
 
   silence = (q, inputs) => {
     return 0.0;
@@ -657,9 +722,9 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
         // this.netClock.play(this.clockFreq, 100);
 
+
         //this.clockPhasor = this.netClock.getPhase(0) / (2 * Math.PI);
-        this.clockPhasor =
-          (this.currentSample % this.maxTimeLength) / this.maxTimeLength;
+        this.clockPhasor = (this.currentSample % this.maxTimeLength) / this.maxTimeLength;
         this.currentSample++;
 
         //share the clock if networked
