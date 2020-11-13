@@ -144,6 +144,7 @@ var inputSABs = {};
 var outputSABs = {};
 
 class SABOutputTransducer {
+
   constructor(port, bufferType, channel, now, blocksize) {
     this.port = port;
     this.zx = new Maximilian.maxiTrigger();
@@ -196,6 +197,7 @@ class SABOutputTransducer {
 }
 
 class SABInputTransducer {
+
   constructor(id, triggered=0) {
     this.value = 0;
     this.id=id;
@@ -274,37 +276,16 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
 		this.numPeers = 1;
 
-		// this.maxiAudio = new Maximilian.maxiAudio();
 		this.clock = new Maximilian.maxiOsc();
-		// this.kick = new Maximilian.maxiSample();
-		// this.snare = new Maximilian.maxiSample();
-		// this.closed = new Maximilian.maxiSample();
-		// this.open = new Maximilian.maxiSample();
 		this.currentSample = 0;
 
 		this.initialised = false;
 
-		this.newq = () => {
-			return {
-				vars: {},
-			};
-		};
-		this.newmem = () => {
-			return new Array(512);
-		};
+
 		this._q = [this.newq(), this.newq()];
 		this._mems = [this.newmem(), this.newmem()];
 		this._cleanup = [0, 0];
 
-		// this.setvar = (q, name, val) => {
-		//   q.vars[name] = val;
-		//   return val;
-		// };
-		//
-		// this.getvar = (q, name) => {
-		//   let val = q.vars[name];
-		//   return val ? val : 0.0;
-		// };
 
 		this.silence = (q, inputs) => {
 			return 0.0;
@@ -313,14 +294,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
 		this.currentSignalFunction = 0;
 		this.xfadeControl = new Maximilian.maxiLine();
 
-		// this.timer = new Date();
-
 		this.OSCMessages = {};
-
-		this.OSCTransducer = function (x, idx = 0) {
-			let val = this.OSCMessages[x];
-			return val ? (idx >= 0 ? val[idx] : val) : 0.0;
-		};
 
 		this.incoming = {};
 
@@ -383,19 +357,13 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
 		this.port.onmessage = this.onAudioWorkletNodeMessageEventHandler;
     
-    
     this.port.postMessage("giveMeSomeSamples");
 
-		// this.clockFreq = 0.7 / 4;
 		this.clockPhaseSharingInterval = 0; //counter for emiting clock phase over the network
-		// this.barFrequency = 4;
-		// this.setBarFrequency = (freq) => {this.barFrequency = freq; return 0;};
 
 		this.bpm = 120;
 		this.beatsPerBar = 4;
 		this.maxTimeLength = sampleRate * 60 * 60 * 24; //24 hours
-
-
 
 		this.clockUpdate();
 
@@ -404,7 +372,22 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
 	}
 
-	getSampleBuffer = (bufferName) => {
+  newq = () => {
+		return {
+			vars: {},
+		};
+	};
+
+  newmem = () => {
+		return new Array(512);
+	};
+
+  OSCTransducer = function (x, idx = 0) {
+		let val = this.OSCMessages[x];
+		return val ? (idx >= 0 ? val[idx] : val) : 0.0;
+	};
+
+	getSampleBuffer = bufferName => {
 		let sample = this.sampleVectorBuffers["defaultEmptyBuffer"]; //defailt - silence
 		if (bufferName in this.sampleVectorBuffers) {
 			sample = this.sampleVectorBuffers[bufferName];
@@ -426,7 +409,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
 		);
 	};
 
-  setBPM = (bpm) => {
+  setBPM = bpm => {
 		if (this.bpm != bpm) {
 			this.bpm = bpm;
 			this.clockUpdate();
@@ -434,14 +417,13 @@ class MaxiProcessor extends AudioWorkletProcessor {
 		return 0;
 	};
 
-	setBeatsPerBar = (bpb) => {
+	setBeatsPerBar = bpb => {
 		if (this.beatsPerBar != bpb) {
 			this.beatsPerBar = bpb;
 			this.clockUpdate();
 		}
 		return 0;
 	};
-
 
 	//@CLP
 	//phasor over one bar length
