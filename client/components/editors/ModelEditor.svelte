@@ -41,7 +41,7 @@
 	export let theme;
 	export let background;
 	export let data;
-  // export let static; // Error: ParseError: The keyword 'static' is reserved
+  export let fixed;
   export let responsive;
   export let resizable;
   export let resize;
@@ -49,6 +49,7 @@
   export let drag;
   export let min = {};
   export let max = {};
+  export let breakpoints = {};
   export let x;
   export let y;
   export let w;
@@ -67,6 +68,7 @@
   onMount(async () => {
     codeMirror.set(data, "js");
 
+  
     subscriptionTokenMID = messaging.subscribe("model-input-data", e => postToModel(e) );
     subscriptionTokenMIB = messaging.subscribe("model-input-buffer", e => postToModel(e) );
     // subscriptionTokenMODR = messaging.subscribe("model-output-data-request", e => postToModel(e) );
@@ -74,7 +76,7 @@
     modelWorker = new ModelWorker();  // Creates one ModelWorker per ModelEditor lifetime
     modelWorker.onmessage = e =>  onModelWorkerMessageHandler(e);
 
-    log( id, name, type, lineNumbers, hasFocus, theme, background, data, responsive, resizable, resize, draggable, drag, min, max, x, y, w, h, component );
+    log( id, name, type, lineNumbers, hasFocus, theme, background, data, breakpoints, fixed, responsive, resizable, resize, draggable, drag, min, max, x, y, w, h, component );
     // console.log('DEBUG:ModelEditor:onMount:');
     // console.log(data);    // console.log(name + ' ' + type + ' ' + lineNumbers +' ' + hasFocus +' ' + theme + ' ' + background /*+  ' ' + data */ );
 

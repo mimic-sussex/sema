@@ -35,8 +35,8 @@ onmessage = function(message) {
       // parserOutputs = cloneDeep(parser.results);
 			// parserOutputs = parser.results;
 
-      console.log("DEBUG:workerParser:onmessage:parserOut");
-			console.log(parserOutputs);
+      // console.log("DEBUG:workerParser:onmessage:parserOut");
+			// console.log(parserOutputs);
 
     	postMessage({
 				parserOutputs: clone(parser.results),

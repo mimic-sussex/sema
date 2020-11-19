@@ -32,7 +32,7 @@
 	export let theme;
 	export let background;
 	export let data;
-  // export let static; // Error: ParseError: The keyword 'static' is reserved 
+  export let fixed;
   export let responsive;
   export let resizable;
   export let resize;
@@ -40,6 +40,7 @@
   export let drag;
   export let min = {};
   export let max = {};
+  export let breakpoints = {};
   export let x;
   export let y;
   export let w;
@@ -56,7 +57,7 @@
     console.log(data);
     codeMirror.set(data, "ebnf");
 
-    log( id, name, type, lineNumbers, hasFocus, theme, background, data, responsive, resizable, resize, draggable, drag, min, max, x, y, w, h, component );
+    log( id, name, type, lineNumbers, hasFocus, theme, breakpoints, fixed, background, data, responsive, resizable, resize, draggable, drag, min, max, x, y, w, h, component );
 	});
 
   onDestroy(async () => {

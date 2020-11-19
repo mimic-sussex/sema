@@ -224,7 +224,7 @@ const originalItems = [
 		},
 		...{
 			breakpoints: {
-				15: { x: 0, y: 0, w: 2, h: 2 },
+				10: { x: 0, y: 0, w: 2, h: 2 },
 				2: { x: 0, y: 0, w: 1, h: 2 },
 			},
 		},
@@ -244,7 +244,7 @@ const originalItems = [
 		},
 		...{
 			breakpoints: {
-				15: { x: 0, y: 0, w: 2, h: 2 },
+				10: { x: 0, y: 0, w: 2, h: 2 },
 				2: { x: 0, y: 0, w: 1, h: 2 },
 			},
 		},
@@ -264,7 +264,7 @@ const originalItems = [
 		},
 		...{
 			breakpoints: {
-				15: { x: 0, y: 0, w: 2, h: 2 },
+				10: { x: 0, y: 0, w: 2, h: 2 },
 				2: { x: 0, y: 0, w: 1, h: 2 },
 			},
 		},
@@ -284,7 +284,7 @@ const originalItems = [
 		},
 		...{
 			breakpoints: {
-				15: { x: 0, y: 0, w: 2, h: 2 },
+				10: { x: 0, y: 0, w: 2, h: 2 },
 				// 2: { x: 0, y: 0, w: 1, h: 2 },
 			},
 		},
@@ -306,7 +306,7 @@ const originalItems = [
 		},
 		...{
 			breakpoints: {
-				15: { x: 0, y: 0, w: 2, h: 2 },
+				10: { x: 0, y: 0, w: 2, h: 2 },
 			},
 		},
 	},
@@ -339,7 +339,7 @@ const originalItems = [
 		},
 		...{
 			breakpoints: {
-				15: { x: 0, y: 0, w: 2, h: 2 },
+				10: { x: 0, y: 0, w: 2, h: 2 },
 			},
 		},
 	},
@@ -362,7 +362,7 @@ const testItems = [
 		},
 		...{
 			breakpoints: {
-				15: { x: 0, y: 0, w: 2, h: 2 },
+				10: { x: 0, y: 0, w: 2, h: 2 },
 				// 2: { x: 0, y: 0, w: 1, h: 2 },
 			},
 		},
@@ -382,7 +382,7 @@ const testItems = [
 		},
 		...{
 			breakpoints: {
-				15: { x: 0, y: 0, w: 2, h: 2 },
+				10: { x: 0, y: 0, w: 2, h: 2 },
 				2: { x: 0, y: 0, w: 1, h: 2 },
 			},
 		},
@@ -402,7 +402,7 @@ const testItems = [
 		},
 		...{
 			breakpoints: {
-				15: { x: 0, y: 0, w: 2, h: 2 },
+				10: { x: 0, y: 0, w: 2, h: 2 },
 				// 2: { x: 0, y: 0, w: 1, h: 2 },
 			},
 		},
@@ -423,7 +423,7 @@ const testItems = [
 		},
 		...{
 			breakpoints: {
-				15: { x: 0, y: 0, w: 2, h: 2 },
+				10: { x: 0, y: 0, w: 2, h: 2 },
 				// 2: { x: 0, y: 0, w: 1, h: 2 },
 			},
 		},
@@ -452,7 +452,7 @@ export let createRandomItem = (type) => {
 		}),
 		...{
 			breakpoints: {
-				15: { x: 0, y: 0, w: 2, h: 2 },
+				10: { x: 0, y: 0, w: 2, h: 2 },
 				// 2: { x: 0, y: 0, w: 1, h: 2 },
 			},
 		},
@@ -567,6 +567,13 @@ export async function createNewItem (type, content){
 			name: type + itemId,
 			lineNumbers: true,
 			hasFocus: true,
+		},
+		...{
+			breakpoints: {
+				10: { x: 0, y: 0, w: 2, h: 2 },
+				5: { x: 0, y: 0, w: 1, h: 2 },
+				2: { x: 0, y: 0, w: 1, h: 2 },
+			},
 		},
 		...component,
 	};

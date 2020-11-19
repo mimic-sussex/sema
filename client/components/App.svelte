@@ -37,9 +37,12 @@
   let messaging = new PubSub();
 
   const unsubscribe = audioEngineStatus.subscribe( value => {
-    if(value === 'running') audioEngine.init(1);
-    else if (value === 'paused')
+    if(value === 'running'){
+      audioEngine.init(1);
+    }
+    else if (value === 'paused'){
       messaging.publish("stop-audio");
+    }
 	});
   onDestroy(unsubscribe);
 

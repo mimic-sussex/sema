@@ -73,7 +73,7 @@
 	export let theme;
 	export let background;
 	export let data;      // liveCode Value that is injected and to which CodeMirror is bound
-  // export let static; // Error: ParseError: The keyword 'static' is reserved
+  export let fixed;
   export let responsive;
   export let resizable;
   export let resize;
@@ -81,6 +81,7 @@
   export let drag;
   export let min = {};
   export let max = {};
+  export let breakpoints = {};
   export let x;
   export let y;
   export let w;
@@ -176,8 +177,8 @@
         });
 
         parserWorker.onmessage = m => {  // Receive code from worker, pass it to then
-          console.log('DEBUG:LiveCodeEditor:parseLiveCode:onmessage');
-          console.log(m);
+          // console.log('DEBUG:LiveCodeEditor:parseLiveCode:onmessage');
+          // console.log(m);
           if(m.data !== undefined){
             res(m.data);
           }
@@ -185,8 +186,8 @@
 
       })
       .then(outputs => {
-        console.log('DEBUG:LiveCodeEditor:parseLiveCode:then1');
-        console.log(outputs);
+        // // console.log('DEBUG:LiveCodeEditor:parseLiveCode:then1');
+        // console.log(outputs);
         const { parserOutputs, parserResults } = outputs;
         if( parserOutputs && parserResults ){
           $liveCodeParseResults = parserResults;
@@ -198,7 +199,7 @@
           // Tree traversal in the main tree.
           $dspCode = IRToJavascript.treeToCode($liveCodeParseResults, 0);
           // let dspCode = IRToJavascript.treeToCode(liveCodeParseResults, 0);
-          console.log("code generated");
+          // console.log("code generated");
 
           // publish eval message with code to audio engine
           messaging.publish("eval-dsp", $dspCode);
@@ -351,7 +352,7 @@
     //   // Where grammar source will be an UUID
     //   // subscribeTo(grammarSource);
     // }
-    log( id, name, type, lineNumbers, hasFocus, theme, background, data, responsive, resizable, resize, draggable, drag, min, max, x, y, w, h, component );
+    log( id, name, type, breakpoints, fixed, lineNumbers, hasFocus, theme, background, data, responsive, resizable, resize, draggable, drag, min, max, x, y, w, h, component );
     log( grammarSource, $grammarCompiledParser );
 
     // console.log( grammarSource, grammarCompiledParser );
