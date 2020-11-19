@@ -73,4 +73,8 @@ package-lock.json
 yarn.lock
 public/
 
+
+# ionide config
+.ionide
+
 .vercel
