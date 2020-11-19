@@ -509,6 +509,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
     }
   };
 
+  // NOT USED
   getSABValue = (id) => {
     let res = 0;
     let sab = inputSABs[id];
@@ -713,15 +714,25 @@ class MaxiProcessor extends AudioWorkletProcessor {
         }
         if (this.codeSwapState == this.codeSwapStates.XFADING) {
           try {
-            this.signals[0](this._q[0], inputs[0][0][i], this._mems[0]);
-            this.signals[1](this._q[1], inputs[0][0][i], this._mems[1]);
+          
+            this.signals[0](
+              this._q[0], 
+              inputs[0][0][i], 
+              this._mems[0]);
+          
+            this.signals[1](
+              this._q[1], 
+              inputs[0][0][i], 
+              this._mems[1]);
+          
           } catch (err) {
             console.log("EVAL ERROR – XFADING", err);
             console.log("signals: ", this.signals);
             console.log("currentSignalFunction: ", this.currentSignalFunction);
             console.log("_q[currentSignalFunction]: ", this._q[this.currentSignalFunction]);
             console.log("inputs: ", inputs);
-            console.log("mems: ",this._mems);
+            console.log("mems: ", this._mems);
+            // HERE'S PART OF THE PROBLEM
             // this.signals[this.currentSignalFunction] = (x, y, z) => {
             //   return 0;
             // };
@@ -732,19 +743,21 @@ class MaxiProcessor extends AudioWorkletProcessor {
           //no xfading - play as normal
           // w = this.signals[this.currentSignalFunction](this._q[this.currentSignalFunction], inputs[0][0][i], this._mems[this.currentSignalFunction]);
           try {
+
             this.signals[this.currentSignalFunction](
               this._q[this.currentSignalFunction],
               inputs[0][0][i],
               this._mems[this.currentSignalFunction]
             );
+          
           } catch (err) {
             console.log("EVAL ERROR – NO xfading ", err);
             console.log("signals: ", this.signals);
             console.log("currentSignalFunction: ", this.currentSignalFunction);
             console.log("_q[currentSignalFunction]: ", this._q[this.currentSignalFunction]);
             console.log("inputs: ", inputs);
-            console.log("mems: ",this._mems);
-
+            console.log("mems: ", this._mems);
+            // HERE'S PART OF THE PROBLEM
             // this.signals[this.currentSignalFunction] = (x, y, z) => {
             //   return 0;
             // };
