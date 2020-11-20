@@ -319,17 +319,16 @@ class Clock {
  * @extends AudioWorkletProcessor
  */
 class MaxiProcessor extends AudioWorkletProcessor {
-  /**
-   * @constructor
-   */
-  constructor() {
+	/**
+	 * @constructor
+	 */
+	constructor() {
 		super();
-
 
 		// this.sampleRate = 44100;
 		console.log("SAMPLERATE", sampleRate);
-		
-    //indicate audio settings in WASM and JS domains
+
+		//indicate audio settings in WASM and JS domains
 		Maximilian.maxiSettings.setup(sampleRate, 1, 512);
 		Maximilian.maxiJSSettings.setup(sampleRate, 1, 512);
 
@@ -380,427 +379,446 @@ class MaxiProcessor extends AudioWorkletProcessor {
 		// this.tempo = 120.0; // tempo (in beats per minute);
 		// this.secondsPerBeat = 60.0 / this.tempo;
 		// this.counterTimeValue = this.secondsPerBeat / 4; //___16th note
-    
-    this.clockPhasor;
+
+		this.clockPhasor;
 		this.bpm = 120;
 		this.beatsPerBar = 4;
 		this.maxTimeLength = sampleRate * 60 * 60 * 24; //24 hours
-		
+
 		this.clockUpdate();
 
 		this.bitTime = Maximilian.maxiBits.sig(0); //this needs to be decoupled from the audio engine? or not... maybe a 'permenant block' with each grammar?
 		this.dt = 0;
 	}
 
-  silence = (q, inputs) => {
-    return 0.0;
-  };
+	silence = (q, inputs) => {
+		return 0.0;
+	};
 
-  newq = () => {
-    return {
-      vars: {},
-    };
-  };
+	newq = () => {
+		return {
+			vars: {},
+		};
+	};
 
-  newmem = () => {
-    return new Array(512);
-  };
+	newmem = () => {
+		return new Array(512);
+	};
 
-  OSCTransducer = function (x, idx = 0) {
-    let val = this.OSCMessages[x];
-    return val ? (idx >= 0 ? val[idx] : val) : 0.0;
-  };
+	OSCTransducer = function (x, idx = 0) {
+		let val = this.OSCMessages[x];
+		return val ? (idx >= 0 ? val[idx] : val) : 0.0;
+	};
 
-  getSampleBuffer = bufferName => {
-    let sample = this.sampleVectorBuffers["defaultEmptyBuffer"]; //defailt - silence
-    if (bufferName in this.sampleVectorBuffers) {
-      sample = this.sampleVectorBuffers[bufferName];
-    } else {
-      console.warn(`${bufferName} doesn't exist yet`);
-    }
-    return sample;
-  };
+	getSampleBuffer = (bufferName) => {
+		let sample = this.sampleVectorBuffers["defaultEmptyBuffer"]; //defailt - silence
+		if (bufferName in this.sampleVectorBuffers) {
+			sample = this.sampleVectorBuffers[bufferName];
+		} else {
+			console.warn(`${bufferName} doesn't exist yet`);
+		}
+		return sample;
+	};
 
-  clockUpdate = () => {
-    this.beatLengthInSamples = (60 / this.bpm) * sampleRate;
-    this.barPhaseMultiplier =
-      this.maxTimeLength / this.beatLengthInSamples / this.beatsPerBar;
+	clockUpdate = () => {
+		this.beatLengthInSamples = (60 / this.bpm) * sampleRate;
+		this.barPhaseMultiplier =
+			this.maxTimeLength / this.beatLengthInSamples / this.beatsPerBar;
 
-    console.log(
-      "CLOCK: ",
-      this.barPhaseMultiplier,
-      this.maxTimeLength,
-      this.beatsPerBar
-    );
-  };
+		console.log(
+			"CLOCK: ",
+			this.barPhaseMultiplier,
+			this.maxTimeLength,
+			this.beatsPerBar
+		);
+	};
 
-  setBPM = bpm => {
-    if (this.bpm != bpm) {
-      this.bpm = bpm;
-      this.clockUpdate();
-    }
-    return 0;
-  };
+	setBPM = (bpm) => {
+		if (this.bpm != bpm) {
+			this.bpm = bpm;
+			this.clockUpdate();
+		}
+		return 0;
+	};
 
-  setBeatsPerBar = bpb => {
-    if (this.beatsPerBar != bpb) {
-      this.beatsPerBar = bpb;
-      this.clockUpdate();
-    }
-    return 0;
-  };
+	setBeatsPerBar = (bpb) => {
+		if (this.beatsPerBar != bpb) {
+			this.beatsPerBar = bpb;
+			this.clockUpdate();
+		}
+		return 0;
+	};
 
-  //@CLP
-  //phasor over one bar length
-  clockPhase = (multiples, phase) => {
-    return (
-      (((this.clockPhasor * this.barPhaseMultiplier * multiples) % 1.0) +
-        phase) %
-      1.0
-    );
-  };
+	/**
+	 * @CLP phasor over one bar length
+	 *
+	 * upon EVAL, this is dynamically invoqued from the LOOP function
+	 * */
+	clockPhase = (multiples, phase) => {
+		return (
+			(((this.clockPhasor * this.barPhaseMultiplier * multiples) % 1.0) +
+				phase) %
+			1.0
+		);
+	};
 
-  //@CLT
-  clockTrig = (multiples, phase) => {
-    let clphase = this.clockPhase(multiples, phase);
-    return clphase - (1.0 / sampleRate) * multiples <= 0 ? 1 : 0;
-  };
+	/**
+	 * @CLT phasor over one bar length
+	 *
+	 * upon EVAL, this is dynamically invoqued from the LOOP function
+	 *
+	 */
+	clockTrig = (multiples, phase) => {
+		let clphase = this.clockPhase(multiples, phase);
+		return clphase - (1.0 / sampleRate) * multiples <= 0 ? 1 : 0;
+	};
 
-  // NOT USED
-  createMLOutputTransducer = sendFrequency => {
-    return new OutputTransducer(this.port, sampleRate, sendFrequency, "ML");
-  };
+	// NOT USED ?
+	createMLOutputTransducer = (sendFrequency) => {
+		return new OutputTransducer(this.port, sampleRate, sendFrequency, "ML");
+	};
 
-  // NOT USED
-  createNetOutputTransducer = sendFrequency => {
-    return new OutputTransducer(this.port, sampleRate, sendFrequency, "NET");
-  };
+	// NOT USED ?
+	createNetOutputTransducer = (sendFrequency) => {
+		return new OutputTransducer(this.port, sampleRate, sendFrequency, "NET");
+	};
 
-  // NOT USED
-  dacOut = (x, ch) => {
-    if (ch >= this.DAC.length) {
-      ch = this.DAC.length - 1;
-    } else if (ch < 0) {
-      ch = 0;
-    }
-    this.DAC[ch] = x;
-    return x;
-  };
+	/**
+	 *
+	 *
+	 * upon EVAL, this is dynamically invoqued from the LOOP function
+	 */
+	dacOut = (x, ch) => {
+		if (ch >= this.DAC.length) {
+			ch = this.DAC.length - 1;
+		} else if (ch < 0) {
+			ch = 0;
+		}
+		this.DAC[ch] = x;
+		return x;
+	};
 
-  // NOT USED
-  dacOutAll = (x) => {
-    for (let i = 0; i < this.DAC.length; i++) {
-      this.DAC[i] = x;
-    }
-    return x;
-  };
+	/**
+	 * Writes computed signal from mems
+	 *
+	 * upon EVAL, this is dynamically invoqued from the LOOP function
+	 */
+	dacOutAll = (x) => {
+		for (let i = 0; i < this.DAC.length; i++) {
+			this.DAC[i] = x;
+		}
+		return x;
+	};
 
-  updateSABInputs = (id) => {
-    for (let v in inputSABs) {
-      let avail = inputSABs[v].rb.available_read();
-      // console.log(avail, SABs[v].rb.capacity);
-      if (avail != inputSABs[v].rb.capacity && avail > 0) {
-        for (let i = 0; i < avail; i += inputSABs[v].blocksize) {
-          let val = new Float64Array(inputSABs[v].blocksize);
-          inputSABs[v].rb.pop(val);
-          inputSABs[v].value = val.length == 1 ? val[0] : val;
-        }
-      }
-    }
-  };
+	updateSABInputs = (id) => {
+		for (let v in inputSABs) {
+			let avail = inputSABs[v].rb.available_read();
+			// console.log(avail, SABs[v].rb.capacity);
+			if (avail != inputSABs[v].rb.capacity && avail > 0) {
+				for (let i = 0; i < avail; i += inputSABs[v].blocksize) {
+					let val = new Float64Array(inputSABs[v].blocksize);
+					inputSABs[v].rb.pop(val);
+					inputSABs[v].value = val.length == 1 ? val[0] : val;
+				}
+			}
+		}
+	};
 
-  // NOT USED
-  getSABValue = (id) => {
-    let res = 0;
-    let sab = inputSABs[id];
-    if (sab) {
-      res = sab.value;
-    }
-    return res;
-  };
+	// NOT USED
+	getSABValue = (id) => {
+		let res = 0;
+		let sab = inputSABs[id];
+		if (sab) {
+			res = sab.value;
+		}
+		return res;
+	};
 
-  addSampleBuffer = (name, buf) => {
-    this.sampleVectorBuffers[name] = this.translateFloat32ArrayToBuffer(buf);
-  };
+	addSampleBuffer = (name, buf) => {
+		this.sampleVectorBuffers[name] = this.translateFloat32ArrayToBuffer(buf);
+	};
 
-  onAudioWorkletNodeMessageEventHandler = event => {
-    // message port async handler
-    // console.log(event);
-    if ("address" in event.data) {
-      //this must be an OSC message
-      this.OSCMessages[event.data.address] = event.data.args;
-      //console.log(this.OSCMessages);
-    } else if ("func" in event.data && "sendbuf" == event.data.func) {
-      console.log("aesendbuf", event.data);
-      this.addSampleBuffer(event.data.name, event.data.data);
-      //DEPRECATED
-      // } else if ('func' in event.data && 'data' == event.data.func) {
-      //   // console.log('ML', event.data);
-      //   //this is from the ML window, map it on to any listening transducers
-      //   let targetTransducers = this.matchTransducers('ML', event.data.ch);
-      //   for (let idx in targetTransducers) {
-      //     targetTransducers[idx].setValue(event.data.val);
-      //   }
-    } else if ("func" in event.data && "sab" == event.data.func) {
-      console.log("buf received", event.data);
-      let sab = event.data.value;
-      let rb = new RingBuffer(sab, Float64Array);
+	onAudioWorkletNodeMessageEventHandler = (event) => {
+		// message port async handler
+		// console.log(event);
+		if ("address" in event.data) {
+			//this must be an OSC message
+			this.OSCMessages[event.data.address] = event.data.args;
+			//console.log(this.OSCMessages);
+		} else if ("func" in event.data && "sendbuf" == event.data.func) {
+			console.log("aesendbuf", event.data);
+			this.addSampleBuffer(event.data.name, event.data.data);
+			//DEPRECATED
+			// } else if ('func' in event.data && 'data' == event.data.func) {
+			//   // console.log('ML', event.data);
+			//   //this is from the ML window, map it on to any listening transducers
+			//   let targetTransducers = this.matchTransducers('ML', event.data.ch);
+			//   for (let idx in targetTransducers) {
+			//     targetTransducers[idx].setValue(event.data.val);
+			//   }
+		} else if ("func" in event.data && "sab" == event.data.func) {
+			console.log("buf received", event.data);
+			let sab = event.data.value;
+			let rb = new RingBuffer(sab, Float64Array);
 
-      inputSABs[event.data.channelID] = {
-        sab: sab,
-        rb: rb,
-        blocksize: event.data.blocksize,
-        value: event.data.blocksize > 1 ? new Float64Array(event.data.blocksize) : 0,
-      };
-      //TEMP DEPRECATED
-      // } else if ('peermsg' in event.data) {
-      //   console.log('peer', event);
-      //   //this is from peer streaming, map it on to any listening transducers
-      //   let targetTransducers = this.matchTransducers('NET', [event.data.src, event.data.ch]);
-      //   // console.log(targetTransducers.length);
-      //   for (let idx in targetTransducers) {
-      //     targetTransducers[idx].setValue(event.data.val);
-      //   }
-    } else if ("sample" in event.data) {
-      //from a worker
-      // console.log("sample received");
-      // console.log(event.data);
-      let sampleKey = event.data.sample.substr(0, event.data.sample.length - 4);
-      // this.sampleBuffers[sampleKey] = event.data.buffer;
-      this.addSampleBuffer(sampleKey, event.data.buffer);
-      // this.sampleVectorBuffers[sampleKey] = this.translateFloat32ArrayToBuffer(event.data.buffer);
-    } else if ("phase" in event.data) {
-      // console.log(this.kuraPhaseIdx);
-      // console.log(event);
-      this.netClock.setPhase(event.data.phase, event.data.i);
-      // this.kuraPhase = event.data.phase;
-      // this.kuraPhaseIdx = event.data.i;
-    } else if ("eval" in event.data) {
-      // check if new code is being sent for evaluation?
+			inputSABs[event.data.channelID] = {
+				sab: sab,
+				rb: rb,
+				blocksize: event.data.blocksize,
+				value:
+					event.data.blocksize > 1 ? new Float64Array(event.data.blocksize) : 0,
+			};
+			//TEMP DEPRECATED
+			// } else if ('peermsg' in event.data) {
+			//   console.log('peer', event);
+			//   //this is from peer streaming, map it on to any listening transducers
+			//   let targetTransducers = this.matchTransducers('NET', [event.data.src, event.data.ch]);
+			//   // console.log(targetTransducers.length);
+			//   for (let idx in targetTransducers) {
+			//     targetTransducers[idx].setValue(event.data.val);
+			//   }
+		} else if ("sample" in event.data) {
+			//from a worker
+			// console.log("sample received");
+			// console.log(event.data);
+			let sampleKey = event.data.sample.substr(0, event.data.sample.length - 4);
+			// this.sampleBuffers[sampleKey] = event.data.buffer;
+			this.addSampleBuffer(sampleKey, event.data.buffer);
+			// this.sampleVectorBuffers[sampleKey] = this.translateFloat32ArrayToBuffer(event.data.buffer);
+		} else if ("phase" in event.data) {
+			// console.log(this.kuraPhaseIdx);
+			// console.log(event);
+			this.netClock.setPhase(event.data.phase, event.data.i);
+			// this.kuraPhase = event.data.phase;
+			// this.kuraPhaseIdx = event.data.i;
+		} else if ("eval" in event.data) {
+			// check if new code is being sent for evaluation?
 
-      let setupFunction;
-      let loopFunction;
-      try {
-        setupFunction = eval(event.data["setup"]);
-        loopFunction = eval(event.data["loop"]);
+			let setupFunction;
+			let loopFunction;
+			try {
+				setupFunction = eval(event.data["setup"]);
+				loopFunction = eval(event.data["loop"]);
 
-        this.nextSignalFunction = 1 - this.currentSignalFunction;
+				this.nextSignalFunction = 1 - this.currentSignalFunction;
 
-        this._q[this.nextSignalFunction] = setupFunction();
-        //allow feedback between evals
-        this._mems[this.nextSignalFunction] = this._mems[
-          this.currentSignalFunction
-        ];
-        // output[SPECTROGAMCHANNEL][i] = specgramValue;
-        // then use channelsplitter
-        this.signals[this.nextSignalFunction] = loopFunction;
-        this._cleanup[this.nextSignalFunction] = 0;
+				this._q[this.nextSignalFunction] = setupFunction();
+				//allow feedback between evals
+				this._mems[this.nextSignalFunction] = this._mems[
+					this.currentSignalFunction
+				];
+				// output[SPECTROGAMCHANNEL][i] = specgramValue;
+				// then use channelsplitter
+				this.signals[this.nextSignalFunction] = loopFunction;
+				this._cleanup[this.nextSignalFunction] = 0;
 
-        let xfadeBegin = Maximilian.maxiMap.linlin(
-          1.0 - this.nextSignalFunction,
-          0,
-          1,
-          -1,
-          1
-        );
-        let xfadeEnd = Maximilian.maxiMap.linlin(
-          this.nextSignalFunction,
-          0,
-          1,
-          -1,
-          1
-        );
-        this.xfadeControl.prepare(xfadeBegin, xfadeEnd, 2, true); // short xfade across signals
-        this.xfadeControl.triggerEnable(true); //enable the trigger straight away
-       
-        this.codeSwapState = this.codeSwapStates.QUEUD;
+				let xfadeBegin = Maximilian.maxiMap.linlin(
+					1.0 - this.nextSignalFunction,
+					0,
+					1,
+					-1,
+					1
+				);
+				let xfadeEnd = Maximilian.maxiMap.linlin(
+					this.nextSignalFunction,
+					0,
+					1,
+					-1,
+					1
+				);
+				this.xfadeControl.prepare(xfadeBegin, xfadeEnd, 2, true); // short xfade across signals
+				this.xfadeControl.triggerEnable(true); //enable the trigger straight away
 
-      } catch (err) {
-        if (err instanceof TypeError) {
-          console.log(
-            "TypeError in worklet evaluation: " + err.name + " – " + err.message
-          );
-        } else {
-          console.log(
-            "Error in worklet evaluation: " + err.name + " – " + err.message
-          );
-          console.log(setupFunction);
-          console.log(loopFunction);
-        }
-      }
-    }
-  };
+				this.codeSwapState = this.codeSwapStates.QUEUD;
+			} catch (err) {
+				if (err instanceof TypeError) {
+					console.log(
+						"TypeError in worklet evaluation: " + err.name + " – " + err.message
+					);
+				} else {
+					console.log(
+						"Error in worklet evaluation: " + err.name + " – " + err.message
+					);
+					console.log(setupFunction);
+					console.log(loopFunction);
+				}
+			}
+		}
+	};
 
-  initialiseDAC = (sampleRate, channels, bufferSize) => {
+	initialiseDAC = (sampleRate, channels, bufferSize) => {
+		for (let i = 0; i < channels; i++) this.DAC[i] = 0.0;
 
-    for (let i = 0; i < channels; i++) 
-      this.DAC[i] = 0.0;
+		console.log("init DAC", channels);
 
-    console.log("init DAC", channels );
+		Maximilian.maxiJSSettings.setup(sampleRate, channels, bufferSize);
+		Maximilian.maxiSettings.setup(sampleRate, channels, bufferSize);
 
-    Maximilian.maxiJSSettings.setup(sampleRate, channels, bufferSize);
-    Maximilian.maxiSettings.setup(sampleRate, channels, bufferSize);
+		this.DACInitialised = true;
+	};
 
-    this.DACInitialised = true;
-  }
+	/**
+	 * @process
+	 */
+	process(inputs, outputs, parameters) {
+		if (!this.DACInitialised) {
+			this.initialiseDAC(sampleRate, outputs[0].length, 512);
+		}
 
+		for (let outputId = 0; outputId < outputs.length; ++outputId) {
+			let output = outputs[outputId];
+			let channelCount = output.length;
 
+			for (let i = 0; i < output[0].length; ++i) {
+				this.updateSABInputs();
 
-  /**
-   * @process
-   */
-  process(inputs, outputs, parameters) {
-    
-    if (!this.DACInitialised) {
-      this.initialiseDAC(sampleRate, outputs[0].length, 512);
-    }
+				for (let channel = 0; channel < channelCount; channel++) {
+					this.DAC[channel] = 0.0;
+				}
 
-   
-    for (let outputId = 0; outputId <  outputs.length; ++outputId) {
-      let output = outputs[outputId];
-      let channelCount = output.length;
+				//this needs decoupling?
+				// WHAT IS THIS?
+				this.bitTime = Maximilian.maxiBits.inc(this.bitTime);
 
-      for (let i = 0; i < output[0].length; ++i) {
-        this.updateSABInputs();
+				//leave this here - we'll bring it back in one day?
+				//net clocks
+				// if (this.kuraPhase != -1) {
+				//   // this.netClock.setPhase(this.kuraPhase, this.kuraPhaseIdx);
+				//   console.log(this.kuraPhaseIdx);
+				//testing
+				// this.netClock.setPhase(this.netClock.getPhase(0), 1);
+				// this.netClock.setPhase(this.netClock.getPhase(0), 2);
+				//   this.kuraPhase = -1;
+				// }
 
-        for (let channel = 0; channel < channelCount; channel++) {
-          this.DAC[channel] = 0.0;
-        }
+				// this.netClock.play(this.clockFreq, 100);
 
-        //this needs decoupling?
-        // WHAT IS THIS?
-        this.bitTime = Maximilian.maxiBits.inc(this.bitTime);
+				//this.clockPhasor = this.netClock.getPhase(0) / (2 * Math.PI);
+				this.clockPhasor =
+					(this.currentSample % this.maxTimeLength) / this.maxTimeLength;
+				this.currentSample++;
 
-        //leave this here - we'll bring it back in one day?
-        //net clocks
-        // if (this.kuraPhase != -1) {
-        //   // this.netClock.setPhase(this.kuraPhase, this.kuraPhaseIdx);
-        //   console.log(this.kuraPhaseIdx);
-        //testing
-        // this.netClock.setPhase(this.netClock.getPhase(0), 1);
-        // this.netClock.setPhase(this.netClock.getPhase(0), 2);
-        //   this.kuraPhase = -1;
-        // }
+				//share the clock if networked
+				// if (this.netClock.size() > 1 && this.clockPhaseSharingInterval++ == 2000) {
+				//   this.clockPhaseSharingInterval=0;
+				//   let phase = this.netClock.getPhase(0);
+				//   // console.log(`DEBUG:MaxiProcessor:phase: ${phase}`);
+				//   this.port.postMessage({ phase: phase, c: "phase" });
+				// }
 
-        // this.netClock.play(this.clockFreq, 100);
+				this.bitclock = Maximilian.maxiBits.sig(
+					Math.floor(this.clockPhase(1, 0) * 1023.999999999)
+				);
 
+				let w = 0;
+				//new code waiting?
 
-        //this.clockPhasor = this.netClock.getPhase(0) / (2 * Math.PI);
-        this.clockPhasor = (this.currentSample % this.maxTimeLength) / this.maxTimeLength;
-        this.currentSample++;
+				let barTrig = this.clockTrig(1, 0);
 
-        //share the clock if networked
-        // if (this.netClock.size() > 1 && this.clockPhaseSharingInterval++ == 2000) {
-        //   this.clockPhaseSharingInterval=0;
-        //   let phase = this.netClock.getPhase(0);
-        //   // console.log(`DEBUG:MaxiProcessor:phase: ${phase}`);
-        //   this.port.postMessage({ phase: phase, c: "phase" });
-        // }
+				if (this.codeSwapState == this.codeSwapStates.QUEUD) {
+					//fade in when a new bar happens
+					if (barTrig) {
+						this.codeSwapState = this.codeSwapStates.XFADING;
+						this.currentSignalFunction = 1 - this.currentSignalFunction;
+						//console.log("xfade start", this.currentSignalFunction);
+					}
+				}
 
-        this.bitclock = Maximilian.maxiBits.sig(
-          Math.floor(this.clockPhase(1, 0) * 1023.999999999)
-        );
+				if (this.codeSwapState == this.codeSwapStates.XFADING) {
+					try {
 
-        let w = 0;
-        //new code waiting?
-        let barTrig = this.clockTrig(1, 0);
-        if (this.codeSwapState == this.codeSwapStates.QUEUD) {
-          //fade in when a new bar happens
-          if (barTrig) {
-            this.codeSwapState = this.codeSwapStates.XFADING;
-            this.currentSignalFunction = 1 - this.currentSignalFunction;
-            //console.log("xfade start", this.currentSignalFunction);
-          }
-        }
-        if (this.codeSwapState == this.codeSwapStates.XFADING) {
-          try {
-          
-            this.signals[0](
+						this.signals[0](
               this._q[0], 
-              inputs[0][0][i], 
+              inputs[0][i], 
               this._mems[0]);
-          
-            this.signals[1](
+
+						this.signals[1](
               this._q[1], 
-              inputs[0][0][i], 
+              inputs[0][i], 
               this._mems[1]);
-          
-          } catch (err) {
-            console.log("EVAL ERROR – XFADING", err);
-            console.log("signals: ", this.signals);
-            console.log("currentSignalFunction: ", this.currentSignalFunction);
-            console.log("_q[currentSignalFunction]: ", this._q[this.currentSignalFunction]);
-            console.log("inputs: ", inputs);
-            console.log("mems: ", this._mems);
-            // HERE'S PART OF THE PROBLEM
-            // this.signals[this.currentSignalFunction] = (x, y, z) => {
-            //   return 0;
-            // };
-          }
-          this.codeSwapState = this.codeSwapStates.NONE;
-          // console.log("xfade complete", xf);
-        } else {
-          //no xfading - play as normal
-          // w = this.signals[this.currentSignalFunction](this._q[this.currentSignalFunction], inputs[0][0][i], this._mems[this.currentSignalFunction]);
-          try {
 
-            this.signals[this.currentSignalFunction](
-              this._q[this.currentSignalFunction],
-              inputs[0][0][i],
-              this._mems[this.currentSignalFunction]
-            );
-          
-          } catch (err) {
-            console.log("EVAL ERROR – NO xfading ", err);
-            console.log("signals: ", this.signals);
-            console.log("currentSignalFunction: ", this.currentSignalFunction);
-            console.log("_q[currentSignalFunction]: ", this._q[this.currentSignalFunction]);
-            console.log("inputs: ", inputs);
-            console.log("mems: ", this._mems);
-            // HERE'S PART OF THE PROBLEM
-            // this.signals[this.currentSignalFunction] = (x, y, z) => {
-            //   return 0;
-            // };
-          }
-        }
+					} catch (err) {
+						console.log("EVAL ERROR – XFADING", err);
+						console.log("signals: ", this.signals);
+						console.log("currentSignalFunction: ", this.currentSignalFunction);
+						console.log(
+							"_q[currentSignalFunction]: ",
+							this._q[this.currentSignalFunction]
+						);
+						console.log("inputs: ", inputs);
+						console.log("mems: ", this._mems);
+						// HERE'S PART OF THE PROBLEM
+						// this.signals[this.currentSignalFunction] = (x, y, z) => {
+						//   return 0;
+						// };
+					}
+					this.codeSwapState = this.codeSwapStates.NONE;
+					// console.log("xfade complete", xf);
+				} else {
+					//no xfading - play as normal
+					// w = this.signals[this.currentSignalFunction](this._q[this.currentSignalFunction], inputs[0][0][i], this._mems[this.currentSignalFunction]);
+					try {
 
-        // let scope = this._mems[this.currentSignalFunction][":show"];
-        // let scopeValue = scope !== undefined ? scope : output[channel][0];
-        // output[1][i] = specgramValue;
+						this.signals[this.currentSignalFunction](
+							this._q[this.currentSignalFunction],
+							inputs[0][i],
+							this._mems[this.currentSignalFunction]
+						);
 
-        for (let channel = 0; channel < channelCount; channel++) {
-          output[channel][i] = this.DAC[channel];
-        }
-      }
+					} catch (err) {
+						console.log("EVAL ERROR – NO xfading ", err);
+						console.log("signals: ", this.signals);
+						console.log("currentSignalFunction: ", this.currentSignalFunction);
+						console.log(
+							"_q[currentSignalFunction]: ",
+							this._q[this.currentSignalFunction]
+						);
+						console.log("inputs: ", inputs);
+						console.log("mems: ", this._mems);
+						// HERE'S PART OF THE PROBLEM
+						// this.signals[this.currentSignalFunction] = (x, y, z) => {
+						//   return 0;
+						// };
+					}
+				}
 
-      //remove old algo and data?
-      let oldIdx = 1.0 - this.currentSignalFunction;
-      if (this.xfadeControl.isLineComplete() && this._cleanup[oldIdx] == 0) {
-        this.signals[oldIdx] = this.silence;
-        //clean up object heap - we must do this because emscripten objects need manual memory management
-        for (let obj in this._q[oldIdx]) {
-          //if there a delete() function
-          if (this._q[oldIdx][obj].delete != undefined) {
-            //delete the emscripten object manually
-            this._q[oldIdx][obj].delete();
-          }
-        }
-        //create a blank new heap for the next livecode evaluation
-        this._q[oldIdx] = this.newq();
-        //signal that the cleanup is complete
-        this._cleanup[oldIdx] = 1;
-      }
-    }
-    return true;
-  }
+				// let scope = this._mems[this.currentSignalFunction][":show"];
+				// let scopeValue = scope !== undefined ? scope : output[channel][0];
+				// output[1][i] = specgramValue;
 
-  translateFloat32ArrayToBuffer(audioFloat32ArrayBuffer) {
-    var maxiSampleBufferData = new Maximilian.VectorDouble();
-    for (var i = 0; i < audioFloat32ArrayBuffer.length; i++) {
-      maxiSampleBufferData.push_back(audioFloat32ArrayBuffer[i]);
-    }
-    return maxiSampleBufferData;
-  }
+				for (let channel = 0; channel < channelCount; channel++) {
+					output[channel][i] = this.DAC[channel];
+				}
+			}
+
+			//remove old algo and data?
+			let oldIdx = 1.0 - this.currentSignalFunction;
+			if (this.xfadeControl.isLineComplete() && this._cleanup[oldIdx] == 0) {
+				this.signals[oldIdx] = this.silence;
+				//clean up object heap - we must do this because emscripten objects need manual memory management
+				for (let obj in this._q[oldIdx]) {
+					//if there a delete() function
+					if (this._q[oldIdx][obj].delete != undefined) {
+						//delete the emscripten object manually
+						this._q[oldIdx][obj].delete();
+					}
+				}
+				//create a blank new heap for the next livecode evaluation
+				this._q[oldIdx] = this.newq();
+				//signal that the cleanup is complete
+				this._cleanup[oldIdx] = 1;
+			}
+		}
+		return true;
+	}
+
+	translateFloat32ArrayToBuffer(audioFloat32ArrayBuffer) {
+		var maxiSampleBufferData = new Maximilian.VectorDouble();
+		for (var i = 0; i < audioFloat32ArrayBuffer.length; i++) {
+			maxiSampleBufferData.push_back(audioFloat32ArrayBuffer[i]);
+		}
+		return maxiSampleBufferData;
+	}
 };
 
 registerProcessor("maxi-processor", MaxiProcessor);

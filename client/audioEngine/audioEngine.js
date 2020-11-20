@@ -427,8 +427,10 @@ class AudioEngine {
   }
 
   evalDSP(dspFunction) {
-    console.log("DEBUG:AudioEngine:evalDSP:");
-    console.log(dspFunction);
+    
+    // console.log("DEBUG:AudioEngine:evalDSP:");
+    // console.log(dspFunction);
+    
     if (this.audioWorkletNode !== undefined) {
       if (this.audioContext.state === "suspended") {
         this.audioContext.resume();

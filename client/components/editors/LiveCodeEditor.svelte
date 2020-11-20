@@ -264,12 +264,12 @@
         dspCode = outputs;
 
         // $liveCodeParseErrors = "";
-        console.log('DEBUG:Layout:translateILtoDSPasync');
+        // console.log('DEBUG:Layout:translateILtoDSPasync');
         // console.log($dspCode);
       })
       .catch(e => {
-        console.log('DEBUG:Layout:translateILtoDSPasync:catch')
-        console.log(e);
+        // console.log('DEBUG:Layout:translateILtoDSPasync:catch')
+        // console.log(e);
       });
     }
   }
