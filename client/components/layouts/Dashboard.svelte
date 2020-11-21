@@ -121,13 +121,14 @@
           <!-- style="background: { item.static ? '#bka' : item.background }; border: { item.hasFocus ? '5px solid red': '5px solid blue' } ;" -->
 
     <div  class="content"
-          style="background: { item.static ? '#bka' : item.background }; border: { item.hasFocus ? '1px solid rgba(100, 100, 100, 0.5)': '1px solid rgba(25, 25, 25, 1)' }; border-width: 1px 0px 0px 1px;"
+          style="background: { item.fixed ? '#bka' : item.background }; border: { item.hasFocus ? '1px solid rgba(100, 100, 100, 0.5)': '1px solid rgba(25, 25, 25, 1)' }; border-width: 1px 0px 0px 1px;"
           on:mousedown={ e => e.stopPropagation() } >
 
       <span class='close'
             on:click={ () => remove(item) } >✕</span>
 
-  		<svelte:component this={item.component}
+  		<svelte:component class='component' 
+                        this={item.component}
                         {...item}
                         on:change={ e => update(item, e.detail.prop, e.detail.value) } />
 
@@ -206,6 +207,12 @@
     cursor: move;
     z-index: 1500;
     color: lightgray;
+  }
+
+  .component{
+
+    z-index: 1500;
+
   }
 
  	.scrollable {
