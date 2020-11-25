@@ -38,11 +38,11 @@
 	const github = new GitHubBase({ /* options */ });
 
   // Playground dashboard configuration
-  let cols = 1;
+  let cols = 12;
   let breakpoints = [
-    [2880, 4]
-    [1287, 4],
-    [700, 1],
+    // [2880, 5]
+    // [1287, 3],
+    // [700, 1],
   ];
   let rowHeight = 100;
   let gap = 1;

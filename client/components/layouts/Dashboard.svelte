@@ -122,7 +122,7 @@
 
     <div  class="content"
           style="background: { item.fixed ? '#bka' : item.background }; border: { item.hasFocus ? '1px solid rgba(100, 100, 100, 0.5)': '1px solid rgba(25, 25, 25, 1)' }; border-width: 1px 0px 0px 1px;"
-          on:mousedown={ e => e.stopPropagation() } >
+          on:pointerdown={ e => e.stopPropagation() } >
 
       <span class='close'
             on:click={ () => remove(item) } >✕</span>

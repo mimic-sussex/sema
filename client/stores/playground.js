@@ -226,6 +226,7 @@ const originalItems = [
 			breakpoints: {
 				10: { x: 0, y: 0, w: 2, h: 2 },
 				2: { x: 0, y: 0, w: 1, h: 2 },
+				1: { x: 0, y: 0, w: 1, h: 2 },
 			},
 		},
 	},
@@ -246,6 +247,7 @@ const originalItems = [
 			breakpoints: {
 				10: { x: 0, y: 0, w: 2, h: 2 },
 				2: { x: 0, y: 0, w: 1, h: 2 },
+				1: { x: 0, y: 0, w: 1, h: 2 },
 			},
 		},
 	},
@@ -266,6 +268,7 @@ const originalItems = [
 			breakpoints: {
 				10: { x: 0, y: 0, w: 2, h: 2 },
 				2: { x: 0, y: 0, w: 1, h: 2 },
+				1: { x: 0, y: 0, w: 1, h: 2 },
 			},
 		},
 	},
@@ -285,7 +288,8 @@ const originalItems = [
 		...{
 			breakpoints: {
 				10: { x: 0, y: 0, w: 2, h: 2 },
-				// 2: { x: 0, y: 0, w: 1, h: 2 },
+				2: { x: 0, y: 0, w: 1, h: 2 },
+				1: { x: 0, y: 0, w: 1, h: 2 },
 			},
 		},
 	},
@@ -307,6 +311,8 @@ const originalItems = [
 		...{
 			breakpoints: {
 				10: { x: 0, y: 0, w: 2, h: 2 },
+				2: { x: 0, y: 0, w: 1, h: 2 },
+				1: { x: 0, y: 0, w: 1, h: 2 },
 			},
 		},
 	},
@@ -340,6 +346,8 @@ const originalItems = [
 		...{
 			breakpoints: {
 				10: { x: 0, y: 0, w: 2, h: 2 },
+				2: { x: 0, y: 0, w: 2, h: 2 },
+				1: { x: 0, y: 0, w: 2, h: 2 },
 			},
 		},
 	},
@@ -363,7 +371,8 @@ const testItems = [
 		...{
 			breakpoints: {
 				10: { x: 0, y: 0, w: 2, h: 2 },
-				// 2: { x: 0, y: 0, w: 1, h: 2 },
+				2: { x: 0, y: 0, w: 1, h: 2 },
+				1: { x: 0, y: 0, w: 1, h: 2 },
 			},
 		},
 	},
@@ -384,6 +393,7 @@ const testItems = [
 			breakpoints: {
 				10: { x: 0, y: 0, w: 2, h: 2 },
 				2: { x: 0, y: 0, w: 1, h: 2 },
+				1: { x: 0, y: 0, w: 1, h: 2 }
 			},
 		},
 	},
@@ -403,7 +413,8 @@ const testItems = [
 		...{
 			breakpoints: {
 				10: { x: 0, y: 0, w: 2, h: 2 },
-				// 2: { x: 0, y: 0, w: 1, h: 2 },
+				2: { x: 0, y: 0, w: 1, h: 2 },
+				1: { x: 0, y: 0, w: 1, h: 2 },
 			},
 		},
 	},
@@ -424,7 +435,8 @@ const testItems = [
 		...{
 			breakpoints: {
 				10: { x: 0, y: 0, w: 2, h: 2 },
-				// 2: { x: 0, y: 0, w: 1, h: 2 },
+				2: { x: 0, y: 0, w: 2, h: 2 },
+				1: { x: 0, y: 0, w: 2, h: 2 },
 			},
 		},
 	},
@@ -568,13 +580,14 @@ export async function createNewItem (type, content){
 			lineNumbers: true,
 			hasFocus: true,
 		},
-		...{
-			breakpoints: {
-				10: { x: 0, y: 0, w: 2, h: 2 },
-				5: { x: 0, y: 0, w: 1, h: 2 },
-				2: { x: 0, y: 0, w: 1, h: 2 },
-			},
-		},
+		// ...{
+		// 	breakpoints: {
+		// 		10: { x: 0, y: 0, w: 2, h: 2 },
+		// 		5: { x: 0, y: 0, w: 1, h: 2 },
+		// 		3: { x: 0, y: 0, w: 1, h: 2 },
+		// 		1: { x: 0, y: 0, w: 1, h: 2 },
+		// 	},
+		// },
 		...component,
 	};
 };
