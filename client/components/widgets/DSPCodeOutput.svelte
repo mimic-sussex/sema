@@ -1,7 +1,33 @@
 <script>
 import { dspCode } from '../../stores/common.js'
-
+import beautify from 'js-beautify';
+import hljs from 'highlight.js/lib/core';
+import javascript from 'highlight.js/lib/languages/javascript';
+hljs.registerLanguage('javascript', javascript);
 // export let items;
+
+let beautifyOptions = { 
+  "indent_size": "2",
+  "indent_char": " ",
+  "max_preserve_newlines": "1",
+  "preserve_newlines": true,
+  "keep_array_indentation": true,
+  "break_chained_methods": true,
+  "indent_scripts": "normal",
+  "brace_style": "collapse",
+  "space_in_empty_paren": true,
+  "space_before_conditional": true,
+  "unescape_strings": true,
+  "jslint_happy": false,
+  "end_with_newline": false,
+  "wrap_line_length": "70",
+  "indent_inner_html": false,
+  "comma_first": true,
+  "e4x": false,
+  "indent_empty_lines": false
+};
+
+
 
 </script>
 
@@ -62,9 +88,9 @@ import { dspCode } from '../../stores/common.js'
   </div>
   {#if $dspCode}
   <strong class="error-state">Setup:</strong>
-  <pre class='prewrap'> { JSON.stringify($dspCode.setup, null, 2) } </pre>
+  <pre class='prewrap'> { beautify($dspCode.setup, beautifyOptions)  } </pre>
   <strong class="error-state">Loop:</strong>
-  <pre class='prewrap'> { JSON.stringify($dspCode.loop, null, 2) } </pre>
+  <pre class='prewrap'> { beautify($dspCode.loop, beautifyOptions) } </pre>
   <!-- <pre> { JSON.stringify($dspCode.loop, null, 2) } </pre> -->
   {/if}
 </div>
