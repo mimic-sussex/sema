@@ -492,14 +492,23 @@ export let createRandomItem = (type) => {
 //     grammarEditorValue.set(item.data);    
 // }
 
-
-// Use traditional function declaration to prevent Temporal Dead Zone issue
+/**
+ * @createNewItem creates a new widget as new grid item object with properties that will be (de)serialized to the layout 
+ * wraps up components (e.g. LiveCodeEditor) which may have considerable load time and needs to be asynchronous
+ * ! NEED TO use traditional function declaration to prevent Temporal Dead Zone issue 
+ * TODO: Refactor to TS to apply inheritance and define parameter types
+ * @param widget type (e.g 'liveCodeEditor')
+ * @param content data hold held by the widget (e.g. liveCodeSource)
+ */
 export async function createNewItem (type, content){
-	// console.log("DEBUG:stores/common:createNewItem:");
-	// console.log(content);
 	let component;
-
 	switch (type) {
+		case "storeInspector":
+			component = {
+				component: StoreInspector,
+				background: "#d1d5ff",
+			};
+			break;
 		case "liveCodeEditor":
 			component = {
 				component: LiveCodeEditor,
@@ -509,7 +518,7 @@ export async function createNewItem (type, content){
 				liveCodeSource: content.livecode,
 				data: content.code,
 			};
-      // await populateStoresWithFetchedProps(component); 
+			// await populateStoresWithFetchedProps(component);
 			break;
 		case "grammarEditor":
 			component = {
@@ -518,7 +527,7 @@ export async function createNewItem (type, content){
 				theme: "monokai",
 				grammarSource: content.grammarSource,
 			};
-      component.data = content.grammar; // Get the store value with Svelte's get
+			component.data = content.grammar; // Get the store value with Svelte's get
 			break;
 		case "modelEditor":
 			component = {
@@ -537,12 +546,6 @@ export async function createNewItem (type, content){
 		case "grammarCompileOutput":
 			component = {
 				component: GrammarCompileOutput,
-				background: "#d1d5ff",
-			};
-			break;
-		case "storeInspector":
-			component = {
-				component: StoreInspector,
 				background: "#d1d5ff",
 			};
 			break;
@@ -592,6 +595,11 @@ export async function createNewItem (type, content){
 	};
 };
 
+/**
+ * @hydrateJSONcomponent receives a JSON description for a grid item and creates a 'live' Svelte component for the grid as new grid item object 
+ * TODO: Refactor to TS to apply inheritance and define parameter types
+ * @param item JSON grid item component description
+ */
 export function hydrateJSONcomponent (item){
 	if (item !== 'undefined' && item.type !== 'undefined') {
 		switch (item.type) {
