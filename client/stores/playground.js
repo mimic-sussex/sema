@@ -94,6 +94,7 @@ export const sidebarModelOptions = writable([
 	},
 ]);
 
+
 export const selectedModelOption = writable(sidebarModelOptions[1]);
 export const isSelectModelEditorDisabled = writable(false);
 
@@ -150,6 +151,7 @@ export const sidebarVisualisationOptions = [
 ];
 
 export const isAddAnalyserDisabled = writable(false);
+
 
 export const editorThemes = [
 	{ id: 0, text: `Change Theme...`, content: "" },
@@ -655,8 +657,13 @@ export const reset = () => {
 
 
 
-/*
- * Wraps writable store a
+/**
+ * @storable wraps the Svelte "writable store" pattern to automatically synchronize a store with local storage 
+ * * synchronize here is bidirectional which means both serializing the store value to a corresponding local storage item
+ * * and reading from a local storage item and hydrating the JSON descriptors
+ * ! HANDLE WITH CARE, requires a good understading of the Svelte store mechanism, the concepts of serialisation and hydration, and local storage
+ * @key text descriptor for the store in the local storage
+ * @initialValue initial default value for store
  */
 export function storable(key, initialValue) {
 	const store = writable(initialValue); // create an underlying store

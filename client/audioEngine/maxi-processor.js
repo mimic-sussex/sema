@@ -322,25 +322,45 @@ class MaxiProcessor extends AudioWorkletProcessor {
 		this.dt = 0;
 	}
 
+	/**
+	 *
+	 * @param {*} q
+	 * @param {*} inputs
+	 */
 	silence = (q, inputs) => {
 		return 0.0;
 	};
 
+	/**
+	 *
+	 */
 	newq = () => {
 		return {
 			vars: {},
 		};
 	};
 
+	/**
+	 *
+	 */
 	newmem = () => {
 		return new Array(512);
 	};
 
+	/**
+	 *
+	 * @param {*} x
+	 * @param {*} idx
+	 */
 	OSCTransducer = function (x, idx = 0) {
 		let val = this.OSCMessages[x];
 		return val ? (idx >= 0 ? val[idx] : val) : 0.0;
 	};
 
+	/**
+	 *
+	 * @param {*} bufferName
+	 */
 	getSampleBuffer = (bufferName) => {
 		let sample = this.sampleVectorBuffers["defaultEmptyBuffer"]; //defailt - silence
 		if (bufferName in this.sampleVectorBuffers) {
@@ -351,19 +371,26 @@ class MaxiProcessor extends AudioWorkletProcessor {
 		return sample;
 	};
 
+	/**
+	 *
+	 */
 	clockUpdate = () => {
 		this.beatLengthInSamples = (60 / this.bpm) * sampleRate;
 		this.barPhaseMultiplier =
 			this.maxTimeLength / this.beatLengthInSamples / this.beatsPerBar;
 
 		console.log(
-			"CLOCK: ",
+			"DEBUG:maxi-processor:clockUpdate: ",
 			this.barPhaseMultiplier,
 			this.maxTimeLength,
 			this.beatsPerBar
 		);
 	};
 
+	/**
+	 *
+	 * @param {*} bpm
+	 */
 	setBPM = (bpm) => {
 		if (this.bpm != bpm) {
 			this.bpm = bpm;
@@ -372,6 +399,10 @@ class MaxiProcessor extends AudioWorkletProcessor {
 		return 0;
 	};
 
+	/**
+	 *
+	 * @param {*} bpb
+	 */
 	setBeatsPerBar = (bpb) => {
 		if (this.beatsPerBar != bpb) {
 			this.beatsPerBar = bpb;
@@ -382,9 +413,10 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
 	/**
 	 * @CLP phasor over one bar length
-	 *
-	 * upon EVAL, this is dynamically invoqued from the LOOP function
-	 * */
+	 * * upon EVAL, this is dynamically invoqued from the LOOP function
+	 * @param {*} multiples
+	 * @param {*} phase
+	 */
 	clockPhase = (multiples, phase) => {
 		return (
 			(((this.clockPhasor * this.barPhaseMultiplier * multiples) % 1.0) +
@@ -395,21 +427,27 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
 	/**
 	 * @CLT phasor over one bar length
-	 *
-	 * upon EVAL, this is dynamically invoqued from the LOOP function
-	 *
+	 * * upon EVAL, this is dynamically invoqued from the LOOP function
+	 * @param {*} multiples
+	 * @param {*} phase
 	 */
 	clockTrig = (multiples, phase) => {
 		let clphase = this.clockPhase(multiples, phase);
 		return clphase - (1.0 / sampleRate) * multiples <= 0 ? 1 : 0;
 	};
 
-	// NOT USED ?
+	/**
+	 *
+	 * @param {*} sendFrequency
+	 */
 	createMLOutputTransducer = (sendFrequency) => {
 		return new OutputTransducer(this.port, sampleRate, sendFrequency, "ML");
 	};
 
-	// NOT USED ?
+	/**
+	 *
+	 * @param {*} sendFrequency
+	 */
 	createNetOutputTransducer = (sendFrequency) => {
 		return new OutputTransducer(this.port, sampleRate, sendFrequency, "NET");
 	};
@@ -417,7 +455,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
 	/**
 	 *
 	 *
-	 * upon EVAL, this is dynamically invoqued from the LOOP function
+	 * * this is dynamically invoked from the LOOP function upon EVAL
 	 */
 	dacOut = (x, ch) => {
 		if (ch >= this.DAC.length) {
@@ -430,9 +468,10 @@ class MaxiProcessor extends AudioWorkletProcessor {
 	};
 
 	/**
-	 * Writes computed signal from mems
-	 *
-	 * upon EVAL, this is dynamically invoqued from the LOOP function
+	 * Writes the resulting computed signal from each component in the heap (mems)
+	 * to each DAC's channel
+   * 
+	 * * this is dynamically invoked from the LOOP function upon EVAL
 	 */
 	dacOutAll = (x) => {
 		for (let i = 0; i < this.DAC.length; i++) {
@@ -441,6 +480,10 @@ class MaxiProcessor extends AudioWorkletProcessor {
 		return x;
 	};
 
+	/**
+	 *
+	 * @param {*} id
+	 */
 	updateSABInputs = (id) => {
 		for (let v in inputSABs) {
 			let avail = inputSABs[v].rb.available_read();
@@ -455,7 +498,10 @@ class MaxiProcessor extends AudioWorkletProcessor {
 		}
 	};
 
-	// NOT USED
+	/**
+	 *
+	 * @param {*} id
+	 */
 	getSABValue = (id) => {
 		let res = 0;
 		let sab = inputSABs[id];
@@ -465,13 +511,21 @@ class MaxiProcessor extends AudioWorkletProcessor {
 		return res;
 	};
 
+	/**
+	 *
+	 * @param {*} name
+	 * @param {*} buf
+	 */
 	addSampleBuffer = (name, buf) => {
 		this.sampleVectorBuffers[name] = this.translateFloat32ArrayToBuffer(buf);
 	};
 
+	/**
+	 * @onAudioWorkletNodeMessageEventHandler
+	 * * message port async handler
+	 * @param {*} event
+	 */
 	onAudioWorkletNodeMessageEventHandler = (event) => {
-		// message port async handler
-		// console.log(event);
 		if ("address" in event.data) {
 			//this must be an OSC message
 			this.OSCMessages[event.data.address] = event.data.args;
@@ -499,7 +553,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
 				value:
 					event.data.blocksize > 1 ? new Float64Array(event.data.blocksize) : 0,
 			};
-			//TEMP DEPRECATED
+			//TEMP DEPR.ECATED
 			// } else if ('peermsg' in event.data) {
 			//   console.log('peer', event);
 			//   //this is from peer streaming, map it on to any listening transducers
@@ -533,6 +587,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
 				this.nextSignalFunction = 1 - this.currentSignalFunction;
 
+        // setup function with the  types 
 				this._q[this.nextSignalFunction] = setupFunction();
 				//allow feedback between evals
 				this._mems[this.nextSignalFunction] = this._mems[
@@ -577,10 +632,16 @@ class MaxiProcessor extends AudioWorkletProcessor {
 		}
 	};
 
+	/**
+	 * Initialises all DAC channels to zero and settings for Maximilian
+	 * @param {*} sampleRate
+	 * @param {*} channels
+	 * @param {*} bufferSize
+	 */
 	initialiseDAC = (sampleRate, channels, bufferSize) => {
 		for (let i = 0; i < channels; i++) this.DAC[i] = 0.0;
 
-		console.log("init DAC", channels);
+		console.log("DEBUG:maxi-processor:initialiseDAC: ", channels);
 
 		Maximilian.maxiJSSettings.setup(sampleRate, channels, bufferSize);
 		Maximilian.maxiSettings.setup(sampleRate, channels, bufferSize);
@@ -589,10 +650,14 @@ class MaxiProcessor extends AudioWorkletProcessor {
 	};
 
 	/**
-	 * @process
+	 *
+	 * @param {*} inputs
+	 * @param {*} outputs
+	 * @param {*} parameters
 	 */
 	process(inputs, outputs, parameters) {
-		if (!this.DACInitialised) {
+		
+    if (!this.DACInitialised) {
 			this.initialiseDAC(sampleRate, outputs[0].length, 512);
 		}
 
@@ -641,7 +706,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
 					Math.floor(this.clockPhase(1, 0) * 1023.999999999)
 				);
 
-				let w = 0;
+				// let w = 0;
 				//new code waiting?
 
 				let barTrig = this.clockTrig(1, 0);
@@ -657,17 +722,9 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
 				if (this.codeSwapState == this.codeSwapStates.XFADING) {
 					try {
+						this.signals[0](this._q[0], inputs[0][i], this._mems[0]);
 
-						this.signals[0](
-              this._q[0], 
-              inputs[0][i], 
-              this._mems[0]);
-
-						this.signals[1](
-              this._q[1], 
-              inputs[0][i], 
-              this._mems[1]);
-
+						this.signals[1](this._q[1], inputs[0][i], this._mems[1]);
 					} catch (err) {
 						console.log("EVAL ERROR – XFADING", err);
 						console.log("signals: ", this.signals);
@@ -689,13 +746,11 @@ class MaxiProcessor extends AudioWorkletProcessor {
 					//no xfading - play as normal
 					// w = this.signals[this.currentSignalFunction](this._q[this.currentSignalFunction], inputs[0][0][i], this._mems[this.currentSignalFunction]);
 					try {
-
 						this.signals[this.currentSignalFunction](
 							this._q[this.currentSignalFunction],
 							inputs[0][i],
 							this._mems[this.currentSignalFunction]
 						);
-
 					} catch (err) {
 						console.log("EVAL ERROR – NO xfading ", err);
 						console.log("signals: ", this.signals);
@@ -740,9 +795,17 @@ class MaxiProcessor extends AudioWorkletProcessor {
 				this._cleanup[oldIdx] = 1;
 			}
 		}
+
+
+
+
 		return true;
 	}
 
+	/**
+	 *
+	 * @param {*} audioFloat32ArrayBuffer
+	 */
 	translateFloat32ArrayToBuffer(audioFloat32ArrayBuffer) {
 		var maxiSampleBufferData = new Maximilian.VectorDouble();
 		for (var i = 0; i < audioFloat32ArrayBuffer.length; i++) {
