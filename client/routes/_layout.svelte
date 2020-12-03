@@ -1,7 +1,7 @@
 <!-- <script context="module">
 	export async function preload() {
 		// '/' absolute URL
-    
+
 		return await fetch(`/tutorial/tutorial.json`).then(r => r.json());
 	}
 </script> -->
@@ -14,8 +14,11 @@
 	import UserObserver from '../components/user/UserObserver.svelte';
 	import SignOut from '../components/user/SignOut.svelte';
 	import AudioEngineStatus from '../components/AudioEngineStatus.svelte';
+  import SiteColor from '../components/SiteColor.svelte';
+
 
   import { currentUser } from '../stores/user.js'
+
 
   import {
     tutorials,
@@ -33,7 +36,7 @@
   $: fetchAndLoadDefaultTutorial();
   $: fetchAndLoadDefaultTutorialItems();
 
-  /** 
+  /**
    * Loads language options from language service and set grammar and default code sources
   */
   let loadSidebarLiveCodeOptions = () => {
@@ -42,10 +45,10 @@
       .then(json => {
         console.log("DEBUG:_layout:loadPlayground");
         console.log(json)
-        $sidebarLiveCodeOptions = $sidebarLiveCodeOptions.concat(json.map( language => ({ 
-            id: 1, 
-            disabled: false, 
-            text: language.name, 
+        $sidebarLiveCodeOptions = $sidebarLiveCodeOptions.concat(json.map( language => ({
+            id: 1,
+            disabled: false,
+            text: language.name,
             content : {
               grammar:  `/languages/${language.name}/grammar.ne`,
               livecode: `/languages/${language.name}/code.sem`
@@ -57,7 +60,7 @@
 	}
 
 
-  /** 
+  /**
    * Fetches Tutorial table of contents and sets default tutorial (Basics/Introduction)
   */
   let fetchAndLoadDefaultTutorial = () => {
@@ -71,7 +74,7 @@
       });
 	}
 
-  /** 
+  /**
    * Fetches and sets the contents of the default tutorial (Basics/Introduction)
   */
   let fetchAndLoadDefaultTutorialItems = () => {
@@ -80,7 +83,7 @@
       .then( r => r.json())
       .then(json => {
         $items = json.map( item => hydrateJSONcomponent(item) );
-        $ready(); 
+        $ready();
       });
 
   }
@@ -116,17 +119,17 @@
     width: 100%;
     /* background: linear-gradient(150deg, rgba(0,18,1,1) 0%, rgba(7,5,17,1) 33%, rgba(16,12,12,1) 67%, rgba(18,16,16,1) 100%); */
   }
-  
+
   .logo {
     /* grid-row: 1; */
     grid-column: 1;
-    
+
   }
 
   .nav-container {
     grid-column: 2 / span 1;
     /* grid-row: 1;  */
-    
+
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
@@ -158,7 +161,7 @@
     color: whitesmoke;
 	}
 
-  /* 
+  /*
   .ul-container{
     margin-top: 0px;
   } */
@@ -209,7 +212,7 @@
       <ul>
       <!-- <li>
         <span style="color:white" on:click={handleCClick}>Canvas</span>
-      </li> -->  
+      </li> -->
         <li><a href="/">Home</a></li>
         <!-- Note: need to keep the slash after tutorial path-->
         <li><a href="/playground/">Playground</a></li>
@@ -236,6 +239,9 @@
     </div>
 
     <div class="actions-container">
+
+      <!-- <SiteColor /> -->
+
       <AudioEngineStatus />
 
       <SignOut />

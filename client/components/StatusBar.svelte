@@ -2,6 +2,7 @@
 
   import AudioEngineStatus from './AudioEngineStatus';
   import SignOut from './user/SignOut';
+  import SiteColor from './SiteColor';
 
 </script>
 
@@ -11,6 +12,8 @@
 
 
 <div>
+
+  <SiteColor />
 
   <AudioEngineStatus />
 
