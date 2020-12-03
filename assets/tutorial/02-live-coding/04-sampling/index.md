@@ -40,7 +40,7 @@ or with another sample
 > {:trig:,1}\909closed;
 ```
 
-Note that the first sample player above has an addition parameter. Let's see what this does...
+Note that the first sample player above has an additional parameter. Let's see what this does...
 
 ### Manipulating sample playback
 
@@ -93,7 +93,7 @@ The second parameter could be controlled by an oscillator. Here, a phasor slowly
 > {{3}imp,{0.1}pha}|patterndrone2;
 ```
 
-The example below does a a very rough timestretch (although it clicks a bit)
+The example below does a very rough timestretch (although it clicks a bit)
 
 ```
 > {{16}imp,{0.1}pha}|convol5;
