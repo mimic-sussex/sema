@@ -16,8 +16,8 @@
 
 
   const createLoginButton = () => {
-    // FirebaseUI config – We might want users to provide a Google Account 
-    // or fetch the email address associated to GitHub account 
+    // FirebaseUI config – We might want users to provide a Google Account
+    // or fetch the email address associated to GitHub account
     // Configuration code extracted from:
     // https://github.com/firebase/firebaseui-web#using-firebaseui-for-authentication
     var uiConfig = {
@@ -39,10 +39,10 @@
           // ...
 
           // trigger 'Sign In as Guest' to change button visibility and kickstart Audio Engine
-          handleClick();          
+          handleClick();
 
           return false;
-        }  
+        }
       }
       // # tosUrl and privacyPolicyUrl accept either url string or a callback
       // # function.
@@ -53,15 +53,15 @@
       //   window.location.assign('<your-privacy-policy-url>');
       // }
     };
-    // # Initialize the FirebaseUI Widget using Firebase, 
+    // # Initialize the FirebaseUI Widget using Firebase,
     // var ui = new firebaseui.auth.AuthUI(firebase.auth());
     // # or if already logged in, get the existing instance
     var ui = firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(firebase.auth());
     // The start method below will wait until the DOM is loaded.
 
-     
 
-    ui.start('#firebaseui-auth-container', uiConfig);  
+
+    ui.start('#firebaseui-auth-container', uiConfig);
 
 
   }
@@ -71,20 +71,20 @@
   //   firebase.auth().signOut().then(async function() {
   //     // Sign-out successful.
   //     console.log('DEBUG:Login: Logged out');
-      
+
   //     await tick();
-  //     createLoginButton(); 
+  //     createLoginButton();
 
   //   }).catch(function(error) {
   //     // An error happened.
   //     console.log('DEBUG:Login:', error);
-    
+
   //   }).finally(() => {
   //     $goto(`/`); // Request Routify client-side router navigation to Home `/`
   //   });
 
-    
-  // }     
+
+  // }
 
   onMount(() => {
     if(!$currentUser){
@@ -95,7 +95,7 @@
 </script>
 
 <style>
-/* 
+/*
   .sign-in-guest-button {
     height: 40px;
     width: 187px;
@@ -109,9 +109,9 @@
 {#if !$currentUser}
 <!-- <button on:click={ () => signOut() }>SignOut</button> -->
 <!-- {:else} -->
-<!-- 
-<button class='sign-in-guest-button' 
-        on:click={ handleClick } 
+<!--
+<button class='sign-in-guest-button'
+        on:click={ handleClick }
         > Sign in as Guest </button>  -->
 
   <div id='firebaseui-auth-container'></div>

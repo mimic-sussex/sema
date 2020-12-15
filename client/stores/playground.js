@@ -372,7 +372,7 @@ const testItems = [
 	{
 		id: id(),
 		8: gridHelp.item({ x: 0, y: 0, w: 2, h: 2 }),
-		5: gridHelp.item({ x: 0, y: 0, w: 2, h: 2 }),
+		6: gridHelp.item({ x: 0, y: 0, w: 2, h: 2 }),
 		3: gridHelp.item({ x: 0, y: 0, w: 1, h: 2 }),
 		2: gridHelp.item({
 			x: 0,
@@ -389,14 +389,14 @@ const testItems = [
 			background: "#151515",
 			theme: "icecoder",
 			component: LiveCodeEditor,
-			data: "#lc-1",
+			content: "#lc-1",
 			grammarSource: "/languages/defaultGrammar.ne",
 		},
 	},
 	{
-		8: gridHelp.item({ x: 0, y: 0, w: 2, h: 2 }),
-		5: gridHelp.item({ x: 0, y: 0, w: 2, h: 2 }),
-		3: gridHelp.item({ x: 0, y: 0, w: 1, h: 2 }),
+		8: gridHelp.item({ x: 2, y: 0, w: 2, h: 2 }),
+		6: gridHelp.item({ x: 2, y: 0, w: 2, h: 2 }),
+		3: gridHelp.item({ x: 2, y: 0, w: 1, h: 2 }),
 		2: gridHelp.item({
 			x: 0,
 			y: 0,
@@ -412,7 +412,7 @@ const testItems = [
 			background: "#151515",
 			theme: "icecoder",
 			component: GrammarEditor,
-			data: "#lc-1",
+			content: "#ge-1",
 			grammarSource: "/languages/defaultGrammar.ne",
 		},
 	},
@@ -500,6 +500,7 @@ export let createRandomItem = (type) => {
 	const x = Math.ceil(Math.random() * 3) + 2;
 	const y = Math.ceil(Math.random() * 4) + 1;
 
+
 	let item = {
 		...gridHelp.item({
 			x: (i * 2) % col,
@@ -553,69 +554,70 @@ export let createRandomItem = (type) => {
  * @param content data hold held by the widget (e.g. liveCodeSource)
  */
 export async function createNewItem (type, content){
-	let component;
+	let data;
 	switch (type) {
 		case "storeInspector":
-			component = {
+			data = {
 				component: StoreInspector,
 				background: "#d1d5ff",
 			};
 			break;
 		case "liveCodeEditor":
-			component = {
+			data = {
 				component: LiveCodeEditor,
 				background: "#151515",
 				theme: "icecoder",
 				grammarSource: content.grammar,
 				liveCodeSource: content.livecode,
-				data: content.code,
+				content: content.code, // changed from `data`
 			};
 			// await populateStoresWithFetchedProps(component);
 			break;
 		case "grammarEditor":
-			component = {
+			data = {
 				component: GrammarEditor,
 				background: "#AAAAAA",
 				theme: "monokai",
 				grammarSource: content.grammarSource,
+        content: content.grammar // Get the store value with Svelte's get
 			};
-			component.data = content.grammar; // Get the store value with Svelte's get
+			// data.data = content.grammar; // Get the store value with Svelte's get
 			break;
 		case "modelEditor":
-			component = {
+			data = {
 				component: ModelEditor,
 				background: "#f0f0f0",
 				theme: "monokai",
-				data: content,
+				content: content,
 			};
 			break;
 		case "liveCodeParseOutput":
-			component = {
+			data = {
 				component: LiveCodeParseOutput,
 				background: "#ebdeff",
 			};
 			break;
 		case "grammarCompileOutput":
-			component = {
+			data = {
 				component: GrammarCompileOutput,
 				background: "#d1d5ff",
 			};
 			break;
 		case "analyser":
-			component = {
+			data = {
 				component: Analyser,
 				background: "#ffffff",
 				mode: "",
 			};
 			break;
 		case "postIt":
-			component = {
+			data = {
 				component: PostIt,
 				background: "#ffffff",
 			};
 			break;
 		case "dspCodeOutput":
-			component = {
+			data = {
 				component: DSPCodeOutput,
 				background: "#fdbd9a",
 			};
@@ -628,22 +630,26 @@ export async function createNewItem (type, content){
 
 	// return component template
 	return {
-		...gridHelp.item({ x: 0, y: 0, w: 7, h: 3, id: itemId }),
-		...{
+    id: itemId,
+		8: gridHelp.item({ x: 0, y: 0, w: 2, h: 2 }),
+		5: gridHelp.item({ x: 0, y: 0, w: 2, h: 2 }),
+		3: gridHelp.item({ x: 0, y: 0, w: 1, h: 2 }),
+		2: gridHelp.item({
+			x: 0,
+			y: 0,
+			w: 1,
+			h: 2,
+		}),
+		data: {
 			type: type,
 			name: type + itemId,
+			background: "#151515",
 			lineNumbers: true,
 			hasFocus: true,
+			background: "#151515",
+			theme: "icecoder",
+			...data
 		},
-		// ...{
-		// 	breakpoints: {
-		// 		10: { x: 0, y: 0, w: 2, h: 2 },
-		// 		5: { x: 0, y: 0, w: 1, h: 2 },
-		// 		3: { x: 0, y: 0, w: 1, h: 2 },
-		// 		1: { x: 0, y: 0, w: 1, h: 2 },
-		// 	},
-		// },
-		...component,
 	};
 };
 

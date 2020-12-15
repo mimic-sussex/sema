@@ -10,7 +10,7 @@
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack",
     "dev": "run-p watch:routify watch:webpack",
-    "watch:webpack": "webpack-dev-server --content-base public",
+    "watch:webpack": "webpack-dev-server --content-base ./public/",
     "watch:routify": "routify -d --pages ./client/routes/",
     "test": "mocha --opts mocha.opts",
     "export": "routify export",

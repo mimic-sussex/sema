@@ -8,7 +8,7 @@
   import compile from '../compiler/compiler';
 
   import Sidebar from '../components/playground/Sidebar.svelte';
-  import Dashboard from '../components/layouts/Dashboard.svelte';
+  // import Dashboard from '../components/layouts/Dashboard.svelte';
 
   import Grid from "svelte-grid";
   import gridHelp from "svelte-grid/build/helper";
@@ -43,21 +43,16 @@
   // let cols = 12;
   // let breakpoints
   let cols = [
-    // [2880, 8]
-    // [1500, 5],
-    // [1024, 3],
-    [1600, 8],
-    [1440, 5],
-    [1280, 3],
-    [1024, 2],
-    // [1287, 3],
-    // [700, 1],
-    // [1100, 5],
-    // [800, 3],
+    // [2880, 13]
+    // [1600, 8],
+    [1440, 6],
+    // [1280, 3],
+    // [1024, 2],
+    // [800, 1],
     // [500, 1]
   ];
   let rowHeight = 100;
-  let gap = [10, 10];
+  let gap = [4, 4];
 
   // Subscription tokens for messaging topic subscriptions
   // must be kept for unsubscribe on each route component onMount/onDestroy
@@ -81,7 +76,7 @@
       try {
         let itemProperties = [];
         if( item.type === "liveCodeEditor" || item.type === "grammarEditor" || item.type === 'modelEditor' ){
-          itemProperties = [ { lineNumbers: item.lineNumbers}, { theme: item.theme } ];
+          itemProperties = [ { lineNumbers: item.data.lineNumbers}, { theme: item.theme } ];
 
           // Order in item properties determines final order in interface
           // if( item.type === "liveCodeEditor" || item.type === "grammarEditor" ){
@@ -133,7 +128,7 @@
         setFocused(newItem);
 
         let findOutPosition = gridHelp.findSpace(newItem, $items, cols); // find out where to place
-        $items =  [...$items, ...[{ ...newItem, ...findOutPosition }]]; // Append to playground Items stores
+        $items =  [...$items, ...[{ ...newItem, [cols]: { ...newItem[cols], ...findOutPosition } }]]; // Append to playground Items stores
 
       }
       catch (error){
@@ -144,30 +139,63 @@
       console.error("Error on routes/Playground.addItem: undefined parameter")
   }
 
-	const update = e => {
+	// const update = e => {
 
-    if( e.detail.item && e.detail.prop ){
-      try{
-        if( e.detail.prop === 'data' ){
-          switch (e.detail.item.type) {
-            case "liveCodeEditor":
-              localStorage.liveCodeEditorValue = e.detail.value;
-              break;
-            case "grammarEditor":
-              localStorage.grammarEditorValue = e.detail.value;
-              break;
-            case "modelEditor":
-              localStorage.modelEditorValue = e.detail.value;
-              break;
-            default:
-              break;
-          }
+  //   if( e.detail.item && e.detail.prop ){
+  //   }
 
-          $items = $items.map(i => i === e.detail.item ? { ...i, [e.detail.prop]: e.detail.value } : i);
-        }
-        else {
-          setFocused(e.detail.item);
-        }
+
+    // if( e.data && e.data.type ){
+    //   try{
+
+    //       switch (e.data.type) {
+    //         case "liveCodeEditor":
+    //           localStorage.liveCodeEditorValue = e.data.content;
+    //           break;
+    //         case "grammarEditor":
+    //           localStorage.grammarEditorValue = e.data.content;
+    //           break;
+    //         case "modelEditor":
+    //           localStorage.modelEditorValue = e.data.content;
+    //           break;
+    //         default:
+    //           break;
+    //       }
+    //     }
+
+    //   }
+    //     else {
+    //       setFocused(e);
+    //     }
+
+    //   catch(error){
+    //     console.error("Error on routes/Playground.update: updating Playground items", error);
+    //   }
+    // }
+  }
+
+    // if( e.detail.item && e.detail.prop ){
+    //   try{
+    //     if( e.detail.prop === 'data' ){
+    //       switch (e.detail.item.type) {
+    //         case "liveCodeEditor":
+    //           localStorage.liveCodeEditorValue = e.detail.value;
+    //           break;
+    //         case "grammarEditor":
+    //           localStorage.grammarEditorValue = e.detail.value;
+    //           break;
+    //         case "modelEditor":
+    //           localStorage.modelEditorValue = e.detail.value;
+    //           break;
+    //         default:
+    //           break;
+    //       }
+
+    //       $items = $items.map(i => i === e.detail.item ? { ...i, [e.detail.prop]: e.detail.value } : i);
+    //     }
+    //     else {
+    //       setFocused(e.detail.item);
+    //     }
 
         // if( e.detail.item.type === 'analyser' && e.detail.prop === 'hasFocus' && e.detail.value ){
         //   setFocused(e.detail.item);
@@ -179,12 +207,12 @@
           // $items = $items; // force an update
 
         // }
-      }
-      catch(error){
-        console.error("Error on routes/Playground.update: updating Playground items", error);
-      }
-    }
-	}
+  //     }
+  //     catch(error){
+  //       console.error("Error on routes/Playground.update: updating Playground items", error);
+  //     }
+  //   }
+	// }
 
 
 
@@ -309,7 +337,7 @@
   <!-- {breakpoints}
   on:update={ e => update(e) }
    -->
-  <div class="dashboard-container">
+  <div class="dashboard-container scrollable">
     <Grid
       bind:items={$items}
       {cols}
@@ -317,26 +345,28 @@
       {gap}
       on:adjust={onAdjust}
       on:mount={onChildMount}
-      useTransform
       let:item
+      let:dataItem
       >
+        <span class='move'>+</span>
 
-        <span class='move' >+</span>
-          <!-- style="background: { item.static ? '#bka' : item.background }; border: { item.hasFocus ? '5px solid red': '5px solid blue' } ;" -->
+        <div  class="content"
+            style="background: { item.fixed ? '#bka' : dataItem.background }; border: { dataItem.hasFocus ? '1px solid rgba(100, 100, 100, 0.5)': '1px solid rgba(25, 25, 25, 1)' }; border-width: 1px 0px 0px 1px;"
+            on:pointerdown={ e => e.stopPropagation() }
+            >
 
-    <div  class="content"
-          style="background: { item.fixed ? '#bka' : item.background }; border: { item.hasFocus ? '1px solid rgba(100, 100, 100, 0.5)': '1px solid rgba(25, 25, 25, 1)' }; border-width: 1px 0px 0px 1px;"
-          on:pointerdown={ e => e.stopPropagation() } >
+        <span class='close'
+              on:click={ () => remove(item) }
+              >✕
+        </span>
 
-      <span class='close'
-            on:click={ () => remove(item) } >✕</span>
+        <svelte:component class='component'
+                          this={dataItem.data.component}
+                          {...dataItem.data}
+                          on:change={ e => update(dataItem, e.detail.prop, e.detail.value) }
+                          />
 
-  		<svelte:component class='component'
-                        this={item.component}
-                        {...item}
-                        on:change={ e => update(item, e.detail.prop, e.detail.value) } />
-
-    </div>
+      </div>
     </Grid>
 
   </div>
@@ -397,7 +427,7 @@
 
   :global(.svlt-grid-container) {
     /* Container color */
-    background: rgb(215, 0, 0);
+    /* background: #eee; */
   }
 
   :global(.svlt-grid-transition > .svlt-grid-item) {
@@ -430,6 +460,17 @@
     z-index: 1500;
     color: lightgray;
   }
+
+  .content {
+    width: 100%;
+    height: 100%;
+    border-radius: 6px;
+    border-top-left-radius: 0px;
+    border-bottom-right-radius: 3px;
+    /* background: black; */
+
+  }
+
 
   .component{
 

@@ -5,7 +5,7 @@ import globalCss from "./global.css";
 import { exportHistory, clearHistory } from "./utils/history.js";
 
 const app = new App({
-	target: document.body 
+	target: document.body
 });
 
 
