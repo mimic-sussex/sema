@@ -51,7 +51,7 @@
     "style-loader": "^1.0.0",
     "svelte": "3.20.1",
     "svelte-codemirror": "https://github.com/frantic0/svelte-codemirror.git",
-    "svelte-grid": "2.3.0",
+    "svelte-grid": "3.5.1",
     "svelte-inspect": "^0.1.2",
     "svelte-loader": "2.13.3",
     "webpack": "^4.30.0",

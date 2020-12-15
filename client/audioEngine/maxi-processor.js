@@ -300,6 +300,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
 		};
 		this.codeSwapState = this.codeSwapStates.NONE;
 
+    // Main event handler for the Audio worklet asynchronous messaging system
 		this.port.onmessage = this.onAudioWorkletNodeMessageEventHandler;
 
 		this.port.postMessage("giveMeSomeSamples");
@@ -470,7 +471,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
 	/**
 	 * Writes the resulting computed signal from each component in the heap (mems)
 	 * to each DAC's channel
-   * 
+   *
 	 * * this is dynamically invoked from the LOOP function upon EVAL
 	 */
 	dacOutAll = (x) => {
@@ -587,7 +588,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
 
 				this.nextSignalFunction = 1 - this.currentSignalFunction;
 
-        // setup function with the  types 
+        // setup function with the  types
 				this._q[this.nextSignalFunction] = setupFunction();
 				//allow feedback between evals
 				this._mems[this.nextSignalFunction] = this._mems[
@@ -656,7 +657,7 @@ class MaxiProcessor extends AudioWorkletProcessor {
 	 * @param {*} parameters
 	 */
 	process(inputs, outputs, parameters) {
-		
+
     if (!this.DACInitialised) {
 			this.initialiseDAC(sampleRate, outputs[0].length, 512);
 		}

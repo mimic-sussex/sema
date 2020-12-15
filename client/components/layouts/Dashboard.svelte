@@ -1,6 +1,6 @@
 <script>
 	import { onMount, createEventDispatcher } from 'svelte';
-	
+
   import { get } from 'svelte/store';
 
   import Grid from "svelte-grid";
@@ -23,8 +23,22 @@
 
   // Svelte-grid configuration
   export let items;
-  export let cols;
-  export let breakpoints;
+  // export let cols;
+
+  export let cols = [
+    // [2880, 8]
+    // [1500, 5],
+   [1024, 6]
+    // [1440, 6]
+    // [1287, 3],
+    // [700, 1],
+    // [1100, 5],
+    // [800, 3],
+    // [500, 1]
+  ];
+
+
+  // export let breakpoints;
   export let rowHeight;
   export let gap;
 
@@ -34,42 +48,42 @@
   const themes = ['monokai', 'cobalt', 'icecoder', 'shadowfox' ];
   const itheme = () => types[Math.floor(Math.random() * themes.length)];
 
-  function generateLayout(col) {
-    return map( new Array(5), function(item, i) {
-      const x = Math.ceil(Math.random() * 3) + 2;
-      const y = Math.ceil(Math.random() * 4) + 1;
-      const iid = id();
-      return {
-        ...gridHelp.item({
-          x: (i * 2) % col,
-          y: Math.floor(i / 6) * y,
-          w: x,
-          h: y,
-          id: iid,
-          name: iid,
-          type: itype()
-        }),
-        ...{ data: randomHexColorCode() },
-      };
-    });
-  }
+  // function generateLayout(col) {
+  //   return map( new Array(5), function(item, i) {
+  //     const x = Math.ceil(Math.random() * 3) + 2;
+  //     const y = Math.ceil(Math.random() * 4) + 1;
+  //     const iid = id();
+  //     return {
+  //       ...gridHelp.item({
+  //         x: (i * 2) % col,
+  //         y: Math.floor(i / 6) * y,
+  //         w: x,
+  //         h: y,
+  //         id: iid,
+  //         name: iid,
+  //         type: itype()
+  //       }),
+  //       ...{ data: randomHexColorCode() },
+  //     };
+  //   });
+  // }
 
   const onAdjust = e => {
-    // console.log("DEBUG:dashboard:onAdjust:", e.detail); 
-    $items = $items; // call a re-render
+    // console.log("DEBUG:dashboard:onAdjust:", e.detail);
+    // $items = $items; // call a re-render
   };
 
   const onChildMount = e => {
-    // console.log("DEBUG:dashboard:onChildMount:", e.detail); 
+    // console.log("DEBUG:dashboard:onChildMount:", e.detail);
     // $items = $items; // call a re-render
   };
 
 	const update = (item, prop, value) => {
-    dispatch('update', { 
-      item,
-      prop, 
-      value
-    });
+    // dispatch('update', {
+    //   item,
+    //   prop,
+    //   value
+    // });
 	}
 
 
@@ -85,9 +99,9 @@
     remove.bind(null, item); // remove dashboard item binding
     delete item.component;
     $items = $items.filter( i => i.id !== item.id);
-    
-    console.log("DEBUG:dashboard:remove:"); 
-    console.log($items); 
+
+    console.log("DEBUG:dashboard:remove:");
+    console.log($items);
   }
 
 
@@ -103,37 +117,41 @@
 
 </script>
 
-
-<div class="layout-template-container scrollable">
+<!-- scrollable -->
+<div class="layout-template-container ">
   <!-- Notice that were passing items as a store here ($)   -->
-  <Grid items={$items}
-        {breakpoints}
+        <!--
+          {breakpoints}
+          on:adjust={onAdjust}
+          on:mount={onChildMount}
+          useTransform
+          items={$items}
+        -->
+  <!-- <Grid
         {cols}
         {rowHeight}
         {gap}
-        useTransform
         let:item
-        on:adjust={onAdjust}
-        on:mount={onChildMount}
-        >
 
-    <span class='move' >+</span>
+        > -->
+
+    <!-- <span class='move' >+</span> -->
           <!-- style="background: { item.static ? '#bka' : item.background }; border: { item.hasFocus ? '5px solid red': '5px solid blue' } ;" -->
 
-    <div  class="content"
+    <!-- <div  class="content"
           style="background: { item.fixed ? '#bka' : item.background }; border: { item.hasFocus ? '1px solid rgba(100, 100, 100, 0.5)': '1px solid rgba(25, 25, 25, 1)' }; border-width: 1px 0px 0px 1px;"
           on:pointerdown={ e => e.stopPropagation() } >
 
       <span class='close'
             on:click={ () => remove(item) } >✕</span>
 
-  		<svelte:component class='component' 
+  		<svelte:component class='component'
                         this={item.component}
                         {...item}
                         on:change={ e => update(item, e.detail.prop, e.detail.value) } />
 
-    </div>
-  </Grid>
+    </div> -->
+  <!-- </Grid> -->
 </div>
 
 
@@ -145,8 +163,8 @@
 
   .layout-template-container {
     /* height: 100vh; */
-    	height: 100%;
-      width: 100%;
+    	/* height: 100%; */
+      /* width: 100%; */
       /* overflow: hidden; */
   }
 
@@ -160,7 +178,7 @@
 
   }
 
-  :global(*) {
+  /* :global(*) {
     user-select: none;
   }
 
@@ -185,9 +203,8 @@
     background: pink;
     border-radius: 6px;
     border-bottom-right-radius: 3px;
-    /*transition: top 0.2s, left 0.2s;*/
     transition: transform 0.2s;
-  }
+  } */
 
   .close {
     position: absolute;

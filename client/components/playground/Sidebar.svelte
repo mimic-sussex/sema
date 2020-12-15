@@ -8,7 +8,7 @@
     sidebarLiveCodeOptions,
     selectedLiveCodeOption,
     isSelectLiveCodeEditorDisabled,
-    
+
     sidebarModelOptions,
     selectedModelOption,
     isSelectModelEditorDisabled,
@@ -20,7 +20,7 @@
 
     sidebarDebuggerOptions,
     selectedDebuggerOption,
-    isSelectDebuggerDisabled, 
+    isSelectDebuggerDisabled,
     // sidebarVisualisationOptions,
 
     focusedItemProperties,
@@ -49,16 +49,19 @@
   // let selectedModelOption;
   let selectedVisualisationOption;
 
+  function onSelectSnapShot(){
 
+
+  }
 
 
   function onReset(){
     messaging.publish('playground-reset');
 
-    $isSelectLiveCodeEditorDisabled = false; 
-    $isSelectModelEditorDisabled = false; 
-    $isAddGrammarEditorDisabled = false;  
-    $isAddAnalyserDisabled = false; 
+    $isSelectLiveCodeEditorDisabled = false;
+    $isSelectModelEditorDisabled = false;
+    $isAddGrammarEditorDisabled = false;
+    $isAddAnalyserDisabled = false;
     $sidebarDebuggerOptions.map( option => option.disabled = false );
   }
 
@@ -70,12 +73,12 @@
       case 'live':
         messaging.publish("playground-add", { type: 'liveCodeEditor', data: selected.content });
         $selectedLiveCodeOption = $sidebarLiveCodeOptions[0];
-        $isSelectLiveCodeEditorDisabled = true;         
+        $isSelectLiveCodeEditorDisabled = true;
         break;
       case 'model':
         messaging.publish("playground-add", { type: 'modelEditor', data: selected.content });
         $selectedModelOption = $sidebarModelOptions[0];
-        $isSelectModelEditorDisabled = true;        
+        $isSelectModelEditorDisabled = true;
         break;
       // case 'grammar':
       //   messaging.publish("playground-add", { type: 'grammarEditor'});
@@ -88,8 +91,8 @@
         break;
       case 'debugger':
         messaging.publish("playground-add", { type: selected.type });
-        disableSelectDebuggerOption(selected.type);       
-        $selectedDebuggerOption = $sidebarDebuggerOptions[0];  
+        disableSelectDebuggerOption(selected.type);
+        $selectedDebuggerOption = $sidebarDebuggerOptions[0];
         break;
       default:
         break;
@@ -138,14 +141,14 @@
       else if(itemType === 'storeInspector'){
         $sidebarDebuggerOptions[5].disabled = state;
       }
-    else 
-      throw new Error("Enable Select Debugger Option On Item Deletion: itemType undefined"); 
+    else
+      throw new Error("Enable Select Debugger Option On Item Deletion: itemType undefined");
   }
 
 
   function activateSelectOnItemDeletion(itemType){
     // console.log("DEBUG:routes/playground:sidebar:activateSelectOnItemDeletion:")
-    
+
     if(itemType !== null){
       switch (itemType) {
         case 'liveCodeEditor':
@@ -158,7 +161,7 @@
           $isAddGrammarEditorDisabled = false;
           break;
         case 'analyser':
-          $isAddAnalyserDisabled = false; 
+          $isAddAnalyserDisabled = false;
           break;
         case 'grammarCompileOutput':
         case 'liveCodeParseOutput':
@@ -171,7 +174,7 @@
           break;
       }
     }
-    else 
+    else
       throw new Error("Activate Select On Item Deletion: itemType undefined")
   }
 
@@ -182,7 +185,7 @@
       for (const item of $items){
         switch (item.type) {
           case 'liveCodeEditor':
-            $isSelectLiveCodeEditorDisabled = true; 
+            $isSelectLiveCodeEditorDisabled = true;
             break;
           case 'modelEditor':
             $isSelectModelEditorDisabled = true;
@@ -191,7 +194,7 @@
             $isAddGrammarEditorDisabled = true;
             break;
           case 'analyser':
-            $isAddAnalyserDisabled = true; 
+            $isAddAnalyserDisabled = true;
             break;
           case 'grammarCompileOutput':
           case 'liveCodeParseOutput':
@@ -211,7 +214,7 @@
   onMount(() => {
     // console.log("DEBUG:routes/playground:sidebar:onMount")
 
-    setButtonsStateOnLoad(); 
+    setButtonsStateOnLoad();
     itemDeletionSubscriptionToken = messaging.subscribe("plaground-item-deletion", activateSelectOnItemDeletion);
   })
 
@@ -239,10 +242,10 @@
 
   /* .checkbox-span {
     color: whitesmoke;
-    margin-left: 20px; 
+    margin-left: 20px;
   } */
   /* .checkbox-input {
-    margin-left: 5px; 
+    margin-left: 5px;
   } */
 
   /* The checkbox container */
@@ -312,7 +315,7 @@
     padding: 0.7em 1em 0.7em 1em;
     /* width: 100%; */
     width: 10em;
-    max-width: 100%; 
+    max-width: 100%;
     box-sizing: border-box;
     border: 0 solid #333;
     text-align: left;
@@ -350,7 +353,7 @@
     padding: 0.7em 1em 0.7em 1em;
     /* width: 100%; */
     width: 10em;
-    max-width: 100%; 
+    max-width: 100%;
     box-sizing: border-box;
     border: 0 solid #333;
     text-align: left;
@@ -388,15 +391,15 @@
     <!-- Live Code Combobox Selector -->
     <div class="controls">
       <!-- on:click={ () => $sidebarLiveCodeOptions[0].disabled = true }  -->
-      <select class="combobox-dark" 
-              bind:value={ $selectedLiveCodeOption } 
+      <select class="combobox-dark"
+              bind:value={ $selectedLiveCodeOption }
               on:change={ () => dispatchAdd('live', $selectedLiveCodeOption) }
               on:click={ () => $sidebarLiveCodeOptions[0].disabled = true }
-              disabled={ $isSelectLiveCodeEditorDisabled }   
-              cursor={ () => ( $isSelectLiveCodeEditorDisabled ? 'not-allowed' : 'pointer') }      
+              disabled={ $isSelectLiveCodeEditorDisabled }
+              cursor={ () => ( $isSelectLiveCodeEditorDisabled ? 'not-allowed' : 'pointer') }
               >
         {#each $sidebarLiveCodeOptions as liveCodeOption}
-          <option disabled={ liveCodeOption.disabled } 
+          <option disabled={ liveCodeOption.disabled }
                   value={liveCodeOption}
                   >
             {liveCodeOption.text}
@@ -410,53 +413,53 @@
       <!-- <select class="combobox" bind:value={$selectedTutorial} > -->
       <!-- on:click={ () => $sidebarModelOptions[0].disabled = true }   -->
       <select class="combobox-dark"
-              bind:value={ $selectedModelOption } 
-              on:change={ () => dispatchAdd('model', $selectedModelOption) } 
-              on:click={ () => $sidebarModelOptions[0].disabled = true }  
+              bind:value={ $selectedModelOption }
+              on:change={ () => dispatchAdd('model', $selectedModelOption) }
+              on:click={ () => $sidebarModelOptions[0].disabled = true }
               disabled={ $isSelectModelEditorDisabled }
               cursor={ () => ( $isSelectModelEditorDisabled ? 'not-allowed' : 'pointer' )}
               >
         {#each $sidebarModelOptions as modelOption}
-          <option disabled={modelOption.disabled} 
+          <option disabled={modelOption.disabled}
                   value={modelOption}
                   >
             { modelOption.text }
           </option>
         {/each}
-      </select>    
+      </select>
     </div>
 
     <!-- Grammar Combobox Selector -->
     <!-- <div class="controls">
-      <select class="combobox-dark" 
-              bind:value={selectedGrammarOption} 
+      <select class="combobox-dark"
+              bind:value={selectedGrammarOption}
               on:change={ () => dispatchAdd('grammar', selectedGrammarOption) } >
         {#each sidebarGrammarOptions as grammarOption}
           <option value={grammarOption}>
             { grammarOption.text }
           </option>
         {/each}
-      </select>    
+      </select>
     </div> -->
 
     <!-- <div>
       <button class="button-dark controls"
               on:click={ () => dispatchAdd('grammar') }
               disabled={ $isAddGrammarEditorDisabled }
-              > 
+              >
         Grammar Editor
       </button>
     </div> -->
 
     <!-- Debuggers Combobox Selector -->
     <div class="controls">
-      <select class="combobox-dark" 
-              bind:value={ $selectedDebuggerOption } 
-              on:change={ () => dispatchAdd('debugger', $selectedDebuggerOption) } 
-              on:click={ () => $sidebarDebuggerOptions[0].disabled = true  }  
+      <select class="combobox-dark"
+              bind:value={ $selectedDebuggerOption }
+              on:change={ () => dispatchAdd('debugger', $selectedDebuggerOption) }
+              on:click={ () => $sidebarDebuggerOptions[0].disabled = true  }
               >
         {#each $sidebarDebuggerOptions as debuggerOption}
-          <option disabled={ debuggerOption.disabled } 
+          <option disabled={ debuggerOption.disabled }
                   value={ debuggerOption }>
             { debuggerOption.text }
           </option>
@@ -468,7 +471,7 @@
       <button class="button-dark controls"
               on:click={ () => dispatchAdd('analyser') }
               disabled={ $isAddAnalyserDisabled }
-              > 
+              >
         Audio Analyser
       </button>
     </div>
@@ -476,11 +479,18 @@
     <div>
       <button class="button-dark controls"
               on:click={ onReset }
-              > 
+              >
         Reset
       </button>
     </div>
 
+    <div>
+      <button class="button-dark controls"
+
+              >
+        Snapshow
+      </button>
+    </div>
     <!-- <div>
       <label class="checkbox-container">Line Numbers
         <input type="checkbox" checked="checked" class="checkbox-input">
@@ -501,7 +511,7 @@
               { modelOption.text }
             </option>
           {/each}
-        </select>    
+        </select>
       </div> -->
     </div>
 </div>

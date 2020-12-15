@@ -4,12 +4,14 @@
 
   import { PubSub } from "../messaging/pubSub.js";
 
-  import gridHelp from "svelte-grid/build/helper";
 
   import compile from '../compiler/compiler';
 
   import Sidebar from '../components/playground/Sidebar.svelte';
   import Dashboard from '../components/layouts/Dashboard.svelte';
+
+  import Grid from "svelte-grid";
+  import gridHelp from "svelte-grid/build/helper";
 
   import {
     fetchFrom
@@ -38,14 +40,24 @@
 	const github = new GitHubBase({ /* options */ });
 
   // Playground dashboard configuration
-  let cols = 12;
-  let breakpoints = [
-    // [2880, 5]
+  // let cols = 12;
+  // let breakpoints
+  let cols = [
+    // [2880, 8]
+    // [1500, 5],
+    // [1024, 3],
+    [1600, 8],
+    [1440, 5],
+    [1280, 3],
+    [1024, 2],
     // [1287, 3],
     // [700, 1],
+    // [1100, 5],
+    // [800, 3],
+    // [500, 1]
   ];
   let rowHeight = 100;
-  let gap = 1;
+  let gap = [10, 10];
 
   // Subscription tokens for messaging topic subscriptions
   // must be kept for unsubscribe on each route component onMount/onDestroy
@@ -186,7 +198,21 @@
   }
 
 
+  const remove = item => {
 
+    if(item.type === 'analyser'){
+      messaging.publish('remove-engine-analyser', { id: item.id }); // notify audio engine to remove associated analyser
+    }
+
+    messaging.publish("plaground-item-deletion", item.type);
+
+    remove.bind(null, item); // remove dashboard item binding
+    delete item.component;
+    $items = $items.filter( i => i.id !== item.id);
+
+    console.log("DEBUG:dashboard:remove:");
+    console.log($items);
+  }
 
   const saveEnvironment = e => {
    	// console.log('DEBUG:saveEnvironment', e);
@@ -223,6 +249,17 @@
 			.catch(console.error);
 		}
   }
+
+  const onAdjust = e => {
+    // console.log("DEBUG:dashboard:onAdjust:", e.detail);
+    $items = $items; // call a re-render
+  };
+
+  const onChildMount = e => {
+    // console.log("DEBUG:dashboard:onChildMount:", e.detail);
+    $items = $items; // call a re-render
+  };
+
 
 
   onMount( async () => {
@@ -269,14 +306,39 @@
   <div class="sidebar-container">
     <Sidebar />
   </div>
-  <div class="dashboard-container scrollable">
-    <Dashboard  {items}
-                {breakpoints}
-                {cols}
-                {rowHeight}
-                {gap}
-                on:update={ e => update(e) }
-                />
+  <!-- {breakpoints}
+  on:update={ e => update(e) }
+   -->
+  <div class="dashboard-container">
+    <Grid
+      bind:items={$items}
+      {cols}
+      {rowHeight}
+      {gap}
+      on:adjust={onAdjust}
+      on:mount={onChildMount}
+      useTransform
+      let:item
+      >
+
+        <span class='move' >+</span>
+          <!-- style="background: { item.static ? '#bka' : item.background }; border: { item.hasFocus ? '5px solid red': '5px solid blue' } ;" -->
+
+    <div  class="content"
+          style="background: { item.fixed ? '#bka' : item.background }; border: { item.hasFocus ? '1px solid rgba(100, 100, 100, 0.5)': '1px solid rgba(25, 25, 25, 1)' }; border-width: 1px 0px 0px 1px;"
+          on:pointerdown={ e => e.stopPropagation() } >
+
+      <span class='close'
+            on:click={ () => remove(item) } >✕</span>
+
+  		<svelte:component class='component'
+                        this={item.component}
+                        {...item}
+                        on:change={ e => update(item, e.detail.prop, e.detail.value) } />
+
+    </div>
+    </Grid>
+
   </div>
 </div>
 
@@ -286,9 +348,9 @@
     width: 100%;
     display: grid;
     grid-template-columns: auto 1fr;
-    grid-template-rows: 50% 50%;
+    /* grid-template-rows: 50% 50%; */
+       /* "sidebar layout" */
     grid-template-areas:
-      "sidebar layout"
       "sidebar layout";
   	/* background-color: #6f7262; */
     background-color: #212121;
@@ -298,18 +360,87 @@
     background: linear-gradient(150deg, rgba(0,18,1,1) 0%, rgba(7,5,17,1) 33%, rgba(16,12,12,1) 67%, rgb(12, 12, 12) 100%);
     /* margin-left: 10px; */
     grid-area: sidebar;
-    grid-row: 0 / 1;
+    /* grid-row: 0 / 1; */
     height: 100%;
     width: auto; /* width is defined by child */
   }
 
   .dashboard-container {
     grid-area: layout;
-    grid-row: 0 / 2;
-    height: 100vh;
+
+    height: 100%;
     width: 100%;
-    overflow: hidden;
+    /* height: 100vh;
+    width: 100%;
+    overflow: hidden; */
+
+    /* grid-row: 0 / 2; */
+  }
+
+
+  :global(*) {
+    user-select: none;
+  }
+
+  :global(body) {
+    overflow: scroll;
+    margin: 0;
+  }
+
+  :global(.svlt-grid-resizer) {
+    z-index: 1500;
+  }
+
+  :global(.svlt-grid-resizer::after) {
+    border-color: white !important;
+  }
+
+  :global(.svlt-grid-container) {
+    /* Container color */
+    background: rgb(215, 0, 0);
+  }
+
+  :global(.svlt-grid-transition > .svlt-grid-item) {
+    transition: transform 0.2s;
+  }
+
+  :global(.svlt-grid-shadow) {
+    background: pink;
+    border-radius: 6px;
+    border-bottom-right-radius: 3px;
+    transition: transform 0.2s;
+  }
+
+  .close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 5px 10px;
+    cursor: pointer;
+    z-index: 1500;
+    text-shadow: 1px 1px 1px #000000;
+  }
+
+  .move {
+    text-shadow: 1px 1px 1px #000000;
+    font-size: 1.2em;
+    position: absolute;
+    padding: 1px 5px;
+    cursor: move;
+    z-index: 1500;
+    color: lightgray;
+  }
+
+  .component{
+
+    z-index: 1500;
 
   }
+
+ 	.scrollable {
+		flex: 1 1 auto;
+		margin: 0 0 0.5em 0;
+		overflow-y: auto;
+	}
 
 </style>

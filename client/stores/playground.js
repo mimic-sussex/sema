@@ -4,15 +4,15 @@ import compile from "../compiler/compiler";
 
 import { id, fetchFrom } from "../utils/utils";
 
-/** 
+/**
  * These methods should be extracted in the future to common.js
  * However there is more to understand about how Webpack builds JS modules
- * there was a runtime error at hydrateJSONcomponent which I couldn't 
- * figure out in time for the user study, so I rolled it back. 
+ * there was a runtime error at hydrateJSONcomponent which I couldn't
+ * figure out in time for the user study, so I rolled it back.
  * hence there is duplicate code in tutorial and playground stores
  * [FB20200527]
  */
-// import { hydrateJSONcomponent, storable } from "../stores/common"; 
+// import { hydrateJSONcomponent, storable } from "../stores/common";
 
 import gridHelp from "svelte-grid/build/helper/index.mjs";
 
@@ -206,7 +206,7 @@ export const editorThemes = [
 /*******                                        ********/
 /*******                                        ********/
 /*******   Playground Dashboard Items Stores    ********/
-/*******                                        ********/ 
+/*******                                        ********/
 
 
 const originalItems = [
@@ -355,10 +355,32 @@ const originalItems = [
 	},
 ];
 
+
+
+
+
+
+
+
+/**
+ * * Test items to study responsive system
+ *
+ *
+ *
+ */
 const testItems = [
 	{
-		...gridHelp.item({ x: 7, y: 0, w: 2, h: 1, id: id() }),
-		...{
+		id: id(),
+		8: gridHelp.item({ x: 0, y: 0, w: 2, h: 2 }),
+		5: gridHelp.item({ x: 0, y: 0, w: 2, h: 2 }),
+		3: gridHelp.item({ x: 0, y: 0, w: 1, h: 2 }),
+		2: gridHelp.item({
+			x: 0,
+			y: 0,
+			w: 1,
+			h: 2,
+		}),
+		data: {
 			type: "liveCodeEditor",
 			name: "hello-world",
 			background: "#151515",
@@ -370,15 +392,42 @@ const testItems = [
 			data: "#lc-1",
 			grammarSource: "/languages/defaultGrammar.ne",
 		},
-		...{
-			breakpoints: {
-				10: { x: 0, y: 0, w: 2, h: 2 },
-				2: { x: 0, y: 0, w: 1, h: 2 },
-				1: { x: 0, y: 0, w: 1, h: 2 },
-			},
+	},
+	{
+		8: gridHelp.item({ x: 0, y: 0, w: 2, h: 2 }),
+		5: gridHelp.item({ x: 0, y: 0, w: 2, h: 2 }),
+		3: gridHelp.item({ x: 0, y: 0, w: 1, h: 2 }),
+		2: gridHelp.item({
+			x: 0,
+			y: 0,
+			w: 1,
+			h: 2,
+		}),
+		data: {
+			type: "grammarEditor",
+			name: "hello-world",
+			background: "#151515",
+			lineNumbers: true,
+			hasFocus: false,
+			background: "#151515",
+			theme: "icecoder",
+			component: GrammarEditor,
+			data: "#lc-1",
+			grammarSource: "/languages/defaultGrammar.ne",
 		},
 	},
 
+	// {
+	// 	6: gridHelp.item({
+	// 		x: 0,
+	// 		y: 0,
+	// 		w: 2,
+	// 		h: 2,
+	// 	}),
+	// 	id: id(),
+	// },
+
+	/*
 	{
 		...gridHelp.item({ x: 10, y: 2, w: 2, h: 1, id: id() }),
 		...{
@@ -395,7 +444,7 @@ const testItems = [
 			breakpoints: {
 				10: { x: 0, y: 0, w: 2, h: 2 },
 				2: { x: 0, y: 0, w: 1, h: 2 },
-				1: { x: 0, y: 0, w: 1, h: 2 }
+				1: { x: 0, y: 0, w: 1, h: 2 },
 			},
 		},
 	},
@@ -441,7 +490,8 @@ const testItems = [
 				1: { x: 0, y: 0, w: 2, h: 2 },
 			},
 		},
-	},
+	}
+  */
 ];
 
 export let createRandomItem = (type) => {
@@ -477,7 +527,7 @@ export let createRandomItem = (type) => {
 
 
 // export const populateStoresWithFetchedProps = async (newItem) => {
-  
+
 //   if(newItem.type === 'liveCodeEditor')
 //     try{
 //       newItem.data = await fetchFrom(newItem.liveCodeSource);
@@ -491,13 +541,13 @@ export let createRandomItem = (type) => {
 //       console.error("Error Populating stores with fetched liveCode props")
 //     }
 //   else if (newItem.type === 'grammarEditor')
-//     grammarEditorValue.set(item.data);    
+//     grammarEditorValue.set(item.data);
 // }
 
 /**
- * @createNewItem creates a new widget as new grid item object with properties that will be (de)serialized to the layout 
+ * @createNewItem creates a new widget as new grid item object with properties that will be (de)serialized to the layout
  * wraps up components (e.g. LiveCodeEditor) which may have considerable load time and needs to be asynchronous
- * ! NEED TO use traditional function declaration to prevent Temporal Dead Zone issue 
+ * ! NEED TO use traditional function declaration to prevent Temporal Dead Zone issue
  * TODO: Refactor to TS to apply inheritance and define parameter types
  * @param widget type (e.g 'liveCodeEditor')
  * @param content data hold held by the widget (e.g. liveCodeSource)
@@ -598,7 +648,7 @@ export async function createNewItem (type, content){
 };
 
 /**
- * @hydrateJSONcomponent receives a JSON description for a grid item and creates a 'live' Svelte component for the grid as new grid item object 
+ * @hydrateJSONcomponent receives a JSON description for a grid item and creates a 'live' Svelte component for the grid as new grid item object
  * TODO: Refactor to TS to apply inheritance and define parameter types
  * @param item JSON grid item component description
  */
@@ -658,10 +708,12 @@ export const reset = () => {
 
 
 /**
- * @storable wraps the Svelte "writable store" pattern to automatically synchronize a store with local storage 
- * * synchronize here is bidirectional which means both serializing the store value to a corresponding local storage item
+ * @storable wraps the Svelte "writable store" pattern to automatically synchronize a store with local storage
+ * * synchronize here is bidirectional which means both serializing the store value
+ * * to a corresponding local storage item
  * * and reading from a local storage item and hydrating the JSON descriptors
- * ! HANDLE WITH CARE, requires a good understading of the Svelte store mechanism, the concepts of serialisation and hydration, and local storage
+ * ! HANDLE WITH CARE, requires a good understading of the Svelte store mechanism,
+ * ! the concepts of serialisation and hydration, and local storage
  * @key text descriptor for the store in the local storage
  * @initialValue initial default value for store
  */
@@ -697,7 +749,8 @@ export function storable(key, initialValue) {
 }
 
 // Dashboard layout in items list
-export const items = storable("playground", originalItems); // localStorageWrapper
+export const items = storable("playground", testItems); // localStorageWrapper
+// export const items = storable("playground", originalItems); // localStorageWrapper
 
 // Dashboard SELECTED item which receives focus and has item controls loaded
 export const focusedItem = writable({});
@@ -713,23 +766,23 @@ export function setFocused(item){
   try {
     let itemProperties = [];
     if( item.type === "liveCodeEditor" || item.type === "grammarEditor" || item.type === 'modelEditor' ){
-      itemProperties = [ item.lineNumbers, item.theme ];     
+      itemProperties = [ item.lineNumbers, item.theme ];
 
       if( item.type === "liveCodeEditor" ){
         // itemProperties.push(item.grammar);
-      } 
+      }
     }
     else if(item.type === 'analyser'){
       itemProperties.push(item.mode)
-    } 
-    focusedItemProperties.set(itemProperties);    
+    }
+    focusedItemProperties.set(itemProperties);
 
     items.update(
-			(itemsToUpdate) => { 
-        itemsToUpdate.map( 
-          itemToUnfocus => ({ 
+			(itemsToUpdate) => {
+        itemsToUpdate.map(
+          itemToUnfocus => ({
             ...itemToUnfocus,
-            ...{ hasFocus: false } 
+            ...{ hasFocus: false }
           })
         )
       }
@@ -744,7 +797,7 @@ export function setFocused(item){
 
     // items.set(itemsUnfocused);
     // items = itemsUnfocused);
-    
+
     //set focused item
     item.hasFocus = true;
   	focusedItem.set(item);
@@ -752,7 +805,7 @@ export function setFocused(item){
   catch(error){
     console.error("Error Playground.setFocused: setting item focusesd" );
   };
-} 
+}
 
 
 export function clearFocused(){
