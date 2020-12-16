@@ -79,14 +79,14 @@
   */
   let fetchAndLoadDefaultTutorialItems = () => {
 
-    if($params.chapter_dir !== undefined && params.section_dir !== undefined)
+    if($params.chapter_dir !== undefined && params.section_dir !== undefined){
       fetch(`/tutorial/${$params.chapter_dir}/${$params.section_dir}/layout.json`)
         .then( r => r.json())
         .then(json => {
           $items = json.map( item => hydrateJSONcomponent(item) );
           $ready();
         });
-
+    }
   }
 
   let persistentParams = { chapter: '01-basics', section: '01-introduction' };

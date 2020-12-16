@@ -632,7 +632,7 @@ export async function createNewItem (type, content){
 	return {
     id: itemId,
 		8: gridHelp.item({ x: 0, y: 0, w: 2, h: 2 }),
-		5: gridHelp.item({ x: 0, y: 0, w: 2, h: 2 }),
+		6: gridHelp.item({ x: 0, y: 0, w: 2, h: 2 }),
 		3: gridHelp.item({ x: 0, y: 0, w: 1, h: 2 }),
 		2: gridHelp.item({
 			x: 0,
@@ -648,7 +648,7 @@ export async function createNewItem (type, content){
 			hasFocus: true,
 			background: "#151515",
 			theme: "icecoder",
-			...data
+    	...data
 		},
 	};
 };

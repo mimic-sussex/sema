@@ -1,3 +1,167 @@
+
+<style>
+  .container {
+    height: 100%;
+    width: 100%;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    /* grid-template-rows: 50% 50%; */
+       /* "sidebar layout" */
+    grid-template-areas:
+      "sidebar layout";
+  	/* background-color: #6f7262; */
+    background-color: #212121;
+    overflow: hidden;
+  }
+  .sidebar-container {
+    background: linear-gradient(150deg, rgba(0,18,1,1) 0%, rgba(7,5,17,1) 33%, rgba(16,12,12,1) 67%, rgb(12, 12, 12) 100%);
+    /* margin-left: 10px; */
+    grid-area: sidebar;
+    /* grid-row: 0 / 1; */
+    height: 100%;
+    width: auto; /* width is defined by child */
+  }
+
+  .dashboard-container {
+    grid-area: layout;
+
+    height: 100%;
+    width: 100%;
+    /* height: 100vh;
+    width: 100%;
+    overflow: hidden; */
+
+    /* grid-row: 0 / 2; */
+  }
+
+
+  :global(*) {
+    user-select: none;
+  }
+
+  :global(body) {
+    overflow: scroll;
+    margin: 0;
+  }
+
+  :global(.svlt-grid-resizer) {
+    z-index: 1500;
+  }
+
+  :global(.svlt-grid-resizer::after) {
+    border-color: white !important;
+  }
+
+  :global(.svlt-grid-container) {
+    /* Container color */
+    /* background: #eee; */
+  }
+
+  :global(.svlt-grid-transition > .svlt-grid-item) {
+    transition: transform 0.2s;
+  }
+
+  :global(.svlt-grid-shadow) {
+    background: pink;
+    border-radius: 6px;
+    border-bottom-right-radius: 3px;
+    transition: transform 0.2s;
+  }
+
+  .close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 5px 10px;
+    cursor: pointer;
+    z-index: 1500;
+    text-shadow: 1px 1px 1px #000000;
+  }
+
+  .move {
+    text-shadow: 1px 1px 1px #000000;
+    font-size: 1.2em;
+    position: absolute;
+    padding: 1px 5px;
+    cursor: move;
+    z-index: 1500;
+    color: lightgray;
+  }
+
+  .content {
+    width: 100%;
+    height: 100%;
+    border-radius: 6px;
+    border-top-left-radius: 0px;
+    border-bottom-right-radius: 3px;
+    /* background: black; */
+
+  }
+
+
+  .component{
+
+    z-index: 1500;
+
+  }
+
+ 	.scrollable {
+		flex: 1 1 auto;
+		margin: 0 0 0.5em 0;
+		overflow-y: auto;
+	}
+
+</style>
+
+
+<svelte:head>
+	<title>Sema – Playground</title>
+</svelte:head>
+
+<div class="container">
+  <div class="sidebar-container">
+    <Sidebar />
+  </div>
+  <!-- {breakpoints}
+  on:update={ e => update(e) }
+   -->
+  <div class="dashboard-container scrollable">
+    <Grid
+      bind:items={$items}
+      {cols}
+      {rowHeight}
+      {gap}
+      on:adjust={onAdjust}
+      on:mount={onChildMount}
+      let:item
+      let:dataItem
+      >
+        <span class='move'>+</span>
+
+        <div  class="content"
+              style="background: { item.fixed ? '#bka' : dataItem.data.background }; border: { dataItem.data.hasFocus ? '1px solid rgba(100, 100, 100, 0.5)': '1px solid rgba(25, 25, 25, 1)' }; border-width: 1px 0px 0px 1px;"
+              on:pointerdown={ e => e.stopPropagation() }
+              >
+
+          <span class='close'
+                on:click={ () => remove(item) }
+                >✕
+          </span>
+
+          <svelte:component class='component'
+                            this={ dataItem.data.component }
+                            { ...dataItem.data }
+                            on:change={ componentUpdateEvent => update(componentUpdateEvent, item, dataItem) }
+                            />
+      </div>
+    </Grid>
+
+  </div>
+</div>
+
+
+
+
 <script>
 
   import { onMount, onDestroy } from 'svelte';
@@ -34,6 +198,8 @@
     resetStores
   } from  "../stores/common.js"
 
+  // import { removeUnderscoredDirs } from '@sveltech/routify/lib/middleware/misc';
+
   const messaging = new PubSub();
 
 	const GitHubBase = require('github-base');
@@ -52,7 +218,7 @@
     // [500, 1]
   ];
   let rowHeight = 100;
-  let gap = [4, 4];
+  let gap = [2, 2];
 
   // Subscription tokens for messaging topic subscriptions
   // must be kept for unsubscribe on each route component onMount/onDestroy
@@ -74,26 +240,26 @@
 
     if(item){
       try {
-        let itemProperties = [];
-        if( item.type === "liveCodeEditor" || item.type === "grammarEditor" || item.type === 'modelEditor' ){
-          itemProperties = [ { lineNumbers: item.data.lineNumbers}, { theme: item.theme } ];
+        // let itemProperties = [];
+        // if( item.type === "liveCodeEditor" || item.type === "grammarEditor" || item.type === 'modelEditor' ){
+        //   itemProperties = [ { lineNumbers: item.data.lineNumbers}, { theme: item.theme } ];
 
-          // Order in item properties determines final order in interface
-          // if( item.type === "liveCodeEditor" || item.type === "grammarEditor" ){
-          //   itemProperties.push({ debug: true });
-          // }
+        //   // Order in item properties determines final order in interface
+        //   // if( item.type === "liveCodeEditor" || item.type === "grammarEditor" ){
+        //   //   itemProperties.push({ debug: true });
+        //   // }
 
-          if( item.type === "liveCodeEditor" ){
-            itemProperties.push({ grammar: item.grammar });
-          }
+        //   if( item.type === "liveCodeEditor" ){
+        //     itemProperties.push({ grammar: item.grammar });
+        //   }
 
-          if( item.type === "modelEditor" ){
-            itemProperties.push({ restart: true });
-          }
-        }
-        else if(item.type === 'analyser'){
-          itemProperties.push( { mode: item.mode } )
-        }
+        //   if( item.type === "modelEditor" ){
+        //     itemProperties.push({ restart: true });
+        //   }
+        // }
+        // else if(item.type === 'analyser'){
+        //   itemProperties.push( { mode: item.mode } )
+        // }
 
         item.hasFocus = true;
         $focusedItem = item;
@@ -113,22 +279,36 @@
   }
 
 
-  const addItem = async (type, value) => {
+  async function addItem(type, value){
+
+    let COLS = 6;
 
     if(type !== undefined){
       try {
         let newItem = await createNewItem(type, value);
+        console.log("DEBUG:newITEM:", newItem)
+        // await updateItemPropsWithFetchedValues(newItem);
 
-        await updateItemPropsWithFetchedValues(newItem);
+        // await populateCommonStoresWithFetchedProps(newItem);
 
-        await populateCommonStoresWithFetchedProps(newItem);
+        // updateItemPropsWithCommonStoreValues(newItem)
 
-        updateItemPropsWithCommonStoreValues(newItem)
+        // setFocused(newItem);
 
-        setFocused(newItem);
+        let findOutPosition = gridHelp.findSpace(newItem, $items, COLS);
 
-        let findOutPosition = gridHelp.findSpace(newItem, $items, cols); // find out where to place
-        $items =  [...$items, ...[{ ...newItem, [cols]: { ...newItem[cols], ...findOutPosition } }]]; // Append to playground Items stores
+        newItem = {
+          ...newItem,
+          [COLS]: {
+            ...newItem[COLS],
+            ...findOutPosition,
+          },
+        };
+
+        $items = [...$items, ...[newItem]]
+
+        // let findOutPosition = gridHelp.findSpace(newItem, $items, cols); // find out where to place
+        // $items =  [...$items, ...[{ ...newItem, [cols]: { ...newItem[cols], ...findOutPosition } }]]; // Append to playground Items stores
 
       }
       catch (error){
@@ -138,6 +318,35 @@
     else
       console.error("Error on routes/Playground.addItem: undefined parameter")
   }
+
+
+  const update = (updateEvent, item, dataItem) => {
+    console.log("DEBUG:playground:update:", updateEvent, item, dataItem);
+    // if(updateEvednt !== undefined && updateEvent.detail !== undefined && dataItem !== undefined){
+    //   if(updateEvent.detail.prop === "content"){
+    //     switch (dataItem.data.type) {
+    //       case "liveCodeEditor":
+    //         localStorage.liveCodeEditorValue = updateEvent.detail.value;
+    //         break;
+    //       case "grammarEditor":
+    //         localStorage.grammarEditorValue = updateEvent.detail.value;
+    //         break;
+    //       case "modelEditor":
+    //         localStorage.modelEditorValue = updateEvent.detail.value;
+    //         break;
+    //       default:
+    //         break;
+    //     }
+    // $items = $items.map(i => i === item ? { item.data[updateEvent.detail.prop]: updateEvent.detail.value } : i);
+
+    //   }
+    //   else if(updateEvent.detail.prop === "hasFocus"){
+    //      // setFocused(dataItem);
+    //   }
+    // }
+    // console.log("DEBUG:playground:component-update", dataItem, item, prop);
+  }
+
 
 	// const update = e => {
 
@@ -172,7 +381,7 @@
     //     console.error("Error on routes/Playground.update: updating Playground items", error);
     //   }
     // }
-  }
+  // }
 
     // if( e.detail.item && e.detail.prop ){
     //   try{
@@ -325,163 +534,3 @@
   });
 
 </script>
-
-<svelte:head>
-	<title>Sema – Playground</title>
-</svelte:head>
-
-<div class="container">
-  <div class="sidebar-container">
-    <Sidebar />
-  </div>
-  <!-- {breakpoints}
-  on:update={ e => update(e) }
-   -->
-  <div class="dashboard-container scrollable">
-    <Grid
-      bind:items={$items}
-      {cols}
-      {rowHeight}
-      {gap}
-      on:adjust={onAdjust}
-      on:mount={onChildMount}
-      let:item
-      let:dataItem
-      >
-        <span class='move'>+</span>
-
-        <div  class="content"
-            style="background: { item.fixed ? '#bka' : dataItem.background }; border: { dataItem.hasFocus ? '1px solid rgba(100, 100, 100, 0.5)': '1px solid rgba(25, 25, 25, 1)' }; border-width: 1px 0px 0px 1px;"
-            on:pointerdown={ e => e.stopPropagation() }
-            >
-
-        <span class='close'
-              on:click={ () => remove(item) }
-              >✕
-        </span>
-
-        <svelte:component class='component'
-                          this={dataItem.data.component}
-                          {...dataItem.data}
-                          on:change={ e => update(dataItem, e.detail.prop, e.detail.value) }
-                          />
-
-      </div>
-    </Grid>
-
-  </div>
-</div>
-
-<style>
-  .container {
-    height: 100%;
-    width: 100%;
-    display: grid;
-    grid-template-columns: auto 1fr;
-    /* grid-template-rows: 50% 50%; */
-       /* "sidebar layout" */
-    grid-template-areas:
-      "sidebar layout";
-  	/* background-color: #6f7262; */
-    background-color: #212121;
-    overflow: hidden;
-  }
-  .sidebar-container {
-    background: linear-gradient(150deg, rgba(0,18,1,1) 0%, rgba(7,5,17,1) 33%, rgba(16,12,12,1) 67%, rgb(12, 12, 12) 100%);
-    /* margin-left: 10px; */
-    grid-area: sidebar;
-    /* grid-row: 0 / 1; */
-    height: 100%;
-    width: auto; /* width is defined by child */
-  }
-
-  .dashboard-container {
-    grid-area: layout;
-
-    height: 100%;
-    width: 100%;
-    /* height: 100vh;
-    width: 100%;
-    overflow: hidden; */
-
-    /* grid-row: 0 / 2; */
-  }
-
-
-  :global(*) {
-    user-select: none;
-  }
-
-  :global(body) {
-    overflow: scroll;
-    margin: 0;
-  }
-
-  :global(.svlt-grid-resizer) {
-    z-index: 1500;
-  }
-
-  :global(.svlt-grid-resizer::after) {
-    border-color: white !important;
-  }
-
-  :global(.svlt-grid-container) {
-    /* Container color */
-    /* background: #eee; */
-  }
-
-  :global(.svlt-grid-transition > .svlt-grid-item) {
-    transition: transform 0.2s;
-  }
-
-  :global(.svlt-grid-shadow) {
-    background: pink;
-    border-radius: 6px;
-    border-bottom-right-radius: 3px;
-    transition: transform 0.2s;
-  }
-
-  .close {
-    position: absolute;
-    top: 0;
-    right: 0;
-    padding: 5px 10px;
-    cursor: pointer;
-    z-index: 1500;
-    text-shadow: 1px 1px 1px #000000;
-  }
-
-  .move {
-    text-shadow: 1px 1px 1px #000000;
-    font-size: 1.2em;
-    position: absolute;
-    padding: 1px 5px;
-    cursor: move;
-    z-index: 1500;
-    color: lightgray;
-  }
-
-  .content {
-    width: 100%;
-    height: 100%;
-    border-radius: 6px;
-    border-top-left-radius: 0px;
-    border-bottom-right-radius: 3px;
-    /* background: black; */
-
-  }
-
-
-  .component{
-
-    z-index: 1500;
-
-  }
-
- 	.scrollable {
-		flex: 1 1 auto;
-		margin: 0 0 0.5em 0;
-		overflow-y: auto;
-	}
-
-</style>

@@ -31,21 +31,21 @@
 	export let hasFocus;
 	export let theme;
 	export let background;
-	export let data;
-  export let fixed;
-  export let responsive;
-  export let resizable;
-  export let resize;
-  export let draggable;
-  export let drag;
-  export let min = {};
-  export let max = {};
-  export let breakpoints = {};
-  export let x;
-  export let y;
-  export let w;
-  export let h;
-  export let component; 
+	export let content;
+  // export let fixed;
+  // export let responsive;
+  // export let resizable;
+  // export let resize;
+  // export let draggable;
+  // export let drag;
+  // export let min = {};
+  // export let max = {};
+  // export let breakpoints = {};
+  // export let x;
+  // export let y;
+  // export let w;
+  // export let h;
+  export let component;
 
   let codeMirror;
   let modelWorker;
@@ -54,10 +54,10 @@
 
   onMount(async () => {
     console.log('DEBUG:GrammarCodeEditor:onMount:')
-    console.log(data);
-    codeMirror.set(data, "ebnf");
+    console.log(content);
+    codeMirror.set(content, "ebnf");
 
-    log( id, name, type, lineNumbers, hasFocus, theme, breakpoints, fixed, background, data, responsive, resizable, resize, draggable, drag, min, max, x, y, w, h, component );
+    // log( id, name, type, lineNumbers, hasFocus, theme, breakpoints, fixed, background, data, responsive, resizable, resize, draggable, drag, min, max, x, y, w, h, component );
 	});
 
   onDestroy(async () => {
@@ -113,13 +113,13 @@
       try{
         let value = codeMirror.getValue();
         $grammarEditorValue = value;
-      
+
         // window.localStorage.grammarEditorValue = $grammarEditorValue;
         let {errors, output} = compile(value);
         $grammarCompiledParser = output;
         $grammarCompilationErrors = errors;
 
-        dispatch('change', { prop:'data', value });
+        dispatch('change', { prop:'content', value });
       }catch(error){
         console.error("Error Live Code Editor get value from code Mirror")
       }
@@ -132,9 +132,9 @@
 
     // console.log("onfocus")
     hasFocus = true;
-    dispatch('change', { 
-      prop:'hasFocus', 
-      value: true 
+    dispatch('change', {
+      prop:'hasFocus',
+      value: true
     });
 
   }
@@ -143,40 +143,40 @@
 
     hasFocus = false;
     // console.log("onBlur")
-    dispatch('change', { 
-      prop:'hasFocus', 
-      value: false 
+    dispatch('change', {
+      prop:'hasFocus',
+      value: false
     });
-    
+
   }
 
 
   let onRefresh = e =>  {
 
     // console.log("onRefresh")
-    // dispatch('change', { 
-    //   prop:'hasFocus', 
-    //   value: true 
+    // dispatch('change', {
+    //   prop:'hasFocus',
+    //   value: true
     // });
   }
 
   let onGutterCick = e => {
 
     // console.log("onGutterCick")
-    // dispatch('change', { 
-    //   prop:'hasFocus', 
-    //   value: true 
+    // dispatch('change', {
+    //   prop:'hasFocus',
+    //   value: true
     // });
   }
 
   let onViewportChange = e => {
 
     // console.log("onViewportChange")
-    // dispatch('change', { 
-    //   prop:'hasFocus', 
-    //   value: true 
+    // dispatch('change', {
+    //   prop:'hasFocus',
+    //   value: true
     // });
-  }   
+  }
 
 
 
@@ -232,7 +232,7 @@
 bind:value={item.value} -->
 <div class="codemirror-container layout-template-container scrollable">
   <CodeMirror bind:this={codeMirror}
-              bind:value={data}
+              bind:value={content}
               tab={true}
               lineNumbers={true}
               on:change={ e => onChange(e)}
@@ -240,6 +240,6 @@ bind:value={item.value} -->
               on:blur={ e => onBlur(e) }
               on:refresh={ e => onRefresh(e) }
               on:gutterClick={ e => onGutterCick(e) }
-              on:viewportChange={ e => onViewportChange(e) }  
+              on:viewportChange={ e => onViewportChange(e) }
               />
 </div>

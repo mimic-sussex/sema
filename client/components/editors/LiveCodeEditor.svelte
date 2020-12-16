@@ -65,27 +65,27 @@
 
   export let tab = true;
 
-  export let id;
-  export let name;
-	export let type;
+  export let id;   // unused
+  export let name; // unused
+	export let type; // unused
 	export let lineNumbers;
 	export let hasFocus;
-	export let theme;
-	export let background;
-	export let data;      // liveCode Value that is injected and to which CodeMirror is bound
-  export let fixed;
-  export let responsive;
-  export let resizable;
-  export let resize;
-  export let draggable;
-  export let drag;
-  export let min = {};
-  export let max = {};
-  export let breakpoints = {};
-  export let x;
-  export let y;
-  export let w;
-  export let h;
+	// export let theme; // unused
+	// export let background; // unused
+	export let content;      // liveCode Value that is injected and to which CodeMirror is bound
+  // export let fixed;
+  // export let responsive;
+  // export let resizable;
+  // export let resize;
+  // export let draggable;
+  // export let drag;
+  // export let min = {};
+  // export let max = {};
+  // export let breakpoints = {};
+  // export let x;
+  // export let y;
+  // export let w;
+  // export let h;
   export let component;
 
   let codeMirror;
@@ -106,7 +106,7 @@
 
     try{
       let value = codeMirror.getValue();
-      dispatch('change', { prop:'data', value });
+      dispatch('change', { prop:'content', value });
     }catch(error){
       console.error("Error Live Code Editor get value from code Mirror")
     }
@@ -116,9 +116,9 @@
 
     // console.log("onfocus")
     hasFocus = true;
-    dispatch('change', { 
-      prop:'hasFocus', 
-      value: true 
+    dispatch('change', {
+      prop:'hasFocus',
+      value: true
     });
 
   }
@@ -127,40 +127,40 @@
 
     hasFocus = false;
     // console.log("onBlur")
-    dispatch('change', { 
-      prop:'hasFocus', 
-      value: false 
+    dispatch('change', {
+      prop:'hasFocus',
+      value: false
     });
-    
+
   }
 
 
   let onRefresh = e =>  {
 
     // console.log("onRefresh")
-    // dispatch('change', { 
-    //   prop:'hasFocus', 
-    //   value: true 
+    // dispatch('change', {
+    //   prop:'hasFocus',
+    //   value: true
     // });
   }
 
   let onGutterCick = e => {
 
     // console.log("onGutterCick")
-    // dispatch('change', { 
-    //   prop:'hasFocus', 
-    //   value: true 
+    // dispatch('change', {
+    //   prop:'hasFocus',
+    //   value: true
     // });
   }
 
   let onViewportChange = e => {
 
     // console.log("onViewportChange")
-    // dispatch('change', { 
-    //   prop:'hasFocus', 
-    //   value: true 
+    // dispatch('change', {
+    //   prop:'hasFocus',
+    //   value: true
     // });
-  }   
+  }
 
 
   let parseLiveCodeAsync = async e => {
@@ -335,7 +335,7 @@
   onMount( async () => {
     // console.log('DEBUG:LiveCodeEditor:onMount:')
     // console.log(data);
-    codeMirror.set(data, "js", 'monokai');
+    codeMirror.set(content, "js", 'monokai');
 
     parserWorker = new ParserWorker();  // Create one worker per widget lifetime
 
@@ -352,8 +352,8 @@
     //   // Where grammar source will be an UUID
     //   // subscribeTo(grammarSource);
     // }
-    log( id, name, type, breakpoints, fixed, lineNumbers, hasFocus, theme, background, data, responsive, resizable, resize, draggable, drag, min, max, x, y, w, h, component );
-    log( grammarSource, $grammarCompiledParser );
+    // log( id, name, type, breakpoints, fixed, lineNumbers, hasFocus, theme, background, data, responsive, resizable, resize, draggable, drag, min, max, x, y, w, h, component );
+    // log( grammarSource, $grammarCompiledParser );
 
     // console.log( grammarSource, grammarCompiledParser );
 	});
@@ -417,7 +417,7 @@
 <div class="codemirror-container layout-template-container scrollable">
 
   <CodeMirror bind:this={codeMirror}
-              bind:value={data}
+              bind:value={content}
               on:change={ e => onChange(e) }
               on:focus={ e => onFocus(e) }
               on:blur={ e => onBlur(e) }
