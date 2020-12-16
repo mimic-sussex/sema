@@ -11,7 +11,7 @@
       "sidebar layout";
   	/* background-color: #6f7262; */
     background-color: #212121;
-    overflow: hidden;
+    /* overflow: hidden; */
   }
   .sidebar-container {
     background: linear-gradient(150deg, rgba(0,18,1,1) 0%, rgba(7,5,17,1) 33%, rgba(16,12,12,1) 67%, rgb(12, 12, 12) 100%);
@@ -25,7 +25,7 @@
   .dashboard-container {
     grid-area: layout;
 
-    height: 100%;
+    /* height: 100%; */
     width: 100%;
     /* height: 100vh;
     width: 100%;
@@ -54,6 +54,9 @@
 
   :global(.svlt-grid-container) {
     /* Container color */
+
+    height: auto !important;
+    overflow-y: visible;
     /* background: #eee; */
   }
 
