@@ -243,28 +243,28 @@
 
     if(item){
       try {
-        // let itemProperties = [];
-        // if( item.type === "liveCodeEditor" || item.type === "grammarEditor" || item.type === 'modelEditor' ){
-        //   itemProperties = [ { lineNumbers: item.data.lineNumbers}, { theme: item.theme } ];
+        let itemProperties = [];
+        if( item.data.type === "liveCodeEditor" || item.data.type === "grammarEditor" || item.data.type === 'modelEditor' ){
+          itemProperties = [ { lineNumbers: item.data.lineNumbers}, { theme: item.data.theme } ];
 
-        //   // Order in item properties determines final order in interface
-        //   // if( item.type === "liveCodeEditor" || item.type === "grammarEditor" ){
-        //   //   itemProperties.push({ debug: true });
-        //   // }
+          // Order in item properties determines final order in interface
+          // if( item.type === "liveCodeEditor" || item.type === "grammarEditor" ){
+          //   itemProperties.push({ debug: true });
+          // }
 
-        //   if( item.type === "liveCodeEditor" ){
-        //     itemProperties.push({ grammar: item.grammar });
-        //   }
+          if( item.data.type === "liveCodeEditor" ){
+            itemProperties.push({ grammar: item.data.grammar });
+          }
 
-        //   if( item.type === "modelEditor" ){
-        //     itemProperties.push({ restart: true });
-        //   }
-        // }
-        // else if(item.type === 'analyser'){
-        //   itemProperties.push( { mode: item.mode } )
-        // }
+          if( item.data.type === "modelEditor" ){
+            itemProperties.push({ restart: true });
+          }
+        }
+        else if(item.data.type === 'analyser'){
+          itemProperties.push( { mode: item.data.mode } )
+        }
 
-        item.hasFocus = true;
+        item.data.hasFocus = true;
         $focusedItem = item;
         $focusedItemProperties = itemProperties;
         // set unfocused items through the rest of the list
@@ -324,28 +324,29 @@
   const update = (updateEvent, item, dataItem) => {
 
     console.log("DEBUG:playground:update:", updateEvent, item, dataItem);
-    // if(updateEvednt !== undefined && updateEvent.detail !== undefined && dataItem !== undefined){
-    //   if(updateEvent.detail.prop === "content"){
-    //     switch (dataItem.data.type) {
-    //       case "liveCodeEditor":
-    //         localStorage.liveCodeEditorValue = updateEvent.detail.value;
-    //         break;
-    //       case "grammarEditor":
-    //         localStorage.grammarEditorValue = updateEvent.detail.value;
-    //         break;
-    //       case "modelEditor":
-    //         localStorage.modelEditorValue = updateEvent.detail.value;
-    //         break;
-    //       default:
-    //         break;
-    //     }
-    // $items = $items.map(i => i === item ? { item.data[updateEvent.detail.prop]: updateEvent.detail.value } : i);
-
-    //   }
-    //   else if(updateEvent.detail.prop === "hasFocus"){
-    //      // setFocused(dataItem);
-    //   }
-    // }
+    if(updateEvent !== undefined && updateEvent.detail !== undefined && dataItem !== undefined){
+      if(updateEvent.detail.prop === "content"){
+        switch (dataItem.data.type) {
+          case "liveCodeEditor":
+            localStorage.liveCodeEditorValue = updateEvent.detail.value;
+            break;
+          case "grammarEditor":
+            localStorage.grammarEditorValue = updateEvent.detail.value;
+            break;
+          case "modelEditor":
+            localStorage.modelEditorValue = updateEvent.detail.value;
+            break;
+          default:
+            break;
+        }
+      }
+      $items = $items.map(i => (i === item) ?
+                          (item.data[updateEvent.detail.prop] = updateEvent.detail.value)
+                          : i);
+    }
+    else if(updateEvent.detail.prop === "hasFocus"){
+      setFocused(dataItem);
+    }
     // console.log("DEBUG:playground:component-update", dataItem, item, prop);
   }
 

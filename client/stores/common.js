@@ -241,7 +241,7 @@ export const populateCommonStoresWithFetchedProps = async (item) => {
 				case "liveCodeEditor":
 					liveCodeEditorValue.set(item.data.content);
 					grammarEditorValue.set(item.data.grammar);
-					grammarCompiledParser.set(compile(item.grammar).output);
+					grammarCompiledParser.set(compile(item.data.grammar).output);
 					break;
 				case "grammarEditor":
 
@@ -264,9 +264,9 @@ export const updateItemPropsWithCommonStoreValues = (item) => {
 
   if(item !== null){
     try{
-      switch (item.type) {
+      switch (item.data.type) {
 				case "liveCodeEditor":
-					item.data = get(liveCodeEditorValue);
+					item.data.content = get(liveCodeEditorValue);
 					break;
 				case "grammarEditor":
 					// item.data = get(grammarEditorValue);

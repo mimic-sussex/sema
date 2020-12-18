@@ -45,6 +45,7 @@
   // export let y;
   // export let w;
   // export let h;
+  export let grammarSource;
   export let component;
 
   let codeMirror;
@@ -53,11 +54,11 @@
   let log = e => { /* console.log(...e); */ }
 
   onMount(async () => {
-    console.log('DEBUG:GrammarCodeEditor:onMount:')
-    console.log(content);
+    // console.log('DEBUG:GrammarCodeEditor:onMount:')
+    // console.log(content);
     codeMirror.set(content, "ebnf");
 
-    log( id, name, type, lineNumbers, hasFocus, theme, background, content, component );
+    log( id, name, type, lineNumbers, hasFocus, theme, background, content, grammarSource, component );
 	});
 
   onDestroy(async () => {

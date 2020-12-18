@@ -15,42 +15,42 @@
 
 	export let lineNumbers;
 	export let theme;
-	export let data;
-  // export let static; // Error: ParseError: The keyword 'static' is reserved 
-  export let responsive;
-  export let resizable;
-  export let resize;
-  export let draggable;
-  export let drag;
+	// export let content;
+  // export let static; // Error: ParseError: The keyword 'static' is reserved
+  // export let responsive;
+  // export let resizable;
+  // export let resize;
+  // export let draggable;
+  // export let drag;
   export let min = {};
   export let max = {};
-  export let x;
-  export let y;
-  export let w;
-  export let h;
-  export let component; 
+  // export let x;
+  // export let y;
+  // export let w;
+  // export let h;
+  export let component;
 
 
-  let fftSize = 256;   
+  let fftSize = 256;
   let frequencyBinCount = 128;
   let smoothingTimeConstant = 0.8;
   let frequencyDataArray = [];
   let timeDataArray = [];
 
   let canvas;
-  
+
 	let frame;
-  let isRendering = true; 
+  let isRendering = true;
 
 
 
-  
+
 
   function randomBytes() {
     for (let i = 0; i < frequencyBinCount; i++) {
       frequencyDataArray[i] = Math.floor(Math.random() * canvas.offsetWidth);
       timeDataArray[i] = Math.floor(Math.random() * canvas.offsetWidth);
-    } 
+    }
   }
 
   let updateAnalyserByteData = e => {
@@ -90,7 +90,7 @@
   }
 
 	const renderLoop = () => {
-     
+
     if (isRendering) {
       frame = requestAnimationFrame(renderLoop);
       // console.log(`canvas w:${canvas.width} h:${canvas.height}`);
@@ -101,9 +101,9 @@
       drawContext.clearRect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
 
       if( mode === 'oscilloscope' ) drawTimeData(drawContext);
-      else if( mode === 'spectrogram' ) drawFrequencyData(drawContext); 
+      else if( mode === 'spectrogram' ) drawFrequencyData(drawContext);
       else {
-        drawFrequencyData(drawContext); 
+        drawFrequencyData(drawContext);
         drawTimeData(drawContext);
       }
     }
@@ -116,15 +116,15 @@
     if(isRendering){
       cancelAnimationFrame(frame);
     }else{
-      frame = requestAnimationFrame(renderLoop);  
+      frame = requestAnimationFrame(renderLoop);
     }
     isRendering = !isRendering;
 
     hasFocus = true;
     console.log("click");
-    dispatch('change', { 
-      prop:'hasFocus', 
-      value: true 
+    dispatch('change', {
+      prop:'hasFocus',
+      value: true
     });
   }
 
@@ -132,7 +132,7 @@
 
   onMount(async () => {
     // Request the creation of an WAAPI analyser to the Audio Engine
-    
+
     messaging.publish("add-engine-analyser", { id } );
 
     canvas.addEventListener('click', () => toggleRendering(), false);
@@ -161,7 +161,7 @@
 		top: 0;
 		left: 0;
 		background-color: rgba(255,255,255,0.7);
-		padding: 1em; 
+		padding: 1em;
   } */
 
   canvas {
@@ -179,11 +179,11 @@
     position: absolute;
     top: 50%; */
   }
-  
+
 </style>
 
 
-<canvas bind:this={canvas} 
+<canvas bind:this={canvas}
         class="canvas"
         >
         </canvas>

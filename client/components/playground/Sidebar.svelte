@@ -391,9 +391,10 @@
     <!-- Live Code Combobox Selector -->
     <div class="controls">
       <!-- on:click={ () => $sidebarLiveCodeOptions[0].disabled = true }  -->
+      <!-- svelte-ignore a11y-no-onchange -->
       <select class="combobox-dark"
               bind:value={ $selectedLiveCodeOption }
-              on:blur={ () => dispatchAdd('live', $selectedLiveCodeOption) }
+              on:change={ () => dispatchAdd('live', $selectedLiveCodeOption) }
               on:click={ () => $sidebarLiveCodeOptions[0].disabled = true }
               disabled={ $isSelectLiveCodeEditorDisabled }
               cursor={ () => ( $isSelectLiveCodeEditorDisabled ? 'not-allowed' : 'pointer') }
@@ -412,9 +413,10 @@
     <div class="controls">
       <!-- <select class="combobox" bind:value={$selectedTutorial} > -->
       <!-- on:click={ () => $sidebarModelOptions[0].disabled = true }   -->
+      <!-- svelte-ignore a11y-no-onchange -->
       <select class="combobox-dark"
               bind:value={ $selectedModelOption }
-              on:blur={ () => dispatchAdd('model', $selectedModelOption) }
+              on:change={ () => dispatchAdd('model', $selectedModelOption) }
               on:click={ () => $sidebarModelOptions[0].disabled = true }
               disabled={ $isSelectModelEditorDisabled }
               cursor={ () => ( $isSelectModelEditorDisabled ? 'not-allowed' : 'pointer' )}
@@ -453,9 +455,10 @@
 
     <!-- Debuggers Combobox Selector -->
     <div class="controls">
+      <!-- svelte-ignore a11y-no-onchange -->
       <select class="combobox-dark"
               bind:value={ $selectedDebuggerOption }
-              on:blur={ () => dispatchAdd('debugger', $selectedDebuggerOption) }
+              on:change={ () => dispatchAdd('debugger', $selectedDebuggerOption) }
               on:click={ () => $sidebarDebuggerOptions[0].disabled = true  }
               >
         {#each $sidebarDebuggerOptions as debuggerOption}
