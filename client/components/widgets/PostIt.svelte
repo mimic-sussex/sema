@@ -7,7 +7,7 @@ import { items } from '../../stores/playground.js'
 
 
 <style>
-  
+
   .container {
     position: relative;
     width: 100%;
@@ -22,10 +22,10 @@ import { items } from '../../stores/playground.js'
 		overflow-y: auto;
 	}
 
-  .error-state {
-    color:red; 
+  /* .error-state {
+    color:red;
     margin:15px 0px 15px 25px;
-  }
+  } */
 
   .prewrap {
     display: inline-flexbox;

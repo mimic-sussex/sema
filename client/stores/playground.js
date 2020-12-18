@@ -371,6 +371,7 @@ const originalItems = [
 const testItems = [
 	{
 		id: id(),
+		12: gridHelp.item({ x: 2, y: 0, w: 2, h: 2 }),
 		8: gridHelp.item({ x: 0, y: 0, w: 2, h: 2 }),
 		6: gridHelp.item({ x: 0, y: 0, w: 2, h: 2 }),
 		3: gridHelp.item({ x: 0, y: 0, w: 1, h: 2 }),
@@ -394,6 +395,8 @@ const testItems = [
 		},
 	},
 	{
+		id: id(),
+		12: gridHelp.item({ x: 2, y: 0, w: 2, h: 2 }),
 		8: gridHelp.item({ x: 2, y: 0, w: 2, h: 2 }),
 		6: gridHelp.item({ x: 2, y: 0, w: 2, h: 2 }),
 		3: gridHelp.item({ x: 2, y: 0, w: 1, h: 2 }),
@@ -631,6 +634,7 @@ export async function createNewItem (type, content){
 	// return component template
 	return {
     id: itemId,
+		12: gridHelp.item({ x: 0, y: 0, w: 2, h: 2 }),
 		8: gridHelp.item({ x: 0, y: 0, w: 2, h: 2 }),
 		6: gridHelp.item({ x: 0, y: 0, w: 2, h: 2 }),
 		3: gridHelp.item({ x: 0, y: 0, w: 1, h: 2 }),
@@ -641,6 +645,7 @@ export async function createNewItem (type, content){
 			h: 2,
 		}),
 		data: {
+      id: itemId,
 			type: type,
 			name: type + itemId,
 			background: "#151515",

@@ -107,22 +107,24 @@ class AudioEngine {
     });
     // this.messaging.subscribe("osc", e => console.log(`DEBUG:AudioEngine:OSC: ${e}`));
 
-    this.kuraClock = new kuramotoNetClock();
+
+    //temporarily disabled for now
+    // this.kuraClock = new kuramotoNetClock();
 
     //temporarily disabled for now
     // this.peerNet = new PeerStreaming();
 
     //the message has incoming data from other peers
-    this.messaging.subscribe("peermsg", (e) => {
-      e.ttype = 'NET';
-      e.peermsg = 1;
-      this.onMessagingEventHandler(e);
-    });
+    // this.messaging.subscribe("peermsg", (e) => {
+    //   e.ttype = 'NET';
+    //   e.peermsg = 1;
+    //   this.onMessagingEventHandler(e);
+    // });
 
-    this.messaging.subscribe("peerinfo-request", (e) => {
-      console.log(this.peerNet.peerID);
-      copyToPasteBuffer(this.peerNet.peerID);
-    });
+    // this.messaging.subscribe("peerinfo-request", (e) => {
+    //   console.log(this.peerNet.peerID);
+    //   copyToPasteBuffer(this.peerNet.peerID);
+    // });
 
 
   }
@@ -427,10 +429,10 @@ class AudioEngine {
   }
 
   evalDSP(dspFunction) {
-    
+
     // console.log("DEBUG:AudioEngine:evalDSP:");
     // console.log(dspFunction);
-    
+
     if (this.audioWorkletNode !== undefined) {
       if (this.audioContext.state === "suspended") {
         this.audioContext.resume();

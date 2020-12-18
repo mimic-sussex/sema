@@ -1,7 +1,7 @@
 <script context="module">
   const is_browser = typeof window !== "undefined";
 
-  import CodeMirror, { set, update } from "svelte-codemirror";
+  import CodeMirror, { set } from "svelte-codemirror";
   import "codemirror/lib/codemirror.css";
 
   if (is_browser) {
@@ -46,7 +46,7 @@
 
 
   // export let grammarSource = "/languages/defaultGrammar.ne";
-  export let grammarSource;
+  // export let grammarSource;
   // let grammarSourceSubscriptionToken;
   // let grammarCompiledParser;
 
@@ -70,8 +70,8 @@
 	export let type; // unused
 	export let lineNumbers;
 	export let hasFocus;
-	// export let theme; // unused
-	// export let background; // unused
+	export let theme; // unused
+	export let background; // unused
 	export let content;      // liveCode Value that is injected and to which CodeMirror is bound
   // export let fixed;
   // export let responsive;
@@ -352,7 +352,7 @@
     //   // Where grammar source will be an UUID
     //   // subscribeTo(grammarSource);
     // }
-    // log( id, name, type, breakpoints, fixed, lineNumbers, hasFocus, theme, background, data, responsive, resizable, resize, draggable, drag, min, max, x, y, w, h, component );
+    log( id, name, type, lineNumbers, hasFocus, theme, background, component );
     // log( grammarSource, $grammarCompiledParser );
 
     // console.log( grammarSource, grammarCompiledParser );

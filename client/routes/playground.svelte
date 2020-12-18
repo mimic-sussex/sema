@@ -56,7 +56,7 @@
     /* Container color */
 
     height: auto !important;
-    overflow-y: visible;
+    /* overflow-y: visible;
     /* background: #eee; */
   }
 
@@ -102,11 +102,11 @@
   }
 
 
-  .component{
+  /* .component{
 
     z-index: 1500;
 
-  }
+  } */
 
  	.scrollable {
 		flex: 1 1 auto;
@@ -213,9 +213,9 @@
   // let breakpoints
   let cols = [
     // [2880, 13]
-    // [1600, 8],
+    [1600, 8],
     [1440, 6],
-    // [1280, 3],
+    [1280, 3],
     // [1024, 2],
     // [800, 1],
     // [500, 1]
@@ -284,13 +284,14 @@
 
   async function addItem(type, value){
 
-    let COLS = 6;
+    let COLS = 12;
 
     if(type !== undefined){
       try {
         let newItem = await createNewItem(type, value);
-        console.log("DEBUG:newITEM:", newItem)
-        // await updateItemPropsWithFetchedValues(newItem);
+        console.log("DEBUG:playground:addItem:", newItem);
+
+        await updateItemPropsWithFetchedValues(newItem);
 
         // await populateCommonStoresWithFetchedProps(newItem);
 
@@ -308,11 +309,8 @@
           },
         };
 
+        // Add to store
         $items = [...$items, ...[newItem]]
-
-        // let findOutPosition = gridHelp.findSpace(newItem, $items, cols); // find out where to place
-        // $items =  [...$items, ...[{ ...newItem, [cols]: { ...newItem[cols], ...findOutPosition } }]]; // Append to playground Items stores
-
       }
       catch (error){
         console.error("Error on routes/Playground.addItem", error);
@@ -324,6 +322,7 @@
 
 
   const update = (updateEvent, item, dataItem) => {
+
     console.log("DEBUG:playground:update:", updateEvent, item, dataItem);
     // if(updateEvednt !== undefined && updateEvent.detail !== undefined && dataItem !== undefined){
     //   if(updateEvent.detail.prop === "content"){
@@ -443,7 +442,7 @@
     if(item.type === 'analyser'){
       messaging.publish('remove-engine-analyser', { id: item.id }); // notify audio engine to remove associated analyser
     }
-
+    console.log("DEBUG:dashboard:remove:", item);
     messaging.publish("plaground-item-deletion", item.type);
 
     remove.bind(null, item); // remove dashboard item binding

@@ -488,7 +488,7 @@
       <button class="button-dark controls"
 
               >
-        Snapshow
+        Snapshot
       </button>
     </div>
     <!-- <div>

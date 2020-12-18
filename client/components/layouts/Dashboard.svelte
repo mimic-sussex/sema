@@ -25,22 +25,22 @@
   export let items;
   // export let cols;
 
-  export let cols = [
-    // [2880, 8]
-    // [1500, 5],
-  [1440, 6]
-    // [1440, 6]
-    // [1287, 3],
-    // [700, 1],
-    // [1100, 5],
-    // [800, 3],
-    // [500, 1]
-  ];
+  // export let cols = [
+  //   // [2880, 8]
+  //   // [1500, 5],
+  // [1440, 6]
+  //   // [1440, 6]
+  //   // [1287, 3],
+  //   // [700, 1],
+  //   // [1100, 5],
+  //   // [800, 3],
+  //   // [500, 1]
+  // ];
 
 
   // export let breakpoints;
-  export let rowHeight;
-  export let gap;
+  // export let rowHeight;
+  // export let gap;
 
   const types = ['liveCodeEditor', 'modelEditor', 'grammarEditor', 'liveCodeParseOutput', 'grammarCompileOutput', 'analyser'];
   const itype = () => types[Math.floor(Math.random() * types.length)];
@@ -161,14 +161,14 @@
   } */
 
 
-  .layout-template-container {
-    /* height: 100vh; */
-    	/* height: 100%; */
-      /* width: 100%; */
-      /* overflow: hidden; */
-  }
+  /* .layout-template-container {
+    height: 100vh;
+    	height: 100%;
+      width: 100%;
+      overflow: hidden;
+  } */
 
-  .content {
+  /* .content {
     width: 100%;
     height: 100%;
     border-radius: 6px;
@@ -176,7 +176,7 @@
     border-bottom-right-radius: 3px;
     background: black;
 
-  }
+  } */
 
   /* :global(*) {
     user-select: none;
@@ -206,7 +206,7 @@
     transition: transform 0.2s;
   } */
 
-  .close {
+  /* .close {
     position: absolute;
     top: 0;
     right: 0;
@@ -214,9 +214,9 @@
     cursor: pointer;
     z-index: 1500;
     text-shadow: 1px 1px 1px #000000;
-  }
+  } */
 
-  .move {
+  /* .move {
     text-shadow: 1px 1px 1px #000000;
     font-size: 1.2em;
     position: absolute;
@@ -224,18 +224,18 @@
     cursor: move;
     z-index: 1500;
     color: lightgray;
-  }
+  } */
 
-  .component{
+  /* .component{
 
     z-index: 1500;
 
-  }
+  } */
 
- 	.scrollable {
+ 	/* .scrollable {
 		flex: 1 1 auto;
 		margin: 0 0 0.5em 0;
 		overflow-y: auto;
-	}
+	} */
 
 </style>

@@ -1,7 +1,7 @@
 <script context="module">
   const is_browser = typeof window !== "undefined";
 
-  import CodeMirror, { set, update, getValue } from "svelte-codemirror";
+  import CodeMirror, { set, getValue } from "svelte-codemirror";
   import "codemirror/lib/codemirror.css";
 
   if (is_browser) {
@@ -40,20 +40,19 @@
 	export let hasFocus;
 	export let theme;
 	export let background;
-	export let data;
-  export let fixed;
-  export let responsive;
-  export let resizable;
-  export let resize;
-  export let draggable;
-  export let drag;
-  export let min = {};
-  export let max = {};
-  export let breakpoints = {};
-  export let x;
-  export let y;
-  export let w;
-  export let h;
+	export let content;
+  // export let fixed;
+  // export let responsive;
+  // export let resizable;
+  // export let resize;
+  // export let draggable;
+  // export let drag;
+  // export let min = {};
+  // export let max = {};
+  // export let x;
+  // export let y;
+  // export let w;
+  // export let h;
   export let component;
 
   let codeMirror;
@@ -66,9 +65,9 @@
   let log = e => { /* console.log(...e); */ }
 
   onMount(async () => {
-    codeMirror.set(data, "js");
+    codeMirror.set(content, "js");
 
-  
+
     subscriptionTokenMID = messaging.subscribe("model-input-data", e => postToModel(e) );
     subscriptionTokenMIB = messaging.subscribe("model-input-buffer", e => postToModel(e) );
     // subscriptionTokenMODR = messaging.subscribe("model-output-data-request", e => postToModel(e) );
@@ -76,7 +75,7 @@
     modelWorker = new ModelWorker();  // Creates one ModelWorker per ModelEditor lifetime
     modelWorker.onmessage = e =>  onModelWorkerMessageHandler(e);
 
-    log( id, name, type, lineNumbers, hasFocus, theme, background, data, breakpoints, fixed, responsive, resizable, resize, draggable, drag, min, max, x, y, w, h, component );
+    log( id, name, type, lineNumbers, hasFocus, theme, background, content, component );
     // console.log('DEBUG:ModelEditor:onMount:');
     // console.log(data);    // console.log(name + ' ' + type + ' ' + lineNumbers +' ' + hasFocus +' ' + theme + ' ' + background /*+  ' ' + data */ );
 
@@ -95,7 +94,7 @@
   let nil = (e) => { }
 
   let onChange = e => {
-    
+
     try{
       let value = codeMirror.getValue();
       dispatch('change', { prop:'data', value });
@@ -110,9 +109,9 @@
     hasFocus = true;
     // console.log("onfocus")
 
-    dispatch('change', { 
-      prop:'hasFocus', 
-      value: true 
+    dispatch('change', {
+      prop:'hasFocus',
+      value: true
     });
 
   }
@@ -122,40 +121,40 @@
     hasFocus = false;
     // console.log("onBlur")
 
-    dispatch('change', { 
-      prop:'hasFocus', 
-      value: false 
+    dispatch('change', {
+      prop:'hasFocus',
+      value: false
     });
-    
+
   }
 
 
   let onRefresh = e =>  {
 
     // console.log("onRefresh")
-    // dispatch('change', { 
-    //   prop:'hasFocus', 
-    //   value: true 
+    // dispatch('change', {
+    //   prop:'hasFocus',
+    //   value: true
     // });
   }
 
   let onGutterCick = e => {
 
     // console.log("onGutterCick")
-    // dispatch('change', { 
-    //   prop:'hasFocus', 
-    //   value: true 
+    // dispatch('change', {
+    //   prop:'hasFocus',
+    //   value: true
     // });
   }
 
   let onViewportChange = e => {
 
     // console.log("onViewportChange")
-    // dispatch('change', { 
-    //   prop:'hasFocus', 
-    //   value: true 
+    // dispatch('change', {
+    //   prop:'hasFocus',
+    //   value: true
     // });
-  }   
+  }
 
 
 
@@ -354,7 +353,7 @@
 <!-- <div class="layout-template-container" contenteditable="true" bind:value={item.value}  bind:innerHTML={layoutTemplate}> -->
 <div class="codemirror-container layout-template-container scrollable">
   <CodeMirror bind:this={codeMirror}
-              bind:value={data}
+              bind:value={content}
               tab={true}
               lineNumbers={true}
               on:change={ e => onChange(e) }
@@ -362,7 +361,7 @@
               on:blur={ e => onBlur(e) }
               on:refresh={ e => onRefresh(e) }
               on:gutterClick={ e => onGutterCick(e) }
-              on:viewportChange={ e => onViewportChange(e) } 
+              on:viewportChange={ e => onViewportChange(e) }
               ctrlEnter={evalModelEditorExpressionBlock}
               cmdEnter={evalModelEditorExpressionBlock}
               shiftEnter={evalModelEditorExpression}

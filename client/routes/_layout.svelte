@@ -43,8 +43,8 @@
 		fetch(`/languages/languages.json`)
       .then(r => r.json())
       .then(json => {
-        console.log("DEBUG:_layout:loadPlayground");
-        console.log(json)
+        // console.log("DEBUG:_layout:loadPlayground");
+        // console.log(json)
         $sidebarLiveCodeOptions = $sidebarLiveCodeOptions.concat(json.map( language => ({
             id: 1,
             disabled: false,
@@ -94,8 +94,8 @@
   $: if($params.chapter && $params.section) persistentParams = $params
 
   onMount( async () => {
-    console.log("DEBUG:routes/_layout:onMount");
-    console.log($params);
+    // console.log("DEBUG:routes/_layout:onMount");
+    // console.log($params);
 
   });
 
@@ -198,7 +198,7 @@
 </style>
 
 <svelte:head>
-  <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.5.0/firebase-ui-auth.css" />
+  <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.7.1/firebase-ui-auth.css" />
 	<title>Sema</title>
 </svelte:head>
 

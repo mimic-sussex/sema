@@ -1,7 +1,7 @@
 <!-- <script context="module">
 	export async function preload() {
 		// '/' absolute URL
-    
+
 		return await fetch(`/tutorial/tutorial.json`).then(r => r.json());
 	}
 </script> -->
@@ -31,13 +31,13 @@
   // $selected = $tutorials[0]
 
   // onMount( async () => {
-   
-  //   console.log(`DEBUG:routes:index:onMount: `); 
-  //   // console.log(`DEBUG:routes:_layout: ${chapter_dir}`); 
-  //   // console.log(`DEBUG:routes:_layout: ${section_dir}`); 
+
+  //   console.log(`DEBUG:routes:index:onMount: `);
+  //   // console.log(`DEBUG:routes:_layout: ${chapter_dir}`);
+  //   // console.log(`DEBUG:routes:_layout: ${section_dir}`);
   //   $tutorials = await preload();
-  //   $selected = $tutorials[0]; 
-  // }); 
+  //   $selected = $tutorials[0];
+  // });
 
 
 </script>
@@ -62,7 +62,7 @@
     display: grid
   }
 
-  
+
   .login {
 		text-align: center;
 		margin: 0 auto;
@@ -82,7 +82,7 @@
 
 	figure {
    	width: 187px;
-    height: 187px; 
+    height: 187px;
     background-color: white;
     border-radius: 2px;
     padding-top: 5px;
@@ -113,7 +113,6 @@
 <!-- <h1>Great success{#if $currentUser }, { $currentUser.displayName } {/if} !</h1> -->
 
 <svelte:head>
-  <!-- <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.5.0/firebase-ui-auth.css" /> -->
 	<title>Sema</title>
 </svelte:head>
 
@@ -134,7 +133,6 @@
     <p><strong style="font-size:150%; color: white; margin:15px 0 10px 5px">Sorry, this browser does not work for Sema...</strong></p>
     <p><strong style="color: white; margin:15px 0 10px 5px">Sema requires a Chromium-based browser as it uses the latest Web Audio API technology</strong></p>
     <p><strong style="color: white; margin:15px 0 10px 5px">(we recommend Chrome, but also possible are Brave, Microsoft Edge, Opera, Vivaldi)</strong></p>
-    
   </div>
   {/if}
 </div>

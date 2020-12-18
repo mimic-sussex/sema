@@ -1,32 +1,21 @@
-<script context="module">
-  const is_browser = typeof window !== "undefined";
-
-  import CodeMirror, { set, update } from "svelte-codemirror";
-  import "codemirror/lib/codemirror.css";
-
-  if (is_browser) {
-    import("../../utils/codeMirrorPlugins");
-  }
-</script>
-
 <script>
 	import { onMount, onDestroy } from 'svelte';
 	import Inspect from 'svelte-inspect';
 
-  import { 
-    grammarCompilationErrors, 
+  import {
+    grammarCompilationErrors,
     liveCodeParseErrors,
-    liveCodeAbstractSyntaxTree  
+    liveCodeAbstractSyntaxTree
   } from "../../stores/common.js";
-  
+
   onMount(async () => {
-    
+
 	});
 
   onDestroy(async () => {
 
 	});
-  
+
 
   let log = (e) => { console.log(e.detail.value); }
 
@@ -57,23 +46,23 @@
 	}
 
   .error-state {
-    color:red; 
+    color:red;
     margin:25px 0px 15px 5px;
   }
 
   .correct-state {
-    color:green; 
+    color:green;
     margin:25px 0px 15px 5px;
 
   }
 
 
   .headline {
-    overflow-y: scroll; 
-    height:auto; 
-    margin-top: 6px; 
+    overflow-y: scroll;
+    height:auto;
+    margin-top: 6px;
     margin-left: 20px;
-    margin-bottom: 10px; 
+    margin-bottom: 10px;
   }
 
 
@@ -82,7 +71,7 @@
 
 <div id="liveCodeCompilerOutput" class="codemirror-container flex scrollable">
   <div class="headline">
-    <strong>LIVE CODE PARSER OUTPUT</strong> 
+    <strong>LIVE CODE PARSER OUTPUT</strong>
   </div>
   {#if $grammarCompilationErrors != ""}
   <div>

@@ -1,7 +1,7 @@
 <script context="module">
   const is_browser = typeof window !== "undefined";
 
-  import CodeMirror, { set, update } from "svelte-codemirror";
+  import CodeMirror, { set } from "svelte-codemirror";
   import "codemirror/lib/codemirror.css";
 
   if (is_browser) {
@@ -57,7 +57,7 @@
     console.log(content);
     codeMirror.set(content, "ebnf");
 
-    // log( id, name, type, lineNumbers, hasFocus, theme, breakpoints, fixed, background, data, responsive, resizable, resize, draggable, drag, min, max, x, y, w, h, component );
+    log( id, name, type, lineNumbers, hasFocus, theme, background, content, component );
 	});
 
   onDestroy(async () => {

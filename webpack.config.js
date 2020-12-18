@@ -10,6 +10,9 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const LiveReloadPlugin = require("webpack-livereload-plugin");
+// var LiveReloadWebpackPlugin = require("@kooneko/livereload-webpack-plugin");
+
+
 
 // "watch:webpack": "webpack --watch --info-verbosity verbose --progress",
 // "watch:webpack": "webpack-dev-server --content-base public",
@@ -28,9 +31,10 @@ const LiveReloadPlugin = require("webpack-livereload-plugin");
 
 
 module.exports = {
-  // entry: {
-  //   bundle: ['./client/main.js', 'webpack-plugin-serve/client'],
-  // },
+	// entry: {
+	//   bundle: ['./client/main.js', 'webpack-plugin-serve/client'],
+	// },
+	mode,
 	entry: {
 		bundle: ["./client/main.js"],
 		// parser: ["./workers/parser.worker.js"],
@@ -76,7 +80,8 @@ module.exports = {
 				use: {
 					loader: "svelte-loader",
 					options: {
-						emitCss: true,
+						// emitCss: true,
+						emitCss: false,
 						hotReload: true,
 						dev: true,
 					},
@@ -94,13 +99,6 @@ module.exports = {
 					"css-loader",
 				],
 			},
-			// {
-			// 	test: /tutorial.json/,
-			// 	loader: "file-loader",
-			// 	options: {
-			// 		name: "tutorial.json",
-			// 	},
-			// },
 			{
 				test: /\.glsl$/,
 				loader: "file-loader", // files should NOT get processed, only emitted
@@ -110,13 +108,12 @@ module.exports = {
 					name: "[name].glsl",
 				},
 			},
-
 			{
 				test: /\.ne$/,
 				use: ["raw-loader"],
 			},
 			{
-				test: /\.tf$/i,
+				test: /\.tf$/,
 				loader: ["raw-loader"],
 			},
 			{
@@ -241,10 +238,15 @@ module.exports = {
 			},
 		],
 	},
-	mode,
 	plugins: [
 		new webpack.ProgressPlugin(),
 		// new Serve(serveOptions), // alternative to webpack-dev-server
+		// new LiveReloadWebpackPlugin({
+		// 	protocol: "http",
+		// 	port: 5001,
+		// 	hostname: "localhost",
+		// 	appendScript: true,
+		// }),
 		new LiveReloadPlugin({
 			protocol: "http",
 			port: 5001,
@@ -279,9 +281,7 @@ module.exports = {
 			filename: "[name].css",
 		}),
 		// new WorkerPlugin(),
-
 		new CleanWebpackPlugin(),
-
 		// new webpack.HotModuleReplacementPlugin(),
 		// new webpack.NoEmitOnErrorsPlugin(),
 	],
@@ -293,17 +293,19 @@ module.exports = {
 		overlay: true, // overlay for capturing compilation related warnings and errors
 		publicPath: "/",
 		watchContentBase: true,
+		contentBase: path.join(__dirname, "public"),
 		hot: false,
 		liveReload: true,
-    historyApiFallback: {
-      rewrites: [
-        { from: /\/playground/, to: '/'},
-        { from: /^\/tutorial\/.*$/, to: '/' },
-        { from: /./, to: '/404.html' }
-      ]
-    }
+		historyApiFallback: {
+			rewrites: [
+				{ from: /\/playground\//, to: "/" },
+				{ from: /^\/tutorial\/.*$/, to: "/" },
+				{ from: /./, to: "/404.html" },
+			],
+		},
 	},
-	devtool: prod ? false : "source-map",
+	devtool: "source-map",
+	// devtool: prod ? false : "source-map",
 	// Issue pointed out by Surma on the following gist – https://gist.github.com/surma/b2705b6cca29357ebea1c9e6e15684cc
 	// This is necessary due to the fact that emscripten puts both Node and web
 	// code into one file. The node part uses Node’s `fs` module to load the wasm
