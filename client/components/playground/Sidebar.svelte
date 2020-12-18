@@ -393,7 +393,7 @@
       <!-- on:click={ () => $sidebarLiveCodeOptions[0].disabled = true }  -->
       <select class="combobox-dark"
               bind:value={ $selectedLiveCodeOption }
-              on:change={ () => dispatchAdd('live', $selectedLiveCodeOption) }
+              on:blur={ () => dispatchAdd('live', $selectedLiveCodeOption) }
               on:click={ () => $sidebarLiveCodeOptions[0].disabled = true }
               disabled={ $isSelectLiveCodeEditorDisabled }
               cursor={ () => ( $isSelectLiveCodeEditorDisabled ? 'not-allowed' : 'pointer') }
@@ -414,7 +414,7 @@
       <!-- on:click={ () => $sidebarModelOptions[0].disabled = true }   -->
       <select class="combobox-dark"
               bind:value={ $selectedModelOption }
-              on:change={ () => dispatchAdd('model', $selectedModelOption) }
+              on:blur={ () => dispatchAdd('model', $selectedModelOption) }
               on:click={ () => $sidebarModelOptions[0].disabled = true }
               disabled={ $isSelectModelEditorDisabled }
               cursor={ () => ( $isSelectModelEditorDisabled ? 'not-allowed' : 'pointer' )}
@@ -455,7 +455,7 @@
     <div class="controls">
       <select class="combobox-dark"
               bind:value={ $selectedDebuggerOption }
-              on:change={ () => dispatchAdd('debugger', $selectedDebuggerOption) }
+              on:blur={ () => dispatchAdd('debugger', $selectedDebuggerOption) }
               on:click={ () => $sidebarDebuggerOptions[0].disabled = true  }
               >
         {#each $sidebarDebuggerOptions as debuggerOption}

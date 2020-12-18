@@ -72,7 +72,7 @@
         <div class="combobox-dark middle">
         <select
                 bind:value={ $selected }
-                on:change={ e => handleSelect(e) }
+                on:blur={ e => handleSelect(e) }
                 >
           {#if $tutorials !== undefined}
             {#each $tutorials as chapter, i}
@@ -228,7 +228,7 @@
 
   }
 
-  
+
   .tutorial-navigator {
     display: grid;
     grid-template-columns: 2em auto 2em;

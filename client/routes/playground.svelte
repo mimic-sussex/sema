@@ -282,22 +282,22 @@
   }
 
 
-  async function addItem(type, value){
+  async function addItem(e){
 
     let COLS = 12;
 
-    if(type !== undefined){
+    if(e.type !== undefined){
       try {
-        let newItem = await createNewItem(type, value);
+        let newItem = await createNewItem(e.type, e.data);
         console.log("DEBUG:playground:addItem:", newItem);
 
         await updateItemPropsWithFetchedValues(newItem);
 
-        // await populateCommonStoresWithFetchedProps(newItem);
+        await populateCommonStoresWithFetchedProps(newItem);
 
-        // updateItemPropsWithCommonStoreValues(newItem)
+        updateItemPropsWithCommonStoreValues(newItem)
 
-        // setFocused(newItem);
+        setFocused(newItem);
 
         let findOutPosition = gridHelp.findSpace(newItem, $items, COLS);
 
@@ -514,7 +514,7 @@
     for (const item of $items)
       updateItemPropsWithCommonStoreValues(item);
 
-    addSubscriptionToken = messaging.subscribe('playground-add', e => addItem(e.type, e.data) );
+    addSubscriptionToken = messaging.subscribe('playground-add', e => addItem(e) );
 		envSaveSubscriptionToken = messaging.subscribe('playground-env-save', e => saveEnvironment(e) );
     envLoadSubscriptionToken = messaging.subscribe('playground-env-load', e => loadEnvironment(e) );
 		resetSubscriptionToken = messaging.subscribe('playground-reset', e => clearItems() );

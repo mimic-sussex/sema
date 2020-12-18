@@ -54,7 +54,7 @@
     margin: 0 auto;
     display: grid;
   }
-  
+
   .sema-logo {
     width: 100%;
     height: auto;
@@ -73,7 +73,7 @@
 <div class="overlay" style='visibility:{$audioEngineStatus}'>
   <button class="button-start-audio" on:click={handleClick}>
     <div class="logo-container">
-      <img {src} class="sema-logo" alt="sema logo image">
+      <img {src} class="sema-logo" alt="sema logo">
       <span class="sema-type">Sema</span>
       <br>
       <br>
