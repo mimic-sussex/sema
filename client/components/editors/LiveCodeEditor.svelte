@@ -1,7 +1,7 @@
 <script context="module">
   const is_browser = typeof window !== "undefined";
 
-  import CodeMirror, { set } from "svelte-codemirror";
+  import CodeMirror, { set, getValue } from "svelte-codemirror";
   import "codemirror/lib/codemirror.css";
 
   if (is_browser) {
@@ -106,7 +106,10 @@
 
     try{
       let value = codeMirror.getValue();
-      dispatch('change', { prop:'content', value });
+      dispatch('change', {
+        prop:'content',
+        value: value
+      });
     }catch(error){
       console.error("Error Live Code Editor get value from code Mirror")
     }

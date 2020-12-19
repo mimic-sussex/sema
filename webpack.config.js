@@ -293,7 +293,7 @@ module.exports = {
 		overlay: true, // overlay for capturing compilation related warnings and errors
 		publicPath: "/",
 		watchContentBase: true,
-		contentBase: path.join(__dirname, "public"),
+		contentBase: path.join(__dirname, "/public/"),
 		hot: false,
 		liveReload: true,
 		historyApiFallback: {

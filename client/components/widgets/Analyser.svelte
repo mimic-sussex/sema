@@ -138,7 +138,7 @@
     canvas.addEventListener('click', () => toggleRendering(), false);
 
     messaging.subscribe('analyser-data', e => updateAnalyserByteData(e) );
-    log( id, name, type, lineNumbers, hasFocus, theme, background, data, responsive, resizable, resize, draggable, drag, min, max, x, y, w, h, component );
+    log( id, name, type, lineNumbers, hasFocus, theme, background, responsive, resizable, resize, draggable, drag, min, max, x, y, w, h, component );
     renderLoop();
 	});
 

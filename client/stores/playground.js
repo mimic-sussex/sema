@@ -664,36 +664,36 @@ export async function createNewItem (type, content){
  * @param item JSON grid item component description
  */
 export function hydrateJSONcomponent (item){
-	if (item !== 'undefined' && item.type !== 'undefined') {
-		switch (item.type) {
+	if (item !== 'undefined' && item.data !== 'undefined' && item.data.type !== 'undefined') {
+		switch (item.data.type) {
 			case "liveCodeEditor":
-				item.component = LiveCodeEditor;
+				item.data.component = LiveCodeEditor;
 				// await populateStoresWithFetchedProps(item);
 				break;
 			case "grammarEditor":
-				item.component = GrammarEditor;
+				item.data.component = GrammarEditor;
 				// grammarEditorValue.set(item.data); // Set the store value with grammar value deserialised from data
 				break;
 			case "modelEditor":
-				item.component = ModelEditor;
+				item.data.component = ModelEditor;
 				break;
 			case "liveCodeParseOutput":
-				item.component = LiveCodeParseOutput;
+				item.data.component = LiveCodeParseOutput;
 				break;
 			case "grammarCompileOutput":
-				item.component = GrammarCompileOutput;
+				item.data.component = GrammarCompileOutput;
 				break;
 			case "storeInspector":
-				item.component = StoreInspector;
+				item.data.component = StoreInspector;
 				break;
 			case "analyser":
-				item.component = Analyser;
+				item.data.component = Analyser;
 				break;
 			case "postIt":
-				item.component = PostIt;
+				item.data.component = PostIt;
 				break;
 			case "dspCodeOutput":
-				item.component = DSPCodeOutput;
+				item.data.component = DSPCodeOutput;
 				break;
 			default:
 				// item.component = StoreInspector;
@@ -701,7 +701,7 @@ export function hydrateJSONcomponent (item){
 		}
 		if(item.id === 'undefined'){
       item.id = id();
-		  item.name = item.type + item.id;
+		  item.data.name = item.data.type + item.id;
     }
 		return item;
   }

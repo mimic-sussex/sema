@@ -147,14 +147,14 @@
               >
 
           <span class='close'
-                on:click={ () => remove(item) }
+                on:click={ () => remove(dataItem) }
                 >✕
           </span>
 
           <svelte:component class='component'
                             this={ dataItem.data.component }
                             { ...dataItem.data }
-                            on:change={ componentUpdateEvent => update(componentUpdateEvent, item, dataItem) }
+                            on:change={ e => update(e, dataItem) }
                             />
       </div>
     </Grid>
@@ -321,33 +321,42 @@
   }
 
 
-  const update = (updateEvent, item, dataItem) => {
+  const update = (e, dataItem) => {
 
-    console.log("DEBUG:playground:update:", updateEvent, item, dataItem);
-    if(updateEvent !== undefined && updateEvent.detail !== undefined && dataItem !== undefined){
-      if(updateEvent.detail.prop === "content"){
-        switch (dataItem.data.type) {
-          case "liveCodeEditor":
-            localStorage.liveCodeEditorValue = updateEvent.detail.value;
-            break;
-          case "grammarEditor":
-            localStorage.grammarEditorValue = updateEvent.detail.value;
-            break;
-          case "modelEditor":
-            localStorage.modelEditorValue = updateEvent.detail.value;
-            break;
-          default:
-            break;
+    try{
+      console.log("DEBUG:playground:update:", e, dataItem);
+      if(e !== undefined && e.detail !== undefined && dataItem !== undefined){
+        if(e.detail.prop === "content"){
+          switch (dataItem.data.type) {
+            case "liveCodeEditor":
+              localStorage.liveCodeEditorValue = e.detail.value;
+              break;
+            case "grammarEditor":
+              localStorage.grammarEditorValue = e.detail.value;
+              break;
+            case "modelEditor":
+              localStorage.modelEditorValue = e.detail.value;
+              break;
+            default:
+              break;
+          }
+          // let d = $items.filter(i => i === dataItem);
+          // dataItem.data[e.detail.prop] = e.detail.value;
+          // $items = [...d, ...[dataItem]]
+
+          // $items = $items.map(  i => i === dataItem ?
+          //                             dataItem => { dataItem.data[e.detail.prop] = e.detail.value; return dataItem }
+          //                             : i );
+        }
+        else if(e.detail.prop === "hasFocus"){
+          setFocused(dataItem);
         }
       }
-      $items = $items.map(i => (i === item) ?
-                          (item.data[updateEvent.detail.prop] = updateEvent.detail.value)
-                          : i);
     }
-    else if(updateEvent.detail.prop === "hasFocus"){
-      setFocused(dataItem);
+    catch(error){
+      console.log("DEBUG:playground:component-update", dataItem );
     }
-    // console.log("DEBUG:playground:component-update", dataItem, item, prop);
+
   }
 
 
