@@ -263,7 +263,7 @@
   } */
 
   .layout-combobox-container{
-    margin-top: 3px;
+    /* margin-top: 3px; */
     margin-left:3px;
     margin-right:2px;
   }

@@ -111,7 +111,6 @@
     background: linear-gradient(150deg, rgba(0,18,1,1) 0%, rgba(7,5,17,1) 33%, rgba(16,12,12,1) 67%, rgba(18,16,16,1) 100%);
   }
 
-
   .header-container {
     grid-row: 1;
     display: grid;
@@ -120,6 +119,13 @@
     width: 100%;
     /* background: linear-gradient(150deg, rgba(0,18,1,1) 0%, rgba(7,5,17,1) 33%, rgba(16,12,12,1) 67%, rgba(18,16,16,1) 100%); */
   }
+  .slot-container {
+    height: 100%;
+    grid-row: 2;
+    width: 100%;
+  }
+
+
 
   .logo {
     /* grid-row: 1; */
@@ -147,12 +153,6 @@
     justify-content: flex-end;
     margin-right: 8px;
     /* background: linear-gradient(150deg, rgba(0,18,1,1) 0%, rgba(7,5,17,1) 33%, rgba(16,12,12,1) 67%, rgba(18,16,16,1) 100%); */
-  }
-
-  .slot-container {
-    height: 100%;
-    grid-row: 2;
-    width: 100%;
   }
 
 	h1 {
