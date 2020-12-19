@@ -192,7 +192,7 @@
   }
 
   path {
-    fill: #0050A0;
+    fill: #FFFFFF;
   }
 
 </style>

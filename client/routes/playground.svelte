@@ -340,16 +340,11 @@
             default:
               break;
           }
-          // console.log("DEBUG:playground:update:", e, dataItem);
-          // console.log(e)
-          // console.log(dataItem)
-          let d = $items.filter(i => i !== dataItem);
-          dataItem.data[e.detail.prop] = e.detail.value;
-          $items = [...d, ...[dataItem]]
 
-          // $items = $items.map(  i => i === dataItem ?
-          //                             dataItem => { i.data[e.detail.prop] = e.detail.value; return dataItem }
-          //                             : i );
+          // Content update from CodeMirror update with 'content' prop and value
+          dataItem.data[e.detail.prop] = e.detail.value;
+          // Update item and items collection by filtering out version with old value and concating update version
+          $items = [...$items.filter(i => i !== dataItem), ...[dataItem]]
         }
         else if(e.detail.prop === "hasFocus"){
           setFocused(dataItem);

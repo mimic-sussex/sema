@@ -1,7 +1,7 @@
 <script>
   import { onMount, onDestroy, tick } from 'svelte';
 
-  import Dashboard from '../../components/layouts/Dashboard.svelte';
+  // import Dashboard from '../../components/layouts/Dashboard.svelte';
   import Markdown from "../../components/tutorial/Markdown.svelte";
 
   import { goto, ready, url, params } from "@sveltech/routify";
@@ -102,12 +102,12 @@
     </div>
   </div>
   <div class="dashboard-container">
-    <Dashboard  {items}
+    <!-- <Dashboard  {items}
                 {breakpoints}
                 {cols}
                 {rowHeight}
                 {gap}
-                />
+                /> -->
   </div>
 </div>
 
