@@ -70,16 +70,6 @@ console.log(markdown);
 
 <style>
 
-  .markdown-container {
-    overflow: auto;
-    margin-left: 2px;
-    margin-right: 2px;
-    margin-bottom: 2px;
-    border: solid 2px #aaaaaa;
-    border-radius: 5px;
-    height: 85vh;
-    background: #aaaaaa;
-  }
 
   .markdown-output {
     /* width: 100%; */
@@ -93,6 +83,6 @@ console.log(markdown);
 
 </style>
 
-<div class="markdown-container">
-  <div class="markdown-output">{@html markdown}</div>
-</div>
+
+<div class="markdown-output">{@html markdown}</div>
+

@@ -62,14 +62,12 @@
 
 <div class="container">
   <div class="sidebar-container">
-    <div class="sidebar">
 
-      <div class="tutorial-navigator">
-        <button class="button-dark left">
-          ◄
-        </button>
-
-        <div class="combobox-dark middle">
+    <div class="tutorial-navigator">
+      <button class="button-dark left">
+        ◄
+      </button>
+      <div class="combobox-dark middle">
         <select
                 bind:value={ $selected }
                 on:blur={ e => handleSelect(e) }
@@ -87,20 +85,16 @@
             {/each}
           {/if}
         </select>
-        </div>
-
-        <button class="button-dark right">
-          ►
-        </button>
-
       </div>
-
-      <!-- <Markdown /> -->
-      <slot scoped={ $selected }>
-      </slot>
-
+      <button class="button-dark right">
+        ►
+      </button>
     </div>
+
+    <slot class="markdown-container" scoped={ $selected } />
+
   </div>
+
   <div class="dashboard-container">
     <!-- <Dashboard  {items}
                 {breakpoints}
@@ -113,7 +107,7 @@
 
 <style>
   .container {
-  	height: 100vh;
+  	height: 100%;
   	display: grid;
   	grid-template-columns: auto 1fr;
   	/* grid-template-rows: 100%; */
@@ -131,8 +125,8 @@
     background: linear-gradient(150deg, rgba(0,18,1,1) 0%, rgba(7,5,17,1) 33%, rgba(16,12,12,1) 67%, rgb(12, 12, 12) 100%);
     /* margin-left: 10px; */
     grid-area: sidebar;
-    grid-row: 0 / 1;
-    height: 100vh;
+    /* grid-row: 0 / 1; */
+    height: 100%;
     /* width: auto; width is defined by child */
     width: 26em;
     /* position: absolute; */
@@ -140,10 +134,32 @@
     margin-right: 2px;
   }
 
+
+  .tutorial-navigator {
+    display: grid;
+    grid-template-columns: 2em auto 2em;
+    width: 100%;
+    /* max-width: 25em; */
+    padding-top: 3px;
+    /* margin-bottom: 5px; */
+    margin-left: 3px;
+    /* margin-right: 20px; */
+  }
+
+
+  .markdown-container {
+    height: 100%;
+    margin-left: 2px;
+    margin-right: 2px;
+    /* margin-bottom: 2px; */
+    border: solid 2px #aaaaaa;
+    border-radius: 5px;
+    /* background: #aaaaaa; */
+  }
   .dashboard-container {
     grid-area: layout;
     /* grid-row: 0 / 2; */
-    height: 100vh;
+    height: 100%;
     /* position: absolute; */
     overflow: hidden;
   }
@@ -229,16 +245,8 @@
   }
 
 
-  .tutorial-navigator {
-    display: grid;
-    grid-template-columns: 2em auto 2em;
-    width: 100%;
-    /* max-width: 25em; */
-    margin-top: 3px;
-    /* margin-bottom: 5px; */
-    margin-left: 3px;
-    /* margin-right: 20px; */
-  }
+
+
 
   .left {
     grid-column: 1;
