@@ -102,8 +102,9 @@
       </button>
     </div>
 
-    <slot class="markdown-container" scoped={ $selected } />
-
+    <div class="markdown-container">
+      <slot scoped={ $selected } />
+    </div>
   </div>
 <!--
       on:adjust={onAdjust}
@@ -146,7 +147,6 @@
 
   .sidebar-container {
     background: linear-gradient(150deg, rgba(0,18,1,1) 0%, rgba(7,5,17,1) 33%, rgba(16,12,12,1) 67%, rgb(12, 12, 12) 100%);
-    /* margin-left: 10px; */
     grid-area: sidebar;
     /* grid-row: 0 / 1; */
     height: 100%;
@@ -171,13 +171,14 @@
 
 
   .markdown-container {
-    height: 100%;
+    height: calc(100vh - 84px);
     margin-left: 2px;
     margin-right: 2px;
     /* margin-bottom: 2px; */
-    border: solid 2px #aaaaaa;
+    /* border: solid 2px #aaaaaa; */
     border-radius: 5px;
     /* background: #aaaaaa; */
+    overflow-y: scroll;
 
 
 
@@ -279,6 +280,8 @@
   }
 
   .middle {
+    margin-left: 4px;
+    margin-right: 4px;
     grid-column: 2;
   }
 

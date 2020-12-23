@@ -15,43 +15,43 @@
   } from '../../stores/tutorial.js';
 
   // export let section; // we are grabbing this export variable value from Routify's file structure variable mechanism [chapter]/[section]
-  
+
   let markdown;
 
   let fetchMarkdown = async (chapter, section) => {
-    
+
     if(chapter != undefined && section != undefined){ // There is a call with undefined value when navigating to Playground
       const res = await fetch(`/tutorial/${chapter}/${section}/index.md`)
       const text = await res.text();
       // console.log(`DEBUG:[/${chapter}]/[${section}]:fetchMarkdown: `, text);
 
-      // await tick();    
+      // await tick();
       if (res.ok) {
         markdown = marked(text);
       } else {
         throw new Error(text);
       }
-    } 
+    }
   }
 
   let promise;
-  
+
   onMount( async () => {
     console.log(`DEBUG:tutorial:index`);
     promise = fetchMarkdown($selected.chapter_dir, $selected.section_dir); // Reactive statement, var 'promise' reacts to 'section' changes
-  });  
+  });
 </script>
 
 <style>
 
-  .markdown-container {
+  .markdown-index-container {
     overflow: auto;
     margin-left: 10px;
     margin-right: 10px;
     margin-bottom: 10px;
     border: solid 5px #aaaaaa;
     border-radius: 5px;
-    height: 85vh;
+    /* height: 85vh; */
     background: #aaaaaa;
   }
 
@@ -63,7 +63,7 @@
 
 </style>
 
-<div class="markdown-container">
+<div class="markdown-index-container">
 {#await promise}
 	<p>...waiting</p>
 {:then number}

@@ -118,7 +118,7 @@
     margin-bottom: 2px; */
     /* border: solid 5px #aaaaaa; */
     border-radius: 5px;
-    height: 85vh;
+    /* height: 85vh; */
     background: #aaaaaa;
 		-webkit-user-select: all;  /* Chrome 49+ */
 	  -moz-user-select: all;     /* Firefox 43+ */
