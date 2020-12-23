@@ -2,7 +2,7 @@
   import { onMount, onDestroy, tick } from 'svelte';
 
   // import Dashboard from '../../components/layouts/Dashboard.svelte';
-  import Markdown from "../../components/tutorial/Markdown.svelte";
+  // import Markdown from "../../components/tutorial/Markdown.svelte";
 
   import { goto, ready, url, params } from "@sveltech/routify";
 
@@ -61,6 +61,7 @@
 </svelte:head>
 
 <div class="container">
+
   <div class="sidebar-container">
 
     <div class="tutorial-navigator">

@@ -44,7 +44,7 @@
 
   let fetchMarkdown = async (chapter, section) => {
 
-    if(chapter !== undefined &&  section !== undefined ){ 
+    if(chapter !== undefined &&  section !== undefined ){
       let res, text;
 
       try{
@@ -53,20 +53,20 @@
 
         let json = await fetch(`/tutorial/${$params.chapter}/${$params.section}/layout.json`)
                           .then( r => r.json());
-          
-        $items = json.map( item => hydrateJSONcomponent(item) ); 
+
+        $items = json.map( item => hydrateJSONcomponent(item) );
 
         for (const item of $items){
-          await updateItemPropsWithFetchedValues(item); 
+          await updateItemPropsWithFetchedValues(item);
           await populateCommonStoresWithFetchedProps(item);
-          updateItemPropsWithCommonStoreValues(item)   
+          updateItemPropsWithCommonStoreValues(item)
         }
       }
       catch(error){
         console.error("Error loading tutorial environment", error);
       }
-    
-      // await tick();    
+
+      // await tick();
       if (res.ok) {
         let tag = 'script';
         markdown = marked(text);
@@ -74,14 +74,14 @@
         let codeID=0;
         while(markdown.indexOf("<pre><code>")>-1) {
           markdown = markdown.replace(
-            "<pre><code>", 
+            "<pre><code>",
             `<pre style="margin-top:-25px">
               <button style="font-size:70%; text-align: center; float: right; z-index: 1000; top: 30px; position: relative;" type="button" onclick="copyCode('code${codeID}')">copy</button>
               <code style="-moz-user-select: text; -html-user-select: text; -webkit-user-select: text; -ms-user-select: text; user-select: text; white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word;" id='code${codeID++}'>`
             );
 
           // markdown = markdown.replace(
-          //   "<pre><code>", 
+          //   "<pre><code>",
           //   `<pre><code style="-moz-user-select: text; -khtml-user-select: text; -webkit-user-select: text; -ms-user-select: text; user-select: text; white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word;" id='code${codeID++}'>`
           // );
 
@@ -89,17 +89,17 @@
               // markdown="test";
       } else {
         console.error("Error on markdown conversion", error);;
-      } 
+      }
     }
   }
 
   onMount( async () => {
-    for (const item of $items) 
+    for (const item of $items)
       await populateCommonStoresWithFetchedProps(item)
 
     console.log(`DEBUG:tutorial/${$params.chapter}/${$params.section}/ index`);
     // promise = fetchMarkdown($selected.chapter_dir, $selected.section_dir); // Reactive statement, var 'promise' reacts to 'section' changes
-  });  
+  });
 
   onDestroy(() => {
     resetStores();
