@@ -1,6 +1,10 @@
 <script>
   import { onMount, onDestroy, tick } from 'svelte';
 
+  import Grid from "svelte-grid";
+  import gridHelp from "svelte-grid/build/helper";
+
+
   // import Dashboard from '../../components/layouts/Dashboard.svelte';
   // import Markdown from "../../components/tutorial/Markdown.svelte";
 
@@ -24,11 +28,17 @@
   } from "../../stores/common.js";
 
   // Tutorial dashboard configuration
-  let cols = 15;
-  let breakpoints = [[1000, 10], [700, 5], [500, 3], [400, 1]];
+  let cols = [
+    // [2880, 13]
+    [1600, 8],
+    [1440, 6],
+    [1280, 3],
+    // [1024, 2],
+    // [800, 1],
+    // [500, 1]
+  ];
   let rowHeight = 100;
-  let gap = 1;
-
+  let gap = [2, 2];
 
   let handleSelect = e => {
 
@@ -95,8 +105,20 @@
     <slot class="markdown-container" scoped={ $selected } />
 
   </div>
-
+<!--
+      on:adjust={onAdjust}
+      on:mount={onChildMount} -->
   <div class="dashboard-container">
+    <Grid
+      bind:items={$items}
+      {cols}
+      {rowHeight}
+      {gap}
+
+      let:item
+      let:dataItem
+      />
+
     <!-- <Dashboard  {items}
                 {breakpoints}
                 {cols}
@@ -156,6 +178,9 @@
     border: solid 2px #aaaaaa;
     border-radius: 5px;
     /* background: #aaaaaa; */
+
+
+
   }
   .dashboard-container {
     grid-area: layout;
