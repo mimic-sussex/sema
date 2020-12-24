@@ -60,7 +60,7 @@ export const modelEditorValue = writable("");
 /*******                                        ********/
 /*******                                        ********/
 /*******     Tutorial Dashboard Items Stores    ********/
-/*******                                        ********/ 
+/*******                                        ********/
 
 
 
@@ -276,47 +276,49 @@ export const populateStoresWithFetchedProps = async (newItem) => {
 };
 
 export function hydrateJSONcomponent (item){
-	if (item !== 'undefined' && item.type !== 'undefined') {
-		switch (item.type) {
+	if (
+		item !== "undefined" &&
+		item.data !== "undefined" &&
+		item.data.type !== "undefined"
+	) {
+		switch (item.data.type) {
 			case "liveCodeEditor":
-				item.component = LiveCodeEditor;
+				item.data.component = LiveCodeEditor;
 				break;
 			case "grammarEditor":
-				item.component = GrammarEditor;
+				item.data.component = GrammarEditor;
 				break;
 			case "modelEditor":
-				item.component = ModelEditor;
+				item.data.component = ModelEditor;
 				break;
 			case "liveCodeParseOutput":
-				item.component = LiveCodeParseOutput;
+				item.data.component = LiveCodeParseOutput;
 				break;
 			case "grammarCompileOutput":
-				item.component = GrammarCompileOutput;
+				item.data.component = GrammarCompileOutput;
 				break;
 			case "storeInspector":
-				item.component = StoreInspector;
+				item.data.component = StoreInspector;
 				break;
 			case "analyser":
-				item.component = Analyser;
+				item.data.component = Analyser;
 				break;
 			case "postIt":
-				item.component = PostIt;
+				item.data.component = PostIt;
 				break;
 			case "dspCodeOutput":
-				item.component = DSPCodeOutput;
+				item.data.component = DSPCodeOutput;
 				break;
 			default:
 				// item.component = StoreInspector;
 				break;
 		}
-		if(item.id !== 'undefined'){
-      item.id = id();
-		  item.name = item.name + item.id;
-    }
+		if (item.id !== "undefined") {
+			item.id = id();
+			item.data.name = item.name + item.id;
+		}
 		return item;
-  }
-  else
-    throw Error("hydrateJSONcomponent: undefined item");
+	} else throw Error("hydrateJSONcomponent: undefined item");
 	// } else {
 	// 	createNewItem();
 	// }

@@ -79,9 +79,10 @@
         ◄
       </button>
       <div class="combobox-dark middle">
+        <!-- svelte-ignore a11y-no-onchange -->
         <select
                 bind:value={ $selected }
-                on:blur={ e => handleSelect(e) }
+                on:change={ e => handleSelect(e) }
                 >
           {#if $tutorials !== undefined}
             {#each $tutorials as chapter, i}
@@ -171,7 +172,7 @@
 
 
   .markdown-container {
-    height: calc(100vh - 84px);
+    height: calc(100vh - 86px);
     margin-left: 2px;
     margin-right: 2px;
     /* margin-bottom: 2px; */
