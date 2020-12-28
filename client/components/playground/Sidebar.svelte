@@ -13,6 +13,11 @@
     selectedModelOption,
     isSelectModelEditorDisabled,
 
+
+    loadEnvironmentOptions,
+    selectedLoadEnvironmentOption,
+    isLoadEnvironmentOptionsDisabled,
+
     // sidebarGrammarOptions,
     isAddGrammarEditorDisabled,
 
@@ -31,7 +36,9 @@
   } from '../../stores/playground.js'
 
 
-  import { id } from '../../utils/utils.js';
+  import { id,
+           addToHistory
+  } from '../../utils/utils.js';
 
   import { PubSub } from "../../messaging/pubSub.js";
   const messaging = new PubSub();
@@ -65,9 +72,36 @@
     $sidebarDebuggerOptions.map( option => option.disabled = false );
   }
 
-  function onSnapshot(){
+  function storeEnvironment(){
 
-    messaging.publish('playground-snapshot');
+    // Add to playground history, e.g.
+    // Key – playground-2020-03-02T15:48:31.080Z,
+    // Value: [{"2":{"fixed":false,"resizable":true,"draggable":true,"min":{"w":1,"h":1},"max":{}, ...]
+	  window.localStorage["playground-" + new Date(Date.now()).toISOString()] = JSON.stringify($items);
+
+    let keys = Object.keys(localStorage).filter(key => key.includes("playground-"));
+
+    $loadEnvironmentOptions = keys.reduce((acc, val, i) =>
+      [ ...acc, { id: i+1, disabled: false, text: val.substring(11) } ]
+      , [{ id: 0, disabled: false, text: `Load` }]
+    )
+  }
+
+  function loadEnvironment(){
+
+    messaging.publish('playground-environmentLoad', { type: 'loadEnvironment', data: selected.content });
+    $selectedLoadEnvironmentOption = $loadEnvironmentOptions[0];
+    $isLoadEnvironmentOptionsDisabled = true;
+  }
+
+  function downloadEnvironment(){
+
+    messaging.publish('playground-snapshotDownload');
+  }
+
+  function uploadEnvironment(){
+
+    messaging.publish('playground-snapshotUpload');
   }
 
   function dispatchAdd(type, selected){
@@ -240,7 +274,7 @@
   }
 
   .controls {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     margin-left: 3px;
     margin-right: 5px;
   }
@@ -273,6 +307,9 @@
     margin-right:2px;
   }
 
+
+
+
   .combobox-dark {
     display: block;
     font-size: 12px;
@@ -283,11 +320,10 @@
     line-height: 1.3;
     padding: 0.7em 1em 0.7em 1em;
     width: 10em;
-    /* max-width: 100%;  */
     box-sizing: border-box;
     margin: 0;
-    /* border: 1px solid #333; */
     border: 0 solid #333;
+    text-align: left;
     /*border-right-color: rgba(34,37,45, 0.4);;
     border-right-style: solid;
     border-right-width: 1px;
@@ -318,7 +354,6 @@
     color: #fff;
     line-height: 1.3;
     padding: 0.7em 1em 0.7em 1em;
-    /* width: 100%; */
     width: 10em;
     max-width: 100%;
     box-sizing: border-box;
@@ -346,6 +381,21 @@
     box-shadow: 2px 2px 3px rgb(0, 0, 0), -1px -1px 3px #ffffff61;
 
   }
+
+  .group-labels {
+
+    padding-left:5px;
+    margin-bottom: 10px;
+  }
+
+
+  .group-label {
+    color: #666;
+    font-size: 14px;
+    font-family: sans-serif;
+    font-weight: 400
+  }
+
 
   .button-dark:disabled {
     display: block;
@@ -393,6 +443,10 @@
 <div class="sidebar">
 
   <div class="layout-combobox-container">
+
+    <div class="group-labels" >
+      <span class="group-label">Widgets</span>
+    </div>
     <!-- Live Code Combobox Selector -->
     <div class="controls">
       <!-- on:click={ () => $sidebarLiveCodeOptions[0].disabled = true }  -->
@@ -484,13 +538,6 @@
       </button>
     </div>
 
-    <div>
-      <button class="button-dark controls"
-              on:click={ onReset }
-              >
-        Reset
-      </button>
-    </div>
 
 
     <!-- <div>
@@ -505,7 +552,10 @@
 
   <div class="layout-combobox-container">
 
-    <div style='margin-top: 20px;'>
+    <div class="group-labels" >
+      <span class="group-label">Properties</span>
+    </div>
+    <div>
       <ItemProps></ItemProps>
     </div>
 
@@ -522,38 +572,58 @@
   <hr style="width: 85%; border-bottom: 1px solid black;">
   <div class="layout-combobox-container">
 
-    <div>
-      <p>Snapshot</p>
+    <div class="group-labels">
+      <span class="group-label">Environment</span>
     </div>
-    <div>
-      <button class="button-dark controls"
-              on:click={ onSnapshotStore }
+    <div class="controls">
+      <button class="button-dark"
+              on:click={ onReset }
+              >
+        Reset
+      </button>
+    </div>
+    <div class="controls">
+      <button class="button-dark"
+              on:click={ () => storeEnvironment() }
               >
         Store
       </button>
     </div>
 
-    <div>
-      <button class="button-dark controls"
-              on:click={ onSnapshotLoad }
+    <div class="controls">
+      <!-- svelte-ignore a11y-no-onchange -->
+      <select class="combobox-dark"
+              bind:value={ $selectedLoadEnvironmentOption }
+              on:change={ () => loadEnvironment() }
+              on:click={ () => $loadEnvironmentOptions[0].disabled = true }
+              disabled={ $isLoadEnvironmentOptionsDisabled }
+              cursor={ () => ( $isLoadEnvironmentOptionsDisabled ? 'not-allowed' : 'pointer') }
               >
-        Load
-      </button>
+        {#each $loadEnvironmentOptions as loadEnvironmentOption }
+          <option disabled={ loadEnvironmentOption.disabled }
+                  value={loadEnvironmentOption}
+                  >
+            { loadEnvironmentOption.text }
+          </option>
+        {/each}
+      </select>
     </div>
 
-    <div>
-      <button class="button-dark controls"
-              on:click={ onSnapshotDownload }
-              >
-        Download
-      </button>
-    </div>
-    <div>
-      <button class="button-dark controls"
-              on:click={ onSnapshotUpload }
+    <div class="controls">
+      <button class="button-dark"
+              on:click={ () => uploadEnvironment() }
               >
         Upload
       </button>
     </div>
+
+    <div class="controls">
+      <button class="button-dark"
+              on:click={ () => downloadEnvironment() }
+              >
+        Download
+      </button>
+    </div>
+
   </div>
 </div>

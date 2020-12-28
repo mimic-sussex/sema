@@ -144,6 +144,25 @@ export const sidebarDebuggerOptions = writable([
 export let selectedDebuggerOption = writable({});
 export let isSelectDebuggerDisabled = writable(false);
 
+
+export const loadEnvironmentOptions  = writable([
+	{ id: 0, disabled: false, text: `Load`, content: "" },
+	{ id: 0, disabled: false, text: `Load`, content: "" },
+	{ id: 0, disabled: false, text: `Load`, content: "" },
+	// { id: 1, disabled: false, text: `new`, content: {
+	//     grammar:  `/languages/default/grammar.ne`,
+	//     livecode: undefined
+	//   }
+	// },
+]);
+
+export const selectedLoadEnvironmentOption = writable(loadEnvironmentOptions[1]);
+export const isLoadEnvironmentOptionsDisabled = writable(false);
+
+
+
+
+
 // Dashboard Store for Live Code Editor options in Sidebar component
 export const sidebarVisualisationOptions = [
 	{ id: 0, text: `Visualisation`, content: "" },

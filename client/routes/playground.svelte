@@ -48,6 +48,7 @@
     z-index: 1500;
   }
 
+
   :global(.svlt-grid-resizer::after) {
     border-color: white !important;
   }
@@ -91,13 +92,16 @@
     color: lightgray;
   }
 
+
+
   .content {
     width: 100%;
     height: 100%;
-    border-radius: 6px;
+    border-radius: 0px;
     border-top-left-radius: 0px;
-    border-bottom-right-radius: 3px;
-    /* background: black; */
+    border-bottom-right-radius: 0px;
+    /* padding: 10px; */
+    /* background: #FFF; */
 
   }
 
@@ -188,6 +192,9 @@
   import { addToHistory } from "../utils/history.js";
 
   import {
+
+    // loadEnvironmentOptions
+
     createNewItem,
     // setFocused,
     clearFocused,
@@ -203,6 +210,7 @@
     updateItemPropsWithCommonStoreValues,
     resetStores
   } from  "../stores/common.js"
+import { stringify } from 'querystring';
 
   // import { removeUnderscoredDirs } from '@sveltech/routify/lib/middleware/misc';
 
@@ -230,8 +238,8 @@
   // must be kept for unsubscribe on each route component onMount/onDestroy
   // (or navigations between tutorial/playground)
   let addSubscriptionToken;
-  let envSaveSubscriptionToken;
-  let envLoadSubscriptionToken;
+  let storeEnvironmentSubscriptionToken;
+  let loadEnvironmentSubscriptionToken;
   let resetSubscriptionToken;
 
   let unsubscribeItemsChangeCallback;
@@ -360,11 +368,6 @@
 
   }
 
-  const takeSnapshot = () => {
-
-    addToHistory("playground-history-", $items); // TODO: Needs refactoring to move up the chain (e.g. tutorial/playground, multiple editors)
-  }
-
 
 
 	// const update = e => {
@@ -470,15 +473,36 @@
     console.log($items);
   }
 
-  const saveEnvironment = e => {
+  const storeEnvironment = e => {
+
+    addToHistory("playground-history-", $items); // TODO: Needs refactoring to move up the chain (e.g. tutorial/playground, multiple editors)
+
+    // $loadEnvironmentOptions = Object.keys(localStorage).filter(key => key.includes("playground-history-") );
+    // let localStorageEnvironmentKeys =
+
+    // console.log("localStorage", localStorageEnvironmentKeys);
+
+
+    // loadEnvironmentsToSidebarStore();
+
    	// console.log('DEBUG:saveEnvironment', e);
-		if (e.storage=='local') {
-			localStorage.setItem(`env--${e.name}`, items.get() );
-		}else{
-			copyToPasteBuffer(items.get());
-			console.log("DEBUG:saveEnvironment: Environment copied to the paste buffer")
-		}
+		// if (e.storage=='local') {
+		// 	localStorage.setItem(`env--${e.name}`, items.get() );
+		// }else{
+		// 	copyToPasteBuffer(items.get());
+		// 	console.log("DEBUG:saveEnvironment: Environment copied to the paste buffer")
+		// }
   }
+
+  const loadEnvironmentsToSidebarStore = () => {
+
+
+
+
+
+  }
+
+
 
   const loadEnvironment = e => {
 		// console.log('DEBUG:playground:loadEnvironment', e);
@@ -532,10 +556,10 @@
       updateItemPropsWithCommonStoreValues(item);
 
     addSubscriptionToken = messaging.subscribe('playground-add', e => addItem(e) );
-		envSaveSubscriptionToken = messaging.subscribe('playground-env-save', e => saveEnvironment(e) );
-    envLoadSubscriptionToken = messaging.subscribe('playground-env-load', e => loadEnvironment(e) );
+		storeEnvironmentSubscriptionToken = messaging.subscribe('playground-store-environment', e => storeEnvironment(e) );
+    loadEnvironmentSubscriptionToken = messaging.subscribe('playground-load-environment', e => loadEnvironment(e) );
 		resetSubscriptionToken = messaging.subscribe('playground-reset', e => clearItems() );
-		snapshotSubscriptionToken = messaging.subscribe('playground-snapshot', e => takeSnapshot() );
+
     unsubscribeItemsChangeCallback = items.subscribe(value => {
       //console.log('Playground items changed: ', value );
     });
@@ -544,8 +568,8 @@
   onDestroy(() => {
     // console.log("DEBUG:routes/playground:onDestroy")
     messaging.unsubscribe(addSubscriptionToken);
-    messaging.unsubscribe(envSaveSubscriptionToken);
-    messaging.unsubscribe(envLoadSubscriptionToken);
+    messaging.unsubscribe(storeEnvironmentSubscriptionToken);
+    messaging.unsubscribe(loadEnvironmentSubscriptionToken);
     messaging.unsubscribe(resetSubscriptionToken);
 
     unsubscribeItemsChangeCallback();

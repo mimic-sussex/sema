@@ -102,7 +102,7 @@
 <style>
 
   .controls {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     margin-left: 3px;
     margin-right: 5px;
   }
@@ -284,7 +284,9 @@
 
   <div>
     {#each $focusedItemProperties as itemProp }
+
       {#if itemProp.lineNumbers }
+
         <div class="controls">
           <label class="input-dark">Line Numbers
             <input  type="checkbox"
@@ -294,47 +296,34 @@
             <span  class="checkbox-span"></span>
           </label>
         </div>
-      <!-- {:else if itemProp.theme }
-        { itemProp.theme }
-        <br> -->
+
       {:else if itemProp.mode }
+
         mode
         { itemProp }
         <br>
+
       {:else if itemProp.restart }
-      <div class="controls">
-        <button class="button-dark"
-                on:click={ () => messaging.publish('restart-ml') }
-                >
-                Restart
-        </button>
-        <br>
-      </div>
-      <!-- {:else if itemProp.debug }
+
         <div class="controls">
-          <select class="combobox-dark"
-                  bind:value={ $selectedDebuggerOption }
-                  on:change={ () => dispatchAdd('debugger', $selectedDebuggerOption) }
-                  on:click={ () => $sidebarDebuggerOptions[0].disabled = true  }
+          <button class="button-dark"
+                  on:click={ () => messaging.publish('restart-ml') }
                   >
-            {#each $sidebarDebuggerOptions as debuggerOption}
-              <option disabled={ debuggerOption.disabled }
-                      value={ debuggerOption }
-                      >
-                { debuggerOption.text }
-              </option>
-            {/each}
-          </select>
-        </div>         -->
+                  Restart
+          </button>
+        </div>
+
       {:else if itemProp.grammar }
+
         <div class="controls">
           <button class="button-dark"
                   on:click={ () => dispatchAdd('grammar') }
                   disabled={ $isAddGrammarEditorDisabled }
                   >
-                  Grammar Editor
+                   Grammar Editor
           </button>
         </div>
+
       {/if}
 
     {/each}
