@@ -182,7 +182,10 @@
 
   import {
     fetchFrom
+
   } from "../utils/utils.js"
+
+  import { addToHistory } from "../utils/history.js";
 
   import {
     createNewItem,
@@ -214,7 +217,7 @@
   let cols = [
     // [2880, 13]
     [1600, 8],
-    [1440, 6],
+    [1440, 12],
     [1280, 3],
     // [1024, 2],
     // [800, 1],
@@ -356,6 +359,12 @@
     }
 
   }
+
+  const takeSnapshot = () => {
+
+    addToHistory("playground-history-", $items); // TODO: Needs refactoring to move up the chain (e.g. tutorial/playground, multiple editors)
+  }
+
 
 
 	// const update = e => {
@@ -526,6 +535,7 @@
 		envSaveSubscriptionToken = messaging.subscribe('playground-env-save', e => saveEnvironment(e) );
     envLoadSubscriptionToken = messaging.subscribe('playground-env-load', e => loadEnvironment(e) );
 		resetSubscriptionToken = messaging.subscribe('playground-reset', e => clearItems() );
+		snapshotSubscriptionToken = messaging.subscribe('playground-snapshot', e => takeSnapshot() );
     unsubscribeItemsChangeCallback = items.subscribe(value => {
       //console.log('Playground items changed: ', value );
     });

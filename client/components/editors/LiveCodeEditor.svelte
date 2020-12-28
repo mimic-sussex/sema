@@ -169,7 +169,7 @@
   let parseLiveCodeAsync = async e => {
     // console.log('DEBUG:LiveCodeEditor:parseLiveCode:');
     // console.log(e);
-    addToHistory("live-code-history-", e); // TODO: Needs refactoring to move up the chain (e.g. tutorial/playground, multiple editors)
+    // addToHistory("live-code-history-", e); // TODO: Needs refactoring to move up the chain (e.g. tutorial/playground, multiple editors)
 
     if(window.Worker){
       let parserWorkerAsync = new Promise( (res, rej) => {

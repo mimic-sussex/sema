@@ -65,6 +65,11 @@
     $sidebarDebuggerOptions.map( option => option.disabled = false );
   }
 
+  function onSnapshot(){
+
+    messaging.publish('playground-snapshot');
+  }
+
   function dispatchAdd(type, selected){
     // console.log(`DEBUG:Sidebar:dispatchAdd: /add/${type}/${selected.id}`);
     // console.log(selected.content);
@@ -487,21 +492,18 @@
       </button>
     </div>
 
-    <div>
-      <button class="button-dark controls"
 
-              >
-        Snapshot
-      </button>
-    </div>
     <!-- <div>
       <label class="checkbox-container">Line Numbers
         <input type="checkbox" checked="checked" class="checkbox-input">
         <span  class="checkbox-span"></span>
       </label>
     </div> -->
+  </div>
 
-    <hr style="width: 85%; border-bottom: 1px solid black;">
+  <hr style="width: 85%; border-bottom: 1px solid black;">
+
+  <div class="layout-combobox-container">
 
     <div style='margin-top: 20px;'>
       <ItemProps></ItemProps>
@@ -516,5 +518,42 @@
           {/each}
         </select>
       </div> -->
+  </div>
+  <hr style="width: 85%; border-bottom: 1px solid black;">
+  <div class="layout-combobox-container">
+
+    <div>
+      <p>Snapshot</p>
     </div>
+    <div>
+      <button class="button-dark controls"
+              on:click={ onSnapshotStore }
+              >
+        Store
+      </button>
+    </div>
+
+    <div>
+      <button class="button-dark controls"
+              on:click={ onSnapshotLoad }
+              >
+        Load
+      </button>
+    </div>
+
+    <div>
+      <button class="button-dark controls"
+              on:click={ onSnapshotDownload }
+              >
+        Download
+      </button>
+    </div>
+    <div>
+      <button class="button-dark controls"
+              on:click={ onSnapshotUpload }
+              >
+        Upload
+      </button>
+    </div>
+  </div>
 </div>
