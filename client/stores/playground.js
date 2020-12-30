@@ -41,6 +41,10 @@ import echo_state_network_code_example from "../machineLearning/tfjs/echo-state/
 import lstm_txt_gen_code_example from "../machineLearning/tfjs/rnn/lstm-txt-gen.tf";
 import music_rnn_example from "../machineLearning/magenta/music-rnn.tf";
 
+
+
+export const isUploadOverlayVisible = writable(false);
+
 export const cm_theme_cobalt = writable("");
 export const cm_theme_icecoder = writable("");
 export const cm_theme_shadowfox = writable("");

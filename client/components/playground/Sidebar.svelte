@@ -30,7 +30,7 @@
     focusedItemProperties,
 
     items,
-
+    isUploadOverlayVisible,
     hydrateJSONcomponent,
     loadEnvironmentSnapshotEntries
   } from '../../stores/playground.js'
@@ -99,7 +99,7 @@
 
   function uploadEnvironment(){
 
-    messaging.publish('playground-snapshotUpload');
+    $isUploadOverlayVisible = true;
   }
 
   function dispatchAdd(type, selected){
@@ -272,8 +272,8 @@
     margin-top: 0px;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
-    /* justify-content: space-between; */
+    /* justify-content: flex-start; */
+    justify-content: space-between;
   }
 
   .controls {
@@ -780,6 +780,7 @@
       </button>
     </div>
 
+    <br>
   </div>
 
 </div>

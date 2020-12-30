@@ -20,18 +20,48 @@
     width: auto; /* width is defined by child */
   }
 
+
   .dashboard-container {
     grid-area: layout;
 
     /* height: 100%; */
     width: 100%;
+    z-index: 0;
     /* height: 100vh;
     width: 100%;
     overflow: hidden; */
 
     /* grid-row: 0 / 2; */
+
   }
 
+  .upload-overlay-container {
+
+    grid-area: layout;
+    z-index: 1000;
+    background-color: rgba(16,12,12,0.8);
+    visibility: visible;
+    width: 100%;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:16px;
+    visibility: hidden;
+  }
+
+
+
+
+  .upload-overlay-text {
+
+    top:50%;
+
+    /* width: 100%; */
+    position: absolute;
+    color: #FFF;
+
+  }
 
   :global(*) {
     user-select: none;
@@ -122,6 +152,14 @@
   <!-- {breakpoints}
   on:update={ e => update(e) }
    -->
+
+  <div  class="upload-overlay-container" style='visibility:{$isUploadOverlayVisible? "visible": "hidden"}'
+        on:drop={handleDragDrop}
+        on:dragenter={handleDragEnter}
+        ondragover="return false"
+        >
+    <p class="upload-overlay-text"><span style="font-weight: 1500;">Choose your .json file</span> or <span>drag'n'drop it here to upload a new environment!</span></p>
+  </div>
   <div class="dashboard-container scrollable">
     <Grid
       bind:items={$items}
@@ -153,7 +191,6 @@
                             />
       </div>
     </Grid>
-
   </div>
 </div>
 
@@ -192,6 +229,7 @@
     hydrateJSONcomponent,
     focusedItem,
     focusedItemProperties,
+    isUploadOverlayVisible,
     items
   } from  "../stores/playground.js"
 
@@ -209,6 +247,8 @@ import { stringify } from 'querystring';
 
 	const GitHubBase = require('github-base');
 	const github = new GitHubBase({ /* options */ });
+
+  let overlayContainer;
 
   // Playground dashboard configuration
   // let cols = 12;
@@ -360,7 +400,21 @@ import { stringify } from 'querystring';
 
   }
 
+  function handleDragDrop(e) {
 
+    e.preventDefault();
+
+    let reader = new FileReader();
+    reader.readAsText(e.dataTransfer.files[0]);
+    reader.onload = e => $items = JSON.parse(e.target.result).map(item => hydrateJSONcomponent(item));
+
+    $isUploadOverlayVisible = false;
+  }
+
+  function handleDragEnter(e){
+
+
+  }
 
 	// const update = e => {
 
