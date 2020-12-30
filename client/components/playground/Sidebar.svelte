@@ -26,13 +26,13 @@
     sidebarDebuggerOptions,
     selectedDebuggerOption,
     isSelectDebuggerDisabled,
-    // sidebarVisualisationOptions,
 
     focusedItemProperties,
 
-    items
-    // editorThemes,
-    // selectedModel,
+    items,
+
+    hydrateJSONcomponent,
+    loadEnvironmentSnapshotEntries
   } from '../../stores/playground.js'
 
 
@@ -45,7 +45,6 @@
 
   let itemDeletionSubscriptionToken;
 
-  // import Markdown from "./Markdown.svelte";
 
 	import { createEventDispatcher } from 'svelte';
 	const dispatch = createEventDispatcher();
@@ -56,14 +55,10 @@
   // let selectedModelOption;
   let selectedVisualisationOption;
 
-  function onSelectSnapShot(){
 
+  function resetEnvironment(){
 
-  }
-
-
-  function onReset(){
-    messaging.publish('playground-reset');
+    $items = $items.slice($items.length);
 
     $isSelectLiveCodeEditorDisabled = false;
     $isSelectModelEditorDisabled = false;
@@ -79,24 +74,27 @@
     // Value: [{"2":{"fixed":false,"resizable":true,"draggable":true,"min":{"w":1,"h":1},"max":{}, ...]
 	  window.localStorage["playground-" + new Date(Date.now()).toISOString()] = JSON.stringify($items);
 
-    let keys = Object.keys(localStorage).filter(key => key.includes("playground-"));
+    loadEnvironmentSnapshotEntries();
 
-    $loadEnvironmentOptions = keys.reduce((acc, val, i) =>
-      [ ...acc, { id: i+1, disabled: false, text: val.substring(11) } ]
-      , [{ id: 0, disabled: false, text: `Load` }]
-    )
   }
 
   function loadEnvironment(){
 
-    messaging.publish('playground-environmentLoad', { type: 'loadEnvironment', data: selected.content });
+    // Retrieve item, hydrate JSON into grid-items
+    let json = window.localStorage.getItem($selectedLoadEnvironmentOption.content);
+    $items = [];
+    $items = JSON.parse(json).map(item => hydrateJSONcomponent(item))
+
+    // Re-set UI
     $selectedLoadEnvironmentOption = $loadEnvironmentOptions[0];
     $isLoadEnvironmentOptionsDisabled = true;
   }
 
   function downloadEnvironment(){
 
-    messaging.publish('playground-snapshotDownload');
+    var fileContents = "Hello world!";
+    var filename = "hello.txt";
+    var filetype = "text/plain";
   }
 
   function uploadEnvironment(){
@@ -269,8 +267,13 @@
 
   .sidebar {
     /* width: 160px; */
+    /* height: calc(100vh - 43px); */
     height: 100%;
     margin-top: 0px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    /* justify-content: space-between; */
   }
 
   .controls {
@@ -302,6 +305,7 @@
   } */
 
   .layout-combobox-container{
+    /* height: 100%; */
     padding-top: 3px;
     margin-left:3px;
     margin-right:2px;
@@ -315,6 +319,75 @@
     font-size: 12px;
     font-family: sans-serif;
     font-weight: 400;
+    cursor: pointer;
+    color: #ccc;
+    line-height: 1.3;
+    padding: 0.7em 1em 0.7em 1em;
+    width: 10em;
+    box-sizing: border-box;
+    margin: 0;
+    border: 0 solid #333;
+    text-align: left;
+    /*border-right-color: rgba(34,37,45, 0.4);;
+    border-right-style: solid;
+    border-right-width: 1px;
+    border-bottom-color: rgba(34,37,45, 0.4);
+    border-bottom-style: solid;
+    border-bottom-width: 1px; */
+    /* box-shadow: 0 1px 0 0px rgba(4, 4, 4, 0.04); */
+    border-radius: .6em;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: rgba(16, 16, 16, 0.04);
+    background-repeat: no-repeat, repeat;
+    background-position: right .7em top 50%, 0 0;
+    background-size: .65em auto, 100%;
+    -webkit-box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
+    -moz-box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
+    box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
+  }
+
+
+  .combobox-dark:hover {
+    display: block;
+    font-size: 12px;
+    font-family: sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    color: #fff;
+    line-height: 1.3;
+    padding: 0.7em 1em 0.7em 1em;
+    width: 10em;
+    box-sizing: border-box;
+    margin: 0;
+    border: 0 solid #333;
+    text-align: left;
+    /*border-right-color: rgba(34,37,45, 0.4);;
+    border-right-style: solid;
+    border-right-width: 1px;
+    border-bottom-color: rgba(34,37,45, 0.4);
+    border-bottom-style: solid;
+    border-bottom-width: 1px; */
+    /* box-shadow: 0 1px 0 0px rgba(4, 4, 4, 0.04); */
+    border-radius: .6em;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: linear-gradient(rgba(16, 16, 16, 1), rgba(16, 16, 16, 0.2));
+    background-repeat: no-repeat, repeat;
+    background-position: right .7em top 50%, 0 0;
+    background-size: .65em auto, 100%;
+    -webkit-box-shadow: 5px 5px 20px -5px rgba(0,0,0,0.75), -5px -5px 20px rgba(255, 255, 255, 0.954);
+    -moz-box-shadow: 5px 5px 20px -5px rgba(0,0,0,0.75), -5px -5px 20px rgba(255, 255, 255, 0.954);
+    box-shadow: 2px 2px 3px rgb(0, 0, 0), -1px -1px 3px #ffffff61;
+  }
+
+  .combobox-dark:focus {
+    display: block;
+    font-size: 12px;
+    font-family: sans-serif;
+    font-weight: 500;
     cursor: pointer;
     color: #fff;
     line-height: 1.3;
@@ -345,13 +418,14 @@
   }
 
 
+
   .button-dark {
     display: block;
     font-size: 12px;
     font-family: sans-serif;
     font-weight: 400;
     cursor: pointer;
-    color: #fff;
+    color: #ccc;
     line-height: 1.3;
     padding: 0.7em 1em 0.7em 1em;
     width: 10em;
@@ -376,11 +450,87 @@
     background-repeat: no-repeat, repeat;
     background-position: right .7em top 50%, 0 0;
     background-size: .65em auto, 100%;
-    -webkit-box-shadow: 2px 2px 5px rgba(0,0,0),-1px -1px 1px rgb(34, 34, 34);
-    -moz-box-shadow: 2px 2px 5px rgba(0,0,0), -1px -1px 1px rgb(34, 34, 34);;
+    -webkit-box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
+    -moz-box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
+    box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
+
+  }
+
+  .button-dark:hover {
+    display: block;
+    font-size: 12px;
+    font-family: sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    color: #fff;
+    line-height: 1.3;
+    padding: 0.7em 1em 0.7em 1em;
+    width: 10em;
+    max-width: 100%;
+    box-sizing: border-box;
+    border: 0 solid #333;
+    text-align: left;
+    /* box-shadow: 0 1px 0 0px rgba(4, 4, 4, 0.04); */
+    border-radius: .6em;
+    /* border-right-color: rgba(34,37,45, 0.1);
+    border-right-style: solid;
+    border-right-width: 1px;
+    border-bottom-color: rgba(34,37,45, 0.1);
+    border-bottom-style: solid;
+    border-bottom-width: 1px; */
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    background-color:  linear-gradient(rgba(16, 16, 16, 0.8), rgba(16, 16, 16, 0.08));
+    /* background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007CB2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'),
+      linear-gradient(to bottom, #ffffff 0%,#e5e5e5 100%); */
+    background-repeat: no-repeat, repeat;
+    background-position: right .7em top 50%, 0 0;
+    background-size: .65em auto, 100%;
+    -webkit-box-shadow: 2px 2px 5px rgba(0,0,0),-0.5px -0.5px 3px rgb(34, 34, 34);
+    -moz-box-shadow: 2px 2px 5px rgba(0,0,0), -0.5px -0.5px 3px rgb(34, 34, 34);;
     box-shadow: 2px 2px 3px rgb(0, 0, 0), -1px -1px 3px #ffffff61;
 
   }
+
+
+  .button-dark:active {
+    display: block;
+    font-size: 12px;
+    font-family: sans-serif;
+    font-weight: 400;
+    cursor: pointer;
+    color: #888;
+    line-height: 1.3;
+    /* padding: 0.7em 1em 0.7em 1em; */
+    width: 10em;
+    max-width: 100%;
+    box-sizing: border-box;
+    /* border: 0 solid #333; */
+    text-align: left;
+    /* box-shadow: 0 1px 0 0px rgba(4, 4, 4, 0.04); */
+    /* border-radius: .6em; */
+    /* border-right-color: rgba(34,37,45, 0.1);
+    border-right-style: solid;
+    border-right-width: 1px;
+    border-bottom-color: rgba(34,37,45, 0.1);
+    border-bottom-style: solid;
+    border-bottom-width: 1px; */
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    background-color:  rgba(16, 16, 16, 0.04);;
+    /* background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007CB2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'),
+      linear-gradient(to bottom, #ffffff 0%,#e5e5e5 100%); */
+    background-repeat: no-repeat, repeat;
+    /* background-position: right .7em top 50%, 0 0; */
+    background-size: .65em auto, 100%;
+    /* -webkit-box-shadow: -1px -1px 1px rgb(34, 34, 34), 2px 2px 5px rgba(0,0,0),;
+    -moz-box-shadow: -1px -1px 1px rgb(34, 34, 34), 2px 2px 5px rgba(0,0,0), ;
+    box-shadow:  -1px -1px 3px #ffffff61, 2px 2px 3px rgb(0, 0, 0); */
+    box-shadow:  -1px -1px 3px rgba(16, 16, 16, 0.4), 0.5px 0.5px 0.5px rgba(16, 16, 16, 0.04);
+  }
+
 
   .group-labels {
 
@@ -401,9 +551,10 @@
     display: block;
     font-size: 12px;
     font-family: sans-serif;
+    /* font-style: italic; */
     font-weight: 400;
     cursor: pointer;
-    color: #999;
+    color: #888;
     line-height: 1.3;
     padding: 0.7em 1em 0.7em 1em;
     /* width: 100%; */
@@ -538,19 +689,15 @@
       </button>
     </div>
 
+    <br>
 
-
-    <!-- <div>
-      <label class="checkbox-container">Line Numbers
-        <input type="checkbox" checked="checked" class="checkbox-input">
-        <span  class="checkbox-span"></span>
-      </label>
-    </div> -->
   </div>
 
-  <hr style="width: 85%; border-bottom: 1px solid black;">
 
   <div class="layout-combobox-container">
+
+    <!-- <hr style="width: 75%; border-bottom: 1px solid black;"> -->
+
 
     <div class="group-labels" >
       <span class="group-label">Properties</span>
@@ -568,16 +715,25 @@
           {/each}
         </select>
       </div> -->
+
+
+    <br>
+
+
   </div>
-  <hr style="width: 85%; border-bottom: 1px solid black;">
+
+
+
   <div class="layout-combobox-container">
+
+    <!-- <hr style="width: 75%; border-bottom: 1px solid black;"> -->
 
     <div class="group-labels">
       <span class="group-label">Environment</span>
     </div>
     <div class="controls">
       <button class="button-dark"
-              on:click={ onReset }
+              on:click={ () => resetEnvironment() }
               >
         Reset
       </button>
@@ -596,7 +752,6 @@
               bind:value={ $selectedLoadEnvironmentOption }
               on:change={ () => loadEnvironment() }
               on:click={ () => $loadEnvironmentOptions[0].disabled = true }
-              disabled={ $isLoadEnvironmentOptionsDisabled }
               cursor={ () => ( $isLoadEnvironmentOptionsDisabled ? 'not-allowed' : 'pointer') }
               >
         {#each $loadEnvironmentOptions as loadEnvironmentOption }
@@ -626,4 +781,5 @@
     </div>
 
   </div>
+
 </div>

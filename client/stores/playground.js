@@ -735,6 +735,7 @@ export const reset = () => {
 	items.set(layoutOriginal);
 };
 
+export const fastStart = writable(true);
 
 
 /**
@@ -845,6 +846,23 @@ export function clearFocused(){
 
 }
 
+export function loadEnvironmentSnapshotEntries() {
+	// Load local storage items filtered by "playground-" prefix
+	let keys = Object.keys(localStorage)
+		.filter((key) => key.includes("playground-"))
+		.sort((a, b) => Date.parse(b.substring(11)) - Date.parse(a.substring(11)));
+
+	// Create a list of sidebar Load combox items with local storage substring, including the default "load"
+	loadEnvironmentOptions.set(
+		keys.reduce(
+			(acc, val, i) => [
+				...acc,
+				{ id: i + 1, disabled: false, text: val.substring(11), content: val },
+			],
+			[{ id: 0, disabled: false, text: `Load` }]
+		)
+	);
+}
 
 
 

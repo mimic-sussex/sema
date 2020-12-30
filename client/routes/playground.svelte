@@ -15,9 +15,7 @@
   }
   .sidebar-container {
     background: linear-gradient(150deg, rgba(0,18,1,1) 0%, rgba(7,5,17,1) 33%, rgba(16,12,12,1) 67%, rgb(12, 12, 12) 100%);
-    /* margin-left: 10px; */
     grid-area: sidebar;
-    /* grid-row: 0 / 1; */
     height: 100%;
     width: auto; /* width is defined by child */
   }
@@ -93,7 +91,6 @@
   }
 
 
-
   .content {
     width: 100%;
     height: 100%;
@@ -104,13 +101,6 @@
     /* background: #FFF; */
 
   }
-
-
-  /* .component{
-
-    z-index: 1500;
-
-  } */
 
  	.scrollable {
 		flex: 1 1 auto;
@@ -138,6 +128,7 @@
       {cols}
       {rowHeight}
       {gap}
+      fastStart={$fastStart}
       on:adjust={onAdjust}
       on:mount={onChildMount}
       let:item
@@ -194,7 +185,7 @@
   import {
 
     // loadEnvironmentOptions
-
+    fastStart,
     createNewItem,
     // setFocused,
     clearFocused,
@@ -269,6 +260,7 @@ import { stringify } from 'querystring';
 
           if( item.data.type === "modelEditor" ){
             itemProperties.push({ restart: true });
+            itemProperties.push({ visor: true });
           }
         }
         else if(item.data.type === 'analyser'){
@@ -450,7 +442,7 @@ import { stringify } from 'querystring';
   const clearItems = () => {
     // console.log("DEBUG:dashboard:clearItems:")
     // items.update( items => items.map( item => remove(item) ) );
-    $items = $items.slice($items.length);
+
 
     clearFocused();
     // items.set([]);
@@ -462,72 +454,15 @@ import { stringify } from 'querystring';
     if(item.type === 'analyser'){
       messaging.publish('remove-engine-analyser', { id: item.id }); // notify audio engine to remove associated analyser
     }
-    console.log("DEBUG:dashboard:remove:", item);
+    // console.log("DEBUG:dashboard:remove:", item);
     messaging.publish("plaground-item-deletion", item.type);
 
     remove.bind(null, item); // remove dashboard item binding
     delete item.component;
     $items = $items.filter( i => i.id !== item.id);
 
-    console.log("DEBUG:dashboard:remove:");
-    console.log($items);
-  }
-
-  const storeEnvironment = e => {
-
-    addToHistory("playground-history-", $items); // TODO: Needs refactoring to move up the chain (e.g. tutorial/playground, multiple editors)
-
-    // $loadEnvironmentOptions = Object.keys(localStorage).filter(key => key.includes("playground-history-") );
-    // let localStorageEnvironmentKeys =
-
-    // console.log("localStorage", localStorageEnvironmentKeys);
-
-
-    // loadEnvironmentsToSidebarStore();
-
-   	// console.log('DEBUG:saveEnvironment', e);
-		// if (e.storage=='local') {
-		// 	localStorage.setItem(`env--${e.name}`, items.get() );
-		// }else{
-		// 	copyToPasteBuffer(items.get());
-		// 	console.log("DEBUG:saveEnvironment: Environment copied to the paste buffer")
-		// }
-  }
-
-  const loadEnvironmentsToSidebarStore = () => {
-
-
-
-
-
-  }
-
-
-
-  const loadEnvironment = e => {
-		// console.log('DEBUG:playground:loadEnvironment', e);
-
-    clearItems();
-
-		if (e.storage === 'local') {
-			let json = localStorage.getItem(`env--${e.name}`);
-			if (json) {
-        let envItems = JSON.parse(json).map( item => hydrateJSONcomponent(item) );
-        items.set( envItems );
-        items.update( items => gridHelp.resizeItems(items, 4, 100) ); // Align items
-        // items.update( items => items.concat(envItems));
-			}
-		}else{
-			github.get(`/gists/${e.name}`)
-			.then(res => {
-				// console.log("git gist", res.body.files[Object.keys(res.body.files)[0]].content)
-				let envdataStr = res.body.files[Object.keys(res.body.files)[0]].content;
-				if (envdataStr) {
-					//fill in soon
-				}
-			})
-			.catch(console.error);
-		}
+    // console.log("DEBUG:dashboard:remove:");
+    // console.log($items);
   }
 
   const onAdjust = e => {
@@ -556,9 +491,9 @@ import { stringify } from 'querystring';
       updateItemPropsWithCommonStoreValues(item);
 
     addSubscriptionToken = messaging.subscribe('playground-add', e => addItem(e) );
-		storeEnvironmentSubscriptionToken = messaging.subscribe('playground-store-environment', e => storeEnvironment(e) );
-    loadEnvironmentSubscriptionToken = messaging.subscribe('playground-load-environment', e => loadEnvironment(e) );
-		resetSubscriptionToken = messaging.subscribe('playground-reset', e => clearItems() );
+		// storeEnvironmentSubscriptionToken = messaging.subscribe('playground-store-environment', e => storeEnvironment(e) );
+    // loadEnvironmentSubscriptionToken = messaging.subscribe('playground-load-environment', e => loadEnvironment(e) );
+		// // resetSubscriptionToken = messaging.subscribe('playground-reset', e => clearItems() );
 
     unsubscribeItemsChangeCallback = items.subscribe(value => {
       //console.log('Playground items changed: ', value );
@@ -568,8 +503,8 @@ import { stringify } from 'querystring';
   onDestroy(() => {
     // console.log("DEBUG:routes/playground:onDestroy")
     messaging.unsubscribe(addSubscriptionToken);
-    messaging.unsubscribe(storeEnvironmentSubscriptionToken);
-    messaging.unsubscribe(loadEnvironmentSubscriptionToken);
+    // messaging.unsubscribe(storeEnvironmentSubscriptionToken);
+    // messaging.unsubscribe(loadEnvironmentSubscriptionToken);
     messaging.unsubscribe(resetSubscriptionToken);
 
     unsubscribeItemsChangeCallback();

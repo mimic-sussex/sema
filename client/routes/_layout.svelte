@@ -28,11 +28,13 @@
   } from '../stores/tutorial.js';
 
   import {
-    sidebarLiveCodeOptions
+    sidebarLiveCodeOptions,
+    loadEnvironmentSnapshotEntries
   } from '../stores/playground.js'
 
 
   $: loadSidebarLiveCodeOptions();
+  $: loadEnvironmentSnapshotEntries();
   $: fetchAndLoadDefaultTutorial();
   $: fetchAndLoadDefaultTutorialItems();
 
@@ -58,6 +60,13 @@
         $ready();
       });
 	}
+
+  // let loadEnvironmentSnapshots = () => {
+
+  //   loadEnvironmentSnapshots
+
+  // }
+
 
 
   /**
