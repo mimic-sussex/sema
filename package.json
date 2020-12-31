@@ -18,17 +18,20 @@
     "serve": "spassr --debug --serve-spa --spa-port 5001 --dist-dir ./public --app ./bundle.js --entrypoint ./index.html"
   },
   "dependencies": {
+    "do-not-zip": "^1.0.0",
     "firebase": "^7.14.1",
     "firebaseui": "^4.5.0",
     "futil": "^1.67.0",
     "github-base": "^1.0.0",
     "highlight.js": "^10.4.0",
+    "install": "^0.13.0",
     "js-beautify": "^1.13.0",
     "lodash": "^4.17.15",
     "lodash.clonedeep": "^4.5.0",
     "lodash.map": "^4.6.0",
     "marked": "^0.8.2",
     "nearley": "^2.19.0",
+    "remove": "^0.1.5",
     "streamsaver": "^2.0.5"
   },
   "devDependencies": {

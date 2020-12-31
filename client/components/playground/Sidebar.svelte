@@ -35,10 +35,8 @@
     loadEnvironmentSnapshotEntries
   } from '../../stores/playground.js'
 
-
-  import { id,
-           addToHistory
-  } from '../../utils/utils.js';
+  import * as doNotZip from 'do-not-zip';
+	import downloadBlob from '../../utils/downloadBlob.js'
 
   import { PubSub } from "../../messaging/pubSub.js";
   const messaging = new PubSub();
@@ -75,26 +73,35 @@
 	  window.localStorage["playground-" + new Date(Date.now()).toISOString()] = JSON.stringify($items);
 
     loadEnvironmentSnapshotEntries();
-
   }
 
   function loadEnvironment(){
 
     // Retrieve item, hydrate JSON into grid-items
     let json = window.localStorage.getItem($selectedLoadEnvironmentOption.content);
-    $items = [];
     $items = JSON.parse(json).map(item => hydrateJSONcomponent(item))
 
-    // Re-set UI
+    // Reset UI
     $selectedLoadEnvironmentOption = $loadEnvironmentOptions[0];
     $isLoadEnvironmentOptionsDisabled = true;
   }
 
   function downloadEnvironment(){
 
-    var fileContents = "Hello world!";
-    var filename = "hello.txt";
-    var filetype = "text/plain";
+    let timestamp = new Date(Date.now()).toISOString();
+
+    // Create blob from current playround state and filtered content from editor widgets
+    const blob = doNotZip.toBlob($items
+      .reduce(
+        (acc, val) => {
+          if (val.data && val.data.content) // if 'val' is an editor type (liveCode, grammar or model), `data.content` if defined
+            acc.push({ path: `${val.data.type}`+`.txt`, data: val.data.content });
+          return acc
+        }, [{ path: `playground.json`, data: localStorage.getItem("playground") }]
+      )
+    );
+    // Trigger a browser file download
+		downloadBlob(blob, 'sema-' + `${timestamp}` + '.zip');
   }
 
   function uploadEnvironment(){
@@ -249,15 +256,11 @@
 
 
   onMount(() => {
-    // console.log("DEBUG:routes/playground:sidebar:onMount")
-
     setButtonsStateOnLoad();
     itemDeletionSubscriptionToken = messaging.subscribe("plaground-item-deletion", activateSelectOnItemDeletion);
   })
 
   onDestroy(() => {
-    // console.log("DEBUG:routes/playground:sidebar:onDestroy")
-
     messaging.unsubscribe(itemDeletionSubscriptionToken);
   });
 
@@ -328,13 +331,6 @@
     margin: 0;
     border: 0 solid #333;
     text-align: left;
-    /*border-right-color: rgba(34,37,45, 0.4);;
-    border-right-style: solid;
-    border-right-width: 1px;
-    border-bottom-color: rgba(34,37,45, 0.4);
-    border-bottom-style: solid;
-    border-bottom-width: 1px; */
-    /* box-shadow: 0 1px 0 0px rgba(4, 4, 4, 0.04); */
     border-radius: .6em;
     -moz-appearance: none;
     -webkit-appearance: none;
@@ -363,13 +359,6 @@
     margin: 0;
     border: 0 solid #333;
     text-align: left;
-    /*border-right-color: rgba(34,37,45, 0.4);;
-    border-right-style: solid;
-    border-right-width: 1px;
-    border-bottom-color: rgba(34,37,45, 0.4);
-    border-bottom-style: solid;
-    border-bottom-width: 1px; */
-    /* box-shadow: 0 1px 0 0px rgba(4, 4, 4, 0.04); */
     border-radius: .6em;
     -moz-appearance: none;
     -webkit-appearance: none;
@@ -397,13 +386,6 @@
     margin: 0;
     border: 0 solid #333;
     text-align: left;
-    /*border-right-color: rgba(34,37,45, 0.4);;
-    border-right-style: solid;
-    border-right-width: 1px;
-    border-bottom-color: rgba(34,37,45, 0.4);
-    border-bottom-style: solid;
-    border-bottom-width: 1px; */
-    /* box-shadow: 0 1px 0 0px rgba(4, 4, 4, 0.04); */
     border-radius: .6em;
     -moz-appearance: none;
     -webkit-appearance: none;
@@ -416,9 +398,6 @@
     -moz-box-shadow: 5px 5px 20px -5px rgba(0,0,0,0.75), -5px -5px 20px rgba(255, 255, 255, 0.954);
     box-shadow: 2px 2px 3px rgb(0, 0, 0), -1px -1px 3px #ffffff61;
   }
-
-
-
   .button-dark {
     display: block;
     font-size: 12px;
@@ -433,27 +412,17 @@
     box-sizing: border-box;
     border: 0 solid #333;
     text-align: left;
-    /* box-shadow: 0 1px 0 0px rgba(4, 4, 4, 0.04); */
     border-radius: .6em;
-    /* border-right-color: rgba(34,37,45, 0.1);
-    border-right-style: solid;
-    border-right-width: 1px;
-    border-bottom-color: rgba(34,37,45, 0.1);
-    border-bottom-style: solid;
-    border-bottom-width: 1px; */
     -moz-appearance: none;
     -webkit-appearance: none;
     appearance: none;
     background-color:  rgba(16, 16, 16, 0.04);
-    /* background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007CB2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'),
-      linear-gradient(to bottom, #ffffff 0%,#e5e5e5 100%); */
     background-repeat: no-repeat, repeat;
     background-position: right .7em top 50%, 0 0;
     background-size: .65em auto, 100%;
     -webkit-box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
     -moz-box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
     box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
-
   }
 
   .button-dark:hover {
@@ -493,7 +462,6 @@
 
   }
 
-
   .button-dark:active {
     display: block;
     font-size: 12px;
@@ -531,13 +499,10 @@
     box-shadow:  -1px -1px 3px rgba(16, 16, 16, 0.4), 0.5px 0.5px 0.5px rgba(16, 16, 16, 0.04);
   }
 
-
   .group-labels {
-
     padding-left:5px;
     margin-bottom: 10px;
   }
-
 
   .group-label {
     color: #666;
@@ -546,44 +511,31 @@
     font-weight: 400
   }
 
-
   .button-dark:disabled {
     display: block;
     font-size: 12px;
     font-family: sans-serif;
-    /* font-style: italic; */
     font-weight: 400;
     cursor: pointer;
     color: #888;
     line-height: 1.3;
     padding: 0.7em 1em 0.7em 1em;
-    /* width: 100%; */
     width: 10em;
     max-width: 100%;
     box-sizing: border-box;
     border: 0 solid #333;
     text-align: left;
-    /* box-shadow: 0 1px 0 0px rgba(4, 4, 4, 0.04); */
     border-radius: .6em;
-    /* border-right-color: rgba(34,37,45, 0.1);
-    border-right-style: solid;
-    border-right-width: 1px;
-    border-bottom-color: rgba(34,37,45, 0.1);
-    border-bottom-style: solid;
-    border-bottom-width: 1px; */
     -moz-appearance: none;
     -webkit-appearance: none;
     appearance: none;
     background-color:  rgba(16, 16, 16, 0.04);
-    /* background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007CB2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'),
-      linear-gradient(to bottom, #ffffff 0%,#e5e5e5 100%); */
     background-repeat: no-repeat, repeat;
     background-position: right .7em top 50%, 0 0;
     background-size: .65em auto, 100%;
     -webkit-box-shadow: 2px 2px 5px rgba(0,0,0),-1px -1px 1px rgb(34, 34, 34);
     -moz-box-shadow: 2px 2px 5px rgba(0,0,0), -1px -1px 1px rgb(34, 34, 34);;
     box-shadow: 2px 2px 3px rgb(0, 0, 0), -1px -1px 3px #ffffff61;
-
   }
 
 
