@@ -646,6 +646,44 @@ For now, you can do the conversion directly using math functions.
 
 # Sequencing
 
+### clk
+
+Set the clock
+
+Arguments:
+1. bpm
+2. number of beats in a bar
+
+```
+{140,4}clk;
+> {{4}clt}\spade;
+```
+
+### clp
+
+Clock phasor, rises from 0 to 1 each period
+
+Arguments:
+1. Rise time, in multiples of the bar length
+2. Phase offset (0 - 1)
+
+### clt
+
+Clock trigger. This generates a trigger every period.
+
+Arguments:
+1. Time between triggers, in multiples of bar length
+2. Phase offset (0 - 1)
+
+```
+{150,4}clk;
+:channel1: {{4}clt}\spade;
+:channel2: {{1}clt}\909b;
+:freq:{{3}clp, 20, 200}uexp;
+:channel3: {{:freq:}saw, 0.1}mul;
+> {:channel1:, :channel2:, :channel3:}mix;
+```
+
 ### rsq
 
 Ratio sequencer
