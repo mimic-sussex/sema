@@ -3,6 +3,8 @@ import "sema-engine/dist/open303.wasmmodule.js"; //NOTE:FB We need this import h
 import "sema-engine/dist/maxi-processor.js";
 import "sema-engine/dist/ringbuf.js";
 
+import { PubSub } from "../messaging/pubSub.js";
+
 export default class Controller{
 	/**
 	 * @constructor
@@ -32,12 +34,17 @@ export default class Controller{
 		// this.sharedArrayBuffers = {};
 
 		// Sema's Publish-Subscribe pattern object with "lowercase-lowercase" format convention for subscription topic
-		// this.messaging = new PubSub();
-		// this.messaging.subscribe("eval-dsp", (e) => audioEngine.evalDSP(e));
-		// this.messaging.subscribe("stop-audio", (e) => audioEngine.stop());
-		// this.messaging.subscribe("load-sample", (name, url) =>
-		// 	this.loadSample(name, url)
-		// );
+		this.messaging = new PubSub();
+
+    this.messaging.subscribe("eval-dsp", (e) =>
+      this.audioEngine.eval(e)
+    );
+
+    this.messaging.subscribe("stop-audio", (e) => this.audioEngine.stop());
+
+    this.messaging.subscribe("load-sample", (name, url) =>
+      this.audioEngine.loadSample(name, url)
+    );
 		// this.messaging.subscribe("model-output-data", (e) =>
 		// 	this.onMessagingEventHandler(e)
 		// );

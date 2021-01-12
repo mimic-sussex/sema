@@ -47,7 +47,7 @@
 
   const unsubscribe = audioEngineStatus.subscribe( value => {
     if(value === 'running'){
-      audioEngine.init('./maxi-processor.js');
+      audioEngine.init(document.location.origin + '/maxi-processor.js');
     }
     else if (value === 'paused'){
       messaging.publish("stop-audio");
