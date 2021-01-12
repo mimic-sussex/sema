@@ -851,17 +851,28 @@ export function clearFocused(){
 }
 
 export function loadEnvironmentSnapshotEntries() {
+
+  let localStorageItemPrefix = "playground-"
 	// Load local storage items filtered by "playground-" prefix
 	let keys = Object.keys(localStorage)
-		.filter((key) => key.includes("playground-"))
-		.sort((a, b) => Date.parse(b.substring(11)) - Date.parse(a.substring(11)));
+		.filter((key) => key.includes(localStorageItemPrefix))
+		.sort(
+			(a, b) =>
+				Date.parse(b.substring(localStorageItemPrefix.length)) -
+				Date.parse(a.substring(localStorageItemPrefix.length))
+		);
 
 	// Create a list of sidebar Load combox items with local storage substring, including the default "load"
 	loadEnvironmentOptions.set(
 		keys.reduce(
 			(acc, val, i) => [
 				...acc,
-				{ id: i + 1, disabled: false, text: val.substring(11), content: val },
+				{
+					id: i + 1, // item starts with 0 when reducer is passed a first item (see below)
+					disabled: false,
+					text: val.substring(localStorageItemPrefix.length),
+					content: val,
+				},
 			],
 			[{ id: 0, disabled: false, text: `Load` }]
 		)

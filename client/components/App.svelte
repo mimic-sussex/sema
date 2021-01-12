@@ -1,6 +1,7 @@
 <script>
 	import { onDestroy } from 'svelte';
 
+  import Controller from '../audioEngine/controller'
   import SplashScreen from './SplashScreen.svelte';
   import {
     unsupportedBrowser,
@@ -10,6 +11,7 @@
 
 
   let audioEngine;
+  let controller;
 
   ( async () => {
 
@@ -17,12 +19,19 @@
     if( /firefox/i.test(navigator.userAgent) ) $unsupportedBrowser = true
     else{
       // Need a dynamic import to prevent the AudioWorkletNode inside the audioEngine module from loading [Safari fix]
-      import('../audioEngine/audioEngine.js')
+      // import('../audioEngine/audioEngine.js')
+      //   .then( module => {
+      //     audioEngine = new module.AudioEngine()
+      //   })
+      //   .catch( err => $unsupportedBrowser = true );
+
+      import('sema-engine/dist/sema-engine.mjs')
         .then( module => {
           audioEngine = new module.AudioEngine()
+          controller = new Controller(audioEngine);
         })
-        .catch( err => $unsupportedBrowser = true );     
-    } 
+        .catch( err => $unsupportedBrowser = true );
+    }
   })();
 
 	import { environment } from "../utils/history.js";
@@ -38,7 +47,7 @@
 
   const unsubscribe = audioEngineStatus.subscribe( value => {
     if(value === 'running'){
-      audioEngine.init(1);
+      audioEngine.init('./maxi-processor.js');
     }
     else if (value === 'paused'){
       messaging.publish("stop-audio");
