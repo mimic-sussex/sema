@@ -8,9 +8,6 @@
     audioEngineStatus
   } from '../stores/common.js';
 
-
-
-  let audioEngine;
   let controller;
 
   ( async () => {
@@ -19,24 +16,17 @@
     if( /firefox/i.test(navigator.userAgent) ) $unsupportedBrowser = true
     else{
       // Need a dynamic import to prevent the AudioWorkletNode inside the audioEngine module from loading [Safari fix]
-      // import('../audioEngine/audioEngine.js')
-      //   .then( module => {
-      //     audioEngine = new module.AudioEngine()
-      //   })
-      //   .catch( err => $unsupportedBrowser = true );
-
       import('sema-engine/dist/sema-engine.mjs')
         .then( module => {
-          audioEngine = new module.AudioEngine()
+          let audioEngine = new module.AudioEngine()
           controller = new Controller(audioEngine);
         })
         .catch( err => $unsupportedBrowser = true );
     }
-  })();
+  })(); // This async IIFE tests in which browser sema is loading, for Audio Worklet API support and graciously fails accordingly
 
-	import { environment } from "../utils/history.js";
-
-	import CanvasOverlay from './CanvasOverlay.svelte';
+	// import { environment } from "../utils/history.js";
+	// import CanvasOverlay from './CanvasOverlay.svelte';
 
   import { Router } from "@sveltech/routify";
   import { routes } from "@sveltech/routify/tmp/routes";
@@ -47,7 +37,7 @@
 
   const unsubscribe = audioEngineStatus.subscribe( value => {
     if(value === 'running'){
-      audioEngine.init(document.location.origin + '/maxi-processor.js');
+      controller.init(document.location.origin + '/maxi-processor.js');
     }
     else if (value === 'paused'){
       messaging.publish("stop-audio");
