@@ -1,5 +1,7 @@
-import "sema-engine/dist/maximilian.wasmmodule.js"; //NOTE:FB We need this import here for webpack to emit maximilian.wasmmodule.js
-import "sema-engine/dist/open303.wasmmodule.js"; //NOTE:FB We need this import here for webpack to emit open303.wasmmodule.js
+
+// NOTE:FB We need this imports here for webpack to emit this modules from sema-engine package
+import "sema-engine/dist/maximilian.wasmmodule.js";
+import "sema-engine/dist/open303.wasmmodule.js";
 import "sema-engine/dist/maxi-processor.js";
 import "sema-engine/dist/ringbuf.js";
 
@@ -26,29 +28,33 @@ export default class Controller {
 
 		this.messaging = new PubSub();
 
-		this.messaging.subscribe("eval-dsp", (e) => this.engine.eval(e));
+		this.messaging.subscribe("eval-dsp", e =>
+      this.engine.eval(e)
+    );
 
-		this.messaging.subscribe("stop-audio", (e) => this.engine.stop());
+		this.messaging.subscribe("stop-audio", e =>
+      this.engine.stop()
+    );
 
 		this.messaging.subscribe("load-sample", (name, url) =>
 			this.engine.loadSample(name, url)
 		);
 
-		this.messaging.subscribe("add-engine-analyser", (e) =>
+		this.messaging.subscribe("add-engine-analyser", e =>
 			this.engine.createAnalyser(e)
 		);
 
-		this.messaging.subscribe("remove-engine-analyser", (e) =>
+		this.messaging.subscribe("remove-engine-analyser", e =>
 			this.engine.removeAnalyser(e)
 		);
 
-		this.messaging.subscribe("model-output-data", (e) =>
+		this.messaging.subscribe("model-output-data", e =>
 			this.engine.postAsyncMessageToProcessor(e)
 		);
-		this.messaging.subscribe("clock-phase", (e) =>
+		this.messaging.subscribe("clock-phase", e =>
 			this.engine.postAsyncMessageToProcessor(e)
 		);
-		this.messaging.subscribe("model-send-buffer", (e) =>
+		this.messaging.subscribe("model-send-buffer", e =>
 			this.engine.postAsyncMessageToProcessor(e)
 		);
 
@@ -158,10 +164,11 @@ export default class Controller {
 	 */
 	async init(audioWorkletURL /*numClockPeers*/) {
 		if (this.engine !== undefined) {
+			this.engine.init(audioWorkletURL);
 
-      this.engine.init(audioWorkletURL);
-
-      this.connectAnalysers(); // Connect Analysers loaded from the store
+			// Connect Analysers loaded from the store
+			// need to pass callbacks after they load
+			this.connectAnalysers();
 
 			this.loadImportedSamples();
 
