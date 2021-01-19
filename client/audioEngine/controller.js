@@ -164,27 +164,33 @@ export default class Controller {
 	 */
 	async init(audioWorkletURL /*numClockPeers*/) {
 		if (this.engine !== undefined) {
-			this.engine.init(audioWorkletURL);
+      try {
+				this.engine.init(audioWorkletURL);
 
-			// Connect Analysers loaded from the store
-			// need to pass callbacks after they load
-			this.connectAnalysers();
 
-			this.loadImportedSamples();
+				this.loadImportedSamples();
 
-			// No need to inject the callback here, messaging is built in KuraClock
-			// this.kuraClock = new kuramotoNetClock((phase, idx) => {
-			//   // console.log( `DEBUG:AudioEngine:sendPeersMyClockPhase:phase:${phase}:id:${idx}`);
-			//   // This requires an initialised audio worklet
-			//   this.audioWorkletNode.port.postMessage({ phase: phase, i: idx });
-			// });
+				// Connect Analysers loaded from the store
+				// need to pass callbacks after they load
+        // this.engine.connectAnalysers();
 
-			//temporarily disabled
-			// if (this.kuraClock.connected()) {
-			// 	this.kuraClock.queryPeers(async numClockPeers => {
-			// 		console.log(`DEBUG:AudioEngine:init:numClockPeers: ${numClockPeers}`);
-			// 	});
-			// }
+				// No need to inject the callback here, messaging is built in KuraClock
+				// this.kuraClock = new kuramotoNetClock((phase, idx) => {
+				//   // console.log( `DEBUG:AudioEngine:sendPeersMyClockPhase:phase:${phase}:id:${idx}`);
+				//   // This requires an initialised audio worklet
+				//   this.audioWorkletNode.port.postMessage({ phase: phase, i: idx });
+				// });
+
+				//temporarily disabled
+				// if (this.kuraClock.connected()) {
+				// 	this.kuraClock.queryPeers(async numClockPeers => {
+				// 		console.log(`DEBUG:AudioEngine:init:numClockPeers: ${numClockPeers}`);
+				// 	});
+				// }
+			} catch (error) {
+        console.error('Error initialising engine')
+      }
+
 		}
 	}
 
@@ -214,15 +220,16 @@ export default class Controller {
 		const r = require.context("../../assets/samples", false, /\.wav$/);
 
 		// return an array list of filenames (with extension)
-		const importAll = (r) => r.keys().map((file) => file.match(/[^\/]+$/)[0]);
+		const importAll = r => r.keys().map((file) => file.match(/[^\/]+$/)[0]);
 
 		return importAll(r);
 	}
 
 	lazyLoadSample(sampleName) {
 		import(/* webpackMode: "lazy" */ `../../assets/samples/${sampleName}`)
-			.then(() => this.engine.loadSample(sampleName, `/samples/${sampleName}`))
-			.catch((err) =>
+			.then( () =>
+        this.engine.loadSample(sampleName, `/samples/${sampleName}`))
+			.catch( err =>
 				console.error(`DEBUG:AudioEngine:lazyLoadSample: ` + err)
 			);
 	}
@@ -230,8 +237,8 @@ export default class Controller {
 	loadImportedSamples() {
 		let samplesNames = this.getSamplesNames();
 		// console.log("DEBUG:AudioEngine:getSamplesNames: " + samplesNames);
-		samplesNames.forEach((sampleName) => {
-			this.lazyLoadSample(sampleName);
-		});
+		samplesNames.forEach( sampleName =>
+      this.lazyLoadSample(sampleName)
+    );
 	}
 }

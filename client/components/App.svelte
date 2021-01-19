@@ -11,8 +11,8 @@
   let controller;
 
   /**
-   * This async IIFE tests the browser we are loading in for Audio Worklet API support
-   * and either succeeds or graciously fails accordingly
+   * This async IIFE tests the browser Sema is loading in for WAAPI Audio Worklet support
+   * It either succeeds or graciously fails
    * */
   ( async () => {
 
@@ -29,7 +29,6 @@
     }
   })();
 
-	// import { environment } from "../utils/history.js";
 	// import CanvasOverlay from './CanvasOverlay.svelte';
 
   import { Router } from "@sveltech/routify";
@@ -49,13 +48,10 @@
 	});
   onDestroy(unsubscribe);
 
-
 	function onMouseMove(e) {
 		messaging.publish("mouse-xy", [e.clientX / window.innerWidth, e.clientY / window.innerHeight]);
 	}
 	document.addEventListener('mousemove', onMouseMove);
-
-
 
 </script>
 
