@@ -10,6 +10,10 @@
 
   let controller;
 
+  /**
+   * This async IIFE tests the browser we are loading in for Audio Worklet API support
+   * and either succeeds or graciously fails accordingly
+   * */
   ( async () => {
 
     // Detect Firefox early otherwise audio engine needs to be initialised for a fail to be detected [Firefox fix]
@@ -18,12 +22,12 @@
       // Need a dynamic import to prevent the AudioWorkletNode inside the audioEngine module from loading [Safari fix]
       import('sema-engine/dist/sema-engine.mjs')
         .then( module => {
-          let audioEngine = new module.AudioEngine()
-          controller = new Controller(audioEngine);
+          // Apply in Inversion of Control with constructor injection
+          controller = new Controller(new module.Engine());
         })
         .catch( err => $unsupportedBrowser = true );
     }
-  })(); // This async IIFE tests in which browser sema is loading, for Audio Worklet API support and graciously fails accordingly
+  })();
 
 	// import { environment } from "../utils/history.js";
 	// import CanvasOverlay from './CanvasOverlay.svelte';
