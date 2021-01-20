@@ -17,7 +17,7 @@ import DSPCodeOutput from "../components/widgets/DSPCodeOutput.svelte";
 import gridHelp from "svelte-grid/build/helper/index.mjs";
 
 
-export const audioEngineStatus = writable('stopped');
+export const audioEngineStatus = writable('no-audio');
 export const unsupportedBrowser = writable(false);
 ;
 // function persist(key, value) {

@@ -39,13 +39,19 @@
   let messaging = new PubSub();
 
   const unsubscribe = audioEngineStatus.subscribe( value => {
-    if(value === 'running'){
-      controller.init(document.location.origin + '/maxi-processor.js');
-    }
-    else if (value === 'paused'){
-      messaging.publish("stop-audio");
-    }
-	});
+    if(controller){
+      if(value === 'running' && !controller.samplesLoaded){
+        controller.init(document.location.origin + '/maxi-processor.js');
+      }
+      // else if (value === 'running')
+      // {
+      //   messaging.publish("play-audio");
+      // }
+      // else if (value === 'paused'){
+      //   messaging.publish("stop-audio");
+      // }
+	  }
+  });
   onDestroy(unsubscribe);
 
 	function onMouseMove(e) {

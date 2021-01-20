@@ -6,7 +6,7 @@ import "sema-engine/dist/maxi-processor.js";
 import "sema-engine/dist/ringbuf.js";
 
 import { PubSub } from "../messaging/pubSub.js";
-
+import { audioEngineStatus } from "../stores/common.js";
 /**
  * The Controller is a singleton class that encapsulates signal engine (sema-engine)
  * and implements the dependency inversion principle
@@ -22,14 +22,24 @@ export default class Controller {
 		}
 		Controller.instance = this;
 
+
+
 		// Constructor dependency injection of a sema-engine singleton instance
     // TODO make this type abstract on Typescript
 		this.engine = engine;
 
+    this.samplesLoaded = false;
+
 		this.messaging = new PubSub();
 
-		this.messaging.subscribe("eval-dsp", e =>
-      this.engine.eval(e)
+		this.messaging.subscribe("eval-dsp", async e => {
+
+      this.engine.eval(e);
+
+    });
+
+    this.messaging.subscribe("play-audio", e =>
+      this.engine.play()
     );
 
 		this.messaging.subscribe("stop-audio", e =>
@@ -58,13 +68,16 @@ export default class Controller {
 			this.engine.postAsyncMessageToProcessor(e)
 		);
 
+
+
+
 		// this.messaging.subscribe("mouse-xy", (e) => {
 		// 	if (this.sharedArrayBuffers.mxy) {
 		// 		this.sharedArrayBuffers.mxy.rb.push(e);
 		// 	}
 		// });
 
-		this.messaging.subscribe("osc", (e) =>
+		this.messaging.subscribe("osc", e =>
 			console.log(`DEBUG:AudioEngine:OSC: ${e}`)
 		);
 
@@ -165,8 +178,7 @@ export default class Controller {
 	async init(audioWorkletURL /*numClockPeers*/) {
 		if (this.engine !== undefined) {
       try {
-				this.engine.init(audioWorkletURL);
-
+				await this.engine.init(audioWorkletURL);
 
 				this.loadImportedSamples();
 
@@ -235,10 +247,11 @@ export default class Controller {
 	}
 
 	loadImportedSamples() {
-		let samplesNames = this.getSamplesNames();
-		// console.log("DEBUG:AudioEngine:getSamplesNames: " + samplesNames);
-		samplesNames.forEach( sampleName =>
+
+    this.getSamplesNames().forEach( sampleName =>
       this.lazyLoadSample(sampleName)
     );
+
+    this.samplesLoaded = true;
 	}
 }
