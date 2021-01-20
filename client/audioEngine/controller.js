@@ -22,8 +22,6 @@ export default class Controller {
 		}
 		Controller.instance = this;
 
-
-
 		// Constructor dependency injection of a sema-engine singleton instance
     // TODO make this type abstract on Typescript
 		this.engine = engine;
@@ -33,7 +31,7 @@ export default class Controller {
 		this.messaging = new PubSub();
 
 		this.messaging.subscribe("eval-dsp", async e => {
-      this.engine.eval(e); // This also resumes the engine p
+      this.engine.eval(e); // Also resumes engine playback if paused
     });
 
 		this.messaging.subscribe("stop-audio", e =>
@@ -45,7 +43,7 @@ export default class Controller {
 		);
 
 		this.messaging.subscribe("add-engine-analyser", e =>
-			this.engine.createAnalyser(e)
+			this.engine.createAnalyser(e, data => this.messaging.publish("analyser-data", data))
 		);
 
 		this.messaging.subscribe("remove-engine-analyser", e =>
@@ -62,14 +60,11 @@ export default class Controller {
 			this.engine.postAsyncMessageToProcessor(e)
 		);
 
-
-
-
-		// this.messaging.subscribe("mouse-xy", (e) => {
-		// 	if (this.sharedArrayBuffers.mxy) {
-		// 		this.sharedArrayBuffers.mxy.rb.push(e);
-		// 	}
-		// });
+		this.messaging.subscribe("mouse-xy", (e) => {
+			if (this.sharedArrayBuffers.mxy) {
+				this.sharedArrayBuffers.mxy.rb.push(e);
+			}
+		});
 
 		this.messaging.subscribe("osc", e =>
 			console.log(`DEBUG:AudioEngine:OSC: ${e}`)
@@ -82,10 +77,10 @@ export default class Controller {
 		//   this.onMessagingEventHandler(e);
 		// });
 
-		this.messaging.subscribe("peerinfo-request", (e) => {
-			console.log(this.peerNet.peerID);
-			copyToPasteBuffer(this.peerNet.peerID);
-		});
+		// this.messaging.subscribe("peerinfo-request", (e) => {
+		// 	console.log(this.peerNet.peerID);
+		// 	copyToPasteBuffer(this.peerNet.peerID);
+		// });
 	}
 
 	/**
@@ -174,11 +169,11 @@ export default class Controller {
       try {
 				await this.engine.init(audioWorkletURL);
 
-				this.loadImportedSamples();
-
 				// Connect Analysers loaded from the store
 				// need to pass callbacks after they load
-        // this.engine.connectAnalysers();
+				this.engine.connectAnalysers();
+
+				this.loadImportedSamples();
 
 				// No need to inject the callback here, messaging is built in KuraClock
 				// this.kuraClock = new kuramotoNetClock((phase, idx) => {
