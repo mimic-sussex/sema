@@ -43,7 +43,7 @@ export default class Controller {
 		);
 
 		this.messaging.subscribe("add-engine-analyser", e =>
-			this.engine.createAnalyser(e, data => this.messaging.publish("analyser-data", data))
+			this.engine.createAnalyser(e.id, data => this.messaging.publish(`${e.id}-analyser-data`, data))
 		);
 
 		this.messaging.subscribe("remove-engine-analyser", e =>
@@ -169,11 +169,15 @@ export default class Controller {
       try {
 				await this.engine.init(audioWorkletURL);
 
-				// Connect Analysers loaded from the store
-				// need to pass callbacks after they load
+				// Connect Analysers loaded from the store need to pass callbacks after they load
 				this.engine.connectAnalysers();
 
+        let channelId = "mxy", ttype = "mouseXY", blockSize = 2;
+        this.engine.createSharedArrayBuffer(channelId, ttype, blockSize);
+
 				this.loadImportedSamples();
+
+
 
 				// No need to inject the callback here, messaging is built in KuraClock
 				// this.kuraClock = new kuramotoNetClock((phase, idx) => {

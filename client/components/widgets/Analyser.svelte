@@ -137,7 +137,7 @@
 
     canvas.addEventListener('click', () => toggleRendering(), false);
 
-    messaging.subscribe('analyser-data', e => updateAnalyserByteData(e) );
+    messaging.subscribe(`${id}-analyser-data`, e => updateAnalyserByteData(e) );
     log( id, name, type, lineNumbers, hasFocus, theme, background, component );
     renderLoop();
 	});
