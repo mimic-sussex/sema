@@ -33,14 +33,8 @@ export default class Controller {
 		this.messaging = new PubSub();
 
 		this.messaging.subscribe("eval-dsp", async e => {
-
-      this.engine.eval(e);
-
+      this.engine.eval(e); // This also resumes the engine p
     });
-
-    this.messaging.subscribe("play-audio", e =>
-      this.engine.play()
-    );
 
 		this.messaging.subscribe("stop-audio", e =>
       this.engine.stop()
