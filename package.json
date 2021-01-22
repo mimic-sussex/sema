@@ -32,7 +32,7 @@
     "marked": "^0.8.2",
     "nearley": "^2.19.0",
     "remove": "^0.1.5",
-    "sema-engine": "^0.0.12"
+    "sema-engine": "^0.0.14"
   },
   "devDependencies": {
     "@sveltech/routify": "^1.7.12",

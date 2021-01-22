@@ -55,6 +55,42 @@
     }
   }
 
+  const update = (e, dataItem) => {
+
+    try{
+
+      if(e !== undefined && e.detail !== undefined && dataItem !== undefined){
+        if(e.detail.prop === "content"){
+          // switch (dataItem.data.type) {
+          //   case "liveCodeEditor":
+          //     localStorage.liveCodeEditorValue = e.detail.value;
+          //     break;
+          //   case "grammarEditor":
+          //     localStorage.grammarEditorValue = e.detail.value;
+          //     break;
+          //   case "modelEditor":
+          //     localStorage.modelEditorValue = e.detail.value;
+          //     break;
+          //   default:
+          //     break;
+          // }
+
+          // Content update from CodeMirror update with 'content' prop and value
+          dataItem.data[e.detail.prop] = e.detail.value;
+          // Update item and items collection by filtering out version with old value and concating update version
+          $items = [...$items.filter(i => i !== dataItem), ...[dataItem]]
+        }
+        else if(e.detail.prop === "hasFocus"){
+          setFocused(dataItem);
+        }
+      }
+    }
+    catch(error){
+      console.log("DEBUG:playground:component-update", dataItem );
+    }
+
+  }
+
 
   onMount( async () => {
     // console.log("DEBUG:routes/tutorial/_layout:onMount")
@@ -119,7 +155,18 @@
 
       let:item
       let:dataItem
-      />
+    >
+      <div  class="content"
+            style="background: { item.fixed ? '#bka' : dataItem.data.background }; border: { dataItem.data.hasFocus ? '1px solid rgba(100, 100, 100, 0.5)': '1px solid rgba(25, 25, 25, 1)' }; border-width: 1px 0px 0px 1px;"
+            on:pointerdown={ e => e.stopPropagation() }
+            >
+        <svelte:component class='component'
+                          this={ dataItem.data.component }
+                          { ...dataItem.data }
+                          on:change={ e => update(e, dataItem) }
+                          />
+      </div>
+    </Grid>
 
     <!-- <Dashboard  {items}
                 {breakpoints}
@@ -168,6 +215,17 @@
     /* margin-bottom: 5px; */
     margin-left: 3px;
     /* margin-right: 20px; */
+  }
+
+  .content {
+    width: 100%;
+    height: 100%;
+    border-radius: 0px;
+    border-top-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+    /* padding: 10px; */
+    /* background: #FFF; */
+
   }
 
 

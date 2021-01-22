@@ -23,7 +23,6 @@ export default class Controller {
 		Controller.instance = this;
 
 		// Constructor dependency injection of a sema-engine singleton instance
-		// TODO make this type abstract on Typescript
 		this.engine = engine;
 
 		this.samplesLoaded = false;
@@ -61,10 +60,10 @@ export default class Controller {
 		);
 
 		this.messaging.subscribe("mouse-xy", (e) => {
-			if (this.sharedArrayBuffers.mxy) {
-				this.sharedArrayBuffers.mxy.rb.push(e);
-			}
+			this.engine.pushToSharedArrayBuffers("mxy", e);
 		});
+
+		// this.engine.subscribeAsyncMessage(onProcessorAsyncMessage);
 
 		this.messaging.subscribe("osc", (e) =>
 			console.log(`DEBUG:AudioEngine:OSC: ${e}`)
@@ -83,7 +82,6 @@ export default class Controller {
 		// });
 	}
 
-
 	/**
 	 * Handler of the Pub/Sub message events
 	 * whose topics are subscribed to in the audio engine constructor
@@ -100,9 +98,10 @@ export default class Controller {
 
 	/**
 	 * Handler of audio worklet processor events
-	 * @engineEventHandler
+	 * @onProcessorAsyncMessageHandler
+	 * @param event
 	 */
-	engineEventHandler(event) {
+	onProcessorAsyncMessage(event) {
 		if (event !== undefined && event.data !== undefined) {
 			// console.log('DEBUG:AudioEngine:processorMessageHandler:');
 			// console.log(event);
@@ -162,10 +161,10 @@ export default class Controller {
 
 	/**
 	 * Initialises audio context and sets worklet processor code
-	 * @play
+	 * @init
+   * @param audioworletURL
 	 */
 	async init(audioWorkletURL /*numClockPeers*/) {
-
 		if (this.engine !== undefined) {
 			try {
 				await this.engine.init(audioWorkletURL, this.engineEventHandler);
@@ -180,7 +179,6 @@ export default class Controller {
 				this.engine.createSharedArrayBuffer(channelId, ttype, blockSize);
 
 				this.loadImportedSamples();
-
 			} catch (error) {
 				console.error("Error initialising engine");
 			}
