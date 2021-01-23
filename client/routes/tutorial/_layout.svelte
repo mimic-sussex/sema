@@ -61,19 +61,6 @@
 
       if(e !== undefined && e.detail !== undefined && dataItem !== undefined){
         if(e.detail.prop === "content"){
-          // switch (dataItem.data.type) {
-          //   case "liveCodeEditor":
-          //     localStorage.liveCodeEditorValue = e.detail.value;
-          //     break;
-          //   case "grammarEditor":
-          //     localStorage.grammarEditorValue = e.detail.value;
-          //     break;
-          //   case "modelEditor":
-          //     localStorage.modelEditorValue = e.detail.value;
-          //     break;
-          //   default:
-          //     break;
-          // }
 
           // Content update from CodeMirror update with 'content' prop and value
           dataItem.data[e.detail.prop] = e.detail.value;
@@ -167,13 +154,6 @@
                           />
       </div>
     </Grid>
-
-    <!-- <Dashboard  {items}
-                {breakpoints}
-                {cols}
-                {rowHeight}
-                {gap}
-                /> -->
   </div>
 </div>
 
