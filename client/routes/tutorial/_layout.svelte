@@ -78,6 +78,15 @@
 
   }
 
+  const onAdjust = e => {
+    // console.log("DEBUG:dashboard:onAdjust:", e.detail);
+    $items = $items; // call a re-render
+  };
+
+  const onChildMount = e => {
+    // console.log("DEBUG:dashboard:onChildMount:", e.detail);
+    $items = $items; // call a re-render
+  };
 
   onMount( async () => {
     // console.log("DEBUG:routes/tutorial/_layout:onMount")
@@ -139,7 +148,8 @@
       {cols}
       {rowHeight}
       {gap}
-
+      on:adjust={onAdjust}
+      on:mount={onChildMount}
       let:item
       let:dataItem
     >

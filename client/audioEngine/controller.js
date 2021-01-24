@@ -60,9 +60,8 @@ export default class Controller {
 		);
 
 		this.messaging.subscribe("mouse-xy", (e) => {
-			this.engine.pushToSharedArrayBuffers("mxy", e);
+			this.engine.pushToSharedArrayBuffer("mxy", e);
 		});
-
 
 		this.messaging.subscribe("osc", (e) =>
 			console.log(`DEBUG:AudioEngine:OSC: ${e}`)
@@ -162,14 +161,15 @@ export default class Controller {
 	 * Initialises audio context and sets worklet processor code
 	 * @init
    * @param audioworletURL
+   * TODO removing numClockPeers, should be added to a specialised function
 	 */
-	async init(audioWorkletURL /*numClockPeers*/) {
+	async init(audioWorkletURL) {
 		if (this.engine !== undefined) {
 			try {
-				await this.engine.init(audioWorkletURL, this.engineEventHandler);
+				await this.engine.init(audioWorkletURL);
 
 				// Subscribe async messages from the Audio Worklet Processor scope
-				this.engine.subscribeAsyncMessage(onProcessorAsyncMessage);
+				this.engine.subscribeAsyncMessage(this.onProcessorAsyncMessage);
 
 				// Connect Analysers loaded from the store need to pass callbacks after they load
 				this.engine.connectAnalysers();
@@ -181,9 +181,8 @@ export default class Controller {
 				// Create SharedArrayBuffer for mouse data
 				this.engine.createSharedArrayBuffer(channelId, ttype, blockSize);
 
-        // Lazy load all samples imported from assets
+				// Lazy load all samples imported from assets
 				this.loadImportedSamples();
-
 			} catch (error) {
 				console.error("Error initialising engine");
 			}
@@ -208,7 +207,7 @@ export default class Controller {
 
 		navigator.mediaDevices
 			.getUserMedia(constraints)
-			.then( s => this.onAudioInputInit(s) )
+			.then((s) => this.onAudioInputInit(s))
 			.catch(this.onAudioInputFail);
 	}
 
