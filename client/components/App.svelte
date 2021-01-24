@@ -1,5 +1,5 @@
 <script>
-	import { onDestroy } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
 
   import Controller from '../audioEngine/controller'
   import SplashScreen from './SplashScreen.svelte';
@@ -9,6 +9,7 @@
   } from '../stores/common.js';
 
   let controller;
+  let router;
 
   /**
    * This async IIFE tests the browser Sema is loading in for WAAPI Audio Worklet support
@@ -59,6 +60,10 @@
 	}
 	document.addEventListener('mousemove', onMouseMove);
 
+  onMount(async () => {
+    router.suppressWarnings(); // not working
+  })
+
 </script>
 
 <style>
@@ -71,7 +76,7 @@
   */
 </style>
 
-<Router { routes } />
+<Router bind:this={router} {routes} />
 
 
 <!-- <div id="app">
