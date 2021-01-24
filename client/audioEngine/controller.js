@@ -63,7 +63,6 @@ export default class Controller {
 			this.engine.pushToSharedArrayBuffers("mxy", e);
 		});
 
-		// this.engine.subscribeAsyncMessage(onProcessorAsyncMessage);
 
 		this.messaging.subscribe("osc", (e) =>
 			console.log(`DEBUG:AudioEngine:OSC: ${e}`)
@@ -169,6 +168,9 @@ export default class Controller {
 			try {
 				await this.engine.init(audioWorkletURL, this.engineEventHandler);
 
+				// Subscribe async messages from the Audio Worklet Processor scope
+				this.engine.subscribeAsyncMessage(onProcessorAsyncMessage);
+
 				// Connect Analysers loaded from the store need to pass callbacks after they load
 				this.engine.connectAnalysers();
 
@@ -176,9 +178,12 @@ export default class Controller {
 					ttype = "mouseXY",
 					blockSize = 2;
 
+				// Create SharedArrayBuffer for mouse data
 				this.engine.createSharedArrayBuffer(channelId, ttype, blockSize);
 
+        // Lazy load all samples imported from assets
 				this.loadImportedSamples();
+
 			} catch (error) {
 				console.error("Error initialising engine");
 			}
@@ -186,8 +191,8 @@ export default class Controller {
 	}
 
 	onAudioInputFail(error) {
-		console.log(
-			`DEBUG:AudioEngine:AudioInputFail: ${error.message} ${error.name}`
+		console.error(
+			`Engine Controller: AudioInputFail – ${error.message} ${error.name}`
 		);
 	}
 
@@ -203,7 +208,7 @@ export default class Controller {
 
 		navigator.mediaDevices
 			.getUserMedia(constraints)
-			.then((s) => this.onAudioInputInit(s))
+			.then( s => this.onAudioInputInit(s) )
 			.catch(this.onAudioInputFail);
 	}
 

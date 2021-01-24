@@ -71,7 +71,7 @@
   */
 </style>
 
-<Router {routes} />
+<Router { routes } />
 
 
 <!-- <div id="app">
