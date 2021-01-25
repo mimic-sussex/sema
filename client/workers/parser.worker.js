@@ -1,11 +1,11 @@
 import nearley from 'nearley';
-import mooo from 'moo';
+import moo from 'moo';
 import semaa from '../intermediateLanguage/sema';
 // import cloneDeep from "lodash.cloneDeep";
 
 
 function getParserModuleExports(source) {
-  let moo = mooo;
+  let mooo = moo;
   let sema = semaa;
 	let module = { exports: '' };
 	eval(source);
@@ -15,7 +15,7 @@ function getParserModuleExports(source) {
 const clone = (a) => JSON.parse(JSON.stringify(a))
 
 
- 
+
 onmessage = function(message) {
   if (
 		message.data !== undefined &&
