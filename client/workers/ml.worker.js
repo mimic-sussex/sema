@@ -167,6 +167,7 @@ onmessage = m => {
   // console.log(m);
 
   if (m.data.eval !== undefined) {
+
     try {
       let evalRes = geval(m.data.eval);
       // if (evalRes != undefined) { //you need to see when things are undefined
@@ -176,7 +177,9 @@ onmessage = m => {
     } catch (e) {
       console.log(`Code eval exception: ${e} `, m.data.eval);
     }
+
   } else if ("val" in m.data) {
+
     // console.log("DEBUG:ml.worker:onmessage:val");
     let val = m.data.val;
     // console.log(val);
@@ -185,9 +188,13 @@ onmessage = m => {
     // console.log(loadResponders);
     loadResponders[m.data.name](val);
     delete loadResponders[m.data.name];
+
   } else if (m.data.type === "model-input-data") {
+
     input(m.data.value, m.data.ch);
+
   } else if (m.data.type === "model-input-buffer") {
+
     console.log("buf received", m);
     let sab = m.data.value;
     let rb = new RingBuffer(sab, Float64Array);
