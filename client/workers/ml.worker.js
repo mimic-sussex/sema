@@ -1,9 +1,9 @@
 "use strict";
 // import * as tf from "@tensorflow/tfjs";  // Can not use it this way, only through import scripts
 importScripts("https://cdn.jsdelivr.net/npm/@tensorflow/tfjs");
-importScripts("./lalolib.js");
-importScripts("./svd.js");
-importScripts("./mlworkerscripts.js");
+importScripts("lalolib.js");
+importScripts("svd.js");
+importScripts("mlworkerscripts.js");
 // importScripts("./ringbuf.js");
 //importScripts("https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.15/lodash.js");
 // import "./magenta/magentamusic.js";
