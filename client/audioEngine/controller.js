@@ -1,9 +1,17 @@
 
 // NOTE:FB We need this imports here for webpack to emit this modules from sema-engine package
-import "sema-engine/dist/maximilian.wasmmodule.js";
-import "sema-engine/dist/open303.wasmmodule.js";
-import "sema-engine/dist/maxi-processor.js";
-import "sema-engine/dist/ringbuf.js";
+// import "sema-engine/dist/maximilian.wasmmodule.js";
+// import "sema-engine/dist/open303.wasmmodule.js";
+// import "sema-engine/dist/maxi-processor.js";
+// import "sema-engine/dist/transducers.js";
+// import "sema-engine/dist/ringbuf.js";
+
+// import "sema-engine/sema-engine.js";
+import "sema-engine/sema-engine.wasmmodule.js";
+import "sema-engine/open303.wasmmodule.js";
+import "sema-engine/maxi-processor.js";
+import "sema-engine/transducers.js";
+import "sema-engine/ringbuf.js";
 
 import { PubSub } from "../messaging/pubSub.js";
 import { audioEngineStatus } from "../stores/common.js";

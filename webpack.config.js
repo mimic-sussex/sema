@@ -76,6 +76,16 @@ module.exports = {
 				],
 			},
 			{
+				test: /\.mjs$/,
+				exclude: [
+					// path.resolve(__dirname, "./client/workers/il.worker.js"),
+					// path.resolve(__dirname, "./client/workers/il.worker.js"),
+					// path.resolve(__dirname, "./client/workers/parser.worker.js"),
+					// path.resolve(__dirname, "./client/workers/ml.worker.js"),
+					// path.resolve(__dirname, "./client/workers/tfjs.min.js"),
+				],
+			},
+			{
 				test: /\.svelte$/,
 				use: {
 					loader: "svelte-loader",
@@ -170,13 +180,13 @@ module.exports = {
 
 				//note - need to import this in audioengine.js to get webpack to trigger this filter
 
-				test: /maximilian.wasmmodule.js$/,
+				test: /sema-engine.wasmmodule.js$/,
 				type: "javascript/auto",
 				// loader: 'wasm-loader', // WASM files get processed [NOT what we want]
 				loader: "file-loader", // WASM files are only emitted to the final dist, NOT processed
 				options: {
 					// mimetype: 'application/wasm',
-					name: "maximilian.wasmmodule.js",
+					name: "sema-engine.wasmmodule.js",
 				},
 			},
 			{
