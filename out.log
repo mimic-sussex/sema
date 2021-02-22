@@ -1,9 +1,9 @@
 
-> svelte-app@1.0.0 routify /Users/francisco/Documents/dev/MIMIC/sema-routify-auth
+> svelte-app@1.0.0 routify /Users/francisco/Documents/dev/MIMIC/sema-next
 > routify
 
 
-> svelte-app@1.0.0 rollup /Users/francisco/Documents/dev/MIMIC/sema-routify-auth
+> svelte-app@1.0.0 rollup /Users/francisco/Documents/dev/MIMIC/sema-next
 > rollup -cw
 
 [Routify] Watching src/pages

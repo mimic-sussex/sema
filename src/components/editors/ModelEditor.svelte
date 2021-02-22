@@ -6,7 +6,7 @@
   // import "codemirror/lib/codemirror.css";
 
   if (is_browser) {
-    import("../../utils/codeMirrorPlugins");
+    import("../../utils/codeMirrorPlugins.js");
   }
 </script>
 
@@ -177,10 +177,10 @@
 
   let evalDomCode = (code) => {
     try {
-      let evalRes = eval(code);
-      if (evalRes != undefined) {
-        // console.log(evalRes);
-      }
+      // let evalRes = eval(code);
+      // if (evalRes != undefined) {
+      //   // console.log(evalRes);
+      // }
       // else console.log("done");
     }catch(e) {
       // console.log(`DOM Code eval exception: ${e}`);
@@ -313,6 +313,24 @@
 
 <style>
 
+
+  /* @import "codemirror/lib/codemirror.css"; */
+  @import 'codemirror/lib/codemirror.css';
+  @import '../../utils/ebnf.css';
+  @import '../../utils/sema.css';
+  @import '../../utils/icecoder.css';
+  @import '../../utils/monokai.css';
+  @import '../../utils/shadowfox.css';
+  @import "codemirror/addon/dialog/dialog.css";
+  @import 'codemirror/theme/idea.css';
+  @import "codemirror/theme/monokai.css";
+  @import "codemirror/theme/icecoder.css";
+  @import "codemirror/theme/shadowfox.css";
+  @import 'codemirror/theme/oceanic-next.css';
+
+
+
+  /* @import"../../../utils/codeMirrorPlugins"; */
   .layout-template-container {
     height: 100vh;
   }

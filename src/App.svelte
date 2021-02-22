@@ -4,8 +4,6 @@
 	import { authStore } from './auth.js'
 
   import Controller from "./engine/controller";
-  import { Engine } from "sema-engine/sema-engine.mjs";
-
   import { PubSub } from './utils/pubSub.js';
   let messaging = new PubSub();
 
@@ -24,10 +22,7 @@
     // Detect Firefox early otherwise audio engine needs to be initialised for a fail to be detected [Firefox fix]
     if (/firefox/i.test(navigator.userAgent)) unsupportedBrowser = true;
     else {
-      // controller = new Controller(new Engine());
-
       // Need a dynamic import to prevent the AudioWorkletNode inside the audioEngine module from loading [Safari fix]
-      // import('sema-engine/dist/sema-engine.mjs')
       import("sema-engine/sema-engine.mjs")
         .then((module) => {
           // Apply in Inversion of Control with constructor injection
@@ -66,6 +61,6 @@
 <style global>
 	@import "../static/app.css";
 	@import "../static/global.css";
-  </style>
+</style>
 
 <Router {routes} />

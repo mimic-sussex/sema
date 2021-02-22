@@ -12,6 +12,9 @@ import { spassr } from 'spassr'
 import { wasm } from '@rollup/plugin-wasm'
 import workerLoader from 'rollup-plugin-web-worker-loader'
 
+import sourcemaps from 'rollup-plugin-sourcemaps'
+
+
 const isNollup = !!process.env.NOLLUP
 
 export function createRollupConfigs(config) {
@@ -136,7 +139,7 @@ function baseConfig(config, ctx) {
 					],
 
 				}),
-
+        sourcemaps(),
 				production && terser(), // minify
 				!production && isNollup && Hmr({ inMemory: true, public: staticDir }), // refresh only updated code
 				!production && !isNollup && livereload(distDir), // refresh entire window when code is updated

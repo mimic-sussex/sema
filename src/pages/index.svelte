@@ -2,6 +2,10 @@
 	import { metatags } from '@roxi/routify'
 	metatags.title = 'My Routify app'
 	metatags.description = 'Description coming soon...'
+
+
+
+
 </script>
 
 <div class="center-all">
@@ -15,7 +19,7 @@
 			<li>No pointless auth in SSR</li>
 			<li>No need to proxy authentication through a server</li>
 		</ul>
-				
+
 		<code>npx @roxi/routify init --branch auth</code>
 	</div>
 </div>

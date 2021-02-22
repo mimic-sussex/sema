@@ -1,16 +1,17 @@
 <script context="module">
   const is_browser = typeof window !== "undefined";
 
+  // import CodeMirror, { set, getValue } from "svelte-codemirror"
   import CodeMirror from "svelte-codemirror";
-  // import CodeMirror, { set } from "svelte-codemirror";
   // import "codemirror/lib/codemirror.css";
 
   if (is_browser) {
-    import("../../utils/codeMirrorPlugins");
+    import("../../utils/codeMirrorPlugins.js");
   }
 </script>
 
 <script>
+  // import { set } from "svelte-codemirror";
 	import { onMount, onDestroy, createEventDispatcher } from 'svelte';
 	const dispatch = createEventDispatcher();
 
@@ -24,6 +25,7 @@
   // import compile from '../../compiler/compiler';
   import { compile } from 'sema-engine/sema-engine';
 
+  // import { set, getValue } from "svelte-codemirror"
   // import ModelWorker from "../../workers/ml.worker.js";
 
   export let id;
@@ -188,6 +190,19 @@
 
 <style>
 
+
+  @import 'codemirror/lib/codemirror.css';
+  @import '../../utils/ebnf.css';
+  @import '../../utils/sema.css';
+  @import '../../utils/icecoder.css';
+  @import '../../utils/monokai.css';
+  @import '../../utils/shadowfox.css';
+  @import "codemirror/addon/dialog/dialog.css";
+  @import 'codemirror/theme/idea.css';
+  @import "codemirror/theme/monokai.css";
+  @import "codemirror/theme/icecoder.css";
+  @import "codemirror/theme/shadowfox.css";
+  @import 'codemirror/theme/oceanic-next.css';
   .layout-template-container {
     height: 100vh;
   }
