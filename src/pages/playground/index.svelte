@@ -351,7 +351,7 @@
   onMount( async () => {
     // console.log("DEBUG:routes/playground:onMount")
 
-    // controller.init('http://localhost:5000' + '/maxi-processor.js');
+    controller.init('http://localhost:5000/sema-engine' + '/maxi-processor.js');
 
     // Sequentially fetch data from individual items' properties into language design workflow stores
     for (const item of $items)

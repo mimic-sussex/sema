@@ -62,6 +62,7 @@
 	@import "../static/app.css";
 	@import "../static/global.css";
   @import "codemirror/lib/codemirror.css";
+
 </style>
 
 <Router {routes} />

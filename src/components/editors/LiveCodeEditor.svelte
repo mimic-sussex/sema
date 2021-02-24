@@ -386,18 +386,18 @@
 
 <style>
   @import '../../../node_modules/codemirror/lib/codemirror.css';
-   @import '../../../static/codemirror.css';
-  /* @import "dialog.css"; */
+   /* @import '../../../static/codemirror.css'; */
+  @import '../../../node_modules/codemirror/theme/idea.css';
+  @import "../../../node_modules/codemirror/theme/monokai.css";
+  @import "../../../node_modules/codemirror/theme/icecoder.css";
+  @import "../../../node_modules/codemirror/theme/shadowfox.css";
+  @import '../../../node_modules/codemirror/theme/oceanic-next.css';
+  @import "../../../node_modules/codemirror/addon/dialog/dialog.css";
 
-  /* @import '../../utils/sema.css';
+  @import '../../utils/sema.css';
   @import '../../utils/icecoder.css';
   @import '../../utils/monokai.css';
   @import '../../utils/shadowfox.css';
-  @import 'codemirror/theme/idea.css';
-  @import "codemirror/theme/monokai.css";
-  @import "codemirror/theme/icecoder.css";
-  @import "codemirror/theme/shadowfox.css";
-  @import 'codemirror/theme/oceanic-next.css'; */
   .layout-template-container {
     height: 100vh;
   }
