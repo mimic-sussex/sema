@@ -1,9 +1,9 @@
 
-> svelte-app@1.0.0 routify /Users/francisco/Documents/dev/MIMIC/sema-next
+> sema-next@1.0.0 routify
 > routify
 
 
-> svelte-app@1.0.0 rollup /Users/francisco/Documents/dev/MIMIC/sema-next
+> sema-next@1.0.0 rollup
 > rollup -cw
 
 [Routify] Watching src/pages
@@ -11,3 +11,5 @@
 [spassr] Serving spa on http://localhost:5000
 [spassr] Serving ssr on http://localhost:5005
 [1m[32mLiveReload enabled[39m[22m
+[spassr] Serving spa on http://localhost:5000
+[spassr] Serving ssr on http://localhost:5005

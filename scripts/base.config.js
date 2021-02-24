@@ -38,6 +38,13 @@ export function createRollupConfigs(config) {
     ].filter(Boolean)
 }
 
+// Silence warning
+const onwarn = (warning, warn) =>  {
+	// suppress eval warnings
+	if (warning.code === 'EVAL') return
+	warn(warning)
+}
+
 
 /**
  * Base config extended by dynamicConfig and baseConfig
@@ -51,17 +58,20 @@ function baseConfig(config, ctx) {
         : { format: 'iife', file: `${buildDir}/bundle.js` }
 
     const _svelteConfig = {
-        dev: !production, // run-time checks
-        // Extract component CSS — better performance
-        css: css => css.write(`${buildDir}/bundle.css`),
-        hot: isNollup,
-    }
+			dev: !production, // run-time checks
+			// Extract component CSS — better performance
+
+			// emitCss: true,
+			css: (css) => css.write(`${buildDir}/bundle.css`),
+			hot: isNollup,
+		}
 
     const svelteConfig = svelteWrapper(_svelteConfig, ctx) || _svelteConfig
 
     const _rollupConfig = {
 			inlineDynamicImports: !dynamicImports,
 			preserveEntrySignatures: false,
+      onwarn,
 			input: `src/main.js`,
 			output: {
 				name: 'routify_app',
@@ -78,23 +88,6 @@ function baseConfig(config, ctx) {
 							rename: '__app.html',
 							transform,
 						},
-					],
-					copyOnce: true,
-					flatten: false,
-				}),
-				svelte(svelteConfig),
-
-				// resolve matching modules from current working directory
-				resolve({
-					browser: true,
-					dedupe: (importee) => !!importee.match(/svelte(\/|$)/),
-				}),
-				commonjs(),
-
-				workerLoader(),
-				wasm(),
-				copy({
-					targets: [
 						{
 							src: 'node_modules/sema-engine/maxi-processor.js',
 							dest: 'dist',
@@ -106,11 +99,6 @@ function baseConfig(config, ctx) {
 						{
 							src: 'node_modules/sema-engine/open303.wasmmodule.js',
 							dest: 'dist',
-						},
-						{
-							// ringbuf version to be imported by learner worker
-							src: 'node_modules/sema-engine/mlworkerscripts.js',
-							dest: ['dist'],
 						},
 						{
 							// ringbuf is imported by both the Engine (AW node) and maxi-processor (AWP) so needs to be both bundled AND copied!
@@ -137,8 +125,20 @@ function baseConfig(config, ctx) {
 							dest: ['dist'],
 						},
 					],
-
+					copyOnce: true,
+					flatten: false,
 				}),
+				svelte(svelteConfig),
+
+				// resolve matching modules from current working directory
+				resolve({
+					browser: true,
+					dedupe: (importee) => !!importee.match(/svelte(\/|$)/),
+				}),
+				commonjs(),
+
+				workerLoader(),
+				wasm(),
         sourcemaps(),
 				production && terser(), // minify
 				!production && isNollup && Hmr({ inMemory: true, public: staticDir }), // refresh only updated code

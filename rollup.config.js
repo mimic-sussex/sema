@@ -4,6 +4,8 @@ import postcssImport from 'postcss-import'
 
 const production = !process.env.ROLLUP_WATCH;
 
+
+
 export const config = {
   staticDir: 'static',
   distDir: 'dist',
@@ -13,10 +15,24 @@ export const config = {
   rollupWrapper: cfg => cfg,
   svelteWrapper: svelte => {
     svelte.preprocess = [
-      autoPreprocess({
-        postcss: { plugins: [postcssImport()] },
-        defaults: { style: 'postcss' }
-      })]
+			autoPreprocess({
+				postcss: {
+					plugins: [
+						postcssImport({
+							path: [
+                'node_modules/codemirror/lib/',
+                'node_modules/codemirror/addon/dialog/',
+                'node_modules/codemirror/theme/',
+                'src/utils'
+              ],
+							addModulesDirectories: ['node_modules'],
+							// from: './node_modules/codemirror/lib/codemirror.css',
+						}),
+					],
+				},
+				defaults: { style: 'postcss' },
+			}),
+		]
   },
   swWrapper: cfg => cfg,
 }

@@ -312,9 +312,6 @@
 
 
 <style>
-
-
-  /* @import "codemirror/lib/codemirror.css"; */
   @import 'codemirror/lib/codemirror.css';
   @import '../../utils/ebnf.css';
   @import '../../utils/sema.css';

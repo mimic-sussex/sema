@@ -109,10 +109,11 @@
     // CHECK <svelte:component on:change={ e => update(item, e.detail.prop, e.detail.value) }
 
     try{
-      let value = codeMirror.getValue();
+      // let value = codeMirror.getValue();
       dispatch('change', {
         prop:'content',
-        value: value
+        // value: value
+        value: content
       });
     }catch(error){
       console.error("Error Live Code Editor get value from code Mirror")
@@ -349,7 +350,7 @@
     // console.log('DEBUG:LiveCodeEditor:onMount:')
     // console.log(data);
     // codeMirror.set(content, "js", 'monokai');
-    codeMirror.set("asdfasdfasdfasdfasdf", "js", 'monokai');
+    // codeMirror.set("asdfasdfasdfasdfasdf", "js", 'monokai');
 
     // parserWorker = new ParserWorker();  // Create one worker per widget lifetime
 
@@ -384,19 +385,18 @@
 
 
 <style>
+  @import 'codemirror/lib/codemirror.css';
+  @import "codemirror/addon/dialog/dialog.css";
 
-  @import '../../utils/ebnf.css';
-  @import '../../utils/sema.css';
+  /* @import '../../utils/sema.css';
   @import '../../utils/icecoder.css';
   @import '../../utils/monokai.css';
   @import '../../utils/shadowfox.css';
-  @import "codemirror/addon/dialog/dialog.css";
   @import 'codemirror/theme/idea.css';
   @import "codemirror/theme/monokai.css";
   @import "codemirror/theme/icecoder.css";
   @import "codemirror/theme/shadowfox.css";
-  @import 'codemirror/theme/oceanic-next.css';
-  @import 'codemirror/lib/codemirror.css';
+  @import 'codemirror/theme/oceanic-next.css'; */
   .layout-template-container {
     height: 100vh;
   }

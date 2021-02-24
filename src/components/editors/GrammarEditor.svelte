@@ -52,7 +52,7 @@
   export let grammarSource;
   export let component;
 
-  let codeMirror;
+  let codeMirror, value;
   let modelWorker;
 
   let log = e => { /* console.log(...e); */ }
@@ -116,11 +116,13 @@
     if(e !== undefined){
 
       try{
-        let value = codeMirror.getValue();
-        $grammarEditorValue = value;
+        // let value = codeMirror.getValue();
+        // $grammarEditorValue = value;
 
         // window.localStorage.grammarEditorValue = $grammarEditorValue;
-        let {errors, output} = compile(value);
+        // let {errors, output} = compile(value);
+        $grammarEditorValue = content;
+        let {errors, output} = compile(content);
         $grammarCompiledParser = output;
         $grammarCompilationErrors = errors;
 
