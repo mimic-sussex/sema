@@ -385,8 +385,9 @@
 
 
 <style>
-  @import 'codemirror/lib/codemirror.css';
-  @import "codemirror/addon/dialog/dialog.css";
+  @import '../../../node_modules/codemirror/lib/codemirror.css';
+   @import '../../../static/codemirror.css';
+  /* @import "dialog.css"; */
 
   /* @import '../../utils/sema.css';
   @import '../../utils/icecoder.css';

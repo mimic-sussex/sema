@@ -191,20 +191,18 @@
 
 
 <style>
-
-
-  @import 'codemirror/lib/codemirror.css';
+  @import 'codemirror';
   @import '../../utils/ebnf.css';
   @import '../../utils/sema.css';
   @import '../../utils/icecoder.css';
   @import '../../utils/monokai.css';
   @import '../../utils/shadowfox.css';
-  @import "codemirror/addon/dialog/dialog.css";
+  /* @import "codemirror/addon/dialog/dialog.css";
   @import 'codemirror/theme/idea.css';
   @import "codemirror/theme/monokai.css";
   @import "codemirror/theme/icecoder.css";
   @import "codemirror/theme/shadowfox.css";
-  @import 'codemirror/theme/oceanic-next.css';
+  @import 'codemirror/theme/oceanic-next.css'; */
   .layout-template-container {
     height: 100vh;
   }

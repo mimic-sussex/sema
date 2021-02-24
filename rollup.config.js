@@ -1,7 +1,8 @@
 import { createRollupConfigs } from './scripts/base.config.js'
 import autoPreprocess from 'svelte-preprocess'
 import postcssImport from 'postcss-import'
-
+// import cssnext from 'postcss-cssnext';
+// import cssnano from 'cssnano';
 const production = !process.env.ROLLUP_WATCH;
 
 
@@ -19,14 +20,15 @@ export const config = {
 				postcss: {
 					plugins: [
 						postcssImport({
-							path: [
-                'node_modules/codemirror/lib/',
-                'node_modules/codemirror/addon/dialog/',
-                'node_modules/codemirror/theme/',
-                'src/utils'
-              ],
-							addModulesDirectories: ['node_modules'],
-							// from: './node_modules/codemirror/lib/codemirror.css',
+							// path: [
+							// 	'node_modules/codemirror/lib/',
+							// 	'node_modules/codemirror/addon/dialog/',
+							// 	'node_modules/codemirror/theme/',
+							// 	'src/utils',
+							// ],
+							// plugins: [cssnext(), cssnano()],
+							// addModulesDirectories: ['node_modules'],
+							// from: 'node_modules/codemirror/lib/codemirror.css',
 						}),
 					],
 				},
