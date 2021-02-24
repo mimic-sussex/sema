@@ -1,11 +1,6 @@
 <script context="module">
-  const is_browser = typeof window !== "undefined";
-
   import CodeMirror from "svelte-codemirror";
-  // import CodeMirror, { set, getValue } from "svelte-codemirror";
-  // import "codemirror/lib/codemirror.css";
-
-  if (is_browser) {
+  if (typeof window !== "undefined") {
     import("../../utils/codeMirrorPlugins.js");
   }
 </script>
@@ -18,8 +13,10 @@
 
   import * as nearley from 'nearley/lib/nearley.js'
 
-  import { compile } from 'sema-engine/sema-engine';
+  import { compile, Engine } from 'sema-engine/sema-engine';
   // import compile from '../../compiler/compiler';
+
+  // import Controller from '../../engine/controller'
 
   import { addToHistory } from "../../utils/history.js";
   import {
@@ -91,6 +88,8 @@
   // export let w;
   // export let h;
   export let component;
+
+  let engine;
 
   let codeMirror;
   let parserWorker;
@@ -285,6 +284,34 @@
   }
 */
 
+
+const evalLiveCodeOnEditorCommand = async () => {
+  if(!engine)
+    engine = new Engine();
+
+  // engine.play();
+  try{
+    let patch = {
+      setup: `() => {
+          let q = this.newq();
+          q.b0u2 = new Maximilian.maxiOsc();
+          q.b0u2.phaseReset(0);
+          return q;
+      }`,
+      loop: `(q, inputs, mem) => {
+        this.dacOutAll(q.b0u2.sinewave(440));
+      }`,
+      paramMarkers: []
+    };
+      // const { errors, dspCode } = compile( content,  );
+    console.info(content);
+    engine.eval(patch);
+  } catch (err) {
+    console.error("ERROR: Failed to compile and eval: ", err);
+  }
+  // else throw new Error('ERROR: Engine not initialized. Please press Start Engine first.')
+}
+
 /*
   const evalLiveCodeOnEditorCommand = async () => {
 
@@ -308,13 +335,14 @@
   }
 */
 
-/*
   const stopAudioOnEditorCommand = () => {
+
+    engine.stop();
     // publish eval message with code to audio engine
-    messaging.publish("stop-audio");
+    // messaging.publish("stop-audio");
 
     // set audio engine status on store to change audioEngineStatus indicator/button
-    $audioEngineStatus = 'paused';
+    // $audioEngineStatus = 'paused';
 
   }
 
@@ -345,7 +373,6 @@
 		});
   }
 
-*/
   onMount( async () => {
     // console.log('DEBUG:LiveCodeEditor:onMount:')
     // console.log(data);
@@ -353,6 +380,9 @@
     // codeMirror.set("asdfasdfasdfasdfasdf", "js", 'monokai');
 
     // parserWorker = new ParserWorker();  // Create one worker per widget lifetime
+
+    // controller = new Controller();
+
 
     btrack = new blockTracker(codeMirror);
 
@@ -386,7 +416,6 @@
 
 <style>
   @import '../../../node_modules/codemirror/lib/codemirror.css';
-   /* @import '../../../static/codemirror.css'; */
   @import '../../../node_modules/codemirror/theme/idea.css';
   @import "../../../node_modules/codemirror/theme/monokai.css";
   @import "../../../node_modules/codemirror/theme/icecoder.css";
@@ -451,13 +480,12 @@
               on:refresh={ e => onRefresh(e) }
               on:gutterClick={ e => onGutterCick(e) }
               on:viewportChange={ e => onViewportChange(e) }
+              cmdEnter={ evalLiveCodeOnEditorCommand }
+              ctrlEnter={ evalLiveCodeOnEditorCommand }
               {tab}
               {lineNumbers}
               cmdForwardSlash={nil}
               />
 </div>
-
-              <!-- ctrlEnter={evalLiveCodeOnEditorCommand}
-              cmdEnter={evalLiveCodeOnEditorCommand}
-              cmdPeriod={stopAudioOnEditorCommand}
+              <!-- cmdPeriod={stopAudioOnEditorCommand}
               ctrlPeriod={stopAudioOnEditorCommand} -->
