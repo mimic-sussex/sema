@@ -4,8 +4,9 @@ import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
-import copy from 'rollup-plugin-copy'
-import del from 'del'
+import copy from 'rollup-plugin-copy';
+import url from '@rollup/plugin-url';
+import del from 'del';
 import replace from '@rollup/plugin-replace';
 import { spassr } from 'spassr'
 
@@ -136,7 +137,13 @@ function baseConfig(config, ctx) {
 					dedupe: (importee) => !!importee.match(/svelte(\/|$)/),
 				}),
 				commonjs(),
-
+        url({
+          include: [
+            'static/languages/**/grammar.ne',
+            'static/languages/**/code.sem',
+            'static/learners/**/*.tf'
+          ]
+        }),
 				workerLoader(),
 				wasm(),
         sourcemaps(),

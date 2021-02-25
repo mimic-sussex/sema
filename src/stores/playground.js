@@ -32,12 +32,12 @@ import default_liveCode from "../../static/languages/default/code.sem";
 // import gabber_liveCode from "../../assets/languages/gabber/code.sem";
 // import nibble_liveCode from "../../assets/languages/nibble/code.sem";
 
-// import hello_world_code_example from "../machineLearning/tfjs/hello-world/hello-world.tf";
-// import two_layer_non_linear_code_example from "../machineLearning/tfjs/non-linear/two-layer-non-linear.tf";
-// import binary_classification_code_example from "../machineLearning/tfjs/non-linear/binary-classification.tf";
-// import echo_state_network_code_example from "../machineLearning/tfjs/echo-state/echo-state-network.tf";
-// import lstm_txt_gen_code_example from "../machineLearning/tfjs/rnn/lstm-txt-gen.tf";
-// import music_rnn_example from "../machineLearning/magenta/music-rnn.tf";
+import hello_world_code_example           from "../../static/learners/hello-world/hello-world.tf";
+import two_layer_non_linear_code_example  from "../../static/learners/non-linear/two-layer-non-linear.tf";
+import binary_classification_code_example from "../../static/learners/non-linear/binary-classification.tf";
+import echo_state_network_code_example    from "../../static/learners/echo-state/echo-state-network.tf";
+import lstm_txt_gen_code_example          from "../../static/learners/rnn/lstm-txt-gen.tf";
+// import music_rnn_example                  from "../machineLearning/magenta/music-rnn.tf";
 
 
 
@@ -66,37 +66,35 @@ export const isSelectLiveCodeEditorDisabled = writable(false);
 
 
 // Store for TFJS model options in Sidebar component
-export const sidebarModelOptions = writable([]);
-// export const sidebarModelOptions = writable([
-// 	{ id: 0, disabled: false, text: `Model Editor`, content: "" },
-// 	// { id: 0, disabled: true, text: `Model Editor`, content: "" },
-// 	// { id: 1, disabled: false, text: `+ hello-world`, content: hello_world_code_example },
-// 	{ id: 1, disabled: false, text: `+ hello-world`, content: '' },
-// 	{
-// 		id: 2,
-//     disabled: false,
-// 		text: `+ two-layer-non-linear`,
-// 		content: two_layer_non_linear_code_example,
-// 	},
-// 	{
-// 		id: 3,
-//     disabled: false,
-// 		text: `+ binary-classification`,
-// 		content: binary_classification_code_example,
-// 	},
-// 	{
-// 		id: 4,
-//     disabled: false,
-// 		text: `+ echo-state-network`,
-// 		content: echo_state_network_code_example,
-// 	},
-// 	{
-// 		id: 5,
-//     disabled: false,
-// 		text: `+ lstm-text-gen`,
-// 		content: lstm_txt_gen_code_example,
-// 	},
-// ]);
+// export const sidebarModelOptions = writable([]);
+export const sidebarModelOptions = writable([
+	{ id: 0, disabled: false, text: `Model Editor`, content: "" },
+	{ id: 1, disabled: false, text: `+ hello-world`, content: hello_world_code_example },
+	{
+		id: 2,
+    disabled: false,
+		text: `+ two-layer-non-linear`,
+		content: two_layer_non_linear_code_example,
+	},
+	{
+		id: 3,
+    disabled: false,
+		text: `+ binary-classification`,
+		content: binary_classification_code_example,
+	},
+	{
+		id: 4,
+    disabled: false,
+		text: `+ echo-state-network`,
+		content: echo_state_network_code_example,
+	},
+	{
+		id: 5,
+    disabled: false,
+		text: `+ lstm-text-gen`,
+		content: lstm_txt_gen_code_example,
+	},
+]);
 
 
 export const selectedModelOption = writable(sidebarModelOptions[1]);
@@ -230,160 +228,6 @@ export const editorThemes = [
 /*******                                        ********/
 /*******   Playground Dashboard Items Stores    ********/
 /*******                                        ********/
-
-
-const originalItems = [
-	{
-		...gridHelp.item({ x: 0, y: 0, w: 6, h: 7, id: id() }),
-		...{
-			type: "liveCodeEditor",
-			name: "hello-world",
-			background: "#151515",
-			lineNumbers: true,
-			hasFocus: false,
-			theme: "icecoder",
-			component: LiveCodeEditor,
-			// data: default_liveCode,
-			data: "",
-			grammarSource: "/languages/default/grammar.ne",
-			liveCodeSource: "/languages/default/code.sem",
-		},
-		...{
-			breakpoints: {
-				10: { x: 0, y: 0, w: 2, h: 2 },
-				2: { x: 0, y: 0, w: 1, h: 2 },
-				1: { x: 0, y: 0, w: 1, h: 2 },
-			},
-		},
-	},
-
-	{
-		...gridHelp.item({ x: 6, y: 0, w: 3, h: 2, id: id() }),
-		...{
-			name: "hello world",
-			type: "analyser",
-			lineNumbers: true,
-			hasFocus: false,
-			theme: "monokai",
-			background: "#f0f0f0",
-			component: Analyser,
-			mode: "both",
-		},
-		...{
-			breakpoints: {
-				10: { x: 0, y: 0, w: 2, h: 2 },
-				2: { x: 0, y: 0, w: 1, h: 2 },
-				1: { x: 0, y: 0, w: 1, h: 2 },
-			},
-		},
-	},
-
-	{
-		...gridHelp.item({ x: 9, y: 0, w: 18, h: 3, id: id() }),
-		...{
-			name: "hello world",
-			type: "modelEditor",
-			lineNumbers: true,
-			hasFocus: false,
-			theme: "monokai",
-			background: "#f0f0f0",
-			component: ModelEditor,
-			// data: hello_world_code_example,
-			data: '',
-		},
-		...{
-			breakpoints: {
-				10: { x: 0, y: 0, w: 2, h: 2 },
-				2: { x: 0, y: 0, w: 1, h: 2 },
-				1: { x: 0, y: 0, w: 1, h: 2 },
-			},
-		},
-	},
-
-	{
-		...gridHelp.item({ x: 6, y: 2, w: 3, h: 5, id: id() }),
-		...{
-			name: "hello world",
-			type: "liveCodeParseOutput",
-			lineNumbers: false,
-			hasFocus: false,
-			theme: "shadowfox",
-			background: "#ebdeff",
-			component: LiveCodeParseOutput,
-			data: "",
-		},
-		...{
-			breakpoints: {
-				10: { x: 0, y: 0, w: 2, h: 2 },
-				2: { x: 0, y: 0, w: 1, h: 2 },
-				1: { x: 0, y: 0, w: 1, h: 2 },
-			},
-		},
-	},
-
-	{
-		...gridHelp.item({ x: 9, y: 3, w: 15, h: 3, id: id() }),
-		...{
-			name: "hello world",
-			type: "grammarEditor",
-			lineNumbers: true,
-			hasFocus: false,
-			theme: "monokai",
-			background: "#AAAAAA",
-			component: GrammarEditor,
-			// data: default_grammar,
-			data: "",
-			grammarSource: "/languages/default/grammar.ne",
-		},
-		...{
-			breakpoints: {
-				10: { x: 0, y: 0, w: 2, h: 2 },
-				2: { x: 0, y: 0, w: 1, h: 2 },
-				1: { x: 0, y: 0, w: 1, h: 2 },
-			},
-		},
-	},
-
-	// {
-	// 	...gridHelp.item({ x: 7, y: 7, w: 4, h: 30, id: id() }),
-	// 	...{
-	// 		name: "hello world",
-	// 		type: "storeInspector",
-	// 		lineNumbers: true,
-	// 		hasFocus: false,
-	// 		theme: "monokai",
-	// 		background: "#f0f0f0",
-	// 		component: StoreInspector,
-	// 		data: "",
-	// 	},
-	// },
-
-	{
-		...gridHelp.item({ x: 9, y: 6, w: 18, h: 1, id: id() }),
-		...{
-			name: "hello world",
-			type: "grammarCompileOutput",
-			lineNumbers: true,
-			hasFocus: false,
-			theme: "monokai",
-			background: "#d1d5ff",
-			component: GrammarCompileOutput,
-			data: "",
-		},
-		...{
-			breakpoints: {
-				10: { x: 0, y: 0, w: 2, h: 2 },
-				2: { x: 0, y: 0, w: 2, h: 2 },
-				1: { x: 0, y: 0, w: 2, h: 2 },
-			},
-		},
-	},
-];
-
-
-
-
-
 
 
 

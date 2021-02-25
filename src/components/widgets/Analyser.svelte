@@ -22,8 +22,8 @@
   // export let resize;
   // export let draggable;
   // export let drag;
-  export let min = {};
-  export let max = {};
+  // export let min = {};
+  // export let max = {};
   // export let x;
   // export let y;
   // export let w;

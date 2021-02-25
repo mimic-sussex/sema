@@ -43,11 +43,12 @@
     dspCode,
     audioEngineStatus
   } from "../../stores/common.js";
+// import { editorThemes } from "../../../../sema/client/stores/playground.js";
+// import grammar from "nearley/lib/nearley-language-bootstrapped";
 
 
 
   // export let grammarSource = "/languages/defaultGrammar.ne";
-  // export let grammarSource;
   // let grammarSourceSubscriptionToken;
   // let grammarCompiledParser;
 
@@ -74,6 +75,7 @@
 	export let theme; // unused
 	export let background; // unused
 	export let content;      // liveCode Value that is injected and to which CodeMirror is bound
+  export let grammarSource;
   // export let fixed;
   // export let responsive;
   // export let resizable;
@@ -285,55 +287,82 @@
 */
 
 
-const evalLiveCodeOnEditorCommand = async () => {
-  if(!engine)
-    engine = new Engine();
+// const evalLiveCodeOnEditorCommand = async () => {
+//   if(!engine)
+//     engine = new Engine();
 
-  // engine.play();
-  try{
-    let patch = {
-      setup: `() => {
-          let q = this.newq();
-          q.b0u2 = new Maximilian.maxiOsc();
-          q.b0u2.phaseReset(0);
-          return q;
-      }`,
-      loop: `(q, inputs, mem) => {
-        this.dacOutAll(q.b0u2.sinewave(440));
-      }`,
-      paramMarkers: []
-    };
-      // const { errors, dspCode } = compile( content,  );
-    console.info(content);
-    engine.eval(patch);
-  } catch (err) {
-    console.error("ERROR: Failed to compile and eval: ", err);
-  }
-  // else throw new Error('ERROR: Engine not initialized. Please press Start Engine first.')
-}
+//   // engine.play();
+//   try{
+//     let patch = {
+//       setup: `() => {
+//           let q = this.newq();
+//           q.b0u2 = new Maximilian.maxiOsc();
+//           q.b0u2.phaseReset(0);
+//           return q;
+//       }`,
+//       loop: `(q, inputs, mem) => {
+//         this.dacOutAll(q.b0u2.sinewave(440));
+//       }`,
+//       paramMarkers: []
+//     };
+//       // const { errors, dspCode } = compile( content,  );
+//     console.info(content);
+//     engine.eval(patch);
+//   } catch (err) {
+//     console.error("ERROR: Failed to compile and eval: ", err);
+//   }
+//   // else throw new Error('ERROR: Engine not initialized. Please press Start Engine first.')
+// }
 
-/*
   const evalLiveCodeOnEditorCommand = async () => {
+    if(!engine)
+      engine = new Engine();
 
-    try {
-
-      if($audioEngineStatus === 'paused')
-        $audioEngineStatus = 'running';
-
-      console.log("parsing");
-      console.log(codeMirror.getCursorPosition());
-
-      await parseLiveCodeAsync(codeMirror.getBlock()); // Code block parsed by parser.worker
-
-      // if($grammarCompiledParser && $liveCodeEditorValue && $liveCodeAbstractSyntaxTree){
-      // let dspCode = IRToJavascript.treeToCode($liveCodeParseResults, 0); // Tree traversal in the main tree. TODO defer to worker thread
-      // messaging.publish("eval-dsp", dspCode); // publish eval message with code to audio engine
-    } catch (error) {
-      console.log('DEBUG:LiveCodeEditor:evalLiveCodeOnEditorCommand:')
-      // console.log($liveCodeAbstractSyntaxTree);
+    // engine.play();
+    try{
+      let patch = {
+        setup: `() => {
+            let q = this.newq();
+            q.b0u2 = new Maximilian.maxiOsc();
+            q.b0u2.phaseReset(0);
+            return q;
+        }`,
+        loop: `(q, inputs, mem) => {
+          this.dacOutAll(q.b0u2.sinewave(440));
+        }`,
+        paramMarkers: []
+      };
+      // const { errors, dspCode } = compile( content, grammarSource );
+      console.info(codeMirror.getBlock());
+      console.info(grammarSource);
+      engine.eval(patch);
+    } catch (err) {
+      console.error("ERROR: Failed to compile and eval: ", err);
     }
+    // else throw new Error('ERROR: Engine not initialized. Please press Start Engine first.')
   }
-*/
+
+
+  // const evalLiveCodeOnEditorCommand = async () => {
+
+  //   try {
+
+  //     if($audioEngineStatus === 'paused')
+  //       $audioEngineStatus = 'running';
+
+  //     console.log("parsing");
+  //     console.log(codeMirror.getCursorPosition());
+
+  //     await parseLiveCodeAsync(codeMirror.getBlock()); // Code block parsed by parser.worker
+
+  //     // if($grammarCompiledParser && $liveCodeEditorValue && $liveCodeAbstractSyntaxTree){
+  //     // let dspCode = IRToJavascript.treeToCode($liveCodeParseResults, 0); // Tree traversal in the main tree. TODO defer to worker thread
+  //     // messaging.publish("eval-dsp", dspCode); // publish eval message with code to audio engine
+  //   } catch (error) {
+  //     console.log('DEBUG:LiveCodeEditor:evalLiveCodeOnEditorCommand:')
+  //     // console.log($liveCodeAbstractSyntaxTree);
+  //   }
+  // }
 
   const stopAudioOnEditorCommand = () => {
 
@@ -480,12 +509,12 @@ const evalLiveCodeOnEditorCommand = async () => {
               on:refresh={ e => onRefresh(e) }
               on:gutterClick={ e => onGutterCick(e) }
               on:viewportChange={ e => onViewportChange(e) }
-              cmdEnter={ evalLiveCodeOnEditorCommand }
-              ctrlEnter={ evalLiveCodeOnEditorCommand }
               {tab}
               {lineNumbers}
               cmdForwardSlash={nil}
+              cmdEnter={ evalLiveCodeOnEditorCommand }
+              ctrlEnter={ evalLiveCodeOnEditorCommand }
+              cmdPeriod={stopAudioOnEditorCommand}
+              ctrlPeriod={stopAudioOnEditorCommand}
               />
 </div>
-              <!-- cmdPeriod={stopAudioOnEditorCommand}
-              ctrlPeriod={stopAudioOnEditorCommand} -->
