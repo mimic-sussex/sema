@@ -1,8 +1,5 @@
 import { writable, readable, get } from "svelte/store";
 
-// import compile from "../compiler/compiler";
-import { compile } from "sema-engine/sema-engine";
-
 import { id, fetchFrom } from "../utils/utils";
 
 /**
@@ -27,11 +24,11 @@ import StoreInspector from "../components/widgets/StoreInspector.svelte";
 import DSPCodeOutput from "../components/widgets/DSPCodeOutput.svelte";
 import PostIt from "../components/widgets/PostIt.svelte";
 
-// import default_grammar from "../../../assets/languages/default/grammar.ne";
+import default_grammar from "../../static/languages/default/grammar.ne";
 // import gabber_grammar from "../../assets/languages/gabber/grammar.ne";
 // import nibble_grammar from "../../assets/languages/nibble/grammar.ne";
 
-// import default_liveCode from "../../assets/languages/default/code.sem";
+import default_liveCode from "../../static/languages/default/code.sem";
 // import gabber_liveCode from "../../assets/languages/gabber/code.sem";
 // import nibble_liveCode from "../../assets/languages/nibble/code.sem";
 

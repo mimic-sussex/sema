@@ -52,18 +52,11 @@
     resetStores
   } from  "../../stores/common.js"
 
-  // let controller = new Controller(new Engine());
-
-// import { stringify } from 'querystring';
-
   // import { removeUnderscoredDirs } from '@sveltech/routify/lib/middleware/misc';
 
   const messaging = new PubSub();
 
   let controller = new Controller();
-
-	// const GitHubBase = require('github-base');
-	// const github = new GitHubBase({ /* options */ });
 
   let overlayContainer;
 
@@ -233,82 +226,6 @@
 
   }
 
-	// const update = e => {
-
-  //   if( e.detail.item && e.detail.prop ){
-  //   }
-
-
-    // if( e.data && e.data.type ){
-    //   try{
-
-    //       switch (e.data.type) {
-    //         case "liveCodeEditor":
-    //           localStorage.liveCodeEditorValue = e.data.content;
-    //           break;
-    //         case "grammarEditor":
-    //           localStorage.grammarEditorValue = e.data.content;
-    //           break;
-    //         case "modelEditor":
-    //           localStorage.modelEditorValue = e.data.content;
-    //           break;
-    //         default:
-    //           break;
-    //       }
-    //     }
-
-    //   }
-    //     else {
-    //       setFocused(e);
-    //     }
-
-    //   catch(error){
-    //     console.error("Error on routes/Playground.update: updating Playground items", error);
-    //   }
-    // }
-  // }
-
-    // if( e.detail.item && e.detail.prop ){
-    //   try{
-    //     if( e.detail.prop === 'data' ){
-    //       switch (e.detail.item.type) {
-    //         case "liveCodeEditor":
-    //           localStorage.liveCodeEditorValue = e.detail.value;
-    //           break;
-    //         case "grammarEditor":
-    //           localStorage.grammarEditorValue = e.detail.value;
-    //           break;
-    //         case "modelEditor":
-    //           localStorage.modelEditorValue = e.detail.value;
-    //           break;
-    //         default:
-    //           break;
-    //       }
-
-    //       $items = $items.map(i => i === e.detail.item ? { ...i, [e.detail.prop]: e.detail.value } : i);
-    //     }
-    //     else {
-    //       setFocused(e.detail.item);
-    //     }
-
-        // if( e.detail.item.type === 'analyser' && e.detail.prop === 'hasFocus' && e.detail.value ){
-        //   setFocused(e.detail.item);
-        //   // $items = $items;
-        // }
-        // else{
-          // Filter out item, update it and refresh items's list
-          // item[prop] = value;
-          // $items = $items; // force an update
-
-        // }
-  //     }
-  //     catch(error){
-  //       console.error("Error on routes/Playground.update: updating Playground items", error);
-  //     }
-  //   }
-	// }
-
-
 
   const clearItems = () => {
     // console.log("DEBUG:dashboard:clearItems:")
@@ -349,7 +266,6 @@
 
 
   onMount( async () => {
-    // console.log("DEBUG:routes/playground:onMount")
 
     controller.init('http://localhost:5000/sema-engine' + '/maxi-processor.js');
 
@@ -364,10 +280,6 @@
       updateItemPropsWithCommonStoreValues(item);
 
     addSubscriptionToken = messaging.subscribe('playground-add', e => addItem(e) );
-		// storeEnvironmentSubscriptionToken = messaging.subscribe('playground-store-environment', e => storeEnvironment(e) );
-    // loadEnvironmentSubscriptionToken = messaging.subscribe('playground-load-environment', e => loadEnvironment(e) );
-		// // resetSubscriptionToken = messaging.subscribe('playground-reset', e => clearItems() );
-
     unsubscribeItemsChangeCallback = items.subscribe(value => {
       //console.log('Playground items changed: ', value );
     });
@@ -376,12 +288,8 @@
   onDestroy(() => {
     // console.log("DEBUG:routes/playground:onDestroy")
     messaging.unsubscribe(addSubscriptionToken);
-    // messaging.unsubscribe(storeEnvironmentSubscriptionToken);
-    // messaging.unsubscribe(loadEnvironmentSubscriptionToken);
     messaging.unsubscribe(resetSubscriptionToken);
-
     unsubscribeItemsChangeCallback();
-
     resetStores();
   });
 

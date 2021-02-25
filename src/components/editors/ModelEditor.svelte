@@ -1,11 +1,6 @@
 <script context="module">
-  const is_browser = typeof window !== "undefined";
-
   import CodeMirror from "svelte-codemirror";
-  // import CodeMirror, { set, getValue } from "svelte-codemirror";
-  // import "codemirror/lib/codemirror.css";
-
-  if (is_browser) {
+  if (typeof window !== "undefined") {
     import("../../utils/codeMirrorPlugins.js");
   }
 </script>

@@ -414,7 +414,7 @@ const evalLiveCodeOnEditorCommand = async () => {
 </script>
 
 
-<style>
+<style global>
   @import '../../../node_modules/codemirror/lib/codemirror.css';
   @import '../../../node_modules/codemirror/theme/idea.css';
   @import "../../../node_modules/codemirror/theme/monokai.css";

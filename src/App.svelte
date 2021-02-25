@@ -15,10 +15,12 @@
       controller;
 
   /**
-   * This async IIFE tests the browser Sema is loading in for WAAPI Audio Worklet support
-   * It either succeeds and dynamically imports the sema-engine, or graciously fails
+   * This async IIFE tests the browser in which Sema is loading
+   * for for WAAPI Audio Worklet support
+   * It either succeeds and dynamically imports the sema-engine,
+   * or fails graciously
    * */
-  (async () => {
+  ( async () => {
     // Detect Firefox early otherwise audio engine needs to be initialised for a fail to be detected [Firefox fix]
     if (/firefox/i.test(navigator.userAgent)) unsupportedBrowser = true;
     else {
@@ -61,7 +63,7 @@
 <style global>
 	@import "../static/app.css";
 	@import "../static/global.css";
-  @import "codemirror/lib/codemirror.css";
+  /* @import "codemirror/lib/codemirror.css"; */
 
 </style>
 
