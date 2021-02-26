@@ -5,11 +5,11 @@ import commonjs from '@rollup/plugin-commonjs';
 import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
 import copy from 'rollup-plugin-copy';
-import url from '@rollup/plugin-url';
+// import url from '@rollup/plugin-url';
 import del from 'del';
 import replace from '@rollup/plugin-replace';
 import { spassr } from 'spassr'
-
+import { string } from "rollup-plugin-string";
 import { wasm } from '@rollup/plugin-wasm'
 import workerLoader from 'rollup-plugin-web-worker-loader'
 
@@ -137,10 +137,12 @@ function baseConfig(config, ctx) {
 					dedupe: (importee) => !!importee.match(/svelte(\/|$)/),
 				}),
 				commonjs(),
-        url({
+        string({
           include: [
-            'static/languages/**/grammar.ne',
-            'static/languages/**/code.sem',
+            'static/languages/default/grammar.ne',
+            'static/languages/nibble/grammar.ne',
+            // 'static/languages/**/grammar.ne',
+            'static/languages/default/code.sem',
             'static/learners/**/*.tf'
           ]
         }),

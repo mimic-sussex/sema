@@ -142,7 +142,6 @@
     if(e.type !== undefined){
       try {
         let newItem = await createNewItem(e.type, e.data);
-        console.log("DEBUG:playground:addItem:", newItem);
 
         await updateItemPropsWithFetchedValues(newItem);
 
@@ -164,6 +163,7 @@
 
         // Add to store
         $items = [...$items, ...[newItem]]
+        console.log("DEBUG:playground:addItem:", newItem);
       }
       catch (error){
         console.error("Error on routes/Playground.addItem", error);

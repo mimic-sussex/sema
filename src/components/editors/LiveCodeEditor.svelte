@@ -14,9 +14,6 @@
   import * as nearley from 'nearley/lib/nearley.js'
 
   import { compile, Engine } from 'sema-engine/sema-engine';
-  // import compile from '../../compiler/compiler';
-
-  // import Controller from '../../engine/controller'
 
   import { addToHistory } from "../../utils/history.js";
   import {
@@ -154,21 +151,20 @@
   }
 
   let onGutterCick = e => {
-
+    dispatch('change', {
+      prop:'hasFocus',
+      value: true
+    });
     // console.log("onGutterCick")
-    // dispatch('change', {
-    //   prop:'hasFocus',
-    //   value: true
-    // });
   }
 
   let onViewportChange = e => {
 
+    dispatch('change', {
+      prop:'hasFocus',
+      value: true
+    });
     // console.log("onViewportChange")
-    // dispatch('change', {
-    //   prop:'hasFocus',
-    //   value: true
-    // });
   }
 
 /*
