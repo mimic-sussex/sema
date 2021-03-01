@@ -139,10 +139,8 @@ function baseConfig(config, ctx) {
 				commonjs(),
         string({
           include: [
-            'static/languages/default/grammar.ne',
-            'static/languages/nibble/grammar.ne',
-            // 'static/languages/**/grammar.ne',
-            'static/languages/default/code.sem',
+            'static/languages/**/grammar.ne',
+            'static/languages/**/code.sem',
             'static/learners/**/*.tf'
           ]
         }),

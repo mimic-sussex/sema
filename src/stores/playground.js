@@ -260,7 +260,7 @@ const testItems = [
 			theme: "icecoder",
 			component: LiveCodeEditor,
 			content: "#lc-1",
-			grammarSource: "/languages/defaultGrammar.ne",
+			grammarSource: "/languages/default/grammar.ne",
 		},
 	},
 	{
@@ -285,7 +285,7 @@ const testItems = [
 			theme: "icecoder",
 			component: GrammarEditor,
 			content: "#ge-1",
-			grammarSource: "/languages/defaultGrammar.ne",
+			grammarSource: "/languages/default/grammar.ne",
 		},
 	},
 

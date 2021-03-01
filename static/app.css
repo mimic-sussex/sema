@@ -5,6 +5,11 @@ body {
   overflow: hidden;
 }
 
+#routify-app {
+  height: 100%;
+  overflow: hidden;
+}
+
 /* APP */
 .app {
 	display: grid;

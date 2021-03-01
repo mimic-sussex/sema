@@ -23,6 +23,8 @@
 
   import Grid from "svelte-grid";
   import gridHelp from "svelte-grid/build/helper";
+  let grid;
+
 
   // import {
   //   fetchFrom
@@ -64,7 +66,7 @@
   // let cols = 12;
   // let breakpoints
   let cols = [
-    // [2880, 13]
+    [2880, 12]
     [1600, 8],
     [1440, 12],
     [1280, 3],
@@ -151,8 +153,10 @@
 
         setFocused(newItem);
 
-        let findOutPosition = gridHelp.findSpace(newItem, $items, COLS);
 
+
+        let findOutPosition = gridHelp.findSpace(newItem, $items, COLS);
+        grid.
         newItem = {
           ...newItem,
           [COLS]: {
@@ -269,7 +273,8 @@
 
     controller.init('http://localhost:5000/sema-engine' + '/maxi-processor.js');
 
-    // Sequentially fetch data from individual items' properties into language design workflow stores
+    // Sequentially fetch data from individual items' properties
+    // into language design workflow stores
     for (const item of $items)
       await updateItemPropsWithFetchedValues(item);
 
@@ -470,6 +475,7 @@
   </div>
   <div class="dashboard-container scrollable">
     <Grid
+      bind:this={grid}
       bind:items={$items}
       {cols}
       {rowHeight}
