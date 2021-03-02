@@ -136,36 +136,31 @@
 
   function setLayoutResponsiveness(item){
 
-    // let newItem = {
-    //   ...item,
-    //   [COLS]: {
-    //     ...item[COLS],
-    //     ...findOutPosition,
-    //   },
-    // };
-
-    const buildCols = (colsArr) => {
-      return colsArr.reduce(
-        (acc, obj) => {
-          let col = obj[1]; // for each col config, get number of cols
-          let findOutPosition = gridHelp.findSpace(item, $items, col);
-          if (!acc[col]) {
-            acc[col] = {
-              ...item[col],
-              ...findOutPosition,
-            };
-          }
-          return acc
-        }, {})
+    if(item && items && cols){
+      try{
+        return {
+          ...item,
+          ...cols.reduce(
+            (acc, obj) => {
+              let col = obj[1]; // for each col config, get number of cols
+              let findOutPosition = gridHelp.findSpace(item, $items, col);
+              if (!acc[col]) {
+                acc[col] = {
+                  ...item[col],
+                  ...findOutPosition,
+                };
+              }
+              return acc
+            }, {})
+        }
+      }
+      catch(err){
+        console.error("Error setting layout responsiveness when adding new item");
+      }
     }
-
-    let newItem = {
-      ...item,
-      ...buildCols(cols)
-    }
-
-    return newItem;
+    else throw new Error("Error setting layout responsiveness when adding new item")
   }
+
 
   async function addItem(e){
 
