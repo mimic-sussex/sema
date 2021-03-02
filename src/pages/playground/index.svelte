@@ -63,17 +63,15 @@
   let overlayContainer;
 
   // Playground dashboard configuration
-  // let cols = 12;
-  // let breakpoints
   let cols = [
-    [2880, 12]
-    [1600, 8],
-    [1440, 12],
-    [1280, 3],
-    // [1024, 2],
-    // [800, 1],
-    // [500, 1]
+    [2880, 12],
+    [1600, 12],
+    [1280, 8], // over this rez is failling
+    [1024, 6],
+    [800, 3],
+    [500, 2]
   ];
+
   let rowHeight = 100;
   let gap = [2, 2];
 
@@ -136,45 +134,64 @@
       console.error("Error Playground.setFocused: setting item focuses: empty item" );
   }
 
+  function setLayoutResponsiveness(item){
+
+    // let newItem = {
+    //   ...item,
+    //   [COLS]: {
+    //     ...item[COLS],
+    //     ...findOutPosition,
+    //   },
+    // };
+
+    const buildCols = (colsArr) => {
+      return colsArr.reduce(
+        (acc, obj) => {
+          let col = obj[1]; // for each col config, get number of cols
+          let findOutPosition = gridHelp.findSpace(item, $items, col);
+          if (!acc[col]) {
+            acc[col] = {
+              ...item[col],
+              ...findOutPosition,
+            };
+          }
+          return acc
+        }, {})
+    }
+
+    let newItem = {
+      ...item,
+      ...buildCols(cols)
+    }
+
+    return newItem;
+  }
 
   async function addItem(e){
 
-    let COLS = 12;
-
-    if(e.type !== undefined){
+    if(e.type){
       try {
-        let newItem = await createNewItem(e.type, e.data);
+        let item = await createNewItem(e.type, e.data);
 
-        await updateItemPropsWithFetchedValues(newItem);
+        await updateItemPropsWithFetchedValues(item);
 
-        await populateCommonStoresWithFetchedProps(newItem);
+        await populateCommonStoresWithFetchedProps(item);
 
-        updateItemPropsWithCommonStoreValues(newItem)
+        updateItemPropsWithCommonStoreValues(item)
 
-        setFocused(newItem);
+        setFocused(item);
 
+        const newItem = setLayoutResponsiveness(item);
 
-
-        let findOutPosition = gridHelp.findSpace(newItem, $items, COLS);
-        grid.
-        newItem = {
-          ...newItem,
-          [COLS]: {
-            ...newItem[COLS],
-            ...findOutPosition,
-          },
-        };
-
-        // Add to store
-        $items = [...$items, ...[newItem]]
-        console.log("DEBUG:playground:addItem:", newItem);
+        $items = [ ...$items, ...[newItem] ]
+        // console.log("DEBUG:playground:addItem:", newItem);
       }
       catch (error){
         console.error("Error on routes/Playground.addItem", error);
       }
     }
     else
-      console.error("Error on routes/Playground.addItem: undefined parameter")
+      console.error("Error on routes/Playground.addItem: undefined parameters")
   }
 
 
@@ -258,20 +275,23 @@
   }
 
   const onAdjust = e => {
-    // console.log("DEBUG:dashboard:onAdjust:", e.detail);
+    console.log("DEBUG:dashboard:onAdjust:", e.detail);
     $items = $items; // call a re-render
   };
 
   const onChildMount = e => {
-    // console.log("DEBUG:dashboard:onChildMount:", e.detail);
+    console.log("DEBUG:dashboard:onChildMount:", e.detail);
     $items = $items; // call a re-render
   };
 
-
+  let container;
 
   onMount( async () => {
 
     controller.init('http://localhost:5000/sema-engine' + '/maxi-processor.js');
+
+    // Debug
+    let resizeObs = new ResizeObserver(e => console.log( e[0].contentRect.width ) ).observe(container);
 
     // Sequentially fetch data from individual items' properties
     // into language design workflow stores
@@ -473,9 +493,11 @@
     </svg>
     <p class="upload-overlay-text"><span style="font-weight: 1500;">Choose your .json file</span> or <span>drag'n'drop it here to upload a new environment!</span></p>
   </div>
-  <div class="dashboard-container scrollable">
+
+  <div class="dashboard-container scrollable"
+    bind:this={container}
+    >
     <Grid
-      bind:this={grid}
       bind:items={$items}
       {cols}
       {rowHeight}
