@@ -1,11 +1,6 @@
 <script context="module">
-  const is_browser = typeof window !== "undefined";
-
-  // import CodeMirror, { set, getValue } from "svelte-codemirror"
   import CodeMirror from "svelte-codemirror";
-  // import "codemirror/lib/codemirror.css";
-
-  if (is_browser) {
+  if (typeof window !== "undefined") {
     import("../../utils/codeMirrorPlugins.js");
   }
 </script>
@@ -193,11 +188,11 @@
 </style>
 
 <div class="codemirror-container layout-template-container scrollable">
-  <CodeMirror bind:this={codeMirror}
-              bind:value={content}
-              tab={true}
-              lineNumbers={true}
-              on:change={ e => onChange(e)}
+  <CodeMirror bind:this={ codeMirror }
+              bind:value={ content }
+              tab={ true }
+              lineNumbers={ true }
+              on:change={ e => onChange(e) }
               on:focus={ e => onFocus(e) }
               on:blur={ e => onBlur(e) }
               on:refresh={ e => onRefresh(e) }

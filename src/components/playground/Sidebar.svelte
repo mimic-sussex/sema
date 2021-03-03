@@ -637,7 +637,7 @@
               on:click={ () => dispatchAdd('analyser') }
               disabled={ $isAddAnalyserDisabled }
               >
-        Audio Analyser
+        ANALYSER
       </button>
     </div>
 
@@ -687,14 +687,14 @@
       <button class="button-dark"
               on:click={ () => resetEnvironment() }
               >
-        Reset
+        RESET
       </button>
     </div>
     <div class="controls">
       <button class="button-dark"
               on:click={ () => storeEnvironment() }
               >
-        Store
+        STORE
       </button>
     </div>
 
@@ -720,7 +720,7 @@
       <button class="button-dark"
               on:click={ () => uploadEnvironment() }
               >
-        Upload
+        UPLOAD
       </button>
     </div>
 
@@ -728,7 +728,7 @@
       <button class="button-dark"
               on:click={ () => downloadEnvironment() }
               >
-        Download
+        DOWNLOAD
       </button>
     </div>
 
