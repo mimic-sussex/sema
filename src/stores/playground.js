@@ -533,15 +533,13 @@ export async function createNewItem (type, content){
  * @param item JSON grid item component description
  */
 export function hydrateJSONcomponent (item){
-	if (item !== 'undefined' && item.data !== 'undefined' && item.data.type !== 'undefined') {
+	if ( item && item.data && item.data.type ) {
 		switch (item.data.type) {
 			case "liveCodeEditor":
 				item.data.component = LiveCodeEditor;
-				// await populateStoresWithFetchedProps(item);
 				break;
 			case "grammarEditor":
 				item.data.component = GrammarEditor;
-				// grammarEditorValue.set(item.data); // Set the store value with grammar value deserialised from data
 				break;
 			case "modelEditor":
 				item.data.component = ModelEditor;
@@ -568,7 +566,7 @@ export function hydrateJSONcomponent (item){
 				// item.component = StoreInspector;
 				break;
 		}
-		if(item.id === 'undefined'){
+		if(!item.id){
       item.id = id();
 		  item.data.name = item.data.type + item.id;
     }
@@ -593,8 +591,9 @@ export const fastStart = writable(true);
  * * synchronize here is bidirectional which means both serializing the store value
  * * to a corresponding local storage item
  * * and reading from a local storage item and hydrating the JSON descriptors
- * ! HANDLE WITH CARE, requires a good understading of the Svelte store mechanism,
- * ! the concepts of serialisation and hydration, and local storage
+ * ! HANDLE WITH CARE requires a good understading of the Svelte store mechanism,
+ * ! the concepts of serialisation and hydration
+ * ! and local storage
  * @key text descriptor for the store in the local storage
  * @initialValue initial default value for store
  */
@@ -604,7 +603,6 @@ export function storable(key, initialValue) {
 
 	let json = localStorage.getItem(key); // get the last value from localStorage
 	if (json) {
-		// set( JSON.parse(json));
 		set(JSON.parse(json).map(item => hydrateJSONcomponent(item))); // use the value from localStorage if it exists
 	}
 

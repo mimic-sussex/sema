@@ -22,108 +22,7 @@ import gridHelp from "svelte-grid/build/helper/index.mjs";
 export const audioEngineStatus = writable('no-audio');
 export const unsupportedBrowser = writable(false);
 ;
-// function persist(key, value) {
-// 	sessionStorage.setItem(key, JSON.stringify(value));
-// }
 
-// // Use traditional function declaration to prevent Temporal Dead Zone issue
-// export function writableSession(key, initialValue) {
-// 	const sessionValue = JSON.parse(sessionStorage.getItem(key));
-
-// 	if (!sessionValue) persist(key, initialValue);
-
-// 	const store = writable(sessionValue || initialValue);
-
-// 	const { set: realSet, subscribe, update: realUpdate } = store;
-
-// 	return {
-// 		set(value) {
-// 			realSet(value);
-// 			persist(key, value);
-// 		},
-// 		subscribe,
-// 		update(fn) {
-// 			realUpdate(fn);
-// 			persist(key, get(store));
-// 		},
-// 	};
-// }
-
-
-// // [NOTE] Use traditional function declaration to prevent Temporal Dead Zone issue
-// export function hydrateJSONcomponent (item){
-// 	if (item !== 'undefined' && item.type !== 'undefined') {
-// 		switch (item.type) {
-// 			case "liveCodeEditor":
-// 				item.component = LiveCodeEditor;
-// 				break;
-// 			case "grammarEditor":
-// 				item.component = GrammarEditor;
-// 				break;
-// 			case "modelEditor":
-// 				item.component = ModelEditor;
-// 				break;
-// 			case "liveCodeParseOutput":
-// 				item.component = LiveCodeParseOutput;
-// 				break;
-// 			case "grammarCompileOutput":
-// 				item.component = GrammarCompileOutput;
-// 				break;
-// 			case "storeInspector":
-// 				item.component = StoreInspector;
-// 				break;
-// 			case "analyser":
-// 				item.component = Analyser;
-// 				break;
-// 			default:
-// 				// item.component = StoreInspector;
-// 				break;
-// 		}
-// 		if(item.id !== 'undefined'){
-//       item.id = id();
-// 		  item.name = item.name + item.id;
-//     }
-// 		return item;
-//   }
-//   else
-//     throw Error("hydrateJSONcomponent: undefined item");
-// 	// } else {
-// 	// 	createNewItem();
-// 	// }
-// };
-
-// /*
-//  * Wraps writable store a
-//  */
-// export function storable(key, initialValue) {
-// 	const store = writable(initialValue); // create an underlying store
-// 	const { subscribe, set, update } = store;
-
-// 	let json = localStorage.getItem(key); // get the last value from localStorage
-// 	if (json) {
-// 		// set( JSON.parse(json));
-// 		set( JSON.parse(json).map( item => hydrateJSONcomponent(item) ) ); // use the value from localStorage if it exists
-// 	}
-
-// 	// return an object with the same interface as Svelte's writable() store interface
-// 	return {
-// 		set(value) {
-// 			localStorage.setItem(key, JSON.stringify(value));
-// 			set(value); // capture set and write to localStorage
-// 		},
-
-// 		update(cb) {
-// 			const value = cb(get(store)); // passes items to callback for invocation e.g items => items.concat(new)
-// 			this.set(value); // capture updates and write to localStore
-// 		},
-
-// 		get() {
-// 			return localStorage.getItem(key);
-// 		},
-
-// 		subscribe, // punt subscriptions to underlying store
-// 	};
-// }
 
 // export const grammarEditorValue = writable(initGrammarEditorValue());
 export const grammarEditorValue = writable("");
@@ -155,56 +54,77 @@ async function updateLiveCodeEditorPropsWithFetchedValues(item){
 
   if (item !== undefined && item.data !== undefined) {
 		if (
-			item.data.content === undefined &&
-			item.data.liveCodeSource &&
-			item.data.liveCodeSource !== ``
+			item.data.liveCodeSource
+      && item.data.liveCodeSource !== ``
+      && !item.data.content
 		) {
 			// liveCodeEditor with language source, FIRST load
 			try {
-				item.data.content = await fetchFrom(item.data.liveCodeSource);
-				item.data.liveCodeSource = ``; // set RELOAD from local storage;
-			} catch (error) {
-				console.error("Error fetching props for Live Code Editor item");
+				item.data.content = await fetchFrom(item.data.liveCodeSource)
+				item.data.liveCodeSource = `` // set RELOAD from local storage;
+    	} catch (error) {
+				console.error('Error fetching props for Live Code Editor item')
 			}
 		} else if (item.data.liveCodeSource === ``) {
 			// if liveCodeSource is empty string "", reload fetch data from localStorage
-			if (localStorage.liveCodeEditorValue && localStorage.liveCodeEditorValue !== ``) {
-				item.data.content = localStorage.liveCodeEditorValue;
+			if (
+				localStorage.liveCodeEditorValue
+        && localStorage.liveCodeEditorValue !== ``
+			) {
+				item.data.content = localStorage.liveCodeEditorValue
 			} else
 				console.error(
-					"Error fetching props for Live Code Editor item: Local store empty"
-				);
+					'Error fetching props for Live Code Editor item: Local store empty'
+				)
 		} else if (!item.data.liveCodeSource) {
 			// if liveCodeSource is undefined, it is a 'new' live code editor, set data empty
-			item.data.content = "";
+			item.data.content = ''
 		}
 		// else if(item.data !== undefined && item.liveCodeSource) return; // first load, hardcoded defaults
 
 		if (item.data.grammarSource !== ``) {
 			try {
 				// liveCodeEditor with language source
-				item.data.grammar = await fetchFrom(item.data.grammarSource);
+				const fetchedGrammar = await fetchFrom(item.data.grammarSource)
+				item.data.grammar = fetchedGrammar;
+				// item.data.grammarSource = ``; // CAN'T USE THIS TO signal next LOAD from local storage, ITEM PROPS will send event with these props
+				// localStorage.grammarEditorValue = fetchedGrammar;
 			} catch (error) {
 				console.error("Error fetching props for Live Code Editor item");
 			}
 		}
+    else if(item.data.grammarSource === ''
+            && localStorage.grammarEditorValue
+            && localStorage.grammarEditorValue !== ``
+    ){
+			try {
+        // if liveCodeSource is empty string "", reload fetch data from localStorage
+        item.data.grammar = localStorage.grammarEditorValue
+			} catch (error) {
+				console.error('Error fetching props for Live Code Editor item')
+			}
+    }
 	}
 }
 
 async function updateGrammarEditorPropsWithFetchedValues(item) {
-	if (item !== undefined && item.data !== undefined) {
-		if (item.data.content === "" && item.data.grammarSource !== ``) {
+	if (item && item.data) {
+    if (item.data.content && item.data.content !== ``)
+    {
+      return;
+    }
+		else if (item.data.grammarSource && item.data.grammarSource !== ``) {
 			try {
 				// liveCodeEditor with language source
-				item.data.content = await fetchFrom(item.data.grammarSource);
-				item.data.grammarSource = ``; // set next RELOAD from local storage;
+				item.data.content = await fetchFrom(item.data.grammarSource)
+				item.data.grammarSource = `` // set next RELOAD from local storage;
 			} catch (error) {
-				console.error("Error fetching props for Grammar Editor item", error);
+				console.error('Error fetching props for Grammar Editor item', error)
 			}
-		} else if (item.data.grammarSource == ``) {
-			// reloads fetch data from localStorage
+		} else if (!item.data.grammarSource || item.data.grammarSource === ``) {
+			// fetch data from localStorage
 			// liveCodeEditor with language source
-			item.data.grammar = localStorage.grammarEditorValue;
+			item.data.content = localStorage.grammarEditorValue
 		}
 	}
   // else if(item.data !== undefined && item.grammarSource) return; // first load, hardcoded defaults
@@ -246,8 +166,7 @@ export const populateCommonStoresWithFetchedProps = async (item) => {
 					grammarCompiledParser.set(compile(item.data.grammar).output);
 					break;
 				case "grammarEditor":
-
-
+          grammarEditorValue.set(item.data.content)
 					break;
 				default:
 					break;
@@ -264,14 +183,14 @@ export const populateCommonStoresWithFetchedProps = async (item) => {
 
 export const updateItemPropsWithCommonStoreValues = (item) => {
 
-  if(item !== null){
+  if(item){
     try{
       switch (item.data.type) {
 				case "liveCodeEditor":
 					item.data.content = get(liveCodeEditorValue);
 					break;
 				case "grammarEditor":
-					// item.data = get(grammarEditorValue);
+					item.data.content = get(grammarEditorValue);
 					break;
 				default:
 					break;

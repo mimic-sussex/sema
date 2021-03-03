@@ -41,29 +41,7 @@
     audioEngineStatus
   } from "../../stores/common.js";
 // import { editorThemes } from "../../../../sema/client/stores/playground.js";
-// import grammar from "nearley/lib/nearley-language-bootstrapped";
-
-
-
-  // export let grammarSource = "/languages/defaultGrammar.ne";
-  // let grammarSourceSubscriptionToken;
-  // let grammarCompiledParser;
-
-  // export let liveCodeEditorValue;
-  // export
-  // let liveCodeParseErrors;
-  // // export
-  // let liveCodeParseResults;
-  // // export
-  // let liveCodeAbstractSyntaxTree;
-  // // export
-  // let dspCode; // code generated from the liveCode AST traversal
-
-  // console.log("grammarCompiledParser");
-  // console.log($grammarCompiledParser);
-
   export let tab = true;
-
   export let id;   // unused
   export let name; // unused
 	export let type; // unused
@@ -73,19 +51,6 @@
 	export let background; // unused
 	export let content;      // liveCode Value that is injected and to which CodeMirror is bound
   export let grammarSource;
-  // export let fixed;
-  // export let responsive;
-  // export let resizable;
-  // export let resize;
-  // export let draggable;
-  // export let drag;
-  // export let min = {};
-  // export let max = {};
-  // export let breakpoints = {};
-  // export let x;
-  // export let y;
-  // export let w;
-  // export let h;
   export let component;
 
   let engine;
@@ -107,11 +72,11 @@
     // CHECK <svelte:component on:change={ e => update(item, e.detail.prop, e.detail.value) }
 
     try{
-      // let value = codeMirror.getValue();
+      let value = codeMirror.getValue();
       dispatch('change', {
         prop:'content',
-        // value: value
-        value: content
+        value: value
+        // value: content
       });
     }catch(error){
       console.error("Error Live Code Editor get value from code Mirror")

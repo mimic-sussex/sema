@@ -65,7 +65,7 @@
       //   $isSelectModelEditorDisabled = true;
       //   break;
       case 'grammar':
-        messaging.publish("playground-add", { type: 'grammarEditor', data: { grammar: $focusedItemProperties[2].grammar, grammarSource: $focusedItem.grammarSource }});
+        messaging.publish("playground-add", { type: 'grammarEditor', data: { grammar: $focusedItemProperties[2].grammar, grammarSource: $focusedItem.data.grammarSource }});
 
         // selectedGrammarOption = sidebarGrammarOptions[0];
         $isAddGrammarEditorDisabled = true;

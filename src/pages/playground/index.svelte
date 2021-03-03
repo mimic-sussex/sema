@@ -8,8 +8,6 @@
 	 **/
 	// $: if ($user) $redirect('/')
 
-  import Controller from "../../engine/controller";
-
 
   import { onMount, onDestroy } from 'svelte';
 
@@ -24,14 +22,6 @@
   import Grid from "svelte-grid";
   import gridHelp from "svelte-grid/build/helper";
   let grid;
-
-
-  // import {
-  //   fetchFrom
-
-  // } from "../utils/utils.js"
-
-  // import { addToHistory } from "../utils/history.js";
 
   import {
 
@@ -54,7 +44,7 @@
     resetStores
   } from  "../../stores/common.js"
 
-  // import { removeUnderscoredDirs } from '@sveltech/routify/lib/middleware/misc';
+  import Controller from "../../engine/controller";
 
   const messaging = new PubSub();
 
@@ -193,8 +183,7 @@
   const update = (e, dataItem) => {
 
     try{
-
-      if(e !== undefined && e.detail !== undefined && dataItem !== undefined){
+      if(e && e.detail && dataItem ){
         if(e.detail.prop === "content"){
           switch (dataItem.data.type) {
             case "liveCodeEditor":

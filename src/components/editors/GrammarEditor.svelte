@@ -52,8 +52,8 @@
   export let grammarSource;
   export let component;
 
-  let codeMirror, value;
-  let modelWorker;
+  let codeMirror,
+      modelWorker;
 
   let log = e => { /* console.log(...e); */ }
 
@@ -108,48 +108,32 @@
   // }
   //
   let onChange = e => {
-
-    // let grammarEditorValue = null;
-
-    // if(e !== undefined && e.detail !== undefined && e.detail.value !== undefined)
-    //   grammarEditorValue = e.detail.value;
-    if(e !== undefined){
-
+    if(e){
       try{
-        // let value = codeMirror.getValue();
-        // $grammarEditorValue = value;
+        let value = codeMirror.getValue();
+        $grammarEditorValue = value;
 
-        // window.localStorage.grammarEditorValue = $grammarEditorValue;
-        // let {errors, output} = compile(value);
-        $grammarEditorValue = content;
-        let {errors, output} = compile(content);
+        let {errors, output} = compile(value);
         $grammarCompiledParser = output;
         $grammarCompilationErrors = errors;
-
+        // dispatch('change', { prop:'content', value: content });
         dispatch('change', { prop:'content', value });
       }catch(error){
-        console.error("Error Live Code Editor get value from code Mirror")
+        console.error("Error Grammar Editor get value from code Mirror")
       }
-
     }
   }
 
-
   let onFocus = e => {
-
-    // console.log("onfocus")
     hasFocus = true;
     dispatch('change', {
       prop:'hasFocus',
       value: true
     });
-
   }
 
   let onBlur = e => {
-
     hasFocus = false;
-    // console.log("onBlur")
     dispatch('change', {
       prop:'hasFocus',
       value: false
@@ -157,9 +141,7 @@
 
   }
 
-
   let onRefresh = e =>  {
-
     // console.log("onRefresh")
     // dispatch('change', {
     //   prop:'hasFocus',
@@ -213,7 +195,6 @@
 		margin: 0 0 0.5em 0;
 		overflow-y: auto;
 	}
-
   .codemirror-container {
     position: relative;
     width: 100%;
@@ -223,7 +204,6 @@
     overflow: hidden;
     font-family: monospace;
   }
-
   .codemirror-container :global(.CodeMirror) {
     height: 100%;
     background: transparent;
@@ -231,23 +211,8 @@
 
   }
 
-
-
-  /* .codemirror-container :global(.error-loc) {
-    position: relative;
-    border-bottom: 2px solid #da106e;
-  } */
-
-  /* .codemirror-container :global(.error-line) {
-    background-color: rgba(200, 0, 0, 0.05);
-  } */
-
-
-
 </style>
 
-<!-- <div class="layout-template-container" contenteditable="true" bind:innerHTML={layoutTemplate}>
-bind:value={item.value} -->
 <div class="codemirror-container layout-template-container scrollable">
   <CodeMirror bind:this={codeMirror}
               bind:value={content}
