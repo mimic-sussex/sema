@@ -12,7 +12,6 @@ import { spassr } from 'spassr'
 import { string } from "rollup-plugin-string";
 import { wasm } from '@rollup/plugin-wasm'
 import workerLoader from 'rollup-plugin-web-worker-loader'
-
 import sourcemaps from 'rollup-plugin-sourcemaps'
 
 

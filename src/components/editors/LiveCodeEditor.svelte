@@ -64,8 +64,6 @@
 
 
   let onChange = e => {
-    // console.log('DEBUG:LiveCodeEditor:onchange:');
-    // console.log(e);
     btrack.onEditChange(e.detail.changeObj);
 
     // this event notifies the parent (Dashboard) to update this items on the items collection, because of the 'data' property change
@@ -74,9 +72,8 @@
     try{
       let value = codeMirror.getValue();
       dispatch('change', {
-        prop:'content',
+        prop: 'content',
         value: value
-        // value: content
       });
     }catch(error){
       console.error("Error Live Code Editor get value from code Mirror")
@@ -84,8 +81,6 @@
   }
 
   let onFocus = e => {
-
-    // console.log("onfocus")
     hasFocus = true;
     dispatch('change', {
       prop:'hasFocus',
@@ -95,19 +90,14 @@
   }
 
   let onBlur = e => {
-
     hasFocus = false;
-    // console.log("onBlur")
     dispatch('change', {
       prop:'hasFocus',
       value: false
     });
-
   }
 
-
   let onRefresh = e =>  {
-
     // console.log("onRefresh")
     // dispatch('change', {
     //   prop:'hasFocus',
@@ -120,11 +110,9 @@
       prop:'hasFocus',
       value: true
     });
-    // console.log("onGutterCick")
   }
 
   let onViewportChange = e => {
-
     dispatch('change', {
       prop:'hasFocus',
       value: true
@@ -388,9 +376,6 @@
     //   // subscribeTo(grammarSource);
     // }
     log( id, name, type, lineNumbers, hasFocus, theme, background, component );
-    // log( grammarSource, $grammarCompiledParser );
-
-    // console.log( grammarSource, grammarCompiledParser );
 	});
 
 
@@ -420,14 +405,12 @@
   .layout-template-container {
     height: 100vh;
   }
-
 	.scrollable {
 		flex: 1 1 auto;
 		/* border-top: 1px solid #eee; */
 		margin: 0 0 0.5em 0;
 		overflow-y: auto;
 	}
-
   .codemirror-container {
     position: relative;
     width: 100%;
@@ -438,8 +421,6 @@
     font-family: monospace;
     color:white;
   }
-
-
   .codemirror-container :global(.CodeMirror) {
     height: 100%;
     background: transparent;
@@ -447,35 +428,23 @@
     color: var(--base);
   }
 
-/*
-  .codemirror-container :global(.error-loc) {
-    position: relative;
-    border-bottom: 2px solid #da106e;
-  }
-
-  .codemirror-container :global(.error-line) {
-    background-color: rgba(200, 0, 0, 0.05);
-  } */
-
-
 </style>
 
 <div class="codemirror-container layout-template-container scrollable">
-
-  <CodeMirror bind:this={codeMirror}
-              bind:value={content}
+  <CodeMirror bind:this={ codeMirror }
+              bind:value={ content }
               on:change={ e => onChange(e) }
               on:focus={ e => onFocus(e) }
               on:blur={ e => onBlur(e) }
               on:refresh={ e => onRefresh(e) }
               on:gutterClick={ e => onGutterCick(e) }
               on:viewportChange={ e => onViewportChange(e) }
-              {tab}
-              {lineNumbers}
-              cmdForwardSlash={nil}
+              { tab }
+              { lineNumbers }
+              cmdForwardSlash={ nil }
               cmdEnter={ evalLiveCodeOnEditorCommand }
               ctrlEnter={ evalLiveCodeOnEditorCommand }
-              cmdPeriod={stopAudioOnEditorCommand}
-              ctrlPeriod={stopAudioOnEditorCommand}
+              cmdPeriod={ stopAudioOnEditorCommand }
+              ctrlPeriod={ stopAudioOnEditorCommand }
               />
 </div>

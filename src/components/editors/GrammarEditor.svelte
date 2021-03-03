@@ -11,9 +11,13 @@
 </script>
 
 <script>
-  // import { set } from "svelte-codemirror";
-	import { onMount, onDestroy, createEventDispatcher } from 'svelte';
-	const dispatch = createEventDispatcher();
+	import {
+    onMount,
+    onDestroy,
+    createEventDispatcher
+  } from 'svelte';
+
+  const dispatch = createEventDispatcher();
 
   import {
     grammarEditorValue,
@@ -21,12 +25,7 @@
     grammarCompilationErrors
   } from "../../stores/common.js";
 
-  import * as nearley from 'nearley/lib/nearley.js'
-  // import compile from '../../compiler/compiler';
-  import { compile } from 'sema-engine/sema-engine';
-
-  // import { set, getValue } from "svelte-codemirror"
-  // import ModelWorker from "../../workers/ml.worker.js";
+  import { compileGrammar } from 'sema-engine/sema-engine';
 
   export let id;
   export let name;
@@ -36,19 +35,6 @@
 	export let theme;
 	export let background;
 	export let content;
-  // export let fixed;
-  // export let responsive;
-  // export let resizable;
-  // export let resize;
-  // export let draggable;
-  // export let drag;
-  // export let min = {};
-  // export let max = {};
-  // export let breakpoints = {};
-  // export let x;
-  // export let y;
-  // export let w;
-  // export let h;
   export let grammarSource;
   export let component;
 
@@ -58,10 +44,8 @@
   let log = e => { /* console.log(...e); */ }
 
   onMount(async () => {
-    // console.log('DEBUG:GrammarCodeEditor:onMount:')
-    // console.log(content);
     codeMirror.set(content, "ebnf");
-
+    // Using export variables for preventing a warning from Svelte comiler
     log( id, name, type, lineNumbers, hasFocus, theme, background, content, grammarSource, component );
 	});
 
@@ -112,14 +96,12 @@
       try{
         let value = codeMirror.getValue();
         $grammarEditorValue = value;
-
-        let {errors, output} = compile(value);
+        let {errors, output } = compileGrammar(value);
         $grammarCompiledParser = output;
         $grammarCompilationErrors = errors;
-        // dispatch('change', { prop:'content', value: content });
-        dispatch('change', { prop:'content', value });
+        dispatch( 'change', { prop: 'content', value } );
       }catch(error){
-        console.error("Error Grammar Editor get value from code Mirror")
+        console.error("Error in automatic grammar evaluation and compilation", error)
       }
     }
   }
@@ -138,7 +120,6 @@
       prop:'hasFocus',
       value: false
     });
-
   }
 
   let onRefresh = e =>  {
@@ -150,7 +131,6 @@
   }
 
   let onGutterCick = e => {
-
     // console.log("onGutterCick")
     // dispatch('change', {
     //   prop:'hasFocus',
@@ -159,7 +139,6 @@
   }
 
   let onViewportChange = e => {
-
     // console.log("onViewportChange")
     // dispatch('change', {
     //   prop:'hasFocus',
