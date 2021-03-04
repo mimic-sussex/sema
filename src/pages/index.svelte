@@ -16,121 +16,35 @@
 
     let rgl = regl(c);
     let m = mouse();
-    const drawTriangle = rgl({
-      frag: `
-      void main() {
-        gl_FragColor = vec4(1, 0, 0, 1);
-      }`,
-
-      vert: `
-      attribute vec2 position;
-      void main() {
-        gl_Position = vec4(position, 0, 1);
-      }`,
-
-      attributes: {
-        position: [[0, -1], [-1, 0], [1, 1]]
-      },
-
-      count: 3
-    });
-
-    var drawSpinningStretchyTriangle = rgl({
-      frag: `
-      void main() {
-        gl_FragColor = vec4(1, 0, 0, 1);
-      }`,
-
-      vert: `
-      attribute vec2 position;
-      uniform float angle, scale, width, height;
-      void main() {
-        float aspect = width / height;
-        gl_Position = vec4(
-          scale * (cos(angle) * position.x - sin(angle) * position.y),
-          aspect * scale * (sin(angle) * position.x + cos(angle) * position.y),
-          0,
-          1.0);
-      }`,
-
-      attributes: {
-        position: [[0, -1], [-1, 0], [1, 1]]
-      },
-
-      uniforms: {
-        //
-        // Dynamic properties can be functions.  Each function gets passed:
-        //
-        //  * context: which contains data about the current regl environment
-        //  * props: which are user specified arguments
-        //  * batchId: which is the index of the draw command in the batch
-        //
-        angle: function (context, props, batchId) {
-          return props.speed * context.tick + 0.01 * batchId
-        },
-
-        // As a shortcut/optimization we can also just read out a property
-        // from the props.  For example, this
-        //
-        scale: rgl.prop('scale'),
-        //
-        // is semantically equivalent to
-        //
-        //  scale: function (context, props) {
-        //    return props.scale
-        //  }
-        //
-
-        // Similarly there are shortcuts for accessing context variables
-        width: rgl.context('viewportWidth'),
-        height: rgl.context('viewportHeight'),
-        //
-        // which is the same as writing:
-        //
-        // width: function (context) {
-        //    return context.viewportWidth
-        // }
-        //
-      },
-
-      count: 3
-    })
-
-    // drawTriangle();
-
-    // drawSpinningStretchyTriangle({
-    //   scale: 0.5,
-    //   speed: 20
-    // })
 
     const pixels = rgl.texture()
 
     const drawFeedback = rgl({
       frag: `
-      precision mediump float;
-      uniform sampler2D texture;
-      uniform vec2 mouse;
-      uniform float t;
-      varying vec2 uv;
-      void main () {
-        float dist = length(gl_FragCoord.xy - mouse);
-        gl_FragColor = vec4(0.98 * texture2D(texture,
-          uv + cos(t) * vec2(0.5 - uv.y, uv.x - 0.5) - sin(2.0 * t) * (uv - 0.5)).rgb, 1) +
-          exp(-0.01 * dist) * vec4(
-            1.0 + cos(2.0 * t),
-            1.0 + cos(2.0 * t + 1.5),
-            1.0 + cos(2.0 * t + 3.0),
-            0.0);
-      }`,
+        precision mediump float;
+        uniform sampler2D texture;
+        uniform vec2 mouse;
+        uniform float t;
+        varying vec2 uv;
+        void main () {
+          float dist = length(gl_FragCoord.xy - mouse);
+          gl_FragColor = vec4(0.98 * texture2D(texture,
+            uv + cos(t) * vec2(0.5 - uv.y, uv.x - 0.5) - sin(2.0 * t) * (uv - 0.5)).rgb, 1) +
+            exp(-0.01 * dist) * vec4(
+              1.0 + cos(2.0 * t),
+              1.0 + cos(2.0 * t + 1.5),
+              1.0 + cos(2.0 * t + 3.0),
+              0.0);
+        }`,
 
       vert: `
-      precision mediump float;
-      attribute vec2 position;
-      varying vec2 uv;
-      void main () {
-        uv = position;
-        gl_Position = vec4(2.0 * position - 1.0, 0, 1);
-      }`,
+        precision mediump float;
+        attribute vec2 position;
+        varying vec2 uv;
+        void main () {
+          uv = position;
+          gl_Position = vec4(2.0 * position - 1.0, 0, 1);
+        }`,
 
       attributes: {
         position: [
@@ -151,17 +65,17 @@
       count: 3
     })
 
-  rgl.frame(function () {
-    rgl.clear({
-      color: [0, 0, 0, 1]
-    })
+    rgl.frame(function () {
+      rgl.clear({
+        color: [0, 0, 0, 1]
+      })
 
-    drawFeedback()
+      drawFeedback()
 
-    pixels({
-      copy: true
+      pixels({
+        copy: true
+      })
     })
-  })
 
   })
 
