@@ -59,6 +59,7 @@
 		"highlight.js": "^10.6.0",
 		"js-beautify": "^1.13.5",
 		"marked": "^2.0.0",
+		"mouse-change": "^1.4.0",
 		"nearley": "^2.20.1",
 		"postcss": "^8.2.6",
 		"postcss-import": "^14.0.0",

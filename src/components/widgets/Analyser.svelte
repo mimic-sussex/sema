@@ -12,22 +12,8 @@
   export let mode;
   export let hasFocus;
   export let background;
-
 	export let lineNumbers;
 	export let theme;
-	// export let class;
-  // export let static; // Error: ParseError: The keyword 'static' is reserved
-  // export let responsive;
-  // export let resizable;
-  // export let resize;
-  // export let draggable;
-  // export let drag;
-  // export let min = {};
-  // export let max = {};
-  // export let x;
-  // export let y;
-  // export let w;
-  // export let h;
   export let component;
 
 
@@ -41,10 +27,6 @@
 
 	let frame;
   let isRendering = true;
-
-
-
-
 
   function randomBytes() {
     for (let i = 0; i < frequencyBinCount; i++) {
@@ -183,8 +165,8 @@
 </style>
 
 
-<canvas bind:this={canvas}
+<canvas bind:this={ canvas }
         class="canvas"
         >
-        </canvas>
+</canvas>
 
