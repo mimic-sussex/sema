@@ -448,20 +448,20 @@ export async function createNewItem (type, content){
 		case "grammarEditor":
 			data = {
 				component: GrammarEditor,
-				background: "#AAAAAA",
-				theme: "monokai",
+				background: '#151515',
+				theme: 'monokai',
 				grammarSource: content.grammarSource,
-        content: content.grammar // Get the store value with Svelte's get
-			};
+				content: content.grammar, // Get the store value with Svelte's get
+			}
 			// data.data = content.grammar; // Get the store value with Svelte's get
 			break;
 		case "modelEditor":
 			data = {
 				component: ModelEditor,
-				background: "#f0f0f0",
-				theme: "monokai",
+				background: '#151515',
+				theme: 'monokai',
 				content: content,
-			};
+			}
 			break;
 		case "liveCodeParseOutput":
 			data = {

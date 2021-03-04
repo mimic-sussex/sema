@@ -323,7 +323,7 @@
       {#if itemProp.lineNumbers }
 
         <div class="controls">
-          <label class="input-dark"># LINE NR
+          <label class="input-dark">NUMBERS
             <input  type="checkbox"
                     class="checkbox-input"
                     checked="checked"

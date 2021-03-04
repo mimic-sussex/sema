@@ -131,7 +131,7 @@
     // });
   }
   onMount(async () => {
-    codeMirror.set(content, "ebnf");
+    codeMirror.set(content, "ebnf", "oceanic-next");
     // Using export variables for preventing a warning from Svelte comiler
     log( id, name, type, lineNumbers, hasFocus, theme, background, content, grammarSource, component );
 	});
@@ -146,7 +146,7 @@
 </script>
 
 
-<style>
+<style global>
   @import 'codemirror';
   @import '../../utils/ebnf.css';
   @import '../../utils/sema.css';

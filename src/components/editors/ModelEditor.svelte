@@ -65,7 +65,7 @@
   let log = e => { /* console.log(...e); */ }
 
   onMount(async () => {
-    codeMirror.set(content, "js");
+    codeMirror.set(content, "js", "material-ocean");
 
 
     subscriptionTokenMID = messaging.subscribe("model-input-data", e => postToModel(e) );
@@ -306,7 +306,7 @@
 </script>
 
 
-<style>
+<style global>
   @import 'codemirror/lib/codemirror.css';
   @import '../../utils/ebnf.css';
   @import '../../utils/sema.css';
@@ -314,7 +314,7 @@
   @import '../../utils/monokai.css';
   @import '../../utils/shadowfox.css';
   @import "codemirror/addon/dialog/dialog.css";
-  @import 'codemirror/theme/idea.css';
+  @import 'codemirror/theme/material-ocean.css';
   @import "codemirror/theme/monokai.css";
   @import "codemirror/theme/icecoder.css";
   @import "codemirror/theme/shadowfox.css";
