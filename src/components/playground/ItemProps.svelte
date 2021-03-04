@@ -323,7 +323,7 @@
       {#if itemProp.lineNumbers }
 
         <div class="controls">
-          <label class="input-dark">Line Numbers
+          <label class="input-dark"># LINE NR
             <input  type="checkbox"
                     class="checkbox-input"
                     checked="checked"
@@ -344,7 +344,7 @@
           <button class="button-dark"
                   on:click={ () => messaging.publish('restart-ml') }
                   >
-                  Restart
+                  RESTART
           </button>
         </div>
 
@@ -354,7 +354,7 @@
           <button class="button-dark"
                   on:click={ () => messaging.publish('show-ml-visor') }
                   >
-                  Visor
+                  VISOR
           </button>
         </div>
 
@@ -366,7 +366,7 @@
                   on:click={ () => dispatchAdd('grammar') }
                   disabled={ $isAddGrammarEditorDisabled }
                   >
-                   Grammar Editor
+                  GRAMMAR
           </button>
         </div>
 

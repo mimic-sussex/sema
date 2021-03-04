@@ -38,16 +38,6 @@
 
   let log = e => { /* console.log(...e); */ }
 
-  onMount(async () => {
-    codeMirror.set(content, "ebnf");
-    // Using export variables for preventing a warning from Svelte comiler
-    log( id, name, type, lineNumbers, hasFocus, theme, background, content, grammarSource, component );
-	});
-
-  onDestroy(async () => {
-    // console.log('DEBUG:GrammarCodeEditor:onDestroy')
-    // console.log(data);
-	});
 
 
 
@@ -140,6 +130,16 @@
     //   value: true
     // });
   }
+  onMount(async () => {
+    codeMirror.set(content, "ebnf");
+    // Using export variables for preventing a warning from Svelte comiler
+    log( id, name, type, lineNumbers, hasFocus, theme, background, content, grammarSource, component );
+	});
+
+  onDestroy(async () => {
+    // console.log('DEBUG:GrammarCodeEditor:onDestroy')
+    // console.log(data);
+	});
 
 
 
