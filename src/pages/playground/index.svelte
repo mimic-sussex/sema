@@ -491,6 +491,7 @@
       on:mount={onChildMount}
       let:item
       let:dataItem
+      scroller={container}
       >
         <span class='move'>+</span>
 

@@ -164,7 +164,7 @@ export default class Controller {
 	async init(audioWorkletURL) {
 		if (this.engine !== undefined) {
 			try {
-				await this.engine.init('maxi-processor', audioWorkletURL);
+				await this.engine.init(audioWorkletURL);
 
 				// Subscribe async messages from the Audio Worklet Processor scope
 				this.engine.subscribeAsyncMessage(this.onProcessorAsyncMessage);

@@ -1,21 +1,24 @@
 <script>
-  import { onMount} from 'svelte';
+  import { onMount, onDestroy } from 'svelte';
 	import { metatags } from '@roxi/routify'
-  import regl from 'regl';
+  import ReGL from 'regl';
   import mouse from 'mouse-change';
   // import regl as RGL from 'regl';
 
 	metatags.title = 'Sema'
 	metatags.description = 'Description coming soon...'
 
-  onMount(async () => {
+  let rgl, m, tick;
+
+  const setupReGL = () => {
+
     var c = document.getElementById("canvas");
-    console.log(c);
     c.width = window.innerWidth;
     c.height = window.innerHeight
 
-    let rgl = regl(c);
-    let m = mouse();
+    rgl = ReGL(c);
+    m = mouse();
+
 
     const pixels = rgl.texture()
 
@@ -65,7 +68,7 @@
       count: 3
     })
 
-    rgl.frame(function () {
+    tick = rgl.frame(function () {
       rgl.clear({
         color: [0, 0, 0, 1]
       })
@@ -76,9 +79,21 @@
         copy: true
       })
     })
+  }
+
+  onMount(async () => {
+
+    setupReGL();
 
   })
 
+  /**
+   * TODO delete objects
+  */
+  onDestroy( async () => {
+    tick.cancel();     // unsubscribe by calling cancel on the callback
+    regl.destroy()
+  })
 
 </script>
 
@@ -87,19 +102,6 @@
           class='canvas-logo'
           >
   </canvas>
-  <!-- bind:this={ canvas } -->
-	<!-- <h1>SEMA</h1> -->
-	<!-- <div class="card">
-		<h5>Notes:</h5>
-		<ul>
-			<li>Auth0</li>
-			<li>Embedded login form on protected pages</li>
-			<li>No need to redirect users</li>
-			<li>No pointless auth in SSR</li>
-			<li>No need to proxy authentication through a server</li>
-
-		<code>https://github.com/mimic-sussex/sema</code>
-	</div> -->
 </div>
 
 
@@ -109,15 +111,8 @@
     background-color: rgb(16, 16, 16);
     height: 100% !important;
     width: 100% !important;
-    /* display: block; */
     visibility: visible;
     border-radius: 2px;
-    /* display: inline-block; 1 */
-    /* vertical-align: baseline; 2 */
-    /*left: 50%;
-    margin: -200px 0 0 -200px;
-    position: absolute;
-    top: 50%; */
   }
 
 </style>
