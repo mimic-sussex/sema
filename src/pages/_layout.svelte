@@ -4,10 +4,10 @@
     import { tick, onMount, onDestroy } from 'svelte'
   import { ready, url, params } from "@roxi/routify";
 
-	import UserObserver from '../components/user/UserObserver.svelte';
-	import SignOut from '../components/user/SignOut.svelte';
-	import AudioEngineStatus from '../components/AudioEngineStatus.svelte';
-  import SiteColor from '../components/SiteColor.svelte';
+	// import UserObserver from '../components/user/UserObserver.svelte';
+	// import SignOut from '../components/user/SignOut.svelte';
+	// import AudioEngineStatus from '../components/settings/AudioEngineStatus.svelte';
+  // import SiteColor from '../components/settings/SiteColor.svelte';
 
   import { currentUser } from '../stores/user.js'
 

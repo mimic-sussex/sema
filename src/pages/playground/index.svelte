@@ -313,21 +313,30 @@
     width: 100%;
     display: grid;
     grid-template-columns: auto 1fr;
-    /* grid-template-rows: 50% 50%; */
-       /* "sidebar layout" */
+    grid-template-rows: auto 1fr;
+
     grid-template-areas:
+      "sidebar settings"
       "sidebar layout";
   	/* background-color: #6f7262; */
     background-color: #212121;
     /* overflow: hidden; */
   }
   .sidebar-container {
-    background: linear-gradient(150deg, rgba(0,18,1,1) 0%, rgba(7,5,17,1) 33%, rgba(16,12,12,1) 67%, rgb(12, 12, 12) 100%);
+    /* background: linear-gradient(150deg, rgba(0,18,1,1) 0%, rgba(7,5,17,1) 33%, rgba(16,12,12,1) 67%, rgb(12, 12, 12) 100%); */
+    background: #151515;
     grid-area: sidebar;
     height: 100%;
     width: auto; /* width is defined by child */
   }
 
+  .settings-container {
+    /* background: linear-gradient(150deg, rgba(0,18,1,1) 0%, rgba(7,5,17,1) 33%, rgba(16,12,12,1) 67%, rgb(12, 12, 12) 100%); */
+    background: #151515;
+    grid-area: settings;
+    height: 100%;
+    width: auto; /* width is defined by child */
+  }
 
   .dashboard-container {
     grid-area: layout;
@@ -383,8 +392,6 @@
   :global(.svlt-grid-resizer) {
     z-index: 1500;
   }
-
-
   :global(.svlt-grid-resizer::after) {
     border-color: white !important;
   }
@@ -402,7 +409,7 @@
   }
 
   :global(.svlt-grid-shadow) {
-    background: pink;
+    background: black;
     border-radius: 6px;
     border-bottom-right-radius: 3px;
     transition: transform 0.2s;
@@ -478,20 +485,24 @@
     <p class="upload-overlay-text"><span style="font-weight: 1500;">Choose your .json file</span> or <span>drag'n'drop it here to upload a new environment!</span></p>
   </div>
 
+  <div class='settings-container'>
+
+  </div>
+
   <div class="dashboard-container scrollable"
     bind:this={container}
     >
     <Grid
-      bind:items={$items}
-      {cols}
-      {rowHeight}
-      {gap}
-      fastStart={$fastStart}
-      on:adjust={onAdjust}
-      on:mount={onChildMount}
+      bind:items={ $items }
+      { cols }
+      { rowHeight }
+      { gap }
+      fastStart={ $fastStart }
+      on:adjust={ onAdjust }
+      on:mount={ onChildMount }
       let:item
       let:dataItem
-      scroller={container}
+      scroller={ container }
       >
         <span class='move'>+</span>
 

@@ -27,6 +27,8 @@
     resetStores
   } from "../../stores/common.js";
 
+  let container;
+
   // Tutorial dashboard configuration
   let cols = [
     // [2880, 13]
@@ -104,7 +106,9 @@
 
 <div class="container">
 
-  <div class="sidebar-container">
+  <div class="sidebar-container"
+    bind:this={ container }
+    >
 
     <div class="tutorial-navigator">
       <button class="button-dark left">
@@ -144,14 +148,15 @@
       on:mount={onChildMount} -->
   <div class="dashboard-container">
     <Grid
-      bind:items={$items}
-      {cols}
-      {rowHeight}
-      {gap}
-      on:adjust={onAdjust}
-      on:mount={onChildMount}
+      bind:items={ $items }
+      { cols }
+      { rowHeight }
+      { gap }
+      on:adjust={ onAdjust }
+      on:mount={ onChildMount }
       let:item
       let:dataItem
+      scroller={ container }
     >
       <div  class="content"
             style="background: { item.fixed ? '#bka' : dataItem.data.background }; border: { dataItem.data.hasFocus ? '1px solid rgba(100, 100, 100, 0.5)': '1px solid rgba(25, 25, 25, 1)' }; border-width: 1px 0px 0px 1px;"
