@@ -1,7 +1,7 @@
 <script>
 	import Navigation from './_navigation.svelte'
 
-    import { tick, onMount, onDestroy } from 'svelte'
+  import { tick, onMount, onDestroy } from 'svelte'
   import { ready, url, params } from "@roxi/routify";
 
 	// import UserObserver from '../components/user/UserObserver.svelte';

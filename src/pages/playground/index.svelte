@@ -17,6 +17,7 @@
   import { compile } from 'sema-engine/sema-engine';
 
   import Sidebar from '../../components/playground/Sidebar.svelte';
+  import Settings from '../../components/settings/Settings.svelte';
   // import Dashboard from '../components/layouts/Dashboard.svelte';
 
   import Grid from "svelte-grid";
@@ -486,7 +487,7 @@
   </div>
 
   <div class='settings-container'>
-
+    <Settings></Settings>
   </div>
 
   <div class="dashboard-container scrollable"
