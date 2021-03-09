@@ -41,7 +41,7 @@
     cursor: pointer;
     color: red;
     line-height: 1.3;
-    padding: 0.3em 1em 0.7em 1em;
+    padding: 0.2em 1em 0.8em 1em;
     max-width: 100%;
     box-sizing: border-box;
     border: 0 solid #333;
@@ -80,7 +80,7 @@
     cursor: pointer;
     color: red;
     line-height: 1.3;
-    padding: 0.3em 1em 0.7em 1em;
+    padding: 0.2em 1em 0.8em 1em;
     max-width: 100%;
     box-sizing: border-box;
     border: 0 solid #333;

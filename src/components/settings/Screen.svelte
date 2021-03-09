@@ -36,7 +36,7 @@
     cursor: pointer;
     color: red;
     line-height: 1.3;
-    padding: 0.3em 1em 0.7em 1em;
+    padding: 0.5em 1em 0.5em 1em;;
     max-width: 100%;
     box-sizing: border-box;
     border: 0 solid #333;
@@ -75,7 +75,7 @@
     cursor: pointer;
     color: red;
     line-height: 1.3;
-    padding: 0.3em 1em 0.7em 1em;
+    padding: 0.5em 1em 0.5em 1em;
     max-width: 100%;
     box-sizing: border-box;
     border: 0 solid #333;
@@ -171,7 +171,7 @@
         id="Layer_1"
         xmlns="http://www.w3.org/2000/svg"
         xmlns:xlink="http://www.w3.org/1999/xlink"
-        x="0px" y="0px"
+        x="0px" y="20px"
         viewBox="0 0 512 512"
         class="fullscreen"
         xml:space="preserve"
