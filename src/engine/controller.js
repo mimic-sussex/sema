@@ -12,14 +12,14 @@ export default class Controller {
 	 */
 	constructor(engine) {
 		if (Controller.instance) {
-			return Controller.instance; // Singleton pattern, only one instance in sema
+			return Controller.instance // Singleton pattern, only one instance in sema
 		}
-		Controller.instance = this;
+		Controller.instance = this
 
 		// Constructor dependency injection of a sema-engine singleton instance
-		this.engine = engine;
+		this.engine = engine
 
-		this.samplesLoaded = false;
+		this.samplesLoaded = false
 
 		// this.messaging = new PubSub();
 
@@ -82,9 +82,9 @@ export default class Controller {
 	onMessagingEventHandler(event) {
 		if (event !== undefined) {
 			// Receive notification from "model-output-data" topic
-			console.log("DEBUG:AudioEngine:onMessagingEventHandler:");
-			console.log(event);
-			this.audioWorkletNode.port.postMessage(event);
+			console.log('DEBUG:AudioEngine:onMessagingEventHandler:')
+			console.log(event)
+			this.audioWorkletNode.port.postMessage(event)
 		}
 	}
 
@@ -117,8 +117,7 @@ export default class Controller {
 			// 			break;
 			// 	}
 			// }
-
-      //  else if (event.data.rq && event.data.rq === "buf") {
+			//  else if (event.data.rq && event.data.rq === "buf") {
 			// 	console.log("buf", event.data);
 			// 	switch (event.data.ttype) {
 			// 		case "ML":
@@ -131,11 +130,10 @@ export default class Controller {
 			// 			break;
 			// 	}
 			// }
-
-      // else if (event.data.phase !== undefined) {
-				// console.log('DEBUG:AudioEngine:phase:');
-				// console.log(event.data.phase);
-				// this.kuraClock.broadcastPhase(event.data.phase); // TODO Refactor p to phase
+			// else if (event.data.phase !== undefined) {
+			// console.log('DEBUG:AudioEngine:phase:');
+			// console.log(event.data.phase);
+			// this.kuraClock.broadcastPhase(event.data.phase); // TODO Refactor p to phase
 			// }
 			// else if (event.data.rq != undefined && event.data.rq === 'receive') {
 			//   switch (event.data.ttype) {
@@ -158,36 +156,35 @@ export default class Controller {
 	/**
 	 * Initialises audio context and sets worklet processor code
 	 * @init
-   * @param audioworletURL
-   * TODO removing numClockPeers, should be added to a specialised function
+	 * @param audioworletURL
+	 * TODO removing numClockPeers, should be added to a specialised function
 	 */
 	async init(audioWorkletURL) {
 		if (this.engine !== undefined) {
 			try {
-				await this.engine.init(audioWorkletURL);
+				await this.engine.init(audioWorkletURL)
 
 				// Subscribe async messages from the Audio Worklet Processor scope
-				this.engine.subscribeAsyncMessage(this.onProcessorAsyncMessage);
+				this.engine.subscribeAsyncMessage(this.onProcessorAsyncMessage)
 
 				// Connect Analysers loaded from the store need to pass callbacks after they load
-				this.engine.connectAnalysers();
+				this.engine.connectAnalysers()
 
-				const channelId = "mxy",
-					ttype = "mouseXY",
-					blockSize = 2;
+				const channelId = 'mxy',
+					ttype = 'mouseXY',
+					blockSize = 2
 
 				// Create SharedArrayBuffer for mouse data
-				this.engine.createSharedBuffer(channelId, ttype, blockSize);
+				this.engine.createSharedBuffer(channelId, ttype, blockSize)
 
-				this.engine.play();
+				this.engine.play()
 
 				// Lazy load all samples imported from assets
-				// this.loadImportedSamples();
-
-        this.importSamples();
+				// this.loadImportedSamples(); // DO NOT DELETE, read comments on function signature
+				this.importSamples();
 
 			} catch (error) {
-				console.error("Error initialising engine", error);
+				console.error('Error initialising engine', error)
 			}
 		}
 	}
@@ -195,7 +192,7 @@ export default class Controller {
 	onAudioInputFail(error) {
 		console.error(
 			`Engine Controller: AudioInputFail – ${error.message} ${error.name}`
-		);
+		)
 	}
 
 	/**
@@ -206,1319 +203,1230 @@ export default class Controller {
 		const constraints = (window.constraints = {
 			audio: true,
 			video: false,
-		});
+		})
 
 		navigator.mediaDevices
 			.getUserMedia(constraints)
 			.then((s) => this.onAudioInputInit(s))
-			.catch(this.onAudioInputFail);
+			.catch(this.onAudioInputFail)
 	}
 
+	/**
+	 * ! Deprecated until I have time to make a Rollup plugin
+	 * @returns list of all imports from a folder specified by context
+	 */
 	getSamplesNames() {
-		// const r = require.context("../../assets/samples", false, /\.wav$/);
+		const r = require.context('../../assets/samples', false, /\.wav$/)
 
 		// return an array list of filenames (with extension)
-		// const importAll = (r) => r.keys().map((file) => file.match(/[^\/]+$/)[0]);
+		const importAll = (r) => r.keys().map((file) => file.match(/[^\/]+$/)[0])
 
-		// return importAll(r);
-
-    return [
-			'../../static/samples/909.wav',
-			'../../static/samples/909b.wav',
-			'../../static/samples/909closed.wav',
-			// '909',
-			// '909b',
-			// '909closed',
-			// '909open',
-			// 'CARinsect',
-			// 'Cryptotympana',
-			// 'Dundunia',
-			// 'InsectBee',
-			// 'InsectBee2',
-			// 'InsectFly',
-			// 'InsecticideZG',
-			// 'Macrosemia',
-			// 'MacrosemiaTonk',
-			// 'MeimunaNau',
-			// 'auboom',
-			// 'auboom2',
-			// 'auclick',
-			// 'audoubelclick2',
-			// 'audoubleclick',
-			// 'auhiclick',
-			// 'ausiclick',
-			// 'backswing-old1',
-			// 'bee',
-			// 'bello',
-			// 'bellrip',
-			// 'bellrip2',
-			// 'bellrip3',
-			// 'bellx',
-			// 'birta',
-			// 'blade-old1',
-			// 'boom',
-			// 'boom2',
-			// 'boomwag',
-			// 'camclick-old1',
-			// 'camina1',
-			// 'camina2',
-			// 'camina3',
-			// 'camina4',
-			// 'chain',
-			// 'chainSpade',
-			// 'click-old1',
-			// 'click',
-			// 'clicko-old1',
-			// 'clicko',
-			// 'clicks1',
-			// 'convol1',
-			// 'convol2',
-			// 'convol3',
-			// 'convol4',
-			// 'convol5',
-			// 'crackle3',
-			// 'crickBee',
-			// 'dalispark',
-			// 'dentist-old1',
-			// 'digaa',
-			// 'dorje',
-			// 'drone1',
-			// 'drone2',
-			// 'drr',
-			// 'electro',
-			// 'elstatic-old1',
-			// 'firecrack',
-			// 'firespark',
-			// 'firespark2',
-			// 'flash-old1',
-			// 'glitch-old1',
-			// 'hapsi',
-			// 'harshi-old1',
-			// 'harshlow-old1',
-			// 'heart',
-			// 'holeMONO',
-			// 'ice',
-			// 'insec',
-			// 'insec2',
-			// 'insec3',
-			// 'insectzapZG',
-			// 'iron',
-			// 'ironrip',
-			// 'jump',
-			// 'kernel',
-			// 'kernel2',
-			// 'kerneldrone',
-			// 'kernelmix',
-			// 'kicic',
-			// 'kicic2',
-			// 'kicicboom',
-			// 'knock',
-			// 'laekur',
-			// 'list',
-			// 'lookout',
-			// 'machine',
-			// 'magnetclock-old1',
-			// 'noinoi',
-			// 'noise-old1',
-			// 'noise1',
-			// 'noise2',
-			// 'paper',
-			// 'pattern10',
-			// 'pattern11',
-			// 'pattern8',
-			// 'pattern9',
-			// 'patterndrone',
-			// 'patterndrone2',
-			// 'patterndrone3',
-			// 'phoo-old1',
-			// 'pork',
-			// 'rain_ravi',
-			// 'ravi',
-			// 'revbell',
-			// 'rocks',
-			// 'rotatingIron',
-			// 'sbq',
-			// 'skake2Ed',
-			// 'snork',
-			// 'snow',
-			// 'spade',
-			// 'spark',
-			// 'stretch',
-			// 'sweetmachine-old1',
-			// 'swipe-old1',
-			// 'triplet',
-			// 'vindva',
-			// 'vindvabd',
-			// 'vindvaclick',
-			// 'vindvadbase',
-			// 'vindvahat',
-			// 'viromachine-old1',
-			// 'woodsamp',
-			// 'wooo-old1',
-			// 'xylophone',
-			// 'zhish',
-			// 'zzzz',
-		]
+		return importAll(r)
 	}
 
-	lazyLoadSample(path) {
-	// lazyLoadSample(sampleName) {
-		// import(`../../static/samples/${sampleName}.wav`) // can't use dynamic import variable
+	/**
+	 * ! Deprecated until I have time to make a Rollup plugin
+	 * @returns list of all imports from a folder specified by context
+	 */
+	lazyLoadSample(sampleName) {
 		// import(`../../static/samples/909.wav`) // need to use the samples relative path to the src, not in public,
-		import(path) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Enginge lazy loading sample: ${path}` + err)
-			)
-	}
-
-	loadImportedSamples() {
-		this.getSamplesNames().forEach((sampleName) =>
-			this.lazyLoadSample(sampleName)
-		);
-
-		this.samplesLoaded = true;
-	}
-
-  importSamples(){
-
-    import(`../../static/samples/909.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/909b.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/909closed.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-    import(`../../static/samples/909open.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-    import(`../../static/samples/CARinsect.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-    import(`../../static/samples/Cryptotympana.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-    import(`../../static/samples/Dundunia.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-    import(`../../static/samples/InsectBee.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-    import(`../../static/samples/InsectBee2.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-    import(`../../static/samples/InsectFly.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-    import(`../../static/samples/InsecticideZG.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-    import(`../../static/samples/Macrosemia.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-    import(`../../static/samples/MacrosemiaTonk.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-    import(`../../static/samples/MeimunaNau.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-    import(`../../static/samples/auboom.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-    import(`../../static/samples/auboom2.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-    import(`../../static/samples/auclick.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-    import(`../../static/samples/audoubelclick2.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-    import(`../../static/samples/audoubleclick.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-    import(`../../static/samples/auhiclick.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-    import(`../../static/samples/ausiclick.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-    import(`../../static/samples/backswing-old1.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-    import(`../../static/samples/bee.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-    import(`../../static/samples/bello.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-    import(`../../static/samples/bellrip.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-    import(`../../static/samples/bellrip2.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-    import(`../../static/samples/bellrip3.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-    import(`../../static/samples/birta.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-    import(`../../static/samples/blade-old1.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-    import(`../../static/samples/boom.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-    import(`../../static/samples/boom2.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-    import(`../../static/samples/boomwag.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-    import(`../../static/samples/camclick-old1.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-    import(`../../static/samples/camina1.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-    import(`../../static/samples/camina2.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-    import(`../../static/samples/camina3.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-    import(`../../static/samples/camina4.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/chain.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/chainSpade.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/click-old1.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/click.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/clicko-old1.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/clicko.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/clicks1.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/convol1.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/convol2.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/convol3.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/convol4.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/convol5.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/crackle3.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/crickBee.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/dalispark.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/dentist-old1.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/digaa.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/dorje.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/drone1.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/drone2.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/drr.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/electro.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/elstatic-old1.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/firecrack.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/firespark.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/firespark2.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/flash-old1.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/glitch-old1.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/hapsi.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/harshi-old1.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/harshlow-old1.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/heart.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/holeMONO.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/ice.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/insec.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/insec2.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/insec3.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/insectzapZG.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/iron.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/ironrip.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/jump.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/kernel.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/kernel2.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/kerneldrone.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/kernelmix.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/kicic.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/kicic2.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/kicicboom.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/knock.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/laekur.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/lookout.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/machine.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/magnetclock-old1.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/noinoi.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/noise-old1.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/noise1.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/noise2.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/paper.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/pattern10.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/pattern11.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/pattern8.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/pattern9.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/patterndrone.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/patterndrone2.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/patterndrone3.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/phoo-old1.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/pork.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/rain_ravi.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/ravi.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/revbell.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/rocks.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/rotatingIron.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/sbq.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/skake2Ed.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/snork.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/snow.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/spade.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/spark.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/stretch.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/sweetmachine-old1.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/swipe-old1.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/triplet.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/vindva.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/vindvabd.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/vindvaclick.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/vindvadbase.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/vindvahat.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/viromachine-old1.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/woodsamp.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/wooo-old1.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/xylophone.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/zhish.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
-			})
-			.catch((err) =>
-				console.error(`Engine lazy loading sample: ${sampleName}` + err)
-			)
-
-    import(`../../static/samples/zzzz.wav`) // need to use the samples relative path to the src, not in public,
-			.then((e) => {
-				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
-				this.engine.loadSample(e.default, `/samples/${e.default}`)
+		// import(path) // doesn't work either
+		import(`../../static/samples/${sampleName}.wav`) // ORIGINAL IMPL, DOESNT WORK can't use dynamic import variable
+			.then((e) => {
+				this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				// this.engine.loadSample(e.default, `/samples/${e.default}`)
 			})
 			.catch((err) =>
 				console.error(`Engine lazy loading sample: ${sampleName}` + err)
 			)
   }
+
+  /**
+   * ! Deprecated until I have time to make a Rollup plugin
+   * @returns list of all imports from a folder specified by context
+   */
+	loadImportedSamples() {
+		this.getSamplesNames().forEach((sampleName) =>
+			this.lazyLoadSample(sampleName)
+		)
+
+		this.samplesLoaded = true
+	}
+
+	/**
+	 * ! This hack is required to load the sema audio sample set
+	 * ! it will be deprecated once I have time to make a Rollup plugin
+	 * @returns list of all imports from a folder specified by context
+	 */
+	importSamples() {
+		import(`../../static/samples/909.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/909b.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/909closed.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/909open.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/CARinsect.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/Cryptotympana.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/Dundunia.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/InsectBee.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/InsectBee2.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/InsectFly.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/InsecticideZG.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/Macrosemia.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/MacrosemiaTonk.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/MeimunaNau.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/auboom.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/auboom2.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/auclick.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/audoubelclick2.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/audoubleclick.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/auhiclick.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/ausiclick.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/backswing-old1.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/bee.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/bello.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/bellrip.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/bellrip2.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/bellrip3.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/birta.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/blade-old1.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/boom.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/boom2.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/boomwag.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/camclick-old1.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/camina1.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/camina2.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/camina3.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/camina4.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/chain.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/chainSpade.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/click-old1.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/click.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/clicko-old1.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/clicko.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/clicks1.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/convol1.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/convol2.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/convol3.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/convol4.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/convol5.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/crackle3.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/crickBee.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/dalispark.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/dentist-old1.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/digaa.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/dorje.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/drone1.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/drone2.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/drr.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/electro.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/elstatic-old1.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/firecrack.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/firespark.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/firespark2.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/flash-old1.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/glitch-old1.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/hapsi.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/harshi-old1.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/harshlow-old1.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/heart.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/holeMONO.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/ice.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/insec.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/insec2.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/insec3.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/insectzapZG.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/iron.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/ironrip.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/jump.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/kernel.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/kernel2.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/kerneldrone.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/kernelmix.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/kicic.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/kicic2.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/kicicboom.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/knock.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/laekur.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/lookout.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/machine.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/magnetclock-old1.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/noinoi.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/noise-old1.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/noise1.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/noise2.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/paper.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/pattern10.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/pattern11.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/pattern8.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/pattern9.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/patterndrone.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/patterndrone2.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/patterndrone3.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/phoo-old1.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/pork.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/rain_ravi.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/ravi.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/revbell.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/rocks.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/rotatingIron.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/sbq.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/skake2Ed.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/snork.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/snow.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/spade.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/spark.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/stretch.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/sweetmachine-old1.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/swipe-old1.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/triplet.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/vindva.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/vindvabd.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/vindvaclick.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/vindvadbase.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/vindvahat.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/viromachine-old1.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/woodsamp.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/wooo-old1.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/xylophone.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/zhish.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+		import(`../../static/samples/zzzz.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+	}
 }

@@ -12,7 +12,8 @@ import { Engine } from 'sema-engine/sema-engine';
   import { audioEngineStatus } from '../../stores/common.js';
 
   let engine,
-      engineLoaded = false;
+      engineLoaded = false,
+      outputText;
 
   const handleClick = () => {
     // if(engine){
@@ -26,8 +27,7 @@ import { Engine } from 'sema-engine/sema-engine';
         const onMouseMove = e => {
           const x = e.offsetX/window.innerWidth;
           const y = e.offsetY/window.innerHeight;
-          // document.getElementById('outputText').innerText = `${parseFloat(x).toFixed(5)} ${parseFloat(y).toFixed(5)}`;
-
+          outputText.innerText = `X:${parseFloat(x).toFixed(5)} Y:${parseFloat(y).toFixed(5)}`;
           // engine.pushDataToSharedBuffer(id, [ x, y ]);
         }
 
@@ -40,7 +40,7 @@ import { Engine } from 'sema-engine/sema-engine';
         // Subscribe Left `Alt`-key UP event to unsubscribe mouse move
         document.addEventListener("keyup", e => {
           if(e.which === 18){
-            // document.getElementById('outputText').innerText = ``;
+            outputText.innerText = ``;
             document.removeEventListener( 'mousemove', onMouseMove, true );
           }
         });
@@ -52,11 +52,11 @@ import { Engine } from 'sema-engine/sema-engine';
   };
 
   onMount( async () => {
-    engine = new Engine
+    engine = new Engine();
   });
 
   onDestroy( () => {
-    codeMirror = null;
+    engine = null;
 	});
 
 
@@ -210,22 +210,30 @@ import { Engine } from 'sema-engine/sema-engine';
 
 <div style='width: 5px;'></div>
 
-<button class="button-dark" on:click={ handleClick }>
-  <svg  version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-        x="0px" y="0px"
-        viewBox="5 0 512 512"
-        class="mouse"
-        xml:space="preserve">
-    <g>
-      <path d="M409.6,0v34.1H221.9c-14.1,0-25.6,11.5-25.6,25.6v42.7h-33.5c-52.2,0.1-94.5,42.3-94.5,94.5v170.6
-        c0,79.6,64.8,144.5,144.5,144.5h1.2c79.6,0,144.5-64.8,144.5-144.5V196.9c-0.1-52.2-42.3-94.5-94.5-94.5h-33.5V68.3h187.7
-        c14.1,0,25.6-11.5,25.6-25.6V0L409.6,0z M162.8,136.5h33.5v93.9h-93.9v-33.5C102.4,163.6,129.5,136.6,162.8,136.5z M213.9,477.9
-        h-1.2c-60.9-0.1-110.3-49.4-110.3-110.3v-103h221.9v103C324.2,428.4,274.8,477.8,213.9,477.9z M324.3,196.9v33.5h-93.9v-93.9h33.5
-        C297.2,136.6,324.2,163.6,324.3,196.9z"/>
-    </g>
-  </svg>
-</button>
+<div style='width:7em; display: flex;'>
 
+
+  <button class="button-dark" on:click={ handleClick }>
+    <svg  version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+          x="0px" y="0px"
+          viewBox="5 0 512 512"
+          class="mouse"
+          xml:space="preserve">
+      <g>
+        <path d="M409.6,0v34.1H221.9c-14.1,0-25.6,11.5-25.6,25.6v42.7h-33.5c-52.2,0.1-94.5,42.3-94.5,94.5v170.6
+          c0,79.6,64.8,144.5,144.5,144.5h1.2c79.6,0,144.5-64.8,144.5-144.5V196.9c-0.1-52.2-42.3-94.5-94.5-94.5h-33.5V68.3h187.7
+          c14.1,0,25.6-11.5,25.6-25.6V0L409.6,0z M162.8,136.5h33.5v93.9h-93.9v-33.5C102.4,163.6,129.5,136.6,162.8,136.5z M213.9,477.9
+          h-1.2c-60.9-0.1-110.3-49.4-110.3-110.3v-103h221.9v103C324.2,428.4,274.8,477.8,213.9,477.9z M324.3,196.9v33.5h-93.9v-93.9h33.5
+          C297.2,136.6,324.2,163.6,324.3,196.9z"/>
+      </g>
+    </svg>
+  </button>
+
+  <span bind:this={outputText}
+        class="mouse-outputText">
+  </span>
+
+</div>
 
 
 
