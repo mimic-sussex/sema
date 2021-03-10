@@ -273,7 +273,8 @@
 
   onMount( async () => {
 
-    controller.init('http://localhost:5000/sema-engine' + '/maxi-processor.js');
+    // controller.init('http://localhost:5000/sema-engine' + '/maxi-processor.js');
+    controller.init('http://localhost:5000/sema-engine');
 
     // Debug
     let resizeObs = new ResizeObserver(e => console.log( e[0].contentRect.width ) ).observe(container);

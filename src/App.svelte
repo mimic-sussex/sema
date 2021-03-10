@@ -12,7 +12,8 @@
 
   // $unsupportedBrowser
   let unsupportedBrowser,
-      controller;
+      controller,
+      engine;
 
   /**
    * This async IIFE tests the browser in which Sema is loading
@@ -28,7 +29,8 @@
       import("sema-engine/sema-engine.mjs")
         .then((module) => {
           // Apply in Inversion of Control with constructor injection
-          controller = new Controller(new module.Engine());
+          engine = new module.Engine();
+          controller = new Controller(engine);
         })
         .catch((err) => (unsupportedBrowser = true));
     }
@@ -56,6 +58,10 @@
 		messaging.publish("mouse-xy", [e.clientX / window.innerWidth, e.clientY / window.innerHeight]);
 	}
 	document.addEventListener('mousemove', onMouseMove);
+
+  const bindCallback = (elemId, event, callback) =>
+    document.getElementById(elemId).addEventListener(event, callback);
+
 
 
 </script>

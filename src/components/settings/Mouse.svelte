@@ -1,25 +1,63 @@
 <script>
-  // import NoAudio             from '../../assets/img/no-audio.svg';
-  // import MuteAudio           from '../../assets/img/mute-audio.svg';
-  // import HighVolumeAudio     from '../../assets/img/high-volume-audio.svg';
-  // import MediumVolumeAudio   from '../../assets/img/medium-volume-audio.svg';
-  // import LowVolumeAudio      from '../../assets/img/low-volume-audio.svg';
+import { Engine } from 'sema-engine/sema-engine';
+
+	import {
+    onMount,
+    onDestroy,
+    createEventDispatcher
+  } from 'svelte'
+
+
 
   import { audioEngineStatus } from '../../stores/common.js';
 
-  let engineLoaded = false;
+  let engine,
+      engineLoaded = false;
 
-  let handleClick = () => {
+  const handleClick = () => {
+    // if(engine){
+      try{
+        const id = "mxy",
+              ttype = "mouseXY",
+              blockSize = 2;
 
-    // if(!engineLoaded){
-    //   $audioEngineStatus = 'no-audio';
-    //   engineLoaded = true;
+        // let sab = engine.createSharedBuffer(id, ttype, blockSize);
+
+        const onMouseMove = e => {
+          const x = e.offsetX/window.innerWidth;
+          const y = e.offsetY/window.innerHeight;
+          // document.getElementById('outputText').innerText = `${parseFloat(x).toFixed(5)} ${parseFloat(y).toFixed(5)}`;
+
+          // engine.pushDataToSharedBuffer(id, [ x, y ]);
+        }
+
+        // Subscribe Left `Alt`-key down event to subscribe mouse move
+        document.addEventListener("keydown", e => {
+          if(e.keyCode === 18){
+            document.addEventListener( 'mousemove', onMouseMove, true )
+          }
+        });
+        // Subscribe Left `Alt`-key UP event to unsubscribe mouse move
+        document.addEventListener("keyup", e => {
+          if(e.which === 18){
+            // document.getElementById('outputText').innerText = ``;
+            document.removeEventListener( 'mousemove', onMouseMove, true );
+          }
+        });
+      } catch (err) {
+        console.error("ERROR: Failed to create new channel for mouse data: ", err);
+      }
     // }
-    // else
-     $audioEngineStatus === 'running'?
-        $audioEngineStatus = 'paused': $audioEngineStatus = 'running';
-  }
+    // else throw new Error('ERROR: Engine not initialized. Please press Start Engine first.')
+  };
 
+  onMount( async () => {
+    engine = new Engine
+  });
+
+  onDestroy( () => {
+    codeMirror = null;
+	});
 
 
 </script>

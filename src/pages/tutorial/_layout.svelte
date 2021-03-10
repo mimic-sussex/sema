@@ -92,6 +92,7 @@
 
   onMount( async () => {
     // console.log("DEBUG:routes/tutorial/_layout:onMount")
+    // controller.init('http://localhost:5000/sema-engine');
   });
 
   onDestroy(() => {

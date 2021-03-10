@@ -92,7 +92,7 @@
   */
   onDestroy( async () => {
     tick.cancel();     // unsubscribe by calling cancel on the callback
-    regl.destroy()
+    rgl.destroy()
   })
 
 </script>

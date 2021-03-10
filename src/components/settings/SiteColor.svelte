@@ -71,3 +71,4 @@
   <input type="checkbox" bind:checked />
   <span class="slider" />
 </label>
+
