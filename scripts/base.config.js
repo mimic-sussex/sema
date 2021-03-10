@@ -15,7 +15,7 @@ import { wasm } from '@rollup/plugin-wasm'
 import workerLoader from 'rollup-plugin-web-worker-loader'
 import sourcemaps from 'rollup-plugin-sourcemaps'
 // import { plugin as globImport } from 'rollup-plugin-glob-import'; doesn't work with dynamic imports
-// import dynamicImportVariables from 'rollup-plugin-dynamic-import-variables'
+import dynamicImportVariables from 'rollup-plugin-dynamic-import-variables'
 
 
 const isNollup = !!process.env.NOLLUP
@@ -84,7 +84,17 @@ function baseConfig(config, ctx) {
 			plugins: [
 				copy({
 					targets: [
-						{ src: [`${staticDir}/*`, '!*/(__index.html)'], dest: distDir },
+						{
+							// ! NOTE `!${staticDir}/samples` a negated pattern for the static/assets directory,
+							// ! we want to prevent static/samples from being copied
+							// ! and have them emitted (not inlined) by the plugin-URL
+							src: [
+								`${staticDir}/*`,
+								'!*/(__index.html)',
+								`!${staticDir}/samples`,
+							],
+							dest: distDir,
+						},
 						{
 							src: [`${staticDir}/__index.html`],
 							dest: distDir,
@@ -92,44 +102,22 @@ function baseConfig(config, ctx) {
 							transform,
 						},
 						{
-							src: 'node_modules/sema-engine/maxi-processor.js',
-							dest: 'dist',
-						},
-						{
-							src: 'node_modules/sema-engine/sema-engine.wasmmodule.js',
-							dest: 'dist',
-						},
-						{
-							src: 'node_modules/sema-engine/open303.wasmmodule.js',
-							dest: 'dist',
-						},
-						{
-							// ringbuf is imported by both the Engine (AW node) and maxi-processor (AWP) so needs to be both bundled AND copied!
-							src: 'node_modules/sema-engine/ringbuf.js',
-							dest: ['dist'],
-						},
-						{
-							// transducers is imported by Engine maxi-processor (AWP) so needs to be both bundled AND copied!
-							src: 'node_modules/sema-engine/transducers.js',
-							dest: ['dist'],
-						},
-						// {
-						// 	src: 'assets/*',
-						// 	dest: 'dist',
-						// },
-						{
-							// lalolib is imported dynamically (importScripts) by the ml.worker, needs to be served in 'dist'
-							src: 'node_modules/sema-engine/lalolib.js',
-							dest: 'dist',
-						},
-						{
-							// svd is imported dynamically (importScripts) by the ml.worker, needs to be served in 'dist'
-							src: 'node_modules/sema-engine/svd.js',
-							dest: ['dist'],
+							src: [
+								'node_modules/sema-engine/maxi-processor.js',
+								'node_modules/sema-engine/sema-engine.wasmmodule.js',
+								'node_modules/sema-engine/open303.wasmmodule.js',
+								'node_modules/sema-engine/ringbuf.js',
+								'node_modules/sema-engine/transducers.js',
+								'node_modules/sema-engine/lalolib.js',
+								'node_modules/sema-engine/svd.js',
+							],
+							// dest: `${buildDir}`,
+							dest: distDir,
 						},
 					],
 					copyOnce: true,
 					flatten: false,
+					verbose: true,
 				}),
 				svelte(svelteConfig),
 
@@ -139,25 +127,28 @@ function baseConfig(config, ctx) {
 					dedupe: (importee) => !!importee.match(/svelte(\/|$)/),
 				}),
 				commonjs(),
-				// dynamicImportVariables({
-				// 	exclude: [
-				// 		'static/languages/**/grammar.ne',
-				// 		'static/languages/**/code.sem',
-				// 		'static/learners/**/*.tf',
-				// 	], // options
-				// 	include: [
-				//     'static/**/*.wav'
-				//   ],
-				// }),
+				dynamicImportVariables({
+					exclude: [
+						'static/languages/**/grammar.ne',
+						'static/languages/**/code.sem',
+						'static/learners/**/*.tf',
+					], // options
+					include: ['**/*.wav'],
+					warnOnError: true,
+				}),
 				// globImport(),
 				url({
 					include: ['**/*.wav'],
-					// publicPath: 'dist/samples',
-          limit: 10,
-          publicPath: '/batman/',
-          emitFiles: true,
-          fileName: '[dirname][hash][extname]',
-          sourceDir: join(__dirname, './samples')
+					// publicPath: 'samples',
+					limit: 10, // 10 kb
+					// // publicPath: '/batman/',
+					emitFiles: true,
+					fileName: '[name][extname]', // '[name][extname]' 'dist/build/'
+					// sourceDir: join(__dirname, 'src/samples'), // 'dist/static/samples'
+					sourceDir: __dirname, // 'dist/build/static/samples'
+					// sourceDir: join(__dirname, 'src/samples'), // 'dist/static/samples'
+					destDir: join(__dirname, 'dist/sema-engine/samples'), // 'dist/static/samples'
+					// destDir: __dirname,
 				}),
 				string({
 					include: [

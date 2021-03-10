@@ -274,6 +274,7 @@
   onMount( async () => {
 
     // controller.init('http://localhost:5000/sema-engine' + '/maxi-processor.js');
+    // controller.init('http://localhost:5000/build/sema-engine');
     controller.init('http://localhost:5000/sema-engine');
 
     // Debug
