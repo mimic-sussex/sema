@@ -33,6 +33,8 @@
 		"postcss-nested": "^5.0.3",
 		"rollup": "^2.18.1",
 		"rollup-plugin-copy": "^3.3.0",
+		"rollup-plugin-dynamic-import-variables": "^1.1.0",
+		"rollup-plugin-glob-import": "^0.4.5",
 		"rollup-plugin-hot": "^0.0.31",
 		"rollup-plugin-livereload": "^1.3.0",
 		"rollup-plugin-sourcemaps": "^0.6.3",

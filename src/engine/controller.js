@@ -182,7 +182,7 @@ export default class Controller {
 				this.engine.play();
 
 				// Lazy load all samples imported from assets
-				// this.loadImportedSamples();
+				this.loadImportedSamples();
 			} catch (error) {
 				console.error("Error initialising engine", error);
 			}
@@ -212,19 +212,158 @@ export default class Controller {
 	}
 
 	getSamplesNames() {
-		const r = require.context("../../assets/samples", false, /\.wav$/);
+		// const r = require.context("../../assets/samples", false, /\.wav$/);
 
 		// return an array list of filenames (with extension)
-		const importAll = (r) => r.keys().map((file) => file.match(/[^\/]+$/)[0]);
+		// const importAll = (r) => r.keys().map((file) => file.match(/[^\/]+$/)[0]);
 
-		return importAll(r);
+		// return importAll(r);
+
+    return [
+			'909',
+			'909b',
+			'909closed',
+			'909open',
+			'CARinsect',
+			'Cryptotympana',
+			'Dundunia',
+			'InsectBee',
+			'InsectBee2',
+			'InsectFly',
+			'InsecticideZG',
+			'Macrosemia',
+			'MacrosemiaTonk',
+			'MeimunaNau',
+			'auboom',
+			'auboom2',
+			'auclick',
+			'audoubelclick2',
+			'audoubleclick',
+			'auhiclick',
+			'ausiclick',
+			'backswing-old1',
+			'bee',
+			'bello',
+			'bellrip',
+			'bellrip2',
+			'bellrip3',
+			'bellx',
+			'birta',
+			'blade-old1',
+			'boom',
+			'boom2',
+			'boomwag',
+			'camclick-old1',
+			'camina1',
+			'camina2',
+			'camina3',
+			'camina4',
+			'chain',
+			'chainSpade',
+			'click-old1',
+			'click',
+			'clicko-old1',
+			'clicko',
+			'clicks1',
+			'convol1',
+			'convol2',
+			'convol3',
+			'convol4',
+			'convol5',
+			'crackle3',
+			'crickBee',
+			'dalispark',
+			'dentist-old1',
+			'digaa',
+			'dorje',
+			'drone1',
+			'drone2',
+			'drr',
+			'electro',
+			'elstatic-old1',
+			'firecrack',
+			'firespark',
+			'firespark2',
+			'flash-old1',
+			'glitch-old1',
+			'hapsi',
+			'harshi-old1',
+			'harshlow-old1',
+			'heart',
+			'holeMONO',
+			'ice',
+			'insec',
+			'insec2',
+			'insec3',
+			'insectzapZG',
+			'iron',
+			'ironrip',
+			'jump',
+			'kernel',
+			'kernel2',
+			'kerneldrone',
+			'kernelmix',
+			'kicic',
+			'kicic2',
+			'kicicboom',
+			'knock',
+			'laekur',
+			'list',
+			'lookout',
+			'machine',
+			'magnetclock-old1',
+			'noinoi',
+			'noise-old1',
+			'noise1',
+			'noise2',
+			'paper',
+			'pattern10',
+			'pattern11',
+			'pattern8',
+			'pattern9',
+			'patterndrone',
+			'patterndrone2',
+			'patterndrone3',
+			'phoo-old1',
+			'pork',
+			'rain_ravi',
+			'ravi',
+			'revbell',
+			'rocks',
+			'rotatingIron',
+			'sbq',
+			'skake2Ed',
+			'snork',
+			'snow',
+			'spade',
+			'spark',
+			'stretch',
+			'sweetmachine-old1',
+			'swipe-old1',
+			'triplet',
+			'vindva',
+			'vindvabd',
+			'vindvaclick',
+			'vindvadbase',
+			'vindvahat',
+			'viromachine-old1',
+			'woodsamp',
+			'wooo-old1',
+			'xylophone',
+			'zhish',
+			'zzzz',
+		]
 	}
 
 	lazyLoadSample(sampleName) {
 		// import(`../../assets/samples/${sampleName}`)
 			// .then(() => this.engine.loadSample(sampleName, `/samples/${sampleName}`))
-		import(`../../assets/samples/${sampleName}.wav`)
-			.then(() => this.engine.loadSample(sampleName, `/samples/${sampleName}`))
+		// import(`../../static/samples/${sampleName}.wav`)
+		import(`/samples/${sampleName}.wav`)
+			.then(e => {
+          console.log(e);
+          this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+      })
 			.catch((err) =>
 				console.error(`DEBUG:AudioEngine:lazyLoadSample: ` + err)
 			);

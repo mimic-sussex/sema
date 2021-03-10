@@ -1,11 +1,12 @@
 import svelte from 'rollup-plugin-svelte-hot';
+import { join } from 'path';
 import Hmr from 'rollup-plugin-hot'
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
 import copy from 'rollup-plugin-copy';
-// import url from '@rollup/plugin-url';
+import url from '@rollup/plugin-url';
 import del from 'del';
 import replace from '@rollup/plugin-replace';
 import { spassr } from 'spassr'
@@ -13,6 +14,8 @@ import { string } from "rollup-plugin-string";
 import { wasm } from '@rollup/plugin-wasm'
 import workerLoader from 'rollup-plugin-web-worker-loader'
 import sourcemaps from 'rollup-plugin-sourcemaps'
+// import { plugin as globImport } from 'rollup-plugin-glob-import'; doesn't work with dynamic imports
+// import dynamicImportVariables from 'rollup-plugin-dynamic-import-variables'
 
 
 const isNollup = !!process.env.NOLLUP
@@ -71,7 +74,7 @@ function baseConfig(config, ctx) {
     const _rollupConfig = {
 			inlineDynamicImports: !dynamicImports,
 			preserveEntrySignatures: false,
-      onwarn,
+			onwarn,
 			input: `src/main.js`,
 			output: {
 				name: 'routify_app',
@@ -110,10 +113,10 @@ function baseConfig(config, ctx) {
 							src: 'node_modules/sema-engine/transducers.js',
 							dest: ['dist'],
 						},
-						{
-							src: 'assets/*',
-							dest: 'dist',
-						},
+						// {
+						// 	src: 'assets/*',
+						// 	dest: 'dist',
+						// },
 						{
 							// lalolib is imported dynamically (importScripts) by the ml.worker, needs to be served in 'dist'
 							src: 'node_modules/sema-engine/lalolib.js',
@@ -136,16 +139,36 @@ function baseConfig(config, ctx) {
 					dedupe: (importee) => !!importee.match(/svelte(\/|$)/),
 				}),
 				commonjs(),
-        string({
-          include: [
-            'static/languages/**/grammar.ne',
-            'static/languages/**/code.sem',
-            'static/learners/**/*.tf'
-          ]
-        }),
+				// dynamicImportVariables({
+				// 	exclude: [
+				// 		'static/languages/**/grammar.ne',
+				// 		'static/languages/**/code.sem',
+				// 		'static/learners/**/*.tf',
+				// 	], // options
+				// 	include: [
+				//     'static/**/*.wav'
+				//   ],
+				// }),
+				// globImport(),
+				url({
+					include: ['**/*.wav'],
+					// publicPath: 'dist/samples',
+          limit: 10,
+          publicPath: '/batman/',
+          emitFiles: true,
+          fileName: '[dirname][hash][extname]',
+          sourceDir: join(__dirname, './samples')
+				}),
+				string({
+					include: [
+						'static/languages/**/grammar.ne',
+						'static/languages/**/code.sem',
+						'static/learners/**/*.tf',
+					],
+				}),
 				workerLoader(),
 				wasm(),
-        sourcemaps(),
+				sourcemaps(),
 				production && terser(), // minify
 				!production && isNollup && Hmr({ inMemory: true, public: staticDir }), // refresh only updated code
 				!production && !isNollup && livereload(distDir), // refresh entire window when code is updated
