@@ -182,7 +182,10 @@ export default class Controller {
 				this.engine.play();
 
 				// Lazy load all samples imported from assets
-				this.loadImportedSamples();
+				// this.loadImportedSamples();
+
+        this.importSamples();
+
 			} catch (error) {
 				console.error("Error initialising engine", error);
 			}
@@ -220,7 +223,10 @@ export default class Controller {
 		// return importAll(r);
 
     return [
-			'909',
+			'../../static/samples/909.wav',
+			'../../static/samples/909b.wav',
+			'../../static/samples/909closed.wav',
+			// '909',
 			// '909b',
 			// '909closed',
 			// '909open',
@@ -355,14 +361,18 @@ export default class Controller {
 		]
 	}
 
-	lazyLoadSample(sampleName) {
-		import(`../../static/samples/${sampleName}.wav`) // can't use dynamic import variable
+	lazyLoadSample(path) {
+	// lazyLoadSample(sampleName) {
+		// import(`../../static/samples/${sampleName}.wav`) // can't use dynamic import variable
 		// import(`../../static/samples/909.wav`) // need to use the samples relative path to the src, not in public,
+		import(path) // need to use the samples relative path to the src, not in public,
 			.then((e) => {
 				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
 				this.engine.loadSample(e.default, `/samples/${e.default}`)
 			})
-			.catch((err) => console.error(`DEBUG:AudioEngine:lazyLoadSample: ` + err))
+			.catch((err) =>
+				console.error(`Enginge lazy loading sample: ${path}` + err)
+			)
 	}
 
 	loadImportedSamples() {
@@ -372,4 +382,33 @@ export default class Controller {
 
 		this.samplesLoaded = true;
 	}
+
+  importSamples(){
+
+    import(`../../static/samples/909.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+
+    import(`../../static/samples/909b.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+    import(`../../static/samples/909closed.wav`) // need to use the samples relative path to the src, not in public,
+			.then((e) => {
+				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
+				this.engine.loadSample(e.default, `/samples/${e.default}`)
+			})
+			.catch((err) =>
+				console.error(`Engine lazy loading sample: ${sampleName}` + err)
+			)
+  }
 }
