@@ -41,19 +41,9 @@
 	export let theme;
 	export let background;
 	export let content;
-  // export let fixed;
-  // export let responsive;
-  // export let resizable;
-  // export let resize;
-  // export let draggable;
-  // export let drag;
-  // export let min = {};
-  // export let max = {};
-  // export let x;
-  // export let y;
-  // export let w;
-  // export let h;
   export let component;
+  export let className;
+  export { className as class };
 
   let codeMirror;
   let modelWorker;
@@ -75,7 +65,7 @@
     // modelWorker = new ModelWorker();  // Creates one ModelWorker per ModelEditor lifetime
     // modelWorker.onmessage = e =>  onModelWorkerMessageHandler(e);
 
-    log( id, name, type, lineNumbers, hasFocus, theme, background, content, component );
+    log( id, name, type, lineNumbers, className, hasFocus, theme, background, content, component );
     // console.log('DEBUG:ModelEditor:onMount:');
     // console.log(data);    // console.log(name + ' ' + type + ' ' + lineNumbers +' ' + hasFocus +' ' + theme + ' ' + background /*+  ' ' + data */ );
 

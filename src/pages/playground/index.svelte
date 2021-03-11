@@ -260,12 +260,12 @@
   }
 
   const onAdjust = e => {
-    console.log("DEBUG:dashboard:onAdjust:", e.detail);
+    // console.log("DEBUG:dashboard:onAdjust:", e.detail);
     $items = $items; // call a re-render
   };
 
   const onChildMount = e => {
-    console.log("DEBUG:dashboard:onChildMount:", e.detail);
+    // console.log("DEBUG:dashboard:onChildMount:", e.detail);
     $items = $items; // call a re-render
   };
 
@@ -278,7 +278,7 @@
     controller.init('http://localhost:5000/sema-engine');
 
     // Debug
-    let resizeObs = new ResizeObserver(e => console.log( e[0].contentRect.width ) ).observe(container);
+    // let resizeObs = new ResizeObserver(e => console.log( e[0].contentRect.width ) ).observe(container);
 
     // Sequentially fetch data from individual items' properties
     // into language design workflow stores

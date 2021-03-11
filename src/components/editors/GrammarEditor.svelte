@@ -32,7 +32,8 @@
 	export let content;
   export let grammarSource;
   export let component;
-
+  export let className;
+  export { className as class };
   let codeMirror,
       modelWorker;
 
@@ -133,7 +134,7 @@
   onMount(async () => {
     codeMirror.set(content, "ebnf", "oceanic-next");
     // Using export variables for preventing a warning from Svelte comiler
-    log( id, name, type, lineNumbers, hasFocus, theme, background, content, grammarSource, component );
+    log( id, name, type, className, lineNumbers, hasFocus, theme, background, content, grammarSource, component );
 	});
 
   onDestroy(async () => {

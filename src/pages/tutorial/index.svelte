@@ -42,7 +42,7 @@
   });
 </script>
 
-<style>
+<style global>
 
   .markdown-index-container {
     overflow: auto;

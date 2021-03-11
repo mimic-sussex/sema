@@ -109,7 +109,7 @@
 
 </script>
 
-<style>
+<style global>
 
   .markdown-container {
     overflow: auto;

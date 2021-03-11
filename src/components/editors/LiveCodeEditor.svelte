@@ -56,7 +56,11 @@
 	export let background; // unused
 	export let content;      // liveCode Value that is injected and to which CodeMirror is bound
   export let grammarSource;
+  export let grammar;
+  export let liveCodeSource;
   export let component;
+  export let className;
+  export { className as class };
 
   let engine,
       codeMirror,
@@ -119,7 +123,7 @@
   onMount( async () => {
     codeMirror.set(content, "js", 'oceanic-next');
     btrack = new blockTracker(codeMirror);
-    log( id, name, type, lineNumbers, hasFocus, theme, grammarSource, background, component );
+    log( id, name, type, className, grammar, liveCodeSource, lineNumbers, hasFocus, theme, grammarSource, background, component );
 	});
 
   onDestroy( () => {
