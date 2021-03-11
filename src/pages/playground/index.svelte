@@ -412,8 +412,10 @@
   }
 
   :global(.svlt-grid-shadow) {
-    background: black;
-    border-radius: 6px;
+    background: #151515 !important;
+    border: solid 3.5em rgba(#151515, .5);
+    /* box-shadow: 10px 10px 10px #151515; */
+    border-radius: 4px;
     border-bottom-right-radius: 3px;
     transition: transform 0.2s;
   }
