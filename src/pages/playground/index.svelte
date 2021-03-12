@@ -46,10 +46,9 @@
   } from  "../../stores/common.js"
 
   import Controller from "../../engine/controller";
+  let controller = new Controller(); // this will return the previously created Singleton instance
 
   const messaging = new PubSub();
-
-  let controller = new Controller(); // this will return the previously created Singleton instance
 
   let overlayContainer;
 

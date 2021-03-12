@@ -102,6 +102,7 @@
         if(dspCode){
           $DSP = dspCode;
           engine.eval(dspCode);
+          audioEngineStatus.set('running');
           $liveCodeParseErrors = '';
         };
         if(errors)
@@ -112,12 +113,14 @@
     }
   }
 
-
   const stopAudioOnEditorCommand = e => {
-    if(e)
-      if(!engine)
+    if(e){
+      if(!engine){
         engine = new Engine();
+      }
       engine.stop();
+      audioEngineStatus.set('paused');
+    }
   }
 
   onMount( async () => {

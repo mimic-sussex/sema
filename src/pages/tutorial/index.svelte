@@ -14,6 +14,11 @@
     selected
   } from '../../stores/tutorial.js';
 
+  import Controller from "../../engine/controller";
+  let controller = new Controller(); // this will return the previously created Singleton instance
+
+
+
   // export let section; // we are grabbing this export variable value from Routify's file structure variable mechanism [chapter]/[section]
 
   let markdown;

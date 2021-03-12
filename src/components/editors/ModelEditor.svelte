@@ -18,20 +18,9 @@
 
   var modelEditorValue = window.localStorage.modelEditorValue;
 
-  // console.log(modelEditorValue);
   import { PubSub } from '../../utils/pubSub.js';
 
-  // import ModelWorker from "worker-loader:../../workers/ml.worker.js";
-
   import { addToHistory } from "../../utils/history.js";
-  // import "../../machineLearning/lalolib.js";
-  // import "../../machineLearning/svd.js";
-  // import "../../workers/mlworkerscripts.js";
-  // import "../../machineLearning/lodash.js";  //why is this causing a problem?
-  // import "sema-engine/lalolib.js";
-  // import "sema-engine/svd.js";
-  // import "sema-engine/lodash.js";  //why is this causing a problem?
-  // import "sema-engine/mlworkerscripts.js";
 
   export let id;
   export let name;
@@ -57,7 +46,6 @@
   onMount(async () => {
     codeMirror.set(content, "js", "material-ocean");
 
-
     subscriptionTokenMID = messaging.subscribe("model-input-data", e => postToModel(e) );
     subscriptionTokenMIB = messaging.subscribe("model-input-buffer", e => postToModel(e) );
     // subscriptionTokenMODR = messaging.subscribe("model-output-data-request", e => postToModel(e) );
@@ -66,9 +54,6 @@
     // modelWorker.onmessage = e =>  onModelWorkerMessageHandler(e);
 
     log( id, name, type, lineNumbers, className, hasFocus, theme, background, content, component );
-    // console.log('DEBUG:ModelEditor:onMount:');
-    // console.log(data);    // console.log(name + ' ' + type + ' ' + lineNumbers +' ' + hasFocus +' ' + theme + ' ' + background /*+  ' ' + data */ );
-
 	});
 
   onDestroy(async () => {
@@ -355,7 +340,6 @@
 
 </style>
 
-<!-- <div class="layout-template-container" contenteditable="true" bind:value={item.value}  bind:innerHTML={layoutTemplate}> -->
 <div class="codemirror-container layout-template-container scrollable">
   <CodeMirror bind:this={codeMirror}
               bind:value={content}
@@ -371,7 +355,5 @@
               cmdEnter={evalModelEditorExpressionBlock}
               shiftEnter={evalModelEditorExpression}
               />
-    <!-- </div> -->
-  <!-- </div> -->
 </div>
 <textarea aria-hidden="true" id="hiddenCopyField" style="position: absolute; left: -999em;" value=""></textarea>
