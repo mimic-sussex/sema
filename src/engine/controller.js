@@ -1,6 +1,6 @@
 
 import { PubSub } from "../utils/pubSub.js";
-import { audioEngineStatus } from "../stores/common.js";
+import { engineStatus } from "../stores/common.js";
 /**
  * The Controller is a singleton class that encapsulates signal engine (sema-engine)
  * and implements the dependency inversion principle
@@ -185,7 +185,7 @@ export default class Controller {
 				// this.loadImportedSamples(); // DO NOT DELETE, read comments on function signature
 				await this.importSamples();
 
-        audioEngineStatus.set('running');
+        engineStatus.set('running');
 
 			} catch (error) {
 				console.error('Error initialising engine', error)

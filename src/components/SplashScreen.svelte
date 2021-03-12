@@ -1,10 +1,10 @@
 <script>
 
-  import { audioEngineStatus } from '../stores/common.js';
+  import { engineStatus } from '../stores/common.js';
   import src from '../../assets/img/sema.svg';
 
   let handleClick = () => {
-    $audioEngineStatus = "hidden";
+    $engineStatus = "hidden";
   }
 
 </script>

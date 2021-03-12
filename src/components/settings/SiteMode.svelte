@@ -5,19 +5,12 @@
   // import MediumVolumeAudio   from '../../assets/img/medium-volume-audio.svg';
   // import LowVolumeAudio      from '../../assets/img/low-volume-audio.svg';
 
-  import { audioEngineStatus } from '../../stores/common.js';
+  import { siteMode } from '../../stores/common.js';
 
   let engineLoaded = false;
 
   let handleClick = () => {
 
-    // if(!engineLoaded){
-    //   $audioEngineStatus = 'no-audio';
-    //   engineLoaded = true;
-    // }
-    // else
-     $audioEngineStatus === 'running'?
-        $audioEngineStatus = 'paused': $audioEngineStatus = 'running';
   }
 
 
@@ -174,7 +167,7 @@
 
 <button class="button-dark" on:click={ handleClick }>
   <div class="icon-container">
-    {#if $audioEngineStatus === 'running' }
+    {#if $siteMode === 'running' }
 
       <svg  version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
             x="0px" y="0px"
@@ -203,7 +196,7 @@
             C384.9,143.7,398.4,143.7,406.8,135.4"/>
         </g>
       </svg>
-    {:else if $audioEngineStatus === 'no-audio' }
+    {:else if $siteMode === 'no-audio' }
       <svg  version="1.1"
             id="Layer_1"
             xmlns="http://www.w3.org/2000/svg"

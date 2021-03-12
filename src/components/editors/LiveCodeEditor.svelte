@@ -41,11 +41,10 @@
     liveCodeParseResults,
     liveCodeAbstractSyntaxTree,
     dspCode as DSP,
-    audioEngineStatus,
+    engineStatus,
     grammarEditorValue
   } from "../../stores/common.js";
 
-  // import { editorThemes } from "../../../../sema/client/stores/playground.js";
   export let tab = true;
   export let id;   // unused
   export let name; // unused
@@ -102,7 +101,7 @@
         if(dspCode){
           $DSP = dspCode;
           engine.eval(dspCode);
-          audioEngineStatus.set('running');
+          engineStatus.set('running');
           $liveCodeParseErrors = '';
         };
         if(errors)
@@ -119,7 +118,7 @@
         engine = new Engine();
       }
       engine.stop();
-      audioEngineStatus.set('paused');
+      engineStatus.set('paused');
     }
   }
 

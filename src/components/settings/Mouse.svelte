@@ -9,7 +9,7 @@ import { Engine } from 'sema-engine/sema-engine';
 
 
 
-  import { audioEngineStatus } from '../../stores/common.js';
+  import { engineStatus } from '../../stores/common.js';
 
   let engine,
       engineLoaded = false,

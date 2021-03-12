@@ -12,6 +12,9 @@
 	const dispatch = createEventDispatcher();
   import {copyToPasteBuffer} from '../../utils/pasteBuffer.js';
 
+  import Controller from "../../engine/controller";
+  let controller = new Controller(); // this will return the previously created Singleton instance
+
   // import {
   //   modelEditorValue
   // } from "../../stores/store.js";
@@ -40,6 +43,8 @@
   let messaging = new PubSub();
   let subscriptionTokenMID;
   let subscriptionTokenMIB;
+
+
 
   let log = e => { /* console.log(...e); */ }
 
