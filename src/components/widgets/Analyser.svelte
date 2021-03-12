@@ -15,7 +15,8 @@
 	export let lineNumbers;
 	export let theme;
   export let component;
-
+  export let className;
+  export { className as class };
 
   let fftSize = 256;
   let frequencyBinCount = 128;

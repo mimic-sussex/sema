@@ -37,9 +37,15 @@
   let promise;
 
   onMount( async () => {
-    console.log(`DEBUG:tutorial:index`);
+    // console.log(`DEBUG:tutorial:index`);
+
+    if(!controller.samplesLoaded)
+      controller.init('http://localhost:5000/sema-engine');
+
+
     promise = fetchMarkdown($selected.chapter_dir, $selected.section_dir); // Reactive statement, var 'promise' reacts to 'section' changes
   });
+
 </script>
 
 <style global>

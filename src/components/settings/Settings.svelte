@@ -1,5 +1,5 @@
 <script>
-  import EngineStatus from './EngineStatus.svelte';
+  import Engine from './Engine.svelte';
   // import SignOut from './user/SignOut';
   // import SiteColor from './SiteColor.svelte';
   import SiteMode from './SiteMode.svelte';
@@ -29,7 +29,7 @@
   <Mouse />
   <div style='width: 5px;'></div>
 
-  <EngineStatus />
+  <Engine />
 
   <div style='width: 10px;'></div>
 

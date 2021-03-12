@@ -49,7 +49,7 @@
 
   const messaging = new PubSub();
 
-  let controller = new Controller();
+  let controller = new Controller(); // this will return the previously created Singleton instance
 
   let overlayContainer;
 
@@ -152,7 +152,6 @@
     else throw new Error("Error setting layout responsiveness when adding new item")
   }
 
-
   async function addItem(e){
 
     if(e.type){
@@ -179,7 +178,6 @@
     else
       console.error("Error on routes/Playground.addItem: undefined parameters")
   }
-
 
   const update = (e, dataItem) => {
 
@@ -227,16 +225,11 @@
     $isUploadOverlayVisible = false;
   }
 
-  function handleDragEnter(e){
-
-
-  }
-
+  function handleDragEnter(e){  }
 
   const clearItems = () => {
     // console.log("DEBUG:dashboard:clearItems:")
     // items.update( items => items.map( item => remove(item) ) );
-
 
     clearFocused();
     // items.set([]);
@@ -273,15 +266,14 @@
 
   onMount( async () => {
 
-    // controller.init('http://localhost:5000/sema-engine' + '/maxi-processor.js');
-    // controller.init('http://localhost:5000/build/sema-engine');
-    controller.init('http://localhost:5000/sema-engine');
+    // No need to create re-initialise controller again here
+    if(!controller.samplesLoaded)
+      controller.init('http://localhost:5000/sema-engine');
 
-    // Debug
+    // Debug dimensions of grid as we resize the window
     // let resizeObs = new ResizeObserver(e => console.log( e[0].contentRect.width ) ).observe(container);
 
-    // Sequentially fetch data from individual items' properties
-    // into language design workflow stores
+    // Sequentially fetch data from individual items' properties into language design workflow stores
     for (const item of $items)
       await updateItemPropsWithFetchedValues(item);
 

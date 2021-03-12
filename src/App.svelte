@@ -20,6 +20,7 @@
    * for for WAAPI Audio Worklet support
    * It either succeeds and dynamically imports the sema-engine,
    * or fails graciously
+   * * This is invoked even if load happens through Playground or Tutorial via client side routing
    * */
   ( async () => {
     // Detect Firefox early otherwise audio engine needs to be initialised for a fail to be detected [Firefox fix]
@@ -30,7 +31,7 @@
         .then((module) => {
           // Apply in Inversion of Control with constructor injection
           engine = new module.Engine();
-          controller = new Controller(engine);
+          controller = new Controller(engine); // Init need to be deferred to Playground or tutorial after User Action
         })
         .catch((err) => (unsupportedBrowser = true));
     }
