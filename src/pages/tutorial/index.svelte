@@ -17,10 +17,8 @@
   import Controller from "../../engine/controller";
   let controller = new Controller(); // this will return the previously created Singleton instance
 
-
-
   // export let section; // we are grabbing this export variable value from Routify's file structure variable mechanism [chapter]/[section]
-
+  let promise;
   let markdown;
 
   let fetchMarkdown = async (chapter, section) => {
@@ -39,14 +37,11 @@
     }
   }
 
-  let promise;
 
   onMount( async () => {
-    // console.log(`DEBUG:tutorial:index`);
 
     if(!controller.samplesLoaded)
       controller.init('http://localhost:5000/sema-engine');
-
 
     promise = fetchMarkdown($selected.chapter_dir, $selected.section_dir); // Reactive statement, var 'promise' reacts to 'section' changes
   });

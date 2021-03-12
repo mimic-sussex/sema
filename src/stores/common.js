@@ -21,10 +21,11 @@ import gridHelp from "svelte-grid/build/helper/index.mjs";
 
 
 export const siteMode = writable('dark');
+export const fullScreen = writable(true);
+export const sideBarVisible = writable(true)
 
 export const engineStatus = writable('no-audio');
 export const unsupportedBrowser = writable(false);
-;
 
 
 // export const grammarEditorValue = writable(initGrammarEditorValue());

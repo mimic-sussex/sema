@@ -1,20 +1,11 @@
 <script>
-  // import NoAudio             from '../../assets/img/no-audio.svg';
-  // import MuteAudio           from '../../assets/img/mute-audio.svg';
-  // import HighVolumeAudio     from '../../assets/img/high-volume-audio.svg';
-  // import MediumVolumeAudio   from '../../assets/img/medium-volume-audio.svg';
-  // import LowVolumeAudio      from '../../assets/img/low-volume-audio.svg';
-
   import { siteMode } from '../../stores/common.js';
 
   let engineLoaded = false;
 
   let handleClick = () => {
-
     $siteMode === 'dark'? $siteMode = 'light': $siteMode = 'dark';
   }
-
-
 
 </script>
 

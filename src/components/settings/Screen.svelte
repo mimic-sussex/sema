@@ -5,7 +5,10 @@
   // import MediumVolumeAudio   from '../../assets/img/medium-volume-audio.svg';
   // import LowVolumeAudio      from '../../assets/img/low-volume-audio.svg';
 
-  import { engineStatus } from '../../stores/common.js';
+  import {
+    fullScreen,
+    sideBarVisible
+  } from '../../stores/common.js';
 
   let engineLoaded = false;
 

@@ -6,18 +6,17 @@
 </script>
 
 <script>
-
-
 	import { onMount, onDestroy, createEventDispatcher } from 'svelte';
 	const dispatch = createEventDispatcher();
   import {copyToPasteBuffer} from '../../utils/pasteBuffer.js';
 
+  import {
+    Learner,
+    Engine
+  } from 'sema-engine/sema-engine';
+
   import Controller from "../../engine/controller";
   let controller = new Controller(); // this will return the previously created Singleton instance
-
-  // import {
-  //   modelEditorValue
-  // } from "../../stores/store.js";
 
   var modelEditorValue = window.localStorage.modelEditorValue;
 
@@ -37,18 +36,24 @@
   export let className;
   export { className as class };
 
-  let codeMirror;
-  let modelWorker;
+  let engine,
+      learner,
+      codeMirror;
 
   let messaging = new PubSub();
   let subscriptionTokenMID;
   let subscriptionTokenMIB;
 
-
-
   let log = e => { /* console.log(...e); */ }
 
   onMount(async () => {
+
+    if(!engine)
+      engine = new Engine();
+
+    learner = new Learner();
+    await engine.addLearner(id, learner)
+
     codeMirror.set(content, "js", "material-ocean");
 
     subscriptionTokenMID = messaging.subscribe("model-input-data", e => postToModel(e) );
@@ -257,28 +262,28 @@
   }
 
   function evalModelEditorExpression(){
-    let modelCode = codeMirror.getSelection();
-    modelWorker.postMessage({ eval: modelCode });
+    let code = codeMirror.getSelection();
+
+    learner.eval(code);
     //console.log("DEBUG:ModelEditor:evalModelEditorExpression: " + code);
     window.localStorage.setItem("modelEditorValue", codeMirror.getValue());
-    addToHistory("model-history-", modelCode);
+    addToHistory("model-history-", code);
   }
 
   function evalModelEditorExpressionBlock() {
-    let modelCode = codeMirror.getBlock();
+    let code = codeMirror.getBlock();
     // console.log(modelCode);
-    let linebreakPos = modelCode.indexOf('\n');
-    let firstLine = modelCode.substr(0,linebreakPos)
+    let linebreakPos = code.indexOf('\n');
+    let firstLine = code.substr(0,linebreakPos)
     // console.log(firstLine);
     if(firstLine == "//--DOM") {
-      modelCode = modelCode.substr(linebreakPos);
-      evalDomCode(modelCode);
-      addToHistory("dom-history-", modelCode);
+      code = code.substr(linebreakPos);
+      evalDomCode(code);
+      addToHistory("dom-history-", code);
     }else{
-      modelWorker.postMessage({ eval: modelCode });
-      // console.log("DEBUG:ModelEditor:evalModelEditorExpressionBlock: " + code);
+      learner.eval(code)
       window.localStorage.setItem("modelEditorValue", codeMirror.getValue());
-      addToHistory("model-history-", modelCode);
+      addToHistory("model-history-", code);
     }
   }
 
