@@ -11,6 +11,7 @@
 
   let handleClick = () => {
 
+    $siteMode === 'dark'? $siteMode = 'light': $siteMode = 'dark';
   }
 
 
@@ -167,7 +168,7 @@
 
 <button class="button-dark" on:click={ handleClick }>
   <div class="icon-container">
-    {#if $siteMode === 'running' }
+    {#if $siteMode === 'dark' }
 
       <svg  version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
             x="0px" y="0px"
@@ -196,7 +197,7 @@
             C384.9,143.7,398.4,143.7,406.8,135.4"/>
         </g>
       </svg>
-    {:else if $siteMode === 'no-audio' }
+    {:else if $siteMode === 'light' }
       <svg  version="1.1"
             id="Layer_1"
             xmlns="http://www.w3.org/2000/svg"

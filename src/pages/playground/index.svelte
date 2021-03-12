@@ -42,7 +42,8 @@
     updateItemPropsWithFetchedValues,
     populateCommonStoresWithFetchedProps,
     updateItemPropsWithCommonStoreValues,
-    resetStores
+    resetStores,
+    siteMode
   } from  "../../stores/common.js"
 
   import Controller from "../../engine/controller";
@@ -324,6 +325,14 @@
     width: auto; /* width is defined by child */
   }
 
+  .sidebar-container-light {
+    /* background: linear-gradient(150deg, rgba(0,18,1,1) 0%, rgba(7,5,17,1) 33%, rgba(16,12,12,1) 67%, rgb(12, 12, 12) 100%); */
+    background: white;
+    grid-area: sidebar;
+    height: 100%;
+    width: auto; /* width is defined by child */
+  }
+
   .settings-container {
     /* background: linear-gradient(150deg, rgba(0,18,1,1) 0%, rgba(7,5,17,1) 33%, rgba(16,12,12,1) 67%, rgb(12, 12, 12) 100%); */
     background: #151515;
@@ -331,10 +340,16 @@
     height: 100%;
     width: auto; /* width is defined by child */
   }
+  .settings-container-light {
+    /* background: linear-gradient(150deg, rgba(0,18,1,1) 0%, rgba(7,5,17,1) 33%, rgba(16,12,12,1) 67%, rgb(12, 12, 12) 100%); */
+    background: white;
+    grid-area: settings;
+    height: 100%;
+    width: auto; /* width is defined by child */
+  }
 
   .dashboard-container {
     grid-area: layout;
-
     /* height: 100%; */
     width: 100%;
     z-index: 0;
@@ -347,7 +362,6 @@
   }
 
   .upload-overlay-container {
-
     grid-area: layout;
     z-index: 1000;
     background-color: rgba(16,12,12,0.8);
@@ -463,12 +477,9 @@
 </svelte:head>
 
 <div class="container">
-  <div class="sidebar-container">
+  <div class="{$siteMode === 'dark' ? 'sidebar-container' : 'sidebar-container-light'}">
     <Sidebar />
   </div>
-  <!-- {breakpoints}
-  on:update={ e => update(e) }
-   -->
 
   <div  class="upload-overlay-container" style='visibility:{$isUploadOverlayVisible? "visible": "hidden"}'
         on:drop={handleDragDrop}
@@ -481,8 +492,8 @@
     <p class="upload-overlay-text"><span style="font-weight: 1500;">Choose your .json file</span> or <span>drag'n'drop it here to upload a new environment!</span></p>
   </div>
 
-  <div class='settings-container'>
-    <Settings></Settings>
+  <div class="{$siteMode === 'dark' ? 'settings-container' : 'settings-container-light'}">
+    <Settings/>
   </div>
 
   <div class="dashboard-container scrollable"
