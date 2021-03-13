@@ -79,10 +79,9 @@
   let nil = (e) => { }
 
   let onChange = e => {
-
     try{
       let value = codeMirror.getValue();
-      dispatch('change', { prop:'data', value });
+      dispatch('change', { prop:'content', value });
     }catch(error){
       console.error("Error Model Editor get value from code Mirror")
     }
@@ -157,7 +156,7 @@
 
   let evalDomCode = (code) => {
     try {
-      // let evalRes = eval(code);
+      let evalRes = eval(code);
       // if (evalRes != undefined) {
       //   // console.log(evalRes);
       // }
@@ -266,7 +265,7 @@
 
     learner.eval(code);
     //console.log("DEBUG:ModelEditor:evalModelEditorExpression: " + code);
-    window.localStorage.setItem("modelEditorValue", codeMirror.getValue());
+    window.localStorage.setItem("modelEditorValue", code);
     addToHistory("model-history-", code);
   }
 
