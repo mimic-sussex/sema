@@ -46,35 +46,6 @@
 
   let log = e => { /* console.log(...e); */ }
 
-  onMount(async () => {
-
-    if(!engine)
-      engine = new Engine();
-
-    learner = new Learner();
-    await engine.addLearner(id, learner)
-
-    codeMirror.set(content, "js", "material-ocean");
-
-    subscriptionTokenMID = messaging.subscribe("model-input-data", e => postToModel(e) );
-    subscriptionTokenMIB = messaging.subscribe("model-input-buffer", e => postToModel(e) );
-    // subscriptionTokenMODR = messaging.subscribe("model-output-data-request", e => postToModel(e) );
-
-    // modelWorker = new ModelWorker();  // Creates one ModelWorker per ModelEditor lifetime
-    // modelWorker.onmessage = e =>  onModelWorkerMessageHandler(e);
-
-    log( id, name, type, lineNumbers, className, hasFocus, theme, background, content, component );
-	});
-
-  onDestroy(async () => {
-    // modelWorker.terminate();
-    // modelWorker = null; // make sure it is deleted by GC
-    // messaging.unsubscribe(subscriptionTokenMID);
-    // messaging.unsubscribe(subscriptionTokenMIB);
-    // // messaging.unsubscribe(subscriptionTokenMODR);
-    // messaging = null;
-    // console.log('DEBUG:ModelEditor:onDestroy')
-	});
 
   let nil = (e) => { }
 
@@ -286,6 +257,35 @@
     }
   }
 
+  onMount(async () => {
+
+    if(!engine)
+      engine = new Engine();
+
+    learner = new Learner();
+    await engine.addLearner(id, learner)
+
+    codeMirror.set(content, "js", "material-ocean");
+
+    subscriptionTokenMID = messaging.subscribe("model-input-data", e => postToModel(e) );
+    subscriptionTokenMIB = messaging.subscribe("model-input-buffer", e => postToModel(e) );
+    // subscriptionTokenMODR = messaging.subscribe("model-output-data-request", e => postToModel(e) );
+
+    // modelWorker = new ModelWorker();  // Creates one ModelWorker per ModelEditor lifetime
+    // modelWorker.onmessage = e =>  onModelWorkerMessageHandler(e);
+
+    log( id, name, type, lineNumbers, className, hasFocus, theme, background, content, component );
+	});
+
+  onDestroy(async () => {
+    // modelWorker.terminate();
+    // modelWorker = null; // make sure it is deleted by GC
+    // messaging.unsubscribe(subscriptionTokenMID);
+    // messaging.unsubscribe(subscriptionTokenMIB);
+    // // messaging.unsubscribe(subscriptionTokenMODR);
+    // messaging = null;
+    // console.log('DEBUG:ModelEditor:onDestroy')
+	});
 
 </script>
 

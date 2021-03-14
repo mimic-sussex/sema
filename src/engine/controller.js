@@ -167,7 +167,7 @@ export default class Controller {
 				await this.engine.init(audioWorkletURL)
 
 				// Subscribe async messages from the Audio Worklet Processor scope
-				this.engine.subscribeAsyncMessage(this.onProcessorAsyncMessage)
+				// this.engine.subscribeAsyncMessage(this.onProcessorAsyncMessage)
 
 				// Connect Analysers loaded from the store need to pass callbacks after they load
 				this.engine.connectAnalysers()
@@ -185,6 +185,7 @@ export default class Controller {
 				// this.loadImportedSamples(); // DO NOT DELETE, read comments on function signature
 				await this.importSamples();
 
+        // Change engine status on settings bar
         engineStatus.set('running');
 
 			} catch (error) {
@@ -259,8 +260,9 @@ export default class Controller {
 
 	/**
 	 * ! This hack is required to load the sema audio sample set
-	 * ! it will be deprecated once I have time to make a Rollup plugin
-	 * @returns list of all imports from a folder specified by context
+	 * ! Will be deprecated once I have time to make a Rollup plugin
+   * * Invokes all imports from a folder specified by context
+	 * @returns returns sychronously, with each import running concurrently and completing asynchronously
 	 */
 	importSamples() {
 
