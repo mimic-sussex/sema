@@ -1,5 +1,9 @@
 <script>
-  import { siteMode } from '../../stores/common.js';
+  import {
+    siteMode,
+    fullScreen
+  } from '../../stores/common.js';
+
 
   let engineLoaded = false;
 
@@ -157,7 +161,9 @@
 
 </style>
 
-<button class="button-dark" on:click={ handleClick }>
+<button class="button-dark"
+        style="{$fullScreen? `visibility:visible;`: `visibility:hidden`}"
+        on:click={ handleClick }>
   <div class="icon-container">
     {#if $siteMode === 'dark' }
 

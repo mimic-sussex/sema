@@ -8,8 +8,9 @@ import { Engine } from 'sema-engine/sema-engine';
   } from 'svelte'
 
 
-
-  import { engineStatus } from '../../stores/common.js';
+  import {
+    fullScreen,
+  } from '../../stores/common.js';
 
   let engine,
       engineLoaded = false,
@@ -191,11 +192,11 @@ import { Engine } from 'sema-engine/sema-engine';
   }
 
 
-  .no-mouse {
+  /* .no-mouse {
     padding-top:3px;
     fill:rgb(80, 80, 80);
     enable-background:new 0 0 512 512;
-  }
+  } */
 
   .mouse {
     padding-top:3px;
@@ -210,7 +211,9 @@ import { Engine } from 'sema-engine/sema-engine';
 
 <div style='width: 5px;'></div>
 
-<div style='width:7em; display: flex;'>
+<div style='width:7em; display: flex; {$fullScreen? `visibility:visible;`: `visibility:hidden`}'
+
+      >
 
 
   <button class="button-dark" on:click={ handleClick }>

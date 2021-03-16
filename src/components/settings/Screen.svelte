@@ -11,8 +11,8 @@
   }
 
   let handleClickFullScreen = () => {
+    $fullScreen? $sideBarVisible = false : $sideBarVisible = true;
     $fullScreen = !$fullScreen;
-    $sideBarVisible = false;
   }
 
 </script>
@@ -128,7 +128,9 @@
 
 </style>
 
-<button class="button-dark" on:click={ handleClickFullScreen }>
+<button class="button-dark"
+        on:click={ handleClickFullScreen }
+        >
   <svg version="1.1"
         id="Layer_1"
         xmlns="http://www.w3.org/2000/svg"
@@ -152,7 +154,10 @@
 
 <div style='width: 5px;'></div>
 
-<button class="button-dark" on:click={ handleClickSideBar }>
+<button class="button-dark"
+        style="{$fullScreen? `visibility:visible;`: `visibility:hidden`}"
+        on:click={ handleClickSideBar }
+        >
   <svg  version="1.1"
         id="Layer_1"
         xmlns="http://www.w3.org/2000/svg"
