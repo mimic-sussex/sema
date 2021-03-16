@@ -49,7 +49,7 @@ export const cm_theme_shadowfox = writable("");
 
 // Dashboard Store for Live Code Editor options in Sidebar component
 export const sidebarLiveCodeOptions = writable([
-	{ id: 0, disabled: false, text: `LIVECODE`, content: "" },
+	{ id: 0, disabled: false, text: `livecode`, content: "" },
   // { id: 1, disabled: false, text: `new`, content: {
   //     grammar:  `/languages/default/grammar.ne`,
   //     livecode: undefined
@@ -68,7 +68,7 @@ export const isSelectLiveCodeEditorDisabled = writable(false);
 // Store for TFJS model options in Sidebar component
 // export const sidebarModelOptions = writable([]);
 export const sidebarModelOptions = writable([
-	{ id: 0, disabled: false, text: `LEARNER`, content: "" },
+	{ id: 0, disabled: false, text: `learner`, content: "" },
 	{ id: 1, disabled: false, text: `+ hello-world`, content: hello_world_code_example },
 	{
 		id: 2,
@@ -105,7 +105,7 @@ export const isAddGrammarEditorDisabled = writable(false);
 
 // Dashboard Store for Live Code Editor options in Sidebar component
 export const sidebarDebuggerOptions = writable([
-	{ id: 0, disabled: false, type: ``, text: `DEBUG`, content: "" },
+	{ id: 0, disabled: false, type: ``, text: `debug`, content: "" },
 	{
 		id: 1,
 		disabled: false,
@@ -148,7 +148,7 @@ export let isSelectDebuggerDisabled = writable(false);
 
 
 export const loadEnvironmentOptions  = writable([
-	{ id: 0, disabled: false, text: `LOAD`, content: "" },
+	{ id: 0, disabled: false, text: `load`, content: "" },
 	// { id: 0, disabled: false, text: `Load`, content: "" },
 	// { id: 0, disabled: false, text: `Load`, content: "" },
 	// { id: 1, disabled: false, text: `new`, content: {
@@ -718,7 +718,7 @@ export function loadEnvironmentSnapshotEntries() {
 					content: val,
 				},
 			],
-			[{ id: 0, disabled: false, text: `LOAD` }]
+			[{ id: 0, disabled: false, text: `load` }]
 		)
 	);
 }

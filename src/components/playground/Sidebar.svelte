@@ -326,7 +326,7 @@
     color: #ccc;
     line-height: 1.3;
     padding: 0.7em 1em 0.7em 1em;
-    width: 10em;
+    width: 8em;
     box-sizing: border-box;
     margin: 0;
     border: 0 solid #333;
@@ -354,7 +354,7 @@
     color: #fff;
     line-height: 1.3;
     padding: 0.7em 1em 0.7em 1em;
-    width: 10em;
+    width: 8em;
     box-sizing: border-box;
     margin: 0;
     border: 0 solid #333;
@@ -381,7 +381,7 @@
     color: #fff;
     line-height: 1.3;
     padding: 0.7em 1em 0.7em 1em;
-    width: 10em;
+    width: 8em;
     box-sizing: border-box;
     margin: 0;
     border: 0 solid #333;
@@ -407,7 +407,7 @@
     color: #ccc;
     line-height: 1.3;
     padding: 0.7em 1em 0.7em 1em;
-    width: 10em;
+    width: 8em;
     max-width: 100%;
     box-sizing: border-box;
     border: 0 solid #333;
@@ -434,7 +434,7 @@
     color: #fff;
     line-height: 1.3;
     padding: 0.7em 1em 0.7em 1em;
-    width: 10em;
+    width: 8em;
     max-width: 100%;
     box-sizing: border-box;
     border: 0 solid #333;
@@ -471,7 +471,7 @@
     color: #888;
     line-height: 1.3;
     /* padding: 0.7em 1em 0.7em 1em; */
-    width: 10em;
+    width: 8em;
     max-width: 100%;
     box-sizing: border-box;
     /* border: 0 solid #333; */
@@ -520,7 +520,7 @@
     color: #888;
     line-height: 1.3;
     padding: 0.7em 1em 0.7em 1em;
-    width: 10em;
+    width: 8em;
     max-width: 100%;
     box-sizing: border-box;
     border: 0 solid #333;
@@ -637,7 +637,7 @@
               on:click={ () => dispatchAdd('analyser') }
               disabled={ $isAddAnalyserDisabled }
               >
-        ANALYSER
+        analyser
       </button>
     </div>
 
@@ -687,14 +687,14 @@
       <button class="button-dark"
               on:click={ () => resetEnvironment() }
               >
-        RESET
+        reset
       </button>
     </div>
     <div class="controls">
       <button class="button-dark"
               on:click={ () => storeEnvironment() }
               >
-        STORE
+        store
       </button>
     </div>
 
@@ -720,7 +720,7 @@
       <button class="button-dark"
               on:click={ () => uploadEnvironment() }
               >
-        UPLOAD
+        upload
       </button>
     </div>
 
@@ -728,7 +728,7 @@
       <button class="button-dark"
               on:click={ () => downloadEnvironment() }
               >
-        DOWNLOAD
+        download
       </button>
     </div>
 

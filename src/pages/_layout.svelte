@@ -23,6 +23,11 @@
     loadEnvironmentSnapshotEntries
   } from '../stores/playground.js'
 
+  import {
+    siteMode,
+    fullScreen,
+    sideBarVisible
+  } from '../stores/common.js';
 
   $: loadSidebarLiveCodeOptions();
   $: loadEnvironmentSnapshotEntries();
@@ -95,7 +100,9 @@
 </script>
 
 <div class="app">
-	<header>
+	<header class="{ $siteMode === 'dark' ? 'sidebar-container': 'sidebar-container-light' }"
+          style="{ $fullScreen ? 'height: auto; visibility: visible;': 'height: 0px; visibility: hidden;' }"
+          >
 		<Navigation />
 	</header>
 

@@ -165,7 +165,7 @@
     color: #ccc;
     line-height: 1.3;
     padding: 0.7em 1em 0.7em 1em;
-    width: 10em;
+    width: 8em;
     max-width: 100%;
     box-sizing: border-box;
     border: 0 solid #333;
@@ -202,7 +202,7 @@
     color: #fff;
     line-height: 1.3;
     padding: 0.7em 1em 0.7em 1em;
-    width: 10em;
+    width: 8em;
     max-width: 100%;
     box-sizing: border-box;
     border: 0 solid #333;
@@ -240,7 +240,7 @@
     color: #888;
     line-height: 1.3;
     /* padding: 0.7em 1em 0.7em 1em; */
-    width: 10em;
+    width: 8em;
     max-width: 100%;
     box-sizing: border-box;
     /* border: 0 solid #333; */
@@ -280,7 +280,7 @@
     line-height: 1.3;
     padding: 0.7em 0em 0.7em 1em;
     /* width: 100%; */
-    width: 10em;
+    width: 8em;
     max-width: 100%;
     box-sizing: border-box;
     border: 0 solid #333;
@@ -323,7 +323,7 @@
       {#if itemProp.lineNumbers }
 
         <div class="controls">
-          <label class="input-dark">NUMBERS
+          <label class="input-dark">numbers
             <input  type="checkbox"
                     class="checkbox-input"
                     checked="checked"
@@ -344,7 +344,7 @@
           <button class="button-dark"
                   on:click={ () => messaging.publish('restart-ml') }
                   >
-                  RESTART
+                  restart
           </button>
         </div>
 
@@ -354,7 +354,7 @@
           <button class="button-dark"
                   on:click={ () => messaging.publish('show-ml-visor') }
                   >
-                  VISOR
+                  visor
           </button>
         </div>
 
@@ -366,7 +366,7 @@
                   on:click={ () => dispatchAdd('grammar') }
                   disabled={ $isAddGrammarEditorDisabled }
                   >
-                  GRAMMAR
+                  grammar
           </button>
         </div>
 

@@ -43,7 +43,8 @@
     populateCommonStoresWithFetchedProps,
     updateItemPropsWithCommonStoreValues,
     resetStores,
-    siteMode
+    siteMode,
+    sideBarVisible
   } from  "../../stores/common.js"
 
   import Controller from "../../engine/controller";
@@ -322,7 +323,7 @@
     background: #151515;
     grid-area: sidebar;
     height: 100%;
-    width: auto; /* width is defined by child */
+    /* width: auto; width is defined by child */
   }
 
   .sidebar-container-light {
@@ -330,7 +331,7 @@
     background: white;
     grid-area: sidebar;
     height: 100%;
-    width: auto; /* width is defined by child */
+    /* width: auto; width is defined by child */
   }
 
   .settings-container {
@@ -477,7 +478,9 @@
 </svelte:head>
 
 <div class="container">
-  <div class="{$siteMode === 'dark' ? 'sidebar-container' : 'sidebar-container-light'}">
+  <div class="{ $siteMode === 'dark' ? 'sidebar-container': 'sidebar-container-light' }"
+       style="{ $sideBarVisible ? 'width: auto; visibility: visible;': 'width: 0px; visibility: hidden;' }"
+    >
     <Sidebar />
   </div>
 
