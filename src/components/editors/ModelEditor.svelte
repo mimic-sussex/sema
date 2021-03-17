@@ -258,26 +258,22 @@
   }
 
   onMount(async () => {
-
-    if(!engine)
-      engine = new Engine();
-
-    learner = new Learner();
-    await engine.addLearner(id, learner)
-
-    codeMirror.set(content, "js", "material-ocean");
-
-    subscriptionTokenMID = messaging.subscribe("model-input-data", e => postToModel(e) );
-    subscriptionTokenMIB = messaging.subscribe("model-input-buffer", e => postToModel(e) );
-    // subscriptionTokenMODR = messaging.subscribe("model-output-data-request", e => postToModel(e) );
-
-    // modelWorker = new ModelWorker();  // Creates one ModelWorker per ModelEditor lifetime
-    // modelWorker.onmessage = e =>  onModelWorkerMessageHandler(e);
-
-    log( id, name, type, lineNumbers, className, hasFocus, theme, background, content, component );
+    try{
+      if(!engine)
+        engine = new Engine();
+      learner = new Learner();
+      await engine.addLearner(id, learner)
+      codeMirror.set(content, "js", "material-ocean");
+      log( id, name, type, lineNumbers, className, hasFocus, theme, background, content, component );
+    }
+    catch(error){
+      console.log();
+    }
 	});
 
   onDestroy(async () => {
+    engine.removeLearner(id);
+    learner.terminate();
     // modelWorker.terminate();
     // modelWorker = null; // make sure it is deleted by GC
     // messaging.unsubscribe(subscriptionTokenMID);

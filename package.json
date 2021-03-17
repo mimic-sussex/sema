@@ -66,7 +66,7 @@
 		"postcss": "^8.2.6",
 		"postcss-import": "^14.0.0",
 		"regl": "^2.1.0",
-		"sema-engine": "^0.0.36",
+		"sema-engine": "^0.0.37",
 		"spank": "^1.5.2",
 		"svelte-grid": "^4.0.0",
 		"svelte-preprocess": "^4.0.9"
