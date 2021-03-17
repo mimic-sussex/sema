@@ -20,7 +20,7 @@
 <style>
 
   .button-dark {
-    width: 40px;
+    width: 35px;
     height: 30px;
     display: block;
     font-size: 12px;
@@ -29,7 +29,7 @@
     cursor: pointer;
     color: red;
     line-height: 1.3;
-    padding: 0.5em 1em 0.5em 1em;
+    padding: 0.6em 1em 0.5em 0.8em;
     max-width: 100%;
     box-sizing: border-box;
     border: 0 solid #333;
@@ -51,7 +51,7 @@
   }
 
   .button-dark:hover {
-    width: 40px;
+    width: 35px;
     height: 30px;
     display: block;
     font-size: 12px;
@@ -60,7 +60,7 @@
     cursor: pointer;
     color: red;
     line-height: 1.3;
-    padding: 0.5em 1em 0.5em 1em;
+    padding: 0.6em 1em 0.5em 0.8em;
     max-width: 100%;
     box-sizing: border-box;
     border: 0 solid #333;
@@ -80,7 +80,7 @@
     box-shadow: 2px 2px 3px rgb(0, 0, 0), -1px -1px 3px #ffffff61;
   }
   .button-dark:active {
-    width: 40px;
+    width: 35px;
     height: 30px;
     display: block;
     font-size: 12px;
@@ -89,7 +89,7 @@
     cursor: pointer;
     color: red;
     line-height: 1.3;
-    padding: 0.5em 1em 0.5em 1em;
+    padding: 0.6em 1em 0.5em 0.8em;
     max-width: 100%;
     box-sizing: border-box;
     margin-top: 5px;

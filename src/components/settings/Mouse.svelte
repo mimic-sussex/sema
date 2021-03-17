@@ -67,7 +67,7 @@ import { Engine } from 'sema-engine/sema-engine';
 
 
   .button-dark {
-    width: 40px;
+    width: 35px;
     height: 30px;
     display: block;
     font-size: 12px;
@@ -76,7 +76,7 @@ import { Engine } from 'sema-engine/sema-engine';
     cursor: pointer;
     color: red;
     line-height: 1.3;
-    padding: 0.3em 1em 0.7em 1em;
+    padding: 0.25em 1em 0.75em 0.8em;
     max-width: 100%;
     box-sizing: border-box;
     border: 0 solid #333;
@@ -84,13 +84,7 @@ import { Engine } from 'sema-engine/sema-engine';
     margin-top: 5px;
     margin-right: 5px;
     /* box-shadow: 0 1px 0 0px rgba(4, 4, 4, 0.04); */
-   border-radius: .6em;
-    /* border-right-color: rgba(34,37,45, 0.1);
-    border-right-style: solid;
-    border-right-width: 1px;
-    border-bottom-color: rgba(34,37,45, 0.1);
-    border-bottom-style: solid;
-    border-bottom-width: 1px; */
+    border-radius: .6em;
     -moz-appearance: none;
     -webkit-appearance: none;
     appearance: none;
@@ -107,7 +101,7 @@ import { Engine } from 'sema-engine/sema-engine';
   }
 
   .button-dark:hover {
-    width: 40px;
+    width: 35px;
     height: 30px;
     display: block;
     font-size: 12px;
@@ -116,7 +110,7 @@ import { Engine } from 'sema-engine/sema-engine';
     cursor: pointer;
     color: red;
     line-height: 1.3;
-    padding: 0.3em 1em 0.7em 1em;
+    padding: 0.25em 1em 0.75em 0.8em;
     max-width: 100%;
     box-sizing: border-box;
     border: 0 solid #333;
@@ -145,7 +139,7 @@ import { Engine } from 'sema-engine/sema-engine';
     box-shadow: 2px 2px 3px rgb(0, 0, 0), -1px -1px 3px #ffffff61;
   }
   .button-dark:active {
-    width: 40px;
+    width: 35px;
     display: block;
     font-size: 12px;
     font-family: sans-serif;
@@ -153,7 +147,7 @@ import { Engine } from 'sema-engine/sema-engine';
     cursor: pointer;
     color: red;
     line-height: 1.3;
-    padding: 0.3em 1em 0.7em 1em;
+    padding: 0.25em 1em 0.75em 0.8em;
     max-width: 100%;
     box-sizing: border-box;
     margin-top: 5px;
