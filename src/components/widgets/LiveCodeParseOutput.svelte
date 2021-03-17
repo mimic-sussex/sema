@@ -8,19 +8,30 @@
     liveCodeAbstractSyntaxTree
   } from "../../stores/common.js";
 
-  onMount(async () => {
+  export let id;
+  export let name;
+	export let type;
+  export let hasFocus;
+  export let background;
+	export let lineNumbers;
+	export let theme;
+  export let component;
+  export let className;
+  export { className as class };
 
+
+
+ let log = e => { /* console.log(...e); */ }
+
+  let nil = (e) => { }
+
+  onMount(async () => {
+    log( id, name, type, className, lineNumbers, hasFocus, theme, background, component );
 	});
 
   onDestroy(async () => {
 
 	});
-
-
-  let log = (e) => { console.log(e.detail.value); }
-
-  let nil = (e) => { }
-
 
 </script>
 

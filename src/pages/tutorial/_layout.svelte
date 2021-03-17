@@ -27,6 +27,9 @@
     resetStores
   } from "../../stores/common.js";
 
+  import Controller from "../../engine/controller";
+  let controller = new Controller(); // this will return the previously created Singleton instance
+
   let container;
 
   // Tutorial dashboard configuration
@@ -41,6 +44,8 @@
   ];
   let rowHeight = 100;
   let gap = [2, 2];
+
+
 
   let handleSelect = e => {
 
@@ -70,12 +75,13 @@
           $items = [...$items.filter(i => i !== dataItem), ...[dataItem]]
         }
         else if(e.detail.prop === "hasFocus"){
-          setFocused(dataItem);
+          // Currently, NO focused item feedback on tutorial
+          // setFocused(dataItem);
         }
       }
     }
     catch(error){
-      console.log("DEBUG:playground:component-update", dataItem );
+      console.error("Error updating item", error);
     }
 
   }
@@ -91,6 +97,10 @@
   };
 
   onMount( async () => {
+
+    if(!controller.samplesLoaded)
+      controller.init('http://localhost:5000/sema-engine');
+
     // console.log("DEBUG:routes/tutorial/_layout:onMount")
     // controller.init('http://localhost:5000/sema-engine');
   });
@@ -105,9 +115,9 @@
 	<title>Sema – Tutorial</title>
 </svelte:head>
 
-<div class="container">
+<div class="tutorial-container">
 
-  <div class="sidebar-container"
+  <div class="tutorial-sidebar-container"
     bind:this={ container }
     >
 
@@ -147,12 +157,13 @@
 <!--
       on:adjust={onAdjust}
       on:mount={onChildMount} -->
-  <div class="dashboard-container">
+  <div class="tutorial-dashboard-container">
     <Grid
       bind:items={ $items }
       { cols }
       { rowHeight }
       { gap }
+      fastStart={ false }
       on:adjust={ onAdjust }
       on:mount={ onChildMount }
       let:item
@@ -173,8 +184,8 @@
   </div>
 </div>
 
-<style>
-  .container {
+<style global>
+  .tutorial-container {
   	height: 100%;
   	display: grid;
   	grid-template-columns: auto 1fr;
@@ -186,7 +197,7 @@
     /* background: linear-gradient(150deg, rgba(0,18,1,1) 0%, rgba(7,5,17,1) 33%, rgba(16,12,12,1) 67%, rgb(12, 12, 12) 100%); */
   }
 
-  .sidebar-container {
+  .tutorial-sidebar-container {
     /* background: linear-gradient(150deg, rgba(0,18,1,1) 0%, rgba(7,5,17,1) 33%, rgba(16,12,12,1) 67%, rgb(12, 12, 12) 100%); */
     grid-area: sidebar;
     /* grid-row: 0 / 1; */
@@ -235,7 +246,7 @@
 
 
   }
-  .dashboard-container {
+  .tutorial-dashboard-container {
     grid-area: layout;
     /* grid-row: 0 / 2; */
     height: 100%;

@@ -9,7 +9,10 @@
 	// $: if ($user) $redirect('/')
 
 
-  import { onMount, onDestroy } from 'svelte';
+  import {
+    onMount,
+    onDestroy
+  } from 'svelte';
 
   import { PubSub } from "../../utils/pubSub.js";
 
@@ -50,7 +53,7 @@
   import Controller from "../../engine/controller";
   let controller = new Controller(); // this will return the previously created Singleton instance
 
-  const messaging = new PubSub();
+  // const messaging = new PubSub();
 
   let overlayContainer;
 
@@ -210,7 +213,7 @@
       }
     }
     catch(error){
-      console.log("DEBUG:playground:component-update", dataItem );
+      console.log(`Erro updating component: ${dataItem}`, error);
     }
 
   }
@@ -243,7 +246,7 @@
       messaging.publish('remove-engine-analyser', { id: item.id }); // notify audio engine to remove associated analyser
     }
     // console.log("DEBUG:dashboard:remove:", item);
-    messaging.publish("plaground-item-deletion", item.type);
+    // messaging.publish("plaground-item-deletion", item.type);
 
     remove.bind(null, item); // remove dashboard item binding
     delete item.component;
@@ -284,17 +287,17 @@
     for (const item of $items)
       updateItemPropsWithCommonStoreValues(item);
 
-    addSubscriptionToken = messaging.subscribe('playground-add', e => addItem(e) );
-    unsubscribeItemsChangeCallback = items.subscribe(value => {
-      //console.log('Playground items changed: ', value );
-    });
+    // addSubscriptionToken = messaging.subscribe('playground-add', e => addItem(e) );
+    // unsubscribeItemsChangeCallback = items.subscribe(value => {
+    //   //console.log('Playground items changed: ', value );
+    // });
   });
 
   onDestroy(() => {
     // console.log("DEBUG:routes/playground:onDestroy")
-    messaging.unsubscribe(addSubscriptionToken);
-    messaging.unsubscribe(resetSubscriptionToken);
-    unsubscribeItemsChangeCallback();
+    // messaging.unsubscribe(addSubscriptionToken);
+    // messaging.unsubscribe(resetSubscriptionToken);
+    // unsubscribeItemsChangeCallback();
     resetStores();
   });
 
@@ -479,7 +482,7 @@
 
 <div class="container">
   <div class="{ $siteMode === 'dark' ? 'sidebar-container': 'sidebar-container-light' }"
-       style="{ $sideBarVisible ? 'width: auto; visibility: visible;': 'width: 0px; visibility: hidden;' }"
+    style="{ $sideBarVisible ? 'width: auto; visibility: visible;': 'width: 0px; visibility: hidden;' }"
     >
     <Sidebar />
   </div>

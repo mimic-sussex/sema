@@ -23,7 +23,7 @@
     resetStores
   } from "../../../../stores/common.js";
 
-  // export let section; // we are grabbing this export variable value from Routify's file structure variable mechanism [chapter]/[section]
+  export let section; // we are grabbing this export variable value from Routify's file structure variable mechanism [chapter]/[section]
 
 
   let renderer = new marked.Renderer();
@@ -93,10 +93,13 @@
     }
   }
 
+  let log = () => {}
+
   onMount( async () => {
     for (const item of $items)
       await populateCommonStoresWithFetchedProps(item)
 
+    log(section);
     console.log(`DEBUG:tutorial/${$params.chapter}/${$params.section}/ index`);
     // promise = fetchMarkdown($selected.chapter_dir, $selected.section_dir); // Reactive statement, var 'promise' reacts to 'section' changes
   });

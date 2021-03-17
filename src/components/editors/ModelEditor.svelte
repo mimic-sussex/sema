@@ -274,13 +274,6 @@
   onDestroy(async () => {
     engine.removeLearner(id);
     learner.terminate();
-    // modelWorker.terminate();
-    // modelWorker = null; // make sure it is deleted by GC
-    // messaging.unsubscribe(subscriptionTokenMID);
-    // messaging.unsubscribe(subscriptionTokenMIB);
-    // // messaging.unsubscribe(subscriptionTokenMODR);
-    // messaging = null;
-    // console.log('DEBUG:ModelEditor:onDestroy')
 	});
 
 </script>
