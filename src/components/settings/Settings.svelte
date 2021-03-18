@@ -26,7 +26,7 @@
 
   <div style='width: 5px;'></div>
 
-  <Mouse />
+  <Screen />
   <div style='width: 5px;'></div>
 
   <Engine />
@@ -37,7 +37,6 @@
 
   <div style='width: 10px;'></div>
 
-  <Screen />
-  <!-- <SignOut /> -->
+  <Mouse />
 
 </div>

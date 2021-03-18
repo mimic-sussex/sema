@@ -105,6 +105,7 @@
   });
 
   onDestroy(() => {
+    $items = [];
     resetStores();
     // console.log("DEBUG:routes/tutorial/_layout:onDestroy")
   });
@@ -113,6 +114,27 @@
 </script>
 
 <style global>
+
+  code {
+    border-radius: 4px;
+    font-size: 100%;
+    background-color: white;
+    color: black;
+    padding: 2px 4px 2px 4px;
+    border: 1px solid #CCCCCC;
+
+  }
+
+  pre code {
+    display: block;
+    border-radius: 4px;
+    font-size: 110%;
+    background-color: white;
+    color: black;
+    padding: 5px;
+    border: 1px solid #CCCCCC;
+    margin: 0px 0px 0px 0px;
+  }
 
   .markdown-container {
     overflow: auto;

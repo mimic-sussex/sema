@@ -4,7 +4,7 @@
   import Grid from "svelte-grid";
   import gridHelp from "svelte-grid/build/helper";
 
-
+  import Settings from '../../components/settings/Settings.svelte';
   // import Dashboard from '../../components/layouts/Dashboard.svelte';
   // import Markdown from "../../components/tutorial/Markdown.svelte";
 
@@ -24,7 +24,8 @@
   import {
     populateCommonStoresWithFetchedProps,
     updateItemPropsWithCommonStoreValues,
-    resetStores
+    resetStores,
+    siteMode
   } from "../../stores/common.js";
 
   import Controller from "../../engine/controller";
@@ -48,13 +49,9 @@
 
 
   let handleSelect = e => {
-
     try{
-
       // await tick();
-      // console.log(`DEBUG:tutorial:_layout[/${$params.chapter}]/[${$params.section}]:`);
-      // console.log(`DEBUG:tutorial:_layout[/${$selected.chapter_dir}]/[${$selected.section_dir}]:`);
-
+      $items = []; // refresh items to call onDestroy on each (learner need to terminate workers)
       $goto(`/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/`);
     }
     catch(error){
@@ -106,6 +103,8 @@
   });
 
   onDestroy(() => {
+
+    $items = [];
     // console.log("DEBUG:routes/tutorial/_layout:onDestroy")
   });
 
@@ -154,6 +153,10 @@
       <slot scoped={ $selected } />
     </div>
   </div>
+
+  <div class="{$siteMode === 'dark' ? 'settings-container' : 'settings-container-light'}">
+    <Settings/>
+  </div>
 <!--
       on:adjust={onAdjust}
       on:mount={onChildMount} -->
@@ -189,7 +192,9 @@
   	height: 100%;
   	display: grid;
   	grid-template-columns: auto 1fr;
+    grid-template-rows: auto 1fr;
   	grid-template-areas:
+  		"sidebar settings"
   		"sidebar layout";
 	  background-color: #212121;
     overflow: hidden;
