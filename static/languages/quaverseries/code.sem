@@ -1,0 +1,14 @@
+// with #: to play
+// with ~: to mod
+#a: saw 50;
+#b: saw 51;
+
+~mod: saw ~modb >> blin 100 8000;
+
+#lead: saw 101 >> lpz ~mod 10;
+
+#c: noiz ~modb >> lpf ~modc;
+
+~modb: sin ~modc >> blin 0.1 0.9;
+
+~modc: sin 8 >> blin 0.1 0.9;

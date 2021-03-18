@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Logs
 logs
 *.log
@@ -79,3 +80,11 @@ public/
 
 .vercel
 .fake
+=======
+/node_modules/
+/dist/
+.DS_Store
+**/.history
+/src/tmp/
+.routify
+>>>>>>> sema-next/main

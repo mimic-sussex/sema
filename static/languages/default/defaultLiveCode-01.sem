@@ -1,0 +1,32 @@
+{0.25}clfreq; // Set the clock frequency to 1/4 cycle/s
+{5}barfreq;   // Set the bar frequency 5 bars/cycle
+
+// \909b kick drum sample sequence
+:s1:{{64}clt,{4}clp, <4>}idx;
+:s2:{:s1:}clt;
+:t1:{{:s2:}\909b,1000,0.1}lpz;
+:t1:{{:t1:,50}dist,0.7}mul;
+   
+// \909closed hi-hat sample sequence		 
+:s3:{{64}clt,{4}clp, <16,32>}idx;
+:s4:{:s3:}clt;
+:t2:{{:s4:}\909closed,1000,0.1}hpz;
+
+// \909open hi-hat sequence
+:s5:{{64}clt,{2}clp, <16,8,12>}idx;
+:s6:{:s5:}clt;
+:t3:{{:s6:}\909open,1}dist;
+
+// \909 snare drum sample sequence		 
+:s7:{{4}clp,<2,3,3>}rsq;
+:t4:{:s7:}\909;     
+
+// 3-osc synth sequence
+:o1:{200}saw;
+:o2:{300}sqr;
+:o3:{{100}sawn, 100,1}lpz;
+:t5:{{2}clp,<1,3,2>,<:o1:,:o2:,:o3:>}rsq;
+
+//mix all together 
+:m:{:t1:,:t2:,:t3:,:t4:,{:t5:,0.1}mul}mix;
+{:m:,10000,1,1,0,0,0}svf
