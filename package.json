@@ -10,6 +10,7 @@
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack",
     "dev": "run-p watch:routify watch:webpack",
+    "dev:err": "run-p watch:routify watch:webpack 2>err.log 1>out.log",
     "watch:webpack": "webpack serve --mode development --env development",
     "watch:routify": "routify -d --pages ./client/routes/",
     "test": "mocha --opts mocha.opts",
@@ -32,7 +33,7 @@
     "marked": "^0.8.2",
     "nearley": "^2.19.0",
     "remove": "^0.1.5",
-    "sema-engine": "^0.0.17"
+    "sema-engine": "^0.0.32"
   },
   "devDependencies": {
     "@sveltech/routify": "^1.7.12",

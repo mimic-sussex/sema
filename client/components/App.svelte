@@ -20,7 +20,7 @@
     if( /firefox/i.test(navigator.userAgent) ) $unsupportedBrowser = true
     else{
       // Need a dynamic import to prevent the AudioWorkletNode inside the audioEngine module from loading [Safari fix]
-      import('sema-engine/dist/sema-engine.mjs')
+      import('sema-engine/sema-engine.mjs')
         .then( module => {
           // Apply in Inversion of Control with constructor injection
           controller = new Controller(new module.Engine());
