@@ -26,6 +26,7 @@
   import Grid from "svelte-grid";
   import gridHelp from "svelte-grid/build/helper";
   let grid;
+  let messaging = new PubSub()
 
   import {
 
@@ -287,17 +288,16 @@
     for (const item of $items)
       updateItemPropsWithCommonStoreValues(item);
 
-    // addSubscriptionToken = messaging.subscribe('playground-add', e => addItem(e) );
-    // unsubscribeItemsChangeCallback = items.subscribe(value => {
-    //   //console.log('Playground items changed: ', value );
-    // });
+    addSubscriptionToken = messaging.subscribe('playground-add', e => addItem(e) );
+    unsubscribeItemsChangeCallback = items.subscribe(value => {
+      //console.log('Playground items changed: ', value );
+    });
   });
 
   onDestroy(() => {
-    // console.log("DEBUG:routes/playground:onDestroy")
-    // messaging.unsubscribe(addSubscriptionToken);
+    messaging.unsubscribe(addSubscriptionToken);
     // messaging.unsubscribe(resetSubscriptionToken);
-    // unsubscribeItemsChangeCallback();
+    unsubscribeItemsChangeCallback();
     resetStores();
   });
 

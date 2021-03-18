@@ -285,27 +285,6 @@
     margin-right: 5px;
   }
 
-  /* .checkbox-span {
-    color: whitesmoke;
-    margin-left: 20px;
-  } */
-  /* .checkbox-input {
-    margin-left: 5px;
-  } */
-
-  /* The checkbox container */
-  /* .checkbox-container {
-    display: block;
-    position: relative;
-    color: whitesmoke;
-    margin-bottom: 10px;
-    cursor: pointer;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    font-size: 12px;
-  } */
 
   .layout-combobox-container{
     /* height: 100%; */
