@@ -115,11 +115,3 @@ header {
 	/* justify-content: space-evenly;
 	align-content: space-around; */
 }
-code {
-	margin-top: 48px;
-	background: #444;
-	display: block;
-	color: white;
-	text-align: center;
-	padding: 16px;
-}
