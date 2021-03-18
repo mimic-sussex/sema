@@ -55,17 +55,22 @@
   .about-sema {
     width: 100%;
     height: 100%;
-    padding: 20px 20px 0px 20px;
     overflow: hidden;
   }
 
   .sema-community {
     width: 100%;
     height: 100%;
-    padding: 20px;
     overflow: hidden;
   }
 
+  h2 {
+    padding: 10px 20px 0px 20px;
+  }
+
+  p {
+    padding: 10px 20px 0px 20px;
+  }
   .sema {
     color: #FFFFFF;
   }
