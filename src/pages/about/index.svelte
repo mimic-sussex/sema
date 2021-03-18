@@ -1,8 +1,7 @@
 <div class="center-all">
   <div class="about">
-    <h1>ABOUT</h1>
     <h2>
-      What is <span class='sema'>sema</span>?
+      About <span class='sema'>sema</span>
     </h2>
     <p>
       <span>
@@ -24,15 +23,15 @@
     </h2>
     <p>
       <span>
-        The playground
+        The playground and the interactive tutorial are the main grounds of exploration. They provide a lightweight introduction and gradual learning for you to get going with Sema.
       </span>
     </p>
     <p>
-      The discord community
+      The sema <a href="https://discord.gg/47kBf2Rr">discord community</a>.
     </p>
     <p>
       <span>
-        The github repos
+        The code repositories in the Github ecosystem
       </span>
     </p>
   </div>
@@ -40,7 +39,8 @@
 
 <style>
   .about {
-    width: 100vw;
+    width: 100%;
+    height: 100%;
     padding: 20px;
     color: #999999;
   }
