@@ -2,7 +2,7 @@
   <div class="about">
     <div class="about-sema">
       <h2>
-        About <span class='sema'>sema</span>
+        about <span class='sema'>sema</span>
       </h2>
       <p>
         <span>
@@ -16,7 +16,7 @@
         Sema is similar to other live coding environments and domain-specific languages for sound and music, such as SuperCollider, TidalCycles and Gibber.
       </p>
       <p>
-        Uniquely, Sema provides an integrated experience to machine learning and language design in your Web browser. It has a real-time, interactive interpreter for machine learning libraries (e.g. <a href="https://www.tensorflow.org/js/">tensorflow.js</a> and a compiler for <a href="https://hardmath123.github.io/earley.html">BNF grammars</a>.
+        Uniquely, Sema provides an integrated experience to machine learning and language design in your Web browser. It has a real-time, interactive interpreter for machine learning libraries (e.g. <a href="https://www.tensorflow.org/js/">tensorflow.js</a>) and a compiler for <a href="https://hardmath123.github.io/earley.html">BNF grammars</a>.
       </p>
     </div>
 
@@ -25,8 +25,16 @@
         <span class='sema'>sema</span> community
       </h2>
       <p>
-        Do you need help? Check issues on <a href="https://github.com/mimic-sussex/sema">Github</a> or talk to us on Discord <a href="https://discord.gg/47kBf2Rr">(invite link)</a>.
+        Do you need help? Check following:
       </p>
+      <!-- <p> -->
+        <ul>
+          <li>video tutorials on our Youtube <a href="https://github.com/mimic-sussex/sema">channel</a></li>
+          <li>talk to us on <a href="https://discord.gg/47kBf2Rr">Discord</a></li>
+          <li>issues on <a href="https://github.com/mimic-sussex/sema">Github</a></li>
+          <li>drop up an email at <a href="https://github.com/mimic-sussex/sema">sema.live.coding@gmail.com</a></li>
+        </ul>
+      <!-- </p> -->
     </div>
 
   </div>

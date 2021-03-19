@@ -520,7 +520,7 @@
         <span class='move'>+</span>
 
         <div  class="content"
-              style="background: { item.fixed ? '#bka' : dataItem.data.background }; border: { dataItem.data.hasFocus ? '1px solid rgba(100, 100, 100, 0.5)': '1px solid rgba(25, 25, 25, 1)' }; border-width: 1px 0px 0px 1px;"
+              style="background: { item.fixed ? '#bka' : dataItem.data.background }; border: { dataItem.data.hasFocus ? '1px solid rgba(100, 100, 100, 0.5)': '1px solid rgba(25, 25, 25, 0.1)' }; border-width: 1px 0px 0px 1px;"
               on:pointerdown={ e => e.stopPropagation() }
               >
 
