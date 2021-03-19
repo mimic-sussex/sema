@@ -1,7 +1,7 @@
 <script>
   import { url, route } from "@roxi/routify";
 
-  $: match = $route.path.match(/\/modal\/([^\/]+)\//);
+  $: match = $route.path.match(/\/docs\/([^\/]+)\//);
   $: active = match && match[1];
 
 
@@ -56,74 +56,69 @@
   .container-docs {
     display: grid;
   	grid-template-areas:
-  		"sidebar settings"
+  		"header header"
+      "sidebar settings"
   		"sidebar layout";
     grid-template-columns: 200px 1fr;
     grid-template-rows: auto 1fr;
-
+    color: #999999;
   }
 
-  .sidebar-item {
-    padding: 10px 10px 0px 10px;
-  }
-
-  .menu {
+  .sidebar-menu {
     display: flex;
     flex-direction: column;
   }
 
+  .sidebar-item {
+    padding: 10px 20px 0px 10px;
+  }
+
+  h2 {
+    padding: 10px 20px 0px 20px;
+  }
+  .header-docs {
+    grid-area: header;
+  }
+
 </style>
 
-<div data-routify="scroll-lock">
+<div class='container-docs' data-routify="scroll-lock">
 
-  <h2>reference documentation</h2>
-  <div class="container-docs">
-
-    <div class="menu">
-
-      <a href={$url('./default-language')}
-          class="sidebar-item {active === 'default-language' ? 'default-language' : ''}"
-          >
-        Default Language
-      </a>
-
-      <a href={$url('./intermediate-language')}
-          class="sidebar-item {active === 'intermediate-language' ? 'intermediate-language' : ''}"
-          >
-        Intermediate Language
-      </a>
-
-      <a href={$url('./load-sound-files')}
-          class="sidebar-item {active === 'load-sound-files' ? 'load-sound-files' : ''}"
-          >
-        Load sound files
-      </a>
-
-      <a href={$url('./editor-utils')}
-          class="sidebar-item {active === 'editor-utils' ? 'editor-utils' : ''}"
-          >
-        Editor utils
-      </a>
-
-      <a href={$url('./maximilian-dsp-api')}
-          class="sidebar-item {active === 'maximilian-dsp-api' ? 'maximilian-dsp-api' : ''}"
-          >
-        Load sound files
-      </a>
-
-
-
-    </div>
-
-    <div>
-
-      <slot>
-        <!-- optional fallback -->
-      </slot>
-
-    </div>
+  <div class='header-docs'>
+    <h2>reference documentation</h2>
   </div>
 
-  <br />
+  <div class="sidebar-menu">
+    <a href={$url('./default-language')}
+        class="sidebar-item {active === 'default-language' ? 'default-language' : ''}"
+        >
+      Default Language
+    </a>
+    <a href={$url('./intermediate-language')}
+        class="sidebar-item {active === 'intermediate-language' ? 'intermediate-language' : ''}"
+        >
+      Intermediate Language
+    </a>
+    <a href={$url('./load-sound-files')}
+        class="sidebar-item {active === 'load-sound-files' ? 'load-sound-files' : ''}"
+        >
+      Load sound files
+    </a>
+    <a href={$url('./editor-utils')}
+        class="sidebar-item {active === 'editor-utils' ? 'editor-utils' : ''}"
+        >
+      Editor utils
+    </a>
+    <a href={$url('./maximilian-dsp-api')}
+        class="sidebar-item {active === 'maximilian-dsp-api' ? 'maximilian-dsp-api' : ''}"
+        >
+      Load sound files
+    </a>
+  </div>
+  <div>
+    <slot>
+      <!-- optional fallback -->
+    </slot>
+  </div>
 
 </div>

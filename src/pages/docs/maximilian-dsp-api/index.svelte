@@ -885,7 +885,6 @@
     padding: 10px 20px 0px 20px;
   }
 
-
   code {
     border-radius: 4px;
     font-size: 100%;

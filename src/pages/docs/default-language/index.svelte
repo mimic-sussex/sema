@@ -498,8 +498,8 @@
 
 <style>
   .about {
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     color: #999999;
     overflow: auto;
     display: grid;
@@ -513,4 +513,16 @@
   p {
     padding: 10px 20px 0px 20px;
   }
+
+  code {
+    /* display: none !important; */
+    width: auto;
+
+  }
+
+  pre{
+    /* display: none !important; */
+    width: 500px;
+  }
+
 </style>

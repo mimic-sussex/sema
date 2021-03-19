@@ -22,15 +22,10 @@
 
     <div class="sema-community">
       <h2>
-        The <span class='sema'>sema</span> live coding community
+        <span class='sema'>sema</span> community
       </h2>
       <p>
-        The sema <a href="https://discord.gg/47kBf2Rr">discord community</a>.
-      </p>
-      <p>
-        <span>
-          Sema's source repository is available on <a href="https://github.com/mimic-sussex/sema">Github</a>.
-        </span>
+        Do you need help? Check issues on <a href="https://github.com/mimic-sussex/sema">Github</a> or talk to us on Discord <a href="https://discord.gg/47kBf2Rr">(invite link)</a>.
       </p>
     </div>
 
