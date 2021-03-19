@@ -25,16 +25,11 @@
         The <span class='sema'>sema</span> live coding community
       </h2>
       <p>
-        <span>
-          The playground and the interactive tutorial are the main grounds of exploration. They provide a lightweight introduction and gradual learning for you to get going with Sema.
-        </span>
-      </p>
-      <p>
         The sema <a href="https://discord.gg/47kBf2Rr">discord community</a>.
       </p>
       <p>
         <span>
-          The code repositories in the Github ecosystem
+          Sema's source repository is available on <a href="https://github.com/mimic-sussex/sema">Github</a>.
         </span>
       </p>
     </div>

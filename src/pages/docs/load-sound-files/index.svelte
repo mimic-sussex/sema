@@ -68,26 +68,6 @@
     padding: 10px 20px 0px 20px;
   }
 
-  code {
-    border-radius: 4px;
-    font-size: 100%;
-    background-color: white;
-    color: black;
-    padding: 2px 4px 2px 4px;
-    border: 1px solid #CCCCCC;
-
-  }
-
-  pre  {
-    display: block;
-    border-radius: 4px;
-    font-size: 110%;
-    background-color: white;
-    color: black;
-    padding: 5px;
-    border: 1px solid #CCCCCC;
-    margin: 0px 0px 0px 0px;
-  }
 
   p {
     padding: 10px 20px 0px 20px;

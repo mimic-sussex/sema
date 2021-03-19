@@ -3,6 +3,8 @@
 
   $: match = $route.path.match(/\/modal\/([^\/]+)\//);
   $: active = match && match[1];
+
+
 </script>
 
 <style>
@@ -47,42 +49,70 @@
     text-align: center;
   }
 
-  .center {
-    /* text-align: center; */
-  }
   .active {
     font-weight: bold;
   }
 
-  .container {
+  .container-docs {
     display: grid;
-    grid-template-areas:
+  	grid-template-areas:
+  		"sidebar settings"
+  		"sidebar layout";
+    grid-template-columns: 200px 1fr;
+    grid-template-rows: auto 1fr;
 
-      "sidebar slot";
+  }
+
+  .sidebar-item {
+    padding: 10px 10px 0px 10px;
   }
 
   .menu {
-
-
+    display: flex;
+    flex-direction: column;
   }
-
 
 </style>
 
 <div data-routify="scroll-lock">
 
-  <div class="center container">
+  <h2>reference documentation</h2>
+  <div class="container-docs">
 
     <div class="menu">
-      <a href={$url('./default-language')} class={active === 'basic' ? 'active' : ''}>
+
+      <a href={$url('./default-language')}
+          class="sidebar-item {active === 'default-language' ? 'default-language' : ''}"
+          >
         Default Language
       </a>
-      <a href={$url('./intermediate-language')} class={active === 'animated' ? 'active' : ''}>
+
+      <a href={$url('./intermediate-language')}
+          class="sidebar-item {active === 'intermediate-language' ? 'intermediate-language' : ''}"
+          >
         Intermediate Language
       </a>
-      <a href={$url('./intermediate-language')} class={active === 'animated' ? 'active' : ''}>
-        Intermediate Language
+
+      <a href={$url('./load-sound-files')}
+          class="sidebar-item {active === 'load-sound-files' ? 'load-sound-files' : ''}"
+          >
+        Load sound files
       </a>
+
+      <a href={$url('./editor-utils')}
+          class="sidebar-item {active === 'editor-utils' ? 'editor-utils' : ''}"
+          >
+        Editor utils
+      </a>
+
+      <a href={$url('./maximilian-dsp-api')}
+          class="sidebar-item {active === 'maximilian-dsp-api' ? 'maximilian-dsp-api' : ''}"
+          >
+        Load sound files
+      </a>
+
+
+
     </div>
 
     <div>
