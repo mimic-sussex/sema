@@ -297,7 +297,7 @@
   onDestroy(() => {
     messaging.unsubscribe(addSubscriptionToken);
     // messaging.unsubscribe(resetSubscriptionToken);
-    unsubscribeItemsChangeCallback();
+    // unsubscribeItemsChangeCallback();
     resetStores();
   });
 

@@ -6,8 +6,9 @@
 		['/index', 'home'],
 		['/playground', 'playground'],
 		['/tutorial', 'tutorial'],
+		['/docs', 'docs'],
 		['/about', 'about'],
-		['/admin', 'admin'],
+		// ['/admin', 'admin'],
 	]
 
 
@@ -31,6 +32,7 @@
 
 	<div>
 		{#if $user}
+			<a href="/admin">admin</a>
 			<img src={$user.picture} alt="profile - {$user.nickname}" />
 			<a href="#signout" on:click={signout}>signout</a>
 		{:else}
