@@ -13,6 +13,21 @@
   let handleClickFullScreen = () => {
     $fullScreen? $sideBarVisible = false : $sideBarVisible = true;
     $fullScreen = !$fullScreen;
+
+    if($fullScreen){
+      // document.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+      // document.webkitExitFullscreen();
+      // document.mozCancelFullScreen();
+      // document.msExitFullscreen();
+      document.exitFullscreen();
+    }
+    else {
+      // document.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+      // document.mozRequestFullScreen();
+      // document.msRequestFullscreen();
+      document.querySelector("#routify-app").requestFullscreen(); // standard
+    }
+
   }
 
 </script>

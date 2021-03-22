@@ -4,6 +4,8 @@
   // import SiteColor from './SiteColor.svelte';
   import SiteMode from './SiteMode.svelte';
   import Screen from './Screen.svelte';
+  import Share from './Share.svelte';
+  import Save from './Save.svelte';
   import Mouse from './Mouse.svelte';
 
 </script>
@@ -38,5 +40,14 @@
   <div style='width: 10px;'></div>
 
   <Mouse />
+
+  <div style='width: 10px;'></div>
+
+  <Save/>
+
+
+  <div style='width: 10px;'></div>
+
+  <Share/>
 
 </div>
