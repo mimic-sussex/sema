@@ -10,24 +10,53 @@
     $sideBarVisible = !$sideBarVisible;
   }
 
-  let handleClickFullScreen = () => {
-    $fullScreen? $sideBarVisible = false : $sideBarVisible = true;
-    $fullScreen = !$fullScreen;
+  const isFullScreen = () => {
+    return (( document.fullscreenElement && document.fullscreenElement !== null) ||
+      ( document.webkitFullscreenElement && document.webkitFullscreenElement !== null) ||
+      ( document.mozFullScreenElement && document.mozFullScreenElement !== null) ||
+      ( document.msFullscreenElement && document.msFullscreenElement !== null)) !== undefined;
+  }
 
-    if($fullScreen){
-      // document.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
-      // document.webkitExitFullscreen();
-      // document.mozCancelFullScreen();
-      // document.msExitFullscreen();
-      document.exitFullscreen();
+  const exitHandler = () => {
+    if (!document.fullscreenElement && !document.webkitIsFullScreen && !document.mozFullScreen && !document.msFullscreenElement) {
+     $fullScreen = $sideBarVisible = !isFullScreen();
+    }
+  }
+
+  const setFullScreenMode = (el, mode) => {
+
+    if(!mode){
+      if(el.requestFullscreen){
+        el.requestFullscreen().catch(() => { });
+        document.addEventListener('fullscreenchange', exitHandler, false);
+      } else if (el.webkitRequestFullscreen) {
+        el.webkitRequestFullscreen();
+        document.addEventListener('webkitfullscreenchange', exitHandler, false);
+      } else if (el.mozRequestFullScreen) {
+        el.mozRequestFullScreen();
+        document.addEventListener('mozfullscreenchange', exitHandler, false);
+      } else if (root.msRequestFullscreen) {
+        el.msRequestFullscreen();
+        document.addEventListener('MSFullscreenChange', exitHandler, false);
+      }
     }
     else {
-      // document.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
-      // document.mozRequestFullScreen();
-      // document.msRequestFullscreen();
-      document.querySelector("#routify-app").requestFullscreen(); // standard
+      if (document.exitFullscreen) {
+        document.exitFullscreen().catch(() => { });
+      } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+      } else if (document.mozCancelFullScreen) {
+        document.mozCancelFullScreen();
+      } else if (document.msExitFullscreen) {
+        document.msExitFullscreen();
+      }
     }
+    $sideBarVisible = $fullScreen = mode;
+  }
 
+
+  const handleClickFullScreen = () => {
+    setFullScreenMode(document.querySelector("#routify-app"), isFullScreen());
   }
 
 </script>
@@ -170,7 +199,7 @@
 <div style='width: 5px;'></div>
 
 <button class="button-dark"
-        style="{$fullScreen? `visibility:visible;`: `visibility:hidden`}"
+        style="{ $fullScreen? `visibility:visible;`: `visibility:hidden` }"
         on:click={ handleClickSideBar }
         >
   <svg  version="1.1"
