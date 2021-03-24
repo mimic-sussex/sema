@@ -24,7 +24,7 @@
   import {
     populateCommonStoresWithFetchedProps,
     updateItemPropsWithCommonStoreValues,
-    resetStores,
+    updateItemPropsWithFetchedValues,
     siteMode
   } from "../../stores/common.js";
 
@@ -52,6 +52,7 @@
     try{
       // await tick();
       $items = []; // refresh items to call onDestroy on each (learner need to terminate workers)
+      localStorage.setItem("tutorial-url", `/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/`);
       $goto(`/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/`);
     }
     catch(error){
@@ -95,10 +96,29 @@
 
   onMount( async () => {
 
-    if(!controller.samplesLoaded)
+    if(!controller.samplesLoaded){
       controller.init('http://localhost:5000/sema-engine');
+      $goto(localStorage.getItem("tutorial-url"));
+    }
+console.log($url())
+// console.log(`layout:url:${$params.chapter}:params:${$params.section}}`);
 
-    // console.log("DEBUG:routes/tutorial/_layout:onMount")
+    if($items.length == 0){
+      let json = await fetch(document.location.origin + `/tutorial/01-basics/01-introduction/layout.json`)
+                            .then( r => r.json());
+
+      $items = json.map( item => hydrateJSONcomponent(item) );
+
+      for (const item of $items){
+        await updateItemPropsWithFetchedValues(item);
+        await populateCommonStoresWithFetchedProps(item);
+        updateItemPropsWithCommonStoreValues(item)
+      }
+    }
+
+
+
+    console.log("DEBUG:routes/tutorial/_layout:onMount")
     // controller.init('http://localhost:5000/sema-engine');
   });
 

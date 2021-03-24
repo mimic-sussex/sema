@@ -20,8 +20,6 @@
     Engine
   } from 'sema-engine/sema-engine';
 
-  import { addToHistory } from "../../utils/history.js";
-
   import {
     nil,
     log

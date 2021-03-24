@@ -37,8 +37,6 @@
   }
 
   let updateAnalyserByteData = e => {
-    // console.log("updateAnalyserByteData");
-    // console.log(e);
     if(e !== undefined){
       smoothingTimeConstant = e.smoothingTimeConstant;
       fftSize = e.fftSize;

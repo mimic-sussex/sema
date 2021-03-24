@@ -1,5 +1,5 @@
 <script>
-  import { ready, url, params } from "@roxi/routify";
+  import { isActive, url, params } from "@roxi/routify";
 	import { authStore } from '../auth'
 	const { user, signout } = authStore
 	const links = [
@@ -8,14 +8,21 @@
 		['/tutorial', 'tutorial'],
 		['/docs', 'docs'],
 		['/about', 'about'],
-		// ['/admin', 'admin'],
 	]
 
 
   let persistentParams = { chapter: '01-basics', section: '01-introduction' };
   // update url parameters only when navigating tutorials
-  $: if($params.chapter && $params.section) persistentParams = $params
+  $: if($params.chapter && $params.section) {
+    // console.log(`navigation:url:${$url}:params:${$params}}`);
+    console.log(`navigation:url:${$params.chapter}:params:${$params.section}}`);
+    persistentParams = $params
+  }
 </script>
+
+<style>
+  .active {font-weight: bold}
+</style>
 
       <!-- {#if links.path.contains('/tutorial')} -->
 <nav>
@@ -23,9 +30,9 @@
 	<div>
 		{#each links as [path, name]}
       {#if path==`tutorial`}
-        <a href={ $url('/tutorial/:chapter/:section/', persistentParams ) }>Tutorial</a>
+        <a class:active={$isActive(path)} href={ $url('/tutorial/:chapter/:section/', persistentParams ) }>Tutorial</a>
       {:else}
-  			<a href={path}>{name}</a>
+  			<a class:active={$isActive(path)} href={path}>{name}</a>
       {/if}
 		{/each}
 	</div>

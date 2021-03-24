@@ -90,7 +90,11 @@
 
   let persistentParams = { chapter: '01-basics', section: '01-introduction' };
   // update url parameters only when navigating tutorials
-  $: if($params.chapter && $params.section) persistentParams = $params
+  $: if($params.chapter && $params.section) {
+
+    persistentParams = $params
+
+  }
 
   onMount( async () => {
     // console.log("DEBUG:routes/_layout:onMount");

@@ -4,12 +4,16 @@
     fullScreen
   } from '../../stores/common.js';
 
+  import {
+    items,
+  } from '../../stores/tutorial.js';
 
   let engineLoaded = false;
 
   let handleClick = () => {
-    $siteMode === 'dark'? $siteMode = 'light': $siteMode = 'dark';
+    window.localStorage["tutorial-" + new Date(Date.now()).toISOString()] = JSON.stringify($items)
   }
+
 
 </script>
 
@@ -119,24 +123,12 @@
 
 
 
-  path {
-
-    transform: translate(-3px, -5px)
-  }
-
-  .audio {
-    fill: #0050A0;
-  }
-
-  .no-audio {
-    fill: red;
-  }
 
   .light-mode {
     fill: rgb(133, 130, 130);
     enable-background:new 0 0 512 512;
     padding-bottom:3px;
-    width: 16px;
+    width: 15px;
   }
 
 </style>
@@ -152,12 +144,10 @@
         xmlns:xlink="http://www.w3.org/1999/xlink"
         x="0px" y="0px"
         viewBox="0 0 512 512"
-        style="enable-background:new 0 0 512 512;"
+        style="enable-background:new 0 0 512 512;width:15px;"
+        class="light-mode"
         xml:space="preserve"
         >
-        <style type="text/css">
-          .st0{fill:#555555;}
-        </style>
         <g id="XMLID_1_">
           <path id="XMLID_9_" d="M466.5,0h-381L0,83.6v382.8C0,491.6,20.4,512,45.5,512h420.9c25.1,0,45.5-20.4,45.5-45.5V45.5
             C512,20.4,491.6,0,466.5,0z M392.1,29.7v60.4H151.5V29.7H392.1z M91.1,481.3v-30.7h330.8v29.7H91.1V481.3z M482.3,465.5
@@ -173,8 +163,8 @@
             xmlns="http://www.w3.org/2000/svg"
             xmlns:xlink="http://www.w3.org/1999/xlink"
             x="0px" y="0px"
-            viewBox="0 0 512 512"
             style="enable-background:new 0 0 512 512;width:15px;"
+            viewBox="0 0 512 512"
             xml:space="preserve"
             >
         <g>

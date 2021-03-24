@@ -118,25 +118,11 @@
 
 
 
-
-  path {
-
-    transform: translate(-3px, -5px)
-  }
-
-  .audio {
-    fill: #0050A0;
-  }
-
-  .no-audio {
-    fill: red;
-  }
-
   .light-mode {
     fill: rgb(133, 130, 130);
     enable-background:new 0 0 512 512;
     padding-bottom:3px;
-    width: 16px;
+    width: 15px;
   }
 
 </style>
@@ -155,10 +141,8 @@
             viewBox="0 0 512 512"
             style="enable-background:new 0 0 512 512;"
             xml:space="preserve"
+            class='light-mode'
             >
-        <style type="text/css">
-          .st0{fill:#555555;}
-        </style>
         <g>
           <path class="st0" d="M404.9,0c45.1,0,81.5,37.1,81.5,82.8c0,45.7-36.5,82.8-81.5,82.8c-24.2,0-46-10.7-60.9-27.7l-160.9,88.1
             c3.6,9.3,5.5,19.5,5.5,30.1c0,13.9-3.3,26.9-9.3,38.4l153.8,95.4c13.8-25.8,40.7-43.4,71.7-43.4c45.1,0,81.5,37.1,81.5,82.8
