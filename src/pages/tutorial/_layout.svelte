@@ -100,7 +100,6 @@
       controller.init('http://localhost:5000/sema-engine');
       $goto(localStorage.getItem("tutorial-url"));
     }
-console.log($url())
 // console.log(`layout:url:${$params.chapter}:params:${$params.section}}`);
 
     if($items.length == 0){

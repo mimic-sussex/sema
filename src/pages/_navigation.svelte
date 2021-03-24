@@ -21,7 +21,9 @@
 </script>
 
 <style>
-  .active {font-weight: bold}
+  .active {
+    text-decoration: underline;
+  }
 </style>
 
       <!-- {#if links.path.contains('/tutorial')} -->
