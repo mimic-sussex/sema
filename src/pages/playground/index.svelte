@@ -54,6 +54,8 @@
   import Controller from "../../engine/controller";
   let controller = new Controller(); // this will return the previously created Singleton instance
 
+  let engine;
+
   // const messaging = new PubSub();
 
   let overlayContainer;
@@ -295,6 +297,9 @@
   });
 
   onDestroy(() => {
+    if(controller)
+      controller.stop();
+
     messaging.unsubscribe(addSubscriptionToken);
     // messaging.unsubscribe(resetSubscriptionToken);
     // unsubscribeItemsChangeCallback();

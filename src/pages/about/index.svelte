@@ -16,7 +16,7 @@
         Sema is similar to other live coding environments and domain-specific languages for sound and music, such as SuperCollider, TidalCycles and Gibber.
       </p>
       <p>
-        Uniquely, Sema provides an integrated experience to machine learning and language design in your Web browser. It has a real-time, interactive interpreter for machine learning libraries (e.g. <a href="https://www.tensorflow.org/js/">tensorflow.js</a>) and a compiler for <a href="https://hardmath123.github.io/earley.html">BNF grammars</a>.
+        Uniquely, Sema provides an integrated experience to machine learning and language design in your Web browser. It has a real-time, interactive interpreter for machine learning libraries (e.g. <a href="https://www.tensorflow.org/js/" target="_blank">tensorflow.js</a>) and a compiler for <a href="https://hardmath123.github.io/earley.html" target="_blank">BNF grammars</a>.
       </p>
     </div>
 

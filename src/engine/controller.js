@@ -14,66 +14,12 @@ export default class Controller {
 		if (Controller.instance) {
 			return Controller.instance // Singleton pattern, only one instance in sema
 		}
-		Controller.instance = this;
+		Controller.instance = this
 
 		// Constructor dependency injection of a sema-engine singleton instance
-		this.engine = engine;
+		this.engine = engine
 
-		this.samplesLoaded = false;
-
-
-
-		// this.messaging = new PubSub();
-
-		// this.messaging.subscribe("eval-dsp", async (e) => {
-		// 	this.engine.eval(e); // Also resumes engine playback if paused
-		// });
-
-		// this.messaging.subscribe("stop-audio", (e) => this.engine.stop());
-
-		// this.messaging.subscribe("load-sample", (name, url) =>
-		// 	this.engine.loadSample(name, url)
-		// );
-
-		// this.messaging.subscribe("add-engine-analyser", (e) =>
-		// 	this.engine.createAnalyser(e.id, (data) =>
-		// 		this.messaging.publish(`${e.id}-analyser-data`, data)
-		// 	)
-		// );
-
-		// this.messaging.subscribe("remove-engine-analyser", (e) =>
-		// 	this.engine.removeAnalyser(e)
-		// );
-
-		// this.messaging.subscribe("model-output-data", (e) =>
-		// 	this.engine.postAsyncMessageToProcessor(e)
-		// );
-		// this.messaging.subscribe("clock-phase", (e) =>
-		// 	this.engine.postAsyncMessageToProcessor(e)
-		// );
-		// this.messaging.subscribe("model-send-buffer", (e) =>
-		// 	this.engine.postAsyncMessageToProcessor(e)
-		// );
-
-		// this.messaging.subscribe("mouse-xy", (e) => {
-		// 	this.engine.pushToSharedArrayBuffer("mxy", e);
-		// });
-
-		// this.messaging.subscribe("osc", (e) =>
-		// 	console.log(`DEBUG:AudioEngine:OSC: ${e}`)
-		// );
-
-		//the message has incoming data from other peers
-		// this.messaging.subscribe("peermsg", (e) => {
-		//   e.ttype = 'NET';
-		//   e.peermsg = 1;
-		//   this.onMessagingEventHandler(e);
-		// });
-
-		// this.messaging.subscribe("peerinfo-request", (e) => {
-		// 	console.log(this.peerNet.peerID);
-		// 	copyToPasteBuffer(this.peerNet.peerID);
-		// });
+		this.samplesLoaded = false
 	}
 
 	/**
@@ -162,7 +108,7 @@ export default class Controller {
 	 * TODO removing numClockPeers, should be added to a specialised function
 	 */
 	async init(audioWorkletURL) {
-		if (this.engine !== undefined) {
+		if (this.engine) {
 			try {
 				await this.engine.init(audioWorkletURL)
 
@@ -183,16 +129,22 @@ export default class Controller {
 
 				// Lazy load all samples imported from assets
 				// this.loadImportedSamples(); // DO NOT DELETE, read comments on function signature
-				await this.importSamples();
+				await this.importSamples()
 
-        // Change engine status on settings bar
-        engineStatus.set('running');
-
+				// Change engine status on settings bar
+				engineStatus.set('running')
 			} catch (error) {
 				console.error('Error initialising engine', error)
 			}
 		}
 	}
+
+	stop() {
+    if(this.engine){
+      this.engine.stop();
+      engineStatus.set('paused');
+    }
+  }
 
 	onAudioInputFail(error) {
 		console.error(
@@ -244,12 +196,12 @@ export default class Controller {
 			.catch((err) =>
 				console.error(`Engine lazy loading sample: ${sampleName}` + err)
 			)
-  }
+	}
 
-  /**
-   * ! Deprecated until I have time to make a Rollup plugin
-   * @returns list of all imports from a folder specified by context
-   */
+	/**
+	 * ! Deprecated until I have time to make a Rollup plugin
+	 * @returns list of all imports from a folder specified by context
+	 */
 	loadImportedSamples() {
 		this.getSamplesNames().forEach((sampleName) =>
 			this.lazyLoadSample(sampleName)
@@ -261,11 +213,10 @@ export default class Controller {
 	/**
 	 * ! This hack is required to load the sema audio sample set
 	 * ! Will be deprecated once I have time to make a Rollup plugin
-   * * Invokes all imports from a folder specified by context
+	 * * Invokes all imports from a folder specified by context
 	 * @returns returns sychronously, with each import running concurrently and completing asynchronously
 	 */
 	importSamples() {
-
 		import(`../../static/samples/909.wav`) // need to use the samples relative path to the src, not in public,
 			.then((e) => {
 				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
@@ -1432,11 +1383,10 @@ export default class Controller {
 				// this.engine.loadSample(sampleName, `/samples/${sampleName}.wav`)
 				this.engine.loadSample(e.default, `/samples/${e.default}`)
 
-        this.samplesLoaded = true;
+				this.samplesLoaded = true
 			})
 			.catch((err) =>
 				console.error(`Engine lazy loading sample: ${sampleName}` + err)
 			)
 	}
-
 }
