@@ -99,6 +99,7 @@ function baseConfig(config, ctx) {
 							src: [`${staticDir}/__index.html`],
 							dest: distDir,
 							rename: '__app.html',
+							// rename: 'index.html',
 							transform,
 						},
 						{
@@ -148,6 +149,7 @@ function baseConfig(config, ctx) {
 					sourceDir: __dirname, // 'dist/build/static/samples'
 					// sourceDir: join(__dirname, 'src/samples'), // 'dist/static/samples'
 					destDir: join(__dirname, 'dist/sema-engine/samples'), // 'dist/static/samples'
+					// destDir: join(__dirname, `${distDir}/sema-engine/samples`), // 'dist/static/samples'
 					// destDir: __dirname,
 				}),
 				string({
