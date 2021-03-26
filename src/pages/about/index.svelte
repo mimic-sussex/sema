@@ -18,6 +18,12 @@
       <p>
         Uniquely, Sema provides an integrated experience to machine learning and language design in your Web browser. It has a real-time, interactive interpreter for machine learning libraries (e.g. <a href="https://www.tensorflow.org/js/" target="_blank">tensorflow.js</a>) and a compiler for <a href="https://hardmath123.github.io/earley.html" target="_blank">BNF grammars</a>.
       </p>
+      <p>
+        Of course as any other open-source software, Sema builds upon the amazing work and contributions of the OSS community, including <a href="https://discord.gg/nNZMJfUHrS" target="_blank">Svelte</a>, <a href="https://discord.gg/nNZMJfUHrS" target="_blank">Routify</a>, <a href="https://discord.gg/nNZMJfUHrS" target="_blank">Maximilian</a>, <a href="https://discord.gg/nNZMJfUHrS" target="_blank">Nearley</a> and many others.
+      </p>
+      <p>
+        Sema got funding from the UKRI/AHRC 'MIMIC - Musically Intelligent Machines Interacting Collaboratively' and 'Innovating Sema' grants. It was created and is developed at the University of Sussex with ❤️
+      </p>
     </div>
 
     <div class="sema-community">
@@ -32,7 +38,7 @@
           <li>video tutorials on our Youtube <a href="https://www.youtube.com/channel/UCMJVYzJaZBNnKP6f0le7Lxg" target="_blank">channel</a></li>
           <li>talk to us on <a href="https://discord.gg/nNZMJfUHrS" target="_blank">Discord</a></li>
           <li>issues on <a href="https://github.com/mimic-sussex/sema" target="_blank">Github</a></li>
-          <li>drop up an email at <a href="mailto://sema.live.coding@gmail.com" target="_blank">sema.live.coding@gmail.com</a></li>
+          <li>drop us up an email at <a href="mailto://sema.live.coding@gmail.com" target="_blank">sema.live.coding@gmail.com</a></li>
         </ul>
       <!-- </p> -->
     </div>

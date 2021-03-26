@@ -490,7 +490,7 @@
       <h1>sema</h1>
     </div>
     <div class="subtitle type-logo">
-      <h2>A Playground for Livecoding Music and AI</h2>
+      <h2>a playground for livecoding Music and AI</h2>
     </div>
   </div>
   <canvas id="canvas"
