@@ -110,16 +110,17 @@
           xmlns:xlink="http://www.w3.org/1999/xlink"
           xmlns:dc="http://purl.org/dc/elements/1.1/"
           id="svg2"
-          sodipodi:docname="Vines Design 1 by Merlin2525.svg"
           viewBox="0 0 500 395.89"
           version="1.1"
           inkscape:version="0.48.3.1 r9886"
           class='spiral-logo'
         >
+        <!-- sodipodi:docname="Vines Design 1 by Merlin2525.svg"
         <title
             id="title5905"
           >Vines Design 1 by Merlin2525.svg</title
-        >
+          thanks Merlin2525!
+        > -->
         <sodipodi:namedview
             id="base"
             fit-margin-left="0"

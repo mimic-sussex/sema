@@ -30,7 +30,7 @@
       <!-- <p> -->
         <ul>
           <li>video tutorials on our Youtube <a href="https://www.youtube.com/channel/UCMJVYzJaZBNnKP6f0le7Lxg" target="_blank">channel</a></li>
-          <li>talk to us on <a href="https://discord.gg/47kBf2Rr" target="_blank">Discord</a></li>
+          <li>talk to us on <a href="https://discord.gg/nNZMJfUHrS" target="_blank">Discord</a></li>
           <li>issues on <a href="https://github.com/mimic-sussex/sema" target="_blank">Github</a></li>
           <li>drop up an email at <a href="mailto://sema.live.coding@gmail.com" target="_blank">sema.live.coding@gmail.com</a></li>
         </ul>
