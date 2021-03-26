@@ -11,18 +11,23 @@
         <span>
           It is also a playground for designing and training machine learning networks and creating your own languages.
         </span>
-      </p>
-      <p>
-        Sema is similar to other live coding environments and domain-specific languages for sound and music, such as SuperCollider, TidalCycles and Gibber.
+        <span>
+          Sema is similar to other live coding environments and domain-specific languages for sound and music, such as SuperCollider, TidalCycles and Gibber.
+        </span>
       </p>
       <p>
         Uniquely, Sema provides an integrated experience to machine learning and language design in your Web browser. It has a real-time, interactive interpreter for machine learning libraries (e.g. <a href="https://www.tensorflow.org/js/" target="_blank">tensorflow.js</a>) and a compiler for <a href="https://hardmath123.github.io/earley.html" target="_blank">BNF grammars</a>.
       </p>
       <p>
-        Of course as any other open-source software, Sema builds upon the amazing work and contributions of the OSS community, including <a href="https://discord.gg/nNZMJfUHrS" target="_blank">Svelte</a>, <a href="https://discord.gg/nNZMJfUHrS" target="_blank">Routify</a>, <a href="https://discord.gg/nNZMJfUHrS" target="_blank">Maximilian</a>, <a href="https://discord.gg/nNZMJfUHrS" target="_blank">Nearley</a> and many others.
+        <span>
+          Sema got funding from the UKRI/AHRC 'MIMIC - Musically Intelligent Machines Interacting Collaboratively' and 'Innovating Sema' grants.
+        </span>
+        <span>
+          Of course as any other open-source software, Sema builds upon the amazing work and contributions of the OSS community, including <a href="https://discord.gg/nNZMJfUHrS" target="_blank">Svelte</a>, <a href="https://discord.gg/nNZMJfUHrS" target="_blank">Routify</a>, <a href="https://discord.gg/nNZMJfUHrS" target="_blank">Maximilian</a>, <a href="https://discord.gg/nNZMJfUHrS" target="_blank">Nearley</a> and many others.
+        </span>
       </p>
       <p>
-        Sema got funding from the UKRI/AHRC 'MIMIC - Musically Intelligent Machines Interacting Collaboratively' and 'Innovating Sema' grants. It was created and is developed at the University of Sussex with ❤️
+        It was created and is developed at the University of Sussex with ❤️
       </p>
     </div>
 
