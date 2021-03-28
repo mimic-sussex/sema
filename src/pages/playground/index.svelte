@@ -275,8 +275,8 @@
 
     // No need to create re-initialise controller again here
     if(!controller.samplesLoaded)
-      controller.init('http://localhost:5000/sema-engine');
-
+      // controller.init('http://localhost:5000/sema-engine');
+      controller.init(document.location.origin +'/sema-engine');
     // Debug dimensions of grid as we resize the window
     // let resizeObs = new ResizeObserver(e => console.log( e[0].contentRect.width ) ).observe(container);
 
