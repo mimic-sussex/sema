@@ -14,7 +14,7 @@
     display: flex;
     flex-direction: row-reverse;
     align-self: flex-end;
-    justify-content:end;
+    justify-content:space-between;
     border-bottom:1px solid #080808;
   }
 
@@ -25,26 +25,20 @@
 
   <div style='width: 5px;'></div>
 
+  <Mouse />
+
   <Screen />
+
+  <SiteMode />
+
   <div style='width: 5px;'></div>
 
   <Engine />
 
   <div style='width: 10px;'></div>
 
-  <SiteMode />
-
-  <div style='width: 10px;'></div>
-
-  <Mouse />
-
-  <div style='width: 10px;'></div>
-
   <Environment/>
 
 
-  <div style='width: 10px;'></div>
-
-  <Share/>
 
 </div>

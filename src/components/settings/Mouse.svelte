@@ -203,7 +203,7 @@ import { Engine } from 'sema-engine/sema-engine';
 
 
 
-<div style='width: 5px;'></div>
+<!-- <div style='width: 5px;'></div> -->
 
 <div style='width:7em; display: flex; {$fullScreen? `visibility:visible;`: `visibility:hidden`}'
 

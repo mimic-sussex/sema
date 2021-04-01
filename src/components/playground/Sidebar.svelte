@@ -572,27 +572,6 @@
       </select>
     </div>
 
-    <!-- Grammar Combobox Selector -->
-    <!-- <div class="controls">
-      <select class="combobox-dark"
-              bind:value={selectedGrammarOption}
-              on:change={ () => dispatchAdd('grammar', selectedGrammarOption) } >
-        {#each sidebarGrammarOptions as grammarOption}
-          <option value={grammarOption}>
-            { grammarOption.text }
-          </option>
-        {/each}
-      </select>
-    </div> -->
-
-    <!-- <div>
-      <button class="button-dark controls"
-              on:click={ () => dispatchAdd('grammar') }
-              disabled={ $isAddGrammarEditorDisabled }
-              >
-        Grammar Editor
-      </button>
-    </div> -->
 
     <!-- Debuggers Combobox Selector -->
     <div class="controls">
@@ -655,9 +634,8 @@
 
 
 
-  <div class="layout-combobox-container">
+  <!-- <div class="layout-combobox-container">
 
-    <!-- <hr style="width: 75%; border-bottom: 1px solid black;"> -->
 
     <div class="group-labels">
       <span class="group-label">Environment</span>
@@ -678,7 +656,7 @@
     </div>
 
     <div class="controls">
-      <!-- svelte-ignore a11y-no-onchange -->
+      svelte-ignore a11y-no-onchange
       <select class="combobox-dark"
               bind:value={ $selectedLoadEnvironmentOption }
               on:change={ () => loadEnvironment() }
@@ -712,6 +690,6 @@
     </div>
 
     <br>
-  </div>
+  </div> -->
 
 </div>

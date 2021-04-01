@@ -196,7 +196,7 @@
   </svg>
 </button>
 
-<div style='width: 5px;'></div>
+<!-- <div style='width: 5px;'></div> -->
 
 <button class="button-dark"
         style="{ $fullScreen? `visibility:visible;`: `visibility:hidden` }"
