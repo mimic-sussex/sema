@@ -4,6 +4,11 @@
     fullScreen
   } from '../../stores/common.js';
 
+  import { isActive } from "@roxi/routify";
+	import { authStore } from '../../auth'
+
+	const { user, signout } = authStore;
+
   import {
     sidebarLiveCodeOptions,
     selectedLiveCodeOption,
@@ -37,6 +42,7 @@
 
   import * as doNotZip from 'do-not-zip';
 	import downloadBlob from '../../utils/downloadBlob.js';
+
 
 
   let engineLoaded = false;
@@ -221,7 +227,7 @@
 
 <!-- SAVE -->
 <button class="button-dark"
-        style="{$fullScreen? `visibility:visible;`: `visibility:hidden`}; margin-left: 2px;"
+        style="{( $fullScreen && $isActive('/playground') )? `visibility:visible;`: `visibility:hidden`}; margin-left: 2px;"
         on:click={ () => storeEnvironment() }
         >
   <div class="icon-container">
@@ -267,7 +273,7 @@
 
 <!-- <div style='width: 5px;'></div> -->
 <button class="button-dark"
-        style="{$fullScreen? `visibility:visible;`: `visibility:hidden`}; padding: 0.1em 0.3em 0.9em 0.7em ! important;"
+        style="{( $fullScreen && $isActive('/playground') )? `visibility:visible;`: `visibility:hidden`}; padding: 0.1em 0.3em 0.9em 0.7em ! important;"
         on:change={ () => loadEnvironment() }
         >
   <div class="icon-container">
