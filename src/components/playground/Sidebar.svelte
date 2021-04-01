@@ -276,7 +276,7 @@
     display: flex;
     flex-direction: column;
     /* justify-content: flex-start; */
-    justify-content: space-between;
+    justify-content: flex-start;
   }
 
   .controls {
@@ -285,9 +285,10 @@
     margin-right: 5px;
   }
 
+
   .layout-sidebar-group-widgets-container {
     /* height: 100%; */
-    padding-top: 10px;
+    padding-top: 15px;
     margin-left:3px;
     margin-right:2px;
   }
