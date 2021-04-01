@@ -285,8 +285,14 @@
     margin-right: 5px;
   }
 
+  .layout-sidebar-group-widgets-container {
+    /* height: 100%; */
+    padding-top: 10px;
+    margin-left:3px;
+    margin-right:2px;
+  }
 
-  .layout-combobox-container{
+  .layout-sidebar-group-properties-container {
     /* height: 100%; */
     padding-top: 3px;
     margin-left:3px;
@@ -524,7 +530,7 @@
 
 <div class="sidebar">
 
-  <div class="layout-combobox-container">
+  <div class="layout-sidebar-group-widgets-container">
 
     <div class="group-labels" >
       <span class="group-label">Widgets</span>
@@ -604,10 +610,7 @@
   </div>
 
 
-  <div class="layout-combobox-container">
-
-    <!-- <hr style="width: 75%; border-bottom: 1px solid black;"> -->
-
+  <div class="layout-sidebar-group-properties-container">
 
     <div class="group-labels" >
       <span class="group-label">Properties</span>
