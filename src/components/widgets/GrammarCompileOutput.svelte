@@ -1,6 +1,5 @@
 <script>
 	import { onMount, onDestroy } from 'svelte';
-	import Inspect from 'svelte-inspect';
 
   import {
     grammarCompilationErrors

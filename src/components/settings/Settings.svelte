@@ -1,13 +1,10 @@
 <script>
   import Engine from './Engine.svelte';
-  // import SignOut from './user/SignOut';
-  // import SiteColor from './SiteColor.svelte';
   import SiteMode from './SiteMode.svelte';
   import Screen from './Screen.svelte';
   import Share from './Share.svelte';
-  import Save from './Save.svelte';
+  import Environment from './Environment.svelte';
   import Mouse from './Mouse.svelte';
-
 </script>
 
 <style>
@@ -43,7 +40,7 @@
 
   <div style='width: 10px;'></div>
 
-  <Save/>
+  <Environment/>
 
 
   <div style='width: 10px;'></div>

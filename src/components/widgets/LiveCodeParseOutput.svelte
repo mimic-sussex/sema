@@ -1,6 +1,6 @@
 <script>
 	import { onMount, onDestroy } from 'svelte';
-	import Inspect from 'svelte-inspect';
+	// import Inspect from 'svelte-inspect';
 
   import {
     grammarCompilationErrors,
@@ -103,7 +103,7 @@
     <br>
     <div style="margin-left:5px">
     <!-- <div style="overflow-y: scroll; height:auto;"> -->
-      <Inspect.Value value={ $liveCodeAbstractSyntaxTree } depth={7} />
+      <!-- <Inspect.Value value={ $liveCodeAbstractSyntaxTree } depth={7} /> -->
       <!-- Expression below causes error when AST is empty -->
       <!-- <Inspect.Value value={ $liveCodeAbstractSyntaxTree[0]['@lang'] } depth={7} /> -->
     </div>
