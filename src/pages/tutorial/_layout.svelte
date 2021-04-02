@@ -106,7 +106,7 @@
     console.log(`tutorial:layout:url:${$params.chapter}:params:${$params.section}}`);
     console.log($items);
 
-    if($items.length == 0){
+    if($items.length === 0){
       let json = await fetch(document.location.origin + `/tutorial/01-basics/01-introduction/layout.json`)
                             .then( r => r.json());
 
