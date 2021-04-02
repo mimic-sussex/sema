@@ -80,8 +80,6 @@
    * Fetches and sets the contents of the default tutorial (Basics/Introduction)
   */
   let fetchAndLoadDefaultTutorialItems = async () => {
-    console.log(`general:layout:url:${$params.chapter}:params:${$params.section}}`);
-    console.log($items);
     if($params.chapter_dir !== undefined && params.section_dir !== undefined){
       fetch(document.location.origin + `/tutorial/${$params.chapter_dir}/${$params.section_dir}/layout.json`)
         .then( r => r.json())

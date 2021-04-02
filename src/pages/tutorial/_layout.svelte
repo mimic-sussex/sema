@@ -102,9 +102,9 @@
       $goto(localStorage.getItem("tutorial-url"));
 
     }
-// console.log(`layout:url:${$params.chapter}:params:${$params.section}}`);
-    console.log(`tutorial:layout:url:${$params.chapter}:params:${$params.section}}`);
-    console.log($items);
+// // console.log(`layout:url:${$params.chapter}:params:${$params.section}}`);
+//     console.log(`tutorial:layout:url:${$params.chapter}:params:${$params.section}}`);
+//     console.log($items);
 
     if($items.length === 0){
       let json = await fetch(document.location.origin + `/tutorial/01-basics/01-introduction/layout.json`)
@@ -119,7 +119,6 @@
       }
     }
 
-    console.log("DEBUG:routes/tutorial/_layout:onMount")
     // controller.init('http://localhost:5000/sema-engine');
   });
 
