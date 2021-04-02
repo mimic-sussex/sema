@@ -90,7 +90,7 @@
   };
 
   const onChildMount = e => {
-    // console.log("DEBUG:dashboard:onChildMount:", e.detail);
+    // console.log("DEBUG:dashboard:onChildMount:"ii, e.detail);
     $items = $items; // call a re-render
   };
 
@@ -103,6 +103,8 @@
 
     }
 // console.log(`layout:url:${$params.chapter}:params:${$params.section}}`);
+    console.log(`tutorial:layout:url:${$params.chapter}:params:${$params.section}}`);
+    console.log($items);
 
     if($items.length == 0){
       let json = await fetch(document.location.origin + `/tutorial/01-basics/01-introduction/layout.json`)

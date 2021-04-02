@@ -26,7 +26,10 @@
   import {
     siteMode,
     fullScreen,
-    sideBarVisible
+    sideBarVisible,
+    populateCommonStoresWithFetchedProps,
+    updateItemPropsWithCommonStoreValues,
+    updateItemPropsWithFetchedValues
   } from '../stores/common.js';
 
   $: loadSidebarLiveCodeOptions();
@@ -76,8 +79,9 @@
   /**
    * Fetches and sets the contents of the default tutorial (Basics/Introduction)
   */
-  let fetchAndLoadDefaultTutorialItems = () => {
-
+  let fetchAndLoadDefaultTutorialItems = async () => {
+    console.log(`general:layout:url:${$params.chapter}:params:${$params.section}}`);
+    console.log($items);
     if($params.chapter_dir !== undefined && params.section_dir !== undefined){
       fetch(document.location.origin + `/tutorial/${$params.chapter_dir}/${$params.section_dir}/layout.json`)
         .then( r => r.json())
@@ -85,6 +89,17 @@
           $items = json.map( item => hydrateJSONcomponent(item) );
           $ready();
         }).catch( () => new Error('Fetching default tutorial items failed'));
+    } else {
+      let json  = await fetch(document.location.origin + `/tutorial/01-basics/01-introduction/layout.json`)
+                      .then( r => r.json() );
+
+      $items = json.map( item => hydrateJSONcomponent(item) );
+
+      for (const item of $items){
+        await updateItemPropsWithFetchedValues(item);
+        await populateCommonStoresWithFetchedProps(item);
+        updateItemPropsWithCommonStoreValues(item)
+      }
     }
   }
 

@@ -419,7 +419,7 @@
 <!-- <div style='width: 5px;'></div> -->
 
 <button class="button-dark"
-        style="{$fullScreen? `visibility:visible;`: `visibility:hidden`}; padding: 0.2em 0.4em 0.8em 0.6em ! important;"
+        style="{( $fullScreen && $isActive('/playground') ) ? `visibility:visible;`: `visibility:hidden`}; padding: 0.2em 0.4em 0.8em 0.6em ! important;"
         on:click={ () => uploadEnvironment() }
         >
   <div class="icon-container">
@@ -543,7 +543,7 @@
 
 <!-- DELETE -->
 <button class="button-dark"
-        style="{$fullScreen? `visibility:visible;`: `visibility:hidden`}"
+        style="{ ( $fullScreen && $isActive('/playground') ) ? `visibility:visible;`: `visibility:hidden`}"
         on:click={ () => resetEnvironment() }
         >
   <div class="icon-container">
