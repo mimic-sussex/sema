@@ -17,7 +17,7 @@
           Uniquely, Sema provides an integrated experience to machine learning and language design in your Web browser.
         </span>
         <span>
-          It is a playground for designing and training machine learning networks and creating your own languages, with an interpreter for machine learning libraries (e.g. <a href="https://www.tensorflow.org/js/" target="_blank">tensorflow.js</a>) and a compiler for <a href="https://hardmath123.github.io/earley.html" target="_blank">BNF grammars</a>.
+          It is a playground for designing and training machine learning networks, with an interpreter for machine learning libraries (e.g. <a href="https://www.tensorflow.org/js/" target="_blank">tensorflow.js</a>), and for creating your own languages, using a compiler for <a href="https://hardmath123.github.io/earley.html" target="_blank">BNF grammars</a>.
         </span>
       </p>
       <p>

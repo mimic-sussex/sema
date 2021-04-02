@@ -7,7 +7,7 @@
 		['/playground', 'playground'],
 		['/tutorial', 'tutorial'],
 		['/docs', 'docs'],
-		['https://blog.sema.codes', 'blog'],
+		// ['https://blog.sema.codes', 'blog'],
 		['/about', 'about'],
 	]
 
