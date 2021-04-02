@@ -276,7 +276,7 @@
     display: flex;
     flex-direction: column;
     /* justify-content: flex-start; */
-    justify-content: space-between;
+    justify-content: flex-start;
   }
 
   .controls {
@@ -286,7 +286,14 @@
   }
 
 
-  .layout-combobox-container{
+  .layout-sidebar-group-widgets-container {
+    /* height: 100%; */
+    padding-top: 15px;
+    margin-left:3px;
+    margin-right:2px;
+  }
+
+  .layout-sidebar-group-properties-container {
     /* height: 100%; */
     padding-top: 3px;
     margin-left:3px;
@@ -524,7 +531,7 @@
 
 <div class="sidebar">
 
-  <div class="layout-combobox-container">
+  <div class="layout-sidebar-group-widgets-container">
 
     <div class="group-labels" >
       <span class="group-label">Widgets</span>
@@ -572,27 +579,6 @@
       </select>
     </div>
 
-    <!-- Grammar Combobox Selector -->
-    <!-- <div class="controls">
-      <select class="combobox-dark"
-              bind:value={selectedGrammarOption}
-              on:change={ () => dispatchAdd('grammar', selectedGrammarOption) } >
-        {#each sidebarGrammarOptions as grammarOption}
-          <option value={grammarOption}>
-            { grammarOption.text }
-          </option>
-        {/each}
-      </select>
-    </div> -->
-
-    <!-- <div>
-      <button class="button-dark controls"
-              on:click={ () => dispatchAdd('grammar') }
-              disabled={ $isAddGrammarEditorDisabled }
-              >
-        Grammar Editor
-      </button>
-    </div> -->
 
     <!-- Debuggers Combobox Selector -->
     <div class="controls">
@@ -625,10 +611,7 @@
   </div>
 
 
-  <div class="layout-combobox-container">
-
-    <!-- <hr style="width: 75%; border-bottom: 1px solid black;"> -->
-
+  <div class="layout-sidebar-group-properties-container">
 
     <div class="group-labels" >
       <span class="group-label">Properties</span>
@@ -655,9 +638,8 @@
 
 
 
-  <div class="layout-combobox-container">
+  <!-- <div class="layout-combobox-container">
 
-    <!-- <hr style="width: 75%; border-bottom: 1px solid black;"> -->
 
     <div class="group-labels">
       <span class="group-label">Environment</span>
@@ -678,7 +660,7 @@
     </div>
 
     <div class="controls">
-      <!-- svelte-ignore a11y-no-onchange -->
+      svelte-ignore a11y-no-onchange
       <select class="combobox-dark"
               bind:value={ $selectedLoadEnvironmentOption }
               on:change={ () => loadEnvironment() }
@@ -712,6 +694,6 @@
     </div>
 
     <br>
-  </div>
+  </div> -->
 
 </div>

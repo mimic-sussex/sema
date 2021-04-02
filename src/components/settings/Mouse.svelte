@@ -203,14 +203,15 @@ import { Engine } from 'sema-engine/sema-engine';
 
 
 
-<div style='width: 5px;'></div>
+<!-- <div style='width: 5px;'></div> -->
 
-<div style='width:7em; display: flex; {$fullScreen? `visibility:visible;`: `visibility:hidden`}'
-
+<div style='width:7em; display: flex; {$fullScreen? `visibility:visible;`: `visibility:hidden`}; margin-left:2px'
       >
 
 
-  <button class="button-dark" on:click={ handleClick }>
+  <button class="button-dark"
+          on:click={ handleClick }
+          >
     <svg  version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
           x="0px" y="0px"
           viewBox="5 0 512 512"

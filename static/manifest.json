@@ -7,8 +7,8 @@
   "display": "standalone",
   "icons": [
     {
-      "src": "/images/touch-icons/logo-192.png",
-      "sizes": "192x192",
+      "src": "/images/touch-icons/logo-150.png",
+      "sizes": "150x150",
       "type": "image/png"
     },
     {
