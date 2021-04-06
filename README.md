@@ -69,6 +69,7 @@ Sema uses Web Audio API Audio Worklets. Their performance seems very sensitive t
 
 ```$ cpupower frequency-set --governor performance```
 
+If you have issues during installation using linux we recommend using the active LTS version of node to avoid errors, this is currently v14. To easily switch between node versions use [nvm](https://github.com/nvm-sh/nvm).
 
 ## Documentation
 
