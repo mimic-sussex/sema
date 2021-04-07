@@ -3,12 +3,6 @@
 	import { redirect } from '@roxi/routify'
 	const { user } = authStore
 
-	/**
-	 *  We don't want the login page to visible to logged in user, so we redirect them
-	 **/
-	// $: if ($user) $redirect('/')
-
-
   import {
     onMount,
     onDestroy
@@ -50,6 +44,10 @@
     siteMode,
     sideBarVisible
   } from  "../../stores/common.js"
+
+  import {
+    Engine
+  } from 'sema-engine/sema-engine'
 
   import Controller from "../../engine/controller";
   let controller = new Controller(); // this will return the previously created Singleton instance

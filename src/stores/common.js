@@ -11,7 +11,7 @@ import GrammarEditor from "../components/editors/GrammarEditor.svelte";
 import LiveCodeEditor from "../components/editors/LiveCodeEditor.svelte";
 import LiveCodeParseOutput from "../components/widgets/LiveCodeParseOutput.svelte";
 import GrammarCompileOutput from "../components/widgets/GrammarCompileOutput.svelte";
-import Analyser from "../components/widgets/_Analyser.svelte";
+import Analyser from "../components/widgets/Analyser.svelte";
 import StoreInspector from "../components/widgets/StoreInspector.svelte";
 import PostIt from "../components/widgets/PostIt.svelte";
 import DSPCodeOutput from "../components/widgets/DSPCodeOutput.svelte";

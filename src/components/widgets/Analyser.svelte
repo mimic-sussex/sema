@@ -24,12 +24,13 @@
   export let className;
   export { className as class };
 
-  let fftSize = 256;
-  let frequencyBinCount = 128;
-  let smoothingTimeConstant = 0.8;
-  let frequencyDataArray = [];
-  let timeDataArray = [];
-  let shift = false;
+  let fftSize = 256,
+      frequencyBinCount = 128,
+      frequencyBinCounter = 128,
+      smoothingTimeConstant = 0.8,
+      frequencyDataArray = [],
+      timeDataArray = [],
+      shift = false;
 
   let canvas;
 
@@ -124,8 +125,8 @@
           if ( avail > 0 && avail != engine.sharedArrayBuffers[v].rb.capacity ) {
             for (let i = 0; i < avail; i += engine.sharedArrayBuffers[v].blocksize) {
               let val = new Float64Array(engine.sharedArrayBuffers[v].blocksize);
-              (i === frequencyBinCount) ? (shift = true) : undefined;
-              shift ? timeDataArray.shitf() : undefined;
+              (!shift && 0 === frequencyBinCounter--) ? (shift = true) : undefined;
+              shift ? timeDataArray.shift() : undefined;
               timeDataArray.push(val);
               engine.sharedArrayBuffers[v].rb.pop(val);
               console.log(v, val);
