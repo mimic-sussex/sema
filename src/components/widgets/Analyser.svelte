@@ -29,6 +29,7 @@
   let smoothingTimeConstant = 0.8;
   let frequencyDataArray = [];
   let timeDataArray = [];
+  let shift = false;
 
   let canvas;
 
@@ -118,11 +119,14 @@
   function sabPrinter() {
     try {
       for (let v in engine.sharedArrayBuffers) {
-        let avail = engine.sharedArrayBuffers[v].rb.available_read();
-        if ( avail > 0 && avail != engine.sharedArrayBuffers[v].rb.capacity ) {
-          for (let i = 0; i < avail; i += engine.sharedArrayBuffers[v].blocksize) {
-            if(engine.sharedArrayBuffers[v].ttype === 'scope'){
+        if(engine.sharedArrayBuffers[v].ttype === 'scope'){
+          let avail = engine.sharedArrayBuffers[v].rb.available_read();
+          if ( avail > 0 && avail != engine.sharedArrayBuffers[v].rb.capacity ) {
+            for (let i = 0; i < avail; i += engine.sharedArrayBuffers[v].blocksize) {
               let val = new Float64Array(engine.sharedArrayBuffers[v].blocksize);
+              (i === frequencyBinCount) ? (shift = true) : undefined;
+              shift ? timeDataArray.shitf() : undefined;
+              timeDataArray.push(val);
               engine.sharedArrayBuffers[v].rb.pop(val);
               console.log(v, val);
             }
