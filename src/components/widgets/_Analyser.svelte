@@ -4,12 +4,6 @@
 
   import { PubSub } from '../../utils/pubSub.js';
 
-  import {
-    Engine
-  } from 'sema-engine/sema-engine'
-
-  let engine;
-
   let messaging = new PubSub();
 
   export let id;
@@ -115,38 +109,9 @@
     });
   }
 
-  function sabPrinter() {
-    try {
-      for (let v in engine.sharedArrayBuffers) {
-        let avail = engine.sharedArrayBuffers[v].rb.available_read();
-        if ( avail > 0 && avail != engine.sharedArrayBuffers[v].rb.capacity ) {
-          for (let i = 0; i < avail; i += engine.sharedArrayBuffers[v].blocksize) {
-            if(engine.sharedArrayBuffers[v].ttype === 'scope'){
-              let val = new Float64Array(engine.sharedArrayBuffers[v].blocksize);
-              engine.sharedArrayBuffers[v].rb.pop(val);
-              console.log(v, val);
-            }
-          }
-        }
-      }
-      setTimeout(sabPrinter, 20);
-    } catch (error) {
-      // console.log(error);
-      setTimeout(sabPrinter, 100);
-    }
-  }
-
-
   let log = e => { /* console.log(...e); */ }
 
   onMount(async () => {
-
-    if(!engine){
-      engine = new Engine();
-    }
-
-    sabPrinter();
-
     // Request the creation of an WAAPI analyser to the Audio Engine
 
     messaging.publish("add-engine-analyser", { id } );
@@ -156,8 +121,7 @@
     messaging.subscribe(`${id}-analyser-data`, e => updateAnalyserByteData(e) );
     log( id, name, type, className, lineNumbers, hasFocus, theme, background, component );
     renderLoop();
-
-  });
+	});
 
   onDestroy(async () => {
     isRendering = false;
@@ -188,7 +152,7 @@
     width: 100%;
     /* display: block; */
     visibility: visible;
-    border-radius: 1px;
+    border-radius: 2px;
     /* display: inline-block; 1 */
     vertical-align: baseline; /* 2 */
     /*left: 50%;

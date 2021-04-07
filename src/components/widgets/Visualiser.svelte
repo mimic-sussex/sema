@@ -140,7 +140,6 @@
   let log = e => { /* console.log(...e); */ }
 
   onMount(async () => {
-
     if(!engine){
       engine = new Engine();
     }
@@ -156,8 +155,7 @@
     messaging.subscribe(`${id}-analyser-data`, e => updateAnalyserByteData(e) );
     log( id, name, type, className, lineNumbers, hasFocus, theme, background, component );
     renderLoop();
-
-  });
+	});
 
   onDestroy(async () => {
     isRendering = false;
@@ -188,7 +186,7 @@
     width: 100%;
     /* display: block; */
     visibility: visible;
-    border-radius: 1px;
+    border-radius: 2px;
     /* display: inline-block; 1 */
     vertical-align: baseline; /* 2 */
     /*left: 50%;
