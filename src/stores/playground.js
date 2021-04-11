@@ -482,6 +482,14 @@ export async function createNewItem (type, content){
 				mode: "",
 			};
 			break;
+		case "visualyser":
+			data = {
+				component: Analyser,
+				background: '#ffffff',
+				mode: '',
+				channelID: '0'
+			}
+			break;
 		case "postIt":
 			data = {
 				component: PostIt,
@@ -653,6 +661,9 @@ export function setFocused(item){
     }
     else if(item.type === 'analyser'){
       itemProperties.push(item.mode)
+    }
+    else if(item.type === 'visualyser'){
+      itemProperties.push(item.channelID)
     }
     focusedItemProperties.set(itemProperties);
 

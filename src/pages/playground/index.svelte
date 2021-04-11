@@ -3,12 +3,6 @@
 	import { redirect } from '@roxi/routify'
 	const { user } = authStore
 
-	/**
-	 *  We don't want the login page to visible to logged in user, so we redirect them
-	 **/
-	// $: if ($user) $redirect('/')
-
-
   import {
     onMount,
     onDestroy
@@ -50,6 +44,10 @@
     siteMode,
     sideBarVisible
   } from  "../../stores/common.js"
+
+  import {
+    Engine
+  } from 'sema-engine/sema-engine'
 
   import Controller from "../../engine/controller";
   let controller = new Controller(); // this will return the previously created Singleton instance
@@ -113,6 +111,9 @@
         }
         else if(item.data.type === 'analyser'){
           itemProperties.push( { mode: item.data.mode } )
+        }
+        else if(item.data.type === 'visualyser'){
+          itemProperties.push( { channelID: item.data.channelID } )
         }
 
         item.data.hasFocus = true;
@@ -523,11 +524,13 @@
       scroller={ container }
       >
         <span class='move'>+</span>
-
+<!-- { dataItem.data.hasFocus ? '1px solid rgba(100, 100, 100, 0.5)': '1px solid rgba(25, 25, 25, 0.1)' }; -->
         <div  class="content"
-              style="background: { item.fixed ? '#bka' : dataItem.data.background }; border: { dataItem.data.hasFocus ? '1px solid rgba(100, 100, 100, 0.5)': '1px solid rgba(25, 25, 25, 0.1)' }; border-width: 1px 0px 0px 1px;"
+              style="background: { item.fixed ? '#bka' : dataItem.data.background }; border: 1px solid rgba(25, 25, 25, 0.1); border-width: 1px 0px 0px 1px;"
               on:pointerdown={ e => e.stopPropagation() }
               >
+
+
 
           <span class='close'
                 on:click={ () => remove(dataItem) }

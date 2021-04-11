@@ -65,15 +65,21 @@
       //   $isSelectModelEditorDisabled = true;
       //   break;
       case 'grammar':
-        messaging.publish("playground-add", { type: 'grammarEditor', data: { grammar: $focusedItemProperties[2].grammar, grammarSource: $focusedItem.data.grammarSource }});
+        messaging.publish("playground-add", {
+                            type: 'grammarEditor',
+                            data: {
+                              grammar: $focusedItemProperties[2].grammar,
+                              grammarSource: $focusedItem.data.grammarSource
+                            }
+        });
 
         // selectedGrammarOption = sidebarGrammarOptions[0];
         $isAddGrammarEditorDisabled = true;
         break;
-      // case 'analyser':
-      //   messaging.publish("playground-add", { type: 'analyser' });
-      //   $isAddAnalyserDisabled = true;
-      //   break;
+      case 'analyser':
+        messaging.publish("playground-add", { type: 'analyser' });
+        $isAddAnalyserDisabled = true;
+        break;
       // case 'debugger':
       //   messaging.publish("playground-add", { type: selected.type });
       //   disableSelectDebuggerOption(selected.type);
@@ -230,6 +236,12 @@
 
   }
 
+  .number-input {
+    width: 35px;
+    height: 15px;
+    margin-left:5px;
+    padding: 2px;
+  }
 
   .button-dark:active {
     display: block;
@@ -329,6 +341,19 @@
                     checked="checked"
                     >
             <span  class="checkbox-span"></span>
+          </label>
+        </div>
+
+      {:else if itemProp.channelID }
+
+        <div class="controls">
+          <label class="input-dark">channel
+            <input  type="number"
+                    class="number-input"
+                    name="channel"
+                    value='0'
+                    >
+            <!-- <span  class="checkbox-span"></span> -->
           </label>
         </div>
 

@@ -35,32 +35,30 @@ Sema requires the following dependencies to be installed:
 
 ## How to build and run the Sema playground on your machine
 
+We recommend using the active LTS version of node.js ( currently v14.4.0) to build sema without errors. To easily switch between node versions, you can use [nvm](https://github.com/nvm-sh/nvm).
 
-If you decide to use NPM, use:
+If you decide to use `npm` to build sema, you can follow this list of commands:
 
 ```sh
 $ cd sema
 $ npm install
 $ npm run build
-$ npm run dev OR npm run serve
+$ npm run dev
 ```
 
-If you decide to go with Yarn (our preferred package manager), to install it:
-```
-$ npm install -g yarn
-```
+If you decide to go with the Yarn package manager instead, you can use the following list of commands:
+
 
 To use Yarn:
 ```sh
 $ cd sema
 $ yarn
 $ yarn build
-$ yarn dev OR yarn serve
+$ yarn dev
 ```
 
-Once you have the node application running, open Sema on your browser on the following ports
-- yarn dev, go to [http://localhost:8080](http://localhost:8080) on your browser
-- yarn serve, go to [http://localhost:5001](http://localhost:5001) on your browser
+Once you have sema running as a node application, you can load it on your browser on the following ports
+- npm run dev, go to [http://localhost:5000](http://localhost:5000) on your browser
 
 
 ## Linux Users
@@ -69,7 +67,6 @@ Sema uses Web Audio API Audio Worklets. Their performance seems very sensitive t
 
 ```$ cpupower frequency-set --governor performance```
 
-If you have issues during installation using linux we recommend using the active LTS version of node to avoid errors, this is currently v14. To easily switch between node versions use [nvm](https://github.com/nvm-sh/nvm).
 
 ## Documentation
 

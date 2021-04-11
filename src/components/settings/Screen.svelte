@@ -173,32 +173,7 @@
 </style>
 
 <button class="button-dark"
-        on:click={ handleClickFullScreen }
-        >
-  <svg version="1.1"
-        id="Layer_1"
-        xmlns="http://www.w3.org/2000/svg"
-        xmlns:xlink="http://www.w3.org/1999/xlink"
-        x="0px" y="20px"
-        viewBox="0 0 512 512"
-        class="fullscreen"
-        xml:space="preserve"
-        >
-
-    <g>
-      <path class="st0"
-        d="M48,32c-8.8,0-16,7.2-16,16v128c0,8.8-7.2,16-16,16s-16-7.2-16-16V48C0,21.5,21.5,0,48,0h128
-        c8.8,0,16,7.2,16,16s-7.2,16-16,16H48z M320,16c0-8.8,7.2-16,16-16h128c26.5,0,48,21.5,48,48v128c0,8.8-7.2,16-16,16s-16-7.2-16-16
-        V48c0-8.8-7.2-16-16-16H336C327.2,32,320,24.8,320,16z M16,320c8.8,0,16,7.2,16,16v128c0,8.8,7.2,16,16,16h128c8.8,0,16,7.2,16,16
-        s-7.2,16-16,16H48c-26.5,0-48-21.5-48-48V336C0,327.2,7.2,320,16,320z M496,320c8.8,0,16,7.2,16,16v128c0,26.5-21.5,48-48,48H336
-        c-8.8,0-16-7.2-16-16s7.2-16,16-16h128c8.8,0,16-7.2,16-16V336C480,327.2,487.2,320,496,320z"/>
-    </g>
-  </svg>
-</button>
-
-<div style='width: 5px;'></div>
-
-<button class="button-dark"
+        title="sidebar visibility"
         style="{ $fullScreen? `visibility:visible;`: `visibility:hidden` }"
         on:click={ handleClickSideBar }
         >
@@ -226,6 +201,35 @@
     </g>
   </svg>
 </button>
+
+<button class="button-dark"
+        title="fullscreen mode"
+        on:click={ handleClickFullScreen }
+        >
+  <svg version="1.1"
+        id="Layer_1"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        x="0px" y="20px"
+        viewBox="0 0 512 512"
+        class="fullscreen"
+        xml:space="preserve"
+        >
+
+    <g>
+      <path class="st0"
+        d="M48,32c-8.8,0-16,7.2-16,16v128c0,8.8-7.2,16-16,16s-16-7.2-16-16V48C0,21.5,21.5,0,48,0h128
+        c8.8,0,16,7.2,16,16s-7.2,16-16,16H48z M320,16c0-8.8,7.2-16,16-16h128c26.5,0,48,21.5,48,48v128c0,8.8-7.2,16-16,16s-16-7.2-16-16
+        V48c0-8.8-7.2-16-16-16H336C327.2,32,320,24.8,320,16z M16,320c8.8,0,16,7.2,16,16v128c0,8.8,7.2,16,16,16h128c8.8,0,16,7.2,16,16
+        s-7.2,16-16,16H48c-26.5,0-48-21.5-48-48V336C0,327.2,7.2,320,16,320z M496,320c8.8,0,16,7.2,16,16v128c0,26.5-21.5,48-48,48H336
+        c-8.8,0-16-7.2-16-16s7.2-16,16-16h128c8.8,0,16-7.2,16-16V336C480,327.2,487.2,320,496,320z"/>
+    </g>
+  </svg>
+</button>
+
+<!-- <div style='width: 5px;'></div> -->
+
+
 
 
 

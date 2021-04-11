@@ -84,7 +84,6 @@
     if (isRendering) {
       frame = requestAnimationFrame(renderLoop);
 
-
       let drawContext = canvas.getContext('2d');
       drawContext.canvas.width = canvas.offsetWidth;    // needed for 'automatic' resizing the canvas to current size
       drawContext.canvas.height = canvas.offsetHeight;  // TODO: Optimise by doing this only on canvas resize call
@@ -120,7 +119,7 @@
           }
         }
     } catch (error) {
-      console.error();
+      console.error("ERROR on sabRender");
     }
   }
   const toggleRendering = () => {
