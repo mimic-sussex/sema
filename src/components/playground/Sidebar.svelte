@@ -133,6 +133,10 @@
         messaging.publish("playground-add", { type: 'analyser' });
         $isAddAnalyserDisabled = true;
         break;
+      case 'visualyser':
+        messaging.publish("playground-add", { type: 'visualyser' });
+        // $isAddAnalyserDisabled = true;
+        break;
       case 'debugger':
         messaging.publish("playground-add", { type: selected.type });
         disableSelectDebuggerOption(selected.type);
@@ -603,6 +607,14 @@
               disabled={ $isAddAnalyserDisabled }
               >
         analyser
+      </button>
+    </div>
+
+    <div>
+      <button class="button-dark controls"
+              on:click={ () => dispatchAdd('visualyser') }
+              >
+        visualyser
       </button>
     </div>
 

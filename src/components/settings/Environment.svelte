@@ -227,6 +227,7 @@
 
 <!-- SAVE -->
 <button class="button-dark"
+        title="save environment"
         style="{( $fullScreen && $isActive('/playground') )? `visibility:visible;`: `visibility:hidden`}; margin-left: 2px;"
         on:click={ () => storeEnvironment() }
         >
@@ -273,6 +274,7 @@
 
 <!-- <div style='width: 5px;'></div> -->
 <button class="button-dark"
+        title="load environment"
         style="{( $fullScreen && $isActive('/playground') )? `visibility:visible;`: `visibility:hidden`}; padding: 0.1em 0.3em 0.9em 0.7em ! important;"
         on:change={ () => loadEnvironment() }
         >
@@ -338,6 +340,7 @@
 
 <!-- <div style='width: 5px;'></div> -->
 <button class="button-dark"
+        title="download environment"
         style="{$fullScreen? `visibility:visible;`: `visibility:hidden`}; padding: 0.2em 0.4em 0.8em 0.6em ! important;"
         on:click={ () => downloadEnvironment() }
         >
@@ -419,6 +422,7 @@
 <!-- <div style='width: 5px;'></div> -->
 
 <button class="button-dark"
+        title="upload environment"
         style="{( $fullScreen && $isActive('/playground') ) ? `visibility:visible;`: `visibility:hidden`}; padding: 0.2em 0.4em 0.8em 0.6em ! important;"
         on:click={ () => uploadEnvironment() }
         >
@@ -495,6 +499,7 @@
 
 <!-- SHARE -->
 <button class="button-dark"
+        title="share environment"
         style="{ $fullScreen? `visibility:visible;`: `visibility:hidden`}; padding: 0.25em 0.3em 0.75em 0.7em;"
         on:click={ handleClick }>
   <div class="icon-container">
@@ -543,6 +548,7 @@
 
 <!-- DELETE -->
 <button class="button-dark"
+        title="clear environment"
         style="{ ( $fullScreen && $isActive('/playground') ) ? `visibility:visible;`: `visibility:hidden`}"
         on:click={ () => resetEnvironment() }
         >

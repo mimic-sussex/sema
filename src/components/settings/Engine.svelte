@@ -134,6 +134,7 @@
 </style>
 
 <button class="button-dark"
+        title="audio status"
         on:click={ handleClick }
         style="{$fullScreen? `visibility:visible;`: `visibility:hidden`}"
         >
@@ -168,6 +169,7 @@
 
 
 <button class="button-dark"
+        title="louder"
         style="{$fullScreen? `visibility:visible;`: `visibility:hidden`}"
         on:click={ handleClick }>
   <div class="icon-container">
@@ -178,6 +180,7 @@
 </button>
 
 <button class="button-dark"
+        title="quieter"
         style="{$fullScreen? `visibility:visible;`: `visibility:hidden`}"
         on:click={ handleClick }
         >

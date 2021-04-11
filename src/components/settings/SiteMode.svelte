@@ -142,6 +142,7 @@
 </style>
 
 <button class="button-dark"
+        title="dark mode"
         style="{$fullScreen? `visibility:visible;`: `visibility:hidden`}"
         on:click={ handleClick }>
   <div class="icon-container">

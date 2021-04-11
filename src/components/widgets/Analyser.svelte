@@ -21,6 +21,7 @@
 	export let lineNumbers;
 	export let theme;
   export let component;
+  export let channelID = 1;
   export let className;
   export { className as class };
 
@@ -69,7 +70,7 @@
   const drawTimeData = drawContext => {
     for (let i = 0; i < frequencyBinCount; i++) {
       let value = timeDataArray[i];
-      let percent = value / 255;
+      let percent = value ;
       let height = canvas.offsetHeight * percent;
       let offset = canvas.offsetHeight - height - 1;
       let barWidth = canvas.offsetWidth/frequencyBinCount;
@@ -82,14 +83,18 @@
 
     if (isRendering) {
       frame = requestAnimationFrame(renderLoop);
-      // console.log(`canvas w:${canvas.width} h:${canvas.height}`);
+
 
       let drawContext = canvas.getContext('2d');
       drawContext.canvas.width = canvas.offsetWidth;    // needed for 'automatic' resizing the canvas to current size
       drawContext.canvas.height = canvas.offsetHeight;  // TODO: Optimise by doing this only on canvas resize call
       drawContext.clearRect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
 
-      if( mode === 'oscilloscope' ) drawTimeData(drawContext);
+      sabRender();
+
+      if( mode === 'oscilloscope' ) {
+        drawTimeData(drawContext);
+      }
       else if( mode === 'spectrogram' ) drawFrequencyData(drawContext);
       else {
         drawFrequencyData(drawContext);
@@ -99,6 +104,25 @@
     else return;
 	};
 
+  function sabRender() {
+    try {
+      // for (let v in engine.sharedArrayBuffers) {
+        if(engine.sharedArrayBuffers[channelID].ttype === 'scope'){
+          let avail = engine.sharedArrayBuffers[channelID].rb.available_read();
+          if ( avail > 0 && avail != engine.sharedArrayBuffers[channelID].rb.capacity ) {
+            for (let i = 0; i < avail; i += engine.sharedArrayBuffers[channelID].blocksize) {
+              let val = new Float64Array(engine.sharedArrayBuffers[channelID].blocksize);
+              ( !shift && 0 === frequencyBinCounter-- ) ? ( shift = true ) : undefined;
+              shift ? timeDataArray.shift() : undefined;
+              timeDataArray.push(val);
+              engine.sharedArrayBuffers[channelID].rb.pop(val);
+            }
+          }
+        }
+    } catch (error) {
+      console.error();
+    }
+  }
   const toggleRendering = () => {
 
     console.log('toggleRender')
@@ -117,29 +141,6 @@
     });
   }
 
-  function sabPrinter() {
-    try {
-      for (let v in engine.sharedArrayBuffers) {
-        if(engine.sharedArrayBuffers[v].ttype === 'scope'){
-          let avail = engine.sharedArrayBuffers[v].rb.available_read();
-          if ( avail > 0 && avail != engine.sharedArrayBuffers[v].rb.capacity ) {
-            for (let i = 0; i < avail; i += engine.sharedArrayBuffers[v].blocksize) {
-              let val = new Float64Array(engine.sharedArrayBuffers[v].blocksize);
-              (!shift && 0 === frequencyBinCounter--) ? (shift = true) : undefined;
-              shift ? timeDataArray.shift() : undefined;
-              timeDataArray.push(val);
-              engine.sharedArrayBuffers[v].rb.pop(val);
-              console.log(v, val);
-            }
-          }
-        }
-      }
-      setTimeout(sabPrinter, 20);
-    } catch (error) {
-      // console.log(error);
-      setTimeout(sabPrinter, 100);
-    }
-  }
 
 
   let log = e => { /* console.log(...e); */ }
@@ -150,18 +151,18 @@
       engine = new Engine();
     }
 
-    sabPrinter();
+    // sabRender()
 
     // Request the creation of an WAAPI analyser to the Audio Engine
 
-    messaging.publish("add-engine-analyser", { id } );
+    // messaging.publish("add-engine-analyser", { id } );
 
     canvas.addEventListener('click', () => toggleRendering(), false);
 
-    messaging.subscribe(`${id}-analyser-data`, e => updateAnalyserByteData(e) );
+    // messaging.subscribe(`${id}-analyser-data`, e => updateAnalyserByteData(e) );
     log( id, name, type, className, lineNumbers, hasFocus, theme, background, component );
-    renderLoop();
 
+    renderLoop();
   });
 
   onDestroy(async () => {
