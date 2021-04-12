@@ -77,9 +77,8 @@ async function updateLiveCodeEditorPropsWithFetchedValues(item){
 				) {
 					item.data.content = localStorage.liveCodeEditorValue
         }
-        if (item.data.content) {
+        else if (item.data.content) {
           // all is good, skip the error
-        }
 				} else
 					console.error(
 						'Error fetching props for Live Code Editor item: Local store empty'
