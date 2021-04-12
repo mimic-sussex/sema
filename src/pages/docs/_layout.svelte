@@ -1,11 +1,61 @@
 <script>
-  import { url, route } from "@roxi/routify";
-
+  import { url, route, isActive} from "@roxi/routify";
+  import { onMount } from 'svelte';
+  import marked from 'marked';
+  
   $: match = $route.path.match(/\/docs\/([^\/]+)\//);
   $: active = match && match[1];
+  
+  let markdown;
+  let doc = 'default-livecoding-language'; //set to default to start with
+  $: promise = fetchMarkdown(doc); //reacts to doc changes
 
+  //console.log(document.location.origin + `/docs/`)
+  //console.log($url())
+
+  const links = [
+    {path:'./default-language', name:'Default Language', file:'default-livecoding-language'},
+    {path:'./intermediate-language', name:'Intermediate Language', file:'sema-intermediate-language'},
+    {path:'./load-sound-files', name:'Load Sound Files', file:'sample-loading'},
+    {path:'./js-editor-utils', name:'JS Editor Utils', file:'javascript-editor-utils'},
+    {path:'./maximilian-dsp-api', name:'Maximilian', file:'maximilian-dsp-api'}
+  ];
+
+  let fetchMarkdown = async (doc) => {
+    console.log('fetching markdown')
+    if(doc != undefined){ // There is a call with undefined value when navigating to Playground
+      const res = await fetch(document.location.origin + `/docs/${doc}.md`)
+      const text = await res.text();
+      // console.log(`DEBUG:[/${chapter}]/[${section}]:fetchMarkdown: `, text);
+
+      // await tick();
+      if (res.ok) {
+        console.log('markdown processed');
+        markdown = marked(text);
+      } else {
+        throw new Error(text);
+      }
+    }
+  }
+
+  onMount( async () => {
+
+    promise = fetchMarkdown(doc);
+
+  });
+
+  function handleClick(active){
+    for (let i = 0; i < links.length; i++) {
+      //console.log(links[i]['path'])
+      if (links[i]['path'] == ('./'+active)){
+        console.log(links[i]['path'])
+        doc = links[i]['file']
+      }
+    }
+  }
 
 </script>
+
 
 <style>
   * :global(.cards) {
@@ -84,10 +134,20 @@
 
 <div class='container-docs' data-routify="scroll-lock">
 
+  
   <div class='header-docs'>
-    <h2>reference documentation</h2>
+    <h2>Reference Documentation</h2>
   </div>
 
+  <ul>
+    {#each links as {path, name, file}, i}
+      <a href={$url(path)} class:active={$isActive(path)} on:click={handleClick(active)}>
+        {name}
+      </a><br><br>
+    {/each}
+  </ul>
+
+  <!---
   <div class="sidebar-menu">
     <a href={$url('./default-language')}
         class="sidebar-item {active === 'default-language' ? 'default-language' : ''}"
@@ -115,9 +175,23 @@
       Load sound files
     </a>
   </div>
+  -->
+
+  <div class="markdown-container">
+    {#await promise}
+      <p>...waiting</p>
+    {:then number}
+      <div class="markdown-output">{@html markdown}</div>
+    {:catch error}
+      <p style="color: red">no markdown :(</p>
+    {/await}
+  </div>
+
   <div>
+    
     <slot>
       <!-- optional fallback -->
+      <!--inject the markdwon here-->
     </slot>
   </div>
 
