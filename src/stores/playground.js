@@ -20,6 +20,7 @@ import LiveCodeEditor from "../components/editors/LiveCodeEditor.svelte";
 import LiveCodeParseOutput from "../components/widgets/LiveCodeParseOutput.svelte";
 import GrammarCompileOutput from "../components/widgets/GrammarCompileOutput.svelte";
 import Analyser from "../components/widgets/Analyser.svelte";
+import Visualiser from "../components/widgets/Visualiser.svelte";
 import StoreInspector from "../components/widgets/StoreInspector.svelte";
 import DSPCodeOutput from "../components/widgets/DSPCodeOutput.svelte";
 import PostIt from "../components/widgets/PostIt.svelte";
@@ -29,8 +30,9 @@ import default_grammar from "../../static/languages/default/grammar.ne";
 // import nibble_grammar from "../../assets/languages/nibble/grammar.ne";
 
 import default_liveCode from "../../static/languages/default/code.sem";
-// import gabber_liveCode from "../../assets/languages/gabber/code.sem";
-// import nibble_liveCode from "../../assets/languages/nibble/code.sem";
+
+
+import default_playground_layout from '../../static/layouts/default-stormzy-vossi-bop.json';
 
 import hello_world_code_example           from "../../static/learners/hello-world/hello-world.tf";
 import two_layer_non_linear_code_example  from "../../static/learners/non-linear/two-layer-non-linear.tf";
@@ -478,16 +480,16 @@ export async function createNewItem (type, content){
 		case "analyser":
 			data = {
 				component: Analyser,
-				background: "#ffffff",
-				mode: "",
-			};
-			break;
-		case "visualyser":
-			data = {
-				component: Analyser,
-				background: '#ffffff',
+				background: '#191919',
 				mode: '',
-				channelID: '0'
+			}
+			break;
+		case "visualiser":
+			data = {
+				component: Visualiser,
+				background: '#191919',
+				mode: '',
+				channelID: '0',
 			}
 			break;
 		case "postIt":
@@ -564,6 +566,9 @@ export function hydrateJSONcomponent (item){
 			case "analyser":
 				item.data.component = Analyser;
 				break;
+			case "visualiser":
+				item.data.component = Visualiser;
+				break;
 			case "postIt":
 				item.data.component = PostIt;
 				break;
@@ -636,7 +641,11 @@ export function storable(key, initialValue) {
 }
 
 // Dashboard layout in items list
-export const items = storable("playground", testItems); // localStorageWrapper
+// export const items = storable('playground', testItems) // localStorageWrapper
+export const items = storable(
+	'playground',
+	default_playground_layout.map((item) => hydrateJSONcomponent(item))
+) // localStorageWrapper
 // export const items = storable("playground", originalItems); // localStorageWrapper
 
 // Dashboard SELECTED item which receives focus and has item controls loaded
@@ -662,7 +671,7 @@ export function setFocused(item){
     else if(item.type === 'analyser'){
       itemProperties.push(item.mode)
     }
-    else if(item.type === 'visualyser'){
+    else if(item.type === 'visualiser'){
       itemProperties.push(item.channelID)
     }
     focusedItemProperties.set(itemProperties);

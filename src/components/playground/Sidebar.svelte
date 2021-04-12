@@ -133,8 +133,8 @@
         messaging.publish("playground-add", { type: 'analyser' });
         $isAddAnalyserDisabled = true;
         break;
-      case 'visualyser':
-        messaging.publish("playground-add", { type: 'visualyser' });
+      case 'visualiser':
+        messaging.publish("playground-add", { type: 'visualiser' });
         // $isAddAnalyserDisabled = true;
         break;
       case 'debugger':
@@ -612,9 +612,9 @@
 
     <div>
       <button class="button-dark controls"
-              on:click={ () => dispatchAdd('visualyser') }
+              on:click={ () => dispatchAdd('visualiser') }
               >
-        visualyser
+        visualiser
       </button>
     </div>
 
@@ -631,17 +631,6 @@
     <div>
       <ItemProps></ItemProps>
     </div>
-
-      <!-- <div class="">
-        <select class="combobox-dark" >
-          {#each editorThemes as modelOption}
-            <option value={ modelOption }>
-              { modelOption.text }
-            </option>
-          {/each}
-        </select>
-      </div> -->
-
 
     <br>
 

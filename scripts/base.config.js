@@ -16,7 +16,7 @@ import workerLoader from 'rollup-plugin-web-worker-loader'
 import sourcemaps from 'rollup-plugin-sourcemaps'
 // import { plugin as globImport } from 'rollup-plugin-glob-import'; doesn't work with dynamic imports
 import dynamicImportVariables from 'rollup-plugin-dynamic-import-variables'
-
+import json from '@rollup/plugin-json'
 
 const isNollup = !!process.env.NOLLUP
 
@@ -133,6 +133,7 @@ function baseConfig(config, ctx) {
 						'static/languages/**/grammar.ne',
 						'static/languages/**/code.sem',
 						'static/learners/**/*.tf',
+						'static/layouts/*.json',
 					], // options
 					include: ['**/*.wav'],
 					warnOnError: true,
@@ -152,11 +153,13 @@ function baseConfig(config, ctx) {
 					// destDir: join(__dirname, `${distDir}/sema-engine/samples`), // 'dist/static/samples'
 					// destDir: __dirname,
 				}),
+        json(),
 				string({
 					include: [
 						'static/languages/**/grammar.ne',
 						'static/languages/**/code.sem',
-						'static/learners/**/*.tf',
+						'static/learners/**/*.tf'
+						// 'static/layouts/*.json',
 					],
 				}),
 				workerLoader(),
