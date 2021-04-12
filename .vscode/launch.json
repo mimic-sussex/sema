@@ -4,6 +4,7 @@
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
+    
 
     {
       "name": "Launch via NPM",
@@ -24,6 +25,14 @@
       "type": "pwa-chrome",
       "url": "http://localhost:5000",
       "webRoot": "${workspaceFolder}/dist"
+    },
+    {
+      "name": "Launch Chromium against localhost",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:5000/",
+      "webRoot": "${workspaceRoot}/dist",
+      "runtimeExecutable": "/usr/bin/chromium",
     },
   ]
 }
