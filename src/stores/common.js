@@ -57,33 +57,36 @@ export const modelEditorValue = writable("");
 async function updateLiveCodeEditorPropsWithFetchedValues(item){
 
   if (item !== undefined && item.data !== undefined) {
-		if (
-			item.data.liveCodeSource
-      && item.data.liveCodeSource !== ``
-      && !item.data.content
-		) {
-			// liveCodeEditor with language source, FIRST load
-			try {
-				item.data.content = await fetchFrom(item.data.liveCodeSource)
-				item.data.liveCodeSource = `` // set RELOAD from local storage;
-    	} catch (error) {
-				console.error('Error fetching props for Live Code Editor item')
-			}
-		} else if (item.data.liveCodeSource === ``) {
-			// if liveCodeSource is empty string "", reload fetch data from localStorage
-			if (
-				localStorage.liveCodeEditorValue
-        && localStorage.liveCodeEditorValue !== ``
+      if (
+				item.data.liveCodeSource &&
+				item.data.liveCodeSource !== `` &&
+				!item.data.content
 			) {
-				item.data.content = localStorage.liveCodeEditorValue
-			} else
-				console.error(
-					'Error fetching props for Live Code Editor item: Local store empty'
-				)
-		} else if (!item.data.liveCodeSource) {
-			// if liveCodeSource is undefined, it is a 'new' live code editor, set data empty
-			item.data.content = ''
-		}
+				// liveCodeEditor with language source, FIRST load
+				try {
+					item.data.content = await fetchFrom(item.data.liveCodeSource)
+					item.data.liveCodeSource = `` // set RELOAD from local storage;
+				} catch (error) {
+					console.error('Error fetching props for Live Code Editor item')
+				}
+			} else if (item.data.liveCodeSource === ``) {
+				// if liveCodeSource is empty string "", reload fetch data from localStorage
+				if (
+					localStorage.liveCodeEditorValue &&
+					localStorage.liveCodeEditorValue !== ``
+				) {
+					item.data.content = localStorage.liveCodeEditorValue
+				} else
+					console.error(
+						'Error fetching props for Live Code Editor item: Local store empty'
+					)
+			} else if (item.data.content){
+
+      }
+      else if (!item.data.liveCodeSource) {
+				// if liveCodeSource is undefined, it is a 'new' live code editor, set data empty
+				item.data.content = ''
+			}
 		// else if(item.data !== undefined && item.liveCodeSource) return; // first load, hardcoded defaults
 
 		if (item.data.grammarSource !== ``) {

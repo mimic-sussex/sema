@@ -212,9 +212,108 @@
     box-shadow:  -1px -1px 3px rgba(16, 16, 16, 0.4), 0.5px 0.5px 0.5px rgba(16, 16, 16, 0.04);
   }
 
+    .combobox-dark {
+    width: 35px;
+    height: 30px;
+    padding: 0.2em 0.2em 0.8em 0.8em;;
+    margin-top: 5px;
+    margin-right: 5px;
+    font-size: 12px;
+    font-family: sans-serif;
+    font-weight: 400;
+    cursor: pointer;
+    color: #ccc;
+    line-height: 1.3;
+    padding: 0.7em 1em 0.7em 1em;
+    box-sizing: border-box;
+    border: 0 solid #333;
+    text-align: left;
+    border-radius: .6em;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: rgba(16, 16, 16, 0.04);
+    background-repeat: no-repeat, repeat;
+    background-position: right .7em top 50%, 0 0;
+    background-size: .65em auto, 100%;
+    -webkit-box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
+    -moz-box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
+    box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
+  }
 
 
+  .combobox-dark:hover {
+    width: 35px;
+    height: 30px;
+    padding: 0.2em 0.2em 0.8em 0.8em;;
+    margin-top: 5px;
+    margin-right: 5px;
+    font-family: sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    color: #fff;
+    line-height: 1.3;
+    padding: 0.7em 1em 0.7em 1em;
+    box-sizing: border-box;
+    border: 0 solid #333;
+    text-align: left;
+    border-radius: .6em;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: linear-gradient(rgba(16, 16, 16, 1), rgba(16, 16, 16, 0.2));
+    background-repeat: no-repeat, repeat;
+    background-position: right .7em top 50%, 0 0;
+    background-size: .65em auto, 100%;
+    -webkit-box-shadow: 5px 5px 20px -5px rgba(0,0,0,0.75), -5px -5px 20px rgba(255, 255, 255, 0.954);
+    -moz-box-shadow: 5px 5px 20px -5px rgba(0,0,0,0.75), -5px -5px 20px rgba(255, 255, 255, 0.954);
+    box-shadow: 2px 2px 3px rgb(0, 0, 0), -1px -1px 3px #ffffff61;
+  }
 
+  .combobox-dark:focus {
+    width: 35px;
+    height: 30px;
+    padding: 0.2em 0.2em 0.8em 0.8em;;
+    margin-top: 5px;
+    margin-right: 5px;
+    font-size: 12px;
+    font-family: sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    /* color: #fff; */
+    line-height: 1.3;
+    padding: 0.7em 1em 0.7em 1em;
+    box-sizing: border-box;
+    border: 0 solid #333;
+    text-align: left;
+    border-radius: .6em;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: rgba(16, 16, 16, 0.04);
+    background-repeat: no-repeat, repeat;
+    background-position: right .7em top 50%, 0 0;
+    background-size: .65em auto, 100%;
+    -webkit-box-shadow: 5px 5px 20px -5px rgba(0,0,0,0.75), -5px -5px 20px rgba(255, 255, 255, 0.954);
+    -moz-box-shadow: 5px 5px 20px -5px rgba(0,0,0,0.75), -5px -5px 20px rgba(255, 255, 255, 0.954);
+    box-shadow: 2px 2px 3px rgb(0, 0, 0), -1px -1px 3px #ffffff61;
+  }
+
+/* select {
+    padding: 15px;
+    border-radius: 3px !important;
+    height: 50px !important;
+    color: #ffffff !important;
+    padding-right: 30px !important;
+    font-size: 14px !important;
+    border-color: blue !important;
+    position: relative;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    border: none;
+    background: white url('data:image/svg+xml;utf8,<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;width:15px;" class="light-mode" xml:space="preserve"><g id="XMLID_1_"><path id="XMLID_9_" d="M466.5,0h-381L0,83.6v382.8C0,491.6,20.4,512,45.5,512h420.9c25.1,0,45.5-20.4,45.5-45.5V45.5 C512,20.4,491.6,0,466.5,0z M392.1,29.7v60.4H151.5V29.7H392.1z M91.1,481.3v-30.7h330.8v29.7H91.1V481.3z M482.3,465.5 c0,8.4-6.5,14.9-14.9,14.9h-15.8V420H61.3v60.4H46.5c-8.4,0-14.9-6.5-14.9-14.9V95.7l67.8-66h22.3v90.1h301.1V29.7h45.5 c8.4,0,14.9,6.5,14.9,14.9v420.9H482.3z M256.5,150.5c-57.6,0-105,47.4-105,105s47.4,105,105,105s105-47.4,105-105 S314.1,150.5,256.5,150.5z M256.5,330.8c-41.8,0-75.3-33.5-75.3-75.3s33.5-75.3,75.3-75.3s75.3,33.5,75.3,75.3 S298.3,330.8,256.5,330.8z"/></g></svg>") no-repeat !important; background-position-x: 100%; background-position-y: 5px;')
+  } */
 
   .light-mode {
     fill: rgb(133, 130, 130);
@@ -272,8 +371,84 @@
 </button>
 
 
+
+
+<!-- svelte-ignore a11y-no-onchange -->
+<select class="combobox-dark"
+        title="load environment"
+        bind:value={ $selectedLoadEnvironmentOption }
+        on:change={ () => loadEnvironment() }
+        style="{( $fullScreen && $isActive('/playground') )? `visibility:visible;`: `visibility:hidden`}; ! important;"
+        on:click={ () => $loadEnvironmentOptions[0].disabled = true }
+        cursor={ () => ( $isLoadEnvironmentOptionsDisabled ? 'not-allowed' : 'pointer') }
+        >
+  <div class="icon-container" style="z-index:1000;">
+    {#if $siteMode === 'dark' }
+      <svg version="1.1"
+            id="Artwork"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            x="0px" y="0px"
+            viewBox="0 0 512 512"
+            style="enable-background:new 0 0 512 512; width: 20px;"
+            class="light-mode"
+            enable-background="new 0 0 512 512"
+            xml:space="preserve"
+            >
+      <g>
+        <path d="M23.3,94.7v280.5c0,46.8,77.5,82.1,180.3,82.1c9.8,0,19.6-0.3,29.1-1c6.7-0.5,11.8-6.3,11.4-13.1
+          c-0.5-6.7-6.3-11.7-13.1-11.4c-9,0.6-18.2,1-27.4,1c-91.8,0-155.8-30.4-155.8-57.6v-51c30.7,24.1,87.7,39.6,155.8,39.6
+          c6.2,0,12.5-0.1,18.6-0.4c6.8-0.3,12-6,11.7-12.8c-0.3-6.8-6-12-12.8-11.7c-5.8,0.3-11.7,0.4-17.5,0.4
+          c-91.8,0-155.8-30.4-155.8-57.6v-50.9c30.7,24.1,87.7,39.6,155.8,39.6c102.8,0,180.3-35.3,180.3-82.1V94.7
+          c0-46.8-77.5-82.1-180.3-82.1C100.8,12.5,23.3,47.9,23.3,94.7z M203.6,245.8c-91.8,0-155.8-30.4-155.8-57.6v-51
+          c30.7,24.1,87.7,39.6,155.8,39.6c68.1,0,125.1-15.5,155.8-39.6v51C359.5,215.5,295.5,245.8,203.6,245.8z M359.5,94.7
+          c0,27.3-64,57.6-155.8,57.6S47.8,121.9,47.8,94.7S111.8,37,203.6,37S359.5,67.4,359.5,94.7z"/>
+        <path d="M371.7,265.5c-64.5,0-117,52.5-117,117s52.5,117,117,117c64.5,0,117-52.5,117-117S436.2,265.5,371.7,265.5z M371.7,475
+          c-51,0-92.5-41.5-92.5-92.5s41.5-92.5,92.5-92.5s92.5,41.5,92.5,92.5S422.7,475,371.7,475z"/>
+        <path d="M380,327c-4.7-4.3-11.8-4.3-16.5,0l-32.6,29.8c-5,4.6-5.4,12.3-0.8,17.3c4.6,5,12.3,5.4,17.3,0.8l12.1-11.1V427
+          c0,6.8,5.5,12.3,12.3,12.3S384,433.8,384,427v-63.2l12.1,11.1c2.3,2.1,5.3,3.2,8.3,3.2c3.3,0,6.6-1.3,9.1-4
+          c4.6-5,4.2-12.7-0.8-17.3L380,327z"/>
+      </g>
+      </svg>
+    {:else if $siteMode === 'light' }
+      <svg version="1.1"
+            id="Artwork"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            x="0px" y="0px"
+            viewBox="0 0 512 512"
+            style="enable-background:new 0 0 512 512; width: 20px; margin-left: 5px; margin-right: 5px"
+            enable-background="new 0 0 512 512"
+            xml:space="preserve"
+            >
+      <g>
+        <path d="M23.3,94.7v280.5c0,46.8,77.5,82.1,180.3,82.1c9.8,0,19.6-0.3,29.1-1c6.7-0.5,11.8-6.3,11.4-13.1
+          c-0.5-6.7-6.3-11.7-13.1-11.4c-9,0.6-18.2,1-27.4,1c-91.8,0-155.8-30.4-155.8-57.6v-51c30.7,24.1,87.7,39.6,155.8,39.6
+          c6.2,0,12.5-0.1,18.6-0.4c6.8-0.3,12-6,11.7-12.8c-0.3-6.8-6-12-12.8-11.7c-5.8,0.3-11.7,0.4-17.5,0.4
+          c-91.8,0-155.8-30.4-155.8-57.6v-50.9c30.7,24.1,87.7,39.6,155.8,39.6c102.8,0,180.3-35.3,180.3-82.1V94.7
+          c0-46.8-77.5-82.1-180.3-82.1C100.8,12.5,23.3,47.9,23.3,94.7z M203.6,245.8c-91.8,0-155.8-30.4-155.8-57.6v-51
+          c30.7,24.1,87.7,39.6,155.8,39.6c68.1,0,125.1-15.5,155.8-39.6v51C359.5,215.5,295.5,245.8,203.6,245.8z M359.5,94.7
+          c0,27.3-64,57.6-155.8,57.6S47.8,121.9,47.8,94.7S111.8,37,203.6,37S359.5,67.4,359.5,94.7z"/>
+        <path d="M371.7,265.5c-64.5,0-117,52.5-117,117s52.5,117,117,117c64.5,0,117-52.5,117-117S436.2,265.5,371.7,265.5z M371.7,475
+          c-51,0-92.5-41.5-92.5-92.5s41.5-92.5,92.5-92.5s92.5,41.5,92.5,92.5S422.7,475,371.7,475z"/>
+        <path d="M380,327c-4.7-4.3-11.8-4.3-16.5,0l-32.6,29.8c-5,4.6-5.4,12.3-0.8,17.3c4.6,5,12.3,5.4,17.3,0.8l12.1-11.1V427
+          c0,6.8,5.5,12.3,12.3,12.3S384,433.8,384,427v-63.2l12.1,11.1c2.3,2.1,5.3,3.2,8.3,3.2c3.3,0,6.6-1.3,9.1-4
+          c4.6-5,4.2-12.7-0.8-17.3L380,327z"/>
+      </g>
+      </svg>
+    {/if}
+  </div>
+  {#each $loadEnvironmentOptions as loadEnvironmentOption }
+    <option disabled={ loadEnvironmentOption.disabled }
+            value={loadEnvironmentOption}
+            >
+      { loadEnvironmentOption.text }
+    </option>
+  {/each}
+</select>
+
 <!-- <div style='width: 5px;'></div> -->
-<button class="button-dark"
+<!-- <button class="button-dark"
         title="load environment"
         style="{( $fullScreen && $isActive('/playground') )? `visibility:visible;`: `visibility:hidden`}; padding: 0.1em 0.3em 0.9em 0.7em ! important;"
         on:change={ () => loadEnvironment() }
@@ -334,7 +509,7 @@
       </svg>
     {/if}
   </div>
-</button>
+</button> -->
 
 
 

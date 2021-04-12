@@ -48,6 +48,10 @@
   let selectedVisualisationOption;
 
 
+  const changeVisualyzerChannelID = e => {
+    console.log(e.target.value)
+  }
+
 
   function dispatchAdd(type, selected){
     // console.log(`DEBUG:Sidebar:dispatchAdd: /add/${type}/${selected.id}`);
@@ -339,6 +343,7 @@
             <input  type="checkbox"
                     class="checkbox-input"
                     checked="checked"
+                    value={$focusedItem.lineNumbers}
                     >
             <span  class="checkbox-span"></span>
           </label>
@@ -351,7 +356,8 @@
             <input  type="number"
                     class="number-input"
                     name="channel"
-                    value='0'
+                    value={$focusedItem.channelID}
+                    on:change={ e => changeVisualyzerChannelID(e) }
                     >
             <!-- <span  class="checkbox-span"></span> -->
           </label>
