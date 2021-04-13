@@ -74,7 +74,7 @@
 			"lineNumbers": true,
 			"hasFocus": false,
 			"theme": "icecoder",
-			"content": "// LIVE CODE EDITOR \n\n// Make sure the audio engine is ON (click on top right button with RED speaker) \n\n// Place the cursor on this panel \n\n// To evaluate the code below and playback sound, press cmd-Enter [Mac] OR ctrl-Enter [Win/Linux] ! \n\n>{5}saw;\n\n// Change the number and re-evaluate \n\n// To stop sound, press cmd-. [Mac] OR ctrl-. [Win/Linux]! ",
+			"content": "// LIVE CODE EDITOR \n\n// Make sure the audio engine is ON (speaker icon buttons are BLUE) \n\n// Place the cursor on this panel \n\n// To evaluate the code below and playback sound, press cmd-Enter [Mac] OR ctrl-Enter [Win/Linux] ! \n\n>{440}sin;\n\n// Change the number and re-evaluate \n\n// To stop sound, press cmd-. [Mac] OR ctrl-. [Win/Linux]! ",
 			"grammarSource": "/languages/default/grammar.ne",
 			"liveCodeSource": "/languages/default/code.sem"
 		}

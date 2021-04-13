@@ -2,10 +2,10 @@
   import { url, route, isActive} from "@roxi/routify";
   import { onMount } from 'svelte';
   import marked from 'marked';
-  
+
   $: match = $route.path.match(/\/docs\/([^\/]+)\//);
   $: active = match && match[1];
-  
+
   let markdown;
   let doc = 'default-livecoding-language'; //set to default to start with
   $: promise = fetchMarkdown(doc); //reacts to doc changes
@@ -111,12 +111,13 @@
   		"sidebar layout";
     grid-template-columns: 200px 1fr;
     grid-template-rows: auto 1fr;
-    color: #999999;
+    /* color: #999999; */
   }
 
   .sidebar-menu {
     display: flex;
     flex-direction: column;
+    padding: 0px 20px 0px 10px;
   }
 
   .sidebar-item {
@@ -125,6 +126,7 @@
 
   h2 {
     padding: 10px 20px 0px 20px;
+    color: #777777;
   }
   .header-docs {
     grid-area: header;
@@ -134,12 +136,12 @@
 
 <div class='container-docs' data-routify="scroll-lock">
 
-  
+
   <div class='header-docs'>
     <h2>Reference Documentation</h2>
   </div>
 
-  <ul>
+  <ul class='sidebar-menu'>
     {#each links as {path, name, file}, i}
       <a href={$url(path)} class:active={$isActive(path)} on:click={handleClick(active)}>
         {name}
@@ -188,7 +190,7 @@
   </div>
 
   <div>
-    
+
     <slot>
       <!-- optional fallback -->
       <!--inject the markdwon here-->
