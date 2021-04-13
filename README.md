@@ -29,7 +29,7 @@ Sema implements a set of core design principles:
 Sema requires the following dependencies to be installed:
 
  - [Chrome browser](https://www.google.com/chrome/) or any Chromium-based browser (e.g. Brave, Microsoft Edge, Opera)
- - [Node.js](https://nodejs.org/en/download/) active LTS version of node.js (currently v14.4.0). To switch between node versions, you can use [nvm](https://github.com/nvm-sh/nvm).
+ - [Node.js](https://nodejs.org/en/download/) active LTS version (currently v14.4.0). To switch between node versions, you can use [nvm](https://github.com/nvm-sh/nvm).
  - [NPM cli](https://docs.npmjs.com/cli/npm) OR [Yarn](https://yarnpkg.com/en/)
 
 ## How to build and run the Sema playground on your machine
