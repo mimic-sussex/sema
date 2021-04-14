@@ -95,11 +95,6 @@
 
         $liveCodeEditorValue = codeMirror.getValue();
 
-        let pos = codeMirror.getCursor();
-        codeMirror.selectAll();
-        await new Promise(r => setTimeout(r, 20)); // non-blocking defer execution for x milliseconds
-        codeMirror.setCursor(pos);
-
         const { errors, dspCode } = compile( $grammarEditorValue, $liveCodeEditorValue );
         if(dspCode){
           $DSP = dspCode;
@@ -109,6 +104,12 @@
         };
         if(errors)
           $liveCodeParseErrors = errors;
+
+        let pos = codeMirror.getCursor();
+        codeMirror.selectAll();
+        await new Promise(r => setTimeout(r, 20)); // non-blocking defer execution for x milliseconds
+        codeMirror.setCursor(pos);
+
       } catch (err) {
         console.error("ERROR: Failed to compile and eval: ", err);
       }
