@@ -4,18 +4,6 @@
 
 @{%
 
-/*
-Examples:
-
-bpm 155;
-kick*1 2,2,4,3,3,2 (dist:10);
-snare*2+0.5 3,1 (dist:2);
-closedhat*2 3,5,4,4 (dist:2);
-openhat*1 1,3,4,4,4 (dist:3, hpf:2000);
-lead*4 3,1,4,4,4 32,0,44 cut_mousey res99 env9 (hpf:1000, dist:100,amp:1);
-
-*/
-
 const lexer = moo.compile({
   separator:  /,/,
   semicolon:  /;/,

@@ -10,6 +10,8 @@ import { Engine } from 'sema-engine/sema-engine';
 
   import {
     fullScreen,
+    mouseActivated,
+    mouseTrailCaptureActivated
   } from '../../stores/common.js';
 
   let engine,
@@ -19,22 +21,26 @@ import { Engine } from 'sema-engine/sema-engine';
   const handleClick = () => {
     // if(engine){
       try{
+
+        $mouseActivated = !$mouseActivated;
+
         const id = "mxy",
               ttype = "mouseXY",
               blockSize = 2;
 
-        // let sab = engine.createSharedBuffer(id, ttype, blockSize);
+        let sab = engine.createSharedBuffer(id, ttype, blockSize);
 
         const onMouseMove = e => {
           const x = e.offsetX/window.innerWidth;
           const y = e.offsetY/window.innerHeight;
           outputText.innerText = `X:${parseFloat(x).toFixed(5)} Y:${parseFloat(y).toFixed(5)}`;
-          // engine.pushDataToSharedBuffer(id, [ x, y ]);
+          engine.pushDataToSharedBuffer(id, [ x, y ]);
         }
 
         // Subscribe Left `Alt`-key down event to subscribe mouse move
         document.addEventListener("keydown", e => {
           if(e.keyCode === 18){
+            $mouseTrailCaptureActivated = true;
             document.addEventListener( 'mousemove', onMouseMove, true )
           }
         });
@@ -42,6 +48,7 @@ import { Engine } from 'sema-engine/sema-engine';
         document.addEventListener("keyup", e => {
           if(e.which === 18){
             outputText.innerText = ``;
+            $mouseTrailCaptureActivated = false;
             document.removeEventListener( 'mousemove', onMouseMove, true );
           }
         });
@@ -53,7 +60,9 @@ import { Engine } from 'sema-engine/sema-engine';
   };
 
   onMount( async () => {
-    engine = new Engine();
+    if(!engine)
+      engine = new Engine();
+
   });
 
   onDestroy( () => {
@@ -194,9 +203,16 @@ import { Engine } from 'sema-engine/sema-engine';
 
   .mouse {
     padding-top:3px;
-    fill:rgb(133, 130, 130);
     enable-background:new 0 0 512 512;
     width:16px;
+  }
+
+  .mouse-on {
+    fill:#0050A0;
+  }
+
+  .mouse-off {
+    fill:rgb(133, 130, 130);
   }
 
 </style>
@@ -213,19 +229,36 @@ import { Engine } from 'sema-engine/sema-engine';
           title="Mouse data"
           on:click={ handleClick }
           >
-    <svg  version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-          x="0px" y="0px"
-          viewBox="5 0 512 512"
-          class="mouse"
-          xml:space="preserve">
-      <g>
-        <path d="M409.6,0v34.1H221.9c-14.1,0-25.6,11.5-25.6,25.6v42.7h-33.5c-52.2,0.1-94.5,42.3-94.5,94.5v170.6
-          c0,79.6,64.8,144.5,144.5,144.5h1.2c79.6,0,144.5-64.8,144.5-144.5V196.9c-0.1-52.2-42.3-94.5-94.5-94.5h-33.5V68.3h187.7
-          c14.1,0,25.6-11.5,25.6-25.6V0L409.6,0z M162.8,136.5h33.5v93.9h-93.9v-33.5C102.4,163.6,129.5,136.6,162.8,136.5z M213.9,477.9
-          h-1.2c-60.9-0.1-110.3-49.4-110.3-110.3v-103h221.9v103C324.2,428.4,274.8,477.8,213.9,477.9z M324.3,196.9v33.5h-93.9v-93.9h33.5
-          C297.2,136.6,324.2,163.6,324.3,196.9z"/>
-      </g>
-    </svg>
+    <div class="icon-container">
+      {#if $mouseActivated }
+        <svg  version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+              x="0px" y="0px"
+              viewBox="5 0 512 512"
+              class="mouse { $mouseActivated ? `mouse-on` : `mouse-off` }"
+              xml:space="preserve">
+          <g>
+            <path d="M409.6,0v34.1H221.9c-14.1,0-25.6,11.5-25.6,25.6v42.7h-33.5c-52.2,0.1-94.5,42.3-94.5,94.5v170.6
+              c0,79.6,64.8,144.5,144.5,144.5h1.2c79.6,0,144.5-64.8,144.5-144.5V196.9c-0.1-52.2-42.3-94.5-94.5-94.5h-33.5V68.3h187.7
+              c14.1,0,25.6-11.5,25.6-25.6V0L409.6,0z M162.8,136.5h33.5v93.9h-93.9v-33.5C102.4,163.6,129.5,136.6,162.8,136.5z M213.9,477.9
+              h-1.2c-60.9-0.1-110.3-49.4-110.3-110.3v-103h221.9v103C324.2,428.4,274.8,477.8,213.9,477.9z M324.3,196.9v33.5h-93.9v-93.9h33.5
+              C297.2,136.6,324.2,163.6,324.3,196.9z"/>
+          </g>
+        </svg>
+      {:else}
+        <svg  version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                x="0px" y="0px"
+                viewBox="5 0 512 512"
+                class="mouse { $mouseActivated ? `mouse-on` : `mouse-off` }"
+                xml:space="preserve">
+            <g>
+              <path d="M409.6,0v34.1H221.9c-14.1,0-25.6,11.5-25.6,25.6v42.7h-33.5c-52.2,0.1-94.5,42.3-94.5,94.5v170.6
+                c0,79.6,64.8,144.5,144.5,144.5h1.2c79.6,0,144.5-64.8,144.5-144.5V196.9c-0.1-52.2-42.3-94.5-94.5-94.5h-33.5V68.3h187.7
+                c14.1,0,25.6-11.5,25.6-25.6V0L409.6,0z M162.8,136.5h33.5v93.9h-93.9v-33.5C102.4,163.6,129.5,136.6,162.8,136.5z M213.9,477.9
+                h-1.2c-60.9-0.1-110.3-49.4-110.3-110.3v-103h221.9v103C324.2,428.4,274.8,477.8,213.9,477.9z M324.3,196.9v33.5h-93.9v-93.9h33.5
+                C297.2,136.6,324.2,163.6,324.3,196.9z"/>
+            </g>
+          </svg>
+        {/if}
   </button>
 
   <span bind:this={outputText}

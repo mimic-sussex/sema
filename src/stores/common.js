@@ -20,6 +20,9 @@ import gridHelp from "svelte-grid/build/helper/index.mjs";
 
 
 
+export const mouseActivated = writable(false);
+export const mouseTrailCaptureActivated = writable(false)
+
 export const siteMode = writable('dark');
 export const fullScreen = writable(true);
 export const sideBarVisible = writable(true)
