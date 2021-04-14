@@ -1,4 +1,4 @@
-# communicating with the audio engine
+# Communicating with the audio engine
 
 The audio engine sends data with @toJS.  This sends a data item, and a channel number, which is routed to the 'input' function in the ML window.  You can reply with the output function, e.g.
 
@@ -12,7 +12,7 @@ input = (x, id) => {
 
 ```
 
-# data storage and loading
+# Data storage and loading
 
 ```
 sema.saveF32Array(filename,data); // save to local storage in the browser
@@ -27,20 +27,20 @@ mydata = "";
 sema.loadF32Array(fn,
     (v)=>{
         if ( v[0] != null ){
-            mydata = v;  
+            mydata = v;
         }
         console.log(fn);
     }
   )
 ```
 
-# copy text to the clipboard
+# Copy text to the clipboard
 
 ```
 sema.pbcopy("some text to copy to the clipboard")
 ```
 
-# create a buffer and send it to the audio engine
+# Create a buffer and send it to the audio engine
 
 in the ML window:
 

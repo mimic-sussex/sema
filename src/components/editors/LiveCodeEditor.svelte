@@ -121,7 +121,11 @@
   }
 
   onMount( async () => {
-    codeMirror.set(content, "js", 'oceanic-next');
+    // codeMirror.set(content, "js", 'seti');
+    // codeMirror.set(content, "js", 'isotope');
+    // codeMirror.set(content, "js", 'liquibyte');
+    // codeMirror.set(content, "js", 'oceanic-next');
+    codeMirror.set(content, "js", 'sema');
     btrack = new blockTracker(codeMirror);
     log( id, name, type, className, grammar, liveCodeSource, lineNumbers, hasFocus, theme, grammarSource, background, component );
 	});
@@ -140,6 +144,10 @@
   @import "../../../node_modules/codemirror/theme/icecoder.css";
   @import "../../../node_modules/codemirror/theme/shadowfox.css";
   @import '../../../node_modules/codemirror/theme/oceanic-next.css';
+  @import '../../../node_modules/codemirror/theme/railscasts.css';
+  @import '../../../node_modules/codemirror/theme/seti.css';
+  @import '../../../node_modules/codemirror/theme/isotope.css';
+  @import '../../../node_modules/codemirror/theme/liquibyte.css';
   @import "../../../node_modules/codemirror/addon/dialog/dialog.css";
   @import '../../utils/sema.css';
   .layout-template-container {
