@@ -1,4 +1,4 @@
-# Sema's Default Live Coding Language
+# Default Live Coding Language
 
 The code examples below work for *one* language, the default demo language. To run these commands, paste them in the top window and hit cmd+enter. That will evaluate the line.
 
@@ -82,7 +82,7 @@ Triangle wave
 >{500}tri;
 ```
 
-### pha 
+### pha
 
 Phasor (a ramp that rises from 0 to 1)
 
@@ -112,7 +112,7 @@ Pulse (the second argument is pulsewidth)
 ```
 >{500,0.7}pul;
 ```
-### imp 
+### imp
 
 Impulse (single impulse, useful for triggering)
 
@@ -123,7 +123,7 @@ Impulse (single impulse, useful for triggering)
 `>{2,0.2}imp;
 ```
 
-### sawn 
+### sawn
 
 Anti-aliased saw wave
 
@@ -274,7 +274,7 @@ This is kind of like (noisy) timestretching
 
 ### lpf
 
-One pole low pass: 
+One pole low pass:
 
 Arguments:
 1. Input signal
@@ -296,7 +296,7 @@ Arguments:
 ```
 ### lpz
 
-Lowpass with resonance: 
+Lowpass with resonance:
 Arguments:
 1. Input signal
 2. Cutoff (20-20000)
@@ -308,7 +308,7 @@ Arguments:
 
 ### hpz
 
-High pass with resonance: 
+High pass with resonance:
 1. Input signal
 2. Cutoff (20-20000)
 3. Resonance (1 upwards)
@@ -414,10 +414,10 @@ Arguments:
 
 ### dl
 
-Delay line 
+Delay line
 
 Arguments:
-1. input signal 
+1. input signal
 2. delay time in samples
 3. amount of feedback (between 0 and 1)
 

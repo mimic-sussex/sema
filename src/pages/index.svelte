@@ -499,9 +499,9 @@
         <svg class="octicon octicon-mark-github color-text-white"
               viewBox="0 0 16 16"
               version="1.1"
-              width="32"
+              width="22"
               aria-hidden="true"
-              style='margin: 1.3em 2em 1em 1em'
+              style='margin: 0em 2em 0em 1em'
               >
               <path fill-rule="evenodd"
                     d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"
@@ -518,10 +518,9 @@
               xmlns:xlink="http://www.w3.org/1999/xlink"
               x="0px" y="0px"
               viewBox="0 0 158 110"
-
-              width='44'
+              width='34'
               xml:space="preserve"
-              style='margin: 1.2em 1em 1em 1em'
+              style='margin: 0em 1em 0em 1em'
               >
           <path fill="#FFFFFF"
                 d="M154.4,17.5c-1.8-6.7-7.1-12-13.9-13.8C128.2,0.5,79,0.5,79,0.5s-48.3-0.2-60.6,3c-6.8,1.8-13.3,7.3-15.1,14 C0,29.7,0.3,55,0.3,55S0,80.3,3.3,92.5c1.8,6.7,8.4,12.2,15.1,14c12.3,3.3,60.6,3,60.6,3s48.3,0.2,60.6-3c6.8-1.8,13.1-7.3,14.9-14c3.3-12.1,3.3-37.5,3.3-37.5S157.7,29.7,154.4,17.5z M63.9,79.2V30.8L103.2,55L63.9,79.2z"/>
@@ -533,8 +532,8 @@
         <svg id="Layer_1"
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 245 240"
-              width='42'
-              style='margin: 1em 1em 1em 2em'
+              width='32'
+              style='margin: 0em 1em 0em 2em'
               >
               <style>.st0{fill:#FFFFFF;}</style>
               <path class="st0"
@@ -560,17 +559,20 @@
     position: absolute;
     /* top: 50px; */
     display:grid;
-    grid-template-rows: 65vh 15vh 5vh 1fr;
+    grid-template-rows: 65vh 15vh 5vh auto;
     overflow-y: hidden;
   }
 
   .container-svg{
     width: 40vw;
     height: 40vh;
-    padding: 0em 5em 6em 8em;
+    padding: 0em 0em 1em 2em;
     margin-left: auto;
     margin-right: auto;
-    margin-top: auto;
+    margin-top: 4em;
+    position: relative;
+    bottom: 0;
+    /* left: 0; */
   }
 
   .container-social-links {
@@ -579,6 +581,8 @@
     justify-content:space-around;
     margin-left: auto;
     margin-right: auto;
+    margin-top:auto;
+    /* position: absolute; */
   }
 
 
@@ -602,7 +606,7 @@
   }
 
   h2 {
-    font-size: 1.5rem;
+    font-size: 1.1rem;
     margin: 0px;
     /* position: absolute; */
     text-align:center;

@@ -1,5 +1,5 @@
 
-# **Sema Intermediate Representation**
+# **Intermediate Representation**
 
 The following are the **types** of the Sema intermediate representation
 
@@ -9,7 +9,7 @@ This is the top level node of the tree, and contains an array of branches
 ```
 { "@lang" : [branches]}
   ```
-  
+
 # @spawn
 Execute a branch of a tree
 ```
@@ -251,7 +251,7 @@ Parameters:
 Tanh distortion
  1. Input signal
  2. Distortion level (0 upwards)
- 
+
 ### asymclip
 Asymmetric wave shaping
 1. Input signal
@@ -341,7 +341,7 @@ Trigger derived from constantly running clock phasor
   2. Phase offset (0-1)
 
 ### clk
-Set the clock 
+Set the clock
  1. Beats per minute
  2. The number of beats in a bar
 

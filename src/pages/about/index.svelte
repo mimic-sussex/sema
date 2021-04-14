@@ -22,18 +22,18 @@
       </p>
       <p>
         <span>
-          Sema got funding from two UKRI/AHRC grants 'MIMIC - Musically Intelligent Machines Interacting Collaboratively' and 'Innovating Sema'.
+          Sema is developed with ❤️ at the University of Sussex, with funding from two UKRI/AHRC grants 'MIMIC - Musically Intelligent Machines Interacting Collaboratively' and 'Innovating Sema'.
         </span>
         <span>
-          It also builds upon the amazing work and many contributions of the open-source community, including <a href="https://discord.gg/nNZMJfUHrS" target="_blank">Svelte</a>, <a href="https://discord.gg/nNZMJfUHrS" target="_blank">Routify</a>, <a href="https://discord.gg/nNZMJfUHrS" target="_blank">Maximilian</a>, <a href="https://discord.gg/nNZMJfUHrS" target="_blank">Nearley</a>.
+          It builds upon many amazing contributions of the open-source community, including <a href="https://svelte.dev/" target="_blank">Svelte</a>, <a href="https://routify.dev/" target="_blank">Routify</a>, <a href="https://nearley.js.org/" target="_blank">Nearley</a> and <a href="https://github.com/micknoise/Maximilian" target="_blank">Maximilian</a>.
         </span>
       </p>
-    </div>
+    <!-- </div> -->
 
-    <div class="sema-community">
-      <h2>
+    <!-- <div class="sema-community"> -->
+      <!-- <h2>
         <span class='sema'>sema</span> community
-      </h2>
+      </h2> -->
       <p>
         Do you need help with sema? Check the following:
       </p>
@@ -47,7 +47,7 @@
         </ul>
       <!-- </p> -->
       <p>
-       Sema was created and is developed with ❤️ at the University of Sussex.
+
       </p>
     </div>
 
