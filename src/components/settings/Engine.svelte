@@ -133,10 +133,10 @@
 
 </style>
 
+        <!-- style="{$fullScreen? `visibility:visible;`: `visibility:hidden`}" -->
 <button class="button-dark"
         title="audio status"
         on:click={ handleClick }
-        style="{$fullScreen? `visibility:visible;`: `visibility:hidden`}"
         >
   <div class="icon-container">
     {#if $engineStatus === 'running' }
@@ -168,9 +168,9 @@
 </button>
 
 
+        <!-- style="{$fullScreen? `visibility:visible;`: `visibility:hidden`}" -->
 <button class="button-dark"
         title="louder"
-        style="{$fullScreen? `visibility:visible;`: `visibility:hidden`}"
         on:click={ handleClick }>
   <div class="icon-container">
     <svg xmlns="http://www.w3.org/2000/svg" class="path audio" width="20" height="20" viewBox="0 0 32 32">
@@ -179,9 +179,9 @@
   </div>
 </button>
 
+        <!-- style="{$fullScreen? `visibility:visible;`: `visibility:hidden`}" -->
 <button class="button-dark"
         title="quieter"
-        style="{$fullScreen? `visibility:visible;`: `visibility:hidden`}"
         on:click={ handleClick }
         >
   <div class="icon-container">

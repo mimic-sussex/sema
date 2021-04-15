@@ -219,9 +219,9 @@ import { Engine } from 'sema-engine/sema-engine';
 
 
 
-<!-- <div style='width: 5px;'></div> -->
 
-<div style='width:7em; display: flex; {$fullScreen? `visibility:visible;`: `visibility:hidden`}; margin-left:2px'
+<!-- <div style='width:7em; display: flex; {$fullScreen? `visibility:visible;`: `visibility:hidden`}; margin-left:2px' -->
+<div style='width:7em; display: flex;  margin-left:2px'
       >
 
 

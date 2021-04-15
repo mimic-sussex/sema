@@ -172,9 +172,9 @@
 
 </style>
 
+        <!-- style="{ $fullScreen? `visibility:visible;`: `visibility:hidden` }" -->
 <button class="button-dark"
         title="sidebar visibility"
-        style="{ $fullScreen? `visibility:visible;`: `visibility:hidden` }"
         on:click={ handleClickSideBar }
         >
   <svg  version="1.1"

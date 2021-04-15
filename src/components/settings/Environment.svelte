@@ -324,10 +324,11 @@
 
 </style>
 
+        <!-- style="{( $fullScreen && $isActive('/playground') )? `visibility:visible;`: `visibility:hidden`}; margin-left: 2px;" -->
 <!-- SAVE -->
 <button class="button-dark"
         title="save environment"
-        style="{( $fullScreen && $isActive('/playground') )? `visibility:visible;`: `visibility:hidden`}; margin-left: 2px;"
+        style="{( $isActive('/playground') )? `visibility:visible;`: `visibility:hidden`}; margin-left: 2px;"
         on:click={ () => storeEnvironment() }
         >
   <div class="icon-container">
@@ -373,12 +374,13 @@
 
 
 
+        <!-- style="{( $fullScreen && $isActive('/playground') )? `visibility:visible;`: `visibility:hidden`}; ! important;" -->
 <!-- svelte-ignore a11y-no-onchange -->
 <select class="combobox-dark"
         title="load environment"
         bind:value={ $selectedLoadEnvironmentOption }
         on:change={ () => loadEnvironment() }
-        style="{( $fullScreen && $isActive('/playground') )? `visibility:visible;`: `visibility:hidden`}; ! important;"
+        style="{( $isActive('/playground') )? `visibility:visible;`: `visibility:hidden`}; ! important;"
         on:click={ () => $loadEnvironmentOptions[0].disabled = true }
         cursor={ () => ( $isLoadEnvironmentOptionsDisabled ? 'not-allowed' : 'pointer') }
         >
@@ -513,10 +515,11 @@
 
 
 
+        <!-- style="{$fullScreen? `visibility:visible;`: `visibility:hidden`}; padding: 0.2em 0.4em 0.8em 0.6em ! important;" -->
 <!-- <div style='width: 5px;'></div> -->
 <button class="button-dark"
         title="download environment"
-        style="{$fullScreen? `visibility:visible;`: `visibility:hidden`}; padding: 0.2em 0.4em 0.8em 0.6em ! important;"
+        style="padding: 0.2em 0.4em 0.8em 0.6em ! important;"
         on:click={ () => downloadEnvironment() }
         >
   <div class="icon-container">
@@ -594,11 +597,12 @@
   </div>
 </button>
 
+        <!-- style="{( $fullScreen && $isActive('/playground') ) ? `visibility:visible;`: `visibility:hidden`}; padding: 0.2em 0.4em 0.8em 0.6em ! important;" -->
 <!-- <div style='width: 5px;'></div> -->
 
 <button class="button-dark"
         title="upload environment"
-        style="{( $fullScreen && $isActive('/playground') ) ? `visibility:visible;`: `visibility:hidden`}; padding: 0.2em 0.4em 0.8em 0.6em ! important;"
+        style="{( $isActive('/playground') ) ? `visibility:visible;`: `visibility:hidden`}; padding: 0.2em 0.4em 0.8em 0.6em ! important;"
         on:click={ () => uploadEnvironment() }
         >
   <div class="icon-container">
@@ -672,10 +676,11 @@
 </button>
 
 
+        <!-- style="{ $fullScreen? `visibility:visible;`: `visibility:hidden`}; padding: 0.25em 0.3em 0.75em 0.7em;" -->
 <!-- SHARE -->
 <button class="button-dark"
         title="share environment"
-        style="{ $fullScreen? `visibility:visible;`: `visibility:hidden`}; padding: 0.25em 0.3em 0.75em 0.7em;"
+        style="padding: 0.25em 0.3em 0.75em 0.7em;"
         on:click={ handleClick }>
   <div class="icon-container">
     {#if $siteMode === 'dark' }
@@ -721,10 +726,11 @@
 </button>
 
 
+        <!-- style="{ ( $fullScreen && $isActive('/playground') ) ? `visibility:visible;`: `visibility:hidden`}" -->
 <!-- DELETE -->
 <button class="button-dark"
         title="clear environment"
-        style="{ ( $fullScreen && $isActive('/playground') ) ? `visibility:visible;`: `visibility:hidden`}"
+        style="{ ( $isActive('/playground') ) ? `visibility:visible;`: `visibility:hidden`}"
         on:click={ () => resetEnvironment() }
         >
   <div class="icon-container">

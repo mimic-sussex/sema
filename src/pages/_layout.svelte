@@ -117,8 +117,8 @@
 </script>
 
 <div class="app">
+          <!-- style="{ $fullScreen ? 'height: auto; visibility: visible;': 'height: 0px; visibility: hidden;' }" -->
 	<header class="{ $siteMode === 'dark' ? 'sidebar-container': 'sidebar-container-light' }"
-          style="{ $fullScreen ? 'height: auto; visibility: visible;': 'height: 0px; visibility: hidden;' }"
           >
 		<Navigation />
 	</header>
