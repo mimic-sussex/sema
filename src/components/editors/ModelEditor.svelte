@@ -38,7 +38,8 @@
 
   let engine,
       learner,
-      codeMirror;
+      codeMirror,
+      container;
 
   let messaging = new PubSub();
   let subscriptionTokenMID;
@@ -134,6 +135,13 @@
       // else console.log("done");
     }catch(e) {
       // console.log(`DOM Code eval exception: ${e}`);
+    }
+  }
+
+  const update = () => {
+
+    if(codeMirror){
+      codeMirror.update();
     }
   }
 
@@ -259,16 +267,22 @@
 
   onMount(async () => {
     try{
+
       if(!engine)
         engine = new Engine();
+
+      new ResizeObserver( e => codeMirror.setSize("100%", "100%")).observe(container);
+      codeMirror.set(content, "js", "material-ocean");
+
       learner = new Learner();
       await engine.addLearner(id, learner)
-      codeMirror.set(content, "js", "material-ocean");
+
       log( id, name, type, lineNumbers, className, hasFocus, theme, background, content, component );
     }
     catch(error){
-      console.log();
+      console.error(error);
     }
+
 	});
 
   onDestroy(async () => {
@@ -280,20 +294,8 @@
 
 
 <style global>
-  @import 'codemirror/lib/codemirror.css';
-  @import '../../utils/ebnf.css';
-  @import '../../utils/sema.css';
-  @import '../../utils/icecoder.css';
-  @import '../../utils/monokai.css';
-  @import '../../utils/shadowfox.css';
-  @import "codemirror/addon/dialog/dialog.css";
-  @import 'codemirror/theme/material-ocean.css';
-  @import "codemirror/theme/monokai.css";
-  @import "codemirror/theme/icecoder.css";
-  @import "codemirror/theme/shadowfox.css";
-  @import 'codemirror/theme/oceanic-next.css';
-
-
+  /* @import 'codemirror/lib/codemirror.css'; */
+  @import '../../utils/material-ocean.css';
 
   /* @import"../../../utils/codeMirrorPlugins"; */
   .layout-template-container {
@@ -338,20 +340,21 @@
 
 </style>
 
-<div class="codemirror-container layout-template-container scrollable">
-  <CodeMirror bind:this={codeMirror}
-              bind:value={content}
-              tab={true}
-              lineNumbers={true}
+<div  bind:this={ container }
+      class="codemirror-container layout-template-container scrollable">
+  <CodeMirror bind:this={ codeMirror }
+                bind:value={ content }
+              tab={ true }
+              lineNumbers={ true }
               on:change={ e => onChange(e) }
               on:focus={ e => onFocus(e) }
               on:blur={ e => onBlur(e) }
               on:refresh={ e => onRefresh(e) }
               on:gutterClick={ e => onGutterCick(e) }
               on:viewportChange={ e => onViewportChange(e) }
-              ctrlEnter={evalModelEditorExpressionBlock}
-              cmdEnter={evalModelEditorExpressionBlock}
-              shiftEnter={evalModelEditorExpression}
+              ctrlEnter={ evalModelEditorExpressionBlock }
+              cmdEnter={ evalModelEditorExpressionBlock }
+              shiftEnter={ evalModelEditorExpression }
               />
 </div>
 <textarea aria-hidden="true" id="hiddenCopyField" style="position: absolute; left: -999em;" value=""></textarea>

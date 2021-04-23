@@ -19,7 +19,9 @@
 
   import Grid from "svelte-grid";
   import gridHelp from "svelte-grid/build/helper";
-  let grid;
+  let grid,
+      fillFree = true;
+
   let messaging = new PubSub()
 
   import {
@@ -522,6 +524,7 @@
       let:item
       let:dataItem
       scroller={ container }
+      fillSpace={ fillFree }
       >
         <span class='move'>+</span>
 <!-- { dataItem.data.hasFocus ? '1px solid rgba(100, 100, 100, 0.5)': '1px solid rgba(25, 25, 25, 0.1)' }; -->

@@ -35,7 +35,8 @@
   export let className;
   export { className as class };
   let codeMirror,
-      modelWorker;
+      modelWorker,
+      container;
 
   let log = e => { /* console.log(...e); */ }
 
@@ -131,11 +132,19 @@
     //   value: true
     // });
   }
-  onMount(async () => {
-    codeMirror.set(content, "ebnf", "oceanic-next");
-    // Using export variables for preventing a warning from Svelte comiler
-    log( id, name, type, className, lineNumbers, hasFocus, theme, background, content, grammarSource, component );
-	});
+  onMount( async () => {
+    try {
+
+      new ResizeObserver( e => codeMirror.setSize("100%", "100%")).observe(container);
+      codeMirror.set(content, "ebnf", "oceanic-next");
+
+      // Using export variables for preventing a warning from Svelte comiler
+      log( id, name, type, className, lineNumbers, hasFocus, theme, background, content, grammarSource, component );
+    }
+    catch(error){
+      console.error(error);
+    }
+  });
 
   onDestroy(async () => {
     // console.log('DEBUG:GrammarCodeEditor:onDestroy')
@@ -188,7 +197,8 @@
 
 </style>
 
-<div class="codemirror-container layout-template-container scrollable">
+<div bind:this={ container }
+      class="codemirror-container layout-template-container scrollable">
   <CodeMirror bind:this={ codeMirror }
               bind:value={ content }
               tab={ true }

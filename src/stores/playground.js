@@ -513,10 +513,10 @@ export async function createNewItem (type, content){
 	// return component template
 	return {
     id: itemId,
-		12: gridHelp.item({ x: 0, y: 0, w: 3, h: 3 }),
-		8: gridHelp.item({ x: 0, y: 0, w: 3, h: 3 }),
-		6: gridHelp.item({ x: 0, y: 0, w: 3, h: 3 }),
-		3: gridHelp.item({ x: 0, y: 0, w: 3, h: 3 }),
+		12: gridHelp.item({ x: 0, y: 0, w: 4, h: 3 }),
+		8: gridHelp.item({ x: 0, y: 0, w: 4, h: 3 }),
+		6: gridHelp.item({ x: 0, y: 0, w: 4, h: 3 }),
+		3: gridHelp.item({ x: 0, y: 0, w: 4, h: 3 }),
 		2: gridHelp.item({
 			x: 0,
 			y: 0,

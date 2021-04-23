@@ -62,7 +62,8 @@
   let engine,
       codeMirror,
       messaging = new PubSub(),
-      btrack;
+      btrack,
+      container;
 
   let onChange = e => {
     btrack.onEditChange(e.detail.changeObj);
@@ -131,7 +132,13 @@
     // codeMirror.set(content, "js", 'isotope');
     // codeMirror.set(content, "js", 'liquibyte');
     // codeMirror.set(content, "js", 'oceanic-next');
+
+
     codeMirror.set(content, "js", 'sema');
+
+    new ResizeObserver( e => codeMirror.setSize("100%", "100%"))
+        .observe(container);
+
     btrack = new blockTracker(codeMirror);
     log( id, name, type, className, grammar, liveCodeSource, lineNumbers, hasFocus, theme, grammarSource, background, component );
 	});
@@ -163,7 +170,7 @@
 		flex: 1 1 auto;
 		/* border-top: 1px solid #eee; */
 		margin: 0 0 0.5em 0;
-		overflow-y: auto;
+		/* overflow-y: auto; */
 	}
   .codemirror-container {
     position: relative;
@@ -174,6 +181,9 @@
     overflow: hidden;
     font-family: monospace;
     color:white;
+    /* resize: both; */
+    overflow: hidden !important;
+    /* overflow: auto !important; */
   }
   .codemirror-container :global(.CodeMirror) {
     height: 100%;
@@ -182,9 +192,13 @@
     color: var(--base);
   }
 
+
+
 </style>
 
-<div class="codemirror-container layout-template-container scrollable">
+<div  bind:this={ container }
+      class="codemirror-container layout-template-container scrollable"
+      >
   <CodeMirror bind:this={ codeMirror }
               bind:value={ content }
               on:change={ e => onChange(e) }

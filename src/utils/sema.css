@@ -40,7 +40,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 .cm-number {
   color: #ff6a00;
 }
-.cm-comment { color: #464B5D; }
+.cm-comment { color: #ccc; }
 
 
 .cm-variable { color: #f8f8f2; }
