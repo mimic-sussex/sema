@@ -48,7 +48,7 @@ nav a,
 nav a:visited {
 	display: inline-block;
 	/* text-transform: uppercase; */
-	color: #777;
+	color: #ccc;
 	padding: 12px;
 	padding-left: calc(2vw);
 	padding-right: calc(2vw);

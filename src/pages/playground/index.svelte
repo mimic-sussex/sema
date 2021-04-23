@@ -401,7 +401,7 @@
   }
 
   :global(*) {
-    user-select: none;
+    /* user-select: none; */
   }
 
   :global(body) {

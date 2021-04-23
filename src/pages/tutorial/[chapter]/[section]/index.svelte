@@ -145,10 +145,14 @@
     border-radius: 5px;
     /* height: 85vh; */
     background: #aaaaaa;
-		-webkit-user-select: all;  /* Chrome 49+ */
-	  -moz-user-select: all;     /* Firefox 43+ */
-	  -ms-user-select: all;      /* No support yet */
-	  user-select: all;          /* Likely future */
+    /* Chrome 49+ */
+		/* -webkit-user-select: all; */
+    /* Firefox 43+ */
+	  /* -moz-user-select: all; */
+    /* No support yet */
+	  /* -ms-user-select: all; */
+    /* Likely future */
+	  /* user-select: all; */
   }
 
   .markdown-output {
