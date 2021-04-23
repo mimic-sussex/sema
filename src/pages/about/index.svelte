@@ -62,12 +62,14 @@
     overflow: hidden;
     display: grid;
     grid-template-rows: auto 1fr;
+    grid-template-columns: 1fr 4fr 1fr;
   }
 
   .about-sema {
     width: 100%;
     height: 100%;
     overflow: hidden;
+    grid-column: 2/2;
   }
 
   .sema-community {
