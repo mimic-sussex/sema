@@ -3,7 +3,7 @@
 	import { authStore } from '../auth'
 	const { user, signout } = authStore
 	const links = [
-		['/index', 'home'],
+		// ['/', 'home'],
 		['/playground', 'playground'],
 		['/tutorial', 'tutorial'],
 		['/docs', 'docs'],

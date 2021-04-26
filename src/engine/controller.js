@@ -141,6 +141,7 @@ export default class Controller {
 
 	stop() {
     if(this.engine){
+      // this.engine.hush();
       this.engine.stop();
       engineStatus.set('paused');
     }
