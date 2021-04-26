@@ -63,7 +63,8 @@
       codeMirror,
       messaging = new PubSub(),
       btrack,
-      container;
+      container,
+      resizeObserver;
 
   let onChange = e => {
     btrack.onEditChange(e.detail.changeObj);
@@ -122,7 +123,7 @@
       if(!engine){
         engine = new Engine();
       }
-      // engine.hush();
+      engine.hush();
       engine.stop();
       engineStatus.set('paused');
     }
@@ -137,7 +138,7 @@
 
     codeMirror.set(content, "js", 'sema');
 
-    new ResizeObserver( e => codeMirror.setSize("100%", "100%"))
+    resizeObserver = new ResizeObserver( e => codeMirror.setSize("100%", "100%"))
         .observe(container);
 
     btrack = new blockTracker(codeMirror);
@@ -146,6 +147,8 @@
 
   onDestroy( () => {
     codeMirror = null;
+    resizeObserver.disconnect();
+    resizeObserver = null;
 	});
 
 </script>

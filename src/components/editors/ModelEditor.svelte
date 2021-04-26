@@ -39,7 +39,8 @@
   let engine,
       learner,
       codeMirror,
-      container;
+      container,
+      resizeObserver;
 
   let messaging = new PubSub();
   let subscriptionTokenMID;
@@ -271,7 +272,7 @@
       if(!engine)
         engine = new Engine();
 
-      new ResizeObserver( e => codeMirror.setSize("100%", "100%")).observe(container);
+      resizeObserver = new ResizeObserver( e => codeMirror.setSize("100%", "100%")).observe(container);
       codeMirror.set(content, "js", "material-ocean");
 
       learner = new Learner();
@@ -288,6 +289,8 @@
   onDestroy(async () => {
     engine.removeLearner(id);
     learner.terminate();
+    resizeObserver.disconnect();
+    resizeObserver = null;
 	});
 
 </script>

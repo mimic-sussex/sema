@@ -36,7 +36,8 @@
   export { className as class };
   let codeMirror,
       modelWorker,
-      container;
+      container,
+      resizeObserver;
 
   let log = e => { /* console.log(...e); */ }
 
@@ -135,7 +136,7 @@
   onMount( async () => {
     try {
 
-      new ResizeObserver( e => codeMirror.setSize("100%", "100%")).observe(container);
+      resizeObserver = new ResizeObserver( e => codeMirror.setSize("100%", "100%")).observe(container);
       codeMirror.set(content, "ebnf", "oceanic-next");
 
       // Using export variables for preventing a warning from Svelte comiler
@@ -147,8 +148,11 @@
   });
 
   onDestroy(async () => {
+    codeMirror = null;
     // console.log('DEBUG:GrammarCodeEditor:onDestroy')
     // console.log(data);
+    resizeObserver.disconnect();
+    resizeObserver = null;
 	});
 
 
