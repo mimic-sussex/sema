@@ -1,5 +1,5 @@
 
-# Sema – Live Code Language Design Playground #
+# Sema – A Playground for Live Coding Music and Machine Learning #
 ![version](https://img.shields.io/badge/version-0.7.0-red)
 [![stability-experimental](https://img.shields.io/badge/stability-experimental-orange.svg)](https://github.com/emersion/stability-badges#experimental)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-yellow.svg)](https://github.com/mimic-sussex/eppEditor/blob/master/CONTRIBUTING.md)
@@ -16,7 +16,7 @@ Sema aims to provide an online integrated environment for designing both abstrac
 
 Sema implements a set of core design principles:
 
-* Integrated signal engine – There is no conceptual split between the language and signal engine. Everything is a signal.
+* Integrated signal engine – In terms language and signal engine integration, there is no conceptual split. Everything is a signal. However, for the sake of modularity, reusability, and sound architecture, the [sema-engine](https://github.com/frantic0/sema-engine) library implements sema's signal engine.
 
 * Single sample signal processing – Per-sample sound processing for supporting techniques that use feedback loops, such as physical modelling, reverberation and IIR filtering.
 
