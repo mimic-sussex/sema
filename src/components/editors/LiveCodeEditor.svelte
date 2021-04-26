@@ -59,9 +59,10 @@
   export let className;
   export { className as class };
 
+  // messaging = new PubSub(),
+
   let engine,
       codeMirror,
-      messaging = new PubSub(),
       btrack,
       container,
       resizeObserver;
@@ -138,8 +139,8 @@
 
     codeMirror.set(content, "js", 'sema');
 
-    resizeObserver = new ResizeObserver( e => codeMirror.setSize("100%", "100%"))
-        .observe(container);
+    resizeObserver = new ResizeObserver( e => codeMirror.setSize("100%", "100%"));
+    resizeObserver.observe(container);
 
     btrack = new blockTracker(codeMirror);
     log( id, name, type, className, grammar, liveCodeSource, lineNumbers, hasFocus, theme, grammarSource, background, component );

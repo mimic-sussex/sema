@@ -136,7 +136,8 @@
   onMount( async () => {
     try {
 
-      resizeObserver = new ResizeObserver( e => codeMirror.setSize("100%", "100%")).observe(container);
+      resizeObserver = new ResizeObserver( e => codeMirror.setSize("100%", "100%"));
+      resizeObserver.observe(container);
       codeMirror.set(content, "ebnf", "oceanic-next");
 
       // Using export variables for preventing a warning from Svelte comiler

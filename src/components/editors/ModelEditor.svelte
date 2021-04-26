@@ -272,7 +272,9 @@
       if(!engine)
         engine = new Engine();
 
-      resizeObserver = new ResizeObserver( e => codeMirror.setSize("100%", "100%")).observe(container);
+      resizeObserver = new ResizeObserver( e => codeMirror.setSize("100%", "100%"));
+      resizeObserver.observe(container);
+
       codeMirror.set(content, "js", "material-ocean");
 
       learner = new Learner();
