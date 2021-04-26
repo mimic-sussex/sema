@@ -16,7 +16,7 @@ Sema aims to provide an online integrated environment for designing both abstrac
 
 Sema implements a set of core design principles:
 
-* Integrated signal engine – There is no conceptual split between the language and signal engine. Everything is a signal. Check out the [sema-engine](https://github.com/frantic0/sema-engine) repo, it is the library that implements sema's signal engine.
+* Integrated signal engine – In terms language and signal engine integration, there is no conceptual split. Everything is a signal. However, for the sake of modularity, reusability, and sound architecture, the [sema-engine](https://github.com/frantic0/sema-engine) library implements sema's signal engine.
 
 * Single sample signal processing – Per-sample sound processing for supporting techniques that use feedback loops, such as physical modelling, reverberation and IIR filtering.
 
