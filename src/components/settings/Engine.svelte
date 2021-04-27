@@ -17,8 +17,15 @@
       ;
 
   let handleAudioOnOff = () => {
-    $engineStatus === 'running'?
-      $engineStatus = 'paused': $engineStatus = 'running';
+    if($engineStatus === 'running'){
+      $engineStatus = 'paused';
+      engine.hush();
+    }
+    else {
+      $engineStatus = 'running';
+      engine.play();
+    }
+
   }
 
   let handleLessAudio = () => {
@@ -159,6 +166,7 @@
   }
 
   .mute-audio {
+    padding: 1px 0px 5px 1px;
     fill: rgb(133, 130, 130);
   }
 
@@ -167,7 +175,7 @@
         <!-- style="{$fullScreen? `visibility:visible;`: `visibility:hidden`}" -->
 <button class="button-dark"
         title="audio status"
-        style='padding: 0.2em 0.05em 0.8em 0.95em;'
+        style='padding: 0.22em 0.05em 0.8em 0.95em;'
         on:click={ handleAudioOnOff }
         >
   <div class="icon-container">
