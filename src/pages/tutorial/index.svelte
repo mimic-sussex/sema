@@ -6,7 +6,7 @@
 </script>
 
 <script>
-  import { tick, onMount } from 'svelte';
+  import { tick, onMount, onDestroy } from 'svelte';
   import { url, params } from '@roxi/routify';
   import marked from 'marked';
   import {
@@ -48,6 +48,12 @@
     // console.log(`index:url:${$params.chapter}:params:${$params.section}}`);
     // console.log($url())
 
+  });
+
+  onDestroy(() => {
+    if(controller){
+      controller.stop();
+    }
   });
 
 </script>

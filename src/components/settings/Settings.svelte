@@ -28,7 +28,6 @@
 
 <div class="settings-container">
 
-  <!-- <div style='width: 5px;'></div> -->
 
   <Mouse />
 
@@ -36,7 +35,11 @@
 
   <div style='width: 5px;'></div>
 
-  <Engine />
+  <div style='width: 5px;'></div>
+
+  <div style='width: 8em; display:inline-flex; justify-content:space-around'>
+    <Engine />
+  </div>
 
   <div style='width: 5px;'></div>
 

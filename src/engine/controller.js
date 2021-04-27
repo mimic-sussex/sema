@@ -141,8 +141,9 @@ export default class Controller {
 
 	stop() {
     if(this.engine){
-      // this.engine.hush();
-      this.engine.stop();
+
+      this.engine.hush();
+      // setTimeout(() => this.engine.stop(), 1500);
       engineStatus.set('paused');
     }
   }

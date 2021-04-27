@@ -300,8 +300,9 @@
   });
 
   onDestroy(() => {
-    if(controller)
+    if(controller){
       controller.stop();
+    }
 
     messaging.unsubscribe(addSubscriptionToken);
     // messaging.unsubscribe(resetSubscriptionToken);
