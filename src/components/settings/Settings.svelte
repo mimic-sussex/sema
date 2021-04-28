@@ -22,6 +22,11 @@
     border-bottom:1px solid #080808;
   }
 
+  .engine-container {
+    width: 10em;
+    display:inline-flex;
+    justify-content:space-between;
+  }
 
 </style>
 
@@ -37,7 +42,7 @@
 
   <div style='width: 5px;'></div>
 
-  <div style='width: 8em; display:inline-flex; justify-content:space-around'>
+  <div class='engine-container'>
     <Engine />
   </div>
 

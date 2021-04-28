@@ -2,7 +2,8 @@
 
   import {
     fullScreen,
-    engineStatus
+    engineStatus,
+    engineSoundLevel
   } from '../../stores/common.js';
 
 	import {
@@ -17,6 +18,7 @@
       ;
 
   let handleAudioOnOff = () => {
+
     if($engineStatus === 'running'){
       $engineStatus = 'paused';
       engine.hush();
@@ -29,23 +31,25 @@
   }
 
   let handleLessAudio = () => {
-    if(!engine)
-      engine = new Engine();
 
-    engine.less();
+    if($engineStatus === 'paused') return;
+    else if(!engine){
+      engine = new Engine();
+      $engineSoundLevel = engine.less();
+    }
   }
 
   let handleMoreAudio = () => {
-    if(!engine)
-      engine = new Engine();
 
-    engine.more();
+    if($engineStatus === 'paused') return;
+    else if(!engine){
+      engine = new Engine();
+      $engineSoundLevel = engine.more();
+    }
   }
 
   onMount( async () => {
-    // if(!engine)
-      engine = new Engine();
-
+    engine = new Engine();
   });
 
   onDestroy( () => {
@@ -157,18 +161,41 @@
     transform: translate(-3px, -5px)
   }
 
-  .audio {
+  .audio-active {
     fill: #0050A0;
   }
 
+  .audio-inactive {
+    fill: rgb(133, 130, 130);
+  }
+
+
   .no-audio {
     fill: red;
+
   }
 
   .mute-audio {
-    padding: 1px 0px 5px 1px;
+    padding: 0.1em 0px 0em 0.1em;
     fill: rgb(133, 130, 130);
   }
+
+  .engine-sound-level-text-container {
+    width: 2em;
+    margin: 0em 0.1em 0em 0em;
+    display: flex;
+    align-items: center;
+    align-content: flex-end;
+  }
+
+  .engine-sound-level-text {
+    /* margin: 0em 0.5em 0em 0.5em; */
+    /* padding: 0.6em 0em 0em 0em; */
+    user-select: none;
+    color: #ccc;
+    font-size: medium;
+  }
+
 
 </style>
 
@@ -180,33 +207,58 @@
         >
   <div class="icon-container">
     {#if $engineStatus === 'running' }
-    <svg xmlns="http://www.w3.org/2000/svg" class="path audio" width="24"  viewBox="0 0 32 32">
-        <path style="text-indent:0;text-align:start;line-height:normal;text-transform:none;block-progression:tb;-inkscape-font-specification:Bitstream Vera Sans"
-              d="M 15 4.59375 L 13.28125 6.28125 L 8.5625 11 L 5 11 L 4 11 L 4 12 L 4 20 L 4 21 L 5 21 L 8.5625 21 L 13.28125 25.71875 L 15 27.40625 L 15 25 L 15 7 L 15 4.59375 z M 13 9.4375 L 13 22.5625 L 9.71875 19.28125 L 9.40625 19 L 9 19 L 6 19 L 6 13 L 9 13 L 9.40625 13 L 9.71875 12.71875 L 13 9.4375 z M 20.21875 11.78125 L 18.78125 13.21875  z"
-              overflow="visible"
+    <svg xmlns="http://www.w3.org/2000/svg"
+          class="path audio-active"
+          width="24"
+          viewBox="0 0 32 32"
+          >
+        <path   style="text-indent:0;text-align:start;line-height:normal;text-transform:none;block-progression:tb;-inkscape-font-specification:Bitstream Vera Sans"
+                d="M 15 4.59375 L 13.28125 6.28125 L 8.5625 11 L 5 11 L 4 11 L 4 12 L 4 20 L 4 21 L 5 21 L 8.5625 21 L 13.28125 25.71875 L 15 27.40625 L 15 25 L 15 7 L 15 4.59375 z M 13 9.4375 L 13 22.5625 L 9.71875 19.28125 L 9.40625 19 L 9 19 L 6 19 L 6 13 L 9 13 L 9.40625 13 L 9.71875 12.71875 L 13 9.4375 z M 20.21875 11.78125 L 18.78125 13.21875  z"
+                overflow="visible"
               />
     </svg>
     {:else if $engineStatus === 'no-audio' }
-    <svg xmlns="http://www.w3.org/2000/svg" class="path no-audio" width="24" viewBox="0 0 32 32">
-      <path style="text-indent:0;text-align:start;line-height:normal;text-transform:none;block-progression:tb;-inkscape-font-specification:Bitstream Vera Sans"
+    <svg xmlns="http://www.w3.org/2000/svg"
+          class="path no-audio"
+          width="24"
+          viewBox="0 0 32 32"
+          >
+      <path   style="text-indent:0;text-align:start;line-height:normal;text-transform:none;block-progression:tb;-inkscape-font-specification:Bitstream Vera Sans"
             d="M 15 4.59375 L 13.28125 6.28125 L 8.5625 11 L 5 11 L 4 11 L 4 12 L 4 20 L 4 21 L 5 21 L 8.5625 21 L 13.28125 25.71875 L 15 27.40625 L 15 25 L 15 7 L 15 4.59375 z M 13 9.4375 L 13 22.5625 L 9.71875 19.28125 L 9.40625 19 L 9 19 L 6 19 L 6 13 L 9 13 L 9.40625 13 L 9.71875 12.71875 L 13 9.4375 z M 20.21875 11.78125 L 18.78125 13.21875 L 21.5625 16 L 18.78125 18.78125 L 20.21875 20.21875 L 23 17.4375 L 25.78125 20.21875 L 27.21875 18.78125 L 24.4375 16 L 27.21875 13.21875 L 25.78125 11.78125 L 23 14.5625 L 20.21875 11.78125 z"
             overflow="visible" font-family="Bitstream Vera Sans"/>
     </svg>
     {:else if $engineStatus === 'high-audio' }
-    <svg xmlns="http://www.w3.org/2000/svg" class="path audio" width="20" height="20" viewBox="0 0 32 32">
-      <path style="text-indent:0;text-align:start;line-height:normal;text-transform:none;block-progression:tb;-inkscape-font-specification:Bitstream Vera Sans" d="M 15 4.59375 L 13.28125 6.28125 L 8.5625 11 L 5 11 L 4 11 L 4 12 L 4 20 L 4 21 L 5 21 L 8.5625 21 L 13.28125 25.71875 L 15 27.40625 L 15 25 L 15 7 L 15 4.59375 z M 13 9.4375 L 13 22.5625 L 9.71875 19.28125 L 9.40625 19 L 9 19 L 6 19 L 6 13 L 9 13 L 9.40625 13 L 9.71875 12.71875 L 13 9.4375 z M 20.21875 11.78125 L 18.78125 13.21875 L 21.5625 16 L 18.78125 18.78125 L 20.21875 20.21875 L 23 17.4375 L 25.78125 20.21875 L 27.21875 18.78125 L 24.4375 16 L 27.21875 13.21875 L 25.78125 11.78125 L 23 14.5625 L 20.21875 11.78125 z" overflow="visible" font-family="Bitstream Vera Sans"/>
+    <svg xmlns="http://www.w3.org/2000/svg"
+          class="path audio"
+          width="20" height="20"
+          viewBox="0 0 32 32"
+          >
+      <path   style="text-indent:0;text-align:start;line-height:normal;text-transform:none;block-progression:tb;-inkscape-font-specification:Bitstream Vera Sans" d="M 15 4.59375 L 13.28125 6.28125 L 8.5625 11 L 5 11 L 4 11 L 4 12 L 4 20 L 4 21 L 5 21 L 8.5625 21 L 13.28125 25.71875 L 15 27.40625 L 15 25 L 15 7 L 15 4.59375 z M 13 9.4375 L 13 22.5625 L 9.71875 19.28125 L 9.40625 19 L 9 19 L 6 19 L 6 13 L 9 13 L 9.40625 13 L 9.71875 12.71875 L 13 9.4375 z M 20.21875 11.78125 L 18.78125 13.21875 L 21.5625 16 L 18.78125 18.78125 L 20.21875 20.21875 L 23 17.4375 L 25.78125 20.21875 L 27.21875 18.78125 L 24.4375 16 L 27.21875 13.21875 L 25.78125 11.78125 L 23 14.5625 L 20.21875 11.78125 z" overflow="visible" font-family="Bitstream Vera Sans"/>
     </svg>
     {:else if $engineStatus === 'medium-audio' }
-    <svg xmlns="http://www.w3.org/2000/svg" class="path audio" width="20" height="20" viewBox="0 0 32 32">
-      <path style="text-indent:0;text-align:start;line-height:normal;text-transform:none;block-progression:tb;-inkscape-font-specification:Bitstream Vera Sans" d="M 15 4.59375 L 13.28125 6.28125 L 8.5625 11 L 5 11 L 4 11 L 4 12 L 4 20 L 4 21 L 5 21 L 8.5625 21 L 13.28125 25.71875 L 15 27.40625 L 15 25 L 15 7 L 15 4.59375 z M 13 9.4375 L 13 22.5625 L 9.71875 19.28125 L 9.40625 19 L 9 19 L 6 19 L 6 13 L 9 13 L 9.40625 13 L 9.71875 12.71875 L 13 9.4375 z M 20.21875 11.78125 L 18.78125 13.21875 L 21.5625 16 L 18.78125 18.78125 L 20.21875 20.21875 L 23 17.4375 L 25.78125 20.21875 L 27.21875 18.78125 L 24.4375 16 L 27.21875 13.21875 L 25.78125 11.78125 L 23 14.5625 L 20.21875 11.78125 z" overflow="visible" font-family="Bitstream Vera Sans"/>
+    <svg xmlns="http://www.w3.org/2000/svg"
+          class="path audio"
+          width="20" height="20"
+          viewBox="0 0 32 32"
+          >
+      <path   style="text-indent:0;text-align:start;line-height:normal;text-transform:none;block-progression:tb;-inkscape-font-specification:Bitstream Vera Sans" d="M 15 4.59375 L 13.28125 6.28125 L 8.5625 11 L 5 11 L 4 11 L 4 12 L 4 20 L 4 21 L 5 21 L 8.5625 21 L 13.28125 25.71875 L 15 27.40625 L 15 25 L 15 7 L 15 4.59375 z M 13 9.4375 L 13 22.5625 L 9.71875 19.28125 L 9.40625 19 L 9 19 L 6 19 L 6 13 L 9 13 L 9.40625 13 L 9.71875 12.71875 L 13 9.4375 z M 20.21875 11.78125 L 18.78125 13.21875 L 21.5625 16 L 18.78125 18.78125 L 20.21875 20.21875 L 23 17.4375 L 25.78125 20.21875 L 27.21875 18.78125 L 24.4375 16 L 27.21875 13.21875 L 25.78125 11.78125 L 23 14.5625 L 20.21875 11.78125 z" overflow="visible" font-family="Bitstream Vera Sans"/>
     </svg>
     {:else if $engineStatus === 'low-audio' }
-    <svg xmlns="http://www.w3.org/2000/svg" class="path audio" width="20" height="20" viewBox="0 0 32 32">
-      <path style="text-indent:0;text-align:start;line-height:normal;text-transform:none;block-progression:tb;-inkscape-font-specification:Bitstream Vera Sans" d="M 15 4.59375 L 13.28125 6.28125 L 8.5625 11 L 5 11 L 4 11 L 4 12 L 4 20 L 4 21 L 5 21 L 8.5625 21 L 13.28125 25.71875 L 15 27.40625 L 15 25 L 15 7 L 15 4.59375 z M 13 9.4375 L 13 22.5625 L 9.71875 19.28125 L 9.40625 19 L 9 19 L 6 19 L 6 13 L 9 13 L 9.40625 13 L 9.71875 12.71875 L 13 9.4375 z M 20.21875 11.78125 L 18.78125 13.21875 L 21.5625 16 L 18.78125 18.78125 L 20.21875 20.21875 L 23 17.4375 L 25.78125 20.21875 L 27.21875 18.78125 L 24.4375 16 L 27.21875 13.21875 L 25.78125 11.78125 L 23 14.5625 L 20.21875 11.78125 z" overflow="visible" font-family="Bitstream Vera Sans"/>
+    <svg xmlns="http://www.w3.org/2000/svg"
+          class="path audio"
+          width="20" height="20"
+          viewBox="0 0 32 32"
+          >
+      <path   style="text-indent:0;text-align:start;line-height:normal;text-transform:none;block-progression:tb;-inkscape-font-specification:Bitstream Vera Sans" d="M 15 4.59375 L 13.28125 6.28125 L 8.5625 11 L 5 11 L 4 11 L 4 12 L 4 20 L 4 21 L 5 21 L 8.5625 21 L 13.28125 25.71875 L 15 27.40625 L 15 25 L 15 7 L 15 4.59375 z M 13 9.4375 L 13 22.5625 L 9.71875 19.28125 L 9.40625 19 L 9 19 L 6 19 L 6 13 L 9 13 L 9.40625 13 L 9.71875 12.71875 L 13 9.4375 z M 20.21875 11.78125 L 18.78125 13.21875 L 21.5625 16 L 18.78125 18.78125 L 20.21875 20.21875 L 23 17.4375 L 25.78125 20.21875 L 27.21875 18.78125 L 24.4375 16 L 27.21875 13.21875 L 25.78125 11.78125 L 23 14.5625 L 20.21875 11.78125 z" overflow="visible" font-family="Bitstream Vera Sans"/>
     </svg>
     {:else if $engineStatus === 'paused' }
-    <svg xmlns="http://www.w3.org/2000/svg" class="path mute-audio" width="20" height="20" viewBox="0 0 32 32">
-      <path style="text-indent:0;text-align:start;line-height:normal;text-transform:none;block-progression:tb;-inkscape-font-specification:Bitstream Vera Sans" d="M 15 4.59375 L 13.28125 6.28125 L 8.5625 11 L 5 11 L 4 11 L 4 12 L 4 20 L 4 21 L 5 21 L 8.5625 21 L 13.28125 25.71875 L 15 27.40625 L 15 25 L 15 7 L 15 4.59375 z M 13 9.4375 L 13 22.5625 L 9.71875 19.28125 L 9.40625 19 L 9 19 L 6 19 L 6 13 L 9 13 L 9.40625 13 L 9.71875 12.71875 L 13 9.4375 z M 20.21875 11.78125 L 18.78125 13.21875 L 21.5625 16 L 18.78125 18.78125 L 20.21875 20.21875 L 23 17.4375 L 25.78125 20.21875 L 27.21875 18.78125 L 24.4375 16 L 27.21875 13.21875 L 25.78125 11.78125 L 23 14.5625 L 20.21875 11.78125 z" overflow="visible" font-family="Bitstream Vera Sans"/>
+    <svg xmlns="http://www.w3.org/2000/svg"
+          class="path mute-audio"
+          width="20" height="20"
+          viewBox="0 0 32 32"
+          >
+      <path  style="text-indent:0;text-align:start;line-height:normal;text-transform:none;block-progression:tb;-inkscape-font-specification:Bitstream Vera Sans"
+            d="M 15 4.59375 L 13.28125 6.28125 L 8.5625 11 L 5 11 L 4 11 L 4 12 L 4 20 L 4 21 L 5 21 L 8.5625 21 L 13.28125 25.71875 L 15 27.40625 L 15 25 L 15 7 L 15 4.59375 z M 13 9.4375 L 13 22.5625 L 9.71875 19.28125 L 9.40625 19 L 9 19 L 6 19 L 6 13 L 9 13 L 9.40625 13 L 9.71875 12.71875 L 13 9.4375 z M 20.21875 11.78125 L 18.78125 13.21875 L 21.5625 16 L 18.78125 18.78125 L 20.21875 20.21875 L 23 17.4375 L 25.78125 20.21875 L 27.21875 18.78125 L 24.4375 16 L 27.21875 13.21875 L 25.78125 11.78125 L 23 14.5625 L 20.21875 11.78125 z" overflow="visible" font-family="Bitstream Vera Sans"/>
     </svg>
     {/if}
   </div>
@@ -219,19 +271,22 @@
         on:click={ handleLessAudio }
         >
   <div class="icon-container">
-    <svg xmlns="http://www.w3.org/2000/svg" class="path audio" width="20" height="20" viewBox="0 0 32 32">
+    <svg xmlns="http://www.w3.org/2000/svg" class="path { $engineStatus !== 'paused'? 'audio-active':'audio-inactive' }" width="20" height="20" viewBox="0 0 32 32">
       <path style="text-indent:0;text-align:start;line-height:normal;text-transform:none;block-progression:tb;-inkscape-font-specification:Bitstream Vera Sans" d="M 15 4.59375 L 13.28125 6.28125 L 8.5625 11 L 5 11 L 4 11 L 4 12 L 4 20 L 4 21 L 5 21 L 8.5625 21 L 13.28125 25.71875 L 15 27.40625 L 15 25 L 15 7 L 15 4.59375 z M 13 9.4375 L 13 22.5625 L 9.71875 19.28125 L 9.40625 19 L 9 19 L 6 19 L 6 13 L 9 13 L 9.40625 13 L 9.71875 12.71875 L 13 9.4375 z M 18.5 12.03125 L 17.0625 13.46875 C 17.6405 14.16275 18 15.028 18 16 C 18 16.972 17.6405 17.83725 17.0625 18.53125 L 18.5 19.96875 C 19.439 18.90975 20 17.523 20 16 C 20 14.477 19.439 13.09025 18.5 12.03125 z" overflow="visible" font-family="Bitstream Vera Sans"/>
     </svg>
   </div>
 </button>
 
+<div class="engine-sound-level-text-container">
+  <span class="engine-sound-level-text">{ parseInt($engineSoundLevel*100) }%</span>
+</div>
         <!-- style="{$fullScreen? `visibility:visible;`: `visibility:hidden`}" -->
 <button class="button-dark"
         title="louder"
         style='padding: 0.3em 0.15em 0.7em 0.85em;'
         on:click={ handleMoreAudio }>
   <div class="icon-container">
-    <svg xmlns="http://www.w3.org/2000/svg" class="path audio" width="20" height="20" viewBox="0 0 32 32">
+    <svg xmlns="http://www.w3.org/2000/svg" class="path { $engineStatus !== 'paused'? 'audio-active':'audio-inactive' }" width="20" height="20" viewBox="0 0 32 32">
       <path style="text-indent:0;text-align:start;line-height:normal;text-transform:none;block-progression:tb;-inkscape-font-specification:Bitstream Vera Sans" d="M 15 4.59375 L 13.28125 6.28125 L 8.5625 11 L 5 11 L 4 11 L 4 12 L 4 20 L 4 21 L 5 21 L 8.5625 21 L 13.28125 25.71875 L 15 27.40625 L 15 25 L 15 7 L 15 4.59375 z M 24.125 6.375 L 22.71875 7.78125 C 24.74275 9.92925 26 12.822 26 16 C 26 19.178 24.74275 22.06975 22.71875 24.21875 L 24.125 25.625 C 26.51 23.113 28 19.729 28 16 C 28 12.271 26.51 8.886 24.125 6.375 z M 21.3125 9.1875 L 19.90625 10.625 C 21.20625 12.048 22 13.925 22 16 C 22 18.075 21.20625 19.951 19.90625 21.375 L 21.3125 22.8125 C 22.9735 21.0255 24 18.626 24 16 C 24 13.374 22.9735 10.9735 21.3125 9.1875 z M 13 9.4375 L 13 22.5625 L 9.71875 19.28125 L 9.40625 19 L 9 19 L 6 19 L 6 13 L 9 13 L 9.40625 13 L 9.71875 12.71875 L 13 9.4375 z M 18.5 12.03125 L 17.0625 13.46875 C 17.6405 14.16275 18 15.028 18 16 C 18 16.972 17.6405 17.83725 17.0625 18.53125 L 18.5 19.96875 C 19.439 18.90975 20 17.523 20 16 C 20 14.477 19.439 13.09025 18.5 12.03125 z" overflow="visible" font-family="Bitstream Vera Sans"/>
     </svg>
   </div>

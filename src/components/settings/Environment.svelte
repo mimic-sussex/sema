@@ -7,6 +7,18 @@
   import { isActive } from "@roxi/routify";
 	import { authStore } from '../../auth'
 
+	import {
+    onMount,
+    onDestroy
+  } from 'svelte';
+
+  import { Engine } from 'sema-engine/sema-engine';
+
+  let engine,
+      engineLoaded = false
+      ;
+
+
 	const { user, signout } = authStore;
 
   import {
@@ -43,15 +55,13 @@
   import * as doNotZip from 'do-not-zip';
 	import downloadBlob from '../../utils/downloadBlob.js';
 
-
-
-  let engineLoaded = false;
-
   let handleClick = () => {
     window.localStorage["tutorial-" + new Date(Date.now()).toISOString()] = JSON.stringify($items)
   }
 
   function resetEnvironment(){
+    if(!engine)
+      engine = new Engine();
 
     $items = $items.slice($items.length);
 
@@ -105,6 +115,16 @@
     // Trigger a browser file download
 		downloadBlob(blob, 'sema-' + `${timestamp}` + '.zip');
   }
+
+  onMount( async () => {
+    engine = new Engine();
+
+  });
+
+  onDestroy( () => {
+    engine = null;
+	});
+
 
 
 </script>

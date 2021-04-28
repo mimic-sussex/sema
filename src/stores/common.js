@@ -28,6 +28,8 @@ export const fullScreen = writable(true);
 export const sideBarVisible = writable(true)
 
 export const engineStatus = writable('no-audio');
+export const engineSoundLevel = writable(0.5);
+
 export const unsupportedBrowser = writable(false);
 
 
