@@ -235,8 +235,8 @@
     box-shadow:  -1px -1px 3px rgba(16, 16, 16, 0.4), 0.5px 0.5px 0.5px rgba(16, 16, 16, 0.04);
   }
 
-    .combobox-dark {
-    width: 35px;
+  .combobox-dark {
+    width: 10em;
     height: 30px;
     padding: 0.2em 0.2em 0.8em 0.8em;;
     margin-top: 5px;
@@ -266,7 +266,7 @@
 
 
   .combobox-dark:hover {
-    width: 35px;
+    width: 10em;
     height: 30px;
     padding: 0.2em 0.2em 0.8em 0.8em;;
     margin-top: 5px;
@@ -294,7 +294,7 @@
   }
 
   .combobox-dark:focus {
-    width: 35px;
+    width: 10em;
     height: 30px;
     padding: 0.2em 0.2em 0.8em 0.8em;;
     margin-top: 5px;
@@ -346,54 +346,6 @@
   }
 
 </style>
-
-        <!-- style="{( $fullScreen && $isActive('/playground') )? `visibility:visible;`: `visibility:hidden`}; margin-left: 2px;" -->
-<!-- SAVE -->
-<button class="button-dark"
-        title="save environment"
-        style="{( $isActive('/playground') )? `visibility:visible;`: `visibility:hidden`}; margin-left: 2px;"
-        on:click={ () => storeEnvironment() }
-        >
-  <div class="icon-container">
-    {#if $siteMode === 'dark' }
-      <svg version="1.1"
-        id="Layer_1"
-        xmlns="http://www.w3.org/2000/svg"
-        xmlns:xlink="http://www.w3.org/1999/xlink"
-        x="0px" y="0px"
-        viewBox="0 0 512 512"
-        style="enable-background:new 0 0 512 512;width:15px;"
-        class="light-mode"
-        xml:space="preserve"
-        >
-        <g id="XMLID_1_">
-          <path id="XMLID_9_" d="M466.5,0h-381L0,83.6v382.8C0,491.6,20.4,512,45.5,512h420.9c25.1,0,45.5-20.4,45.5-45.5V45.5
-            C512,20.4,491.6,0,466.5,0z M392.1,29.7v60.4H151.5V29.7H392.1z M91.1,481.3v-30.7h330.8v29.7H91.1V481.3z M482.3,465.5
-            c0,8.4-6.5,14.9-14.9,14.9h-15.8V420H61.3v60.4H46.5c-8.4,0-14.9-6.5-14.9-14.9V95.7l67.8-66h22.3v90.1h301.1V29.7h45.5
-            c8.4,0,14.9,6.5,14.9,14.9v420.9H482.3z M256.5,150.5c-57.6,0-105,47.4-105,105s47.4,105,105,105s105-47.4,105-105
-            S314.1,150.5,256.5,150.5z M256.5,330.8c-41.8,0-75.3-33.5-75.3-75.3s33.5-75.3,75.3-75.3s75.3,33.5,75.3,75.3
-            S298.3,330.8,256.5,330.8z"/>
-        </g>
-      </svg>
-    {:else if $siteMode === 'light' }
-      <svg  version="1.1"
-            id="Layer_1"
-            xmlns="http://www.w3.org/2000/svg"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            x="0px" y="0px"
-            style="enable-background:new 0 0 512 512; width:15px;"
-            viewBox="0 0 512 512"
-            xml:space="preserve"
-            >
-        <g>
-          <path d="M179,0C75,34.9,0,132.9,0,248.8C0,394.2,117.8,512,263.2,512c115.8,0,213.9-75,248.8-179c-26.3,8.5-54.6,14.5-84.3,14.5
-            c-145.4,0-263.2-117.8-263.2-263.2C164.5,54.6,169.8,26.3,179,0z"/>
-        </g>
-      </svg>
-    {/if}
-  </div>
-</button>
-
 
 
 
@@ -471,6 +423,110 @@
     </option>
   {/each}
 </select>
+
+        <!-- style="{( $fullScreen && $isActive('/playground') )? `visibility:visible;`: `visibility:hidden`}; margin-left: 2px;" -->
+<!-- SAVE -->
+<button class="button-dark"
+        title="save environment"
+        style="{( $isActive('/playground') )? `visibility:visible;`: `visibility:hidden`}; margin-left: 2px;"
+        on:click={ () => storeEnvironment() }
+        >
+  <div class="icon-container">
+    {#if $siteMode === 'dark' }
+      <svg version="1.1"
+        id="Layer_1"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        x="0px" y="0px"
+        viewBox="0 0 512 512"
+        style="enable-background:new 0 0 512 512;width:15px;"
+        class="light-mode"
+        xml:space="preserve"
+        >
+        <g id="XMLID_1_">
+          <path id="XMLID_9_" d="M466.5,0h-381L0,83.6v382.8C0,491.6,20.4,512,45.5,512h420.9c25.1,0,45.5-20.4,45.5-45.5V45.5
+            C512,20.4,491.6,0,466.5,0z M392.1,29.7v60.4H151.5V29.7H392.1z M91.1,481.3v-30.7h330.8v29.7H91.1V481.3z M482.3,465.5
+            c0,8.4-6.5,14.9-14.9,14.9h-15.8V420H61.3v60.4H46.5c-8.4,0-14.9-6.5-14.9-14.9V95.7l67.8-66h22.3v90.1h301.1V29.7h45.5
+            c8.4,0,14.9,6.5,14.9,14.9v420.9H482.3z M256.5,150.5c-57.6,0-105,47.4-105,105s47.4,105,105,105s105-47.4,105-105
+            S314.1,150.5,256.5,150.5z M256.5,330.8c-41.8,0-75.3-33.5-75.3-75.3s33.5-75.3,75.3-75.3s75.3,33.5,75.3,75.3
+            S298.3,330.8,256.5,330.8z"/>
+        </g>
+      </svg>
+    {:else if $siteMode === 'light' }
+      <svg  version="1.1"
+            id="Layer_1"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            x="0px" y="0px"
+            style="enable-background:new 0 0 512 512; width:15px;"
+            viewBox="0 0 512 512"
+            xml:space="preserve"
+            >
+        <g>
+          <path d="M179,0C75,34.9,0,132.9,0,248.8C0,394.2,117.8,512,263.2,512c115.8,0,213.9-75,248.8-179c-26.3,8.5-54.6,14.5-84.3,14.5
+            c-145.4,0-263.2-117.8-263.2-263.2C164.5,54.6,169.8,26.3,179,0z"/>
+        </g>
+      </svg>
+    {/if}
+  </div>
+</button>
+
+
+        <!-- style="{ ( $fullScreen && $isActive('/playground') ) ? `visibility:visible;`: `visibility:hidden`}" -->
+<!-- DELETE -->
+<button class="button-dark"
+        title="clear environment"
+        style="{ ( $isActive('/playground') ) ? `visibility:visible;`: `visibility:hidden`}"
+        on:click={ () => resetEnvironment() }
+        >
+  <div class="icon-container">
+    {#if $siteMode === 'dark' }
+      <svg version="1.1"
+            id="Layer_1"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            x="0px" y="0px"
+            viewBox="0 0 512 512"
+            class="light-mode"
+            style="enable-background:new 0 0 512 512;width:19px;"
+            xml:space="preserve"
+            >
+        <g>
+          <path d="M317.667,214.42l5.667-86.42h20.951V38h-98.384V0H132.669v38H34.285v90h20.951l20,305h140.571
+            c23.578,24.635,56.766,40,93.478,40c71.368,0,129.43-58.062,129.43-129.43C438.715,275.019,385.143,218.755,317.667,214.42z
+            M162.669,30h53.232v8h-53.232V30z M64.285,68h250v30h-250V68z M103.334,403L85.301,128H293.27l-5.77,87.985
+            c-61.031,10.388-107.645,63.642-107.645,127.586c0,21.411,5.231,41.622,14.475,59.43H103.334z M309.285,443
+            c-54.826,0-99.43-44.604-99.43-99.43s44.604-99.429,99.43-99.429s99.43,44.604,99.43,99.429S364.111,443,309.285,443z"/>
+          <polygon points="342.248,289.395 309.285,322.358 276.322,289.395 255.109,310.608 288.072,343.571 255.109,376.533
+            276.322,397.746 309.285,364.783 342.248,397.746 363.461,376.533 330.498,343.571 363.461,310.608 	"/>
+        </g>
+      </svg>
+    {:else if $siteMode === 'light' }
+      <svg version="1.1"
+            id="Layer_1"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            x="0px" y="0px"
+            viewBox="0 0 512 512"
+            style="enable-background:new 0 0 512 512;width:19px;"
+            xml:space="preserve"
+            >
+        <g>
+          <path d="M317.667,214.42l5.667-86.42h20.951V38h-98.384V0H132.669v38H34.285v90h20.951l20,305h140.571
+            c23.578,24.635,56.766,40,93.478,40c71.368,0,129.43-58.062,129.43-129.43C438.715,275.019,385.143,218.755,317.667,214.42z
+            M162.669,30h53.232v8h-53.232V30z M64.285,68h250v30h-250V68z M103.334,403L85.301,128H293.27l-5.77,87.985
+            c-61.031,10.388-107.645,63.642-107.645,127.586c0,21.411,5.231,41.622,14.475,59.43H103.334z M309.285,443
+            c-54.826,0-99.43-44.604-99.43-99.43s44.604-99.429,99.43-99.429s99.43,44.604,99.43,99.429S364.111,443,309.285,443z"/>
+          <polygon points="342.248,289.395 309.285,322.358 276.322,289.395 255.109,310.608 288.072,343.571 255.109,376.533
+            276.322,397.746 309.285,364.783 342.248,397.746 363.461,376.533 330.498,343.571 363.461,310.608 	"/>
+        </g>
+      </svg>
+    {/if}
+  </div>
+</button>
+
+
+
 
 <!-- <div style='width: 5px;'></div> -->
 <!-- <button class="button-dark"
@@ -749,58 +805,6 @@
 </button>
 
 
-        <!-- style="{ ( $fullScreen && $isActive('/playground') ) ? `visibility:visible;`: `visibility:hidden`}" -->
-<!-- DELETE -->
-<button class="button-dark"
-        title="clear environment"
-        style="{ ( $isActive('/playground') ) ? `visibility:visible;`: `visibility:hidden`}"
-        on:click={ () => resetEnvironment() }
-        >
-  <div class="icon-container">
-    {#if $siteMode === 'dark' }
-      <svg version="1.1"
-            id="Layer_1"
-            xmlns="http://www.w3.org/2000/svg"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            x="0px" y="0px"
-            viewBox="0 0 512 512"
-            class="light-mode"
-            style="enable-background:new 0 0 512 512;width:19px;"
-            xml:space="preserve"
-            >
-        <g>
-          <path d="M317.667,214.42l5.667-86.42h20.951V38h-98.384V0H132.669v38H34.285v90h20.951l20,305h140.571
-            c23.578,24.635,56.766,40,93.478,40c71.368,0,129.43-58.062,129.43-129.43C438.715,275.019,385.143,218.755,317.667,214.42z
-            M162.669,30h53.232v8h-53.232V30z M64.285,68h250v30h-250V68z M103.334,403L85.301,128H293.27l-5.77,87.985
-            c-61.031,10.388-107.645,63.642-107.645,127.586c0,21.411,5.231,41.622,14.475,59.43H103.334z M309.285,443
-            c-54.826,0-99.43-44.604-99.43-99.43s44.604-99.429,99.43-99.429s99.43,44.604,99.43,99.429S364.111,443,309.285,443z"/>
-          <polygon points="342.248,289.395 309.285,322.358 276.322,289.395 255.109,310.608 288.072,343.571 255.109,376.533
-            276.322,397.746 309.285,364.783 342.248,397.746 363.461,376.533 330.498,343.571 363.461,310.608 	"/>
-        </g>
-      </svg>
-    {:else if $siteMode === 'light' }
-      <svg version="1.1"
-            id="Layer_1"
-            xmlns="http://www.w3.org/2000/svg"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            x="0px" y="0px"
-            viewBox="0 0 512 512"
-            style="enable-background:new 0 0 512 512;width:19px;"
-            xml:space="preserve"
-            >
-        <g>
-          <path d="M317.667,214.42l5.667-86.42h20.951V38h-98.384V0H132.669v38H34.285v90h20.951l20,305h140.571
-            c23.578,24.635,56.766,40,93.478,40c71.368,0,129.43-58.062,129.43-129.43C438.715,275.019,385.143,218.755,317.667,214.42z
-            M162.669,30h53.232v8h-53.232V30z M64.285,68h250v30h-250V68z M103.334,403L85.301,128H293.27l-5.77,87.985
-            c-61.031,10.388-107.645,63.642-107.645,127.586c0,21.411,5.231,41.622,14.475,59.43H103.334z M309.285,443
-            c-54.826,0-99.43-44.604-99.43-99.43s44.604-99.429,99.43-99.429s99.43,44.604,99.43,99.429S364.111,443,309.285,443z"/>
-          <polygon points="342.248,289.395 309.285,322.358 276.322,289.395 255.109,310.608 288.072,343.571 255.109,376.533
-            276.322,397.746 309.285,364.783 342.248,397.746 363.461,376.533 330.498,343.571 363.461,310.608 	"/>
-        </g>
-      </svg>
-    {/if}
-  </div>
-</button>
 
 
 

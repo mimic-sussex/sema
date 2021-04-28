@@ -22,6 +22,18 @@
     border-bottom:1px solid #080808;
   }
 
+  .screen-container {
+    width: 7.5em;
+    display:inline-flex;
+    justify-content:space-between;
+  }
+
+  .environment-container {
+    width: 20em;
+    display:inline-flex;
+    justify-content:space-between;
+  }
+
   .engine-container {
     width: 10em;
     display:inline-flex;
@@ -34,11 +46,19 @@
 <div class="settings-container">
 
 
-  <Mouse />
+  <div class='screen-container'>
+    <Screen />
 
-  <Environment/>
+    <SiteMode />
+  </div>
 
   <div style='width: 5px;'></div>
+
+  <div class='environment-container'>
+    <Environment/>
+  </div>
+
+
 
   <div style='width: 5px;'></div>
 
@@ -48,10 +68,9 @@
 
   <div style='width: 5px;'></div>
 
-  <SiteMode />
 
-  <Screen />
 
+  <Mouse />
 
   <!-- <div style='width: 10px;'></div> -->
 

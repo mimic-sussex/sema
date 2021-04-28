@@ -22,8 +22,15 @@
 </script>
 
 <style>
-  .active {
+  /* .active {
     text-decoration: underline;
+  } */
+
+  [aria-current] {
+    /* font-weight: bold; */
+    /* background-color: #cc33ff; */
+
+    border: 4px 4px 4px 4px solid orangered;
   }
 
   .container-logo {
@@ -450,9 +457,15 @@
 	<div>
 		{#each links as [path, name]}
       {#if path==`tutorial`}
-        <a class:active={$isActive(path)} href={ $url('/tutorial/:chapter/:section/', persistentParams ) }>Tutorial</a>
+        <a class:active={$isActive(path)}
+            aria-current="{ $isActive(path)? 'page' : undefined}"
+            href={ $url('/tutorial/:chapter/:section/', persistentParams ) }>Tutorial</a>
       {:else}
-  			<a class:active={$isActive(path)} href={path}>{name}</a>
+        <!-- Accessible Rich Internet Applications – aria-current – Indicates the element that represents the current item within a container or set of related elements.-->
+  			<a  class:active={$isActive(path)}
+            aria-current="{ $isActive(path)? 'page' : undefined}"
+            href={path}>{name}
+            </a>
       {/if}
 		{/each}
 	</div>

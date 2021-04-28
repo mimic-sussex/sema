@@ -309,7 +309,7 @@
 
   .combobox-dark {
     display: block;
-    font-size: 12px;
+    font-size: medium;
     font-family: sans-serif;
     font-weight: 400;
     cursor: pointer;

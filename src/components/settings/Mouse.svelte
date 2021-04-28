@@ -24,34 +24,43 @@ import { Engine } from 'sema-engine/sema-engine';
 
         $mouseActivated = !$mouseActivated;
 
-        const id = "mxy",
-              ttype = "mouseXY",
-              blockSize = 2;
+        if($mouseActivated){
 
-        let sab = engine.createSharedBuffer(id, ttype, blockSize);
+          const id = "mxy",
+                ttype = "mouseXY",
+                blockSize = 2;
 
-        const onMouseMove = e => {
-          const x = e.offsetX/window.innerWidth;
-          const y = e.offsetY/window.innerHeight;
-          outputText.innerText = `X:${parseFloat(x).toFixed(5)} Y:${parseFloat(y).toFixed(5)}`;
-          engine.pushDataToSharedBuffer(id, [ x, y ]);
+          let sab = engine.createSharedBuffer(id, ttype, blockSize);
+
+          const onMouseMove = e => {
+            const x = e.offsetX/window.innerWidth;
+            const y = e.offsetY/window.innerHeight;
+            outputText.innerText = `X:${parseFloat(x).toFixed(5)} Y:${parseFloat(y).toFixed(5)}`;
+            engine.pushDataToSharedBuffer(id, [ x, y ]);
+          }
+
+          // Subscribe Left `Alt`-key down event to subscribe mouse move
+          document.addEventListener("keydown", e => {
+            if(e.keyCode === 18){
+              $mouseTrailCaptureActivated = true;
+              document.addEventListener( 'mousemove', onMouseMove, true )
+            }
+          });
+          // Subscribe Left `Alt`-key UP event to unsubscribe mouse move
+          document.addEventListener("keyup", e => {
+            if(e.which === 18){
+              outputText.innerText = ``;
+              $mouseTrailCaptureActivated = false;
+              document.removeEventListener( 'mousemove', onMouseMove, true );
+            }
+          });
+        }
+        else {
+
+
+
         }
 
-        // Subscribe Left `Alt`-key down event to subscribe mouse move
-        document.addEventListener("keydown", e => {
-          if(e.keyCode === 18){
-            $mouseTrailCaptureActivated = true;
-            document.addEventListener( 'mousemove', onMouseMove, true )
-          }
-        });
-        // Subscribe Left `Alt`-key UP event to unsubscribe mouse move
-        document.addEventListener("keyup", e => {
-          if(e.which === 18){
-            outputText.innerText = ``;
-            $mouseTrailCaptureActivated = false;
-            document.removeEventListener( 'mousemove', onMouseMove, true );
-          }
-        });
       } catch (err) {
         console.error("ERROR: Failed to create new channel for mouse data: ", err);
       }
