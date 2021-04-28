@@ -18,6 +18,11 @@
     items
   } from '../stores/tutorial.js';
 
+  import { Engine } from 'sema-engine/sema-engine';
+
+  let engine
+      ;
+
   import {
     sidebarLiveCodeOptions,
     loadEnvironmentSnapshotEntries
@@ -29,7 +34,8 @@
     sideBarVisible,
     populateCommonStoresWithFetchedProps,
     updateItemPropsWithCommonStoreValues,
-    updateItemPropsWithFetchedValues
+    updateItemPropsWithFetchedValues,
+    engineStatus
   } from '../stores/common.js';
 
   $: loadSidebarLiveCodeOptions();
@@ -37,6 +43,15 @@
   $: fetchAndLoadDefaultTutorial();
   $: fetchAndLoadDefaultTutorialItems();
 
+  $: document.addEventListener( "keydown", e => {
+    if(!engine)
+      engine = new Engine();
+
+    if ( e.code === "Period" && ( e.ctrlKey || e.metaKey ) ){
+      engine.hush();
+      $engineStatus = 'paused';
+    }
+  });
 
   /**
    * Loads language options from language service and set grammar and default code sources
@@ -106,14 +121,13 @@
   $: if($params.chapter && $params.section) {
 
     persistentParams = $params
-
   }
 
   onMount( async () => {
     // console.log("DEBUG:routes/_layout:onMount");
     // console.log($params);
-
   });
+
 </script>
 
 <div class="app">

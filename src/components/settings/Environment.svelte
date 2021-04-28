@@ -60,8 +60,11 @@
   }
 
   function resetEnvironment(){
+
     if(!engine)
       engine = new Engine();
+
+    engine.hush();
 
     $items = $items.slice($items.length);
 

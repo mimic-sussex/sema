@@ -217,7 +217,7 @@
               cmdForwardSlash={ nil }
               cmdEnter={ evalLiveCodeOnEditorCommand }
               ctrlEnter={ evalLiveCodeOnEditorCommand }
-              cmdPeriod={ stopAudioOnEditorCommand }
-              ctrlPeriod={ stopAudioOnEditorCommand }
               />
+              <!-- cmdPeriod={ stopAudioOnEditorCommand }
+              ctrlPeriod={ stopAudioOnEditorCommand } -->
 </div>

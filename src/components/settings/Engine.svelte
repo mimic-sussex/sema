@@ -33,17 +33,22 @@
   let handleLessAudio = () => {
 
     if($engineStatus === 'paused') return;
-    else if(!engine){
-      engine = new Engine();
+    else {
+      if(!engine){
+        engine = new Engine();
+      }
       $engineSoundLevel = engine.less();
+
     }
   }
 
   let handleMoreAudio = () => {
 
     if($engineStatus === 'paused') return;
-    else if(!engine){
-      engine = new Engine();
+    else {
+      if(!engine){
+        engine = new Engine();
+      }
       $engineSoundLevel = engine.more();
     }
   }
@@ -83,7 +88,7 @@
     border: 0 solid #333;
     text-align: left;
     margin-top: 5px;
-    margin-right: 5px;
+    /* margin-right: 5px; */
     border-radius: .6em;
     -moz-appearance: none;
     -webkit-appearance: none;
@@ -114,7 +119,7 @@
     border: 0 solid #333;
     text-align: left;
     margin-top: 5px;
-    margin-right: 5px;
+    /* margin-right: 5px; */
     border-radius: .6em;
     -moz-appearance: none;
     -webkit-appearance: none;
@@ -143,7 +148,7 @@
     max-width: 100%;
     box-sizing: border-box;
     margin-top: 5px;
-    margin-right: 5px;
+    /* margin-right: 5px; */
     text-align: left;
     -moz-appearance: none;
     -webkit-appearance: none;

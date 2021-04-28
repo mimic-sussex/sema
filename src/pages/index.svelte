@@ -82,9 +82,7 @@
   }
 
   onMount(async () => {
-
     setupReGL();
-
   })
 
   /**
