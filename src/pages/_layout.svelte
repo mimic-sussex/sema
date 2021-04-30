@@ -130,10 +130,23 @@
 
 </script>
 
-<div class="app">
-          <!-- style="{ $fullScreen ? 'height: auto; visibility: visible;': 'height: 0px; visibility: hidden;' }" -->
-	<header class="{ $siteMode === 'dark' ? 'sidebar-container': 'sidebar-container-light' }"
-          >
+<style>
+  .app-dark {
+    background-color: #151515;
+    color:white;
+  }
+
+  .app-light {
+    background-color: white;
+    color:black;
+  }
+
+
+</style>
+
+
+<div class= "app { $siteMode === 'dark' ? 'app-dark': 'app-light' }">
+  <header>
 		<Navigation />
 	</header>
 

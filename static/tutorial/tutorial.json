@@ -2,7 +2,7 @@
   "title": "Basics",
   "sections": [{
     "slug": "introduction",
-    "title": "Introduction",
+    "title": "Introduction to the Sema playground",
     "chapter_dir": "01-basics",
     "section_dir": "01-introduction"
   }, {
@@ -25,7 +25,7 @@
   "title": "Live Coding with the Default Language",
   "sections": [{
     "slug": "introduction",
-    "title": "Introduction",
+    "title": "Introduction to the Default Language",
     "chapter_dir": "02-live-coding",
     "section_dir": "01-introduction"
   }, {
@@ -69,7 +69,7 @@
   "title": "Machine Learning",
   "sections": [{
     "slug": "introduction",
-    "title": "Introduction ",
+    "title": "Introduction to Machine Learning",
     "chapter_dir": "03-machine-learning",
     "section_dir": "01-introduction"
   },
@@ -123,7 +123,7 @@
   "title": "Language Design",
   "sections": [{
     "slug": "introduction",
-    "title": "Introduction",
+    "title": "Introduction to Language Design",
     "chapter_dir": "04-language-design",
     "section_dir": "01-introduction"
   },

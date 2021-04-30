@@ -131,12 +131,6 @@
   }
 
   onMount( async () => {
-    // codeMirror.set(content, "js", 'seti');
-    // codeMirror.set(content, "js", 'isotope');
-    // codeMirror.set(content, "js", 'liquibyte');
-    // codeMirror.set(content, "js", 'oceanic-next');
-
-
     codeMirror.set(content, "js", 'sema');
 
     resizeObserver = new ResizeObserver( e => codeMirror.setSize("100%", "100%"));

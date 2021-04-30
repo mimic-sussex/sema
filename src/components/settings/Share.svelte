@@ -26,7 +26,8 @@
     height: 30px;
     padding: 0.2em 0.2em 0.8em 0.8em;
     display: block;
-    font-size: 12px;
+    font-size: medium;
+    /* font-size: 12px; */
     font-family: sans-serif;
     font-weight: 400;
     cursor: pointer;
@@ -59,7 +60,8 @@
     height: 30px;
     padding: 0.2em 0.2em 0.8em 0.8em;
     display: block;
-    font-size: 12px;
+    font-size: medium;
+    /* font-size: 12px; */
     font-family: sans-serif;
     font-weight: 500;
     cursor: pointer;
@@ -91,7 +93,8 @@
     height: 30px;
     padding: 0.2em 0.2em 0.8em 0.8em;
     display: block;
-    font-size: 12px;
+    font-size: medium;
+    /* font-size: 12px; */
     font-family: sans-serif;
     font-weight: 400;
     cursor: pointer;

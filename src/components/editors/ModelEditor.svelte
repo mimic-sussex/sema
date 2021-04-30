@@ -291,6 +291,7 @@
   onDestroy(async () => {
     engine.removeLearner(id);
     learner.terminate();
+    console.info('disposing Learner')
     resizeObserver.disconnect();
     resizeObserver = null;
 	});

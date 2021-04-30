@@ -64,10 +64,11 @@
 <style>
 
   .button-dark {
-    width: 35px;
-    height: 30px;
+    width: 2.5em;
+    height: 2.5em;
     display: block;
-    font-size: 12px;
+    font-size: medium;
+    /* font-size: 12px; */
     font-family: sans-serif;
     font-weight: 400;
     cursor: pointer;
@@ -78,7 +79,7 @@
     box-sizing: border-box;
     border: 0 solid #333;
     text-align: left;
-    margin-top: 5px;
+    /* margin-top: 5px; */
     margin-right: 5px;
     border-radius: .6em;
     -moz-appearance: none;
@@ -95,10 +96,11 @@
   }
 
   .button-dark:hover {
-    width: 35px;
-    height: 30px;
+     width: 2.5em;
+    height: 2.5em;
     display: block;
-    font-size: 12px;
+    font-size: medium;
+    /* font-size: 12px; */
     font-family: sans-serif;
     font-weight: 500;
     cursor: pointer;
@@ -109,7 +111,7 @@
     box-sizing: border-box;
     border: 0 solid #333;
     text-align: left;
-    margin-top: 5px;
+    /* margin-top: 5px; */
     margin-right: 5px;
     border-radius: .6em;
     -moz-appearance: none;
@@ -124,10 +126,11 @@
     box-shadow: 2px 2px 3px rgb(0, 0, 0), -1px -1px 3px #ffffff61;
   }
   .button-dark:active {
-    width: 35px;
-    height: 30px;
+    width: 2.5em;
+    height: 2.5em;
     display: block;
-    font-size: 12px;
+    font-size: medium;
+    /* font-size: 12px; */
     font-family: sans-serif;
     font-weight: 400;
     cursor: pointer;
@@ -136,7 +139,7 @@
     padding: 0.6em 1em 0.5em 0.8em;
     max-width: 100%;
     box-sizing: border-box;
-    margin-top: 5px;
+    /* margin-top: 5px; */
     margin-right: 5px;
     text-align: left;
     -moz-appearance: none;

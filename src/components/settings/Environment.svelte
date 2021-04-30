@@ -141,11 +141,11 @@
 
 
   .button-dark {
-    width: 35px;
-    height: 30px;
+    width: 2.5em;
+    height: 2.5em;
     padding: 0.2em 0.2em 0.8em 0.8em;
     display: block;
-    font-size: 12px;
+    /* font-size: 12px; */
     font-family: sans-serif;
     font-weight: 400;
     cursor: pointer;
@@ -155,7 +155,7 @@
     box-sizing: border-box;
     border: 0 solid #333;
     text-align: left;
-    margin-top: 5px;
+    /* margin-top: 5px; */
     margin-right: 5px;
     border-radius: .6em;
     -moz-appearance: none;
@@ -174,11 +174,11 @@
   }
 
   .button-dark:hover {
-    width: 35px;
-    height: 30px;
+    width: 2.5em;
+    height: 2.5em;
     padding: 0.2em 0.2em 0.8em 0.8em;
     display: block;
-    font-size: 12px;
+    /* font-size: 12px; */
     font-family: sans-serif;
     font-weight: 500;
     cursor: pointer;
@@ -188,7 +188,7 @@
     box-sizing: border-box;
     border: 0 solid #333;
     text-align: left;
-    margin-top: 5px;
+    /* margin-top: 5px; */
     margin-right: 5px;
     /* box-shadow: 0 1px 0 0px rgba(4, 4, 4, 0.04); */
     border-radius: .6em;
@@ -206,11 +206,12 @@
     box-shadow: 2px 2px 3px rgb(0, 0, 0), -1px -1px 3px #ffffff61;
   }
   .button-dark:active {
-    width: 35px;
-    height: 30px;
+    width: 2.5em;
+    height: 2.5em;
     padding: 0.2em 0.2em 0.8em 0.8em;
     display: block;
-    font-size: 12px;
+    font-size: medium;
+    /* font-size: 12px; */
     font-family: sans-serif;
     font-weight: 400;
     cursor: pointer;
@@ -218,7 +219,7 @@
     line-height: 1.3;
     max-width: 100%;
     box-sizing: border-box;
-    margin-top: 5px;
+    /* margin-top: 5px; */
     margin-right: 5px;
     /* border: 0 solid #333; */
     text-align: left;
@@ -237,11 +238,11 @@
 
   .combobox-dark {
     width: 10em;
-    height: 30px;
-    padding: 0.2em 0.2em 0.8em 0.8em;;
-    margin-top: 5px;
+    height: 2.5em;
+    padding: 0.2em 0.2em 0.8em 0.8em;
+    /* margin-top: 5px; */
     margin-right: 5px;
-    font-size: 12px;
+    font-size: medium;
     font-family: sans-serif;
     font-weight: 400;
     cursor: pointer;
@@ -267,9 +268,9 @@
 
   .combobox-dark:hover {
     width: 10em;
-    height: 30px;
-    padding: 0.2em 0.2em 0.8em 0.8em;;
-    margin-top: 5px;
+    height: 2.5em;
+    padding: 0.2em 0.2em 0.8em 0.8em;
+    /* margin-top: 5px; */
     margin-right: 5px;
     font-family: sans-serif;
     font-weight: 500;
@@ -295,11 +296,11 @@
 
   .combobox-dark:focus {
     width: 10em;
-    height: 30px;
-    padding: 0.2em 0.2em 0.8em 0.8em;;
-    margin-top: 5px;
+    height: 2.5em;
+    padding: 0.2em 0.2em 0.8em 0.8em;
+    /* margin-top: 5px; */
     margin-right: 5px;
-    font-size: 12px;
+    font-size: medium;
     font-family: sans-serif;
     font-weight: 500;
     cursor: pointer;

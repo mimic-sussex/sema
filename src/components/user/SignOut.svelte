@@ -105,7 +105,8 @@
 
   .button-dark {
     display: block;
-    font-size: 12px;
+    font-size: medium;
+    /* font-size: 12px; */
     font-family: sans-serif;
     font-weight: 400;
     cursor: pointer;
@@ -142,7 +143,8 @@
   }
   .button-dark {
     display: block;
-    font-size: 12px;
+    /* font-size: 12px; */
+    font-size: medium;
     font-family: sans-serif;
     font-weight: 400;
     cursor: pointer;
@@ -178,7 +180,8 @@
 
   .button-dark:hover {
     display: block;
-    font-size: 12px;
+    /* font-size: 12px; */
+    font-size: medium;
     font-family: sans-serif;
     font-weight: 500;
     cursor: pointer;
@@ -216,7 +219,8 @@
 
   .button-dark:active {
     display: block;
-    font-size: 12px;
+    /* font-size: 12px; */
+    font-size: medium;
     font-family: sans-serif;
     font-weight: 400;
     cursor: pointer;

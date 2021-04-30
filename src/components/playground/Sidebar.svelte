@@ -337,7 +337,7 @@
 
   .combobox-dark:hover {
     display: block;
-    font-size: 12px;
+    font-size: medium;
     font-family: sans-serif;
     font-weight: 500;
     cursor: pointer;
@@ -364,7 +364,7 @@
 
   .combobox-dark:focus {
     display: block;
-    font-size: 12px;
+    font-size: medium;
     font-family: sans-serif;
     font-weight: 500;
     cursor: pointer;
@@ -390,7 +390,7 @@
   }
   .button-dark {
     display: block;
-    font-size: 12px;
+    font-size: medium;
     font-family: sans-serif;
     font-weight: 400;
     cursor: pointer;
@@ -417,7 +417,7 @@
 
   .button-dark:hover {
     display: block;
-    font-size: 12px;
+    font-size: medium;
     font-family: sans-serif;
     font-weight: 500;
     cursor: pointer;
@@ -454,7 +454,7 @@
 
   .button-dark:active {
     display: block;
-    font-size: 12px;
+    font-size: medium;
     font-family: sans-serif;
     font-weight: 400;
     cursor: pointer;
@@ -496,14 +496,14 @@
 
   .group-label {
     color: #666;
-    font-size: 14px;
+    font-size: medium;
     font-family: sans-serif;
     font-weight: 400
   }
 
   .button-dark:disabled {
     display: block;
-    font-size: 12px;
+    font-size: medium;
     font-family: sans-serif;
     font-weight: 400;
     cursor: pointer;
@@ -538,7 +538,7 @@
   <div class="layout-sidebar-group-widgets-container">
 
     <div class="group-labels" >
-      <span class="group-label">Widgets</span>
+      <span class="group-label">Windows</span>
     </div>
     <!-- Live Code Combobox Selector -->
     <div class="controls">
@@ -626,7 +626,7 @@
   <div class="layout-sidebar-group-properties-container">
 
     <div class="group-labels" >
-      <span class="group-label">Properties</span>
+      <span class="group-label">Window Settings</span>
     </div>
     <div>
       <ItemProps></ItemProps>

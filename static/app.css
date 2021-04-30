@@ -3,7 +3,7 @@ body {
 	padding: 0;
 	margin: 0;
   overflow: hidden;
-  background-color: #151515;
+  /* background-color: #151515; */
 }
 
 #routify-app {
@@ -19,8 +19,6 @@ body {
 }
 
 .app > main {
-	background-color: #151515;
-  /* background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='30' viewBox='0 0 2000 240'%3E%3Cg fill='none' stroke='%23222' stroke-width='10' %3E%3Cpath d='M-500 75c0 0 125-30 250-30S0 75 0 75s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3Cpath d='M-500 45c0 0 125-30 250-30S0 45 0 45s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3Cpath d='M-500 105c0 0 125-30 250-30S0 105 0 105s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3Cpath d='M-500 15c0 0 125-30 250-30S0 15 0 15s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3Cpath d='M-500-15c0 0 125-30 250-30S0-15 0-15s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3Cpath d='M-500 135c0 0 125-30 250-30S0 135 0 135s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3C/g%3E%3C/svg%3E"); */
 	background-attachment: fixed;
 	background-size: cover;
 }
@@ -48,7 +46,7 @@ nav a,
 nav a:visited {
 	display: inline-block;
 	/* text-transform: uppercase; */
-	color: #ccc;
+	/* color: #ccc; */
 	padding: 12px;
 	padding-left: calc(2vw);
 	padding-right: calc(2vw);
@@ -90,7 +88,7 @@ header {
 /* GENERICS */
 .card {
 	/* background: rgba(255,255,255, 0.9); */
-	background: white;
+	/* background: white; */
 	padding: 24px 48px;
 	border-radius: 4px;
 	box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
@@ -100,7 +98,7 @@ header {
 	background: #333;
 	margin-top: 32px;
 	padding: 16px 24px;
-	color: white;
+	/* color: white; */
 	outline: none;
 	border: none;
 	box-shadow: none;

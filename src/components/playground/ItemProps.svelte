@@ -168,7 +168,7 @@
 
   .button-dark {
     display: block;
-    font-size: 12px;
+    font-size: medium;
     font-family: sans-serif;
     font-weight: 400;
     cursor: pointer;
@@ -205,7 +205,7 @@
 
   .button-dark:hover {
     display: block;
-    font-size: 12px;
+    font-size: medium;
     font-family: sans-serif;
     font-weight: 500;
     cursor: pointer;
@@ -242,14 +242,14 @@
 
   .number-input {
     width: 35px;
-    height: 15px;
+    height: 2.5em;
     margin-left:5px;
     padding: 2px;
   }
 
   .button-dark:active {
     display: block;
-    font-size: 12px;
+    font-size: medium;
     font-family: sans-serif;
     font-weight: 400;
     cursor: pointer;
@@ -286,9 +286,9 @@
 
 
   .input-dark {
-    height: 32px;
+    height: 2.5em;
     display: inline-flex;
-    font-size: 12px;
+    font-size: medium;
     font-family: sans-serif;
     font-weight: 400;
     cursor: pointer;

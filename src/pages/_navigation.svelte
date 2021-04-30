@@ -29,16 +29,23 @@
   [aria-current] {
     /* font-weight: bold; */
     /* background-color: #cc33ff; */
-
-    border: 4px 4px 4px 4px solid orangered;
+    /* box-shadow: 0 2px #FF6A00; */
+    box-shadow: 0 0.15em #ccc;
   }
 
   .container-logo {
     /* margin: 10px 10px 10px 10px; */
     font-weight: bold;
     display: inline-block;
-    padding: 0px 10px 0px 10px;
+    /* content */
+    /* padding: 0px 10px 0px 10px; */
 
+  }
+
+  .container-links {
+    /* font-weight: bold; */
+    display: flex;
+    justify-content: space-evenly;
   }
 
   .container-logo-svg {
@@ -49,6 +56,17 @@
 
   path {
     fill: white;
+  }
+
+  a {
+    /* padding: 0.5em 0.5em 0.60em 0.5em; */
+    padding: 0.5em 0em 0.35em 0em;
+  }
+
+  a:hover {
+    /* text-decoration: underline; */
+    text-decoration: none;
+    /* color:white; */
   }
 
 </style>
@@ -449,23 +467,27 @@
         </svg>
       </div>
       <a href={ $url('/index') }
-          style='visibility: {$isActive(`/index`)? `hidden`: `visible`}; font-size: xx-large; text-decoration: none; padding: 0px 0px 5px 0px;color: #fffdfa;'
+          style='visibility: {$isActive(`/index`)? `hidden`: `visible`}; font-size: xx-large; text-decoration: none; padding: 0px 0px 0px 0px;'
           >
         sema
       </a>
   </div>
-	<div>
+	<div class='container-links'>
 		{#each links as [path, name]}
       {#if path==`tutorial`}
-        <a class:active={$isActive(path)}
-            aria-current="{ $isActive(path)? 'page' : undefined}"
-            href={ $url('/tutorial/:chapter/:section/', persistentParams ) }>Tutorial</a>
+        <div>
+          <a class:active={$isActive(path)}
+              aria-current="{ $isActive(path)? 'page' : undefined}"
+              href={ $url('/tutorial/:chapter/:section/', persistentParams ) }>Tutorial</a>
+        </div>
       {:else}
-        <!-- Accessible Rich Internet Applications – aria-current – Indicates the element that represents the current item within a container or set of related elements.-->
-  			<a  class:active={$isActive(path)}
-            aria-current="{ $isActive(path)? 'page' : undefined}"
-            href={path}>{name}
-            </a>
+        <div>
+          <!-- Accessible Rich Internet Applications – aria-current – Indicates the element that represents the current item within a container or set of related elements.-->
+          <a  class:active={$isActive(path)}
+              aria-current="{ $isActive(path)? 'page' : undefined}"
+              href={path}>{name}
+              </a>
+        </div>
       {/if}
 		{/each}
 	</div>

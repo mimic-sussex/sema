@@ -19,7 +19,8 @@
     flex-direction: row;
     align-self: flex-end;
     justify-content:space-between;
-    border-bottom:1px solid #080808;
+    border-bottom: 1px solid #080808;
+    margin-left: 0.5em;
   }
 
   .screen-container {
@@ -29,7 +30,7 @@
   }
 
   .environment-container {
-    width: 20em;
+    width: 22.5em;
     display:inline-flex;
     justify-content:space-between;
   }

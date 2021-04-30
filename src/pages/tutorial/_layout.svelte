@@ -86,12 +86,12 @@
 
   const onAdjust = e => {
     // console.log("DEBUG:dashboard:onAdjust:", e.detail);
-    $items = $items; // call a re-render
+    // $items = $items; // call a re-render
   };
 
   const onChildMount = e => {
     // console.log("DEBUG:dashboard:onChildMount:"ii, e.detail);
-    $items = $items; // call a re-render
+    // $items = $items; // call a re-render
   };
 
   onMount( async () => {
@@ -111,6 +111,7 @@
                             .then( r => r.json());
 
       $items = json.map( item => hydrateJSONcomponent(item) );
+      // $items = json.map( item => hydrateJSONcomponent(item) );
 
       for (const item of $items){
         await updateItemPropsWithFetchedValues(item);
@@ -221,12 +222,19 @@
   	grid-template-areas:
   		"sidebar settings"
   		"sidebar layout";
-	  background-color: #212121;
     overflow: hidden;
-    background: #151515;
     /* background: linear-gradient(150deg, rgba(0,18,1,1) 0%, rgba(7,5,17,1) 33%, rgba(16,12,12,1) 67%, rgb(12, 12, 12) 100%); */
   }
 
+  .container-dark {
+    background: #151515;
+
+  }
+
+  .container-light {
+    background: #151515;
+
+  }
 
   .tutorial-sidebar-container {
     /* background: linear-gradient(150deg, rgba(0,18,1,1) 0%, rgba(7,5,17,1) 33%, rgba(16,12,12,1) 67%, rgb(12, 12, 12) 100%); */
@@ -235,22 +243,39 @@
     height: 100%;
     /* width: auto; width is defined by child */
     min-width: 15em;
-    width: 22em;
+    max-width: 22em;
     /* position: absolute; */
-    margin-left: 3px;
-    margin-right: 2px;
+    padding-left: 0.1em;
+    padding-right: 0.2em;
+  }
+
+  .settings-container {
+    /* background: linear-gradient(150deg, rgba(0,18,1,1) 0%, rgba(7,5,17,1) 33%, rgba(16,12,12,1) 67%, rgb(12, 12, 12) 100%); */
+    /* background: #151515; */
+    grid-area: settings;
+    height: 100%;
+    width: auto; /* width is defined by child */
+  }
+
+  .settings-container-light {
+    /* background: linear-gradient(150deg, rgba(0,18,1,1) 0%, rgba(7,5,17,1) 33%, rgba(16,12,12,1) 67%, rgb(12, 12, 12) 100%); */
+    background: white;
+    grid-area: settings;
+    height: 100%;
+    width: auto; /* width is defined by child */
   }
 
 
   .tutorial-navigator {
     display: grid;
-    grid-template-columns: 2em auto 2em;
+    grid-template-columns: auto auto auto;
     width: 100%;
-    /* max-width: 25em; */
-    padding-top: 5px;
-    /* margin-bottom: 6px; */
+
+    /* padding-left: 0.2em; */
+    padding-right: 0.3em;
+    margin-bottom: 0.05em;
     /* margin-left: 3px; */
-    /* margin-right: 20px; */
+    /* margin-right: 0.4em; */
   }
 
   .content {
@@ -259,7 +284,7 @@
     border-radius: 0px;
     border-top-left-radius: 0px;
     border-bottom-right-radius: 0px;
-    /* padding: 10px; */
+    /* margin-left: 0.2em; */
     /* background: #FFF; */
 
   }
@@ -267,8 +292,8 @@
 
   .markdown-container {
     height: calc(100vh - 86px);
-    margin-left: 2px;
-    margin-right: 2px;
+    padding-left: 0.1em;
+    padding-right: 0.1em;
     /* margin-bottom: 2px; */
     /* border: solid 2px #aaaaaa; */
     border-radius: 5px;
@@ -284,6 +309,7 @@
     height: 100%;
     /* position: absolute; */
     overflow: hidden;
+    margin-left: 0.2em;
   }
 
   .combobox-dark {
@@ -292,9 +318,10 @@
 
   .combobox-dark select {
     width: 100%;
-    height: 30px;
+    height: 2.5em;
     display: block;
-    font-size: 12px;
+    font-size: medium;
+    /* font-size: 12px; */
     font-family: sans-serif;
     font-weight: 400;
     cursor: pointer;
@@ -303,7 +330,7 @@
     padding: 0.7em 1em 0.7em 1em;
     max-width: 100%;
     box-sizing: border-box;
-    margin: 0;
+    /* margin: 0; */
     border: 0 solid #333;
     border-radius: .6em;
     -moz-appearance: none;
@@ -323,11 +350,12 @@
   }
 
   .button-dark {
-    width: 35px;
-    height: 30px;
+    width: 2.5em;
+    height: 2.5em;
     padding: 0.7em 1em 0.7em 1em;
     display: block;
-    font-size: 12px;
+    /* font-size: 12px; */
+    font-size: medium;
     font-family: sans-serif;
     font-weight: 400;
     cursor: pointer;
