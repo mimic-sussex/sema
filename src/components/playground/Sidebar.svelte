@@ -313,7 +313,7 @@
     font-family: sans-serif;
     font-weight: 400;
     cursor: pointer;
-    color: #ccc;
+    /* color: #ccc; */
     line-height: 1.3;
     padding: 0.7em 1em 0.7em 1em;
     width: 8em;
@@ -341,7 +341,7 @@
     font-family: sans-serif;
     font-weight: 500;
     cursor: pointer;
-    color: #fff;
+    /* color: #fff; */
     line-height: 1.3;
     padding: 0.7em 1em 0.7em 1em;
     width: 8em;
@@ -368,7 +368,7 @@
     font-family: sans-serif;
     font-weight: 500;
     cursor: pointer;
-    color: #fff;
+    /* color: #fff; */
     line-height: 1.3;
     padding: 0.7em 1em 0.7em 1em;
     width: 8em;
@@ -394,7 +394,7 @@
     font-family: sans-serif;
     font-weight: 400;
     cursor: pointer;
-    color: #ccc;
+    /* color: #ccc; */
     line-height: 1.3;
     padding: 0.7em 1em 0.7em 1em;
     width: 8em;
@@ -421,7 +421,7 @@
     font-family: sans-serif;
     font-weight: 500;
     cursor: pointer;
-    color: #fff;
+    /* color: #fff; */
     line-height: 1.3;
     padding: 0.7em 1em 0.7em 1em;
     width: 8em;
@@ -458,7 +458,7 @@
     font-family: sans-serif;
     font-weight: 400;
     cursor: pointer;
-    color: #888;
+    /* color: #888; */
     line-height: 1.3;
     /* padding: 0.7em 1em 0.7em 1em; */
     width: 8em;
@@ -495,7 +495,7 @@
   }
 
   .group-label {
-    color: #666;
+    /* color: #666; */
     font-size: medium;
     font-family: sans-serif;
     font-weight: 400
@@ -507,7 +507,7 @@
     font-family: sans-serif;
     font-weight: 400;
     cursor: pointer;
-    color: #888;
+    /* color: #888; */
     line-height: 1.3;
     padding: 0.7em 1em 0.7em 1em;
     width: 8em;

@@ -327,7 +327,7 @@
       "sidebar settings"
       "sidebar layout";
   	/* background-color: #6f7262; */
-    background-color: #212121;
+    /* background-color: #212121; */
     /* overflow: hidden; */
   }
   .sidebar-container {
@@ -366,13 +366,17 @@
     /* height: 100%; */
     width: 100%;
     z-index: 0;
-    /* height: 100vh;
-    width: 100%;
-    overflow: hidden; */
-
-    /* grid-row: 0 / 2; */
-
   }
+
+  .dashboard-container-dark {
+    background: #212121;
+  }
+
+  .dashboard-container-light {
+    background: #d1d1d1;
+  }
+
+
 
   .upload-overlay-container {
     grid-area: layout;
@@ -401,9 +405,6 @@
 
   }
 
-  :global(*) {
-    /* user-select: none; */
-  }
 
   :global(body) {
     overflow: scroll;
@@ -511,8 +512,8 @@
     <Settings/>
   </div>
 
-  <div class="dashboard-container scrollable"
-    bind:this={container}
+  <div class="dashboard-container { $siteMode === 'dark'? 'dashboard-container-dark' : 'dashboard-container-light'}  scrollable"
+    bind:this={ container }
     >
     <Grid
       bind:items={ $items }
