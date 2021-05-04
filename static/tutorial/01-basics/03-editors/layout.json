@@ -13,8 +13,6 @@
     "responsive": {
       "valueW": 0
     },
-    "resizable": true,
-    "draggable": true,
     "min": {},
     "max": {},
     "x": 0,
@@ -36,8 +34,6 @@
     "responsive": {
       "valueW": 0
     },
-    "resizable": true,
-    "draggable": true,
     "min": {},
     "max": {},
     "x": 0,
@@ -59,8 +55,6 @@
     "responsive": {
       "valueW": 0
     },
-    "resizable": true,
-    "draggable": true,
     "min": {},
     "max": {},
     "x": 0,
@@ -82,8 +76,6 @@
     "responsive": {
       "valueW": 0
     },
-    "resizable": true,
-    "draggable": true,
     "min": {},
     "max": {},
     "x": 0,
@@ -105,8 +97,6 @@
     "responsive": {
       "valueW": 0
     },
-    "resizable": true,
-    "draggable": true,
     "min": {},
     "max": {},
     "x": 0,
@@ -142,8 +132,6 @@
     "responsive": {
       "valueW": 0
     },
-    "resizable": true,
-    "draggable": true,
     "min": {},
     "max": {},
     "x": 8,
@@ -165,8 +153,6 @@
     "responsive": {
       "valueW": 0
     },
-    "resizable": true,
-    "draggable": true,
     "min": {},
     "max": {},
     "x": 8,
@@ -188,8 +174,6 @@
     "responsive": {
       "valueW": 0
     },
-    "resizable": true,
-    "draggable": true,
     "min": {},
     "max": {},
     "x": 8,
@@ -211,8 +195,6 @@
     "responsive": {
       "valueW": 0
     },
-    "resizable": true,
-    "draggable": true,
     "min": {},
     "max": {},
     "x": 8,
@@ -234,8 +216,6 @@
     "responsive": {
       "valueW": 0
     },
-    "resizable": true,
-    "draggable": true,
     "min": {},
     "max": {},
     "x": 8,
@@ -269,8 +249,6 @@
     "responsive": {
       "valueW": 0
     },
-    "resizable": true,
-    "draggable": true,
     "min": {},
     "max": {},
     "x": 6,
@@ -292,8 +270,6 @@
     "responsive": {
       "valueW": 0
     },
-    "resizable": true,
-    "draggable": true,
     "min": {},
     "max": {},
     "x": 6,
@@ -315,8 +291,6 @@
     "responsive": {
       "valueW": 0
     },
-    "resizable": true,
-    "draggable": true,
     "min": {},
     "max": {},
     "x": 6,
@@ -338,8 +312,6 @@
     "responsive": {
       "valueW": 0
     },
-    "resizable": true,
-    "draggable": true,
     "min": {},
     "max": {},
     "x": 6,
@@ -361,8 +333,6 @@
     "responsive": {
       "valueW": 0
     },
-    "resizable": true,
-    "draggable": true,
     "min": {},
     "max": {},
     "x": 6,
@@ -396,8 +366,6 @@
     "responsive": {
       "valueW": 0
     },
-    "resizable": true,
-    "draggable": true,
     "min": {},
     "max": {},
     "x": 0,
@@ -419,7 +387,6 @@
     "responsive": {
       "valueW": 0
     },
-    "resizable": true,
     "draggable": true,
     "min": {},
     "max": {},
@@ -442,7 +409,6 @@
     "responsive": {
       "valueW": 0
     },
-    "resizable": true,
     "draggable": true,
     "min": {},
     "max": {},
@@ -465,7 +431,6 @@
     "responsive": {
       "valueW": 0
     },
-    "resizable": true,
     "draggable": true,
     "min": {},
     "max": {},
@@ -505,7 +470,7 @@
     "lineNumbers": true,
     "hasFocus": false,
     "theme": "monokai",
-    "background": "#f0f0f0",
+    "background": "rgba(20, 20, 20, 0.2)",
     "content": "// MODEL EDITOR \n\n//js \u2013 Bypass function input to output \n\n//route the test data into the model\ninput = (x, id) => {\n\tconsole.log(\">liveCode signal: \"+[id,x]);\n\toutput(x, 0)\n};\n"
   }
 }]

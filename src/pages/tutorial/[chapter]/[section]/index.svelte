@@ -144,7 +144,7 @@
     /* border: solid 5px #aaaaaa; */
     border-radius: 5px;
     /* height: 85vh; */
-    background: #aaaaaa;
+    background: #999;
     /* Chrome 49+ */
 		/* -webkit-user-select: all; */
     /* Firefox 43+ */

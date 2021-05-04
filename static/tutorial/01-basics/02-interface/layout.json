@@ -759,7 +759,7 @@
       "lineNumbers": true,
       "hasFocus": false,
       "theme": "monokai",
-      "background": "#f0f0f0",
+      "background": "rgba(20, 20, 20, 0.2)",
       "mode": "both"
   }
 }]

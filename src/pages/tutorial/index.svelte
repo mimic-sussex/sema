@@ -65,10 +65,10 @@
     margin-left: 10px;
     margin-right: 10px;
     margin-bottom: 10px;
-    border: solid 5px #aaaaaa;
+    border: solid 5px #999;
     border-radius: 5px;
     /* height: 85vh; */
-    background: #aaaaaa;
+    background: #999;
   }
 
   .markdown-output {
