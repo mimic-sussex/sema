@@ -23,7 +23,7 @@ import Analyser from "../components/widgets/Analyser.svelte";
 import Visualiser from "../components/widgets/Visualiser.svelte";
 import StoreInspector from "../components/widgets/StoreInspector.svelte";
 import DSPCodeOutput from "../components/widgets/DSPCodeOutput.svelte";
-import PostIt from "../components/widgets/PostIt.svelte";
+import Console from "../components/widgets/Console.svelte";
 
 import default_grammar from "../../static/languages/default/grammar.ne";
 // import gabber_grammar from "../../assets/languages/gabber/grammar.ne";
@@ -111,7 +111,7 @@ export const sidebarDebuggerOptions = writable([
 	{
 		id: 1,
 		disabled: false,
-		type: `postIt`,
+		type: `console`,
 		text: `Console`,
 		content: "",
 	},
@@ -494,7 +494,7 @@ export async function createNewItem (type, content){
 			break;
 		case "postIt":
 			data = {
-				component: PostIt,
+				component: Console,
 				background: "#ffffff",
 			};
 			break;
@@ -513,15 +513,15 @@ export async function createNewItem (type, content){
 	// return component template
 	return {
     id: itemId,
-		12: gridHelp.item({ x: 0, y: 0, w: 4, h: 3 }),
-		8: gridHelp.item({ x: 0, y: 0, w: 4, h: 3 }),
-		6: gridHelp.item({ x: 0, y: 0, w: 4, h: 3 }),
-		3: gridHelp.item({ x: 0, y: 0, w: 4, h: 3 }),
+		12: gridHelp.item({ x: 0, y: 0, w: 8, h: 5 }),
+		8: gridHelp.item({ x: 0, y: 0, w: 8, h: 5 }),
+		6: gridHelp.item({ x: 0, y: 0, w: 6, h: 3 }),
+		3: gridHelp.item({ x: 0, y: 0, w: 3, h: 2 }),
 		2: gridHelp.item({
 			x: 0,
 			y: 0,
-			w: 4,
-			h: 3,
+			w: 2,
+			h: 2,
 		}),
 		data: {
       id: itemId,
@@ -569,8 +569,8 @@ export function hydrateJSONcomponent (item){
 			case "visualiser":
 				item.data.component = Visualiser;
 				break;
-			case "postIt":
-				item.data.component = PostIt;
+			case "console":
+				item.data.component = Console;
 				break;
 			case "dspCodeOutput":
 				item.data.component = DSPCodeOutput;

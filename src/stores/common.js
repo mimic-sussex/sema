@@ -13,7 +13,7 @@ import LiveCodeParseOutput from "../components/widgets/LiveCodeParseOutput.svelt
 import GrammarCompileOutput from "../components/widgets/GrammarCompileOutput.svelte";
 import Analyser from "../components/widgets/Analyser.svelte";
 import StoreInspector from "../components/widgets/StoreInspector.svelte";
-import PostIt from "../components/widgets/PostIt.svelte";
+import Console from "../components/widgets/Console.svelte";
 import DSPCodeOutput from "../components/widgets/DSPCodeOutput.svelte";
 
 import gridHelp from "svelte-grid/build/helper/index.mjs";

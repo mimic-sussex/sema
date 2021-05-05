@@ -13,7 +13,7 @@ import GrammarCompileOutput from "../components/widgets/GrammarCompileOutput.sve
 import Analyser from "../components/widgets/Analyser.svelte";
 import StoreInspector from "../components/widgets/StoreInspector.svelte";
 import DSPCodeOutput from "../components/widgets/DSPCodeOutput.svelte";
-import PostIt from "../components/widgets/PostIt.svelte";
+import Console from "../components/widgets/Console.svelte";
 
 let liveCode = "";
 let modelCode = "";
@@ -303,8 +303,8 @@ export function hydrateJSONcomponent (item){
 			case "analyser":
 				item.data.component = Analyser;
 				break;
-			case "postIt":
-				item.data.component = PostIt;
+			case "console":
+				item.data.component = Console;
 				break;
 			case "dspCodeOutput":
 				item.data.component = DSPCodeOutput;
