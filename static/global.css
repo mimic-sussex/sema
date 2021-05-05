@@ -32,7 +32,7 @@ label {
 	display: block;
 }
 
-input, button, select, textarea {
+input, button, select  {
 	font-family: inherit;
 	font-size: inherit;
 	padding: 0.4em;

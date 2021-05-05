@@ -513,9 +513,9 @@ export async function createNewItem (type, content){
 	// return component template
 	return {
     id: itemId,
-		12: gridHelp.item({ x: 0, y: 0, w: 8, h: 5 }),
-		8: gridHelp.item({ x: 0, y: 0, w: 8, h: 5 }),
-		6: gridHelp.item({ x: 0, y: 0, w: 6, h: 3 }),
+		12: gridHelp.item({ x: 0, y: 0, w: 9, h: 5 }),
+		8: gridHelp.item({ x: 0, y: 0, w: 7, h: 5 }),
+		6: gridHelp.item({ x: 0, y: 0, w: 5, h: 3 }),
 		3: gridHelp.item({ x: 0, y: 0, w: 3, h: 2 }),
 		2: gridHelp.item({
 			x: 0,
