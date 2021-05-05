@@ -45,6 +45,7 @@
 
 
 	import { createEventDispatcher } from 'svelte';
+import { siteMode } from "../../stores/common";
 	const dispatch = createEventDispatcher();
 
 
@@ -304,6 +305,32 @@
     margin-right:2px;
   }
 
+  .combobox-light {
+    display: block;
+    font-size: medium;
+    font-family: sans-serif;
+    font-weight: 400;
+    cursor: pointer;
+    color: #000;
+    line-height: 1.3;
+    padding: 0.7em 1em 0.7em 1em;
+    width: 8em;
+    box-sizing: border-box;
+    margin: 0;
+    border: 0 solid #333;
+    text-align: left;
+    border-radius: .6em;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: rgba(16, 16, 16, 0.04);
+    background-repeat: no-repeat, repeat;
+    background-position: right .7em top 50%, 0 0;
+    background-size: .65em auto, 100%;
+    -webkit-box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
+    -moz-box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
+    box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
+  }
 
 
 
@@ -544,7 +571,7 @@
     <div class="controls">
       <!-- on:click={ () => $sidebarLiveCodeOptions[0].disabled = true }  -->
       <!-- svelte-ignore a11y-no-onchange -->
-      <select class="combobox-dark"
+      <select class="{ $siteMode === 'dark'? 'combobox-dark' :'combobox-light'}"
               bind:value={ $selectedLiveCodeOption }
               on:change={ () => dispatchAdd('live', $selectedLiveCodeOption) }
               on:click={ () => $sidebarLiveCodeOptions[0].disabled = true }
@@ -566,7 +593,7 @@
       <!-- <select class="combobox" bind:value={$selectedTutorial} > -->
       <!-- on:click={ () => $sidebarModelOptions[0].disabled = true }   -->
       <!-- svelte-ignore a11y-no-onchange -->
-      <select class="combobox-dark"
+      <select class="{ $siteMode === 'dark'? 'combobox-dark' :'combobox-light'}"
               bind:value={ $selectedModelOption }
               on:change={ () => dispatchAdd('model', $selectedModelOption) }
               on:click={ () => $sidebarModelOptions[0].disabled = true }
@@ -587,7 +614,7 @@
     <!-- Debuggers Combobox Selector -->
     <div class="controls">
       <!-- svelte-ignore a11y-no-onchange -->
-      <select class="combobox-dark"
+      <select class="{ $siteMode === 'dark'? 'combobox-dark' :'combobox-light' }"
               bind:value={ $selectedDebuggerOption }
               on:change={ () => dispatchAdd('debugger', $selectedDebuggerOption) }
               on:click={ () => $sidebarDebuggerOptions[0].disabled = true  }

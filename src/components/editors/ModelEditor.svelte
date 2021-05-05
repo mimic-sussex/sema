@@ -278,8 +278,14 @@
       resizeObserver = new ResizeObserver( e => codeMirror && codeMirror.setSize("100%", "100%"));
       resizeObserver.observe(container);
 
-      learner = new Learner();
-      await engine.addLearner(id, learner)
+      // In Tutorial re-use learner
+      if(Object.keys(engine.learners).length > 0){
+        learner = engine.learners[Object.keys(engine.learners)];
+      }
+      else {
+        learner = new Learner();
+        await engine.addLearner(id, learner)
+      }
 
       log( id, name, type, lineNumbers, className, hasFocus, theme, background, content, component );
     }
@@ -290,8 +296,8 @@
 	});
 
   onDestroy(async () => {
-    engine.removeLearner(id);
-    learner.terminate();
+    // engine.removeLearner(id);
+    // learner.terminate();
     console.info('disposing Learner')
     resizeObserver.disconnect();
     resizeObserver = null;

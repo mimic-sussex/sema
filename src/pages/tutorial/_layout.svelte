@@ -107,7 +107,8 @@
 //     console.log($items);
 
     if($items.length === 0){
-      let json = await fetch(document.location.origin + `/tutorial/01-basics/01-introduction/layout.json`)
+      // let json = await fetch(document.location.origin + `/tutorial/01-basics/01-introduction/layout.json`)
+      let json = await fetch(document.location.origin + localStorage.getItem("tutorial-url") + 'layout.json' )
                             .then( r => r.json());
 
       $items = json.map( item => hydrateJSONcomponent(item) );
