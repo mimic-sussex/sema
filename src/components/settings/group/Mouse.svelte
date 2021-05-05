@@ -12,7 +12,7 @@ import { Engine } from 'sema-engine/sema-engine';
     fullScreen,
     mouseActivated,
     mouseTrailCaptureActivated
-  } from '../../stores/common.js';
+  } from '../../../stores/common.js';
 
   let engine,
       engineLoaded = false,

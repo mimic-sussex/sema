@@ -2,7 +2,7 @@
   import {
     siteMode,
     fullScreen
-  } from '../../stores/common.js';
+  } from '../../../stores/common.js';
 
 
   let engineLoaded = false;
@@ -22,12 +22,12 @@
 
 
   .button-dark {
-    width: 35px;
-    height: 30px;
+    width: 2.5em;
+    height: 2.5em;
     padding: 0.2em 0.2em 0.8em 0.8em;
     display: block;
-    font-size: medium;
     /* font-size: 12px; */
+    font-size: medium;
     font-family: sans-serif;
     font-weight: 400;
     cursor: pointer;
@@ -37,7 +37,7 @@
     box-sizing: border-box;
     border: 0 solid #333;
     text-align: left;
-    margin-top: 5px;
+    /* margin-top: 5px; */
     margin-right: 5px;
     border-radius: .6em;
     -moz-appearance: none;
@@ -56,8 +56,8 @@
   }
 
   .button-dark:hover {
-    width: 35px;
-    height: 30px;
+    width: 2.5em;
+    height: 2.5em;
     padding: 0.2em 0.2em 0.8em 0.8em;
     display: block;
     font-size: medium;
@@ -71,7 +71,7 @@
     box-sizing: border-box;
     border: 0 solid #333;
     text-align: left;
-    margin-top: 5px;
+    /* margin-top: 5px; */
     margin-right: 5px;
     /* box-shadow: 0 1px 0 0px rgba(4, 4, 4, 0.04); */
     border-radius: .6em;
@@ -89,8 +89,8 @@
     box-shadow: 2px 2px 3px rgb(0, 0, 0), -1px -1px 3px #ffffff61;
   }
   .button-dark:active {
-    width: 35px;
-    height: 30px;
+    width: 2.5em;
+    height: 2.5em;
     padding: 0.2em 0.2em 0.8em 0.8em;
     display: block;
     font-size: medium;
@@ -102,7 +102,7 @@
     line-height: 1.3;
     max-width: 100%;
     box-sizing: border-box;
-    margin-top: 5px;
+    /* margin-top: 5px; */
     margin-right: 5px;
     /* border: 0 solid #333; */
     text-align: left;
@@ -121,40 +121,62 @@
 
 
 
+
+  path {
+
+    transform: translate(-3px, -5px)
+  }
+
+  .audio {
+    fill: #0050A0;
+  }
+
+  .no-audio {
+    fill: red;
+  }
+
   .light-mode {
     fill: rgb(133, 130, 130);
     enable-background:new 0 0 512 512;
     padding-bottom:3px;
-    width: 15px;
+    width: 16px;
   }
 
 </style>
 
         <!-- style="{$fullScreen? `visibility:visible;`: `visibility:hidden`}" -->
 <button class="button-dark"
+        title="dark mode"
         on:click={ handleClick }>
   <div class="icon-container">
     {#if $siteMode === 'dark' }
 
-      <svg version="1.1"
-            id="Layer_1"
-            xmlns="http://www.w3.org/2000/svg"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
+      <svg  version="1.1" id="Layer_1"
+            xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
             x="0px" y="0px"
+
             viewBox="0 0 512 512"
-            style="enable-background:new 0 0 512 512;"
+            class="light-mode"
             xml:space="preserve"
-            class='light-mode'
             >
         <g>
-          <path class="st0" d="M404.9,0c45.1,0,81.5,37.1,81.5,82.8c0,45.7-36.5,82.8-81.5,82.8c-24.2,0-46-10.7-60.9-27.7l-160.9,88.1
-            c3.6,9.3,5.5,19.5,5.5,30.1c0,13.9-3.3,26.9-9.3,38.4l153.8,95.4c13.8-25.8,40.7-43.4,71.7-43.4c45.1,0,81.5,37.1,81.5,82.8
-            c0,45.7-36.5,82.8-81.5,82.8s-81.5-37.1-81.5-82.8l0.1-3.5L156.3,322.1c-13.7,10.5-30.7,16.7-49.1,16.7
-            c-45.1,0-81.5-37.1-81.5-82.8s36.5-82.8,81.5-82.8c21.8,0,41.6,8.7,56.3,22.9l163.4-89.4c-2.2-7.5-3.4-15.5-3.4-23.8
-            C323.4,37.1,359.8,0,404.9,0z M404.9,382.1c-25.4,0-46.1,21-46.1,47.1c0,26,20.7,47.1,46.1,47.1s46.1-21,46.1-47.1
-            C451,403.1,430.3,382.1,404.9,382.1z M107.1,208.9c-25.4,0-46.1,21-46.1,47.1s20.7,47.1,46.1,47.1s46.1-21,46.1-47.1
-            S132.5,208.9,107.1,208.9z M404.9,35.7c-25.4,0-46.1,21-46.1,47.1c0,26,20.7,47.1,46.1,47.1s46.1-21,46.1-47.1
-            C451,56.8,430.3,35.7,404.9,35.7z"/>
+          <path d="M256,149.3v21.3c23.6,0,44.8,9.5,60.3,25c15.5,15.5,25,36.7,25,60.3c0,23.6-9.5,44.8-25,60.3c-15.5,15.5-36.7,25-60.3,25
+            c-23.6,0-44.8-9.5-60.3-25c-15.5-15.5-25-36.7-25-60.3c0-23.6,9.5-44.8,25-60.3c15.5-15.5,36.7-25,60.3-25V149.3V128
+            c-70.7,0-128,57.3-128,128c0,70.7,57.3,128,128,128c70.7,0,128-57.3,128-128c0-70.7-57.3-128-128-128V149.3z"/>
+          <path d="M234.7,21.3V64c0,11.8,9.6,21.3,21.3,21.3s21.3-9.6,21.3-21.3V21.3C277.3,9.6,267.8,0,256,0S234.7,9.6,234.7,21.3"/>
+          <path d="M234.7,448v42.7c0,11.8,9.6,21.3,21.3,21.3s21.3-9.6,21.3-21.3V448c0-11.8-9.6-21.3-21.3-21.3S234.7,436.2,234.7,448"/>
+          <path d="M74.9,105.1l30.3,30.3c8.3,8.3,21.8,8.3,30.2,0c8.3-8.3,8.3-21.8,0-30.2l-30.3-30.3c-8.3-8.3-21.8-8.3-30.2,0
+            S66.6,96.8,74.9,105.1"/>
+          <path d="M376.6,406.8l30.3,30.3c8.3,8.3,21.8,8.3,30.2,0c8.3-8.3,8.3-21.8,0-30.2l-30.3-30.3c-8.3-8.3-21.8-8.3-30.2,0
+            S368.3,398.4,376.6,406.8"/>
+          <path d="M21.3,277.3H64c11.8,0,21.3-9.6,21.3-21.3c0-11.8-9.6-21.3-21.3-21.3H21.3C9.6,234.7,0,244.2,0,256
+            C0,267.8,9.6,277.3,21.3,277.3"/>
+          <path d="M448,277.3h42.7c11.8,0,21.3-9.6,21.3-21.3c0-11.8-9.6-21.3-21.3-21.3H448c-11.8,0-21.3,9.6-21.3,21.3
+            C426.7,267.8,436.2,277.3,448,277.3"/>
+          <path d="M105.1,437.1l30.3-30.3c8.3-8.3,8.3-21.8,0-30.2s-21.8-8.3-30.2,0l-30.3,30.3c-8.3,8.3-8.3,21.8,0,30.2
+            C83.3,445.4,96.8,445.4,105.1,437.1"/>
+          <path d="M406.8,135.4l30.3-30.3c8.3-8.3,8.3-21.8,0-30.2s-21.8-8.3-30.2,0l-30.3,30.3c-8.3,8.3-8.3,21.8,0,30.2
+            C384.9,143.7,398.4,143.7,406.8,135.4"/>
         </g>
       </svg>
     {:else if $siteMode === 'light' }
@@ -176,7 +198,7 @@
   </div>
 </button>
 
-<div style='width: 10px;'></div>
+<!-- <div style='width: 10px;'></div> -->
 
 
 

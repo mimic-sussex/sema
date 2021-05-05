@@ -1,10 +1,10 @@
 <script>
-  import Engine from './Engine.svelte';
-  import SiteMode from './SiteMode.svelte';
-  import Screen from './Screen.svelte';
-  import Share from './Share.svelte';
-  import Environment from './Environment.svelte';
-  import Mouse from './Mouse.svelte';
+  import Engine from './group/Engine.svelte';
+  import SiteMode from './group/SiteMode.svelte';
+  import Screen from './group/Screen.svelte';
+  import Share from './group/Share.svelte';
+  import Environment from './group/Environment.svelte';
+  import Mouse from './group/Mouse.svelte';
 
 
 

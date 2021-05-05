@@ -2,7 +2,7 @@
   import {
     fullScreen,
     sideBarVisible
-  } from '../../stores/common.js';
+  } from '../../../stores/common.js';
 
   let engineLoaded = false;
 

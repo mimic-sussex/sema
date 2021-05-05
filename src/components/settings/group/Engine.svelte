@@ -4,7 +4,7 @@
     fullScreen,
     engineStatus,
     engineSoundLevel
-  } from '../../stores/common.js';
+  } from '../../../stores/common.js';
 
 	import {
     onMount,

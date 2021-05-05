@@ -2,10 +2,10 @@
   import {
     siteMode,
     fullScreen
-  } from '../../stores/common.js';
+  } from '../../../stores/common.js';
 
   import { isActive } from "@roxi/routify";
-	import { authStore } from '../../auth'
+	import { authStore } from '../../../auth'
 
 	import {
     onMount,
@@ -50,10 +50,10 @@
     isUploadOverlayVisible,
     hydrateJSONcomponent,
     loadEnvironmentSnapshotEntries
-  } from '../../stores/playground.js'
+  } from '../../../stores/playground.js'
 
   import * as doNotZip from 'do-not-zip';
-	import downloadBlob from '../../utils/downloadBlob.js';
+	import downloadBlob from '../../../utils/downloadBlob.js';
 
   let handleClick = () => {
     window.localStorage["tutorial-" + new Date(Date.now()).toISOString()] = JSON.stringify($items)
