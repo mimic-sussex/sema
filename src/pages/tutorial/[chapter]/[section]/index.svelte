@@ -128,7 +128,7 @@
   pre code {
     display: block;
     border-radius: 4px;
-    font-size: 110%;
+    font-size: 90%;
     background-color: white;
     color: black;
     padding: 5px;

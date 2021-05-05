@@ -4,6 +4,7 @@
 	import { authStore } from './auth.js'
 
   import Controller from "./engine/controller";
+  import Logger from './utils/logger.js';
   import { PubSub } from './utils/pubSub.js';
   let messaging = new PubSub();
 
@@ -13,7 +14,8 @@
   // $unsupportedBrowser
   let unsupportedBrowser,
       controller,
-      engine;
+      engine,
+      logger;
 
   /**
    * This async IIFE tests the browser in which Sema is loading
@@ -37,23 +39,6 @@
     }
   })();
 
-
-
-  // const unsubscribe = audioEngineStatus.subscribe( value => {
-  //   if(controller){
-  //     if(value === 'running' && !controller.samplesLoaded){
-  //       controller.init(document.location.origin + '/maxi-processor.js');
-  //     }
-  //     // else if (value === 'running')
-  //     // {
-  //     //   messaging.publish("play-audio");
-  //     // }
-  //     // else if (value === 'paused'){
-  //     //   messaging.publish("stop-audio");
-  //     // }
-	//   }
-  // });
-  // onDestroy(unsubscribe);
 
 	function onMouseMove(e) {
 		messaging.publish("mouse-xy", [e.clientX / window.innerWidth, e.clientY / window.innerHeight]);

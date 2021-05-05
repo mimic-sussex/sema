@@ -14,11 +14,10 @@ export default class Controller {
 		if (Controller.instance) {
 			return Controller.instance // Singleton pattern, only one instance in sema
 		}
-		Controller.instance = this
+		Controller.instance = this;
 
 		// Constructor dependency injection of a sema-engine singleton instance
-		this.engine = engine
-
+		this.engine = engine;
 		this.samplesLoaded = false
 	}
 

@@ -492,7 +492,7 @@ export async function createNewItem (type, content){
 				channelID: '0',
 			}
 			break;
-		case "postIt":
+		case "console":
 			data = {
 				component: Console,
 				background: "#ffffff",
@@ -501,8 +501,8 @@ export async function createNewItem (type, content){
 		case "dspCodeOutput":
 			data = {
 				component: DSPCodeOutput,
-				background: "#fdbd9a",
-			};
+				background: '#191919',
+			}
 			break;
 		default:
 			break;
@@ -639,6 +639,34 @@ export function storable(key, initialValue) {
 		subscribe, // punt subscriptions to underlying store
 	};
 }
+
+export function sessionable(key, initialValue) {
+	const store = writable(initialValue) // create an underlying store
+	const { subscribe, set, update } = store
+
+	let text = sessionStorage.getItem(key) // get the last value from localStorage
+
+	// return an object with the same interface as Svelte's writable() store interface
+	return {
+		set(value) {
+			sessionStorage.setItem(key, value)
+			set(value) // capture set and write to localStorage
+		},
+
+		update(cb) {
+			const value = cb(get(store)) // passes items to callback for invocation e.g items => items.concat(new)
+			this.set(value) // capture updates and write to localStore
+		},
+
+		get() {
+			return sessionStorage.getItem(key)
+		},
+
+		subscribe, // punt subscriptions to underlying store
+	}
+}
+
+
 
 // Dashboard layout in items list
 // export const items = storable('playground', testItems) // localStorageWrapper

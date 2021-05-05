@@ -6,7 +6,7 @@ import javascript from 'highlight.js/lib/languages/javascript';
 hljs.registerLanguage('javascript', javascript);
 // export let items;
 
-let beautifyOptions = { 
+let beautifyOptions = {
   "indent_size": "2",
   "indent_char": " ",
   "max_preserve_newlines": "1",
@@ -33,8 +33,8 @@ let beautifyOptions = {
 
 
 <style>
-  
-  .container {
+
+  .container-dsp-code-output {
     position: relative;
     width: 100%;
     height: 100%;
@@ -68,23 +68,23 @@ let beautifyOptions = {
     user-select: text;
   }
   .error-state {
-    color:red; 
+    color:red;
     margin: 25px 10px 5px 10px;
   }
 
   .headline {
-    overflow-y: scroll; height:auto; 
-    margin-top: 6px; 
-    margin-left: 20px; 
+    overflow-y: scroll; height:auto;
+    margin-top: 6px;
+    margin-left: 20px;
     margin-bottom: 10px;
   }
 
 
 </style>
 
-<div class='container scrollable'>
+<div class='container-dsp-code-output scrollable'>
   <div class="headline">
-    <strong>DSP CODE OUTPUT</strong> 
+    <strong>DSP CODE OUTPUT</strong>
   </div>
   {#if $dspCode}
   <strong class="error-state">Setup:</strong>
