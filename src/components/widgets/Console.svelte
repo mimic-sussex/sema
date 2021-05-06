@@ -6,10 +6,21 @@
   let textArea;
   let logger;
 
+
+  export let id;
+  export let name;
+	export let type;
+  export let hasFocus;
+  export let background;
+	export let lineNumbers;
+	export let theme;
+  export let component;
+  export let className;
+  export { className as class };
+
   export let append = '';
 
-  let value = `
-  running Maximilian v2.3.0 (Wasm)
+  let value = `  running Maximilian v2.3.0 (Wasm)
   running Maximilian v2.3.0 (PureJS)
   running Open303 (Wasm)
   Sample rate: 44100
@@ -219,6 +230,8 @@
 
     // }
     console.log('Console')
+
+    log( id, name, type, className, lineNumbers, hasFocus, theme, background, component );
   });
 
   onDestroy( async () => {
@@ -248,15 +261,21 @@
     width: 100%;
     height: 100%;
     resize: none;
+    overflow-y: scroll;
   }
 
 </style>
 
 <div class='console-container scrollable-textarea'>
 
-  <textarea readonly
+  <pre readonly
+      bind:this={ textArea }
+
+      class='console-textarea'
+      >{ value }</pre>
+  <!-- <textarea readonly
       bind:this={ textArea }
       bind:value
       class='console-textarea'
-      ></textarea>
+      ></textarea> -->
 </div>

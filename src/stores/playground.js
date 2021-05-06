@@ -495,13 +495,13 @@ export async function createNewItem (type, content){
 		case "console":
 			data = {
 				component: Console,
-				background: "#ffffff",
-			};
+				background: 'rgba(20, 20, 20, 0.3)',
+			}
 			break;
 		case "dspCodeOutput":
 			data = {
 				component: DSPCodeOutput,
-				background: '#191919',
+				background: 'rgba(25, 25, 25, 0.3)',
 			}
 			break;
 		default:

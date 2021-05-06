@@ -338,19 +338,6 @@
     font: 400 14px/1.7 var(--font-mono);
     color: var(--base);
   }
-
-
-
-  /* .codemirror-container :global(.error-loc) {
-    position: relative;
-    border-bottom: 2px solid #da106e;
-  } */
-/*
-  .codemirror-container :global(.error-line) {
-    background-color: rgba(200, 0, 0, 0.05);
-  } */
-
-
 </style>
 
 <div  bind:this={ container }

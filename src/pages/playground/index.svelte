@@ -431,7 +431,7 @@
   }
 
   :global(.svlt-grid-shadow) {
-    background: #151515 !important;
+    background: rgba(25, 25, 25, 0.6) !important;
     border: solid 3.5em rgba(#151515, .5);
     /* box-shadow: 10px 10px 10px #151515; */
     border-radius: 4px;
@@ -439,36 +439,74 @@
     transition: transform 0.2s;
   }
 
-  .close {
-    position: absolute;
-    top: 0;
-    right: 0;
-    padding: 5px 10px;
-    cursor: pointer;
+  :global(.svlt-grid-item) {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    grid-template-rows: auto 1fr;
+
+  }
+
+
+
+  .chrome {
+    grid-row: 1/1;
+    grid-column: 1/3;
+    display: grid;
+    /* grid-template-columns: auto 1fr auto; */
+    position: relative;
+    /* background: rgba(25, 25, 25, 0.6); */
+    /* border-width: 1px 1px 1px 1px; */
+    /* top: 1.4em; */
+    padding: 0.2em 0.1em 0.1em 0.1em;
     z-index: 1500;
-    text-shadow: 1px 1px 1px #000000;
   }
 
   .move {
     text-shadow: 1px 1px 1px #000000;
     font-size: 1.2em;
     position: absolute;
-    padding: 4px 2px;
+    padding: 0em 0.3em ;
     cursor: move;
-    z-index: 1500;
     color: lightgray;
+    /* margin-left: 0.2em; */
+    grid-column: 1/1;
   }
 
+  .item-header-type {
+    grid-column: 2/2;
+    /* padding-top: 0.2em; */
+
+  }
+
+  .close {
+    grid-column: 3/2;
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding:  0.1em 0.3em 0.1em 0.1em;
+    cursor: pointer;
+    /* z-index: 1500; */
+    text-shadow: 1px 1px 1px #000000;
+  }
 
   .content {
+    grid-row: 2/2;
+    grid-column: 1/3;
+    /* top: -1.4em; */
     width: 100%;
+    /* height: calc(100%-2.5em); */
     height: 100%;
     border-radius: 0px;
     border-top-left-radius: 0px;
     border-bottom-right-radius: 0px;
     /* padding: 10px; */
+    /* padding: 10px; */
     /* background: #FFF; */
+    overflow-y:hidden;
+  }
 
+  .component {
+    /* height: calc(100%-2.5em); */
   }
 
  	.scrollable {
@@ -476,9 +514,11 @@
 		margin: 0 0 0.5em 0;
 		overflow-y: auto;
 	}
+
   .box-icon {
     margin-bottom: 120px;
   }
+
   path {
     fill: white;
   }
@@ -530,7 +570,12 @@
       >
         <!-- <span class='move'>+</span> -->
 
-        <svg version="1.1"
+
+        <div class='chrome'
+          style="background: rgba(25, 25, 25, 0.6);"
+          >
+          <div class='move'>
+            <svg version="1.1"
               id="Capa_1"
               xmlns="http://www.w3.org/2000/svg"
               xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -538,37 +583,37 @@
               viewBox="0 0 489.9 489.9"
               style="enable-background:new 0 0 489.9 489.9;"
               xml:space="preserve"
-              width='15px'
-              class='move'
+              width='16px'
               >
-          <g>
-            <g>
-              <path d="M406.2,173.55c-4.8,4.8-4.8,12.5,0,17.3l41.8,41.8H333.3v-63.9c0-6.8-5.5-12.3-12.3-12.3h-63.9V41.85l41.8,41.8
-                c2.4,2.4,5.5,3.6,8.7,3.6s6.3-1.2,8.7-3.6c4.8-4.8,4.8-12.5,0-17.3l-62.7-62.7c-2.3-2.3-5.4-3.6-8.7-3.6s-6.4,1.3-8.7,3.6
-                l-62.7,62.7c-4.8,4.8-4.8,12.5,0,17.3s12.5,4.8,17.3,0l41.8-41.8v114.7h-63.9c-6.8,0-12.3,5.5-12.3,12.3v63.9H41.8l41.8-41.8
-                c4.8-4.8,4.8-12.5,0-17.3s-12.5-4.8-17.3,0l-62.7,62.7c-4.8,4.8-4.8,12.5,0,17.3l62.7,62.7c2.4,2.4,5.5,3.6,8.7,3.6
-                s6.3-1.2,8.7-3.6c4.8-4.8,4.8-12.5,0-17.3l-41.8-41.8h114.7v63.9c0,6.8,5.5,12.3,12.3,12.3h63.9v114.7l-41.9-41.9
-                c-4.8-4.8-12.5-4.8-17.3,0s-4.8,12.5,0,17.3l62.7,62.7c2.3,2.3,5.4,3.6,8.7,3.6s6.4-1.3,8.7-3.6l62.7-62.7
-                c4.8-4.8,4.8-12.5,0-17.3s-12.5-4.8-17.3,0l-41.8,41.8v-114.7h63.9c6.8,0,12.3-5.5,12.3-12.3v-63.9h114.7l-42,41.8
-                c-4.8,4.8-4.8,12.5,0,17.3c2.4,2.4,5.5,3.6,8.7,3.6s6.3-1.2,8.7-3.6l62.7-62.7c2.3-2.3,3.6-5.4,3.6-8.7s-1.3-6.4-3.6-8.7
-                l-62.7-62.7C418.7,168.75,411,168.75,406.2,173.55z M308.8,308.85H181v-127.8h127.8L308.8,308.85L308.8,308.85z"/>
-            </g>
-          </g>
-        </svg>
-
-
-<!-- { dataItem.data.hasFocus ? '1px solid rgba(100, 100, 100, 0.5)': '1px solid rgba(25, 25, 25, 0.1)' }; -->
-        <div  class="content"
-              style="background: { item.fixed ? '#bka' : dataItem.data.background }; border: 1px solid rgba(25, 25, 25, 0.1); border-width: 1px 1px 1px 1px;"
-              on:pointerdown={ e => e.stopPropagation() }
-              >
-
-
-
+              <g>
+                <g>
+                  <path d="M406.2,173.55c-4.8,4.8-4.8,12.5,0,17.3l41.8,41.8H333.3v-63.9c0-6.8-5.5-12.3-12.3-12.3h-63.9V41.85l41.8,41.8
+                    c2.4,2.4,5.5,3.6,8.7,3.6s6.3-1.2,8.7-3.6c4.8-4.8,4.8-12.5,0-17.3l-62.7-62.7c-2.3-2.3-5.4-3.6-8.7-3.6s-6.4,1.3-8.7,3.6
+                    l-62.7,62.7c-4.8,4.8-4.8,12.5,0,17.3s12.5,4.8,17.3,0l41.8-41.8v114.7h-63.9c-6.8,0-12.3,5.5-12.3,12.3v63.9H41.8l41.8-41.8
+                    c4.8-4.8,4.8-12.5,0-17.3s-12.5-4.8-17.3,0l-62.7,62.7c-4.8,4.8-4.8,12.5,0,17.3l62.7,62.7c2.4,2.4,5.5,3.6,8.7,3.6
+                    s6.3-1.2,8.7-3.6c4.8-4.8,4.8-12.5,0-17.3l-41.8-41.8h114.7v63.9c0,6.8,5.5,12.3,12.3,12.3h63.9v114.7l-41.9-41.9
+                    c-4.8-4.8-12.5-4.8-17.3,0s-4.8,12.5,0,17.3l62.7,62.7c2.3,2.3,5.4,3.6,8.7,3.6s6.4-1.3,8.7-3.6l62.7-62.7
+                    c4.8-4.8,4.8-12.5,0-17.3s-12.5-4.8-17.3,0l-41.8,41.8v-114.7h63.9c6.8,0,12.3-5.5,12.3-12.3v-63.9h114.7l-42,41.8
+                    c-4.8,4.8-4.8,12.5,0,17.3c2.4,2.4,5.5,3.6,8.7,3.6s6.3-1.2,8.7-3.6l62.7-62.7c2.3-2.3,3.6-5.4,3.6-8.7s-1.3-6.4-3.6-8.7
+                    l-62.7-62.7C418.7,168.75,411,168.75,406.2,173.55z M308.8,308.85H181v-127.8h127.8L308.8,308.85L308.8,308.85z"/>
+                </g>
+              </g>
+            </svg>
+          </div>
+          <div class='item-header-type'>
+            <span>{ dataItem.data.type }</span>
+          </div>
           <span class='close'
                 on:click={ () => remove(dataItem) }
                 >✕
           </span>
+        </div>
+
+<!-- { dataItem.data.hasFocus ? '1px solid rgba(100, 100, 100, 0.5)': '1px solid rgba(25, 25, 25, 0.1)' }; -->
+        <div  class="content"
+              style="background: { item.fixed ? '#bka' : dataItem.data.background };"
+              on:pointerdown={ e => e.stopPropagation() }
+              >
 
           <svelte:component class='component'
                             this={ dataItem.data.component }

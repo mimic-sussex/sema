@@ -141,7 +141,7 @@
     margin-left: 1px;
     /* margin-right: 2px;
     margin-bottom: 2px; */
-    /* border: solid 5px #aaaaaa; */
+    /* border: solid 5px #aaaaaa; eee*/
     border-radius: 5px;
     /* height: 85vh; */
     background: #999;
@@ -153,11 +153,6 @@
 	  /* -ms-user-select: all; */
     /* Likely future */
 	  /* user-select: all; */
-  }
-
-  .markdown-output {
-    /* width: 100%; */
-    padding: 0em 0.9em 0em 0.9em;
   }
 
 </style>

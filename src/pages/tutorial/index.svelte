@@ -73,7 +73,7 @@
 
   .markdown-output {
     /* width: 100%; */
-    padding: 0em 0.9em 0em 0.9em;
+    padding: 0em 0.6em 0em 0.5em;
 
   }
 

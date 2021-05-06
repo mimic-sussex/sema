@@ -42,6 +42,44 @@ input, button, select  {
 	border-radius: 2px;
 }
 
+textarea {
+    /* -webkit-writing-mode: horizontal-tb !important; */
+    /* text-rendering: auto; */
+    /* color: -internal-light-dark(black, white); */
+    letter-spacing: normal;
+    word-spacing: normal;
+    text-transform: none;
+    text-indent: 0px;
+    text-shadow: none;
+    display: inline-block;
+    text-align: start;
+    appearance: auto;
+    /* background-color: -internal-light-dark(rgb(255, 255, 255), rgb(59, 59, 59)); */
+    background-color:  rgb(59, 59, 59);
+    -webkit-rtl-ordering: logical;
+    flex-direction: column;
+    resize: none;
+    cursor: text;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    column-count: initial !important;
+    margin: 0em;
+    /* font: 400 13.3333px Arial; */
+    /* border-width: 1px;
+    border-style: solid; */
+    /* border-color: -internal-light-dark(rgb(118, 118, 118), rgb(133, 133, 133)); */
+    /* border-image: initial; */
+    /* padding: 2px; */
+}
+
+pre {
+    display: block;
+    font-family: monospace;
+    white-space: pre;
+    margin: 0em 0px;
+}
+
+
 input:disabled {
 	color: #ccc;
 }
