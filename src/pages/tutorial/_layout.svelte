@@ -199,8 +199,17 @@
       let:dataItem
       scroller={ container }
     >
+
+      <div class='chrome'
+          style="background: rgba(25, 25, 25, 0.6);"
+          >
+          <div class='item-header-type'>
+            <span>{ dataItem.data.type }</span>
+          </div>
+        </div>
+
       <div  class="content"
-            style="background: { item.fixed ? '#bka' : dataItem.data.background }; border: { dataItem.data.hasFocus ? '1px solid rgba(100, 100, 100, 0.5)': '1px solid rgba(25, 25, 25, 1)' }; border-width: 1px 0px 0px 1px;"
+            style="background: { item.fixed ? '#bka' : dataItem.data.background };"
             on:pointerdown={ e => e.stopPropagation() }
             >
         <svelte:component class='component'
@@ -279,14 +288,34 @@
     /* margin-right: 0.4em; */
   }
 
+  .chrome {
+    grid-row: 1/1;
+    grid-column: 1/3;
+    display: grid;
+    /* grid-template-columns: auto 1fr auto; */
+    position: relative;
+    /* background: rgba(25, 25, 25, 0.6); */
+    /* border-width: 1px 1px 1px 1px; */
+    /* top: 1.4em; */
+    padding: 0.2em 0.1em 0.1em 0.1em;
+    z-index: 1500;
+  }
+
+  .item-header-type {
+    grid-column: 2/2;
+    /* padding-top: 0.2em; */
+
+  }
+
   .content {
+    grid-row: 2/2;
+    grid-column: 1/3;
     width: 100%;
     height: 100%;
     border-radius: 0px;
     border-top-left-radius: 0px;
     border-bottom-right-radius: 0px;
-    /* margin-left: 0.2em; */
-    /* background: #FFF; */
+    overflow-y:hidden;
 
   }
 

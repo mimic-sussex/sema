@@ -443,7 +443,6 @@
     display: grid;
     grid-template-columns: auto 1fr auto;
     grid-template-rows: auto 1fr;
-
   }
 
 
