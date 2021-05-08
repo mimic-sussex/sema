@@ -36,7 +36,7 @@
   }
 
   .engine-container {
-    width: 10em;
+    width: 12.5em;
     display:inline-flex;
     justify-content:space-between;
   }
