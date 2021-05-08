@@ -46,6 +46,7 @@
   }
 
   let updateAnalyserByteData = e => {
+
     if(e !== undefined){
       smoothingTimeConstant = e.smoothingTimeConstant;
       fftSize = e.fftSize;
@@ -156,6 +157,8 @@
     // Request the creation of an WAAPI analyser to the Audio Engine
 
     // messaging.publish("add-engine-analyser", { id } );
+
+    engine.createAnalyser(id, e => updateAnalyserByteData(e) )
 
     canvas.addEventListener('click', () => toggleRendering(), false);
 

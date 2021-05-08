@@ -56,16 +56,13 @@
 
   let handleConnectInputStream = () => {
 
-    if($engineStatus === 'paused') return;
-    else {
-      if(!engine){
-        engine = new Engine();
-      }
-      if( !$inputStreamConnected ) {
-        $inputStreamConnected  = engine.connectMediaStream();
-      } else {
-        $inputStreamConnected  = engine.disconnectMediaStream();
-      }
+    if(!engine){
+      engine = new Engine();
+    }
+    if( !$inputStreamConnected ) {
+      $inputStreamConnected  = engine.connectMediaStream();
+    } else {
+      $inputStreamConnected  = engine.disconnectMediaStream();
     }
   }
 
