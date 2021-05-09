@@ -19,10 +19,11 @@
 
   import Grid from "svelte-grid";
   import gridHelp from "svelte-grid/build/helper";
+
   let grid,
       fillFree = true;
 
-  let messaging = new PubSub()
+  let messaging = new PubSub();
 
   import {
 
@@ -53,8 +54,7 @@
 
   import Controller from "../../engine/controller";
   let controller = new Controller(); // this will return the previously created Singleton instance
-
-  let engine;
+  let engine = controller.engine;
 
   // const messaging = new PubSub();
 
@@ -248,11 +248,15 @@
 
   const remove = item => {
 
-    if(item.type === 'analyser'){
-      messaging.publish('remove-engine-analyser', { id: item.id }); // notify audio engine to remove associated analyser
+    if(!engine)
+      engine = new Engine();
+
+    if(item.data.type === 'analyser'){
+      engine.removeAnalyser({ id: item.id });
+      // messaging.publish('remove-engine-analyser', { id: item.id }); // notify audio engine to remove associated analyser
     }
     // console.log("DEBUG:dashboard:remove:", item);
-    // messaging.publish("plaground-item-deletion", item.type);
+    messaging.publish("plaground-item-deletion", item.data.type);
 
     remove.bind(null, item); // remove dashboard item binding
     delete item.component;
@@ -280,8 +284,6 @@
     if(!controller.samplesLoaded)
       // controller.init('http://localhost:5000/sema-engine');
       controller.init(document.location.origin +'/sema-engine');
-    // Debug dimensions of grid as we resize the window
-    // let resizeObs = new ResizeObserver(e => console.log( e[0].contentRect.width ) ).observe(container);
 
     // Sequentially fetch data from individual items' properties into language design workflow stores
     for (const item of $items)

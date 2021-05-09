@@ -132,6 +132,7 @@ export default class Controller {
 
 				// Change engine status on settings bar
 				engineStatus.set('running')
+
 			} catch (error) {
 				console.error('Error initialising engine', error)
 			}
@@ -140,9 +141,7 @@ export default class Controller {
 
 	stop() {
     if(this.engine){
-
       this.engine.hush();
-      // setTimeout(() => this.engine.stop(), 1500);
       engineStatus.set('paused');
     }
   }
