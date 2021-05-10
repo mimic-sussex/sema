@@ -1,19 +1,19 @@
-// MODEL EDITOR
-
+importScripts("https://cdn.jsdelivr.net/npm/@tensorflow/tfjs/dist/tf.min.js");
+___
 //js - Long-short-term-memory (LSTM) model for text generation (tfjs)
 
-// Hyperparameters of LSTM model 
+// Hyperparameters of LSTM model
 var lstmLayerSizes;
-var learningRate; 
-var numEpochs; 
-var examplesPerEpoch; 
-var batchSize; 
+var learningRate;
+var numEpochs;
+var examplesPerEpoch;
+var batchSize;
 var validationSplit;
 var sentenceIndices;
 var length;
 var temperature;
 
-//create the model 
+//create the model
 createModel(lstmLayerSizes) {
   if (!Array.isArray(lstmLayerSizes)) {
     lstmLayerSizes = [lstmLayerSizes];
@@ -97,4 +97,3 @@ async generateText(sentenceIndices, length, temperature) {
   temperatureScalar.dispose();
   return generated;
 }
-  

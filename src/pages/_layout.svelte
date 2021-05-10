@@ -14,14 +14,14 @@
   import {
     tutorials,
     selected,
-    hydrateJSONcomponent,
-    items
+    hydrateJSONcomponent,    items
   } from '../stores/tutorial.js';
 
-  import { Engine } from 'sema-engine/sema-engine';
 
-  let engine
-      ;
+  import { Engine } from 'sema-engine/sema-engine';
+  import Controller from "../engine/controller";
+  let controller = new Controller(); // this will return the previously created Singleton instance
+  let engine = controller.engine;
 
   import {
     sidebarLiveCodeOptions,
@@ -124,8 +124,15 @@
   }
 
   onMount( async () => {
-    // console.log("DEBUG:routes/_layout:onMount");
-    // console.log($params);
+    console.log("DEBUG:routes/_layout:onMount");
+    console.log($params);
+
+    // If application loads from index page, entry is through here
+    // otherwise, it loads first from playground/index or tutorial/_layout
+    // so no need to re-initialise controller here
+    if(!controller.initializing && !controller.samplesLoaded)
+      await controller.init(document.location.origin +'/sema-engine');
+
   });
 
 </script>

@@ -1,6 +1,7 @@
-// MODEL EDITOR
-
+importScripts("https://cdn.jsdelivr.net/npm/@tensorflow/tfjs/dist/tf.min.js");
+____
 //js – Two-layer non linear model for regression (tfjs)
+
 var model = tf.sequential();
 model.add(tf.layers.dense({
   inputShape: [1],
@@ -19,9 +20,9 @@ model.fit(xs, ys, { epochs: 50 }).then(result => {console.log(`INFO:ml.model: Mo
 
 //define the callback for testing the model on new data
 var test = (x) => { return model.predict(tf.tensor2d([x], [1, 1])).dataSync()[0]; }
-
-__________
+____
 //route the test data into the model
+
 var w = 0;
 input = (x,id) => {
 	console.log(">toModel:   "+[id,x]);

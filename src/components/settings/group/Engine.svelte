@@ -399,7 +399,7 @@
 
 <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
         title="microphone"
-        style='padding: 0.1em 0.4em 0.9em 0.6em;'
+        style='padding: 0.1em 0.35em 0.9em 0.65em;'
         on:click={ handleConnectInputStream }>
   <div class="icon-container">
     <!-- <svg xmlns="http://www.w3.org/2000/svg" class="path { $engineStatus !== 'paused'? 'audio-active':'audio-inactive' }" width="20" height="20" viewBox="0 0 32 32"> -->

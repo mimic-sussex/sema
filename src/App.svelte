@@ -18,10 +18,8 @@
       logger;
 
   /**
-   * This async IIFE tests the browser in which Sema is loading
-   * for for WAAPI Audio Worklet support
-   * It either succeeds and dynamically imports the sema-engine,
-   * or fails graciously
+   * This async IIFE tests the browser in which Sema is loading for WAAPI Audio Worklet support
+   * It either succeeds and dynamically imports the sema-engine OR fails graciously
    * * This is invoked even if load happens through Playground or Tutorial via client side routing
    * */
   ( async () => {

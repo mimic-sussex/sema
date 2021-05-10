@@ -280,10 +280,14 @@
 
   onMount( async () => {
 
+    console.log('Playground mount: ');
+
     // No need to create re-initialise controller again here
-    if(!controller.samplesLoaded)
+    if(!controller.initializing && !controller.samplesLoaded)
       // controller.init('http://localhost:5000/sema-engine');
-      controller.init(document.location.origin +'/sema-engine');
+      await controller.init(document.location.origin +'/sema-engine');
+
+    console.log('Playground index: onMount ');
 
     // Sequentially fetch data from individual items' properties into language design workflow stores
     for (const item of $items)

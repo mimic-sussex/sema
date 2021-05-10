@@ -82,15 +82,15 @@
   }
 
   onMount(async () => {
-    setupReGL();
+    // setupReGL();
   })
 
   /**
    * TODO delete objects
   */
   onDestroy( async () => {
-    tick.cancel();     // unsubscribe by calling cancel on the callback
-    rgl.destroy()
+    // tick.cancel();     // unsubscribe by calling cancel on the callback
+    // rgl.destroy()
   })
 
 </script>

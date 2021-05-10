@@ -346,6 +346,13 @@
     width: 15px;
   }
 
+  .dark-mode {
+    fill: rgb(133, 130, 130);
+    enable-background:new 0 0 512 512;
+    padding-bottom:3px;
+    width: 15px;
+  }
+
 
   .button-light {
     width: 2.5em;
@@ -789,6 +796,7 @@
             xmlns:xlink="http://www.w3.org/1999/xlink"
             x="0px" y="0px"
             viewBox="0 0 512 512"
+            class='dark-mode'
             style="enable-background:new 0 0 512 512;"
             xml:space="preserve"
 

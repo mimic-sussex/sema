@@ -151,7 +151,7 @@
     if(!engine){
       engine = new Engine();
     }
-
+    console.log('analyser')
     // sabRender()
 
     // Request the creation of an WAAPI analyser to the Audio Engine
