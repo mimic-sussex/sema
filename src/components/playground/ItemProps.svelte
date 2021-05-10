@@ -26,8 +26,9 @@
 
     // editorThemes,
     // selectedModel,
-  } from '../../stores/playground.js'
+  } from '../../stores/playground.js';
 
+  import { siteMode } from "../../stores/common.js";
 
   import { id } from '../../utils/utils.js';
 
@@ -39,6 +40,7 @@
   // import Markdown from "./Markdown.svelte";
 
 	import { createEventDispatcher } from 'svelte';
+
 	const dispatch = createEventDispatcher();
 
 
@@ -201,6 +203,7 @@
     -moz-box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
     box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
 
+
   }
 
   .button-dark:hover {
@@ -328,6 +331,89 @@
     margin-left: 5px;
   }
 
+  .button-light {
+    display: block;
+    font-size: medium;
+    font-family: sans-serif;
+    font-weight: 400;
+    cursor: pointer;
+    color: black;
+    line-height: 1.3;
+    padding: 0.7em 1em 0.7em 1em;
+    width: 8em;
+    max-width: 100%;
+    box-sizing: border-box;
+    border: 0 solid #333;
+    text-align: left;
+    border-radius: .6em;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    background-color:  rgba(16, 16, 16, 0.04);
+    background-repeat: no-repeat, repeat;
+    background-position: right .7em top 50%, 0 0;
+    background-size: .65em auto, 100%;
+    box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
+    -moz-box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
+    -webkit-box-shadow:  2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
+  }
+
+  .button-light:active {
+    display: block;
+    font-size: medium;
+    font-family: sans-serif;
+    font-weight: 400;
+    cursor: pointer;
+    color: black;
+    line-height: 1.3;
+    padding: 0.7em 1em 0.7em 1em;
+    width: 8em;
+    max-width: 100%;
+    box-sizing: border-box;
+    border: 0 solid #333;
+    text-align: left;
+    border-radius: .6em;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    background-color:  rgba(16, 16, 16, 0.04);
+    background-repeat: no-repeat, repeat;
+    background-position: right .7em top 50%, 0 0;
+    background-size: .65em auto, 100%;
+    box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
+    -moz-box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
+    -webkit-box-shadow:  2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0)
+  }
+  .button-light:disabled {
+    display: block;
+    font-size: medium;
+    font-family: sans-serif;
+    font-weight: 400;
+    cursor: pointer;
+    color: #888;
+    line-height: 1.3;
+    padding: 0.7em 1em 0.7em 1em;
+    width: 8em;
+    max-width: 100%;
+    box-sizing: border-box;
+    border: 0 solid #333;
+    text-align: left;
+    border-radius: .6em;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    background-color:  rgba(16, 16, 16, 0.04);
+    background-repeat: no-repeat, repeat;
+    background-position: right .7em top 50%, 0 0;
+    background-size: .65em auto, 100%;
+    box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
+    -moz-box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
+    -webkit-box-shadow:  2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0)
+  }
+
+
+
+
 </style>
 
 
@@ -372,7 +458,7 @@
       {:else if itemProp.restart }
 
         <div class="controls">
-          <button class="button-dark"
+          <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
                   on:click={ () => messaging.publish('restart-ml') }
                   >
                   restart
@@ -382,7 +468,7 @@
       {:else if itemProp.visor }
 
         <div class="controls">
-          <button class="button-dark"
+          <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
                   on:click={ () => messaging.publish('show-ml-visor') }
                   >
                   visor
@@ -393,7 +479,7 @@
       {:else if itemProp.grammar }
 
         <div class="controls">
-          <button class="button-dark"
+          <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
                   on:click={ () => dispatchAdd('grammar') }
                   disabled={ $isAddGrammarEditorDisabled }
                   >

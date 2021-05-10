@@ -311,7 +311,7 @@ import { siteMode } from "../../stores/common";
     font-family: sans-serif;
     font-weight: 400;
     cursor: pointer;
-    color: #000;
+    /* color: #000; */
     line-height: 1.3;
     padding: 0.7em 1em 0.7em 1em;
     width: 8em;
@@ -327,9 +327,9 @@ import { siteMode } from "../../stores/common";
     background-repeat: no-repeat, repeat;
     background-position: right .7em top 50%, 0 0;
     background-size: .65em auto, 100%;
-    -webkit-box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
-    -moz-box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
-    box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
+    box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
+    -moz-box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
+    -webkit-box-shadow:  2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
   }
 
 
@@ -340,7 +340,7 @@ import { siteMode } from "../../stores/common";
     font-family: sans-serif;
     font-weight: 400;
     cursor: pointer;
-    /* color: #ccc; */
+    color: white;
     line-height: 1.3;
     padding: 0.7em 1em 0.7em 1em;
     width: 8em;
@@ -368,7 +368,7 @@ import { siteMode } from "../../stores/common";
     font-family: sans-serif;
     font-weight: 500;
     cursor: pointer;
-    /* color: #fff; */
+    color: white;
     line-height: 1.3;
     padding: 0.7em 1em 0.7em 1em;
     width: 8em;
@@ -395,7 +395,7 @@ import { siteMode } from "../../stores/common";
     font-family: sans-serif;
     font-weight: 500;
     cursor: pointer;
-    /* color: #fff; */
+    color: #fff;
     line-height: 1.3;
     padding: 0.7em 1em 0.7em 1em;
     width: 8em;
@@ -421,7 +421,7 @@ import { siteMode } from "../../stores/common";
     font-family: sans-serif;
     font-weight: 400;
     cursor: pointer;
-    /* color: #ccc; */
+    color: white;
     line-height: 1.3;
     padding: 0.7em 1em 0.7em 1em;
     width: 8em;
@@ -448,7 +448,7 @@ import { siteMode } from "../../stores/common";
     font-family: sans-serif;
     font-weight: 500;
     cursor: pointer;
-    /* color: #fff; */
+    color: white;
     line-height: 1.3;
     padding: 0.7em 1em 0.7em 1em;
     width: 8em;
@@ -485,7 +485,7 @@ import { siteMode } from "../../stores/common";
     font-family: sans-serif;
     font-weight: 400;
     cursor: pointer;
-    /* color: #888; */
+    color: white;
     line-height: 1.3;
     /* padding: 0.7em 1em 0.7em 1em; */
     width: 8em;
@@ -534,7 +534,7 @@ import { siteMode } from "../../stores/common";
     font-family: sans-serif;
     font-weight: 400;
     cursor: pointer;
-    /* color: #888; */
+    color: #888;
     line-height: 1.3;
     padding: 0.7em 1em 0.7em 1em;
     width: 8em;
@@ -550,9 +550,89 @@ import { siteMode } from "../../stores/common";
     background-repeat: no-repeat, repeat;
     background-position: right .7em top 50%, 0 0;
     background-size: .65em auto, 100%;
-    -webkit-box-shadow: 2px 2px 5px rgba(0,0,0),-1px -1px 1px rgb(34, 34, 34);
-    -moz-box-shadow: 2px 2px 5px rgba(0,0,0), -1px -1px 1px rgb(34, 34, 34);;
     box-shadow: 2px 2px 3px rgb(0, 0, 0), -1px -1px 3px #ffffff61;
+    -moz-box-shadow: 2px 2px 3px rgb(0, 0, 0), -1px -1px 3px #ffffff61;
+    -webkit-box-shadow: 2px 2px 3px rgb(0, 0, 0), -1px -1px 3px #ffffff61;
+  }
+
+  .button-light {
+    display: block;
+    font-size: medium;
+    font-family: sans-serif;
+    font-weight: 400;
+    cursor: pointer;
+    color: black;
+    line-height: 1.3;
+    padding: 0.7em 1em 0.7em 1em;
+    width: 8em;
+    max-width: 100%;
+    box-sizing: border-box;
+    border: 0 solid #333;
+    text-align: left;
+    border-radius: .6em;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    background-color:  rgba(16, 16, 16, 0.04);
+    background-repeat: no-repeat, repeat;
+    background-position: right .7em top 50%, 0 0;
+    background-size: .65em auto, 100%;
+    box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
+    -moz-box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
+    -webkit-box-shadow:  2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
+  }
+
+  .button-light:active {
+    display: block;
+    font-size: medium;
+    font-family: sans-serif;
+    font-weight: 400;
+    cursor: pointer;
+    color: black;
+    line-height: 1.3;
+    padding: 0.7em 1em 0.7em 1em;
+    width: 8em;
+    max-width: 100%;
+    box-sizing: border-box;
+    border: 0 solid #333;
+    text-align: left;
+    border-radius: .6em;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    background-color:  rgba(16, 16, 16, 0.04);
+    background-repeat: no-repeat, repeat;
+    background-position: right .7em top 50%, 0 0;
+    background-size: .65em auto, 100%;
+    box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
+    -moz-box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
+    -webkit-box-shadow:  2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0)
+  }
+  .button-light:disabled {
+    display: block;
+    font-size: medium;
+    font-family: sans-serif;
+    font-weight: 400;
+    cursor: pointer;
+    color: #888;
+    line-height: 1.3;
+    padding: 0.7em 1em 0.7em 1em;
+    width: 8em;
+    max-width: 100%;
+    box-sizing: border-box;
+    border: 0 solid #333;
+    text-align: left;
+    border-radius: .6em;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    background-color:  rgba(16, 16, 16, 0.04);
+    background-repeat: no-repeat, repeat;
+    background-position: right .7em top 50%, 0 0;
+    background-size: .65em auto, 100%;
+    box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
+    -moz-box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
+    -webkit-box-shadow:  2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0)
   }
 
 
@@ -629,7 +709,7 @@ import { siteMode } from "../../stores/common";
     </div>
 
     <div>
-      <button class="button-dark controls"
+      <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' } controls"
               on:click={ () => dispatchAdd('analyser') }
               disabled={ $isAddAnalyserDisabled }
               >
@@ -638,7 +718,7 @@ import { siteMode } from "../../stores/common";
     </div>
 
     <div>
-      <button class="button-dark controls"
+      <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' } controls"
               on:click={ () => dispatchAdd('visualiser') }
               >
         visualiser

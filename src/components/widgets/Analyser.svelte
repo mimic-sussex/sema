@@ -162,6 +162,8 @@
 
     canvas.addEventListener('click', () => toggleRendering(), false);
 
+    // engine.
+
     // messaging.subscribe(`${id}-analyser-data`, e => updateAnalyserByteData(e) );
     log( id, name, type, className, lineNumbers, hasFocus, theme, background, component );
 
@@ -170,6 +172,7 @@
 
   onDestroy(async () => {
     isRendering = false;
+    engine.removeAnalyser( { id } );
    	return () => cancelAnimationFrame(frame);
 	})
 

@@ -1,7 +1,8 @@
 <script>
   import {
     fullScreen,
-    sideBarVisible
+    sideBarVisible,
+    siteMode
   } from '../../../stores/common.js';
 
   let engineLoaded = false;
@@ -151,6 +152,90 @@
     box-shadow:  -1px -1px 3px rgba(16, 16, 16, 0.4), 0.5px 0.5px 0.5px rgba(16, 16, 16, 0.04);
   }
 
+  .button-light {
+    width: 2.5em;
+    height: 2.5em;
+    display: block;
+    font-size: medium;
+    font-family: sans-serif;
+    font-weight: 400;
+    cursor: pointer;
+    color: black;
+    line-height: 1.3;
+    padding: 0.6em 1em 0.5em 0.8em;
+    max-width: 100%;
+    box-sizing: border-box;
+    border: 0 solid #333;
+    text-align: left;
+    border-radius: .6em;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    background-color:  rgba(16, 16, 16, 0.04);
+    background-repeat: no-repeat, repeat;
+    background-position: right .7em top 50%, 0 0;
+    background-size: .65em auto, 100%;
+    box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
+    -moz-box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
+    -webkit-box-shadow:  2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
+  }
+
+  .button-light:active {
+    width: 2.5em;
+    height: 2.5em;
+    display: block;
+    font-size: medium;
+    font-family: sans-serif;
+    font-weight: 400;
+    cursor: pointer;
+    color: black;
+    line-height: 1.3;
+    padding: 0.6em 1em 0.5em 0.8em;;
+    max-width: 100%;
+    box-sizing: border-box;
+    border: 0 solid #333;
+    text-align: left;
+    border-radius: .6em;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    background-color:  rgba(16, 16, 16, 0.04);
+    background-repeat: no-repeat, repeat;
+    background-position: right .7em top 50%, 0 0;
+    background-size: .65em auto, 100%;
+    box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
+    -moz-box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
+    -webkit-box-shadow:  2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0)
+  }
+
+  .button-light:disabled {
+    width: 2.5em;
+    height: 2.5em;
+    display: block;
+    font-size: medium;
+    font-family: sans-serif;
+    font-weight: 400;
+    cursor: pointer;
+    color: #888;
+    line-height: 1.3;
+    padding: 0.6em 1em 0.5em 0.8em;
+    max-width: 100%;
+    box-sizing: border-box;
+    border: 0 solid #333;
+    text-align: left;
+    border-radius: .6em;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    background-color:  rgba(16, 16, 16, 0.04);
+    background-repeat: no-repeat, repeat;
+    background-position: right .7em top 50%, 0 0;
+    background-size: .65em auto, 100%;
+    box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
+    -moz-box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
+    -webkit-box-shadow:  2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0)
+  }
+
 
 
 
@@ -176,7 +261,7 @@
 </style>
 
         <!-- style="{ $fullScreen? `visibility:visible;`: `visibility:hidden` }" -->
-<button class="button-dark"
+<button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
         title="sidebar visibility"
         on:click={ handleClickSideBar }
         >
@@ -205,7 +290,7 @@
   </svg>
 </button>
 
-<button class="button-dark"
+<button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
         title="fullscreen mode"
         on:click={ handleClickFullScreen }
         >

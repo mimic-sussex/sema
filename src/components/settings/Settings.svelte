@@ -2,7 +2,7 @@
   import Engine from './group/Engine.svelte';
   import SiteMode from './group/SiteMode.svelte';
   import Screen from './group/Screen.svelte';
-  import Share from './group/Share.svelte';
+  // import Share from './group/Share.svelte';
   import Environment from './group/Environment.svelte';
   import Mouse from './group/Mouse.svelte';
 
