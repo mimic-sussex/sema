@@ -22,7 +22,7 @@ import GrammarCompileOutput from "../components/widgets/GrammarCompileOutput.sve
 import Analyser from "../components/widgets/Analyser.svelte";
 import Visualiser from "../components/widgets/Visualiser.svelte";
 import StoreInspector from "../components/widgets/StoreInspector.svelte";
-import DSPCodeOutput from "../components/widgets/DSPCodeOutput.svelte";
+import DSPCode from '../components/widgets/DSPCode.svelte'
 import Console from "../components/widgets/Console.svelte";
 
 import default_grammar from "../../static/languages/default/grammar.ne";
@@ -125,8 +125,8 @@ export const sidebarDebuggerOptions = writable([
 	{
 		id: 3,
 		disabled: false,
-		type: `dspCodeOutput`,
-		text: `DSP Code Generator`,
+		type: `dspCode`,
+		text: `DSP Code`,
 		content: "",
 	},
 	{
@@ -498,9 +498,9 @@ export async function createNewItem (type, content){
 				background: 'rgba(20, 20, 20, 0.3)',
 			}
 			break;
-		case "dspCodeOutput":
+		case "dspCode":
 			data = {
-				component: DSPCodeOutput,
+				component: DSPCode,
 				background: 'rgba(25, 25, 25, 0.3)',
 			}
 			break;
@@ -545,39 +545,39 @@ export async function createNewItem (type, content){
 export function hydrateJSONcomponent (item){
 	if ( item && item.data && item.data.type ) {
 		switch (item.data.type) {
-			case "liveCodeEditor":
-				item.data.component = LiveCodeEditor;
-				break;
-			case "grammarEditor":
-				item.data.component = GrammarEditor;
-				break;
-			case "modelEditor":
-				item.data.component = ModelEditor;
-				break;
-			case "liveCodeParseOutput":
-				item.data.component = LiveCodeParseOutput;
-				break;
-			case "grammarCompileOutput":
-				item.data.component = GrammarCompileOutput;
-				break;
-			case "storeInspector":
-				item.data.component = StoreInspector;
-				break;
-			case "analyser":
-				item.data.component = Analyser;
-				break;
-			case "visualiser":
-				item.data.component = Visualiser;
-				break;
-			case "console":
-				item.data.component = Console;
-				break;
-			case "dspCodeOutput":
-				item.data.component = DSPCodeOutput;
-				break;
+			case 'liveCodeEditor':
+				item.data.component = LiveCodeEditor
+				break
+			case 'grammarEditor':
+				item.data.component = GrammarEditor
+				break
+			case 'modelEditor':
+				item.data.component = ModelEditor
+				break
+			case 'liveCodeParseOutput':
+				item.data.component = LiveCodeParseOutput
+				break
+			case 'grammarCompileOutput':
+				item.data.component = GrammarCompileOutput
+				break
+			case 'storeInspector':
+				item.data.component = StoreInspector
+				break
+			case 'analyser':
+				item.data.component = Analyser
+				break
+			case 'visualiser':
+				item.data.component = Visualiser
+				break
+			case 'console':
+				item.data.component = Console
+				break
+			case 'dspCode':
+				item.data.component = DSPCode
+				break
 			default:
 				// item.component = StoreInspector;
-				break;
+				break
 		}
 		if(!item.id){
       item.id = id();

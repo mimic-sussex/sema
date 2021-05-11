@@ -12,7 +12,7 @@ import LiveCodeParseOutput from "../components/widgets/LiveCodeParseOutput.svelt
 import GrammarCompileOutput from "../components/widgets/GrammarCompileOutput.svelte";
 import Analyser from "../components/widgets/Analyser.svelte";
 import StoreInspector from "../components/widgets/StoreInspector.svelte";
-import DSPCodeOutput from "../components/widgets/DSPCodeOutput.svelte";
+import DSPCode from '../components/widgets/DSPCode.svelte'
 import Console from "../components/widgets/Console.svelte";
 
 let liveCode = "";
@@ -282,36 +282,36 @@ export function hydrateJSONcomponent (item){
 		item.data.type !== "undefined"
 	) {
 		switch (item.data.type) {
-			case "liveCodeEditor":
-				item.data.component = LiveCodeEditor;
-				break;
-			case "grammarEditor":
-				item.data.component = GrammarEditor;
-				break;
-			case "modelEditor":
-				item.data.component = ModelEditor;
-				break;
-			case "liveCodeParseOutput":
-				item.data.component = LiveCodeParseOutput;
-				break;
-			case "grammarCompileOutput":
-				item.data.component = GrammarCompileOutput;
-				break;
-			case "storeInspector":
-				item.data.component = StoreInspector;
-				break;
-			case "analyser":
-				item.data.component = Analyser;
-				break;
-			case "console":
-				item.data.component = Console;
-				break;
-			case "dspCodeOutput":
-				item.data.component = DSPCodeOutput;
-				break;
+			case 'liveCodeEditor':
+				item.data.component = LiveCodeEditor
+				break
+			case 'grammarEditor':
+				item.data.component = GrammarEditor
+				break
+			case 'modelEditor':
+				item.data.component = ModelEditor
+				break
+			case 'liveCodeParseOutput':
+				item.data.component = LiveCodeParseOutput
+				break
+			case 'grammarCompileOutput':
+				item.data.component = GrammarCompileOutput
+				break
+			case 'storeInspector':
+				item.data.component = StoreInspector
+				break
+			case 'analyser':
+				item.data.component = Analyser
+				break
+			case 'console':
+				item.data.component = Console
+				break
+			case 'dspCode':
+				item.data.component = DSPCode
+				break
 			default:
 				// item.component = StoreInspector;
-				break;
+				break
 		}
 		if (item.id !== "undefined") {
 			item.id = id();

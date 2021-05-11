@@ -626,7 +626,7 @@
   },
   "data": {
     "name": "hello world_2u9faflxp_lrgjppobq",
-    "type": "dspCodeOutput",
+    "type": "dspCode",
     "lineNumbers": true,
     "hasFocus": false,
     "theme": "monokai",

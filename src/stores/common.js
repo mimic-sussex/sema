@@ -14,7 +14,7 @@ import GrammarCompileOutput from "../components/widgets/GrammarCompileOutput.sve
 import Analyser from "../components/widgets/Analyser.svelte";
 import StoreInspector from "../components/widgets/StoreInspector.svelte";
 import Console from "../components/widgets/Console.svelte";
-import DSPCodeOutput from "../components/widgets/DSPCodeOutput.svelte";
+import DSPCode from '../components/widgets/DSPCode.svelte'
 
 import gridHelp from "svelte-grid/build/helper/index.mjs";
 

@@ -158,7 +158,7 @@ import { siteMode } from "../../stores/common";
       else if(itemType === 'liveCodeParseOutput'){
         $sidebarDebuggerOptions[2].disabled = true;
       }
-      else if(itemType === 'dspCodeOutput'){
+      else if(itemType === 'dspCode'){
         $sidebarDebuggerOptions[3].disabled = true;
       }
       else if(itemType === 'console'){
@@ -181,7 +181,7 @@ import { siteMode } from "../../stores/common";
       else if(itemType === 'liveCodeParseOutput'){
         $sidebarDebuggerOptions[2].disabled = state;
       }
-      else if(itemType === 'dspCodeOutput'){
+      else if(itemType === 'dspCode'){
         $sidebarDebuggerOptions[3].disabled = state;
       }
       else if(itemType === 'console'){
@@ -214,7 +214,7 @@ import { siteMode } from "../../stores/common";
           break;
         case 'grammarCompileOutput':
         case 'liveCodeParseOutput':
-        case 'dspCodeOutput':
+        case 'dspCode':
         case 'console':
         case 'storeInspector':
           setDisabledOnSelectDebuggerOption(itemType, false);
@@ -247,7 +247,7 @@ import { siteMode } from "../../stores/common";
             break;
           case 'grammarCompileOutput':
           case 'liveCodeParseOutput':
-          case 'dspCodeOutput':
+          case 'dspCode':
           case 'console':
           case 'storeInspector':
             setDisabledOnSelectDebuggerOption(item.type, true);
