@@ -646,6 +646,26 @@ For now, you can do the conversion directly using math functions.
 
 # Sequencing
 
+### quantise
+
+When you evaluate your code, choose whether to bring it in on a new bar or immeadiately
+
+Arguments:
+1. On (1) or off (0)
+
+
+To play new code immeadiately:
+```
+{0}quantise;
+```
+
+To play new code at the start of the next bar:
+```
+{1}quantise;
+```
+
+By default, this value is set to 0.
+
 ### clk
 
 Set the clock
