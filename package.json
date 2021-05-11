@@ -56,7 +56,7 @@
 		"svelte": "^3.23.2",
 		"svelte-grid": "^4.0.1",
 		"svelte-inspect": "^0.1.2",
-		"postcss": "^8.2.6",
+		"postcss": "^8.2.10",
 		"postcss-import": "^14.0.0",
 		"workbox-cli": "^5.1.3"
 	},
