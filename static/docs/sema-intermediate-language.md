@@ -330,6 +330,10 @@ These functions are paired with 'input' and 'output' in the machine learning win
 
 ## Clock functions
 
+### quantise
+Choose when to bring in new code changes
+  1. 1 = at the start of the next bar, 0 = immeadiately 
+
 ### clp
 Phasor derived from constantly running clock phasor
   1. Number of cycles per bar
