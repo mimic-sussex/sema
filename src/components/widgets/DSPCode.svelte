@@ -64,7 +64,7 @@
     width: 100%;
     height: 100%;
     border: none;
-    font-family: monospace;
+    /* font-family: monospace; */
   }
 
 	.scrollable {
@@ -92,9 +92,10 @@
     -ms-user-select: text;
     user-select: text;
   }
-  .error-state {
-    color:red;
-    margin: 25px 10px 5px 10px;
+
+  .dspCode-function-bloc-header {
+    /* color:red; */
+    margin: 25px 10px 5px 5px;
   }
 
   .headline {
@@ -109,9 +110,9 @@
 
 <div class='container-dsp-code-output scrollable'>
   {#if $dspCode}
-  <strong class="error-state">Setup:</strong>
+  <span class="dspCode-function-bloc-header">Setup:</span>
   <pre class='prewrap'> { beautify($dspCode.setup, beautifyOptions)  } </pre>
-  <strong class="error-state">Loop:</strong>
+  <span class="dspCode-function-bloc-header">Loop:</span>
   <pre class='prewrap'> { beautify($dspCode.loop, beautifyOptions) } </pre>
   <!-- <pre> { JSON.stringify($dspCode.loop, null, 2) } </pre> -->
   {/if}

@@ -468,8 +468,8 @@ export async function createNewItem (type, content){
 		case "liveCodeParseOutput":
 			data = {
 				component: LiveCodeParseOutput,
-				background: "#ebdeff",
-			};
+				background: 'rgba(25, 25, 25, 0.3)',
+			}
 			break;
 		case "grammarCompileOutput":
 			data = {

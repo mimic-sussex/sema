@@ -1,11 +1,30 @@
 <script>
 	import { onMount, onDestroy } from 'svelte';
-	// import Inspect from 'svelte-inspect';
+	import Inspect from 'svelte-inspect';
+
+  const CustomInspect = Inspect.configure({
+    palette: {
+      selection: 'hotpink',
+      blue: 'dodgerblue',
+      black: 'white',
+      gray: 'white',
+      pink: 'white',
+      brown: 'white',
+      yellow: 'white',
+      orange: 'white',
+      purple: 'white',
+      blue: 'white',
+      red: 'white',
+      white: 'white'
+    }
+  });
+
 
   import {
     grammarCompilationErrors,
     liveCodeParseErrors,
-    liveCodeAbstractSyntaxTree
+    liveCodeAbstractSyntaxTree,
+    siteMode
   } from "../../stores/common.js";
 
   export let id;
@@ -38,14 +57,13 @@
 
 <style>
 
-  .codemirror-container {
+  .liveCodeParse-container {
     position: relative;
     width: 100%;
     height: 100%;
     border: none;
     line-height: 1.4;
     overflow: hidden;
-    font-family: monospace;
     margin-top: 20px;
   }
 
@@ -62,8 +80,8 @@
   }
 
   .correct-state {
-    color:green;
-    margin:25px 0px 15px 5px;
+    color:var(--color-gray);
+    margin:25px 0px 15px 0px;
 
   }
 
@@ -72,41 +90,89 @@
     overflow-y: scroll;
     height:auto;
     margin-top: 6px;
-    margin-left: 20px;
+    margin-left: 5px;
     margin-bottom: 10px;
   }
+
+  .prewrap {
+    display: inline-flexbox;
+    width: 100%;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    white-space: -moz-pre-wrap;
+    white-space: -pre-wrap;
+    white-space: -o-pre-wrap;
+    word-wrap: break-word;
+    margin:5px 0px 15px 5px;
+    font-family: monospace;
+
+    -moz-user-select: text;
+    -khtml-user-select: text;
+    -webkit-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+  }
+
+  /* .inspect {
+    font-family: Menlo, Consolas, Lucida Console, Courier New, Dejavu Sans Mono, monospace;
+    font-size: 16px;
+    line-height: 1.35;
+    color: var(--color-white);
+    --color-red: darkred;
+    --color-blue: darkblue;
+    --color-green: darkgreen;
+    --color-purple: purple;
+    --color-orange: darkorange;
+    --color-yellow: gold;
+    --color-brown: darkgoldenrod;
+    --color-pink: hotpink;
+    --color-gray: #a0a0a0;
+    --color-black: #202020;
+    --color-white: #f0f0f0;
+    --color-selection: lightskyblue;
+  } */
 
 
 </style>
 
 
-<div id="liveCodeCompilerOutput" class="codemirror-container flex scrollable">
-  <div class="headline">
-    <strong>LIVE CODE PARSER OUTPUT</strong>
-  </div>
+<div id="liveCodeCompilerOutput" class="liveCodeParse-container flex scrollable">
   {#if $grammarCompilationErrors != ""}
-  <div>
-    <strong class="error-state">Go work on your grammar!</strong>
-  </div>
+    <div>
+      <strong class="error-state">Go work on your grammar!</strong>
+    </div>
   {:else if $liveCodeParseErrors !=='' }
-  <div>
-    <strong class="error-state">Live Code Syntax Error</strong>
-    <br>
-    <div style="margin-left:5px">
-    <!-- <div style="overflow-y: scroll; height:auto;"> -->
-      <span style="white-space: pre-wrap">{ $liveCodeParseErrors } </span>
+    <div>
+      <strong class="error-state">Live Code Syntax Error</strong>
+      <br>
+      <div style="margin-left:5px">
+      <!-- <div style="overflow-y: scroll; height:auto;"> -->
+        <span class="prewrap">{ $liveCodeParseErrors } </span>
+      </div>
     </div>
-  </div>
   {:else}
-  <div class="headline">
-    <strong class="correct-state">Abstract Syntax Tree:</strong>
-    <br>
-    <div style="margin-left:5px">
-    <!-- <div style="overflow-y: scroll; height:auto;"> -->
-      <!-- <Inspect.Value value={ $liveCodeAbstractSyntaxTree } depth={7} /> -->
-      <!-- Expression below causes error when AST is empty -->
-      <!-- <Inspect.Value value={ $liveCodeAbstractSyntaxTree[0]['@lang'] } depth={7} /> -->
+    <div class="headline">
+      <span class="correct-state">Abstract Syntax Tree:</span>
+      <br>
+      <!-- <div style="margin-left:5px"> -->
+      {#if $siteMode === 'dark' }
+        <div style="overflow-y: scroll; height:auto;"
+              class='inspect'
+              >
+          <Inspect.Inverted value={ $liveCodeAbstractSyntaxTree }
+                          depth={7}
+                          />
+        </div>
+      {:else}
+        <div style="overflow-y: scroll; height:auto;"
+              class='inspect'
+              >
+          <Inspect value={ $liveCodeAbstractSyntaxTree }
+                          depth={7}
+                          />
+
+        </div>
+      {/if}
     </div>
-  </div>
   {/if}
 </div>

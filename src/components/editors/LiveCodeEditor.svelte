@@ -16,7 +16,9 @@
 
   import {
     compile,
+    parse,
     ASTreeToJavascript,
+    ASTreeToDSPcode,
     Engine
   } from 'sema-engine/sema-engine';
 
@@ -98,13 +100,18 @@
 
         $liveCodeEditorValue = codeMirror.getValue();
 
-        const { errors, dspCode } = compile( $grammarEditorValue, $liveCodeEditorValue );
-        if(dspCode){
-          $DSP = dspCode;
-          engine.eval(dspCode);
-          engineStatus.set('running');
-          $liveCodeParseErrors = '';
-        };
+        // const { errors, dspCode } = compile( $grammarEditorValue, $liveCodeEditorValue );
+        const { errors, livecodeParseTree } = parse( $grammarEditorValue, $liveCodeEditorValue );
+        if( livecodeParseTree ){
+          $liveCodeAbstractSyntaxTree = livecodeParseTree;
+          const { dspCode } = ASTreeToDSPcode(livecodeParseTree[0]);
+          if( dspCode ){
+            $DSP = dspCode;
+            engine.eval(dspCode);
+            engineStatus.set('running');
+            $liveCodeParseErrors = '';
+          };
+        }
         if(errors)
           $liveCodeParseErrors = errors;
 
