@@ -1,17 +1,20 @@
 <script>
+
   import { isActive, url, params } from "@roxi/routify";
 	import { authStore } from '../auth'
-import { siteMode } from "../stores/common";
+  import { siteMode } from "../stores/common";
+
+  import Controller from "../engine/controller";
+  let controller = new Controller(); // this will return the previously created Singleton instance
+
 	const { user, signout } = authStore
+
 	const links = [
-		// ['/', 'home'],
 		['/playground', 'playground'],
 		['/tutorial', 'tutorial'],
 		['/docs', 'docs'],
-		// ['https://blog.sema.codes', 'blog'],
 		['/about', 'about'],
 	]
-
 
   let persistentParams = { chapter: '01-basics', section: '01-introduction' };
   // update url parameters only when navigating tutorials
@@ -19,6 +22,12 @@ import { siteMode } from "../stores/common";
     // console.log(`navigation:url:${$url}:params:${$params}}`);
     console.log(`navigation:url:${$params.chapter}:params:${$params.section}}`);
     persistentParams = $params
+
+    if(!controller){
+      controller = new Controller();
+    }
+
+    controller.stop();
   }
 </script>
 

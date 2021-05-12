@@ -95,22 +95,12 @@
   };
 
   onMount( async () => {
-
-// // console.log(`layout:url:${$params.chapter}:params:${$params.section}}`);
-    console.log("tutorial - _layout");
-
-
     if(!controller.samplesLoaded){
-      // controller.init('http://localhost:5000/sema-engine');
       controller.init(document.location.origin + '/sema-engine');
       $goto(localStorage.getItem("tutorial-url"));
-
     }
-//     console.log(`tutorial:layout:url:${$params.chapter}:params:${$params.section}}`);
-//     console.log($items);
 
     if($items.length === 0){
-      // let json = await fetch(document.location.origin + `/tutorial/01-basics/01-introduction/layout.json`)
       let json = await fetch(document.location.origin + localStorage.getItem("tutorial-url") + 'layout.json' )
                             .then( r => r.json());
 
@@ -118,12 +108,10 @@
     }
 
     for (const item of $items){
-        await updateItemPropsWithFetchedValues(item);
-        await populateCommonStoresWithFetchedProps(item);
-        updateItemPropsWithCommonStoreValues(item)
+      await updateItemPropsWithFetchedValues(item);
+      await populateCommonStoresWithFetchedProps(item);
+      updateItemPropsWithCommonStoreValues(item)
     }
-
-    // controller.init('http://localhost:5000/sema-engine');
   });
 
   onDestroy(() => {
