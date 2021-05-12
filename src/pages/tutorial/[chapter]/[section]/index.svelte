@@ -96,6 +96,9 @@
   let log = () => {}
 
   onMount( async () => {
+
+    console.log("tutorial - chapter section");
+
     for (const item of $items)
       await populateCommonStoresWithFetchedProps(item)
 
@@ -136,9 +139,9 @@
     margin: 0px 0px 0px 0px;
   }
 
-  .markdown-container {
+  .markdown-section-container {
     overflow: auto;
-    margin-left: 1px;
+    /* margin-left: 1px; */
     /* margin-right: 2px;
     margin-bottom: 2px; */
     /* border: solid 5px #aaaaaa; eee*/
@@ -156,7 +159,7 @@
   }
 
 </style>
-<div class="markdown-container">
+<div class="markdown-section-container">
 {#await promise}
 	<p>...waiting</p>
 {:then number}

@@ -96,13 +96,16 @@
 
   onMount( async () => {
 
+// // console.log(`layout:url:${$params.chapter}:params:${$params.section}}`);
+    console.log("tutorial - _layout");
+
+
     if(!controller.samplesLoaded){
       // controller.init('http://localhost:5000/sema-engine');
       controller.init(document.location.origin + '/sema-engine');
       $goto(localStorage.getItem("tutorial-url"));
 
     }
-// // console.log(`layout:url:${$params.chapter}:params:${$params.section}}`);
 //     console.log(`tutorial:layout:url:${$params.chapter}:params:${$params.section}}`);
 //     console.log($items);
 
@@ -112,13 +115,12 @@
                             .then( r => r.json());
 
       $items = json.map( item => hydrateJSONcomponent(item) );
-      // $items = json.map( item => hydrateJSONcomponent(item) );
+    }
 
-      for (const item of $items){
+    for (const item of $items){
         await updateItemPropsWithFetchedValues(item);
         await populateCommonStoresWithFetchedProps(item);
         updateItemPropsWithCommonStoreValues(item)
-      }
     }
 
     // controller.init('http://localhost:5000/sema-engine');

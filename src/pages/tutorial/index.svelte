@@ -40,6 +40,8 @@
 
   onMount( async () => {
 
+    console.log("tutorial - index");
+
     if(!controller.samplesLoaded)
       // controller.init('http://localhost:5000/sema-engine');
       controller.init(document.location.origin + '/sema-engine');
@@ -62,10 +64,10 @@
 
   .markdown-index-container {
     overflow: auto;
-    margin-left: 10px;
+    /* margin-left: 10px;
     margin-right: 10px;
     margin-bottom: 10px;
-    border: solid 5px #999;
+    border: solid 5px #999; */
     border-radius: 5px;
     /* height: 85vh; */
     background: #999;

@@ -125,7 +125,7 @@
         engine = new Engine();
       }
       engine.hush();
-      engine.stop();
+      // engine.stop();
       engineStatus.set('paused');
     }
   }
