@@ -85,7 +85,7 @@
     white-space: -o-pre-wrap;
     word-wrap: break-word;
     margin:5px 0px 15px 5px;
-
+    font-size: medium;
     -moz-user-select: text;
     -khtml-user-select: text;
     -webkit-user-select: text;

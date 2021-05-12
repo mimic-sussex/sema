@@ -232,7 +232,7 @@ import { siteMode } from "../../stores/common";
 
     if($items.length > 0){
       for (const item of $items){
-        switch (item.type) {
+        switch (item.data.type) {
           case 'liveCodeEditor':
             $isSelectLiveCodeEditorDisabled = true;
             break;
@@ -250,7 +250,7 @@ import { siteMode } from "../../stores/common";
           case 'dspCode':
           case 'console':
           case 'storeInspector':
-            setDisabledOnSelectDebuggerOption(item.type, true);
+            setDisabledOnSelectDebuggerOption(item.data.type, true);
             break;
           default:
             break;

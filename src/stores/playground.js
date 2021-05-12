@@ -474,8 +474,8 @@ export async function createNewItem (type, content){
 		case "grammarCompileOutput":
 			data = {
 				component: GrammarCompileOutput,
-				background: "#d1d5ff",
-			};
+				background: 'rgba(20, 20, 20, 0.3)',
+			}
 			break;
 		case "analyser":
 			data = {
@@ -689,17 +689,17 @@ export const focusedItemControls = writable([]);
 export function setFocused(item){
   try {
     let itemProperties = [];
-    if( item.type === "liveCodeEditor" || item.type === "grammarEditor" || item.type === 'modelEditor' ){
+    if( item.data.type === "liveCodeEditor" || item.data.type === "grammarEditor" || item.data.type === 'modelEditor' ){
       itemProperties = [ item.lineNumbers, item.theme ];
 
-      if( item.type === "liveCodeEditor" ){
+      if( item.data.type === "liveCodeEditor" ){
         // itemProperties.push(item.grammar);
       }
     }
-    else if(item.type === 'analyser'){
+    else if(item.data.type === 'analyser'){
       itemProperties.push(item.mode)
     }
-    else if(item.type === 'visualiser'){
+    else if(item.data.type === 'visualiser'){
       itemProperties.push(item.channelID)
     }
     focusedItemProperties.set(itemProperties);

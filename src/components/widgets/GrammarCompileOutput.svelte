@@ -24,7 +24,7 @@
 
 <style>
 
-  .codemirror-container {
+  .grammarCompiler-container {
     position: relative;
     width: 100%;
     height: 100%;
@@ -32,7 +32,7 @@
 
     line-height: 1.4;
     overflow: hidden;
-    font-family: monospace;
+    /* font-family: monospace; */
   }
 
 	.scrollable {
@@ -45,42 +45,52 @@
 
   .error-state {
     color:red;
-    margin:25px 0px 15px 5px;
   }
 
   .correct-state {
     color:green;
-    margin:25px 0px 15px 5px;
-
+    margin:25px 0px 15px 0px;
   }
-
+  .prewrap {
+    display: inline-flexbox;
+    width: 100%;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    white-space: -moz-pre-wrap;
+    white-space: -pre-wrap;
+    white-space: -o-pre-wrap;
+    word-wrap: break-word;
+    /* margin:5px 0px 15px 5px; */
+    font-family: monospace;
+    font-size:1em;
+    font-weight:800;
+    -moz-user-select: text;
+    -khtml-user-select: text;
+    -webkit-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+  }
 
   .headline {
     overflow-y: scroll;
     height:auto;
-    margin-top:6px;
-    margin-left:20px;
+    margin-left: 5px;
     margin-bottom: 10px;
   }
 
 </style>
 
-<div id="grammarOutput" class="codemirror-container flex scrollable">
-  <div class="headline">
-    <strong>GRAMMAR COMPILER OUTPUT</strong>
-  </div>
+<div id="grammarOutput" class="grammarCompiler-container flex scrollable">
   {#if $grammarCompilationErrors !== ""}
   <div>
-    <strong class="error-state">Grammar compilation errors!</strong>
-    <br>
     <div style="margin-left:5px">
     <!-- <div style="overflow-y: scroll; height:auto;"> -->
-      <span style="white-space: pre-wrap">{ $grammarCompilationErrors } </span>
+      <span class="prewrap error-state">{ $grammarCompilationErrors } </span>
     </div>
   </div>
   {:else}
   <div class="headline">
-    <strong class="correct-state">Grammar validated and parser generated!</strong>
+    <span class="correct-state">Grammar validated and parser generated!</span>
   </div>
   {/if}
 </div>

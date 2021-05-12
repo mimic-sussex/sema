@@ -76,7 +76,9 @@
 
   .error-state {
     color:red;
-    margin:25px 0px 15px 5px;
+    margin-top: 3px;
+    margin-left: 5px;
+    margin-bottom: 10px;
   }
 
   .correct-state {
@@ -89,7 +91,6 @@
   .headline {
     overflow-y: scroll;
     height:auto;
-    margin-top: 6px;
     margin-left: 5px;
     margin-bottom: 10px;
   }
@@ -103,9 +104,10 @@
     white-space: -pre-wrap;
     white-space: -o-pre-wrap;
     word-wrap: break-word;
-    margin:5px 0px 15px 5px;
+    /* margin:5px 0px 15px 5px; */
     font-family: monospace;
-
+    font-size:1em;
+    font-weight:800;
     -moz-user-select: text;
     -khtml-user-select: text;
     -webkit-user-select: text;
@@ -139,15 +141,15 @@
 <div id="liveCodeCompilerOutput" class="liveCodeParse-container flex scrollable">
   {#if $grammarCompilationErrors != ""}
     <div>
-      <strong class="error-state">Go work on your grammar!</strong>
+      <span class="error-state">Go work on your grammar!</span>
     </div>
   {:else if $liveCodeParseErrors !=='' }
     <div>
-      <strong class="error-state">Live Code Syntax Error</strong>
-      <br>
+      <!-- <span class="error-state">Syntax Error</span> -->
+      <!-- <br> -->
       <div style="margin-left:5px">
       <!-- <div style="overflow-y: scroll; height:auto;"> -->
-        <span class="prewrap">{ $liveCodeParseErrors } </span>
+        <span class="prewrap  error-state">{ $liveCodeParseErrors } </span>
       </div>
     </div>
   {:else}
