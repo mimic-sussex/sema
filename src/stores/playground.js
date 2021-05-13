@@ -39,6 +39,7 @@ import two_layer_non_linear_code_example  from "../../static/learners/non-linear
 import binary_classification_code_example from "../../static/learners/non-linear/binary-classification.tf";
 import echo_state_network_code_example    from "../../static/learners/echo-state/echo-state-network.tf";
 import lstm_txt_gen_code_example          from "../../static/learners/rnn/lstm-txt-gen.tf";
+import new_learner_template               from '../../static/learners/new/new.tf'
 // import music_rnn_example                  from "../machineLearning/magenta/music-rnn.tf";
 
 
@@ -71,31 +72,37 @@ export const isSelectLiveCodeEditorDisabled = writable(false);
 // export const sidebarModelOptions = writable([]);
 export const sidebarModelOptions = writable([
 	{ id: 0, disabled: false, text: `learner`, content: "" },
-	{ id: 1, disabled: false, text: `+ hello-world`, content: hello_world_code_example },
+	{ id: 1, disabled: false, text: `hello-world`, content: hello_world_code_example },
 	{
 		id: 2,
     disabled: false,
-		text: `+ two-layer-non-linear`,
+		text: `two-layer-non-linear`,
 		content: two_layer_non_linear_code_example,
 	},
 	{
 		id: 3,
     disabled: false,
-		text: `+ binary-classification`,
+		text: `binary-classification`,
 		content: binary_classification_code_example,
 	},
 	{
 		id: 4,
     disabled: false,
-		text: `+ echo-state-network`,
+		text: `echo-state-network`,
 		content: echo_state_network_code_example,
 	},
 	{
 		id: 5,
     disabled: false,
-		text: `+ lstm-text-gen`,
+		text: `lstm-text-gen`,
 		content: lstm_txt_gen_code_example,
 	},
+	{
+		id: 6,
+    disabled: false,
+		text: `* new *`,
+		content: new_learner_template,
+	}
 ]);
 
 
@@ -108,41 +115,41 @@ export const isAddGrammarEditorDisabled = writable(false);
 // Dashboard Store for Live Code Editor options in Sidebar component
 export const sidebarDebuggerOptions = writable([
 	{ id: 0, disabled: false, type: ``, text: `debug`, content: "" },
+	// {
+	// 	id: 1,
+	// 	disabled: false,
+	// 	type: `console`,
+	// 	text: `Console`,
+	// 	content: "",
+	// },
 	{
 		id: 1,
-		disabled: false,
-		type: `console`,
-		text: `Console`,
-		content: "",
-	},
-	{
-		id: 2,
 		disabled: false,
 		type: `liveCodeParseOutput`,
 		text: `Live Code Parser`,
 		content: "",
 	},
 	{
-		id: 3,
+		id: 2,
 		disabled: false,
 		type: `dspCode`,
 		text: `DSP Code`,
 		content: "",
 	},
 	{
-		id: 4,
+		id: 3,
 		disabled: false,
 		type: `grammarCompileOutput`,
 		text: `Grammar Compiler`,
 		content: "",
 	},
-	{
-		id: 5,
-		disabled: false,
-		type: `storeInspector`,
-		text: `Store Inspector`,
-		content: "",
-	},
+	// {
+	// 	id: 5,
+	// 	disabled: false,
+	// 	type: `storeInspector`,
+	// 	text: `Store Inspector`,
+	// 	content: "",
+	// },
 ]);
 
 export let selectedDebuggerOption = writable({});
