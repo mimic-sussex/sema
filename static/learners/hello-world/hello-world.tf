@@ -1,5 +1,5 @@
-// MODEL EDITOR
-
+importScripts("https://cdn.jsdelivr.net/npm/@tensorflow/tfjs/dist/tf.min.js");
+____
 //js – Linear model for regression (tfjs)
 
 //create the model
