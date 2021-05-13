@@ -205,7 +205,7 @@ export default class Controller {
 	async importSamplesAsync(sampleList) {
 		return await new Promise(async (resolve, reject) => {
 			// let sampleCounter = sampleList.length;
-			let sampleCounter = 7
+			let sampleCounter = 9
 			await import(`../../static/samples/909.wav`) // need to use the samples relative path to the src, not in public,
 				.then((e) => {
 					this.engine.loadSample(e.default, `/samples/${e.default}`)
@@ -287,7 +287,49 @@ export default class Controller {
 					reject(err)
 				})
 
+			await import(`../../static/samples/boom.wav`) // need to use the samples relative path to the src, not in public,
+				.then((e) => {
+					this.engine.loadSample(e.default, `/samples/${e.default}`)
+					if (--sampleCounter <= 0) resolve(true)
+					console.log(`loading sample: ${e.default}`)
+				})
+				.catch((err) => {
+					console.error(`Error Engine lazy loading sample: ${err}`)
+					reject(err)
+				})
 
+			await import(`../../static/samples/machine.wav`) // need to use the samples relative path to the src, not in public,
+				.then((e) => {
+					this.engine.loadSample(e.default, `/samples/${e.default}`)
+					if (--sampleCounter <= 0) resolve(true)
+					console.log(`loading sample: ${e.default}`)
+				})
+				.catch((err) => {
+					console.error(`Error Engine lazy loading sample: ${err}`)
+					reject(err)
+				})
+
+			await import(`../../static/samples/patterndrone2.wav`) // need to use the samples relative path to the src, not in public,
+				.then((e) => {
+					this.engine.loadSample(e.default, `/samples/${e.default}`)
+					if (--sampleCounter <= 0) resolve(true)
+					console.log(`loading sample: ${e.default}`)
+				})
+				.catch((err) => {
+					console.error(`Error Engine lazy loading sample: ${err}`)
+					reject(err)
+				})
+
+			await import(`../../static/samples/convol5.wav`) // need to use the samples relative path to the src, not in public,
+				.then((e) => {
+					this.engine.loadSample(e.default, `/samples/${e.default}`)
+					if (--sampleCounter <= 0) resolve(true)
+					console.log(`loading sample: ${e.default}`)
+				})
+				.catch((err) => {
+					console.error(`Error Engine lazy loading sample: ${err}`)
+					reject(err)
+				})
 
 			// sampleCounter++;
 		})

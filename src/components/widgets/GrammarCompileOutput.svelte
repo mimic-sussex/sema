@@ -5,19 +5,32 @@
     grammarCompilationErrors
   } from "../../stores/common.js";
 
+
+
+  let log = (e) => {  }
+
+  let nil = (e) => { }
+
+  export let id;
+  export let name;
+	export let type;
+  export let hasFocus;
+  export let background;
+	export let lineNumbers;
+	export let theme;
+  export let component;
+  export let className;
+  export { className as class };
+
   onMount(async () => {
+
+    log( id, name, type, className, lineNumbers, hasFocus, theme, background, component );
 
 	});
 
   onDestroy(async () => {
 
 	});
-
-
-  let log = (e) => { console.log(e.detail.value); }
-
-  let nil = (e) => { }
-
 
 </script>
 
@@ -44,11 +57,11 @@
 
 
   .error-state {
-    color:red;
+    color:rgb(2200, 0, 0);
   }
 
   .correct-state {
-    color:green;
+    color:rgb(0, 160, 0);
     margin:25px 0px 15px 0px;
   }
   .prewrap {

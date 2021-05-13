@@ -75,7 +75,7 @@
 	}
 
   .error-state {
-    color:red;
+    color:rgb(220, 0, 0);
     margin-top: 3px;
     margin-left: 5px;
     margin-bottom: 10px;

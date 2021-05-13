@@ -370,7 +370,7 @@
     "max": {},
     "x": 0,
     "y": 3,
-    "w": 6,
+    "w": 2,
     "h": 3
   },
   "3": {
@@ -387,12 +387,11 @@
     "responsive": {
       "valueW": 0
     },
-    "draggable": true,
     "min": {},
     "max": {},
     "x": 0,
     "y": 3,
-    "w": 6,
+    "w": 3,
     "h": 3
   },
   "6": {
@@ -409,7 +408,6 @@
     "responsive": {
       "valueW": 0
     },
-    "draggable": true,
     "min": {},
     "max": {},
     "x": 0,
@@ -431,7 +429,6 @@
     "responsive": {
       "valueW": 0
     },
-    "draggable": true,
     "min": {},
     "max": {},
     "x": 0,
@@ -453,8 +450,6 @@
     "responsive": {
       "valueW": 0
     },
-    "resizable": true,
-    "draggable": true,
     "min": {},
     "max": {},
     "x": 0,
@@ -471,6 +466,6 @@
     "hasFocus": false,
     "theme": "monokai",
     "background": "rgba(20, 20, 20, 0.2)",
-    "content": "// MODEL EDITOR \n\n//js \u2013 Bypass function input to output \n\n//route the test data into the model\ninput = (x, id) => {\n\tconsole.log(\">liveCode signal: \"+[id,x]);\n\toutput(x, 0)\n};\n"
+    "content": "//js \u2013 Bypass function input to output \n\n//route the test data into the model\ninput = (x, id) => {\n\tconsole.log(\">liveCode signal: \"+[id,x]);\n\toutput(x, 0)\n};\n"
   }
 }]
