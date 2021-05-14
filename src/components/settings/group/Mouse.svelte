@@ -11,13 +11,53 @@ import { Engine } from 'sema-engine/sema-engine';
   import {
     fullScreen,
     mouseActivated,
-    mouseTrailCaptureActivated,
+    isMouseOverlayVisible,
     siteMode
   } from '../../../stores/common.js';
 
   let engine,
       engineLoaded = false,
       outputText;
+
+
+  const id = "mxy",
+        ttype = "mouseXY",
+        blockSize = 2;
+
+  const onMouseMove = e => {
+    const x = e.offsetX/window.innerWidth;
+    const y = e.offsetY/window.innerHeight;
+    if(outputText){
+      outputText.innerText = `X:${parseFloat(x).toFixed(5)} Y:${parseFloat(y).toFixed(5)}`;
+    }
+    if(engine){
+      engine.pushDataToSharedBuffer(id, [ x, y ]);
+    }
+  }
+
+  const onKeyDown = e => {
+    if(e.keyCode === 18){
+      $isMouseOverlayVisible = true;
+      document.addEventListener( 'mousemove', onMouseMove, true )
+    }
+  }
+
+  const onKeyUp = e => {
+    if(e.which === 18){
+      if(outputText)
+        outputText.innerText = ``;
+      $isMouseOverlayVisible = false;
+      document.removeEventListener( 'mousemove', onMouseMove, true );
+    }
+  }
+
+  const deactivateMouse = e => {
+    $mouseActivated = false;
+    $isMouseOverlayVisible = false;
+    document.removeEventListener( 'mousemove', onMouseMove, true )
+    document.removeEventListener( "keydown", onKeyDown)
+    document.removeEventListener( "keydown", onKeyUp)
+  }
 
   const handleClick = () => {
     // if(engine){
@@ -27,39 +67,20 @@ import { Engine } from 'sema-engine/sema-engine';
 
         if($mouseActivated){
 
-          const id = "mxy",
-                ttype = "mouseXY",
-                blockSize = 2;
+          // $mouseTrailCaptureActivated = true;
+
+          // document.addEventListener( 'mousemove', onMouseMove, true )
 
           let sab = engine.createSharedBuffer(id, ttype, blockSize);
 
-          const onMouseMove = e => {
-            const x = e.offsetX/window.innerWidth;
-            const y = e.offsetY/window.innerHeight;
-            outputText.innerText = `X:${parseFloat(x).toFixed(5)} Y:${parseFloat(y).toFixed(5)}`;
-            engine.pushDataToSharedBuffer(id, [ x, y ]);
-          }
-
           // Subscribe Left `Alt`-key down event to subscribe mouse move
-          document.addEventListener("keydown", e => {
-            if(e.keyCode === 18){
-              $mouseTrailCaptureActivated = true;
-              document.addEventListener( 'mousemove', onMouseMove, true )
-            }
-          });
+          document.addEventListener("keydown", onKeyDown );
+
           // Subscribe Left `Alt`-key UP event to unsubscribe mouse move
-          document.addEventListener("keyup", e => {
-            if(e.which === 18){
-              outputText.innerText = ``;
-              $mouseTrailCaptureActivated = false;
-              document.removeEventListener( 'mousemove', onMouseMove, true );
-            }
-          });
+          document.addEventListener("keyup", onKeyUp);
         }
         else {
-
-
-
+          deactivateMouse();
         }
 
       } catch (err) {
@@ -70,12 +91,15 @@ import { Engine } from 'sema-engine/sema-engine';
   };
 
   onMount( async () => {
+
+
     if(!engine)
       engine = new Engine();
 
   });
 
   onDestroy( () => {
+    deactivateMouse();
     engine = null;
 	});
 

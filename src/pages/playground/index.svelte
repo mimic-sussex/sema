@@ -43,6 +43,7 @@
     updateItemPropsWithFetchedValues,
     populateCommonStoresWithFetchedProps,
     updateItemPropsWithCommonStoreValues,
+    isMouseOverlayVisible,
     resetStores,
     siteMode,
     sideBarVisible
@@ -398,6 +399,19 @@
     visibility: hidden;
   }
 
+  .mouse-overlay-container {
+    grid-area: layout;
+    z-index: 1000;
+    background-color: rgba(16,12,12,0.8);
+    visibility: visible;
+    width: 100%;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:16px;
+    visibility: hidden;
+  }
 
 
 
@@ -552,6 +566,12 @@
     </svg>
     <p class="upload-overlay-text"><span style="font-weight: 1500;">Choose your .json file</span> or <span>drag'n'drop it here to upload a new environment!</span></p>
   </div>
+
+  <!-- <div  class="mouse-overlay-container" style='visibility:visible' -->
+  <div  class="mouse-overlay-container" style='visibility:{$isMouseOverlayVisible? "visible": "hidden"}'
+        >
+  </div>
+
 
   <div class="{$siteMode === 'dark' ? 'settings-container' : 'settings-container-light'}">
     <Settings/>

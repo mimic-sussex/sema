@@ -25,6 +25,7 @@
     populateCommonStoresWithFetchedProps,
     updateItemPropsWithCommonStoreValues,
     updateItemPropsWithFetchedValues,
+    isMouseOverlayVisible,
     siteMode
   } from "../../stores/common.js";
 
@@ -176,6 +177,12 @@
 <!--
       on:adjust={onAdjust}
       on:mount={onChildMount} -->
+
+  <div  class="mouse-overlay-container" style='visibility:{$isMouseOverlayVisible? "visible": "hidden"}'
+        >
+  </div>
+
+
   <div class="tutorial-dashboard-container">
     <Grid
       bind:items={ $items }
@@ -335,6 +342,21 @@
   .combobox-dark {
     border: 0;
   }
+
+  .mouse-overlay-container {
+    grid-area: layout;
+    z-index: 1000;
+    background-color: rgba(16,12,12,0.8);
+    visibility: visible;
+    width: 100%;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:16px;
+    visibility: hidden;
+  }
+
 
   .combobox-dark select {
     width: 100%;
