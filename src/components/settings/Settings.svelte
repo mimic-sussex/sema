@@ -30,7 +30,8 @@
   }
 
   .environment-container {
-    width: 22.5em;
+    /* width: 22.5em; */
+    width: auto;
     display:inline-flex;
     justify-content:space-between;
   }
@@ -39,6 +40,12 @@
     width: 12.5em;
     display:inline-flex;
     justify-content:space-between;
+  }
+
+  .mouse-container {
+    width: 10em;
+    /* display:inline-flex; */
+    /* justify-content:space-between; */
   }
 
 </style>
@@ -70,10 +77,12 @@
   <div style='width: 5px;'></div>
 
 
+  <div class='mouse-container'>
+      <Mouse />
+  </div>
 
-  <Mouse />
 
-  <div style='width: 10px;'></div>
+  <div style='width: 5px;'></div>
 
 
 

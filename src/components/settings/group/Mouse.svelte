@@ -54,6 +54,8 @@ import { Engine } from 'sema-engine/sema-engine';
   const deactivateMouse = e => {
     $mouseActivated = false;
     $isMouseOverlayVisible = false;
+    if(outputText)
+      outputText.innerText = ``;
     document.removeEventListener( 'mousemove', onMouseMove, true )
     document.removeEventListener( "keydown", onKeyDown)
     document.removeEventListener( "keydown", onKeyUp)
@@ -67,6 +69,8 @@ import { Engine } from 'sema-engine/sema-engine';
 
         if($mouseActivated){
 
+          if(outputText)
+            outputText.innerText = `Press ALT \n+ click-drag`;
           // $mouseTrailCaptureActivated = true;
 
           // document.addEventListener( 'mousemove', onMouseMove, true )
@@ -322,6 +326,12 @@ import { Engine } from 'sema-engine/sema-engine';
     enable-background:new 0 0 512 512;
   } */
 
+
+  .mouse-outputText{
+    padding-top:0.1em;
+    width:10em;
+  }
+
   .mouse {
     padding-top:3px;
     enable-background:new 0 0 512 512;
@@ -342,7 +352,7 @@ import { Engine } from 'sema-engine/sema-engine';
 
 
 <!-- <div style='width:7em; display: flex; {$fullScreen? `visibility:visible;`: `visibility:hidden`}; margin-left:2px' -->
-<div style='width:7em; display: flex;  margin-left:2px'
+<div style='width:9em; display: flex;  margin-left:2px'
       >
 
 

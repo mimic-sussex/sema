@@ -450,7 +450,7 @@
         title="load environment"
         bind:value={ $selectedLoadEnvironmentOption }
         on:change={ () => loadEnvironment() }
-        style="{( $isActive('/playground') )? `visibility:visible;`: `visibility:hidden`}; ! important;"
+        style="{( $isActive('/playground') )? `visibility:visible;`: `visibility:collapse`}; ! important;"
         on:click={ () => $loadEnvironmentOptions[0].disabled = true }
         cursor={ () => ( $isLoadEnvironmentOptionsDisabled ? 'not-allowed' : 'pointer') }
         >
@@ -523,7 +523,7 @@
 <!-- SAVE -->
 <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
         title="save environment"
-        style="{( $isActive('/playground') )? `visibility:visible;`: `visibility:hidden`}; margin-left: 2px;"
+        style="{( $isActive('/playground') )? `visibility:visible;`: `visibility:collapse`}; margin-left: 2px;"
         on:click={ () => storeEnvironment() }
         >
   <div class="icon-container">
@@ -575,7 +575,7 @@
 <!-- DELETE -->
 <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
         title="clear environment"
-        style="{ ( $isActive('/playground') ) ? `visibility:visible;`: `visibility:hidden`}"
+        style="{ ( $isActive('/playground') ) ? `visibility:visible;`: `visibility:collapse`}"
         on:click={ () => resetEnvironment() }
         >
   <div class="icon-container">
@@ -707,7 +707,7 @@
 
 <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
         title="upload environment"
-        style="{( $isActive('/playground') ) ? `visibility:visible;`: `visibility:hidden`}; padding: 0.2em 0.4em 0.8em 0.6em ! important;"
+        style="{( $isActive('/playground') ) ? `visibility:visible;`: `visibility:collapse`}; padding: 0.2em 0.4em 0.8em 0.6em ! important;"
         on:click={ () => uploadEnvironment() }
         >
   <div class="icon-container">
