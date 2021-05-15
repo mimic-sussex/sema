@@ -9,9 +9,9 @@
 		"Thor Magnusson <t.magnusson@sussex.ac.uk> (http://www.ixi-audio.net)"
 	],
 	"license": "MIT",
-  "engines": {
-    "node": ">=14.44.0 <15"
-  },
+	"engines": {
+		"node": ">=14.44.0 <15"
+	},
 	"scripts": {
 		"dev": "run-p routify rollup",
 		"dev:err": "run-p routify rollup 2>err.log 1>out.log",

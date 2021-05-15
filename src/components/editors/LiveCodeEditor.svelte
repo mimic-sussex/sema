@@ -27,6 +27,10 @@
     log
   } from "../../utils/utils.js";
 
+  import {
+    functionDefinitions
+  } from "../../utils/hints/functionDefinitions.js"
+
   import { PubSub } from '../../utils/pubSub.js';
 
   import {
@@ -169,6 +173,7 @@
   @import '../../../node_modules/codemirror/theme/liquibyte.css';
   @import "../../../node_modules/codemirror/addon/dialog/dialog.css";
   @import '../../utils/sema.css';
+  @import '../../utils/hints/hint.css';
   .layout-template-container {
     height: 100vh;
   }
@@ -218,6 +223,8 @@
               cmdForwardSlash={ nil }
               cmdEnter={ evalLiveCodeOnEditorCommand }
               ctrlEnter={ evalLiveCodeOnEditorCommand }
+              snippets={functionDefinitions}
+              useAutocomplete={true}
               />
               <!-- cmdPeriod={ stopAudioOnEditorCommand }
               ctrlPeriod={ stopAudioOnEditorCommand } -->
