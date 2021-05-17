@@ -25,8 +25,8 @@ import { Engine } from 'sema-engine/sema-engine';
         blockSize = 2;
 
   const onMouseMove = e => {
-    const x = e.offsetX/window.innerWidth;
-    const y = e.offsetY/window.innerHeight;
+    const x = e.pageX/window.innerWidth;
+    const y = e.pageY/window.innerHeight;
     if(outputText){
       outputText.innerText = `X:${parseFloat(x).toFixed(5)} Y:${parseFloat(y).toFixed(5)}`;
     }
@@ -37,7 +37,7 @@ import { Engine } from 'sema-engine/sema-engine';
 
   const onKeyDown = e => {
     if(e.keyCode === 18){
-      $isMouseOverlayVisible = true;
+      // $isMouseOverlayVisible = true;
       document.addEventListener( 'mousemove', onMouseMove, true )
     }
   }
@@ -46,19 +46,19 @@ import { Engine } from 'sema-engine/sema-engine';
     if(e.which === 18){
       if(outputText)
         outputText.innerText = ``;
-      $isMouseOverlayVisible = false;
+      // $isMouseOverlayVisible = false;
       document.removeEventListener( 'mousemove', onMouseMove, true );
     }
   }
 
   const deactivateMouse = e => {
     $mouseActivated = false;
-    $isMouseOverlayVisible = false;
+    // $isMouseOverlayVisible = false;
     if(outputText)
       outputText.innerText = ``;
     document.removeEventListener( 'mousemove', onMouseMove, true )
-    document.removeEventListener( "keydown", onKeyDown)
-    document.removeEventListener( "keydown", onKeyUp)
+    // document.removeEventListener( "keydown", onKeyDown)
+    // document.removeEventListener( "keydown", onKeyUp)
   }
 
   const handleClick = () => {
@@ -69,19 +69,19 @@ import { Engine } from 'sema-engine/sema-engine';
 
         if($mouseActivated){
 
-          if(outputText)
-            outputText.innerText = `Press ALT \n+ click-drag`;
+          // if(outputText)
+          //   outputText.innerText = `Press ALT \n+ click-drag`;
           // $mouseTrailCaptureActivated = true;
 
-          // document.addEventListener( 'mousemove', onMouseMove, true )
+          document.addEventListener( 'mousemove', onMouseMove, true )
 
           let sab = engine.createSharedBuffer(id, ttype, blockSize);
 
           // Subscribe Left `Alt`-key down event to subscribe mouse move
-          document.addEventListener("keydown", onKeyDown );
+          // document.addEventListener("keydown", onKeyDown );
 
           // Subscribe Left `Alt`-key UP event to unsubscribe mouse move
-          document.addEventListener("keyup", onKeyUp);
+          // document.addEventListener("keyup", onKeyUp);
         }
         else {
           deactivateMouse();
