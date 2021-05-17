@@ -67,6 +67,8 @@ Sema uses Web Audio API Audio Worklets. Their performance seems very sensitive t
 
 ## Documentation
 
+Sema's _reference documentation_ is integrated in the application. It comprises the following elements: 
+
 [Default Livecoding Language](static/docs/default-livecoding-language.md)
 
 [Sema Intermediate Language](static/docs/sema-intermediate-language.md)
@@ -74,6 +76,28 @@ Sema uses Web Audio API Audio Worklets. Their performance seems very sensitive t
 [Maximilian DSP API](static/docs/maximilian-dsp-api.md)
 
 [Javascript Editor Utils](static/docs/javascript-editor-utils.md)
+
+
+The [Wiki](https://github.com/mimic-sussex/sema/wiki) documentation is more focused on how Sema is built, which you might need to know before contributing: 
+
+
+[What is the architecture of Sema?](https://github.com/mimic-sussex/sema/wiki/the-architecture-of-Sema)
+
+[How to setup Sema on my own web server?](https://github.com/mimic-sussex/sema/wiki/How-to-setup-Sema-on-my-own-web-server%3F)
+
+[How do I add a new ML library to Sema?](https://github.com/mimic-sussex/sema/wiki/How-do-I-add-a-new-ML-library-to-Sema%3F)
+
+[How do I create and add a new widget to Sema?](https://github.com/mimic-sussex/sema/wiki/How-do-I-create-and-add-a-new-widget-to-Sema%3F)
+
+[How do the Svelte stores in Sema work?](https://github.com/mimic-sussex/sema/wiki/How-do-the-Svelte-stores-in-Sema-work%3F)
+
+[How does Sema implement and use web services](https://github.com/mimic-sussex/sema/wiki/How-Sema-implements-and-uses-web-services)
+
+Sema is an open-source project and hopefully this wiki will motivate you to contribute to it. More details on that specifically: 
+
+## Contributing
+
+[How do I contribute to Sema?](https://github.com/mimic-sussex/sema/wiki/How-do-I-contribute-to-Sema%3F)
 
 ## Publications
 
