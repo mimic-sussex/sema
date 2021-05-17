@@ -91,12 +91,12 @@ The [Wiki](https://github.com/mimic-sussex/sema/wiki) documentation is more focu
 
 [How do the Svelte stores in Sema work?](https://github.com/mimic-sussex/sema/wiki/How-do-the-Svelte-stores-in-Sema-work%3F)
 
-[How does Sema implement and use web services](https://github.com/mimic-sussex/sema/wiki/How-Sema-implements-and-uses-web-services)
+[How does Sema implement and use web services?](https://github.com/mimic-sussex/sema/wiki/How-Sema-implements-and-uses-web-services)
 
 
 ## Contributing
 
-Sema is an open-source project and hopefully this wiki will motivate you to contribute to it. More details on that specifically in the wiki 
+Sema is an open-source project and hopefully it will motivate you to contribute to it. More details on that specifically in 
 
 [How do I contribute to Sema?](https://github.com/mimic-sussex/sema/wiki/How-do-I-contribute-to-Sema%3F)
 
