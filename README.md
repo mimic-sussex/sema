@@ -93,11 +93,15 @@ The [Wiki](https://github.com/mimic-sussex/sema/wiki) documentation is more focu
 
 [How does Sema implement and use web services](https://github.com/mimic-sussex/sema/wiki/How-Sema-implements-and-uses-web-services)
 
-Sema is an open-source project and hopefully this wiki will motivate you to contribute to it. More details on that specifically: 
 
 ## Contributing
 
+Sema is an open-source project and hopefully this wiki will motivate you to contribute to it. More details on that specifically in the wiki 
+
 [How do I contribute to Sema?](https://github.com/mimic-sussex/sema/wiki/How-do-I-contribute-to-Sema%3F)
+
+and in the [CONTRIBUTING.md](https://github.com/mimic-sussex/sema/blob/master/CONTRIBUTING.md).
+
 
 ## Publications
 
