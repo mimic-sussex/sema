@@ -67,7 +67,7 @@ Sema uses Web Audio API Audio Worklets. Their performance seems very sensitive t
 
 ## Documentation
 
-Sema's _reference documentation_ is integrated in the application and comprises the following elements: 
+Sema's _reference documentation_ is aimed at supporting users, it is integrated in the application and comprises the following elements: 
 
 * [Default Livecoding Language](static/docs/default-livecoding-language.md)
 
@@ -78,7 +78,7 @@ Sema's _reference documentation_ is integrated in the application and comprises 
 * [Javascript Editor Utils](static/docs/javascript-editor-utils.md)
 
 
-Sema's [Wiki](https://github.com/mimic-sussex/sema/wiki) documentation focuses on how Sema is built in order to support contributions: 
+Sema's [Wiki](https://github.com/mimic-sussex/sema/wiki) aims at supporting contributions and it focuses on how Sema is designed and built: 
 
 * [What is the architecture of Sema?](https://github.com/mimic-sussex/sema/wiki/1.-The-Architecture-of-Sema)
 
@@ -94,9 +94,11 @@ Sema's [Wiki](https://github.com/mimic-sussex/sema/wiki) documentation focuses o
 
 ## Contributing
 
-Sema is an open-source project and hopefully its aims and structure will motivate you to contribute to it. Check  
+Sema is an open-source project and hopefully the underlying vision, aims and structure will motivate you to contribute to it. Check  
 
-[How do I contribute to Sema?](https://github.com/mimic-sussex/sema/wiki/How-do-I-contribute-to-Sema%3F) and in [CONTRIBUTING.md](https://github.com/mimic-sussex/sema/blob/master/CONTRIBUTING.md).
+* [How do I contribute to Sema?](https://github.com/mimic-sussex/sema/wiki/How-do-I-contribute-to-Sema%3F) 
+
+* [CONTRIBUTING.md](https://github.com/mimic-sussex/sema/blob/master/CONTRIBUTING.md).
 
 
 ## Publications
