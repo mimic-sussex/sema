@@ -96,11 +96,9 @@ Sema's [Wiki](https://github.com/mimic-sussex/sema/wiki) documentation focuses o
 
 ## Contributing
 
-Sema is an open-source project and hopefully it will motivate you to contribute to it. More details on that specifically in 
+Sema is an open-source project and hopefully its aims and structure will motivate you to contribute to it. Check  
 
-[How do I contribute to Sema?](https://github.com/mimic-sussex/sema/wiki/How-do-I-contribute-to-Sema%3F)
-
-and in the [CONTRIBUTING.md](https://github.com/mimic-sussex/sema/blob/master/CONTRIBUTING.md).
+[How do I contribute to Sema?](https://github.com/mimic-sussex/sema/wiki/How-do-I-contribute-to-Sema%3F) and in [CONTRIBUTING.md](https://github.com/mimic-sussex/sema/blob/master/CONTRIBUTING.md).
 
 
 ## Publications
