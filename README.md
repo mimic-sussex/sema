@@ -67,7 +67,7 @@ Sema uses Web Audio API Audio Worklets. Their performance seems very sensitive t
 
 ## Documentation
 
-Sema's _reference documentation_ is aimed at supporting users, it is integrated in the application and comprises the following elements: 
+Sema's _reference documentation_ aims at supporting the users learning experience. It is integrated in the application and comprises the following elements: 
 
 * [Default Livecoding Language](static/docs/default-livecoding-language.md)
 
@@ -78,7 +78,7 @@ Sema's _reference documentation_ is aimed at supporting users, it is integrated 
 * [Javascript Editor Utils](static/docs/javascript-editor-utils.md)
 
 
-Sema's [Wiki](https://github.com/mimic-sussex/sema/wiki) aims at supporting contributions and it focuses on how Sema is designed and built: 
+Sema's [Wiki](https://github.com/mimic-sussex/sema/wiki) documentation aims at supporting contributions and it focuses on how Sema is designed and built: 
 
 * [What is the architecture of Sema?](https://github.com/mimic-sussex/sema/wiki/1.-The-Architecture-of-Sema)
 
