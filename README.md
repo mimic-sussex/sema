@@ -78,7 +78,7 @@ Sema's _reference documentation_ aims at supporting the users learning experienc
 * [Javascript Editor Utils](static/docs/javascript-editor-utils.md)
 
 
-Sema's [Wiki](https://github.com/mimic-sussex/sema/wiki) documentation aims at supporting contributions and it focuses on how Sema is designed and built: 
+Sema's [Wiki](https://github.com/mimic-sussex/sema/wiki) documentation aims at supporting contributions. It focuses on how Sema is designed and built: 
 
 * [What is the architecture of Sema?](https://github.com/mimic-sussex/sema/wiki/1.-The-Architecture-of-Sema)
 
