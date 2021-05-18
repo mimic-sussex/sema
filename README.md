@@ -81,18 +81,17 @@ Sema's _reference documentation_ is integrated in the application. It comprises 
 Sema's [Wiki](https://github.com/mimic-sussex/sema/wiki) documentation focuses on how Sema is built in order to support contributions: 
 
 
-[What is the architecture of Sema?](https://github.com/mimic-sussex/sema/wiki/the-architecture-of-Sema)
+[What is the architecture of Sema?](https://github.com/mimic-sussex/sema/wiki/1.-The-Architecture-of-Sema)
 
-[How to setup Sema on my own web server?](https://github.com/mimic-sussex/sema/wiki/How-to-setup-Sema-on-my-own-web-server%3F)
+[How do the Svelte stores in Sema work?](https://github.com/mimic-sussex/sema/wiki/1.3.-Application-State-Management-with-Svelte-stores)
 
-[How do I add a new ML library to Sema?](https://github.com/mimic-sussex/sema/wiki/How-do-I-add-a-new-ML-library-to-Sema%3F)
+[How does Sema implement and use web services?](https://github.com/mimic-sussex/sema/wiki/1.4.-Languages-and-Tutorials-JSON-web-services)
 
-[How do I create and add a new widget to Sema?](https://github.com/mimic-sussex/sema/wiki/How-do-I-create-and-add-a-new-widget-to-Sema%3F)
+[How do I create and add a new widget to Sema?](https://github.com/mimic-sussex/sema/wiki/4.-How-do-I-create-and-add-a-new-widget-to-Sema%3F)
 
-[How do the Svelte stores in Sema work?](https://github.com/mimic-sussex/sema/wiki/How-do-the-Svelte-stores-in-Sema-work%3F)
+[How do I add a new ML library to Sema?](https://github.com/mimic-sussex/sema/wiki/5.-How-do-I-add-a-new-ML-library-to-Sema%3F)
 
-[How does Sema implement and use web services?](https://github.com/mimic-sussex/sema/wiki/How-Sema-implements-and-uses-web-services)
-
+[How to setup Sema on my own web server?](https://github.com/mimic-sussex/sema/wiki/6.-How-to-setup-Sema-on-my-own-web-server%3F)
 
 ## Contributing
 
