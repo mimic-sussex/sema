@@ -67,40 +67,38 @@ Sema uses Web Audio API Audio Worklets. Their performance seems very sensitive t
 
 ## Documentation
 
-Sema's _reference documentation_ is integrated in the application. It comprises the following elements: 
+Sema's _reference documentation_ aims at supporting the users learning experience. It is integrated in the application and comprises the following elements: 
 
-[Default Livecoding Language](static/docs/default-livecoding-language.md)
+* [Default Livecoding Language](static/docs/default-livecoding-language.md)
 
-[Sema Intermediate Language](static/docs/sema-intermediate-language.md)
+* [Sema Intermediate Language](static/docs/sema-intermediate-language.md)
 
-[Maximilian DSP API](static/docs/maximilian-dsp-api.md)
+* [Maximilian DSP API](static/docs/maximilian-dsp-api.md)
 
-[Javascript Editor Utils](static/docs/javascript-editor-utils.md)
-
-
-The [Wiki](https://github.com/mimic-sussex/sema/wiki) documentation is more focused on how Sema is built, which you might need to know before contributing: 
+* [Javascript Editor Utils](static/docs/javascript-editor-utils.md)
 
 
-[What is the architecture of Sema?](https://github.com/mimic-sussex/sema/wiki/the-architecture-of-Sema)
+Sema's [Wiki](https://github.com/mimic-sussex/sema/wiki) documentation aims at supporting contributions. It focuses on how Sema is designed and built: 
 
-[How to setup Sema on my own web server?](https://github.com/mimic-sussex/sema/wiki/How-to-setup-Sema-on-my-own-web-server%3F)
+* [What is the architecture of Sema?](https://github.com/mimic-sussex/sema/wiki/1.-The-Architecture-of-Sema)
 
-[How do I add a new ML library to Sema?](https://github.com/mimic-sussex/sema/wiki/How-do-I-add-a-new-ML-library-to-Sema%3F)
+* [How do the Svelte stores in Sema work?](https://github.com/mimic-sussex/sema/wiki/1.3.-Application-State-Management-with-Svelte-stores)
 
-[How do I create and add a new widget to Sema?](https://github.com/mimic-sussex/sema/wiki/How-do-I-create-and-add-a-new-widget-to-Sema%3F)
+* [How does Sema implement and use web services?](https://github.com/mimic-sussex/sema/wiki/1.4.-Languages-and-Tutorials-JSON-web-services)
 
-[How do the Svelte stores in Sema work?](https://github.com/mimic-sussex/sema/wiki/How-do-the-Svelte-stores-in-Sema-work%3F)
+* [How do I create and add a new widget to Sema?](https://github.com/mimic-sussex/sema/wiki/4.-How-do-I-create-and-add-a-new-widget-to-Sema%3F)
 
-[How does Sema implement and use web services?](https://github.com/mimic-sussex/sema/wiki/How-Sema-implements-and-uses-web-services)
+* [How do I add a new ML library to Sema?](https://github.com/mimic-sussex/sema/wiki/5.-How-do-I-add-a-new-ML-library-to-Sema%3F)
 
+* [How to setup Sema on my own web server?](https://github.com/mimic-sussex/sema/wiki/6.-How-to-setup-Sema-on-my-own-web-server%3F)
 
 ## Contributing
 
-Sema is an open-source project and hopefully it will motivate you to contribute to it. More details on that specifically in 
+Sema is an open-source project and hopefully the underlying vision, aims and structure will motivate you to contribute to it. Check  
 
-[How do I contribute to Sema?](https://github.com/mimic-sussex/sema/wiki/How-do-I-contribute-to-Sema%3F)
+* [How do I contribute to Sema?](https://github.com/mimic-sussex/sema/wiki/How-do-I-contribute-to-Sema%3F) 
 
-and in the [CONTRIBUTING.md](https://github.com/mimic-sussex/sema/blob/master/CONTRIBUTING.md).
+* [CONTRIBUTING.md](https://github.com/mimic-sussex/sema/blob/master/CONTRIBUTING.md).
 
 
 ## Publications
