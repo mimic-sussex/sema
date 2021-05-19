@@ -9,9 +9,9 @@
 		"Thor Magnusson <t.magnusson@sussex.ac.uk> (http://www.ixi-audio.net)"
 	],
 	"license": "MIT",
-  "engines": {
-    "node": ">=14.44.0 <15"
-  },
+	"engines": {
+		"node": ">=14.44.0 <15"
+	},
 	"scripts": {
 		"dev": "run-p routify rollup",
 		"dev:err": "run-p routify rollup 2>err.log 1>out.log",
@@ -77,7 +77,7 @@
 		"mouse-change": "^1.4.0",
 		"nearley": "^2.20.1",
 		"regl": "^2.1.0",
-		"sema-engine": "0.0.54",
+		"sema-engine": "0.0.56",
 		"spank": "^1.5.2",
 		"svelte-codemirror": "git+https://github.com/frantic0/svelte-codemirror.git",
 		"svelte-preprocess": "^4.0.9"
