@@ -6,34 +6,29 @@
       </h2>
       <p>
         <span>
-          Sema is a live coding environment for performing and composing music in realtime using simple live coding languages.
-        </span>
-        <span>
-          It is similar to other live coding environments and domain-specific languages for sound and music, such as SuperCollider, TidalCycles and Gibber.
+          Sema lets you compose and perform music in real time using simple live coding languages. It also enables you to customise these languages, create new ones, and infuse your live code with bespoke neural networks, using interactive workflows and small training data sets.
         </span>
       </p>
+      <div class='iframe-container'>
+        <iframe class='iframe'
+                width="630" height="420"
+                title="Sema-demo"
+                src="https://www.youtube.com/embed/Qw4sYnTj-Ow?t=27s"
+                >
+        </iframe>
+      </div>
       <p>
         <span>
-          Uniquely, Sema provides an integrated experience to machine learning and language design in your Web browser.
-        </span>
         <span>
-          It is a playground for designing and training machine learning networks, with an interpreter for machine learning libraries (e.g. <a href="https://www.tensorflow.org/js/" target="_blank">tensorflow.js</a>), and for creating your own languages, using a compiler for <a href="https://hardmath123.github.io/earley.html" target="_blank">BNF grammars</a>.
+          Sema is a live coding environment for sound and music similar to SuperCollider, TidalCycles and Gibber.
+        </span>
+          Uniquely, it provides many domain-specific languages and an integrated experience to language design and machine learning in your Web browser. This is achieved through the integration of:
         </span>
       </p>
-      <p>
-        <span>
-          Sema is developed with ❤️ at the University of Sussex, with funding from two UKRI/AHRC grants 'MIMIC - Musically Intelligent Machines Interacting Collaboratively' and 'Innovating Sema'.
-        </span>
-        <span>
-          It builds upon many amazing contributions of the open-source community, including <a href="https://svelte.dev/" target="_blank">Svelte</a>, <a href="https://routify.dev/" target="_blank">Routify</a>, <a href="https://nearley.js.org/" target="_blank">Nearley</a> and <a href="https://github.com/micknoise/Maximilian" target="_blank">Maximilian</a>.
-        </span>
-      </p>
-    <!-- </div> -->
-
-    <!-- <div class="sema-community"> -->
-      <!-- <h2>
-        <span class='sema'>sema</span> community
-      </h2> -->
+      <ul>
+        <li>an interpreter for machine learning libraries (e.g. <a href="https://www.tensorflow.org/js/" target="_blank">tensorflow.js</a>) that lets you build and train neural networks</li>
+        <li>a compiler for <a href="https://hardmath123.github.io/earley.html" target="_blank">BNF grammars</a> that enables you to customise or create live coding languages</li>
+      </ul>
       <p>
         Do you need help with sema? Check the following:
       </p>
@@ -46,6 +41,19 @@
           <li>drop us an email at <a href="mailto://sema.live.coding@gmail.com" target="_blank">sema.live.coding@gmail.com</a></li>
         </ul>
       <!-- </p> -->
+      <div class='image-container'>
+        <img src="images/team/wac2019.jpg"
+              alt="team"
+              width="640" height="431" >
+      </div>
+      <p>
+        <span>
+          Sema is developed with ❤️ at the University of Sussex, with funding from two UKRI/AHRC grants 'MIMIC - Musically Intelligent Machines Interacting Collaboratively' and 'Innovating Sema'.
+        </span>
+        <span>
+          It builds upon many amazing contributions of the open-source community, including <a href="https://svelte.dev/" target="_blank">Svelte</a>, <a href="https://routify.dev/" target="_blank">Routify</a>, <a href="https://nearley.js.org/" target="_blank">Nearley</a> and <a href="https://github.com/micknoise/Maximilian" target="_blank">Maximilian</a>.
+        </span>
+      </p>
       <p>
 
       </p>
@@ -59,7 +67,7 @@
     width: 100vw;
     height: 100vh;
     color: #999999;
-    overflow: hidden;
+    overflow: scroll;
     display: grid;
     grid-template-rows: auto 1fr;
     grid-template-columns: 1fr 4fr 1fr;
@@ -68,7 +76,7 @@
   .about-sema {
     width: 100%;
     height: 100%;
-    overflow: hidden;
+    overflow: auto;
     grid-column: 2/2;
   }
 
@@ -87,5 +95,21 @@
   }
   .sema {
     color: #FFFFFF;
+  }
+
+  .iframe {
+    /* margin: 0 auto; */
+  }
+
+  .iframe-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 </style>

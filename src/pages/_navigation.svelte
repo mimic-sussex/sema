@@ -12,7 +12,7 @@
 	const links = [
 		['/playground', 'playground'],
 		['/tutorial', 'tutorial'],
-		['/docs', 'docs'],
+		['/docs', 'reference'],
 		['/about', 'about'],
 	]
 
