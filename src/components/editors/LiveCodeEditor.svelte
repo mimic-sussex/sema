@@ -121,7 +121,7 @@
 
         let pos = codeMirror.getCursor();
         codeMirror.selectAll();
-        await new Promise(r => setTimeout(r, 20)); // non-blocking defer execution for x milliseconds
+        // await new Promise(r => setTimeout(r, 20)); // non-blocking defer execution for x milliseconds
         codeMirror.setCursor(pos);
 
       } catch (err) {

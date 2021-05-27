@@ -124,8 +124,8 @@
   }
 
   onMount( async () => {
-    console.log("DEBUG:routes/_layout:onMount");
-    console.log($params);
+    // console.log("DEBUG:routes/_layout:onMount");
+    // console.log($params);
 
     // If application loads from index page, entry is through here
     // otherwise, it loads first from playground/index or tutorial/_layout

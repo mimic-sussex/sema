@@ -78,7 +78,7 @@
 
 
   <div class='mouse-container'>
-      <Mouse />
+    <Mouse />
   </div>
 
 

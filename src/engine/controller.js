@@ -20,6 +20,7 @@ export default class Controller {
 		this.engine = engine
     this.initializing = false
 		this.samplesLoaded = false
+    this.isStopped = false
 	}
 
 	/**

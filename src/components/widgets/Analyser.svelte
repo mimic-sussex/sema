@@ -107,8 +107,12 @@
 
   function sabRender() {
     try {
+
       // for (let v in engine.sharedArrayBuffers) {
-        if(engine.sharedArrayBuffers[channelID].ttype === 'scope'){
+        if(engine
+            && engine.sharedArrayBuffers
+            && engine.sharedArrayBuffers[channelID]
+            && engine.sharedArrayBuffers[channelID].ttype === 'scope'){
           let avail = engine.sharedArrayBuffers[channelID].rb.available_read();
           if ( avail > 0 && avail != engine.sharedArrayBuffers[channelID].rb.capacity ) {
             for (let i = 0; i < avail; i += engine.sharedArrayBuffers[channelID].blocksize) {
@@ -120,8 +124,9 @@
             }
           }
         }
+
     } catch (error) {
-      console.error();
+      console.error(error);
     }
   }
   const toggleRendering = () => {
@@ -151,7 +156,7 @@
     if(!engine){
       engine = new Engine();
     }
-    console.log('analyser')
+    // console.log('analyser')
     // sabRender()
 
     // Request the creation of an WAAPI analyser to the Audio Engine

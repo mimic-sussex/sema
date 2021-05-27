@@ -24,7 +24,10 @@
    * */
   ( async () => {
     // Detect Firefox early otherwise audio engine needs to be initialised for a fail to be detected [Firefox fix]
-    if (/firefox/i.test(navigator.userAgent)) unsupportedBrowser = true;
+    if (/firefox/i.test(navigator.userAgent)){
+      console.error('Firefox detected: unsupported browser')
+      unsupportedBrowser = true;
+    }
     else {
       // Need a dynamic import to prevent the AudioWorkletNode inside the audioEngine module from loading [Safari fix]
       import("sema-engine/sema-engine.mjs")
