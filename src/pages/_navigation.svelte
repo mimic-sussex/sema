@@ -27,6 +27,7 @@
       controller = new Controller();
     }
 
+    // does an async hush
     controller.stop();
   }
 </script>

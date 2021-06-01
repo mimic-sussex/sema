@@ -141,8 +141,8 @@ export default class Controller {
 	}
 
 	async stop() {
-		if (this.engine) {
-			await this.engine.hush();
+		if (this.engine && !this.engine.isHushed) {
+			await this.engine.hush()
 			engineStatus.set('paused')
 		}
 	}

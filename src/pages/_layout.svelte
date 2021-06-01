@@ -44,12 +44,12 @@
   $: fetchAndLoadDefaultTutorialItems();
 
   $: document.addEventListener( "keydown", e => {
-    if(!engine)
-      engine = new Engine();
 
     if ( e.code === "Period" && ( e.ctrlKey || e.metaKey ) ){
-      engine.hush();
-      $engineStatus = 'paused';
+      if( !engine && !engine.isHushed )
+        engine = new Engine();
+        engine.hush();
+        $engineStatus = 'paused';
     }
   });
 

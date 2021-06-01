@@ -77,7 +77,7 @@
 		"mouse-change": "^1.4.0",
 		"nearley": "^2.20.1",
 		"regl": "^2.1.0",
-		"sema-engine": "0.0.58",
+		"sema-engine": "0.0.60",
 		"spank": "^1.5.2",
 		"svelte-codemirror": "git+https://github.com/frantic0/svelte-codemirror.git",
 		"svelte-preprocess": "^4.0.9"

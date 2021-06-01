@@ -72,7 +72,7 @@ export const isSelectLiveCodeEditorDisabled = writable(false);
 // Store for TFJS model options in Sidebar component
 // export const sidebarModelOptions = writable([]);
 export const sidebarModelOptions = writable([
-	{ id: 0, disabled: false, text: `learner`, content: "" },
+	{ id: 0, disabled: false, text: `Javascript`, content: "" },
 	{ id: 1, disabled: false, text: `hello-world`, content: hello_world_code_example },
 	{
 		id: 2,

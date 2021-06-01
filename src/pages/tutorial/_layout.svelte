@@ -101,8 +101,9 @@
       $goto(localStorage.getItem("tutorial-url"));
     }
 
-    if($items.length === 0){
-      let json = await fetch(document.location.origin + localStorage.getItem("tutorial-url") + 'layout.json' )
+    if($items.length === 0 && localStorage["tutorial-url"]){
+      let sessionTutorialURL = document.location.origin + localStorage.getItem("tutorial-url") + 'layout.json'
+      let json = await fetch(sessionTutorialURL)
                             .then( r => r.json());
 
       $items = json.map( item => hydrateJSONcomponent(item) );
