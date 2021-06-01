@@ -113,13 +113,17 @@
             && engine.sharedArrayBuffers
             && engine.sharedArrayBuffers[channelID]
             && engine.sharedArrayBuffers[channelID].ttype === 'scope'){
+
           let avail = engine.sharedArrayBuffers[channelID].rb.available_read();
+
           if ( avail > 0 && avail != engine.sharedArrayBuffers[channelID].rb.capacity ) {
+
             for (let i = 0; i < avail; i += engine.sharedArrayBuffers[channelID].blocksize) {
+
               let val = new Float64Array(engine.sharedArrayBuffers[channelID].blocksize);
-              ( !shift && 0 === frequencyBinCounter-- ) ? ( shift = true ) : undefined;
-              shift ? timeDataArray.shift() : undefined;
-              timeDataArray.push(val);
+              // ( !shift && 0 === frequencyBinCounter-- ) ? ( shift = true ) : undefined;
+              // shift ? timeDataArray.shift() : undefined;
+              // timeDataArray.push(val);
               engine.sharedArrayBuffers[channelID].rb.pop(val);
             }
           }
