@@ -267,6 +267,12 @@
     // console.log($items);
   }
 
+  const onClickCloseOverlay = () => {
+    console.log("asdf");
+    $isUploadOverlayVisible = false;
+
+  }
+
   const onAdjust = e => {
     // console.log("DEBUG:dashboard:onAdjust:", e.detail);
     $items = $items; // call a re-render
@@ -276,6 +282,8 @@
     // console.log("DEBUG:dashboard:onChildMount:", e.detail);
     $items = $items; // call a re-render
   };
+
+
 
   let container;
 
@@ -318,8 +326,6 @@
   });
 
 </script>
-
-<slot />
 
 
 <style>
@@ -384,8 +390,7 @@
   }
 
 
-
-  .upload-overlay-container {
+  .overlay-container {
     grid-area: layout;
     z-index: 1000;
     background-color: rgba(16,12,12,0.8);
@@ -399,6 +404,19 @@
     visibility: hidden;
   }
 
+  .upload-overlay-container {
+    grid-area: layout;
+    z-index: 1000;
+    background-color: rgba(16,12,12,0.8);
+    visibility: hidden;
+    width: 100%;
+
+    /* display:flex; */
+    /* justify-content:center;
+    align-items:center; */
+    font-size:16px;
+  }
+
   .mouse-overlay-container {
     grid-area: layout;
     z-index: 1000;
@@ -406,9 +424,9 @@
     visibility: visible;
     width: 100%;
 
-    display:flex;
-    justify-content:center;
-    align-items:center;
+    /* display:flex; */
+    /* justify-content:center;
+    align-items:center; */
     font-size:16px;
     visibility: hidden;
   }
@@ -508,6 +526,17 @@
     text-shadow: 1px 1px 1px #000000;
   }
 
+  .close-overlay {
+    /* grid-column: 3/2; */
+    position: absolute;
+    /* top: 0; */
+    right: 0;
+    padding:  0.1em 0.3em 0.1em 0.1em;
+    cursor: pointer;
+    /* z-index: 1500; */
+    text-shadow: 1px 1px 1px #000000;
+  }
+
   .content {
     grid-row: 2/2;
     grid-column: 1/3;
@@ -556,19 +585,20 @@
     <Sidebar />
   </div>
 
-  <div  class="upload-overlay-container" style='visibility:{$isUploadOverlayVisible? "visible": "hidden"}'
-        on:drop={handleDragDrop}
-        on:dragenter={handleDragEnter}
-        ondragover="return false"
+  <div  class="upload-overlay-container"
+        style='visibility:{ $isUploadOverlayVisible? "visible" : "hidden"}'
         >
-    <svg class="box-icon" xmlns="http://www.w3.org/2000/svg" width="50" height="43" viewBox="0 0 50 43">
-      <path d="M48.4 26.5c-.9 0-1.7.7-1.7 1.7v11.6h-43.3v-11.6c0-.9-.7-1.7-1.7-1.7s-1.7.7-1.7 1.7v13.2c0 .9.7 1.7 1.7 1.7h46.7c.9 0 1.7-.7 1.7-1.7v-13.2c0-1-.7-1.7-1.7-1.7zm-24.5 6.1c.3.3.8.5 1.2.5.4 0 .9-.2 1.2-.5l10-11.6c.7-.7.7-1.7 0-2.4s-1.7-.7-2.4 0l-7.1 8.3v-25.3c0-.9-.7-1.7-1.7-1.7s-1.7.7-1.7 1.7v25.3l-7.1-8.3c-.7-.7-1.7-.7-2.4 0s-.7 1.7 0 2.4l10 11.6z"></path>
-    </svg>
-    <p class="upload-overlay-text"><span style="font-weight: 1500;">Choose your .json file</span> or <span>drag'n'drop it here to upload a new environment!</span></p>
+    <span class='close-overlay'
+          on:click={ () => onClickCloseOverlay() }
+          >✕
+    </span>
+    <slot>
+
+    </slot>
   </div>
 
   <!-- <div  class="mouse-overlay-container" style='visibility:visible' -->
-  <div  class="mouse-overlay-container" style='visibility:{$isMouseOverlayVisible? "visible": "hidden"}'
+  <div  class="mouse-overlay-container" style='visibility:{ $isMouseOverlayVisible? "visible" : "hidden" }'
         >
   </div>
 
