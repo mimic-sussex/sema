@@ -45,9 +45,10 @@
     isSelectDebuggerDisabled,
 
     focusedItemProperties,
-
-    items,
+    isSaveOverlayVisible,
     isUploadOverlayVisible,
+    isDeleteOverlayVisible,
+    items,
     hydrateJSONcomponent,
     loadEnvironmentSnapshotEntries
   } from '../../../stores/playground.js'
@@ -61,12 +62,17 @@
 
   function resetEnvironment(){
 
+
     if(!engine)
       engine = new Engine();
 
     engine.hush();
 
     $items = $items.slice($items.length);
+
+    $isUploadOverlayVisible = false;
+    $isSaveOverlayVisible = false;
+    $isDeleteOverlayVisible = true;
 
     $isSelectLiveCodeEditorDisabled = false;
     $isSelectModelEditorDisabled = false;
@@ -77,11 +83,14 @@
 
   function storeEnvironment(){
 
+    $isUploadOverlayVisible = false;
+    $isSaveOverlayVisible = true;
+    $isDeleteOverlayVisible = false;
     // Add to playground history, e.g.
     // Key – playground-2020-03-02T15:48:31.080Z,
     // Value: [{"2":{"fixed":false,"resizable":true,"draggable":true,"min":{"w":1,"h":1},"max":{}, ...]
-	  window.localStorage["playground-" + new Date(Date.now()).toISOString()] = JSON.stringify($items);
 
+    window.localStorage["playground-" + new Date(Date.now()).toISOString()] = JSON.stringify($items);
     loadEnvironmentSnapshotEntries();
   }
 
@@ -99,6 +108,8 @@
   function uploadEnvironment(){
 
     $isUploadOverlayVisible = true;
+    $isSaveOverlayVisible = false;
+    $isDeleteOverlayVisible = false;
   }
 
   function downloadEnvironment(){

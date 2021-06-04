@@ -10,12 +10,15 @@
 
   import { PubSub } from "../../utils/pubSub.js";
 
-
   import { compile } from 'sema-engine/sema-engine';
 
+  import Delete from '../../components/overlays/Delete.svelte';
+  import Save from '../../components/overlays/Save.svelte';
+  import Upload from '../../components/overlays/Upload.svelte';
   import Sidebar from '../../components/playground/Sidebar.svelte';
   import Settings from '../../components/settings/Settings.svelte';
   // import Dashboard from '../components/layouts/Dashboard.svelte';
+
 
   import Grid from "svelte-grid";
   import gridHelp from "svelte-grid/build/helper";
@@ -26,7 +29,6 @@
   let messaging = new PubSub();
 
   import {
-
     // loadEnvironmentOptions
     fastStart,
     createNewItem,
@@ -36,6 +38,8 @@
     focusedItem,
     focusedItemProperties,
     isUploadOverlayVisible,
+    isDeleteOverlayVisible,
+    isSaveOverlayVisible,
     items
   } from  "../../stores/playground.js"
 
@@ -268,9 +272,7 @@
   }
 
   const onClickCloseOverlay = () => {
-    console.log("asdf");
-    $isUploadOverlayVisible = false;
-
+    $isUploadOverlayVisible = $isSaveOverlayVisible = $isDeleteOverlayVisible = false;
   }
 
   const onAdjust = e => {
@@ -579,22 +581,26 @@
 </svelte:head>
 
 <div class="container">
-  <div class="{ $siteMode === 'dark' ? 'sidebar-container': 'sidebar-container-light' }"
-    style="{ $sideBarVisible ? 'width: auto; visibility: visible;': 'width: 0px; visibility: hidden;' }"
-    >
+  <div  class="{ $siteMode === 'dark' ? 'sidebar-container': 'sidebar-container-light' }"
+        style="{ $sideBarVisible ? 'width: auto; visibility: visible;': 'width: 0px; visibility: hidden;' }"
+        >
     <Sidebar />
   </div>
 
   <div  class="upload-overlay-container"
-        style='visibility:{ $isUploadOverlayVisible? "visible" : "hidden"}'
+        style='visibility:{ ( $isUploadOverlayVisible || $isDeleteOverlayVisible || $isSaveOverlayVisible ) ? "visible" : "hidden"}'
         >
     <span class='close-overlay'
           on:click={ () => onClickCloseOverlay() }
           >✕
     </span>
-    <slot>
 
+    <slot>
+      <Delete></Delete>
+      <Upload></Upload>
+      <Save></Save>
     </slot>
+
   </div>
 
   <!-- <div  class="mouse-overlay-container" style='visibility:visible' -->

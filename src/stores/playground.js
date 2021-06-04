@@ -45,7 +45,8 @@ import new_learner_template               from '../../static/learners/new/new.tf
 
 
 export const isUploadOverlayVisible = writable(false);
-
+export const isSaveOverlayVisible = writable(false)
+export const isDeleteOverlayVisible = writable(false);
 
 export const cm_theme_cobalt = writable("");
 export const cm_theme_icecoder = writable("");
