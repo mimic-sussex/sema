@@ -3,7 +3,7 @@
 
 Welcome to the Sema tutorial! In this tutorial you will learn everything you need to know to start live coding music and audio with machine learning and designing your own live coding language.
 
-You can also consult the [API docs](https://github.com/mimic-sussex/sema/tree/master/docs) for further information. If you're impatient to start hacking Sema free-style, use the playground or explore the source code on Github. You will find links for that in the top banner of this page.
+You can also consult the [Wiki](https://github.com/mimic-sussex/sema/wiki) for further information. If you're impatient to start hacking Sema free-style, use the *Playground* or explore the source code on [Github](https://github.com/mimic-sussex). The playground can be accessed from links in the navigation bar at the top of this page.
 
 When you have explored this tutorial and want to start to make your music, you will exit this *Tutorial* and do all your work in the *Playground*.
 
@@ -15,7 +15,7 @@ We recommended that you go from start to finish. You can navigate the Table of C
 
 * Part 2, *Live Coding with the default language* will get you started with the basic element and syntax of Sema's default language.
 
-* Part 3, *Machine Learning* will show you some machine learning wizardry with custom neural networks architecture.
+* Part 3, *Machine Learning* will show you some machine learning wizardry with custom neural network architectures.
 
 * Part 4 *Language Design* will introduce you to the concepts and workflow to help you get started designing your own custom language.
 
