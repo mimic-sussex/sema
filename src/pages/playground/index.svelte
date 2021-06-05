@@ -229,18 +229,7 @@
 
   }
 
-  function handleDragDrop(e) {
 
-    e.preventDefault();
-
-    let reader = new FileReader();
-    reader.readAsText(e.dataTransfer.files[0]);
-    reader.onload = e => $items = JSON.parse(e.target.result).map(item => hydrateJSONcomponent(item));
-
-    $isUploadOverlayVisible = false;
-  }
-
-  function handleDragEnter(e){  }
 
   const clearItems = () => {
     // console.log("DEBUG:dashboard:clearItems:")
@@ -435,16 +424,6 @@
 
 
 
-  .upload-overlay-text {
-
-    top:50%;
-
-    /* width: 100%; */
-    position: absolute;
-    color: #FFF;
-
-  }
-
 
   :global(body) {
     overflow: scroll;
@@ -555,9 +534,9 @@
     overflow-y:hidden;
   }
 
-  .component {
-    /* height: calc(100%-2.5em); */
-  }
+  /* .component {
+    height: calc(100%-2.5em);
+  } */
 
  	.scrollable {
 		flex: 1 1 auto;
@@ -565,9 +544,9 @@
 		overflow-y: auto;
 	}
 
-  .box-icon {
+  /* .box-icon {
     margin-bottom: 120px;
-  }
+  } */
 
   path {
     fill: white;

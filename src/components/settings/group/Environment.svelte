@@ -61,24 +61,9 @@
   }
 
   function resetEnvironment(){
-
-
-    if(!engine)
-      engine = new Engine();
-
-    engine.hush();
-
-    $items = $items.slice($items.length);
-
     $isUploadOverlayVisible = false;
     $isSaveOverlayVisible = false;
     $isDeleteOverlayVisible = true;
-
-    $isSelectLiveCodeEditorDisabled = false;
-    $isSelectModelEditorDisabled = false;
-    $isAddGrammarEditorDisabled = false;
-    $isAddAnalyserDisabled = false;
-    $sidebarDebuggerOptions.map( option => option.disabled = false );
   }
 
   function storeEnvironment(){
@@ -751,7 +736,8 @@
             c0.933-0.241,1.887-0.362,2.836-0.362c6.324,0,11.471,5.146,11.471,11.471c0,6.325-5.146,11.468-11.471,11.468
             c-0.949,0-1.903-0.121-2.834-0.361c-1.125-0.292-2.313,0.095-3.053,0.988c-1.605,1.938-3.564,3.474-5.726,4.613v6.59
             c3.419-1.297,6.542-3.332,9.123-6.025c0.825,0.12,1.657,0.182,2.489,0.182c9.625,0,17.455-7.83,17.455-17.455
-            C79.848,25.963,72.016,18.133,62.393,18.133z"/>
+            C79.848,25.963,72.016,18.133,62.393,18.133z"
+            />
         </g>
       </svg>
     {:else if $siteMode === 'light' }
