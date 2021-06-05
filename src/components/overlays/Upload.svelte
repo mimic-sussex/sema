@@ -38,7 +38,6 @@
         input.accept = '.json';
       }
       $isUploadOverlayVisible = false;
-
     }
     catch(err){
 
