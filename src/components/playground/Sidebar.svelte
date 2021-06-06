@@ -138,6 +138,9 @@ import { siteMode } from "../../stores/common";
         messaging.publish("playground-add", { type: 'visualiser' });
         // $isAddAnalyserDisabled = true;
         break;
+      case 'MIDI':
+        messaging.publish("playground-add", { type: 'MIDI' });
+        break;
       case 'debugger':
         messaging.publish("playground-add", { type: selected.type });
         disableSelectDebuggerOption(selected.type);
@@ -722,6 +725,14 @@ import { siteMode } from "../../stores/common";
               on:click={ () => dispatchAdd('visualiser') }
               >
         visualiser
+      </button>
+    </div>
+
+    <div>
+      <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' } controls"
+              on:click={ () => dispatchAdd('MIDI') }
+              >
+        MIDI
       </button>
     </div>
 

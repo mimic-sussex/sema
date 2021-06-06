@@ -24,6 +24,8 @@ import Visualiser from "../components/widgets/Visualiser.svelte";
 import StoreInspector from "../components/widgets/StoreInspector.svelte";
 import DSPCode from '../components/widgets/DSPCode.svelte'
 import Console from "../components/widgets/Console.svelte";
+import Visor from "../components/widgets/Visor.svelte";
+import MIDI from "../components/widgets/MIDI.svelte";
 
 import default_grammar from "../../static/languages/default/grammar.ne";
 // import gabber_grammar from "../../assets/languages/gabber/grammar.ne";
@@ -510,6 +512,18 @@ export async function createNewItem (type, content){
 		case "dspCode":
 			data = {
 				component: DSPCode,
+				background: 'rgba(25, 25, 25, 0.3)',
+			}
+			break;
+		case "MIDI":
+			data = {
+				component: MIDI,
+				background: 'rgba(25, 25, 25, 0.3)',
+			}
+			break;
+		case "visor":
+			data = {
+				component: Visor,
 				background: 'rgba(25, 25, 25, 0.3)',
 			}
 			break;
