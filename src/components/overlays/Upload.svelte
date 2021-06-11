@@ -7,6 +7,7 @@
     hydrateJSONcomponent
   } from  "../../stores/playground.js"
 
+	import { onMount, onDestroy, createEventDispatcher } from 'svelte';
 
   function readJSONFileToItems(file){
 
@@ -43,6 +44,15 @@
 
     }
   }
+
+  onMount( async () => {
+    engine = new Engine();
+
+  });
+
+  onDestroy( () => {
+    engine = null;
+	});
 
 </script>
 

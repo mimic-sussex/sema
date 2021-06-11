@@ -164,7 +164,7 @@
   {:else}
 		{#if showAST }
 			<div class="headline">
-				<span class="correct-state">Abstract Syntax Tree (</span>
+				<span class="correct-state">Abstract Syntax Tree </span>(
 				<span style="cursor:pointer;text-decoration:underline;" on:click="{() => { showAST = false; }}"> show less detail </span>)
 				<br>
 				<!-- <div style="margin-left:5px"> -->

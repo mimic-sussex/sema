@@ -16,7 +16,7 @@
     sidebarDebuggerOptions
   } from '../../stores/playground.js';
 
-
+	import { onMount, onDestroy } from 'svelte';
 
   const closeOverlay = () => {
     $isDeleteOverlayVisible = false;
@@ -41,6 +41,15 @@
     $isAddAnalyserDisabled = false;
     $sidebarDebuggerOptions.map( option => option.disabled = false );
   }
+
+  onMount( async () => {
+    engine = new Engine();
+
+  });
+
+  onDestroy( () => {
+    engine = null;
+	});
 
 </script>
 

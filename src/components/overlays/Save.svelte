@@ -4,6 +4,18 @@
     isSaveOverlayVisible,
   } from  "../../stores/playground.js"
 
+	import { onMount, onDestroy } from 'svelte';
+
+  onMount( async () => {
+    engine = new Engine();
+
+  });
+
+  onDestroy( () => {
+    engine = null;
+	});
+
+
 </script>
 
 <div  class="save-overlay-component"
