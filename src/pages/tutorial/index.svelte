@@ -42,6 +42,7 @@
 
     console.log("tutorial - index");
 
+		localStorage.setItem("tutorial-reloaded", true);
     if(!controller.samplesLoaded)
       // controller.init('http://localhost:5000/sema-engine');
       controller.init(document.location.origin + '/sema-engine');

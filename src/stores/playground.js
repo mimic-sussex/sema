@@ -603,18 +603,16 @@ export function hydrateJSONcomponent (item){
 				// item.component = StoreInspector;
 				break
 		}
+		// NOTE
 		// if(!item.id){
-	  item.id = id();
-	  item.data.name = item.data.type + item.id;
-		item.data.id = item.id;
-    // }
-		return item;
-  }
+		item.id = id()
+		item.data.name = item.data.type + item.id
+		item.data.id = item.id
+		// }
+		return item
+	}
   else
     throw Error("hydrateJSONcomponent: undefined item");
-	// } else {
-	// 	createNewItem();
-	// }
 };
 
 export const reset = () => {
