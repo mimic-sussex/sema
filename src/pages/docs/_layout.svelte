@@ -143,7 +143,10 @@
 
   <ul class='sidebar-menu'>
     {#each links as {path, name, file}, i}
-      <a href={$url(path)} class:active={$isActive(path)} on:click={handleClick(active)}>
+      <a  href={$url(path)}
+          class:active={$isActive(path)}
+          on:click={handleClick(active)}
+          >
         {name}
       </a><br><br>
     {/each}

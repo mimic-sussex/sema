@@ -49,6 +49,7 @@
     isUploadOverlayVisible,
     isDeleteOverlayVisible,
     items,
+    // assignNewID,
     hydrateJSONcomponent,
     loadEnvironmentSnapshotEntries
   } from '../../../stores/playground.js'
@@ -83,7 +84,9 @@
 
     // Retrieve item, hydrate JSON into grid-items
     let json = window.localStorage.getItem($selectedLoadEnvironmentOption.content);
-    $items = JSON.parse(json).map(item => hydrateJSONcomponent(item))
+    $items = JSON.parse(json)
+    		.map(item => hydrateJSONcomponent(item))
+		// .map(item => assignNewID(item))
 
     // Reset UI
     $selectedLoadEnvironmentOption = $loadEnvironmentOptions[0];

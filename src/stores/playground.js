@@ -27,6 +27,7 @@ import Console from "../components/widgets/Console.svelte";
 import Visor from "../components/widgets/Visor.svelte";
 import MIDI from "../components/widgets/MIDI.svelte";
 
+
 import default_grammar from "../../static/languages/default/grammar.ne";
 // import gabber_grammar from "../../assets/languages/gabber/grammar.ne";
 // import nibble_grammar from "../../assets/languages/nibble/grammar.ne";
@@ -602,10 +603,11 @@ export function hydrateJSONcomponent (item){
 				// item.component = StoreInspector;
 				break
 		}
-		if(!item.id){
-      item.id = id();
-		  item.data.name = item.data.type + item.id;
-    }
+		// if(!item.id){
+	  item.id = id();
+	  item.data.name = item.data.type + item.id;
+		item.data.id = item.id;
+    // }
 		return item;
   }
   else

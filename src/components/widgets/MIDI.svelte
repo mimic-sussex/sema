@@ -1,12 +1,14 @@
 <script>
+
   import {
     onMount,
     onDestroy
   } from 'svelte';
 
   import WebMidi from 'webmidi';
+  import LibTimidity from 'timidity/libtimidity';
 
-  const subscribeEvents = input => {
+  const subscribeMidiEvents = input => {
 
     input.addListener('pitchbend', "all", function(e) {
       console.log("Pitch value: " + e.value);
@@ -51,7 +53,9 @@
       e => console.log("Received 'programchange' message.", e)
     );
   }
-  onMount( async () => {
+
+
+  const enableMidi = () => {
 
     WebMidi.enable( err => {
       if(err)
@@ -64,11 +68,45 @@
         // let input = WebMidi.getInputByName("Axiom Pro 25 USB A In");
         let input_xtone = WebMidi.getInputByName("XTONE");
         let input_mio = WebMidi.getInputByName("mio");
-        if(input_xtone) subscribeEvents(input_xtone);
-        if(input_mio) subscribeEvents(input_mio);
+        if(input_xtone) subscribeMidiEvents(input_xtone);
+        if(input_mio) subscribeMidiEvents(input_mio);
       };
-  });
+    })
+  }
 
+  const enableTimidity = () => {
+
+    // (hex 0x7FFF); dec number 32767; binary, 01111111 11111111
+
+
+    console.log(LibTimidity);
+    // console.log(Timidity);
+
+    // let player = new Timidity(this.baseUrl)
+
+    LibTimidity({
+      locateFile: file => new URL(file, '/').href
+    }).then((lib) => {
+      this._lib = lib
+      this._onLibReady()
+    })
+
+    // const player = new Timidity()
+    // player.load('../static/deadmau5-Deus-Ex-Machina.mid')
+    // player.play()
+
+    // player.on('playing', () => {
+    //   console.log(player.duration) // => 351.521
+    // })
+
+  }
+
+
+  onMount( async () => {
+
+    enableMidi();
+
+    enableTimidity();
   });
 
 </script>
