@@ -426,7 +426,7 @@
 
 
   :global(body) {
-    overflow: scroll;
+    /* overflow: scroll; */
     margin: 0;
   }
 
@@ -574,11 +574,11 @@
           >✕
     </span>
 
-    <slot>
-      <Delete></Delete>
-      <Upload></Upload>
-      <Save></Save>
-    </slot>
+    <!-- <slot> -->
+      <Delete/>
+      <Upload/>
+      <Save/>
+    <!-- </slot> -->
 
   </div>
 

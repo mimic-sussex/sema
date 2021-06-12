@@ -465,8 +465,8 @@ export async function createNewItem (type, content){
 				content: content.code, // changed from `data`
 			};
 			layout = {
-				12: gridHelp.item({ x: 0, y: 0, w: 9, h: 5 }),
-				8: gridHelp.item({ x: 0, y: 0, w: 6, h: 5 }),
+				12: gridHelp.item({ x: 0, y: 0, w: 8, h: 5 }),
+				8: gridHelp.item({ x: 0, y: 0, w: 7, h: 5 }),
 				6: gridHelp.item({ x: 0, y: 0, w: 4, h: 3 }),
 				3: gridHelp.item({ x: 0, y: 0, w: 2, h: 2 }),
 				2: gridHelp.item({ x: 0, y: 0, w: 1, h: 2 }),
@@ -482,12 +482,12 @@ export async function createNewItem (type, content){
 				content: content.grammar, // Get the store value with Svelte's get
 			};
 			layout = {
-				12: gridHelp.item({ x: 0, y: 0, w: 9, h: 5 }),
+				12: gridHelp.item({ x: 0, y: 0, w: 8, h: 5 }),
 				8: gridHelp.item({ x: 0, y: 0, w: 7, h: 5 }),
-				6: gridHelp.item({ x: 0, y: 0, w: 5, h: 3 }),
-				3: gridHelp.item({ x: 0, y: 0, w: 3, h: 2 }),
-				2: gridHelp.item({ x: 0, y: 0, w: 2, h: 2 }),
-			};
+				6: gridHelp.item({ x: 0, y: 0, w: 4, h: 3 }),
+				3: gridHelp.item({ x: 0, y: 0, w: 2, h: 2 }),
+				2: gridHelp.item({ x: 0, y: 0, w: 1, h: 2 })
+			}
   		// data.data = content.grammar; // Get the store value with Svelte's get
 			break;
 		case "modelEditor":
@@ -498,18 +498,11 @@ export async function createNewItem (type, content){
 				content: content,
 			}
 			layout = {
-				12: gridHelp.item({ x: 0, y: 0, w: 9, h: 5 }),
+				12: gridHelp.item({ x: 0, y: 0, w: 8, h: 5 }),
 				8: gridHelp.item({ x: 0, y: 0, w: 7, h: 5 }),
-				6: gridHelp.item({ x: 0, y: 0, w: 5, h: 3 }),
-				3: gridHelp.item({ x: 0, y: 0, w: 3, h: 2 }),
-				2: gridHelp.item({ x: 0, y: 0, w: 2, h: 2 }),
-			};
-			layout = {
-				12: gridHelp.item({ x: 0, y: 0, w: 9, h: 5 }),
-				8: gridHelp.item({ x: 0, y: 0, w: 7, h: 5 }),
-				6: gridHelp.item({ x: 0, y: 0, w: 5, h: 3 }),
-				3: gridHelp.item({ x: 0, y: 0, w: 3, h: 2 }),
-				2: gridHelp.item({ x: 0, y: 0, w: 2, h: 2 }),
+				6: gridHelp.item({ x: 0, y: 0, w: 4, h: 3 }),
+				3: gridHelp.item({ x: 0, y: 0, w: 2, h: 2 }),
+				2: gridHelp.item({ x: 0, y: 0, w: 1, h: 2 })
 			};
 			break;
 		case "liveCodeParseOutput":
@@ -518,10 +511,10 @@ export async function createNewItem (type, content){
 				background: 'rgba(25, 25, 25, 0.3)',
 			};
 			layout = {
-				12: gridHelp.item({ x: 0, y: 0, w: 3, h: 1 }),
-				8: gridHelp.item({ x: 0, y: 0, w: 3, h: 1 }),
+				12: gridHelp.item({ x: 0, y: 0, w: 4, h: 1 }),
+				8: gridHelp.item({ x: 0, y: 0, w: 4, h: 1 }),
 				6: gridHelp.item({ x: 0, y: 0, w: 3, h: 1 }),
-				3: gridHelp.item({ x: 0, y: 0, w: 2, h: 1 }),
+				3: gridHelp.item({ x: 0, y: 0, w: 1, h: 1 }),
 				2: gridHelp.item({ x: 0, y: 0, w: 1, h: 1 }),
 			};
 			break;
@@ -545,11 +538,11 @@ export async function createNewItem (type, content){
 				mode: '',
 			};
 			layout = {
-				12: gridHelp.item({ x: 0, y: 0, w: 9, h: 5 }),
-				8: gridHelp.item({ x: 0, y: 0, w: 7, h: 5 }),
-				6: gridHelp.item({ x: 0, y: 0, w: 5, h: 3 }),
-				3: gridHelp.item({ x: 0, y: 0, w: 3, h: 2 }),
-				2: gridHelp.item({ x: 0, y: 0, w: 2, h: 2 }),
+				12: gridHelp.item({ x: 0, y: 0, w: 4, h: 4 }),
+				8: gridHelp.item({ x: 0, y: 0, w: 4, h: 4 }),
+				6: gridHelp.item({ x: 0, y: 0, w: 3, h: 3 }),
+				3: gridHelp.item({ x: 0, y: 0, w: 1, h: 2 }),
+				2: gridHelp.item({ x: 0, y: 0, w: 1, h: 2 }),
 			};
 			break;
 		case "visualiser":

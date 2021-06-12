@@ -46,12 +46,12 @@
   }
 
   onMount( async () => {
-    engine = new Engine();
-
+    // engine = new Engine();
+		console.log("upload")
   });
 
   onDestroy( () => {
-    engine = null;
+    // engine = null;
 	});
 
 </script>
@@ -126,11 +126,11 @@
 
   .upload-overlay-component {
     width: 100%;
+		height:100%;
     display:flex;
     justify-content:center;
     align-items:center;
     font-size:16px;
-
   }
 
   .upload-overlay-text {

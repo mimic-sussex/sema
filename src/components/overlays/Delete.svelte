@@ -43,12 +43,12 @@
   }
 
   onMount( async () => {
-    engine = new Engine();
-
+    // engine = new Engine();
+		console.log("delete")
   });
 
   onDestroy( () => {
-    engine = null;
+    // engine = null;
 	});
 
 </script>
@@ -142,12 +142,12 @@
   }
 
   .delete-overlay-component {
-    /* background-color: rgba(16,12,12,0.8); */
-    /* visibility: hidden; */
     width: 100%;
-    /* display:inline; */
+		height:100%;
+    display:flex;
     justify-content:center;
     align-items:center;
+		flex-direction:column;
     font-size:16px;
   }
 
