@@ -574,11 +574,13 @@
           >✕
     </span>
 
-    <!-- <slot> -->
-      <Delete/>
-      <Upload/>
-      <Save/>
-    <!-- </slot> -->
+		{#if $isUploadOverlayVisible }
+      <Upload />
+		{:else if $isDeleteOverlayVisible }
+      <Delete />
+		{:else if $isSaveOverlayVisible }
+      <Save />
+		{/if}
 
   </div>
 

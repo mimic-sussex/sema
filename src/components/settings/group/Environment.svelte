@@ -76,7 +76,7 @@
     // Key – playground-2020-03-02T15:48:31.080Z,
     // Value: [{"2":{"fixed":false,"resizable":true,"draggable":true,"min":{"w":1,"h":1},"max":{}, ...]
 
-    window.localStorage["playground-" + new Date(Date.now()).toISOString()] = JSON.stringify($items);
+
     loadEnvironmentSnapshotEntries();
   }
 

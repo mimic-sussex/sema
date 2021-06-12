@@ -7,7 +7,7 @@
     hydrateJSONcomponent
   } from  "../../stores/playground.js"
 
-	import { onMount, onDestroy, createEventDispatcher } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
 
   function readJSONFileToItems(file){
 
@@ -111,6 +111,8 @@
 
   .label-underline{
     text-decoration: underline;
+		display: inline-flex;
+
   }
 
   #file-input {
@@ -125,11 +127,12 @@
   }
 
   .upload-overlay-component {
-    width: 100%;
+    /* width: 100%; */
 		height:100%;
     display:flex;
     justify-content:center;
     align-items:center;
+		flex-direction:column;
     font-size:16px;
   }
 
