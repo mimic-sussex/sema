@@ -8,7 +8,7 @@
 
 	import { onMount, onDestroy } from 'svelte';
 
-	let filename;
+	let filename, input;
 
   const closeOverlay = () => {
     $isSaveOverlayVisible = false;
@@ -16,9 +16,17 @@
 
   const saveEnvironment = () => {
 
-		window.localStorage[filename] = JSON.stringify($items);
-    loadEnvironmentSnapshotEntries();
-    $isSaveOverlayVisible = false;
+		let localStorageEntry =	"playground-" + new Date(Date.now()).toISOString()+'-'+filename
+
+		if(filename && !window.localStorage[localStorageEntry]){
+			window.localStorage[localStorageEntry] = JSON.stringify($items);
+			loadEnvironmentSnapshotEntries();
+			$isSaveOverlayVisible = false;
+		}
+		else if (window.localStorage[filename]){
+
+
+		}
 	}
 
   onMount( async () => {
@@ -41,7 +49,8 @@
   </svg>
   <!-- <p class="save-overlay-text"><span style="font-weight: 1500;">Enter the name for the record</span></p> -->
 	<label for="name">Enter a name for the record (8 to 15 alphanumeric characters):</label>
-	<input 	bind:value={ filename }
+	<input 	bind:this={ input }
+					bind:value={ filename }
 					type="text"
 					id="name"
 					name="name"
@@ -158,6 +167,10 @@
   .save-overlay-button-container {
     display: inline-flex;
   }
+
+	input:invalid {
+  	border: 2px dashed red;
+	}
 
 
 </style>
