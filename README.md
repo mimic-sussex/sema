@@ -98,7 +98,7 @@ Sema is an open-source project and hopefully the underlying vision, aims and str
 
 * [How do I contribute to Sema?](https://github.com/mimic-sussex/sema/wiki/7.-How-do-I-contribute-to-Sema%3F) 
 
-* [CONTRIBUTING.md](https://github.com/mimic-sussex/sema/blob/master/CONTRIBUTING.md).
+* [CONTRIBUTING.md](https://github.com/mimic-sussex/sema/blob/master/CONTRIBUTING.md)
 
 
 ## Publications
