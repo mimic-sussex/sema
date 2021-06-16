@@ -279,13 +279,13 @@
       resizeObserver.observe(container);
 
       // In Tutorial re-use learner
-      if(Object.keys(engine.learners).length > 0){
-        learner = engine.learners[Object.keys(engine.learners)];
-      }
-      else {
-        learner = new Learner();
-				learner = await engine.addLearner(id, learner)
-      }
+      // if(Object.keys(engine.learners).length > 0){
+      //   learner = engine.learners[Object.keys(engine.learners)];
+      // }
+      // else {
+			learner = new Learner();
+			learner = await engine.addLearner(id, learner)
+      // }
 
       log( id, name, type, lineNumbers, className, hasFocus, theme, background, content, component );
     }
@@ -297,11 +297,16 @@
 
   onDestroy(async () => {
 
-    // engine.removeLearner(id);
-    // learner.terminate();
+		if(!learner)
+			learner =	engine.learners[id];
+
+		learner.terminate();
 
 
-    console.info('disposing Learner')
+		engine.removeLearner(id);
+
+		console.info('disposing Learner')
+
     resizeObserver.disconnect();
     resizeObserver = null;
 	});
