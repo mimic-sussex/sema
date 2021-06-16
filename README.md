@@ -96,7 +96,7 @@ Sema's [Wiki](https://github.com/mimic-sussex/sema/wiki) documentation aims at s
 
 Sema is an open-source project and hopefully the underlying vision, aims and structure will motivate you to contribute to it. Check  
 
-* [How do I contribute to Sema?](https://github.com/mimic-sussex/sema/wiki/How-do-I-contribute-to-Sema%3F) 
+* [How do I contribute to Sema?](https://github.com/mimic-sussex/sema/wiki/7.-How-do-I-contribute-to-Sema%3F) 
 
 * [CONTRIBUTING.md](https://github.com/mimic-sussex/sema/blob/master/CONTRIBUTING.md).
 
