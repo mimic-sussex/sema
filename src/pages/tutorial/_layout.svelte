@@ -53,7 +53,7 @@
     try{
       // await tick();
       $items = []; // refresh items to call onDestroy on each (learner need to terminate workers)
-      localStorage.setItem("tutorial-url", `/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/`);
+      localStorage.setItem("last-session-tutorial-url", `/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/`);
       $goto(`/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/`);
     }
     catch(error){
@@ -98,11 +98,11 @@
   onMount( async () => {
     if(!controller.samplesLoaded){
       controller.init(document.location.origin + '/sema-engine');
-      $goto(localStorage.getItem("tutorial-url"));
+      $goto(localStorage.getItem("last-session-tutorial-url"));
     }
 
-    if($items.length === 0 && localStorage["tutorial-url"]){
-      let sessionTutorialURL = document.location.origin + localStorage.getItem("tutorial-url") + 'layout.json'
+    if($items.length === 0 && localStorage["last-session-tutorial-url"]){
+      let sessionTutorialURL = document.location.origin + localStorage.getItem("last-session-tutorial-url") + 'layout.json'
       let json = await fetch(sessionTutorialURL)
                             .then( r => r.json());
 

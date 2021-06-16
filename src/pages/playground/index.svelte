@@ -426,7 +426,7 @@
 
 
   :global(body) {
-    overflow: scroll;
+    /* overflow: scroll; */
     margin: 0;
   }
 
@@ -574,11 +574,13 @@
           >✕
     </span>
 
-    <slot>
-      <Delete></Delete>
-      <Upload></Upload>
-      <Save></Save>
-    </slot>
+		{#if $isUploadOverlayVisible }
+      <Upload />
+		{:else if $isDeleteOverlayVisible }
+      <Delete />
+		{:else if $isSaveOverlayVisible }
+      <Save />
+		{/if}
 
   </div>
 

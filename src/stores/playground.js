@@ -24,6 +24,9 @@ import Visualiser from "../components/widgets/Visualiser.svelte";
 import StoreInspector from "../components/widgets/StoreInspector.svelte";
 import DSPCode from '../components/widgets/DSPCode.svelte'
 import Console from "../components/widgets/Console.svelte";
+// import Visor from "../components/widgets/Visor.svelte";
+import MIDI from "../components/widgets/MIDI.svelte";
+
 
 import default_grammar from "../../static/languages/default/grammar.ne";
 // import gabber_grammar from "../../assets/languages/gabber/grammar.ne";
@@ -437,12 +440,19 @@ export let createRandomItem = (type) => {
  * @param content data hold held by the widget (e.g. liveCodeSource)
  */
 export async function createNewItem (type, content){
-	let data;
+	let data, layout;
 	switch (type) {
 		case "storeInspector":
 			data = {
 				component: StoreInspector,
 				background: "#d1d5ff",
+			};
+			layout = {
+				12: gridHelp.item({ x: 0, y: 0, w: 9, h: 5 }),
+				8: gridHelp.item({ x: 0, y: 0, w: 7, h: 5 }),
+				6: gridHelp.item({ x: 0, y: 0, w: 5, h: 3 }),
+				3: gridHelp.item({ x: 0, y: 0, w: 3, h: 2 }),
+				2: gridHelp.item({ x: 0, y: 0, w: 2, h: 2 }),
 			};
 			break;
 		case "liveCodeEditor":
@@ -454,6 +464,13 @@ export async function createNewItem (type, content){
 				liveCodeSource: content.livecode,
 				content: content.code, // changed from `data`
 			};
+			layout = {
+				12: gridHelp.item({ x: 0, y: 0, w: 8, h: 5 }),
+				8: gridHelp.item({ x: 0, y: 0, w: 7, h: 5 }),
+				6: gridHelp.item({ x: 0, y: 0, w: 4, h: 3 }),
+				3: gridHelp.item({ x: 0, y: 0, w: 2, h: 2 }),
+				2: gridHelp.item({ x: 0, y: 0, w: 1, h: 2 }),
+			};
 			// await populateStoresWithFetchedProps(component);
 			break;
 		case "grammarEditor":
@@ -463,8 +480,15 @@ export async function createNewItem (type, content){
 				theme: 'monokai',
 				grammarSource: content.grammarSource,
 				content: content.grammar, // Get the store value with Svelte's get
+			};
+			layout = {
+				12: gridHelp.item({ x: 0, y: 0, w: 8, h: 5 }),
+				8: gridHelp.item({ x: 0, y: 0, w: 7, h: 5 }),
+				6: gridHelp.item({ x: 0, y: 0, w: 4, h: 3 }),
+				3: gridHelp.item({ x: 0, y: 0, w: 2, h: 2 }),
+				2: gridHelp.item({ x: 0, y: 0, w: 1, h: 2 })
 			}
-			// data.data = content.grammar; // Get the store value with Svelte's get
+  		// data.data = content.grammar; // Get the store value with Svelte's get
 			break;
 		case "modelEditor":
 			data = {
@@ -473,25 +497,53 @@ export async function createNewItem (type, content){
 				theme: 'monokai',
 				content: content,
 			}
+			layout = {
+				12: gridHelp.item({ x: 0, y: 0, w: 8, h: 5 }),
+				8: gridHelp.item({ x: 0, y: 0, w: 7, h: 5 }),
+				6: gridHelp.item({ x: 0, y: 0, w: 4, h: 3 }),
+				3: gridHelp.item({ x: 0, y: 0, w: 2, h: 2 }),
+				2: gridHelp.item({ x: 0, y: 0, w: 1, h: 2 })
+			};
 			break;
 		case "liveCodeParseOutput":
 			data = {
 				component: LiveCodeParseOutput,
 				background: 'rgba(25, 25, 25, 0.3)',
-			}
+			};
+			layout = {
+				12: gridHelp.item({ x: 0, y: 0, w: 4, h: 1 }),
+				8: gridHelp.item({ x: 0, y: 0, w: 4, h: 1 }),
+				6: gridHelp.item({ x: 0, y: 0, w: 3, h: 1 }),
+				3: gridHelp.item({ x: 0, y: 0, w: 1, h: 1 }),
+				2: gridHelp.item({ x: 0, y: 0, w: 1, h: 1 }),
+			};
 			break;
 		case "grammarCompileOutput":
 			data = {
 				component: GrammarCompileOutput,
 				background: 'rgba(20, 20, 20, 0.3)',
-			}
+			};
+			layout = {
+				12: gridHelp.item({ x: 0, y: 0, w: 9, h: 5 }),
+				8: gridHelp.item({ x: 0, y: 0, w: 7, h: 5 }),
+				6: gridHelp.item({ x: 0, y: 0, w: 5, h: 3 }),
+				3: gridHelp.item({ x: 0, y: 0, w: 3, h: 2 }),
+				2: gridHelp.item({ x: 0, y: 0, w: 2, h: 2 }),
+			};
 			break;
 		case "analyser":
 			data = {
 				component: Analyser,
 				background: '#191919',
 				mode: '',
-			}
+			};
+			layout = {
+				12: gridHelp.item({ x: 0, y: 0, w: 4, h: 4 }),
+				8: gridHelp.item({ x: 0, y: 0, w: 4, h: 4 }),
+				6: gridHelp.item({ x: 0, y: 0, w: 3, h: 3 }),
+				3: gridHelp.item({ x: 0, y: 0, w: 1, h: 2 }),
+				2: gridHelp.item({ x: 0, y: 0, w: 1, h: 2 }),
+			};
 			break;
 		case "visualiser":
 			data = {
@@ -499,19 +551,66 @@ export async function createNewItem (type, content){
 				background: '#191919',
 				mode: '',
 				channelID: '0',
-			}
+			};
+			layout = {
+				12: gridHelp.item({ x: 0, y: 0, w: 9, h: 5 }),
+				8: gridHelp.item({ x: 0, y: 0, w: 7, h: 5 }),
+				6: gridHelp.item({ x: 0, y: 0, w: 5, h: 3 }),
+				3: gridHelp.item({ x: 0, y: 0, w: 3, h: 2 }),
+				2: gridHelp.item({ x: 0, y: 0, w: 2, h: 2 }),
+			};
 			break;
 		case "console":
 			data = {
 				component: Console,
 				background: 'rgba(20, 20, 20, 0.3)',
-			}
+			};
+			layout = {
+				12: gridHelp.item({ x: 0, y: 0, w: 9, h: 5 }),
+				8: gridHelp.item({ x: 0, y: 0, w: 7, h: 5 }),
+				6: gridHelp.item({ x: 0, y: 0, w: 5, h: 3 }),
+				3: gridHelp.item({ x: 0, y: 0, w: 3, h: 2 }),
+				2: gridHelp.item({ x: 0, y: 0, w: 2, h: 2 }),
+			};
 			break;
 		case "dspCode":
 			data = {
 				component: DSPCode,
 				background: 'rgba(25, 25, 25, 0.3)',
-			}
+			};
+			layout = {
+				12: gridHelp.item({ x: 0, y: 0, w: 9, h: 5 }),
+				8: gridHelp.item({ x: 0, y: 0, w: 7, h: 5 }),
+				6: gridHelp.item({ x: 0, y: 0, w: 5, h: 3 }),
+				3: gridHelp.item({ x: 0, y: 0, w: 3, h: 2 }),
+				2: gridHelp.item({ x: 0, y: 0, w: 2, h: 2 }),
+			};
+			break;
+		case "MIDI":
+			data = {
+				component: MIDI,
+				background: 'rgba(25, 25, 25, 0.3)',
+			};
+			layout = {
+				12: gridHelp.item({ x: 0, y: 0, w: 9, h: 5 }),
+				8: gridHelp.item({ x: 0, y: 0, w: 7, h: 5 }),
+				6: gridHelp.item({ x: 0, y: 0, w: 5, h: 3 }),
+				3: gridHelp.item({ x: 0, y: 0, w: 3, h: 2 }),
+				2: gridHelp.item({ x: 0, y: 0, w: 2, h: 2 }),
+			};;
+			break;
+		case "visor":
+			data = {
+				// component: Visor,
+				background: 'rgba(25, 25, 25, 0.3)',
+			};
+			layout = {
+				12: gridHelp.item({ x: 0, y: 0, w: 9, h: 5 }),
+				8: gridHelp.item({ x: 0, y: 0, w: 7, h: 5 }),
+				6: gridHelp.item({ x: 0, y: 0, w: 5, h: 3 }),
+				3: gridHelp.item({ x: 0, y: 0, w: 3, h: 2 }),
+				2: gridHelp.item({ x: 0, y: 0, w: 2, h: 2 }),
+			};
 			break;
 		default:
 			break;
@@ -522,16 +621,7 @@ export async function createNewItem (type, content){
 	// return component template
 	return {
     id: itemId,
-		12: gridHelp.item({ x: 0, y: 0, w: 9, h: 5 }),
-		8: gridHelp.item({ x: 0, y: 0, w: 7, h: 5 }),
-		6: gridHelp.item({ x: 0, y: 0, w: 5, h: 3 }),
-		3: gridHelp.item({ x: 0, y: 0, w: 3, h: 2 }),
-		2: gridHelp.item({
-			x: 0,
-			y: 0,
-			w: 2,
-			h: 2,
-		}),
+		...layout,
 		data: {
       id: itemId,
 			type: type,
@@ -588,17 +678,16 @@ export function hydrateJSONcomponent (item){
 				// item.component = StoreInspector;
 				break
 		}
-		if(!item.id){
-      item.id = id();
-		  item.data.name = item.data.type + item.id;
-    }
-		return item;
-  }
+		// NOTE
+		// if(!item.id){
+		item.id = id()
+		item.data.name = item.data.type + item.id
+		item.data.id = item.id
+		// }
+		return item
+	}
   else
     throw Error("hydrateJSONcomponent: undefined item");
-	// } else {
-	// 	createNewItem();
-	// }
 };
 
 export const reset = () => {
@@ -753,15 +842,25 @@ export function clearFocused(){
 
 export function loadEnvironmentSnapshotEntries() {
 
+	let dateLength = new Date(Date.now()).toISOString().length;
+
   let localStorageItemPrefix = "playground-"
 	// Load local storage items filtered by "playground-" prefix
 	let keys = Object.keys(localStorage)
 		.filter((key) => key.includes(localStorageItemPrefix))
 		.sort(
 			(a, b) =>
-				Date.parse(b.substring(localStorageItemPrefix.length)) -
-				Date.parse(a.substring(localStorageItemPrefix.length))
-		);
+				Date.parse(
+					b.substring(
+						localStorageItemPrefix.length,
+						localStorageItemPrefix.length + dateLength
+					)
+				) - Date.parse(
+					a.substring(
+						localStorageItemPrefix.length,
+						localStorageItemPrefix.length + dateLength
+				))
+		)
 
 	// Create a list of sidebar Load combox items with local storage substring, including the default "load"
 	loadEnvironmentOptions.set(
@@ -771,13 +870,15 @@ export function loadEnvironmentSnapshotEntries() {
 				{
 					id: i + 1, // item starts with 0 when reducer is passed a first item (see below)
 					disabled: false,
-					text: val.substring(localStorageItemPrefix.length),
+					text: val.substring(
+						localStorageItemPrefix.length + dateLength + 1, val.length
+					),
 					content: val,
 				},
 			],
 			[{ id: 0, disabled: false, text: `load` }]
 		)
-	);
+	)
 }
 
 

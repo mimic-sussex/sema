@@ -469,7 +469,7 @@
 
         <div class="controls">
           <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
-                  on:click={ () => messaging.publish('show-ml-visor') }
+                  on:click={ () => messaging.publish("playground-add", { type: 'visor' } )}
                   >
                   visor
           </button>
