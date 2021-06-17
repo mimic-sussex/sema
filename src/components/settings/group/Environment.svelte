@@ -49,6 +49,7 @@
     isUploadOverlayVisible,
     isDeleteOverlayVisible,
     items,
+    // assignNewID,
     hydrateJSONcomponent,
     loadEnvironmentSnapshotEntries
   } from '../../../stores/playground.js'
@@ -75,7 +76,7 @@
     // Key – playground-2020-03-02T15:48:31.080Z,
     // Value: [{"2":{"fixed":false,"resizable":true,"draggable":true,"min":{"w":1,"h":1},"max":{}, ...]
 
-    window.localStorage["playground-" + new Date(Date.now()).toISOString()] = JSON.stringify($items);
+
     loadEnvironmentSnapshotEntries();
   }
 
@@ -83,7 +84,9 @@
 
     // Retrieve item, hydrate JSON into grid-items
     let json = window.localStorage.getItem($selectedLoadEnvironmentOption.content);
-    $items = JSON.parse(json).map(item => hydrateJSONcomponent(item))
+    $items = JSON.parse(json)
+    		.map(item => hydrateJSONcomponent(item))
+		// .map(item => assignNewID(item))
 
     // Reset UI
     $selectedLoadEnvironmentOption = $loadEnvironmentOptions[0];
@@ -123,6 +126,7 @@
   onDestroy( () => {
     engine = null;
 	});
+
 
 
 

@@ -20,6 +20,7 @@
   });
 
 
+
   import {
     grammarCompilationErrors,
     liveCodeParseErrors,
@@ -40,12 +41,15 @@
 
 
 
- let log = e => { /* console.log(...e); */ }
+ 	let log = e => { /* console.log(...e); */ }
 
   let nil = (e) => { }
 
+	let showAST = false;
+
   onMount(async () => {
     log( id, name, type, className, lineNumbers, hasFocus, theme, background, component );
+
 	});
 
   onDestroy(async () => {
@@ -65,6 +69,7 @@
     line-height: 1.4;
     overflow: hidden;
     margin-top: 20px;
+		/*  */
   }
 
 	.scrollable {
@@ -72,6 +77,7 @@
 		/* border-top: 1px solid #eee; */
 		margin: 0 0 0.5em 0;
 		overflow-y: auto;
+
 	}
 
   .error-state {
@@ -84,7 +90,7 @@
   .correct-state {
     color:var(--color-gray);
     margin:25px 0px 15px 0px;
-
+    color:rgb(0, 220, 0);
   }
 
 
@@ -138,7 +144,10 @@
 </style>
 
 
-<div id="liveCodeCompilerOutput" class="liveCodeParse-container flex scrollable">
+<div 	id="liveCodeCompilerOutput"
+			class="liveCodeParse-container flex scrollable"
+			style="{ $liveCodeParseErrors === "" ? "background-color:rgb(0, 20, 0)" : "background-color:rgb(20, 0, 0)" }"
+			>
   {#if $grammarCompilationErrors != ""}
     <div>
       <span class="error-state">Go work on your grammar!</span>
@@ -153,28 +162,55 @@
       </div>
     </div>
   {:else}
-    <div class="headline">
-      <span class="correct-state">Abstract Syntax Tree:</span>
-      <br>
-      <!-- <div style="margin-left:5px"> -->
-      {#if $siteMode === 'dark' }
-        <div style="overflow-y: scroll; height:auto;"
-              class='inspect'
-              >
-          <Inspect.Inverted value={ $liveCodeAbstractSyntaxTree }
-                          depth={7}
-                          />
-        </div>
-      {:else}
-        <div style="overflow-y: scroll; height:auto;"
-              class='inspect'
-              >
-          <Inspect value={ $liveCodeAbstractSyntaxTree }
-                          depth={7}
-                          />
+		{#if showAST }
+			<div class="headline">
+				<span class="correct-state">Abstract Syntax Tree </span>(
+				<span style="cursor:pointer;text-decoration:underline;" on:click="{() => { showAST = false; }}"> show less detail </span>)
+				<br>
+				<!-- <div style="margin-left:5px"> -->
+				{#if $siteMode === 'dark' }
+					<div style="overflow-y: scroll; height:auto;"
+								class='inspect'
+								>
+						<Inspect.Inverted value={ $liveCodeAbstractSyntaxTree }
+														depth={7}
+														/>
+					</div>
+				{:else}
+					<div style="overflow-y: scroll; height:auto;"
+								class='inspect'
+								>
+						<Inspect value={ $liveCodeAbstractSyntaxTree }
+														depth={7}
+														/>
 
-        </div>
-      {/if}
-    </div>
+					</div>
+				{/if}
+	    </div>
+		{:else}
+			<div class="headline">
+				<span class="correct-state">Live Code correct </span>(
+			  <span style="cursor:pointer;text-decoration:underline;" on:click="{() => { showAST = true; }}"> show Abstract Syntax Tree </span>)
+				<!-- <div style="margin-left:5px"> -->
+				{#if $siteMode === 'dark' }
+					<div style="overflow-y: scroll; height:auto;"
+								class='inspect'
+								>
+						<!-- <Inspect.Inverted value={ $liveCodeAbstractSyntaxTree }
+														depth={7}
+														/> -->
+					</div>
+				{:else}
+					<div style="overflow-y: scroll; height:auto;"
+								class='inspect'
+								>
+						<!-- <Inspect value={ $liveCodeAbstractSyntaxTree }
+														depth={7}
+														/> -->
+
+					</div>
+				{/if}
+	    </div>
+		{/if}
   {/if}
 </div>
