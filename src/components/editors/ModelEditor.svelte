@@ -279,13 +279,13 @@
       resizeObserver.observe(container);
 
       // In Tutorial re-use learner
-      // if(Object.keys(engine.learners).length > 0){
-      //   learner = engine.learners[Object.keys(engine.learners)];
-      // }
-      // else {
-			learner = new Learner();
-			learner = await engine.addLearner(id, learner)
-      // }
+      if(Object.keys(engine.learners).length > 0){
+        learner = engine.learners[Object.keys(engine.learners)];
+      }
+      else {
+				learner = new Learner();
+				await engine.addLearner(id, learner)
+      }
 
       log( id, name, type, lineNumbers, className, hasFocus, theme, background, content, component );
     }
