@@ -58,6 +58,15 @@ Once you have sema running as a node application, you can load it on your browse
 - npm run dev, go to [http://localhost:5000](http://localhost:5000) on your browser
 
 
+## Hardware acceleration: 
+
+Hardware acceleration will have a drastic effect in Tensorflow.js model training speed. To enable it in Chrome: 
+
+* Navigate to chrome://settings
+* Click the **Advanced ▼** button at the bottom of the page
+* In the **System** section, ensure the **Use hardware acceleration when available** checkbox is checked (relaunch Chrome for changes to take effect)
+
+
 ## Linux Users
 
 Sema uses Web Audio API Audio Worklets. Their performance seems very sensitive to CPU power scaling. If you are experiencing sound quality issues, try setting the CPU governor to *performance* mode. e.g on Ubuntu,
