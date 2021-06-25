@@ -1,0 +1,192 @@
+[{
+	"2": {
+		"fixed": false,
+		"resizable": true,
+		"draggable": true,
+		"customDragger": false,
+		"customResizer": false,
+		"min": {
+			"w": 1,
+			"h": 1
+		},
+		"max": {},
+		"x": 1,
+		"y": 0,
+		"w": 1,
+		"h": 2
+	},
+	"3": {
+		"fixed": false,
+		"resizable": true,
+		"draggable": true,
+		"customDragger": false,
+		"customResizer": false,
+		"min": {
+			"w": 1,
+			"h": 1
+		},
+		"max": {},
+		"x": 2,
+		"y": 0,
+		"w": 1,
+		"h": 2
+	},
+	"6": {
+		"fixed": false,
+		"resizable": true,
+		"draggable": true,
+		"customDragger": false,
+		"customResizer": false,
+		"min": {
+			"w": 1,
+			"h": 1
+		},
+		"max": {},
+		"x": 0,
+		"y": 3,
+		"w": 3,
+		"h": 3
+	},
+	"8": {
+		"fixed": false,
+		"resizable": true,
+		"draggable": true,
+		"customDragger": false,
+		"customResizer": false,
+		"min": {
+			"w": 1,
+			"h": 1
+		},
+		"max": {},
+		"x": 7,
+		"y": 0,
+		"w": 1,
+		"h": 2,
+		"id": "_0ur2erfiz"
+	},
+	"12": {
+		"fixed": false,
+		"resizable": true,
+		"draggable": true,
+		"customDragger": false,
+		"customResizer": false,
+		"min": {
+			"w": 1,
+			"h": 1
+		},
+		"max": {},
+		"x": 8,
+		"y": 0,
+		"w": 4,
+		"h": 4
+	},
+	"id": "_0ur2erfiz",
+	"data": {
+		"id": "_0ur2erfiz",
+		"type": "analyser",
+		"name": "analyser_0ur2erfiz",
+		"background": "#191919",
+		"lineNumbers": true,
+		"hasFocus": true,
+		"theme": "icecoder",
+		"mode": ""
+	},
+	"hasFocus": false
+}, {
+	"2": {
+		"fixed": false,
+		"resizable": true,
+		"draggable": true,
+		"customDragger": false,
+		"customResizer": false,
+		"min": {
+			"w": 1,
+			"h": 1
+		},
+		"max": {},
+		"x": 0,
+		"y": 0,
+		"w": 1,
+		"h": 2
+	},
+	"3": {
+		"fixed": false,
+		"resizable": true,
+		"draggable": true,
+		"customDragger": false,
+		"customResizer": false,
+		"min": {
+			"w": 1,
+			"h": 1
+		},
+		"max": {},
+		"x": 0,
+		"y": 0,
+		"w": 2,
+		"h": 2
+	},
+	"6": {
+		"fixed": false,
+		"resizable": true,
+		"draggable": true,
+		"customDragger": false,
+		"customResizer": false,
+		"min": {
+			"w": 1,
+			"h": 1
+		},
+		"max": {},
+		"x": 0,
+		"y": 0,
+		"w": 4,
+		"h": 3
+	},
+	"8": {
+		"fixed": false,
+		"resizable": true,
+		"draggable": true,
+		"customDragger": false,
+		"customResizer": false,
+		"min": {
+			"w": 1,
+			"h": 1
+		},
+		"max": {},
+		"x": 0,
+		"y": 0,
+		"w": 7,
+		"h": 5,
+		"id": "_z4b1ofltm"
+	},
+	"12": {
+		"fixed": false,
+		"resizable": true,
+		"draggable": true,
+		"customDragger": false,
+		"customResizer": false,
+		"min": {
+			"w": 1,
+			"h": 1
+		},
+		"max": {},
+		"x": 0,
+		"y": 0,
+		"w": 8,
+		"h": 5
+	},
+	"id": "_z4b1ofltm",
+	"data": {
+		"id": "_z4b1ofltm",
+		"type": "liveCodeEditor",
+		"name": "liveCodeEditor_z4b1ofltm",
+		"background": "#151515",
+		"lineNumbers": true,
+		"hasFocus": true,
+		"theme": "icecoder",
+		"grammarSource": "/languages/default/grammar.ne",
+		"liveCodeSource": "",
+		"content": "// Piano Phase\n// Coded by Corey Ford (corey2.ford@live.uwe.ac.uk) @ UWE Bristol\n// Based on the in C version made for Codetta. See bottom of this page: \n// https://thecoreyford.github.io/codetta/tutorials/tutorial2\n{144, 3}clk;\n\n//D E A B C E; \n:piano1:{{8}clp, [1], [587,\n\t\t\t\t\t\t659,\n\t\t\t\t\t\t880,\n\t\t\t\t\t\t987,\n\t\t\t\t\t\t1046,\n\t\t\t\t\t\t659,\n\t\t\t\t\t\t587,\n\t\t\t\t\t\t987,\n\t\t\t\t\t\t880,\n\t\t\t\t\t\t659,\n\t\t\t\t\t\t1046,\n\t\t\t\t\t\t987]}rsq;\n// offset for the second piano \n:phase:{0.01}clp; //< change the speed of the phase happening here \n// the second piano\n:piano2:{{8,:phase:}clp, [1], \n\t[587,\n\t 659,\n\t 880,\n\t 987,\n\t 1046,\n\t 659,\n\t 587,\n\t 987,\n \t 880,\n \t 659,\n   1046,\n   987]}rsq;\n\n>{{:piano1:}saw, {:piano2:}saw}mix;",
+		"grammar": "# Lexer [or tokenizer] definition with language lexemes [or tokens]\n@{%\n\nconst lexer = moo.compile({\n  separator:      /,/,\n  paramEnd:       /}/,\n  paramBegin:     /{/,\n  listEnd:        /\\]/,\n  listBegin:      /\\[/,\n  dacoutCh:       /\\>[0-9]+/,\n  dacout:         /\\>/,\n  variable:       /:[a-zA-Z0-9]+:/,\n  sample:         { match: /\\\\[a-zA-Z0-9]+/, lineBreaks: true, value: x => x.slice(1, x.length)},\n  slice:          { match: /\\|[a-zA-Z0-9]+/, lineBreaks: true, value: x => x.slice(1, x.length)},\n  stretch:        { match: /\\@[a-zA-Z0-9]+/, lineBreaks: true, value: x => x.slice(1, x.length)},\n  clockTrig:      /0t-?(?:[0-9]|[1-9][0-9]+)(?:\\.[0-9]+)?\\b/,\n\tnumber:         /-?(?:[0-9]|[1-9][0-9]+)(?:\\.[0-9]+)?\\b/,\n  semicolon:      /;/,\n  funcName:       /[a-zA-Z][a-zA-Z0-9]*/,\n\tstring:\t\t\t\t\t{ match: /'[a-zA-Z0-9]+'/, value: x => x.slice(1,x.length-1)},\n  comment:        /\\/\\/[^\\n]*/,\n  ws:             { match: /\\s+/, lineBreaks: true},\n});\n\n%}\n\n# Pass your lexer object using the @lexer option\n@lexer lexer\n\n# Grammar definition in the Extended Backus Naur Form (EBNF)\nmain -> _ Statement _\n{% d => ( { '@lang' : d[1] } )  %}\n\nStatement ->\n  %comment _ Statement\n  {% d => d[2] %}\n\t|\n  Expression _ %semicolon _ Statement\n  {% d => [ { '@spawn': d[0] } ].concat(d[4]) %}\n  |\n  Expression _ %semicolon (_ %comment):*\n  {% d => [ { '@spawn': d[0] } ] %}\n\n\nExpression ->\n  ParameterList _ %funcName\n  {% d => sema.synth( d[2].value, d[0]['@params'] ) %}\n  |\n  ParameterList _ %sample\n  {% d => sema.synth( 'sampler', d[0]['@params'].concat( [ sema.str( d[2].value ) ] ) ) %}\n  |\n  ParameterList _ %slice\n  {% d => sema.synth( 'slice', d[0]['@params'].concat( [ sema.str( d[2].value ) ] ) ) %}\n  |\n  ParameterList _ %stretch\n  {% d => sema.synth( 'stretch', d[0]['@params'].concat( [ sema.str( d[2].value ) ] ) ) %}\n  |\n  %variable _ Expression\n  {% d => sema.setvar( d[0].value, d[2] ) %}\n  |\n  %dacout _ Expression\n  {% d => sema.synth( 'dac', [d[2]] ) %}\n  |\n  %dacoutCh _ Expression\n  {% d => sema.synth( 'dac', [d[2], sema.num(d[0].value.substr(1))] ) %}\n\nParameterList ->\n  %paramBegin Params %paramEnd\n  {% d => ( { 'paramBegin': d[0], '@params': d[1], 'paramEnd': d[2] } ) %}\n\t|\n\t%paramBegin _ %paramEnd\n  {% d => ( { 'paramBegin': d[0], '@params': [], 'paramEnd': d[2] } ) %}\n\n\nParams ->\n  ParamElement\n  {% d => ( [ d[0] ] ) %}\n  |\n  ParamElement _ %separator _ Params\n  {% d => [ d[0] ].concat(d[4]) %}\n\nParamElement ->\n  %number\n  {% d => ( { '@num': d[0] } ) %}\n\t|\n\t%string\n  {% d => ( { '@string': d[0].value } ) %}\n  |\n  Expression\n  {% id %}\n  |\n  %variable\n  {% d => sema.getvar( d[0].value ) %}\n  |\n  %listBegin Params  %listEnd\n  {% d => ( { '@list': d[1] } )%}\n\n\n# Whitespace\n\n_  -> wschar:*\n{% function(d) {return null;} %}\n\n__ -> wschar:+\n{% function(d) {return null;} %}\n\nwschar -> %ws\n{% id %}\n"
+	},
+	"hasFocus": true
+}]

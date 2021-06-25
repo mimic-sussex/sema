@@ -116,12 +116,12 @@ export default class Controller {
 
 				// Subscribe async messages from the Audio Worklet Processor scope
 				// this.engine.subscribeAsyncMessage(this.onProcessorAsyncMessage)
-				const channelId = 'mxy',
-					ttype = 'mouseXY',
-					blockSize = 2
+				// const channelId = 'mxy',
+				// 	ttype = 'mouseXY',
+				// 	blockSize = 2
 
-				// Create SharedArrayBuffer for mouse data
-				this.engine.createSharedBuffer(channelId, ttype, blockSize)
+				// // Create SharedArrayBuffer for mouse data
+				// this.engine.createSharedBuffer(channelId, ttype, blockSize)
 
 				// Lazy load all samples imported from assets
 				this.samplesLoaded = await this.importSamplesAsync()

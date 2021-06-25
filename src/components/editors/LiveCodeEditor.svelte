@@ -48,6 +48,7 @@
     engineStatus,
     grammarEditorValue
   } from "../../stores/common.js";
+import { edit } from "marked/src/helpers";
 
   export let tab = true;
   export let id;   // unused
@@ -96,6 +97,21 @@
     });
   }
 
+	/**
+	 * editor blink, non-blocking, defers execution for M milliseconds
+	 * @param editor
+	 * @param milliseconds
+	 */
+	const blinkEditorSelectionForMilliseconds = async (editor, milliseconds) => {
+		if(editor){
+			  let pos = editor.getCursor();
+        editor.selectAll();
+        await new Promise(r => setTimeout(r, milliseconds));
+        editor.setCursor(pos);
+		}
+	}
+
+
   const evalLiveCodeOnEditorCommand = async e => {
     if(e){
       try{
@@ -119,10 +135,7 @@
         if(errors)
           $liveCodeParseErrors = errors;
 
-        let pos = codeMirror.getCursor();
-        codeMirror.selectAll();
-        // await new Promise(r => setTimeout(r, 20)); // non-blocking defer execution for x milliseconds
-        codeMirror.setCursor(pos);
+				await blinkEditorSelectionForMilliseconds(codeMirror, 20);
 
       } catch (err) {
         console.error("ERROR: Failed to compile and eval: ", err);

@@ -24,14 +24,29 @@ export function createRollupConfigs(config) {
     const { production, serve, distDir } = config
     const useDynamicImports = process.env.BUNDLING === 'dynamic' || isNollup || !!production
 
+		console.log('hello rollup config');
+		console.log(serve);
+		console.log(isNollup);
+
     del.sync(distDir + '/**') // clear previous builds
 
     if (serve && !isNollup)
         spassr({
-            serveSpa: true, // serve app
-            serveSsr: !isNollup, // Nollup doesn't need SSR
-            silent: isNollup // Nollup needs Spassr internally
-        })
+					serveSpa: true, // serve app
+					serveSsr: !isNollup, // Nollup doesn't need SSR
+					silent: isNollup, // Nollup needs Spassr internally
+					middleware: (server) => {
+						console.log('hello world');
+						console.log(server);
+						server.get('/', (req, res) => {
+							console.log('hello');
+							res.set({
+								'Cross-Origin-Opener-Policy': 'same-origin',
+								'Cross-Origin-Embedder-Policy': 'require-corp',
+							})
+						})
+					}
+				})
 
     // Combine configs as needed
     return [
