@@ -155,8 +155,6 @@
     <h2>Reference Documentation</h2>
   </div>
 
-  <SidebarMenu/>
-
   
   <ul class='sidebar-menu'>
     {#each links as {path, name, file}, i}
