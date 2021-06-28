@@ -148,13 +148,16 @@
 
 </style>
 
+<svelte:head>
+	<title>Sema – Documentation</title>
+</svelte:head>
+
 <div class='container-docs' data-routify="scroll-lock">
 
 
   <div class='header-docs'>
     <h2>Reference Documentation</h2>
   </div>
-
   
   <ul class='sidebar-menu'>
     {#each links as {path, name, file}, i}

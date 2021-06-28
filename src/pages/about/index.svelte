@@ -1,3 +1,7 @@
+<svelte:head>
+	<title>Sema – About</title>
+</svelte:head>
+
 <div class="center-all">
   <div class="about">
     <div class="about-sema">
