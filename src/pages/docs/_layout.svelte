@@ -2,7 +2,7 @@
   import { url, route, isActive, goto} from "@roxi/routify";
   import { onMount } from 'svelte';
   import marked from 'marked';
-  import SidebarMenu from './sidebar-menu.svelte'
+  //import SidebarMenu from './sidebar-menu.svelte'
 
   $: match = $route.path.match(/\/docs\/([^\/]+)\//);
   $: active = match && match[1];
