@@ -24,28 +24,40 @@ export function createRollupConfigs(config) {
     const { production, serve, distDir } = config
     const useDynamicImports = process.env.BUNDLING === 'dynamic' || isNollup || !!production
 
-		console.log('hello rollup config');
-		console.log(serve);
-		console.log(isNollup);
-
     del.sync(distDir + '/**') // clear previous builds
 
     if (serve && !isNollup)
         spassr({
-					serveSpa: true, // serve app
+					// port: 5001,
+					// serveSpa: true, // serve app
 					serveSsr: !isNollup, // Nollup doesn't need SSR
 					silent: isNollup, // Nollup needs Spassr internally
-					middleware: (server) => {
-						console.log('hello world');
-						console.log(server);
-						server.get('/', (req, res) => {
-							console.log('hello');
-							res.set({
+					// middleware: (server) => {
+					// middleware: (req, res, next) => {
+							// console.log('hello server use')
+					middleware: server => server.use( (req, res, next) => {
+							// server.use((req, res, next) => {
+							// console.log(req)
+							// console.log('Time: %d', Date.now())
+							// console.log(res)
+							// res.set({
+							// 	'Cross-Origin-Opener-Policy': 'same-origin',
+							// 	'Cross-Origin-Embedder-Policy': 'require-corp',
+							// })
+							res.header({
 								'Cross-Origin-Opener-Policy': 'same-origin',
+							})
+							res.header({
 								'Cross-Origin-Embedder-Policy': 'require-corp',
 							})
-						})
-					}
+							// res.append('Cross-Origin-Opener-Policy', 'same-origin');
+							// res.append('Cross-Origin-Embedder-Policy', 'require-corp');
+							// res.append('Access-Control-Allow-Origin', ['*'])
+							// res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
+							// res.append('Access-Control-Allow-Headers', 'Content-Type')
+							console.log('Time: %d', Date.now())
+							next();
+					})
 				})
 
     // Combine configs as needed
@@ -73,14 +85,14 @@ function baseConfig(config, ctx) {
 
     const outputConfig = !!dynamicImports
         ? { format: 'esm', dir: buildDir }
-        : { format: 'iife', file: `${buildDir}/bundle.js` }
+        : { format: 'iife', file: `${buildDir}/main.js` }
 
     const _svelteConfig = {
 			dev: !production, // run-time checks
 			// Extract component CSS — better performance
 
 			// emitCss: true,
-			css: (css) => css.write(`${buildDir}/bundle.css`),
+			css: (css) => css.write(`${buildDir}/main.css`),
 			hot: isNollup,
 		}
 
@@ -111,10 +123,10 @@ function baseConfig(config, ctx) {
 							dest: distDir,
 						},
 						{
-							src: [`${staticDir}/__index.html`],
+							src: [`${staticDir}/__app.html`],
 							dest: distDir,
-							rename: '__app.html',
-							// rename: 'index.html',
+							// rename: '__app.html',
+							rename: 'index.html',
 							transform,
 						},
 						{
@@ -145,10 +157,10 @@ function baseConfig(config, ctx) {
 				commonjs(),
 				dynamicImportVariables({
 					exclude: [
-						'static/languages/**/grammar.ne',
-						'static/languages/**/code.sem',
-						'static/learners/**/*.tf',
-						'static/layouts/*.json',
+						'assets/languages/**/grammar.ne',
+						'assets/languages/**/code.sem',
+						'assets/learners/**/*.tf',
+						'assets/layouts/*.json',
 					], // options
 					include: ['**/*.wav'],
 					warnOnError: true,
@@ -161,20 +173,20 @@ function baseConfig(config, ctx) {
 					// // publicPath: '/batman/',
 					emitFiles: true,
 					fileName: '[name][extname]', // '[name][extname]' 'dist/build/'
-					// sourceDir: join(__dirname, 'src/samples'), // 'dist/static/samples'
-					sourceDir: __dirname, // 'dist/build/static/samples'
-					// sourceDir: join(__dirname, 'src/samples'), // 'dist/static/samples'
-					destDir: join(__dirname, 'dist/sema-engine/samples'), // 'dist/static/samples'
-					// destDir: join(__dirname, `${distDir}/sema-engine/samples`), // 'dist/static/samples'
+					// sourceDir: join(__dirname, 'src/samples'), // 'dist/assets/samples'
+					sourceDir: __dirname, // 'dist/build/assets/samples'
+					// sourceDir: join(__dirname, 'src/samples'), // 'dist/assets/samples'
+					destDir: join(__dirname, 'dist/sema-engine/samples'), // 'dist/assets/samples'
+					// destDir: join(__dirname, `${distDir}/sema-engine/samples`), // 'dist/assets/samples'
 					// destDir: __dirname,
 				}),
         json(),
 				string({
 					include: [
-						'static/languages/**/grammar.ne',
-						'static/languages/**/code.sem',
-						'static/learners/**/*.tf'
-						// 'static/layouts/*.json',
+						'assets/languages/**/grammar.ne',
+						'assets/languages/**/code.sem',
+						'assets/learners/**/*.tf'
+						// 'assets/layouts/*.json',
 					],
 				}),
 				workerLoader(),
@@ -197,7 +209,7 @@ function baseConfig(config, ctx) {
     function transform(contents) {
         const scriptTag = typeof config.scriptTag != 'undefined' ?
             config.scriptTag : '<script type="module" defer src="/build/main.js"></script>'
-        const bundleTag = '<script defer src="/build/bundle.js"></script>'
+        const bundleTag = '<script defer src="/build/main.js"></script>'
         return contents.toString().replace('__SCRIPT__', dynamicImports ? scriptTag : bundleTag)
     }
 }

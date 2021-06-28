@@ -10,7 +10,7 @@
 
 	<link rel="manifest" href="/manifest.json">
 	<link rel='icon' type='image/png' href='/favicon.png'>
-	<link rel='stylesheet' href='/build/bundle.css'>
+	<link rel='stylesheet' href='/build/main.css'>
   <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y9365DG53B"></script>
   <script>
@@ -20,7 +20,8 @@
 
     gtag('config', 'G-Y9365DG53B');
   </script>
-	__SCRIPT__
+	<link rel="modulepreload" href="/build/main.js" />
+	<script type="module" src="/build/main.js"></script>
 </head>
 
 <body>

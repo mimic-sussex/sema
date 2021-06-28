@@ -18,13 +18,10 @@
 		"dev:nollup": "run-p routify nollup",
 		"dev-dynamic": "cross-env BUNDLING=dynamic npm run dev",
 		"build": "routify -b && rollup -c",
-		"serve": "spassr --serve-spa --serve-ssr",
+		"serve": "spassr --ssr",
 		"export": "spank",
-		"build:docker": "npm run build && ./scripts/docker/docker-build.sh",
-		"deploy:now": "cd scripts/now && npm run deploy",
-		"deploy:netlify": "cd scripts/netlify && npm run deploy",
 		"rollup": "rollup -cw",
-		"nollup": "nollup -c",
+		"nollup": "nollup -c --verbose",
 		"routify": "routify"
 	},
 	"devDependencies": {
@@ -58,7 +55,7 @@
 		"rollup-plugin-svelte-hot": "^0.9.2",
 		"rollup-plugin-terser": "^6.1.0",
 		"rollup-plugin-web-worker-loader": "^1.6.0",
-		"spassr": "^1.1.2",
+		"spassr": "^2.6.0",
 		"svelte": "^3.23.2",
 		"svelte-grid": "^4.0.1",
 		"svelte-inspect": "^0.1.2",
@@ -69,7 +66,7 @@
 		"dynamicImports": false
 	},
 	"dependencies": {
-		"@roxi/routify": "^2.7.3",
+		"@roxi/routify": "^2.18.0",
 		"do-not-zip": "^1.0.0",
 		"highlight.js": "^10.6.0",
 		"js-beautify": "^1.13.5",
@@ -77,6 +74,7 @@
 		"mouse-change": "^1.4.0",
 		"nearley": "^2.20.1",
 		"regl": "^2.1.0",
+		"rollup-plugin-workbox": "^6.1.1",
 		"sema-engine": "0.0.68",
 		"spank": "^1.5.2",
 		"svelte-codemirror": "git+https://github.com/frantic0/svelte-codemirror.git",

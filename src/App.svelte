@@ -54,8 +54,8 @@
 </script>
 
 <style global>
-	@import "../static/app.css";
-	@import "../static/global.css";
+	@import "../assets/app.css";
+	@import "../assets/global.css";
 </style>
 
 <Router { routes } />

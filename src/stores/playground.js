@@ -28,21 +28,21 @@ import Console from "../components/widgets/Console.svelte";
 import MIDI from "../components/widgets/MIDI.svelte";
 
 
-import default_grammar from "../../static/languages/default/grammar.ne";
+import default_grammar from "../../assets/languages/default/grammar.ne";
 // import gabber_grammar from "../../assets/languages/gabber/grammar.ne";
 // import nibble_grammar from "../../assets/languages/nibble/grammar.ne";
 
-import default_liveCode from "../../static/languages/default/code.sem";
+import default_liveCode from "../../assets/languages/default/code.sem";
 
 
-import default_playground_layout from '../../static/layouts/default-stormzy-vossi-bop.json';
+import default_playground_layout from '../../assets/layouts/default-stormzy-vossi-bop.json';
 
-import hello_world_code_example           from "../../static/learners/hello-world/hello-world.tf";
-import two_layer_non_linear_code_example  from "../../static/learners/non-linear/two-layer-non-linear.tf";
-import binary_classification_code_example from "../../static/learners/non-linear/binary-classification.tf";
-import echo_state_network_code_example    from "../../static/learners/echo-state/echo-state-network.tf";
-import lstm_txt_gen_code_example          from "../../static/learners/rnn/lstm-txt-gen.tf";
-import new_learner_template               from '../../static/learners/new/new.tf'
+import hello_world_code_example           from "../../assets/learners/hello-world/hello-world.tf";
+import two_layer_non_linear_code_example  from "../../assets/learners/non-linear/two-layer-non-linear.tf";
+import binary_classification_code_example from "../../assets/learners/non-linear/binary-classification.tf";
+import echo_state_network_code_example    from "../../assets/learners/echo-state/echo-state-network.tf";
+import lstm_txt_gen_code_example          from "../../assets/learners/rnn/lstm-txt-gen.tf";
+import new_learner_template               from '../../assets/learners/new/new.tf'
 // import music_rnn_example                  from "../machineLearning/magenta/music-rnn.tf";
 
 
