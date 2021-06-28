@@ -1,7 +1,8 @@
 <script>
-  import { url, route, isActive} from "@roxi/routify";
+  import { url, route, isActive, goto} from "@roxi/routify";
   import { onMount } from 'svelte';
   import marked from 'marked';
+  import SidebarMenu from './sidebar-menu.svelte'
 
   $: match = $route.path.match(/\/docs\/([^\/]+)\//);
   $: active = match && match[1];
@@ -21,13 +22,14 @@
     {path:'./maximilian-dsp-api', name:'Maximilian', file:'maximilian-dsp-api'}
   ];
 
+  
+
   let fetchMarkdown = async (doc) => {
     // console.log('fetching markdown')
     if(doc != undefined){ // There is a call with undefined value when navigating to Playground
       const res = await fetch(document.location.origin + `/docs/${doc}.md`)
       const text = await res.text();
       // console.log(`DEBUG:[/${chapter}]/[${section}]:fetchMarkdown: `, text);
-
       // await tick();
       if (res.ok) {
         // console.log('markdown processed');
@@ -44,15 +46,21 @@
 
   });
 
-  function handleClick(active){
+  function handleClick(path){
+    console.log('this is getting called');
     for (let i = 0; i < links.length; i++) {
       //console.log(links[i]['path'])
-      if (links[i]['path'] == ('./'+active)){
+      
+      if (links[i]['path'] == (path)){
         // console.log(links[i]['path'])
-        doc = links[i]['file']
+        console.log(links[i]['path'], path)
+        doc = links[i]['file'];
+        console.log(doc);
+        //$goto(path);
       }
     }
   }
+
 
 </script>
 
@@ -120,6 +128,12 @@
     padding: 0px 20px 0px 10px;
   }
 
+  .sidebar-sub-menu {
+    display: flex;
+    flex-direction: column;
+    padding: 0px 30px 0px 10px;
+  }
+
   .sidebar-item {
     padding: 10px 20px 0px 10px;
   }
@@ -141,16 +155,21 @@
     <h2>Reference Documentation</h2>
   </div>
 
+  <SidebarMenu/>
+
+  
   <ul class='sidebar-menu'>
     {#each links as {path, name, file}, i}
       <a  href={$url(path)}
           class:active={$isActive(path)}
-          on:click={handleClick(active)}
+          on:click={() => handleClick(path)}
           >
         {name}
       </a><br><br>
     {/each}
   </ul>
+  
+  
 
   <!---
   <div class="sidebar-menu">
