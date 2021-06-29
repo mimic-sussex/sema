@@ -23,7 +23,7 @@
     {path:'./maximilian-dsp-api', name:'Maximilian', file:'maximilian-dsp-api'}
   ];
 
-  
+
 
   let fetchMarkdown = async (doc) => {
     // console.log('fetching markdown')
@@ -63,7 +63,7 @@
     console.log('this is getting called');
     for (let i = 0; i < links.length; i++) {
       //console.log(links[i]['path'])
-      
+
       if (links[i]['path'] == (path)){
         // console.log(links[i]['path'])
         console.log(links[i]['path'], path)
@@ -78,7 +78,30 @@
 </script>
 
 
-<style>
+<style global>
+
+  code {
+    border-radius: 4px;
+    font-size: 100%;
+    background-color: white;
+    color: black;
+    padding: 2px 4px 2px 4px;
+    border: 1px solid #CCCCCC;
+
+  }
+
+  pre code {
+    display: block;
+    border-radius: 4px;
+    font-size: 90%;
+    background-color: white;
+    color: black;
+    padding: 5px;
+    border: 1px solid #CCCCCC;
+    margin: 0px 0px 0px 0px;
+  }
+
+
   * :global(.cards) {
     display: flex;
     flex-wrap: wrap;
@@ -195,8 +218,8 @@
       </a><br><br>
     {/each}
   </ul>
-  
-  
+
+
 
   <!---
   <div class="sidebar-menu">
