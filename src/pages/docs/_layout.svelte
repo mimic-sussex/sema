@@ -237,10 +237,10 @@
 
   <!--<h2 class='sidebar-menu'>Reference</h2><br>-->
 
-  
-  <Sidebar {...props} />
-
   <!--
+  <Sidebar {...props} />
+  -->
+  
   <ul class='sidebar-menu'>
     {#each links as {path, name, file}, i}
       <a  class='nav-links' href={$url(path)}
