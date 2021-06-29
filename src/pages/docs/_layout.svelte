@@ -237,10 +237,10 @@
 
   <!--<h2 class='sidebar-menu'>Reference</h2><br>-->
 
-  <!--
-  <Sidebar {...props} />
-  -->
   
+  <Sidebar {...props} />
+
+  <!--
   <ul class='sidebar-menu'>
     {#each links as {path, name, file}, i}
       <a  class='nav-links' href={$url(path)}
@@ -251,37 +251,6 @@
       </a><br><br>
     {/each}
   </ul>
-
-
-
-  <!---
-  <div class="sidebar-menu">
-    <a href={$url('./default-language')}
-        class="sidebar-item {active === 'default-language' ? 'default-language' : ''}"
-        >
-      Default Language
-    </a>
-    <a href={$url('./intermediate-language')}
-        class="sidebar-item {active === 'intermediate-language' ? 'intermediate-language' : ''}"
-        >
-      Intermediate Language
-    </a>
-    <a href={$url('./load-sound-files')}
-        class="sidebar-item {active === 'load-sound-files' ? 'load-sound-files' : ''}"
-        >
-      Load sound files
-    </a>
-    <a href={$url('./editor-utils')}
-        class="sidebar-item {active === 'editor-utils' ? 'editor-utils' : ''}"
-        >
-      Editor utils
-    </a>
-    <a href={$url('./maximilian-dsp-api')}
-        class="sidebar-item {active === 'maximilian-dsp-api' ? 'maximilian-dsp-api' : ''}"
-        >
-      Load sound files
-    </a>
-  </div>
   -->
   
 
