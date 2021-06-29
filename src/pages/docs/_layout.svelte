@@ -1,9 +1,38 @@
 <script>
-  import { url, route, isActive, goto} from "@roxi/routify";
+  import { url, route, isActive, goto, params} from "@roxi/routify";
   import { onMount } from 'svelte';
   import marked from 'marked';
-  //import Sidebar from 'https://cdn.skypack.dev/svelte_sidebar';
+  import Sidebar from 'https://cdn.skypack.dev/svelte_sidebar';
   //import SidebarMenu from './sidebar-menu.svelte'
+  
+  const props = {
+    routes: [
+    { "name": "Default Language", "route": $url('./default-language') ,"childRoutes":[
+      {"name": "Audio Outputs", "route": $url('#audio-outputs')}
+    ]},
+    { "name": "Intermediate Language", "route": $url('./intermediate-language') ,"childRoutes":[
+      {"name": "Audio Outputs", "route": $url('#audio-outputs')}
+    ]},
+  ], 
+  
+  open:"false",
+
+  theme:  { "backgroundColor_linkActive": "#151515",
+            "backgroundColor_nav": "#999999",
+            "color_link": "#ffffff",
+            "color_linkHover": "#ffffff",
+            "fontSize": "1rem",
+            "maxWidth_nav": "20vw",
+            "minWidth_nav": "320px",
+            "opacity_linkDisabled": "0.5",
+            "opacity_linkInactive": 0.7 
+          },  
+
+  activeUrl: "/docs",
+
+  onLinkClick: () => handleClick('./intermediate-language')
+  }
+
 
   $: match = $route.path.match(/\/docs\/([^\/]+)\//);
   $: active = match && match[1];
@@ -60,7 +89,6 @@
   });
 
   function handleClick(path){
-    console.log('this is getting called');
     for (let i = 0; i < links.length; i++) {
       //console.log(links[i]['path'])
       
@@ -185,6 +213,11 @@
   -->
 
   <!--<h2 class='sidebar-menu'>Reference</h2><br>-->
+
+  
+  <Sidebar {...props} />
+
+  <!--
   <ul class='sidebar-menu'>
     {#each links as {path, name, file}, i}
       <a  class='nav-links' href={$url(path)}
@@ -195,38 +228,8 @@
       </a><br><br>
     {/each}
   </ul>
-  
-  
-
-  <!---
-  <div class="sidebar-menu">
-    <a href={$url('./default-language')}
-        class="sidebar-item {active === 'default-language' ? 'default-language' : ''}"
-        >
-      Default Language
-    </a>
-    <a href={$url('./intermediate-language')}
-        class="sidebar-item {active === 'intermediate-language' ? 'intermediate-language' : ''}"
-        >
-      Intermediate Language
-    </a>
-    <a href={$url('./load-sound-files')}
-        class="sidebar-item {active === 'load-sound-files' ? 'load-sound-files' : ''}"
-        >
-      Load sound files
-    </a>
-    <a href={$url('./editor-utils')}
-        class="sidebar-item {active === 'editor-utils' ? 'editor-utils' : ''}"
-        >
-      Editor utils
-    </a>
-    <a href={$url('./maximilian-dsp-api')}
-        class="sidebar-item {active === 'maximilian-dsp-api' ? 'maximilian-dsp-api' : ''}"
-        >
-      Load sound files
-    </a>
-  </div>
   -->
+  
 
   <div class="markdown-container">
     {#await promise}
