@@ -93,8 +93,6 @@ const serve = () => ({
 							res.header({
 								'Cross-Origin-Embedder-Policy': 'require-corp',
 							})
-							// res.append('Cross-Origin-Opener-Policy', 'same-origin')
-							// res.append('Cross-Origin-Embedder-Policy', 'require-corp')
 							// res.append('Access-Control-Allow-Origin', ['*'])
 							// res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
 							// res.append('Access-Control-Allow-Headers', 'Content-Type')
