@@ -1,13 +1,40 @@
-# Contributing
+# Contributing to Sema
 
-When contributing to this repository, please first discuss the change you wish to make via issue,
-email, or any other method with the owners of this repository before making a change. 
+:+1::tada: Thanks so much for taking the time to contribute! :tada::+1:
 
-Please note we have a code of conduct, please follow it in all your interactions with the project.
+The following is a set of guidelines for contributing to Sema and its engine, the sema-engine, which are hosted here on GitHub. These are mostly guidelines, not rules. Use your best judgment, and feel free to propose changes to this document in a pull request.
 
-## Pull Request Process
+#### Table Of Contents
 
-1. Ensure any install or build dependencies are removed before the end of the layer when doing a build.
-2. Update the README.md with details of changes to the interface, this includes new environment variables, exposed ports, useful file locations and container parameters.
-3. Increase the version numbers in any examples files and the README.md to the new version that this Pull Request would represent. The versioning scheme we use is [SemVer](http://semver.org/).
-4. You may merge the Pull Request in once you have the sign-off of two other developers, or if you do not have permission to do that, you may request the second reviewer to merge it for you.
+[Code of Conduct](#code-of-conduct)
+
+[I don't want to read this whole thing, I just have a question!!!](#i-dont-want-to-read-this-whole-thing-i-just-have-a-question)
+
+[What should I know before I get started?](#what-should-i-know-before-i-get-started)
+  * [What is the architecture of Sema?](https://github.com/mimic-sussex/sema/wiki/1.-The-Architecture-of-Sema)
+  * [How can I debug Sema?](https://github.com/mimic-sussex/sema/wiki/3.-How-can-I-debug-Sema%3F)
+
+[How Can I Contribute?](#how-can-i-contribute)
+  * [Reporting Bugs](#reporting-bugs)
+  * [Suggesting Enhancements](#suggesting-enhancements)
+  * [Your First Code Contribution](#your-first-code-contribution)
+  * [Pull Requests](#pull-requests)
+
+	[Styleguides](#styleguides)
+  * [Git Commit Messages](#git-commit-messages)
+  * [JavaScript Styleguide](#javascript-styleguide)
+  * [Specs Styleguide](#specs-styleguide)
+  * [Documentation Styleguide](#documentation-styleguide)
+
+[Additional Notes](#additional-notes)
+  * [Issue and Pull Request Labels](#issue-and-pull-request-labels)
+
+
+## Code of Conduct
+
+This project and everyone participating in it is governed by the [Sema Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please report unacceptable behavior to [sema.live.coding@gmail.com](mailto:sema.live.coding@gmail.com).
+
+
+## I don't want to read this whole thing I just have a question!!!
+
+> **Note:** [Please don't file an issue to ask a question.]() You'll get faster results by using the resources below.
