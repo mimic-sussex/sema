@@ -169,7 +169,7 @@
   .sidebar-sub-menu {
     display: flex;
     flex-direction: column;
-    padding: 0px 30px 0px 10px;
+    padding: 0px 0px 0px 10px;
   }
 
   .nav-links {
