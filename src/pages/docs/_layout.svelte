@@ -1,18 +1,49 @@
+
 <script>
   import { url, route, isActive, goto, params} from "@roxi/routify";
-  import { onMount } from 'svelte';
+  import { onMount, setContext } from 'svelte';
   import marked from 'marked';
   import Sidebar from 'https://cdn.skypack.dev/svelte_sidebar';
   //import SidebarMenu from './sidebar-menu.svelte'
-  
+
+  //get links from json file in dist
+  let awaitLinks = getLinks();
+  let links = {};
+
+  async function getLinks() {
+    console.log("get links is being called")
+    const res = await fetch(document.location.origin + `/docs/docsnew.json`);
+    links = await res.json()
+    if (res.ok){
+      console.log('this stage', links);
+      //setContext('links', links);
+    }
+    console.log(links)
+    //$ready()
+  }
+  //make accesible
+  setContext('links', [
+    {path:'./welcome', name:'Welcome', file:'welcome'},
+    {path:'./default-language', name:'Default Language', file:'default-livecoding-language'},
+    {path:'./intermediate-language', name:'Intermediate Language', file:'sema-intermediate-language'},
+    {path:'./load-sound-files', name:'Load Sound Files', file:'sample-loading'},
+    {path:'./javascript-editor-utils', name:'JS Editor Utils', file:'javascript-editor-utils'},
+    {path:'./maximilian-dsp-api', name:'Maximilian', file:'maximilian-dsp-api'}
+  ])
+
+  //Sidebar.svelte properties
   const props = {
     routes: [
+    {"name":"Welcome", "route": $url('./welcome')},
     { "name": "Default Language", "route": $url('./default-language') ,"childRoutes":[
       {"name": "Audio Outputs", "route": $url('#audio-outputs')}
     ]},
     { "name": "Intermediate Language", "route": $url('./intermediate-language') ,"childRoutes":[
       {"name": "Audio Outputs", "route": $url('#audio-outputs')}
     ]},
+    {"name": "Load Sound Files", "route": $url('./load-sound-files')},
+    {"name":"JS Editor Utils", "route":$url('./javascript-editor-utils')},
+    {"name":"Maximilian", "route":$url('./maximilian-dsp-api')}
   ], 
   
   open:"false",
@@ -28,30 +59,33 @@
             "opacity_linkInactive": 0.7 
           },  
 
-  activeUrl: "/docs",
+  activeUrl: "/docs"
 
-  onLinkClick: () => handleClick('./intermediate-language')
+  //onLinkClick: () => handleClick('./intermediate-language')
   }
 
-
+  /*
   $: match = $route.path.match(/\/docs\/([^\/]+)\//);
   $: active = match && match[1];
 
   let markdown;
-  let doc = 'default-livecoding-language'; //set to default to start with
+  let doc = 'welcome'; //set to default to start with
   $: promise = fetchMarkdown(doc); //reacts to doc changes
 
   //console.log(document.location.origin + `/docs/`)
   //console.log($url())
-
+  
+  
   const links = [
+    {path:'./welcome', name:'Welcome', file:'welcome'},
     {path:'./default-language', name:'Default Language', file:'default-livecoding-language'},
     {path:'./intermediate-language', name:'Intermediate Language', file:'sema-intermediate-language'},
     {path:'./load-sound-files', name:'Load Sound Files', file:'sample-loading'},
     {path:'./javascript-editor-utils', name:'JS Editor Utils', file:'javascript-editor-utils'},
     {path:'./maximilian-dsp-api', name:'Maximilian', file:'maximilian-dsp-api'}
   ];
-
+  
+  
 
 
   let fetchMarkdown = async (doc) => {
@@ -87,6 +121,7 @@
     promise = fetchMarkdown(doc);
 
   });
+  
 
   function handleClick(path){
     for (let i = 0; i < links.length; i++) {
@@ -99,6 +134,23 @@
         console.log(doc);
         //$goto(path);
       }
+    }
+  }
+  */
+
+  let dropDownSections = [
+    {
+			path: './default-language',
+			title: "Section 1",
+			content: "This is some test content",
+			active: false,
+		}
+  ]
+
+
+  function handleDropDown(path){
+    if (dropDownSections[0].path === path){
+      dropDownSections[0] = true;
     }
   }
 
@@ -194,12 +246,6 @@
     overflow: scroll;
   }
 
-  .sidebar-sub-menu {
-    display: flex;
-    flex-direction: column;
-    padding: 0px 0px 0px 10px;
-  }
-
   .nav-links {
     color:white
   }
@@ -219,6 +265,24 @@
 
   .markdown-container {
     padding: 10px 20px 0px 10px;
+    overflow: auto;
+  }
+
+  .arrow {
+    border: solid black;
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 3px;
+  }
+
+  .up {
+    transform: rotate(-135deg);
+    -webkit-transform: rotate(-135deg);
+  }
+
+  .down {
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
   }
 
 </style>
@@ -240,20 +304,35 @@
   <!--
   <Sidebar {...props} />
   -->
+
+
   
   <ul class='sidebar-menu'>
-    {#each links as {path, name, file}, i}
-      <a  class='nav-links' href={$url(path)}
-          class:active={$isActive(path)}
-          on:click={() => handleClick(path)}
-          >
-        {name}
-      </a><br><br>
-    {/each}
+    {#await awaitLinks}
+      <p>...waiting</p>
+    {:then number}
+      {#each links as {path, name, file}, i}
+        <li>
+
+          {#if name != 'Welcome'}<p style="display: inline" on:click={() => handleDropDown(path)}><i class="arrow up"></i></p>{/if}
+          
+          <a  class='nav-links' href={$url(path)}
+              class:active={$isActive(path)}
+              >
+            {name}
+          </a>
+
+        </li><br>
+      {/each}
+    {:catch error}
+      <p style="color: red">{error.message}</p>
+    {/await}
   </ul>
   
   
 
+  
+  <!--
   <div class="markdown-container">
     {#await promise}
       <p>...waiting</p>
@@ -263,12 +342,13 @@
       <p style="color: red">no markdown :(</p>
     {/await}
   </div>
+  -->
 
   <div>
 
     <slot>
       <!-- optional fallback -->
-      <!--inject the markdwon here-->
+      <!--inject the markdown here-->
     </slot>
   </div>
 
