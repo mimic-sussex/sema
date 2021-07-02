@@ -19,6 +19,8 @@ import workerLoader from 'rollup-plugin-web-worker-loader'
 import { wasm } from '@rollup/plugin-wasm'
 import sourcemaps from 'rollup-plugin-sourcemaps'
 import json from '@rollup/plugin-json'
+import cors from 'cors';
+
 
 const { distDir } = getConfig() // use Routify's distDir for SSOT
 const assetsDir = 'assets'
@@ -50,26 +52,69 @@ const serve = () => ({
         spassr({
 					...options,
 					port: 5000,
-					middleware: (server) =>
+					middleware: (server) => {
+						// server.use(cors());
+
+
 						server.use((req, res, next) => {
-							// res.set({
-							// 	'Cross-Origin-Opener-Policy': 'same-origin',
-							// 	'Cross-Origin-Embedder-Policy': 'require-corp',
-							// })
-							res.header({
+							res.set({
 								'Cross-Origin-Opener-Policy': 'same-origin',
-							})
-							res.header({
 								'Cross-Origin-Embedder-Policy': 'require-corp',
+								'Cross-Origin-Resource-Policy': 'cross-origin',
+								'Access-Control-Allow-Origin': [
+									// 'livereload.js?snipver=1',
+									// '/livereload.js?snipver=1',
+									'http://localhost:35729/livereload.js?snipver=1',
+									'http://localhost:35729/',
+									'https://www.youtube.com/embed/Qw4sYnTj-Ow?t=27s',
+									'*',
+								],
+								'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE',
+								'Access-Control-Allow-Headers':
+									'Content-Type, X-Requested-With, Content-Type, Accept',
 							})
-							// res.append('Cross-Origin-Opener-Policy', 'same-origin')
-							// res.append('Cross-Origin-Embedder-Policy', 'require-corp')
-							// res.append('Access-Control-Allow-Origin', ['*'])
-							// res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
-							// res.append('Access-Control-Allow-Headers', 'Content-Type')
 							console.log('Time: %d', Date.now())
+							console.log(req)
 							next()
-						}),
+						})
+
+						server.get(
+							// 'livereload.js?snipver=1',
+							'http://localhost:35729/livereload.js?snipver=1',
+							// cors(),
+							function (req, res) {
+								console.log('livereload')
+								res.set({
+									'Cross-Origin-Resource-Policy': 'same-site',
+									'Access-Control-Allow-Origin': [
+										'*',
+									],
+									'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE',
+									'Access-Control-Allow-Headers':
+										'Content-Type, X-Requested-With, Content-Type, Accept',
+								})
+								next()
+							}
+						)
+
+						server.get(
+							// 'Qw4sYnTj-Ow?t=27s',
+							'https://www.youtube.com/embed/Qw4sYnTj-Ow?t=27s',
+							cors(),
+							function (req, res) {
+							res.set({
+								'Cross-Origin-Resource-Policy': 'cross-origin',
+								'Access-Control-Allow-Origin': ['*'],
+								'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE',
+								'Access-Control-Allow-Headers':
+									'Content-Type, X-Requested-With, Content-Type, Accept',
+							})
+							next()
+						})
+
+
+
+					}
 				})
 
 				// SSR server
@@ -81,27 +126,46 @@ const serve = () => ({
 						inlineDynamicImports: true,
 						dev: true,
 					},
-					middleware: (server) =>
+					middleware: (server) => {
+						// server.use(cors());
+						server.get('livereload.js?snipver=1', cors(), function (req, res) {
+							res.set({
+								'Cross-Origin-Resource-Policy': 'same-site',
+								'Access-Control-Allow-Origin': ['http://localhost:35729/', '*'],
+								'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE',
+								'Access-Control-Allow-Headers':
+									'Content-Type, X-Requested-With, Content-Type, Accept',
+							})
+							next();
+						})
+
+						server.get('Qw4sYnTj-Ow?t=27s', cors(), function (req, res) {
+							res.set({
+								'Cross-Origin-Resource-Policy': 'cross-origin',
+							})
+							next();
+						})
+
 						server.use((req, res, next) => {
-							// res.set({
-							// 	'Cross-Origin-Opener-Policy': 'same-origin',
-							// 	'Cross-Origin-Embedder-Policy': 'require-corp',
-							// })
-							res.header({
+							res.set({
 								'Cross-Origin-Opener-Policy': 'same-origin',
-							})
-							res.header({
 								'Cross-Origin-Embedder-Policy': 'require-corp',
-							})
-							// res.append('Access-Control-Allow-Origin', ['*'])
-							// res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
-							// res.append('Access-Control-Allow-Headers', 'Content-Type')
-							console.log('Time: %d', Date.now())
+								'Cross-Origin-Resource-Policy': 'cross-origin',
+								'Access-Control-Allow-Origin': [
+									'http://localhost:35729/',
+									'*',
+								],
+								'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE',
+								'Access-Control-Allow-Headers':
+									'Content-Type, X-Requested-With, Content-Type, Accept',
+							}),
+							console.log('Time@SSR: %d', Date.now())
 							next()
-						}),
+						})}
 				})
     }
 })
+
 const copyToDist = () => ({ writeBundle() { copySync(assetsDir, distDir) } })
 
 
@@ -114,7 +178,7 @@ export default {
 		format: 'esm',
 		dir: buildDir,
 		// for performance, disabling filename hashing in development
-		chunkFileNames: `[name]${(production && '-[hash]') || ''}.js`,
+		// chunkFileNames: `[name]${(production && '-[hash]') || ''}.js`,
 	},
 	plugins: [
 		svelte({
@@ -130,8 +194,8 @@ export default {
 		copy({
 			targets: [
 				{
-					// ! NOTE `!${staticDir}/samples` a negated pattern for the static/assets directory,
-					// ! we want to prevent static/samples from being copied
+					// ! NOTE `!${staticDir}/samples` a negated pattern for the assets/samples directory,
+					// ! we want to prevent assets/samples from being copied
 					// ! and have them emitted (not inlined) by the plugin-URL
 					src: ['!*/(__index.html)', `!${assetsDir}/samples`, `${assetsDir}/*`],
 					dest: distDir,
@@ -179,6 +243,7 @@ export default {
 			// // publicPath: '/batman/',
 			emitFiles: true,
 			fileName: '[name][extname]', // '[name][extname]' 'dist/build/'
+			// sourceDir: join(__dirname, 'assets/samples'), // 'dist/assets/samples'
 			// sourceDir: join(__dirname, 'src/samples'), // 'dist/assets/samples'
 			sourceDir: __dirname, // 'dist/build/assets/samples'
 			// sourceDir: join(__dirname, 'src/samples'), // 'dist/assets/samples'
@@ -221,7 +286,8 @@ export default {
 			maximumFileSizeToCacheInBytes: 10000000, // 10 MB,
 			mode: 'production',
 		}),
-		production && copyToDist(),
+		// production && copyToDist()
+		// production && livereload(distDir),
 	],
 	watch: {
 		clearScreen: false,
