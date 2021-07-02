@@ -18,6 +18,7 @@
                 width="630" height="420"
                 title="Sema-demo"
                 src="https://www.youtube.com/embed/Qw4sYnTj-Ow?t=27s"
+								crossorigin
                 >
         </iframe>
       </div>

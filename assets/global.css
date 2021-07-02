@@ -72,12 +72,34 @@ textarea {
     /* padding: 2px; */
 }
 
-pre {
+/* pre {
     display: block;
     font-family: monospace;
     white-space: pre;
     margin: 0em 0px;
 }
+ */
+  code {
+    border-radius: 4px;
+    font-size: 100%;
+    background-color: white;
+    color: black;
+    padding: 2px 4px 2px 4px;
+    border: 1px solid #CCCCCC;
+
+  }
+
+  pre code {
+    display: block;
+    border-radius: 4px;
+    font-size: 90%;
+    background-color: white;
+    color: black;
+    padding: 5px;
+    border: 1px solid #CCCCCC;
+    margin: 0px 0px 0px 0px;
+  }
+
 
 
 input:disabled {

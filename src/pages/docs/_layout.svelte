@@ -78,9 +78,9 @@
 </script>
 
 
-<style global>
+<style>
 
-  code {
+  /* code {
     border-radius: 4px;
     font-size: 100%;
     background-color: white;
@@ -99,7 +99,7 @@
     padding: 5px;
     border: 1px solid #CCCCCC;
     margin: 0px 0px 0px 0px;
-  }
+  } */
 
 
   * :global(.cards) {
