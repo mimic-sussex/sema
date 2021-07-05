@@ -4,8 +4,10 @@
   import { url, params, ready} from "@roxi/routify";
   import marked from 'marked';
 
-  const links = getContext('links');
-  console.log("links inner", links);
+  import { links, chosenDocs } from '../../../stores/docs.js'
+
+  //const links = getContext('links');
+  console.log("links inner", $links);
 
   //custom renderer to make headers have anchor links
   const renderer = {
@@ -90,11 +92,12 @@
   }
   
   function findFileName(path){
-    
-    for (let i = 0; i < links.length; i++) {
-      if (links[i]['path'] == ('./'+path)){
-        console.log('here ./'+path);
-        return links[i]['file'];
+    if ($links != undefined){
+      for (let i = 0; i < $links.length; i++) {
+        if ($links[i]['path'] == ('./'+path)){
+          console.log('here ./'+path);
+          return $links[i]['file'];
+        }
       }
     }
   }
@@ -107,11 +110,13 @@
 
 
 <div class="markdown-container">
-  {#await promise}
-    <p>...waiting</p>
-  {:then number}
-    <div class="markdown-output">{@html markdown}</div>
-  {:catch error}
-    <p style="color: red">no markdown :(</p>
-  {/await}
+  {#if $links != undefined}
+    {#await promise}
+      <p>...waiting</p>
+    {:then number}
+      <div class="markdown-output">{@html markdown}</div>
+    {:catch error}
+      <p style="color: red">no markdown :(</p>
+    {/await}
+  {/if}
 </div>

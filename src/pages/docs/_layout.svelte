@@ -3,25 +3,31 @@
   import { url, route, isActive, goto, params} from "@roxi/routify";
   import { onMount, setContext } from 'svelte';
   import marked from 'marked';
-  import Sidebar from 'https://cdn.skypack.dev/svelte_sidebar';
-  //import SidebarMenu from './sidebar-menu.svelte'
+  //import Sidebar from 'https://cdn.skypack.dev/svelte_sidebar';
+  import SidebarMenu from './sidebar-menu.svelte'
+
+  import { links, chosenDocs } from '../../stores/docs.js'
 
   //get links from json file in dist
-  let awaitLinks = getLinks();
-  let links = {};
+  //let awaitLinks = getLinks();
+  //let links = {};
+  console.log("outer layout", $links);
 
   async function getLinks() {
     console.log("get links is being called")
     const res = await fetch(document.location.origin + `/docs/docsnew.json`);
     links = await res.json()
     if (res.ok){
-      console.log('this stage', links);
-      //setContext('links', links);
+      console.log('this stage', links); 
     }
-    console.log(links)
     //$ready()
+    //setContext('links', links);
   }
+
+  
+  //setLinks()
   //make accesible
+  /*
   setContext('links', [
     {path:'./welcome', name:'Welcome', file:'welcome'},
     {path:'./default-language', name:'Default Language', file:'default-livecoding-language'},
@@ -30,7 +36,10 @@
     {path:'./javascript-editor-utils', name:'JS Editor Utils', file:'javascript-editor-utils'},
     {path:'./maximilian-dsp-api', name:'Maximilian', file:'maximilian-dsp-api'}
   ])
+  */
+  
 
+  /*
   //Sidebar.svelte properties
   const props = {
     routes: [
@@ -64,6 +73,7 @@
   //onLinkClick: () => handleClick('./intermediate-language')
   }
 
+  */
   /*
   $: match = $route.path.match(/\/docs\/([^\/]+)\//);
   $: active = match && match[1];
@@ -115,14 +125,14 @@
       }
     }
   }
-
+  */
   onMount( async () => {
-
-    promise = fetchMarkdown(doc);
-
+    //promise = fetchMarkdown(doc);
+    console.log("DEBUG:routes/docs/_layout:onMount");
+    
   });
   
-
+  /*
   function handleClick(path){
     for (let i = 0; i < links.length; i++) {
       //console.log(links[i]['path'])
@@ -137,16 +147,6 @@
     }
   }
   */
-
-  let dropDownSections = [
-    {
-			path: './default-language',
-			title: "Section 1",
-			content: "This is some test content",
-			active: false,
-		}
-  ]
-
 
   function handleDropDown(path){
     if (dropDownSections[0].path === path){
@@ -305,13 +305,13 @@
   <Sidebar {...props} />
   -->
 
-
-  
+  <SidebarMenu/>
+  <!--
   <ul class='sidebar-menu'>
     {#await awaitLinks}
       <p>...waiting</p>
     {:then number}
-      {#each links as {path, name, file}, i}
+      {#each $links as {path, name, file}, i}
         <li>
 
           {#if name != 'Welcome'}<p style="display: inline" on:click={() => handleDropDown(path)}><i class="arrow up"></i></p>{/if}
@@ -328,8 +328,24 @@
       <p style="color: red">{error.message}</p>
     {/await}
   </ul>
-  
+  -->
+  <ul class='sidebar-menu'>
+    {#if $links != undefined}
+      {#each $links as {path, name, file}, i}
+        <li>
 
+          {#if name != 'Welcome'}<p style="display: inline" on:click={() => handleDropDown(path)}><i class="arrow up"></i></p>{/if}
+          
+          <a  class='nav-links' href={$url(path)}
+              class:active={$isActive(path)}
+              >
+            {name}
+          </a>
+
+        </li><br>
+      {/each}
+    {/if}
+  </ul>
   
   <!--
   <div class="markdown-container">
