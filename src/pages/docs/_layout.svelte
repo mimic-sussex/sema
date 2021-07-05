@@ -3,7 +3,7 @@
   import { url, route, isActive, goto, params} from "@roxi/routify";
   import { onMount, setContext } from 'svelte';
   import marked from 'marked';
-  //import Sidebar from 'https://cdn.skypack.dev/svelte_sidebar';
+  import Sidebar from 'https://cdn.skypack.dev/svelte_sidebar';
   import SidebarMenu from './sidebar-menu.svelte'
 
   import { links, chosenDocs } from '../../stores/docs.js'
@@ -11,12 +11,12 @@
   //get links from json file in dist
   //let awaitLinks = getLinks();
   //let links = {};
-  console.log("outer layout", $links);
+  //console.log("outer layout", $links);
 
   async function getLinks() {
     console.log("get links is being called")
     const res = await fetch(document.location.origin + `/docs/docsnew.json`);
-    links = await res.json()
+    links = await res.json();
     if (res.ok){
       console.log('this stage', links); 
     }
@@ -39,41 +39,41 @@
   */
   
 
-  /*
-  //Sidebar.svelte properties
-  const props = {
-    routes: [
-    {"name":"Welcome", "route": $url('./welcome')},
-    { "name": "Default Language", "route": $url('./default-language') ,"childRoutes":[
-      {"name": "Audio Outputs", "route": $url('#audio-outputs')}
-    ]},
-    { "name": "Intermediate Language", "route": $url('./intermediate-language') ,"childRoutes":[
-      {"name": "Audio Outputs", "route": $url('#audio-outputs')}
-    ]},
-    {"name": "Load Sound Files", "route": $url('./load-sound-files')},
-    {"name":"JS Editor Utils", "route":$url('./javascript-editor-utils')},
-    {"name":"Maximilian", "route":$url('./maximilian-dsp-api')}
-  ], 
+  async function populateSidebarProps(){
+    console.log("populating", $links);
+    for (let i=0;i<$links.length;i++){
+      
+      props.routes.push(
+        {"name":$links[i].name, "route": $url($links[i].path)}
+      );
+    }
+    console.log(props)
+  }
+
   
-  open:"false",
+  //Sidebar.svelte properties
+  let props = {
+    routes: [], 
+  
+    open:"false",
 
-  theme:  { "backgroundColor_linkActive": "#151515",
-            "backgroundColor_nav": "#999999",
-            "color_link": "#ffffff",
-            "color_linkHover": "#ffffff",
-            "fontSize": "1rem",
-            "maxWidth_nav": "20vw",
-            "minWidth_nav": "320px",
-            "opacity_linkDisabled": "0.5",
-            "opacity_linkInactive": 0.7 
-          },  
+    theme:  { "backgroundColor_linkActive": "#151515",
+              "backgroundColor_nav": "#999999",
+              "color_link": "#ffffff",
+              "color_linkHover": "#ffffff",
+              "fontSize": "1rem",
+              "maxWidth_nav": "20vw",
+              "minWidth_nav": "320px",
+              "opacity_linkDisabled": "0.5",
+              "opacity_linkInactive": 0.7 
+            },  
 
-  activeUrl: "/docs"
+    activeUrl: "/docs"
 
   //onLinkClick: () => handleClick('./intermediate-language')
   }
 
-  */
+  
   /*
   $: match = $route.path.match(/\/docs\/([^\/]+)\//);
   $: active = match && match[1];
@@ -95,8 +95,6 @@
     {path:'./maximilian-dsp-api', name:'Maximilian', file:'maximilian-dsp-api'}
   ];
   
-  
-
 
   let fetchMarkdown = async (doc) => {
     // console.log('fetching markdown')
@@ -129,7 +127,7 @@
   onMount( async () => {
     //promise = fetchMarkdown(doc);
     console.log("DEBUG:routes/docs/_layout:onMount");
-    
+    populateSidebarProps();
   });
   
   /*
@@ -149,6 +147,7 @@
   */
 
   function handleDropDown(path){
+    console.log('clickedme', $links);
     if (dropDownSections[0].path === path){
       dropDownSections[0] = true;
     }
@@ -301,11 +300,12 @@
 
   <!--<h2 class='sidebar-menu'>Reference</h2><br>-->
 
-  <!--
-  <Sidebar {...props} />
-  -->
+  {#if $links !== undefined}
+    <Sidebar {...props} />
+  {/if}
 
-  <SidebarMenu/>
+  <!--<SidebarMenu/>-->
+  
   <!--
   <ul class='sidebar-menu'>
     {#await awaitLinks}
@@ -329,6 +329,8 @@
     {/await}
   </ul>
   -->
+  
+  <!--
   <ul class='sidebar-menu'>
     {#if $links != undefined}
       {#each $links as {path, name, file}, i}
@@ -346,6 +348,7 @@
       {/each}
     {/if}
   </ul>
+  -->
   
   <!--
   <div class="markdown-container">

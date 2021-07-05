@@ -93,6 +93,7 @@
   
   function findFileName(path){
     if ($links != undefined){
+      console.log()
       for (let i = 0; i < $links.length; i++) {
         if ($links[i]['path'] == ('./'+path)){
           console.log('here ./'+path);
@@ -106,11 +107,16 @@
   //console.log("params", $params)
   //console.log("docId:", docId);
 
+  onMount( async () => {
+    //promise = fetchMarkdown(doc);
+    console.log("DEBUG:routes/docs/"+$params.docId+"/_layout:onMount");
+  });
+
 </script>
 
 
 <div class="markdown-container">
-  {#if $links != undefined}
+  {#if $links != []}
     {#await promise}
       <p>...waiting</p>
     {:then number}
