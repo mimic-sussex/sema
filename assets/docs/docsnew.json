@@ -1,0 +1,13 @@
+[
+  {"path":"./welcome", "name":"Welcome", "file":"welcome"},
+
+  {"path":"./default-language", "name":"Default Language", "file":"default-livecoding-language"},
+
+  {"path":"./intermediate-language", "name":"Intermediate Language", "file":"sema-intermediate-language"},
+
+  {"path":"./load-sound-files", "name":"Load Sound Files", "file":"sample-loading"},
+
+  {"path":"./javascript-editor-utils", "name":"JS Editor Utils", "file":"javascript-editor-utils"},
+  
+  {"path":"./maximilian-dsp-api", "name":"Maximilian", "file":"maximilian-dsp-api"}
+]
