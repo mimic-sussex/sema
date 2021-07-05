@@ -13,6 +13,8 @@
   //let links = {};
   //console.log("outer layout", $links);
 
+  $: populateSidebarProps($links);
+
   async function getLinks() {
     console.log("get links is being called")
     const res = await fetch(document.location.origin + `/docs/docsnew.json`);
@@ -38,22 +40,36 @@
   ])
   */
   
-
-  async function populateSidebarProps(){
-    console.log("populating", $links);
-    for (let i=0;i<$links.length;i++){
-      
-      props.routes.push(
-        {"name":$links[i].name, "route": $url($links[i].path)}
-      );
-    }
-    console.log(props)
-  }
-
   
+
   //Sidebar.svelte properties
   let props = {
-    routes: [], 
+    routes: [
+    {
+        "name": "Welcome",
+        "route": "/docs/welcome"
+    },
+    {
+        "name": "Default Language",
+        "route": "/docs/default-language"
+    },
+    {
+        "name": "Intermediate Language",
+        "route": "/docs/intermediate-language"
+    },
+    {
+        "name": "Load Sound Files",
+        "route": "/docs/load-sound-files"
+    },
+    {
+        "name": "JS Editor Utils",
+        "route": "/docs/javascript-editor-utils"
+    },
+    {
+        "name": "Maximilian",
+        "route": "/docs/maximilian-dsp-api"
+    }
+], 
   
     open:"false",
 
@@ -72,6 +88,21 @@
 
   //onLinkClick: () => handleClick('./intermediate-language')
   }
+
+
+  async function populateSidebarProps(links){
+    console.log("populating", links);
+    for (let i=0;i<links.length;i++){
+      
+      props.routes.push(
+        {"name":links[i].name, "route": $url(links[i].path)}
+      );
+    }
+    console.log(props)
+  }
+
+  
+  
 
   
   /*
@@ -127,7 +158,7 @@
   onMount( async () => {
     //promise = fetchMarkdown(doc);
     console.log("DEBUG:routes/docs/_layout:onMount");
-    populateSidebarProps();
+    //populateSidebarProps();
   });
   
   /*
@@ -148,9 +179,6 @@
 
   function handleDropDown(path){
     console.log('clickedme', $links);
-    if (dropDownSections[0].path === path){
-      dropDownSections[0] = true;
-    }
   }
 
 
@@ -300,9 +328,51 @@
 
   <!--<h2 class='sidebar-menu'>Reference</h2><br>-->
 
-  {#if $links !== undefined}
-    <Sidebar {...props} />
-  {/if}
+  
+  <Sidebar {...{
+    routes: [
+    {
+        "name": "Welcome",
+        "route": "/docs/welcome"
+    },
+    {
+        "name": "Default Language",
+        "route": "/docs/default-language"
+    },
+    {
+        "name": "Intermediate Language",
+        "route": "/docs/intermediate-language"
+    },
+    {
+        "name": "Load Sound Files",
+        "route": "/docs/load-sound-files"
+    },
+    {
+        "name": "JS Editor Utils",
+        "route": "/docs/javascript-editor-utils"
+    },
+    {
+        "name": "Maximilian",
+        "route": "/docs/maximilian-dsp-api"
+    }
+], 
+  
+    open:"false",
+
+    theme:  { "backgroundColor_linkActive": "#151515",
+              "backgroundColor_nav": "#999999",
+              "color_link": "#ffffff",
+              "color_linkHover": "#ffffff",
+              "fontSize": "1rem",
+              "maxWidth_nav": "100vw",
+              "minWidth_nav": "320px",
+              "opacity_linkDisabled": "0.5",
+              "opacity_linkInactive": 0.7 
+            },  
+
+    activeUrl: "/docs"
+  }} />
+  
 
   <!--<SidebarMenu/>-->
   
@@ -332,7 +402,7 @@
   
   <!--
   <ul class='sidebar-menu'>
-    {#if $links != undefined}
+    
       {#each $links as {path, name, file}, i}
         <li>
 
@@ -346,7 +416,7 @@
 
         </li><br>
       {/each}
-    {/if}
+    
   </ul>
   -->
   

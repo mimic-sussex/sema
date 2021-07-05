@@ -55,14 +55,15 @@
   */
 
   //$: docId = $params.docId; //get the doc part of the url
-  $: promise = fetchMarkdown($params.docId)
+
+  $: promise = fetchMarkdown($params.docId, $links) //promise is reactive to changes in url docId
 
   let markdown;
 
-  let fetchMarkdown = async (docId) => {
+  let fetchMarkdown = async (docId, links) => {
     
     //docId is the $params.id, the url slug
-    let doc = findFileName(docId);
+    let doc = findFileName(docId, links);
 
     console.log('fetching markdown', doc)
     if(doc != undefined){ // There is a call with undefined value when navigating to Playground
@@ -91,13 +92,13 @@
     }
   }
   
-  function findFileName(path){
-    if ($links != undefined){
+  function findFileName(path, links){
+    if (links != undefined){
       console.log()
-      for (let i = 0; i < $links.length; i++) {
-        if ($links[i]['path'] == ('./'+path)){
+      for (let i = 0; i < links.length; i++) {
+        if (links[i]['path'] == ('./'+path)){
           console.log('here ./'+path);
-          return $links[i]['file'];
+          return links[i]['file'];
         }
       }
     }
