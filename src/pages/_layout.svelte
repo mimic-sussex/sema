@@ -17,6 +17,11 @@
     hydrateJSONcomponent,    items
   } from '../stores/tutorial.js';
 
+  import {
+    links,
+    chosenDocs
+  } from '../stores/docs.js';
+
 
   import { Engine } from 'sema-engine/sema-engine';
   import Controller from "../engine/controller";
@@ -42,6 +47,7 @@
   $: loadEnvironmentSnapshotEntries();
   $: fetchAndLoadDefaultTutorial();
   $: fetchAndLoadDefaultTutorialItems();
+  $: fetchAndLoadDocsNavLinks(); //preload nav links for documentation (reference)
 
   $: document.addEventListener( "keydown", e => {
 
@@ -122,6 +128,18 @@
 
     persistentParams = $params
   }
+
+  let fetchAndLoadDocsNavLinks = async () => {
+    fetch(document.location.origin + `/docs/docsnew.json`)
+      .then(r => r.json())
+      .then(json => {
+        $links = json;
+        $chosenDocs = $links[0].path;
+        $ready();
+      }).catch( () => new Error('Fetching docsnew.json failed'));
+  }
+
+  // let let fetchAndLoadDefaultDocs = async () => {}
 
   onMount( async () => {
     console.log("DEBUG:routes/_layout:onMount");
