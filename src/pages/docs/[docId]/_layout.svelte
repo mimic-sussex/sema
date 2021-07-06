@@ -116,6 +116,25 @@
 </script>
 
 
+<style>
+
+  .markdown-container {
+    height: calc(100vh - 86px); /* this fixed scrolling issue */
+    padding: 10px 20px 0px 10px;
+    border-radius: 5px;
+    /* background: #aaaaaa; */
+    overflow-y: auto;
+  }
+
+  .markdown-output {
+    /* width: 100%; */
+    /*padding: 0em 0.6em 0em 0.5em;*/
+
+  }
+
+</style>
+
+
 <div class="markdown-container">
   {#if $links != []}
     {#await promise}

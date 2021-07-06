@@ -8,40 +8,8 @@
 
   import { links, chosenDocs } from '../../stores/docs.js'
 
-  //get links from json file in dist
-  //let awaitLinks = getLinks();
-  //let links = {};
-  //console.log("outer layout", $links);
-
   $: populateSidebarProps($links);
-
-  async function getLinks() {
-    console.log("get links is being called")
-    const res = await fetch(document.location.origin + `/docs/docsnew.json`);
-    links = await res.json();
-    if (res.ok){
-      console.log('this stage', links); 
-    }
-    //$ready()
-    //setContext('links', links);
-  }
-
-  
-  //setLinks()
-  //make accesible
-  /*
-  setContext('links', [
-    {path:'./welcome', name:'Welcome', file:'welcome'},
-    {path:'./default-language', name:'Default Language', file:'default-livecoding-language'},
-    {path:'./intermediate-language', name:'Intermediate Language', file:'sema-intermediate-language'},
-    {path:'./load-sound-files', name:'Load Sound Files', file:'sample-loading'},
-    {path:'./javascript-editor-utils', name:'JS Editor Utils', file:'javascript-editor-utils'},
-    {path:'./maximilian-dsp-api', name:'Maximilian', file:'maximilian-dsp-api'}
-  ])
-  */
-  
-  
-
+  let subHeadings = {};
   //Sidebar.svelte properties
   let props = {
     routes: [
@@ -89,6 +57,37 @@
   //onLinkClick: () => handleClick('./intermediate-language')
   }
 
+  async function getSubHeadingsForAll(){
+    for (let i=0;i<links.length;i++){
+      console.log(i);
+    }
+  }
+
+  async function fetchHeaders(doc){
+    let headings = []
+    if(doc != undefined){ // There is a call with undefined value when navigating to Playground
+        const res = await fetch(document.location.origin + `/docs/${doc}.md`)
+        const text = await res.text();
+        if (res.ok) {
+          //get tokens from the marked lexer
+          let tokens = marked.lexer(text);
+          //loop through them
+          for (let i=0; i<tokens.length; i++){
+            //console.log(tokens[i])
+            if (tokens[i].type == "heading" && tokens[i].depth == 1){
+              //console.log(tokens[i]);
+              //subHeadings[doc] = [];
+              headings.push(tokens[i].text.replace(/\s+/g, '-').toLowerCase());
+            }
+          }
+          //console.log(tokens[0]);
+        } else {
+          throw new Error(text);
+        }
+      }
+    return headings;
+  }
+  
 
   async function populateSidebarProps(links){
     console.log("populating", links);
@@ -101,10 +100,6 @@
     console.log(props)
   }
 
-  
-  
-
-  
   /*
   $: match = $route.path.match(/\/docs\/([^\/]+)\//);
   $: active = match && match[1];
@@ -177,8 +172,8 @@
   }
   */
 
-  function handleDropDown(path){
-    console.log('clickedme', $links);
+  function handleDropDown(file){
+    console.log(fetchHeaders(file));
   }
 
 
@@ -290,13 +285,8 @@
     grid-area: header;
   }
 
-  .markdown-container {
-    padding: 10px 20px 0px 10px;
-    overflow: auto;
-  }
-
   .arrow {
-    border: solid black;
+    border: solid grey;
     border-width: 0 3px 3px 0;
     display: inline-block;
     padding: 3px;
@@ -329,53 +319,6 @@
   <!--<h2 class='sidebar-menu'>Reference</h2><br>-->
 
   
-  <Sidebar {...{
-    routes: [
-    {
-        "name": "Welcome",
-        "route": "/docs/welcome"
-    },
-    {
-        "name": "Default Language",
-        "route": "/docs/default-language"
-    },
-    {
-        "name": "Intermediate Language",
-        "route": "/docs/intermediate-language"
-    },
-    {
-        "name": "Load Sound Files",
-        "route": "/docs/load-sound-files"
-    },
-    {
-        "name": "JS Editor Utils",
-        "route": "/docs/javascript-editor-utils"
-    },
-    {
-        "name": "Maximilian",
-        "route": "/docs/maximilian-dsp-api"
-    }
-], 
-  
-    open:"false",
-
-    theme:  { "backgroundColor_linkActive": "#151515",
-              "backgroundColor_nav": "#999999",
-              "color_link": "#ffffff",
-              "color_linkHover": "#ffffff",
-              "fontSize": "1rem",
-              "maxWidth_nav": "100vw",
-              "minWidth_nav": "320px",
-              "opacity_linkDisabled": "0.5",
-              "opacity_linkInactive": 0.7 
-            },  
-
-    activeUrl: "/docs"
-  }} />
-  
-
-  <!--<SidebarMenu/>-->
-  
   <!--
   <ul class='sidebar-menu'>
     {#await awaitLinks}
@@ -400,13 +343,13 @@
   </ul>
   -->
   
-  <!--
+  
   <ul class='sidebar-menu'>
     
       {#each $links as {path, name, file}, i}
         <li>
 
-          {#if name != 'Welcome'}<p style="display: inline" on:click={() => handleDropDown(path)}><i class="arrow up"></i></p>{/if}
+          {#if name != 'Welcome'}<p style="display: inline" on:click={() => handleDropDown(file)}><i class="arrow up"></i></p>{/if}
           
           <a  class='nav-links' href={$url(path)}
               class:active={$isActive(path)}
@@ -418,7 +361,7 @@
       {/each}
     
   </ul>
-  -->
+  
   
   <!--
   <div class="markdown-container">
