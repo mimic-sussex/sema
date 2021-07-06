@@ -6,6 +6,14 @@
 
   import { links, chosenDocs } from '../../../stores/docs.js'
 
+
+  $: setLastVisitedPage($params.docId);
+
+  function setLastVisitedPage(){
+    $chosenDocs = './'+$params.docId;
+    console.log("chosen docs:)", $chosenDocs);
+  }
+
   //const links = getContext('links');
   console.log("links inner", $links);
 
@@ -56,7 +64,7 @@
 
   //$: docId = $params.docId; //get the doc part of the url
 
-  $: promise = fetchMarkdown($params.docId, $links) //promise is reactive to changes in url docId
+  $: promise = fetchMarkdown($params.docId, $links) //promise is reactive to changes in url docId and links since they load asynchrynously
 
   let markdown;
 
@@ -94,10 +102,9 @@
   
   function findFileName(path, links){
     if (links != undefined){
-      console.log()
       for (let i = 0; i < links.length; i++) {
         if (links[i]['path'] == ('./'+path)){
-          console.log('here ./'+path);
+          //console.log('here ./'+path);
           return links[i]['file'];
         }
       }

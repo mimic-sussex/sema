@@ -154,6 +154,8 @@
     //promise = fetchMarkdown(doc);
     console.log("DEBUG:routes/docs/_layout:onMount");
     //populateSidebarProps();
+    console.log('onMount', $chosenDocs)
+    $goto($url($chosenDocs));
   });
   
   /*
