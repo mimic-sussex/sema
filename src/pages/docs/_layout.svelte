@@ -3,7 +3,7 @@
   import { url, route, isActive, goto, params} from "@roxi/routify";
   import { onMount, setContext } from 'svelte';
   import marked from 'marked';
-  import Sidebar from 'https://cdn.skypack.dev/svelte_sidebar';
+  //import Sidebar from 'https://cdn.skypack.dev/svelte_sidebar';
   import SidebarMenu from './sidebar-menu.svelte'
 
   import { links, chosenDocs } from '../../stores/docs.js'
@@ -265,7 +265,10 @@
     flex-direction: column;
     padding: 20px 20px 0px 10px;
     background-color: #999;
-    overflow: scroll;
+    border-radius: 5px;
+    overflow: auto;
+    height: 100%;
+    bottom:0;
   }
 
   .nav-links {

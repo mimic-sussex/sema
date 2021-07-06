@@ -121,7 +121,6 @@
   .markdown-container {
     height: calc(100vh - 86px); /* this fixed scrolling issue */
     padding: 10px 20px 0px 10px;
-    border-radius: 5px;
     /* background: #aaaaaa; */
     overflow-y: auto;
   }
