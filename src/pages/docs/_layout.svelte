@@ -1,6 +1,6 @@
 
 <script>
-  import { url, route, isActive, goto, params} from "@roxi/routify";
+  import { url, route, isActive, goto, params, redirect} from "@roxi/routify";
   import { onMount, setContext } from 'svelte';
   import marked from 'marked';
   //import Sidebar from 'https://cdn.skypack.dev/svelte_sidebar';
@@ -8,8 +8,19 @@
 
   import { links, chosenDocs } from '../../stores/docs.js'
 
-  $: populateSidebarProps($links);
+  //$: populateSidebarProps($links);
   let subHeadings = {};
+  let allHeadings = ['well', 'lalala'];
+  $: fetchAllSubHeadings($links); //fetch all subheadings for all documentation
+  
+  $: testHeadings = getSubHeadings($links, subHeadings);
+
+  function getSubHeadings(links, subHeadings){
+    console.log("SUB HEADINGS",subHeadings);
+    console.log("TEST HEADINGS", testHeadings);
+    return subHeadings;
+  }
+
   //Sidebar.svelte properties
   let props = {
     routes: [
@@ -57,35 +68,42 @@
   //onLinkClick: () => handleClick('./intermediate-language')
   }
 
-  async function getSubHeadingsForAll(){
+  async function fetchAllSubHeadings(links){
     for (let i=0;i<links.length;i++){
-      console.log(i);
+      fetchSubHeadings(links[i].file, links[i].path);
     }
   }
 
-  async function fetchHeaders(doc){
-    let headings = []
-    if(doc != undefined){ // There is a call with undefined value when navigating to Playground
-        const res = await fetch(document.location.origin + `/docs/${doc}.md`)
+  async function fetchSubHeadings(file, path){
+
+    //we use path as the key (ID) for consitency
+    if (subHeadings.hasOwnProperty(path)){
+      return; //if it already exists just break out of the function already no need to fetch again
+    } else {
+      subHeadings[path] = [];
+    }
+
+    if(file != undefined){ // There is a call with undefined value when navigating to Playground
+        const res = await fetch(document.location.origin + `/docs/${file}.md`)
         const text = await res.text();
         if (res.ok) {
           //get tokens from the marked lexer
           let tokens = marked.lexer(text);
           //loop through them
           for (let i=0; i<tokens.length; i++){
-            //console.log(tokens[i])
             if (tokens[i].type == "heading" && tokens[i].depth == 1){
-              //console.log(tokens[i]);
-              //subHeadings[doc] = [];
-              headings.push(tokens[i].text.replace(/\s+/g, '-').toLowerCase());
+              let heading = tokens[i].text;
+
+              allHeadings.push(heading);
+              allHeadings = allHeadings;
+              subHeadings[path].push( {name: heading, route: heading.replace(/\s+/g, '-').toLowerCase(), active:false} );
+              subHeadings = subHeadings;
             }
           }
-          //console.log(tokens[0]);
         } else {
           throw new Error(text);
         }
       }
-    return headings;
   }
   
 
@@ -155,7 +173,8 @@
     console.log("DEBUG:routes/docs/_layout:onMount");
     //populateSidebarProps();
     console.log('onMount', $chosenDocs)
-    $goto($url($chosenDocs));
+    $redirect($url($chosenDocs));
+    console.log("SUBHEADINGS on mount", subHeadings);
   });
   
   /*
@@ -174,8 +193,9 @@
   }
   */
 
-  function handleDropDown(file){
-    console.log(fetchHeaders(file));
+  function handleDropDown(file, path){
+    //fetchHeaders(file, path);
+    console.log(subHeadings);
   }
 
 
@@ -274,7 +294,11 @@
   }
 
   .nav-links {
-    color:white
+    color:white;
+  }
+
+  .sub-nav-links {
+    color:black;
   }
 
   .sidebar-item {
@@ -298,8 +322,8 @@
   }
 
   .up {
-    transform: rotate(-135deg);
-    -webkit-transform: rotate(-135deg);
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
   }
 
   .down {
@@ -352,9 +376,10 @@
   <ul class='sidebar-menu'>
     
       {#each $links as {path, name, file}, i}
+
         <li>
 
-          {#if name != 'Welcome'}<p style="display: inline" on:click={() => handleDropDown(file)}><i class="arrow up"></i></p>{/if}
+          {#if name != 'Welcome'}<p style="display: inline" on:click={() => handleDropDown(file, path)}><i class="arrow up"></i></p>{/if}
           
           <a  class='nav-links' href={$url(path)}
               class:active={$isActive(path)}
@@ -363,6 +388,30 @@
           </a>
 
         </li><br>
+
+        <!--
+        {#each allHeadings as heds}
+          <p>{heds}</p>
+        {/each}
+        -->
+
+        <!--
+        {#each subHeadings[path] as subObj}
+          {#each subObj as {subhead, route, active}}
+            <p>subhead</p>
+          {/each}
+        {/each}
+        -->
+        <!--
+        {#each {subHeadings['./default-language']} as {headingname, route, active}, j}
+          <a class='sub-nav-links' href={$url(route[j])} 
+          class:active={$isActive(route[j])}>
+            {headingname[j]}     
+          </a>
+        
+        {/each}
+        -->
+
       {/each}
     
   </ul>
