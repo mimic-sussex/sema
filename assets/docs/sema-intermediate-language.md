@@ -1,5 +1,5 @@
 
-# **Intermediate Representation**
+# Intermediate Representation
 
 The following are the **types** of the Sema intermediate representation
 

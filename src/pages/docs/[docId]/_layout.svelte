@@ -6,6 +6,14 @@
 
   import { links, chosenDocs } from '../../../stores/docs.js'
 
+
+  $: setLastVisitedPage($params.docId);
+
+  function setLastVisitedPage(){
+    $chosenDocs = './'+$params.docId;
+    console.log("chosen docs:)", $chosenDocs);
+  }
+
   //const links = getContext('links');
   console.log("links inner", $links);
 
@@ -55,14 +63,15 @@
   */
 
   //$: docId = $params.docId; //get the doc part of the url
-  $: promise = fetchMarkdown($params.docId)
+
+  $: promise = fetchMarkdown($params.docId, $links) //promise is reactive to changes in url docId and links since they load asynchrynously
 
   let markdown;
 
-  let fetchMarkdown = async (docId) => {
+  let fetchMarkdown = async (docId, links) => {
     
     //docId is the $params.id, the url slug
-    let doc = findFileName(docId);
+    let doc = findFileName(docId, links);
 
     console.log('fetching markdown', doc)
     if(doc != undefined){ // There is a call with undefined value when navigating to Playground
@@ -91,13 +100,12 @@
     }
   }
   
-  function findFileName(path){
-    if ($links != undefined){
-      console.log()
-      for (let i = 0; i < $links.length; i++) {
-        if ($links[i]['path'] == ('./'+path)){
-          console.log('here ./'+path);
-          return $links[i]['file'];
+  function findFileName(path, links){
+    if (links != undefined){
+      for (let i = 0; i < links.length; i++) {
+        if (links[i]['path'] == ('./'+path)){
+          //console.log('here ./'+path);
+          return links[i]['file'];
         }
       }
     }
@@ -113,6 +121,18 @@
   });
 
 </script>
+
+
+<style>
+
+  .markdown-container {
+    height: calc(100vh - 86px); /* this fixed scrolling issue */
+    padding: 10px 20px 0px 10px;
+    /* background: #aaaaaa; */
+    overflow-y: auto;
+  }
+
+</style>
 
 
 <div class="markdown-container">

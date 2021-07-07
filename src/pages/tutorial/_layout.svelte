@@ -96,6 +96,9 @@
   };
 
   onMount( async () => {
+
+    console.log("DEBUG:routes/tutorial/_layout:onMount");
+
     if(!controller.samplesLoaded){
       controller.init(document.location.origin + '/sema-engine');
       $goto(localStorage.getItem("last-session-tutorial-url"));
