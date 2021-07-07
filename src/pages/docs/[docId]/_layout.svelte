@@ -1,7 +1,7 @@
 <script>
 
-  import { tick, onMount, onDestroy, getContext} from 'svelte';
-  import { url, params, ready} from "@roxi/routify";
+  import { tick, onMount, onDestroy} from 'svelte';
+  import { url, params, ready, isActive, route, afterPageLoad} from "@roxi/routify";
   import marked from 'marked';
 
   import { links, chosenDocs } from '../../../stores/docs.js'
@@ -9,6 +9,7 @@
 
   $: setLastVisitedPage($params.docId);
 
+  // sets chosenDocs in store to the current page so that its rememebered for when the user returns
   function setLastVisitedPage(){
     $chosenDocs = './'+$params.docId;
     console.log("chosen docs:)", $chosenDocs);
@@ -48,20 +49,6 @@
   });
   */
 
-
-
-  //move this to a seperate file
-  /*
-  const links = [
-    {path:'./welcome', name:'Welcome', file:'welcome'},
-    {path:'./default-language', name:'Default Language', file:'default-livecoding-language'},
-    {path:'./intermediate-language', name:'Intermediate Language', file:'sema-intermediate-language'},
-    {path:'./load-sound-files', name:'Load Sound Files', file:'sample-loading'},
-    {path:'./javascript-editor-utils', name:'JS Editor Utils', file:'javascript-editor-utils'},
-    {path:'./maximilian-dsp-api', name:'Maximilian', file:'maximilian-dsp-api'}
-  ];
-  */
-
   //$: docId = $params.docId; //get the doc part of the url
 
   $: promise = fetchMarkdown($params.docId, $links) //promise is reactive to changes in url docId and links since they load asynchrynously
@@ -69,6 +56,8 @@
   let markdown;
 
   let fetchMarkdown = async (docId, links) => {
+    console.log("params", $params);
+    console.log("params2", $params.docId);
     
     //docId is the $params.id, the url slug
     let doc = findFileName(docId, links);
@@ -97,6 +86,20 @@
       } else {
         throw new Error(text);
       }
+      
+      /*
+      //jump to correct anchor if there exists one in the url
+      let regex = /(?<=\#).g;
+      let section = window.location.href.match(regex)
+      console.log("url part", section );
+      window.scrollTo(0, 1000);
+      
+      if (section != null){
+        location.hash = '#' + section;
+        console.log("HERERERHER", $route());
+      }
+      */
+        //$goto($url())
     }
   }
   
@@ -112,7 +115,7 @@
   }
 
   //$: if (docId) fetchMarkdown(docId);
-  //console.log("params", $params)
+  
   //console.log("docId:", docId);
 
   onMount( async () => {
@@ -120,11 +123,15 @@
     console.log("DEBUG:routes/docs/"+$params.docId+"/_layout:onMount");
   });
 
+
+  $afterPageLoad(page => {
+    console.log('loaded ' + page.title)
+  })
+
 </script>
 
 
 <style>
-
   .markdown-container {
     height: calc(100vh - 86px); /* this fixed scrolling issue */
     padding: 10px 20px 0px 10px;

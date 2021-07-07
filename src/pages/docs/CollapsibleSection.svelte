@@ -40,18 +40,19 @@ h3 {
 }
 
 button {
-  background-color: var(--background, #999);
+  background-color: var(--background, #949090);
   color: var(--gray-darkest, #282828);
   display: flex;
   justify-content: space-between;
   width: 100%;
-  border: none;
+  border: 5px;
   margin: 0;
   padding: 0.5em 0.5em;
 }
 
 button[aria-expanded="true"] {
   border-bottom: 1px solid var(--gray-light, #eee);
+  background-color: var(--background, #5b5757);
 }
 
 button[aria-expanded="true"] .vert {
@@ -69,9 +70,12 @@ button [aria-expanded="true"] rect {
 svg {
     height: 0.6em;
     width: 0.6em;
+    justify-content: flex-end;
 }
 
 .nav-links {
+  text-align: left;
+  justify-content: flex-start;
   color:white;
 }
 
