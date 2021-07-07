@@ -74,7 +74,7 @@ const serve = () => ({
 									'Content-Type, X-Requested-With, Content-Type, Accept',
 							})
 							console.log('Time: %d', Date.now())
-							console.log(req)
+							// console.log(req)
 							next()
 						})
 
