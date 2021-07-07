@@ -1,6 +1,6 @@
 # Documentation
 
-Welcome! This page provides links to documentation about various aspects of Sema.
+Welcome! This page provides links to documentation about various aspects of Sema. Please browse using the navigation bar on the left hand side of the screen.
 
 ## Default Language
 Documentation of the default language. Although you can create your own language within Sema, the default language is available as a demo to show some of the capabilities available.
@@ -20,4 +20,4 @@ Documentation on Maximilian, a multi-target audio synthesis and signal processin
 
 
 ---
-As with all open-source projects, the documentation is an evolving document. If you think you can contribute to its improvement please file an issue or pull request on [Github](https://github.com/mimic-sussex/sema).
+As with all open-source projects, the documentation is an evolving document. If you find a mistake, or think you can contribute to its improvement please file an issue and/or pull request on [Github](https://github.com/mimic-sussex/sema).

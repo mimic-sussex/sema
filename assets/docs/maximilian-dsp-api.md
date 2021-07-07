@@ -1,3 +1,5 @@
+# Maximilian Documentation
+
 ### maxiAudio ###
 
 This the audio context. You must always have one to produce sound with maxiLib

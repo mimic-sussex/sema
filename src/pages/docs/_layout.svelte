@@ -1,59 +1,55 @@
 
 <script>
-  import { url, route, isActive, goto, params} from "@roxi/routify";
+  import { url, route, isActive, goto, params, redirect} from "@roxi/routify";
   import { onMount, setContext } from 'svelte';
   import marked from 'marked';
-  import Sidebar from 'https://cdn.skypack.dev/svelte_sidebar';
+  //import Sidebar from 'https://cdn.skypack.dev/svelte_sidebar';
   import SidebarMenu from './sidebar-menu.svelte'
+  import CollapsibleSection from './CollapsibleSection.svelte'
 
   import { links, chosenDocs } from '../../stores/docs.js'
 
-  //get links from json file in dist
-  //let awaitLinks = getLinks();
-  //let links = {};
-  //console.log("outer layout", $links);
+  //$: populateSidebarProps($links);
+  let subHeadings = {};
+  let allHeadings = [];
+  $: fetchAllSubHeadings($links); //fetch all subheadings for all documentation
+  
+  $: testHeadings = getSubHeadings($links, subHeadings);
 
-  async function getLinks() {
-    console.log("get links is being called")
-    const res = await fetch(document.location.origin + `/docs/docsnew.json`);
-    links = await res.json();
-    if (res.ok){
-      console.log('this stage', links); 
-    }
-    //$ready()
-    //setContext('links', links);
+  function getSubHeadings(links, subHeadings){
+    console.log("SUB HEADINGS",subHeadings);
+    console.log("TEST HEADINGS", testHeadings);
+    return subHeadings;
   }
 
-  
-  //setLinks()
-  //make accesible
-  /*
-  setContext('links', [
-    {path:'./welcome', name:'Welcome', file:'welcome'},
-    {path:'./default-language', name:'Default Language', file:'default-livecoding-language'},
-    {path:'./intermediate-language', name:'Intermediate Language', file:'sema-intermediate-language'},
-    {path:'./load-sound-files', name:'Load Sound Files', file:'sample-loading'},
-    {path:'./javascript-editor-utils', name:'JS Editor Utils', file:'javascript-editor-utils'},
-    {path:'./maximilian-dsp-api', name:'Maximilian', file:'maximilian-dsp-api'}
-  ])
-  */
-  
-
-  async function populateSidebarProps(){
-    console.log("populating", $links);
-    for (let i=0;i<$links.length;i++){
-      
-      props.routes.push(
-        {"name":$links[i].name, "route": $url($links[i].path)}
-      );
-    }
-    console.log(props)
-  }
-
-  
   //Sidebar.svelte properties
   let props = {
-    routes: [], 
+    routes: [
+    {
+        "name": "Welcome",
+        "route": "/docs/welcome"
+    },
+    {
+        "name": "Default Language",
+        "route": "/docs/default-language"
+    },
+    {
+        "name": "Intermediate Language",
+        "route": "/docs/intermediate-language"
+    },
+    {
+        "name": "Load Sound Files",
+        "route": "/docs/load-sound-files"
+    },
+    {
+        "name": "JS Editor Utils",
+        "route": "/docs/javascript-editor-utils"
+    },
+    {
+        "name": "Maximilian",
+        "route": "/docs/maximilian-dsp-api"
+    }
+], 
   
     open:"false",
 
@@ -73,7 +69,77 @@
   //onLinkClick: () => handleClick('./intermediate-language')
   }
 
+  async function fetchAllSubHeadings(links){
+    for (let i=0;i<links.length;i++){
+      fetchSubHeadings(links[i].file, links[i].path);
+    }
+  }
+
+  async function fetchSubHeadings(file, path){
+
+    //we use path as the key (ID) for consitency
+    if (subHeadings.hasOwnProperty(path)){
+      return; //if it already exists just break out of the function already no need to fetch again
+    } else {
+      subHeadings[path] = [];
+    }
+
+    let currentHeadings = [];
+
+    
+
+    if(file != undefined){ // There is a call with undefined value when navigating to Playground
+        const res = await fetch(document.location.origin + `/docs/${file}.md`)
+        const text = await res.text();
+        if (res.ok) {
+          //get tokens from the marked lexer
+          let tokens = marked.lexer(text);
+
+          
+
+          //loop through them
+          for (let i=0; i<tokens.length; i++){
+            if (tokens[i].type == "heading" && tokens[i].depth == 1){
+              let heading = tokens[i].text;
+
+              currentHeadings.push({heading: heading , route: heading.replace(/\s+/g, '-').toLowerCase(), active:false})
+
+              subHeadings[path].push( {name: heading, route: heading.replace(/\s+/g, '-').toLowerCase(), active:false} );
+              subHeadings = subHeadings;
+
+              
+
+            }
+          }
+
+          for (let i=0; i<$links.length; i++){
+            if ($links[i].path == path){
+              $links[i].subs = currentHeadings;
+              $links = $links;
+            }
+          }
+
+          allHeadings.push({name:path, deets:{currentHeadings}})
+          allHeadings = allHeadings;
+
+        } else {
+          throw new Error(text);
+        }
+      }
+  }
   
+
+  async function populateSidebarProps(links){
+    console.log("populating", links);
+    for (let i=0;i<links.length;i++){
+      
+      props.routes.push(
+        {"name":links[i].name, "route": $url(links[i].path)}
+      );
+    }
+    console.log(props)
+  }
+
   /*
   $: match = $route.path.match(/\/docs\/([^\/]+)\//);
   $: active = match && match[1];
@@ -127,7 +193,10 @@
   onMount( async () => {
     //promise = fetchMarkdown(doc);
     console.log("DEBUG:routes/docs/_layout:onMount");
-    populateSidebarProps();
+    //populateSidebarProps();
+    console.log('onMount', $chosenDocs)
+    $redirect($url($chosenDocs));
+    console.log("$links on mount", $links);
   });
   
   /*
@@ -146,11 +215,11 @@
   }
   */
 
-  function handleDropDown(path){
-    console.log('clickedme', $links);
-    if (dropDownSections[0].path === path){
-      dropDownSections[0] = true;
-    }
+  function handleDropDown(file, path){
+    //fetchHeaders(file, path);
+    console.log(subHeadings);
+    console.log(allHeadings);
+    console.log($links);
   }
 
 
@@ -242,11 +311,18 @@
     flex-direction: column;
     padding: 20px 20px 0px 10px;
     background-color: #999;
-    overflow: scroll;
+    border-radius: 5px;
+    overflow-y: auto;
+    height: calc(100vh - 86px);
+    bottom:0;
   }
 
   .nav-links {
-    color:white
+    color:white;
+  }
+
+  .sub-nav-links {
+    color:black;
   }
 
   .sidebar-item {
@@ -262,21 +338,16 @@
     grid-area: header;
   }
 
-  .markdown-container {
-    padding: 10px 20px 0px 10px;
-    overflow: auto;
-  }
-
   .arrow {
-    border: solid black;
+    border: solid grey;
     border-width: 0 3px 3px 0;
     display: inline-block;
     padding: 3px;
   }
 
   .up {
-    transform: rotate(-135deg);
-    -webkit-transform: rotate(-135deg);
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
   }
 
   .down {
@@ -300,11 +371,6 @@
 
   <!--<h2 class='sidebar-menu'>Reference</h2><br>-->
 
-  {#if $links !== undefined}
-    <Sidebar {...props} />
-  {/if}
-
-  <!--<SidebarMenu/>-->
   
   <!--
   <ul class='sidebar-menu'>
@@ -330,25 +396,63 @@
   </ul>
   -->
   
+
+
+  <ul class='sidebar-menu'>
+    {#each $links as {path, name, file, subs}, i}
+      {#if name == 'Welcome'}
+        <a  class='nav-links' href={$url(path)} class:active={$isActive(path)}>{name}</a>
+      {:else if name != 'Welcome'}
+        <CollapsibleSection headerText={name} path={path}>
+            <div class="content">
+              <ul>
+                {#each subs as {heading, route, active}}
+                  <li>
+                    <a class='sub-nav-links' href={$url(route)} 
+                    class:active={$isActive(route)}>
+                      {heading}
+                    </a>
+                </li>
+                {/each}
+              </ul>
+            </div>
+        </CollapsibleSection>
+      {/if}
+    {/each}
+  </ul>
+  
+
   <!--
   <ul class='sidebar-menu'>
-    {#if $links != undefined}
-      {#each $links as {path, name, file}, i}
+    
+      {#each $links as {path, name, file, subs}, i}
+        
         <li>
 
-          {#if name != 'Welcome'}<p style="display: inline" on:click={() => handleDropDown(path)}><i class="arrow up"></i></p>{/if}
+          {#if name != 'Welcome'}<p style="display: inline" on:click={() => handleDropDown(file, path)}><i class="arrow up"></i></p>{/if}
           
           <a  class='nav-links' href={$url(path)}
               class:active={$isActive(path)}
               >
             {name}
           </a>
+          
 
+          {#each subs as {heading, route, active}}
+            <a class='sub-nav-links' href={$url(route)} 
+            class:active={$isActive(route)}>
+              {heading}
+            </a>
+            <br>
+          {/each}
+          
         </li><br>
+
       {/each}
-    {/if}
+    
   </ul>
   -->
+  
   
   <!--
   <div class="markdown-container">

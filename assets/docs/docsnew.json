@@ -1,13 +1,13 @@
 [
-  {"path":"./welcome", "name":"Welcome", "file":"welcome"},
+  {"path":"./welcome", "name":"Welcome", "file":"welcome", "subs":[]},
 
-  {"path":"./default-language", "name":"Default Language", "file":"default-livecoding-language"},
+  {"path":"./default-language", "name":"Default Language", "file":"default-livecoding-language", "subs":[]},
 
-  {"path":"./intermediate-language", "name":"Intermediate Language", "file":"sema-intermediate-language"},
+  {"path":"./intermediate-language", "name":"Intermediate Language", "file":"sema-intermediate-language", "subs":[]},
 
-  {"path":"./load-sound-files", "name":"Load Sound Files", "file":"sample-loading"},
+  {"path":"./load-sound-files", "name":"Load Sound Files", "file":"sample-loading", "subs":[]},
 
-  {"path":"./javascript-editor-utils", "name":"JS Editor Utils", "file":"javascript-editor-utils"},
+  {"path":"./javascript-editor-utils", "name":"JS Editor Utils", "file":"javascript-editor-utils", "subs":[]},
   
-  {"path":"./maximilian-dsp-api", "name":"Maximilian", "file":"maximilian-dsp-api"}
+  {"path":"./maximilian-dsp-api", "name":"Maximilian", "file":"maximilian-dsp-api", "subs":[]}
 ]
