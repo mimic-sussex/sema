@@ -9,8 +9,15 @@
 
   //$: populateSidebarProps($links);
   let subHeadings = {};
+  //$: promise = makeSureLinksFull($links);
+
+
+  async function makeSureLinksFull(links){
+    await (links[links.length-1].subs.length != 0);
+  }
+
   //let allHeadings = [];
-  $: fetchAllSubHeadings($links); //fetch all subheadings for all documentation
+  //$: promise = fetchAllSubHeadings($links); //fetch all subheadings for all documentation
   
 
   async function fetchAllSubHeadings(links){
@@ -81,7 +88,7 @@
     console.log("DEBUG:routes/docs/_layout:onMount");
     //console.log('onMount', $chosenDocs)
     $redirect($url($chosenDocs));
-    //console.log("$links on mount", $links);
+    console.log("$links on mount", $links);
   });
 
 
@@ -191,6 +198,7 @@
 
 <div class='container-docs' data-routify="scroll-lock">
 
+  
   <ul class='sidebar-menu'>
     {#each $links as {path, name, file, subs}, i}
       {#if name == 'Welcome'}
@@ -204,7 +212,7 @@
               <ul>
                 {#each subs as {heading, route, active}}
                   <li>
-                    <a class='sub-nav-links' href={$url(path+'#'+route)} 
+                    <a class='sub-nav-links' href={$url(path+'#'+route)} target="_self" 
                     class:active={$isActive(route)}>
                       {heading}
                     </a>
@@ -216,6 +224,7 @@
       {/if}
     {/each}
   </ul>
+  
 
 
   <!--

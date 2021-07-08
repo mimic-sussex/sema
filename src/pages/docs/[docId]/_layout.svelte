@@ -8,7 +8,9 @@
 
 
   $: setLastVisitedPage($params.docId);
+  $: promise = fetchMarkdown($params.docId, $links) //promise is reactive to changes in url docId and links since they load asynchrynously
 
+  let markdown;
   // sets chosenDocs in store to the current page so that its rememebered for when the user returns
   function setLastVisitedPage(){
     $chosenDocs = './'+$params.docId;
@@ -25,7 +27,7 @@
 
       return `
               <h${level}>
-                <a name="${escapedText}" class="anchor" href="#${escapedText}">
+                <a name="${escapedText}" class="anchor" href="#${escapedText}" id="#${escapedText}">
                   <span class="header-link"></span>
                 #
                 </a>
@@ -51,9 +53,7 @@
 
   //$: docId = $params.docId; //get the doc part of the url
 
-  $: promise = fetchMarkdown($params.docId, $links) //promise is reactive to changes in url docId and links since they load asynchrynously
-
-  let markdown;
+  
 
   let fetchMarkdown = async (docId, links) => {
     console.log("params", $params);
@@ -100,6 +100,7 @@
       }
       */
         //$goto($url())
+      //document.getElementById("#"+location.hash).scrollIntoView({behavior: 'smooth'});
     }
   }
   

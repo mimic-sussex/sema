@@ -3,6 +3,7 @@
 
   import { tick, onMount, onDestroy } from 'svelte'
   import { ready, url, params } from "@roxi/routify";
+  import marked from 'marked';
 
 	// import UserObserver from '../components/user/UserObserver.svelte';
 	// import SignOut from '../components/user/SignOut.svelte';
@@ -48,6 +49,21 @@
   $: fetchAndLoadDefaultTutorial();
   $: fetchAndLoadDefaultTutorialItems();
   $: fetchAndLoadDocsNavLinks(); //preload nav links for documentation (reference)
+  //$: if ($links.length != 0) {fetchAndLoadDocsNavSubLinks();}
+  //$: if (!checkIfLinksIsDone()) { fetchAndLoadDocsNavSubLinks(); };
+
+  function checkIfLinksIsDone(){
+    if ($links.length != 0){
+      console.log("empty");
+      if ($links[$links.length-1].subs.length != 0){
+        console.log("true");
+        return true //finished
+      }
+    }
+    console.log("false");
+    return false
+  }
+
 
   $: document.addEventListener( "keydown", e => {
 
@@ -130,14 +146,87 @@
   }
 
   let fetchAndLoadDocsNavLinks = async () => {
+    const res1 = await fetch(document.location.origin + `/docs/docsnew.json`);
+    const json = await res1.json();
+    if (res1.ok){
+      let tmpLinks = json;
+      let tmpChosenDocs = tmpLinks[0].path;
+    
+      for (let i=0;i<tmpLinks.length;i++){
+          let currentHeadings = [];
+          if(tmpLinks[i].file != undefined){ // There is a call with undefined value when navigating to Playground
+            const res = await fetch(document.location.origin + `/docs/${tmpLinks[i].file}.md`)
+            const text = await res.text();
+            if (res.ok) {
+              //get tokens from the marked lexer
+              let tokens = marked.lexer(text);
+              //loop through them
+              for (let i=0; i<tokens.length; i++){
+                if (tokens[i].type == "heading" && tokens[i].depth == 1){
+                  let heading = tokens[i].text;
+                  currentHeadings.push({heading: heading , route: heading.replace(/\s+/g, '-').toLowerCase(), active:false})
+                }
+              }
+              tmpLinks[i].subs = currentHeadings;
+            } else {
+              throw new Error(text);
+            }
+          }
+        }
+
+        console.log("tmpLinks", tmpLinks);
+        $links = tmpLinks;
+        $chosenDocs = tmpChosenDocs;
+    }
+    /*
     fetch(document.location.origin + `/docs/docsnew.json`)
       .then(r => r.json())
       .then(json => {
-        $links = json;
-        $chosenDocs = $links[0].path;
-        $ready();
+        
+        tmpLinks = json;
+        tmpChosenDocs = tmpLinks[0].path;
+
+        
+
+        //$links = json;
+        //$chosenDocs = $links[0].path;
+        //console.log("loading links!!", $links);
+        //fetchAndLoadDocsNavSubLinks();
+        //$ready();
       }).catch( () => new Error('Fetching docsnew.json failed'));
+      */
+
+      
   }
+
+  let fetchAndLoadDocsNavSubLinks = async () => {
+
+    for (let i=0;i<$links.length;i++){
+      //fetchSubHeadings(links[i].file, links[i].path);
+      let currentHeadings = [];
+      console.log("linksfile", $links[i].file);
+      if($links[i].file != undefined){ // There is a call with undefined value when navigating to Playground
+          const res = await fetch(document.location.origin + `/docs/${$links[i].file}.md`)
+          const text = await res.text();
+          if (res.ok) {
+            //get tokens from the marked lexer
+            let tokens = marked.lexer(text);
+            //loop through them
+            for (let i=0; i<tokens.length; i++){
+              if (tokens[i].type == "heading" && tokens[i].depth == 1){
+                let heading = tokens[i].text;
+                currentHeadings.push({heading: heading , route: heading.replace(/\s+/g, '-').toLowerCase(), active:false})
+              }
+            }
+            $links[i].subs = currentHeadings;
+          } else {
+            throw new Error(text);
+          }
+        }
+      }
+      console.log('LINKS!!', $links);
+      //3$ready();
+    }
 
   // let let fetchAndLoadDefaultDocs = async () => {}
 
