@@ -1,6 +1,6 @@
 
 # Sema – A Playground for Live Coding Music and Machine Learning #
-![version](https://img.shields.io/badge/version-0.7.0-red)
+![version](https://img.shields.io/badge/version-0.8.0-red)
 [![stability-experimental](https://img.shields.io/badge/stability-experimental-orange.svg)](https://github.com/emersion/stability-badges#experimental)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-yellow.svg)](https://github.com/mimic-sussex/eppEditor/blob/master/CONTRIBUTING.md)
 [![Build Status](https://travis-ci.com/mimic-sussex/sema.svg?branch=master)](https://travis-ci.com/mimic-sussex/sema)
@@ -58,9 +58,9 @@ Once you have sema running as a node application, you can load it on your browse
 - npm run dev, go to [http://localhost:5000](http://localhost:5000) on your browser
 
 
-## Hardware acceleration: 
+## Hardware acceleration:
 
-Hardware acceleration will have a drastic effect in Tensorflow.js model training speed. To enable it in Chrome: 
+Hardware acceleration will have a drastic effect in Tensorflow.js model training speed. To enable it in Chrome:
 
 * Navigate to chrome://settings
 * Click the **Advanced ▼** button at the bottom of the page
@@ -76,7 +76,7 @@ Sema uses Web Audio API Audio Worklets. Their performance seems very sensitive t
 
 ## Documentation
 
-Sema's _reference documentation_ aims at supporting the users learning experience. It is integrated in the application and comprises the following elements: 
+Sema's _reference documentation_ aims at supporting the users learning experience. It is integrated in the application and comprises the following elements:
 
 * [Default Livecoding Language](static/docs/default-livecoding-language.md)
 
@@ -87,7 +87,7 @@ Sema's _reference documentation_ aims at supporting the users learning experienc
 * [Javascript Editor Utils](static/docs/javascript-editor-utils.md)
 
 
-Sema's [Wiki](https://github.com/mimic-sussex/sema/wiki) documentation aims at supporting contributions. It focuses on how Sema is designed and built: 
+Sema's [Wiki](https://github.com/mimic-sussex/sema/wiki) documentation aims at supporting contributions. It focuses on how Sema is designed and built:
 
 * [What is the architecture of Sema?](https://github.com/mimic-sussex/sema/wiki/1.-The-Architecture-of-Sema)
 
@@ -103,9 +103,9 @@ Sema's [Wiki](https://github.com/mimic-sussex/sema/wiki) documentation aims at s
 
 ## Contributing
 
-Sema is an open-source project and hopefully the underlying vision, aims and structure will motivate you to contribute to it. Check the following:  
+Sema is an open-source project and hopefully the underlying vision, aims and structure will motivate you to contribute to it. Check the following:
 
-* [How do I contribute to Sema?](https://github.com/mimic-sussex/sema/wiki/7.-How-do-I-contribute-to-Sema%3F) 
+* [How do I contribute to Sema?](https://github.com/mimic-sussex/sema/wiki/7.-How-do-I-contribute-to-Sema%3F)
 
 * [CONTRIBUTING.md](https://github.com/mimic-sussex/sema/blob/master/CONTRIBUTING.md)
 

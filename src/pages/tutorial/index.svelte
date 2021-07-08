@@ -30,6 +30,9 @@
 
       // await tick();
       if (res.ok) {
+				marked.setOptions({
+					renderer: new marked.Renderer()
+				})
         markdown = marked(text);
       } else {
         throw new Error(text);

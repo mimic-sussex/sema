@@ -1,6 +1,6 @@
 {
 	"name": "sema",
-	"version": "0.7.0",
+	"version": "0.8.0",
 	"repository": "https://github.com/mimic-sussex/sema",
 	"description": "Sema, a live coding language design and performance playground",
 	"author": "Francisco Bernardo <f.bernardo@sussex.ac.uk> (http://frantic0.com)",
@@ -18,7 +18,7 @@
 		"dev:nollup": "run-p routify nollup",
 		"dev-dynamic": "cross-env BUNDLING=dynamic npm run dev",
 		"build": "routify -b && rollup -c",
-		"serve": "spassr --ssr",
+		"serve": "spassr --port 5001 --ssr",
 		"export": "spank",
 		"rollup": "rollup -cw",
 		"nollup": "nollup -c --verbose",

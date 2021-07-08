@@ -19,7 +19,7 @@ import workerLoader from 'rollup-plugin-web-worker-loader'
 import { wasm } from '@rollup/plugin-wasm'
 import sourcemaps from 'rollup-plugin-sourcemaps'
 import json from '@rollup/plugin-json'
-import cors from 'cors';
+// import cors from 'cors';
 
 
 const { distDir } = getConfig() // use Routify's distDir for SSOT
@@ -51,7 +51,7 @@ const serve = () => ({
 				// SPA server
         spassr({
 					...options,
-					port: 5000,
+					port: 5001,
 					middleware: (server) => {
 						// server.use(cors());
 
@@ -78,39 +78,39 @@ const serve = () => ({
 							next()
 						})
 
-						server.get(
-							// 'livereload.js?snipver=1',
-							'http://localhost:35729/livereload.js?snipver=1',
-							// cors(),
-							function (req, res) {
-								console.log('livereload')
-								res.set({
-									'Cross-Origin-Resource-Policy': 'same-site',
-									'Access-Control-Allow-Origin': [
-										'*',
-									],
-									'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE',
-									'Access-Control-Allow-Headers':
-										'Content-Type, X-Requested-With, Content-Type, Accept',
-								})
-								next()
-							}
-						)
+						// server.get(
+						// 	// 'livereload.js?snipver=1',
+						// 	'http://localhost:35729/livereload.js?snipver=1',
+						// 	// cors(),
+						// 	function (req, res) {
+						// 		console.log('livereload')
+						// 		res.set({
+						// 			'Cross-Origin-Resource-Policy': 'same-site',
+						// 			'Access-Control-Allow-Origin': [
+						// 				'*',
+						// 			],
+						// 			'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE',
+						// 			'Access-Control-Allow-Headers':
+						// 				'Content-Type, X-Requested-With, Content-Type, Accept',
+						// 		})
+						// 		next()
+						// 	}
+						// )
 
-						server.get(
-							// 'Qw4sYnTj-Ow?t=27s',
-							'https://www.youtube.com/embed/Qw4sYnTj-Ow?t=27s',
-							cors(),
-							function (req, res) {
-							res.set({
-								'Cross-Origin-Resource-Policy': 'cross-origin',
-								'Access-Control-Allow-Origin': ['*'],
-								'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE',
-								'Access-Control-Allow-Headers':
-									'Content-Type, X-Requested-With, Content-Type, Accept',
-							})
-							next()
-						})
+						// server.get(
+						// 	// 'Qw4sYnTj-Ow?t=27s',
+						// 	'https://www.youtube.com/embed/Qw4sYnTj-Ow?t=27s',
+						// 	cors(),
+						// 	function (req, res) {
+						// 	res.set({
+						// 		'Cross-Origin-Resource-Policy': 'cross-origin',
+						// 		'Access-Control-Allow-Origin': ['*'],
+						// 		'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE',
+						// 		'Access-Control-Allow-Headers':
+						// 			'Content-Type, X-Requested-With, Content-Type, Accept',
+						// 	})
+						// 	next()
+						// })
 
 
 
@@ -128,40 +128,41 @@ const serve = () => ({
 					},
 					middleware: (server) => {
 						// server.use(cors());
-						server.get('livereload.js?snipver=1', cors(), function (req, res) {
-							res.set({
-								'Cross-Origin-Resource-Policy': 'same-site',
-								'Access-Control-Allow-Origin': ['http://localhost:35729/', '*'],
-								'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE',
-								'Access-Control-Allow-Headers':
-									'Content-Type, X-Requested-With, Content-Type, Accept',
-							})
-							next();
-						})
+						// server.get('livereload.js?snipver=1', cors(), function (req, res) {
+						// 	res.set({
+						// 		'Cross-Origin-Resource-Policy': 'same-site',
+						// 		'Access-Control-Allow-Origin': ['http://localhost:35729/', '*'],
+						// 		'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE',
+						// 		'Access-Control-Allow-Headers':
+						// 			'Content-Type, X-Requested-With, Content-Type, Accept',
+						// 	})
+						// 	next();
+						// })
 
-						server.get('Qw4sYnTj-Ow?t=27s', cors(), function (req, res) {
-							res.set({
-								'Cross-Origin-Resource-Policy': 'cross-origin',
-							})
-							next();
-						})
+						// server.get('Qw4sYnTj-Ow?t=27s', cors(), function (req, res) {
+						// 	res.set({
+						// 		'Cross-Origin-Resource-Policy': 'cross-origin',
+						// 	})
+						// 	next();
+						// })
 
-						server.use((req, res, next) => {
-							res.set({
-								'Cross-Origin-Opener-Policy': 'same-origin',
-								'Cross-Origin-Embedder-Policy': 'require-corp',
-								'Cross-Origin-Resource-Policy': 'cross-origin',
-								'Access-Control-Allow-Origin': [
-									'http://localhost:35729/',
-									'*',
-								],
-								'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE',
-								'Access-Control-Allow-Headers':
-									'Content-Type, X-Requested-With, Content-Type, Accept',
-							}),
-							console.log('Time@SSR: %d', Date.now())
-							next()
-						})}
+						// server.use((req, res, next) => {
+						// 	res.set({
+						// 		'Cross-Origin-Opener-Policy': 'same-origin',
+						// 		'Cross-Origin-Embedder-Policy': 'require-corp',
+						// 		'Cross-Origin-Resource-Policy': 'cross-origin',
+						// 		'Access-Control-Allow-Origin': [
+						// 			'http://localhost:35729/',
+						// 			'*',
+						// 		],
+						// 		'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE',
+						// 		'Access-Control-Allow-Headers':
+						// 			'Content-Type, X-Requested-With, Content-Type, Accept',
+						// 	}),
+						// 	console.log('Time@SSR: %d', Date.now())
+						// 	next()
+						// })
+					}
 				})
     }
 })
@@ -197,7 +198,12 @@ export default {
 					// ! NOTE `!${staticDir}/samples` a negated pattern for the assets/samples directory,
 					// ! we want to prevent assets/samples from being copied
 					// ! and have them emitted (not inlined) by the plugin-URL
-					src: ['!*/(__index.html)', `!${assetsDir}/samples`, `${assetsDir}/*`],
+					src: [
+						'!*/(__index.html)',
+						'!assets/samples/*',
+						// `!${assetsDir}/samples/*`,
+						`${assetsDir}/*`,
+					],
 					dest: distDir,
 				},
 				{
@@ -237,7 +243,9 @@ export default {
 		}),
 		// globImport(),
 		url({
-			include: ['**/*.wav'],
+			// include: ['**/*.wav'],
+			include: ['assets/samples/*.wav'],
+			// include: ['**/*.wav'],
 			// publicPath: 'samples',
 			limit: 10, // 10 kb
 			// // publicPath: '/batman/',
@@ -286,7 +294,7 @@ export default {
 			maximumFileSizeToCacheInBytes: 10000000, // 10 MB,
 			mode: 'production',
 		}),
-		// production && copyToDist()
+		production && copyToDist(),
 		// production && livereload(distDir),
 	],
 	watch: {
