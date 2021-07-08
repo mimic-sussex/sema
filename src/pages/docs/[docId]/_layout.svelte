@@ -8,7 +8,21 @@
 
 
   $: setLastVisitedPage($params.docId);
-  $: promise = fetchMarkdown($params.docId, $links) //promise is reactive to changes in url docId and links since they load asynchrynously
+  $: promise = fetchMarkdown($params.docId, $links); //promise is reactive to changes in url docId and links since they load asynchrynously
+  $: promise.then(jumpToHash())
+  //$: jumpToHash(promise);
+  
+  function jumpToHash(){
+    if (location.hash !== ""){
+      console.log(typeof location.hash, location.hash, 'LOCATION HASH HERE');
+      document.getElementById(location.hash).scrollIntoView({behavior: 'auto'});
+    } else{
+      console.log("no hash to jump to");
+    }
+  }
+
+
+  
 
   let markdown;
   // sets chosenDocs in store to the current page so that its rememebered for when the user returns
@@ -27,7 +41,7 @@
 
       return `
               <h${level}>
-                <a name="${escapedText}" class="anchor" href="#${escapedText}" id="#${escapedText}">
+                <a name="${escapedText}" class="anchor" href="#${escapedText}" id="#${escapedText}" target="_self">
                   <span class="header-link"></span>
                 #
                 </a>
@@ -82,6 +96,8 @@
               <code style="-moz-user-select: text; -html-user-select: text; -webkit-user-select: text; -ms-user-select: text; user-select: text; white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word;" id='code${codeID++}'>`
             );
         };
+        
+      }
 
       } else {
         throw new Error(text);
@@ -100,8 +116,9 @@
       }
       */
         //$goto($url())
+      
       //document.getElementById("#"+location.hash).scrollIntoView({behavior: 'smooth'});
-    }
+
   }
   
   function findFileName(path, links){
