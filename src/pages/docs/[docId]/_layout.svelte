@@ -28,7 +28,7 @@
     let section = window.location.href.match(regex);
     
     window.onload = (event) => {
-      console.log("window LOADED");
+      //console.log("window LOADED");
       document.getElementById(location.hash).scrollIntoView({behavior: 'auto'});
     }
     
@@ -44,11 +44,11 @@
   // sets chosenDocs in store to the current page so that its rememebered for when the user returns
   function setLastVisitedPage(){
     $chosenDocs = './'+$params.docId;
-    console.log("chosen docs:)", $chosenDocs);
+    //console.log("chosen docs:)", $chosenDocs);
   }
 
   //const links = getContext('links');
-  console.log("links inner", $links);
+  //console.log("links inner", $links);
 
   //custom renderer to make headers have anchor links
   const renderer = {
@@ -121,22 +121,6 @@
       } else {
         throw new Error(text);
       }
-      
-      /*
-      //jump to correct anchor if there exists one in the url
-      let regex = /(?<=\#).g;
-      let section = window.location.href.match(regex)
-      console.log("url part", section );
-      window.scrollTo(0, 1000);
-      
-      if (section != null){
-        location.hash = '#' + section;
-        console.log("HERERERHER", $route());
-      }
-      */
-        //$goto($url())
-      
-      //document.getElementById("#"+location.hash).scrollIntoView({behavior: 'smooth'});
 
   }
   
@@ -164,8 +148,16 @@
 
   $afterPageLoad(page => {
     console.log('loaded ' + page.title)
-    lastLoadedDoc = "";
+    lastLoadedDoc = ""; //reset lastLoadedDocument
+    /*
+    console.log("HERE location.hash before if", location.hash);
+    if (location.hash != null || location.hash == ""){
+      console.log("HERE location.hash on page load", location.hash);
+      document.getElementById(location.hash).scrollIntoView({behavior: 'auto'});
+    }
+    */
   })
+
 
 </script>
 

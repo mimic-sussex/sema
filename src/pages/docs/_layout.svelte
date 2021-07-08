@@ -93,7 +93,7 @@
   .sidebar-menu {
     display: flex;
     flex-direction: column;
-    padding: 20px 20px 0px 10px;
+    padding: 20px 2px 0px 2px;
     background-color: #999;
     border-radius: 5px;
     overflow-y: auto;
@@ -114,7 +114,7 @@
   }
 
   .sidebar-item {
-    padding: 10px 20px 0px 10px;
+    padding: 5px 5px 0px 5px;
   }
 
   h2 {
