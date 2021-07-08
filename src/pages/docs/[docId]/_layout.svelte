@@ -9,18 +9,34 @@
 
   $: setLastVisitedPage($params.docId);
   $: promise = fetchMarkdown($params.docId, $links); //promise is reactive to changes in url docId and links since they load asynchrynously
-  $: promise.then(jumpToHash())
+  let lastLoadedDoc = $chosenDocs;
+  /*
+  $: promise.then(value => {
+      jumpToHash();
+    }, reason => {
+      console.log("no hash sad");
+    }).catch(e => {
+      console.log(e);
+    });
+  */
+    
+    ;
   //$: jumpToHash(promise);
   
   function jumpToHash(){
-    if (location.hash !== ""){
-      console.log(typeof location.hash, location.hash, 'LOCATION HASH HERE');
+    let regex = /(?<=\#).*/g;
+    let section = window.location.href.match(regex);
+    
+    window.onload = (event) => {
+      console.log("window LOADED");
       document.getElementById(location.hash).scrollIntoView({behavior: 'auto'});
-    } else{
-      console.log("no hash to jump to");
     }
+    
+    //console.log(document.getElementById(window.location.hash));
+    //if (window.location.hash != null){
+    //  document.getElementById(window.location.hash).scrollIntoView({behavior: 'auto'});
+    //}
   }
-
 
   
 
@@ -70,9 +86,10 @@
   
 
   let fetchMarkdown = async (docId, links) => {
-    console.log("params", $params);
-    console.log("params2", $params.docId);
-    
+    if (docId == lastLoadedDoc){
+      return;
+    }
+    lastLoadedDoc = docId;
     //docId is the $params.id, the url slug
     let doc = findFileName(docId, links);
 

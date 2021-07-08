@@ -7,69 +7,6 @@
 
   import { links, chosenDocs } from '../../stores/docs.js';
 
-  //$: populateSidebarProps($links);
-  let subHeadings = {};
-  //$: promise = makeSureLinksFull($links);
-
-
-  async function makeSureLinksFull(links){
-    await (links[links.length-1].subs.length != 0);
-  }
-
-  //let allHeadings = [];
-  //$: promise = fetchAllSubHeadings($links); //fetch all subheadings for all documentation
-  
-
-  async function fetchAllSubHeadings(links){
-    for (let i=0;i<links.length;i++){
-      fetchSubHeadings(links[i].file, links[i].path);
-    }
-  }
-
-  async function fetchSubHeadings(file, path){
-    //console.log("subheadings", subHeadings)
-
-    //check if the subheading has already been got
-    //we use path as the key (ID) for consitency
-    if (subHeadings.hasOwnProperty(path)){
-      return; //if it already exists just break out of the function already no need to fetch again
-    } else {
-      subHeadings[path] = [];
-    }
-
-    let currentHeadings = [];
-
-    if(file != undefined){ // There is a call with undefined value when navigating to Playground
-        const res = await fetch(document.location.origin + `/docs/${file}.md`)
-        const text = await res.text();
-        if (res.ok) {
-          //get tokens from the marked lexer
-          let tokens = marked.lexer(text);
-
-          //loop through them
-          for (let i=0; i<tokens.length; i++){
-            if (tokens[i].type == "heading" && tokens[i].depth == 1){
-              let heading = tokens[i].text;
-              currentHeadings.push({heading: heading , route: heading.replace(/\s+/g, '-').toLowerCase(), active:false})
-              //subHeadings[path].push( {name: heading, route: heading.replace(/\s+/g, '-').toLowerCase(), active:false} );
-              //subHeadings = subHeadings;
-            }
-          }
-
-          //add to the relevent part of links depending on the path
-          for (let i=0; i<$links.length; i++){
-            if ($links[i].path == path){
-              $links[i].subs = currentHeadings;
-              //$links = $links;
-            }
-          }
-
-        } else {
-          throw new Error(text);
-        }
-      }
-  }
-
   /*
   $: match = $route.path.match(/\/docs\/([^\/]+)\//);
   $: active = match && match[1];
