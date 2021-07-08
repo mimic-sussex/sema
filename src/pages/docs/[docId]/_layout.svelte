@@ -9,7 +9,7 @@
 
   $: setLastVisitedPage($params.docId);
   $: promise = fetchMarkdown($params.docId, $links); //promise is reactive to changes in url docId and links since they load asynchrynously
-  let lastLoadedDoc = $chosenDocs;
+  let lastLoadedDoc = "";//$chosenDocs;
   /*
   $: promise.then(value => {
       jumpToHash();
@@ -86,8 +86,10 @@
   
 
   let fetchMarkdown = async (docId, links) => {
+    console.log("HERE last loaded doc", lastLoadedDoc);
+    console.log("HERE docId", docId);
     if (docId == lastLoadedDoc){
-      return;
+      return; 
     }
     lastLoadedDoc = docId;
     //docId is the $params.id, the url slug
@@ -156,11 +158,13 @@
   onMount( async () => {
     //promise = fetchMarkdown(doc);
     console.log("DEBUG:routes/docs/"+$params.docId+"/_layout:onMount");
+    
   });
 
 
   $afterPageLoad(page => {
     console.log('loaded ' + page.title)
+    lastLoadedDoc = "";
   })
 
 </script>
