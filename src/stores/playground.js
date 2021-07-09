@@ -120,13 +120,13 @@ export const isAddGrammarEditorDisabled = writable(false);
 // Dashboard Store for Live Code Editor options in Sidebar component
 export const sidebarDebuggerOptions = writable([
 	{ id: 0, disabled: false, type: ``, text: `debug`, content: "" },
-	// {
-	// 	id: 1,
-	// 	disabled: false,
-	// 	type: `console`,
-	// 	text: `Console`,
-	// 	content: "",
-	// },
+	{
+		id: 1,
+		disabled: false,
+		type: `console`,
+		text: `Console`,
+		content: "",
+	},
 	{
 		id: 1,
 		disabled: false,
