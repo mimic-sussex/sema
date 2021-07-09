@@ -3,6 +3,7 @@
 
   import { tick, onMount, onDestroy } from 'svelte'
   import { ready, url, params } from "@roxi/routify";
+  import marked from 'marked';
 
 	// import UserObserver from '../components/user/UserObserver.svelte';
 	// import SignOut from '../components/user/SignOut.svelte';
@@ -48,6 +49,7 @@
   $: fetchAndLoadDefaultTutorial();
   $: fetchAndLoadDefaultTutorialItems();
   $: fetchAndLoadDocsNavLinks(); //preload nav links for documentation (reference)
+
 
   $: document.addEventListener( "keydown", e => {
 
@@ -130,16 +132,38 @@
   }
 
   let fetchAndLoadDocsNavLinks = async () => {
-    fetch(document.location.origin + `/docs/docsnew.json`)
-      .then(r => r.json())
-      .then(json => {
-        $links = json;
-        $chosenDocs = $links[0].path;
-        $ready();
-      }).catch( () => new Error('Fetching docsnew.json failed'));
+    const res1 = await fetch(document.location.origin + `/docs/docsnew.json`);
+    const json = await res1.json();
+    if (res1.ok){
+      let tmpLinks = json;
+      let tmpChosenDocs = tmpLinks[0].path;
+    
+      for (let i=0;i<tmpLinks.length;i++){
+          let currentHeadings = [];
+          if(tmpLinks[i].file != undefined){ // There is a call with undefined value when navigating to Playground
+            const res = await fetch(document.location.origin + `/docs/${tmpLinks[i].file}.md`)
+            const text = await res.text();
+            if (res.ok) {
+              //get tokens from the marked lexer
+              let tokens = marked.lexer(text);
+              //loop through them
+              for (let i=0; i<tokens.length; i++){
+                if (tokens[i].type == "heading" && tokens[i].depth == 1){
+                  let heading = tokens[i].text;
+                  currentHeadings.push({heading: heading , route: heading.replace(/\s+/g, '-').toLowerCase(), active:false})
+                }
+              }
+              tmpLinks[i].subs = currentHeadings;
+            } else {
+              throw new Error(text);
+            }
+          }
+        }
+        console.log("tmpLinks", tmpLinks);
+        $links = tmpLinks;
+        $chosenDocs = tmpChosenDocs;
+    }  
   }
-
-  // let let fetchAndLoadDefaultDocs = async () => {}
 
   onMount( async () => {
     console.log("DEBUG:routes/_layout:onMount");

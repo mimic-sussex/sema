@@ -8,15 +8,47 @@
 
 
   $: setLastVisitedPage($params.docId);
+  $: promise = fetchMarkdown($params.docId, $links); //promise is reactive to changes in url docId and links since they load asynchrynously
+  let lastLoadedDoc = "";//$chosenDocs;
+  /*
+  $: promise.then(value => {
+      jumpToHash();
+    }, reason => {
+      console.log("no hash sad");
+    }).catch(e => {
+      console.log(e);
+    });
+  */
+    
+    ;
+  //$: jumpToHash(promise);
+  
+  function jumpToHash(){
+    let regex = /(?<=\#).*/g;
+    let section = window.location.href.match(regex);
+    
+    window.onload = (event) => {
+      //console.log("window LOADED");
+      document.getElementById(location.hash).scrollIntoView({behavior: 'auto'});
+    }
+    
+    //console.log(document.getElementById(window.location.hash));
+    //if (window.location.hash != null){
+    //  document.getElementById(window.location.hash).scrollIntoView({behavior: 'auto'});
+    //}
+  }
 
+  
+
+  let markdown;
   // sets chosenDocs in store to the current page so that its rememebered for when the user returns
   function setLastVisitedPage(){
     $chosenDocs = './'+$params.docId;
-    console.log("chosen docs:)", $chosenDocs);
+    //console.log("chosen docs:)", $chosenDocs);
   }
 
   //const links = getContext('links');
-  console.log("links inner", $links);
+  //console.log("links inner", $links);
 
   //custom renderer to make headers have anchor links
   const renderer = {
@@ -25,7 +57,7 @@
 
       return `
               <h${level}>
-                <a name="${escapedText}" class="anchor" href="#${escapedText}">
+                <a name="${escapedText}" class="anchor" href="#${escapedText}" id="#${escapedText}" target="_self">
                   <span class="header-link"></span>
                 #
                 </a>
@@ -51,14 +83,15 @@
 
   //$: docId = $params.docId; //get the doc part of the url
 
-  $: promise = fetchMarkdown($params.docId, $links) //promise is reactive to changes in url docId and links since they load asynchrynously
-
-  let markdown;
+  
 
   let fetchMarkdown = async (docId, links) => {
-    console.log("params", $params);
-    console.log("params2", $params.docId);
-    
+    console.log("HERE last loaded doc", lastLoadedDoc);
+    console.log("HERE docId", docId);
+    if (docId == lastLoadedDoc){
+      return; 
+    }
+    lastLoadedDoc = docId;
     //docId is the $params.id, the url slug
     let doc = findFileName(docId, links);
 
@@ -82,25 +115,13 @@
               <code style="-moz-user-select: text; -html-user-select: text; -webkit-user-select: text; -ms-user-select: text; user-select: text; white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word;" id='code${codeID++}'>`
             );
         };
+        
+      }
 
       } else {
         throw new Error(text);
       }
-      
-      /*
-      //jump to correct anchor if there exists one in the url
-      let regex = /(?<=\#).g;
-      let section = window.location.href.match(regex)
-      console.log("url part", section );
-      window.scrollTo(0, 1000);
-      
-      if (section != null){
-        location.hash = '#' + section;
-        console.log("HERERERHER", $route());
-      }
-      */
-        //$goto($url())
-    }
+
   }
   
   function findFileName(path, links){
@@ -121,12 +142,22 @@
   onMount( async () => {
     //promise = fetchMarkdown(doc);
     console.log("DEBUG:routes/docs/"+$params.docId+"/_layout:onMount");
+    
   });
 
 
   $afterPageLoad(page => {
     console.log('loaded ' + page.title)
+    lastLoadedDoc = ""; //reset lastLoadedDocument
+    /*
+    console.log("HERE location.hash before if", location.hash);
+    if (location.hash != null || location.hash == ""){
+      console.log("HERE location.hash on page load", location.hash);
+      document.getElementById(location.hash).scrollIntoView({behavior: 'auto'});
+    }
+    */
   })
+
 
 </script>
 

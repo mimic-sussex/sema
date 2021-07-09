@@ -7,62 +7,6 @@
 
   import { links, chosenDocs } from '../../stores/docs.js';
 
-  //$: populateSidebarProps($links);
-  let subHeadings = {};
-  //let allHeadings = [];
-  $: fetchAllSubHeadings($links); //fetch all subheadings for all documentation
-  
-
-  async function fetchAllSubHeadings(links){
-    for (let i=0;i<links.length;i++){
-      fetchSubHeadings(links[i].file, links[i].path);
-    }
-  }
-
-  async function fetchSubHeadings(file, path){
-    //console.log("subheadings", subHeadings)
-
-    //check if the subheading has already been got
-    //we use path as the key (ID) for consitency
-    if (subHeadings.hasOwnProperty(path)){
-      return; //if it already exists just break out of the function already no need to fetch again
-    } else {
-      subHeadings[path] = [];
-    }
-
-    let currentHeadings = [];
-
-    if(file != undefined){ // There is a call with undefined value when navigating to Playground
-        const res = await fetch(document.location.origin + `/docs/${file}.md`)
-        const text = await res.text();
-        if (res.ok) {
-          //get tokens from the marked lexer
-          let tokens = marked.lexer(text);
-
-          //loop through them
-          for (let i=0; i<tokens.length; i++){
-            if (tokens[i].type == "heading" && tokens[i].depth == 1){
-              let heading = tokens[i].text;
-              currentHeadings.push({heading: heading , route: heading.replace(/\s+/g, '-').toLowerCase(), active:false})
-              //subHeadings[path].push( {name: heading, route: heading.replace(/\s+/g, '-').toLowerCase(), active:false} );
-              //subHeadings = subHeadings;
-            }
-          }
-
-          //add to the relevent part of links depending on the path
-          for (let i=0; i<$links.length; i++){
-            if ($links[i].path == path){
-              $links[i].subs = currentHeadings;
-              //$links = $links;
-            }
-          }
-
-        } else {
-          throw new Error(text);
-        }
-      }
-  }
-
   /*
   $: match = $route.path.match(/\/docs\/([^\/]+)\//);
   $: active = match && match[1];
@@ -81,7 +25,7 @@
     console.log("DEBUG:routes/docs/_layout:onMount");
     //console.log('onMount', $chosenDocs)
     $redirect($url($chosenDocs));
-    //console.log("$links on mount", $links);
+    console.log("$links on mount", $links);
   });
 
 
@@ -149,7 +93,7 @@
   .sidebar-menu {
     display: flex;
     flex-direction: column;
-    padding: 20px 20px 0px 10px;
+    padding: 20px 2px 0px 2px;
     background-color: #999;
     border-radius: 5px;
     overflow-y: auto;
@@ -170,7 +114,7 @@
   }
 
   .sidebar-item {
-    padding: 10px 20px 0px 10px;
+    padding: 5px 5px 0px 5px;
   }
 
   h2 {
@@ -191,6 +135,7 @@
 
 <div class='container-docs' data-routify="scroll-lock">
 
+  
   <ul class='sidebar-menu'>
     {#each $links as {path, name, file, subs}, i}
       {#if name == 'Welcome'}
@@ -204,7 +149,7 @@
               <ul>
                 {#each subs as {heading, route, active}}
                   <li>
-                    <a class='sub-nav-links' href={$url(path+'#'+route)} 
+                    <a class='sub-nav-links' href={$url(path+'#'+route)} target="_self" 
                     class:active={$isActive(route)}>
                       {heading}
                     </a>
@@ -216,6 +161,7 @@
       {/if}
     {/each}
   </ul>
+  
 
 
   <!--
