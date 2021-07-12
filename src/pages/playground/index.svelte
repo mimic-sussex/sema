@@ -10,7 +10,7 @@
 
   import { PubSub } from "../../utils/pubSub.js";
 
-  import { compile } from 'sema-engine/sema-engine';
+  // import { compile } from '../node_modules/sema-engine/sema-engines';
 
   import Delete from '../../components/overlays/Delete.svelte';
   import Save from '../../components/overlays/Save.svelte';
