@@ -20,7 +20,8 @@
     ASTreeToJavascript,
     ASTreeToDSPcode,
     Engine
-  } from 'sema-engine/sema-engine';
+  } from '../../../node_modules/sema-engine/sema-engine';
+  // } from '../../../n sema-engine/sema-engine';
 
   import {
     nil,

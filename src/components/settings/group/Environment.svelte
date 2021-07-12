@@ -12,7 +12,7 @@
     onDestroy
   } from 'svelte';
 
-  import { Engine } from 'sema-engine/sema-engine';
+  import { Engine } from '../../../../node_modules/sema-engine/sema-engine';
 
   let engine,
       engineLoaded = false

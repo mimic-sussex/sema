@@ -24,7 +24,7 @@
   } from '../stores/docs.js';
 
 
-  import { Engine } from 'sema-engine/sema-engine';
+  import { Engine } from '../../node_modules/sema-engine/sema-engine';
   import Controller from "../engine/controller";
   let controller = new Controller(); // this will return the previously created Singleton instance
   let engine = controller.engine;
@@ -137,7 +137,7 @@
     if (res1.ok){
       let tmpLinks = json;
       let tmpChosenDocs = tmpLinks[0].path;
-    
+
       for (let i=0;i<tmpLinks.length;i++){
           let currentHeadings = [];
           if(tmpLinks[i].file != undefined){ // There is a call with undefined value when navigating to Playground
@@ -162,7 +162,7 @@
         console.log("tmpLinks", tmpLinks);
         $links = tmpLinks;
         $chosenDocs = tmpChosenDocs;
-    }  
+    }
   }
 
   onMount( async () => {

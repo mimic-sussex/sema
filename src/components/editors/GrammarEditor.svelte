@@ -20,7 +20,7 @@
     grammarCompilationErrors
   } from "../../stores/common.js";
 
-  import { compileGrammar } from 'sema-engine/sema-engine';
+  import { compileGrammar } from '../../../node_modules/sema-engine/sema-engine';
 
   export let id;
   export let name;
