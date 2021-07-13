@@ -6,7 +6,7 @@
 
   import {
     Engine
-  } from '../../../node_modules/sema-engine/sema-engine'
+  } from 'sema-engine'
 
   let engine;
 

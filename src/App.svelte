@@ -30,7 +30,8 @@
     // }
     // else {
       // Need a dynamic import to prevent the AudioWorkletNode inside the audioEngine module from loading [Safari fix]
-      import("../node_modules/sema-engine/sema-engine.mjs")
+      // import("../node_modules/sema-engine/sema-engine.mjs")
+      import("sema-engine")
         .then((module) => {
           // Apply in Inversion of Control with constructor injection
           engine = new module.Engine();

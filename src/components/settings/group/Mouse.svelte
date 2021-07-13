@@ -1,5 +1,5 @@
 <script>
-import { Engine } from '../../../../node_modules/sema-engine/sema-engine';
+import { Engine } from 'sema-engine';
 
 	import {
     onMount,

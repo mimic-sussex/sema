@@ -55,7 +55,7 @@
 
   import {
     Engine
-  } from '../../../node_modules/sema-engine/sema-engine'
+  } from 'sema-engine'
 
   import Controller from "../../engine/controller";
   let controller = new Controller(); // this will return the previously created Singleton instance

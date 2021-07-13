@@ -1,7 +1,7 @@
 import { get, writable } from "svelte/store";
 
 // import compile from "../compiler/compiler";
-import { compile } from '../../node_modules/sema-engine/sema-engine'
+import { compile } from 'sema-engine'
 
 
 import { id, fetchFrom } from "../utils/utils";
