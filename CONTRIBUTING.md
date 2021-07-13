@@ -19,8 +19,7 @@ The following is a set of guidelines for contributing to Sema and its engine, th
   * [Suggesting Enhancements](#suggesting-enhancements)
   * [Your First Code Contribution](#your-first-code-contribution)
   * [Pull Requests](#pull-requests)
-
-	[Styleguides](#styleguides)
+  *	[Styleguides](#styleguides)
   * [Git Commit Messages](#git-commit-messages)
   * [JavaScript Styleguide](#javascript-styleguide)
   * [Specs Styleguide](#specs-styleguide)
@@ -40,13 +39,15 @@ This project and everyone participating in it is governed by the [Sema Code of C
 > **Note:** [Please don't file an issue to ask a question.]() You'll get faster results by using the resources below.
 
 
+## What should I know before
+
 ## How Can I Contribute?
 
 ### Reporting Bugs
 
 This section guides you through submitting a bug report for Atom. Following these guidelines helps maintainers and the community understand your report :pencil:, reproduce the behavior :computer: :computer:, and find related reports :mag_right:.
 
-Before creating bug reports, please check [this list](#before-submitting-a-bug-report) as you might find out that you don't need to create one. When you are creating a bug report, please [include as many details as possible](#how-do-i-submit-a-good-bug-report). Fill out [the required template](https://github.com/atom/.github/blob/master/.github/ISSUE_TEMPLATE/bug_report.md), the information it asks for helps us resolve issues faster.
+Before creating bug reports, please check [this list](#before-submitting-a-bug-report) as you might find out that you don't need to create one. When you are creating a bug report, please [include as many details as possible](#how-do-i-submit-a-good-bug-report).
 
 > **Note:** If you find a **Closed** issue that seems like it is the same thing that you're experiencing, open a new issue and include a link to the original issue in the body of your new one.
 
@@ -58,7 +59,38 @@ Before creating bug reports, please check [this list](#before-submitting-a-bug-r
 
 #### How Do I Submit A (Good) Bug Report?
 
-Bugs are tracked as [GitHub issues](https://guides.github.com/features/issues/). After you've determined [which repository](#atom-and-packages) your bug is related to, create an issue on that repository and provide the following information by filling in [the template](https://github.com/atom/.github/blob/master/.github/ISSUE_TEMPLATE/bug_report.md).
+Bugs are tracked as [GitHub issues](https://guides.github.com/features/issues/). After you've determined [which repository](#atom-and-packages) your bug is related to, create an issue on the repository and provide the following information by filling in [the template](https://github.com/atom/.github/blob/master/.github/ISSUE_TEMPLATE/bug_report.md).
+
+##### Description
+
+<!-- Description of the issue -->
+
+##### Steps to Reproduce
+
+1. <!-- First Step -->
+2. <!-- Second Step -->
+3. <!-- and so on… -->
+
+**Expected behavior:**
+
+<!-- What you expect to happen -->
+
+**Actual behavior:**
+
+<!-- What actually happens -->
+
+**Reproduces how often:**
+
+<!-- What percentage of the time does it reproduce? -->
+
+##### Versions
+
+<!-- Also, please include the OS and what version of the OS you're running, the browser and the the browser version. -->
+
+##### Additional Information
+
+<!-- Any additional information, configuration or data that might be necessary to reproduce the issue. -->
+
 
 Explain the problem and include additional details to help maintainers reproduce the problem:
 
