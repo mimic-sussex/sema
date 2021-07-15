@@ -1,15 +1,16 @@
 <script>
 	import { Router } from '@roxi/routify'
 	import { routes } from '../.routify/routes'
-	import { authStore } from './auth.js'
+	import { init } from './stores/auth.js'
 
   import Controller from "./engine/controller";
   import Logger from './utils/logger.js';
   import { PubSub } from './utils/pubSub.js';
+
   let messaging = new PubSub();
 
 	// we need to queue our init till after Routify has been initialized
-	setTimeout(() => window.routify.inBrowser && authStore.init())
+	setTimeout(() => window.routify.inBrowser && init())
 
   // $unsupportedBrowser
   let unsupportedBrowser,
@@ -30,7 +31,6 @@
     // }
     // else {
       // Need a dynamic import to prevent the AudioWorkletNode inside the audioEngine module from loading [Safari fix]
-      // import("../node_modules/sema-engine/sema-engine.mjs")
       import("sema-engine")
         .then((module) => {
           // Apply in Inversion of Control with constructor injection

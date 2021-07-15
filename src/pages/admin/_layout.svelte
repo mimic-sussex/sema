@@ -1,8 +1,16 @@
 <script>
 	import { ready } from '@roxi/routify'
-	import { authStore } from '../../auth.js'
+	import {
+		username,
+		website,
+		loading,
+		avatar_url,
+		updateProfile,
+		getProfile,
+		signOut
+	} from '../../stores/auth.js'
 	import Login from '../login/index.svelte'
-	const { user, authenticated, loading } = authStore
+	// const { user, authenticated, loading } = authStore
 
 	/**
 	 * since SSR normally won't render till all components have been loaded
@@ -12,14 +20,14 @@
 	$ready()
 </script>
 
-<div class="admin-module" class:not-authed={!$user}>
+<div class="admin-module" class:not-authed={!$username}>
 	{#if !window.routify.inBrowser}
 		Hello bot. This page is only available to humans.
 	{:else if $loading}
 		<div class="center-all">
 			<h1>Loading...</h1>
 		</div>
-	{:else if $user}
+	{:else if $username}
 		<slot />
 	{:else}
 		<Login />

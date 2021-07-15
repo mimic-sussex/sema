@@ -19,6 +19,8 @@ import workerLoader from 'rollup-plugin-web-worker-loader'
 import { wasm } from '@rollup/plugin-wasm'
 import sourcemaps from 'rollup-plugin-sourcemaps'
 import json from '@rollup/plugin-json'
+import replace from '@rollup/plugin-replace'
+import { config } from 'dotenv'
 // import cors from 'cors';
 
 
@@ -209,12 +211,12 @@ export default {
 				{
 					src: [
 						'node_modules/sema-engine/maxi-processor.js',
-						'node_modules/sema-engine/sema-engine.wasmmodule.js',
-						'node_modules/sema-engine/open303.wasmmodule.js',
-						'node_modules/sema-engine/ringbuf.js',
-						'node_modules/sema-engine/transducers.js',
-						'node_modules/sema-engine/lalolib.js',
-						'node_modules/sema-engine/svd.js',
+						// 'node_modules/sema-engine/sema-engine.wasmmodule.js',
+						// 'node_modules/sema-engine/open303.wasmmodule.js',
+						// 'node_modules/sema-engine/ringbuf.js',
+						// 'node_modules/sema-engine/transducers.js',
+						// 'node_modules/sema-engine/lalolib.js',
+						// 'node_modules/sema-engine/svd.js',
 					],
 					// dest: `${buildDir}`,
 					dest: distDir,
@@ -259,6 +261,15 @@ export default {
 			// destDir: join(__dirname, `${distDir}/sema-engine/samples`), // 'dist/assets/samples'
 			// destDir: __dirname,
 		}),
+		replace({
+			// preventAssignment: true,
+			__api: JSON.stringify({
+				env: {
+					// isProd: production,
+					...config().parsed, // attached the .env config
+				},
+			}),
+		}),
 		json(),
 		string({
 			include: [
@@ -278,13 +289,13 @@ export default {
 		!production && isNollup && Hmr({ inMemory: true, public: assetsDir }), // refresh only updated code
 		{
 			// provide node environment on the client
-			transform: (code) => ({
-				code: code.replace(
-					/process\.env\.NODE_ENV/g,
-					`"${process.env.NODE_ENV}"`
-				),
-				map: { mappings: '' },
-			}),
+			// transform: (code) => ({
+			// 	code: code.replace(
+			// 		/process\.env\.NODE_ENV/g,
+			// 		`"${process.env.NODE_ENV}"`
+			// 	),
+			// 	map: { mappings: '' },
+			// }),
 		},
 		injectManifest({
 			globDirectory: assetsDir,

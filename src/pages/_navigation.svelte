@@ -1,13 +1,21 @@
 <script>
 
   import { isActive, url, params } from "@roxi/routify";
-	import { authStore } from '../auth'
+	import {
+		username,
+		website,
+		loading,
+		avatar_url,
+		updateProfile,
+		getProfile,
+		signOut
+  } from '../stores/auth.js'
   import { siteMode } from "../stores/common";
 
   import Controller from "../engine/controller";
   let controller = new Controller(); // this will return the previously created Singleton instance
 
-	const { user, signout } = authStore
+	// const { user, signout } = authStore
 
 	const links = [
 		['/playground', 'playground'],
@@ -543,13 +551,13 @@
 	</div>
 
 	<div>
-		{#if $user}
+		{#if $username}
 			<a href="/admin"
         style='color: {$siteMode === 'dark'? 'white': 'black'};'
       >
       admin</a>
-			<img src={$user.picture} alt="profile - {$user.nickname}" />
-			<a href="#signout" on:click={signout}
+			<img src={$avatar_url} alt="profile - {$username}" />
+			<a href="#signout" on:click={ () => signOut()}
         style='color: {$siteMode === 'dark'? 'white': 'black'};'
         >
         signout</a>

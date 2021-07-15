@@ -1,0 +1,159 @@
+[{
+  "title": "Basics",
+  "sections": [{
+    "slug": "introduction",
+    "title": "Introduction to the Sema playground",
+    "chapter_dir": "01-basics",
+    "section_dir": "01-introduction"
+  }, {
+    "slug": "interface",
+    "title": "Interface",
+    "chapter_dir": "01-basics",
+    "section_dir": "02-interface"
+  }, {
+    "slug": "editors",
+    "title": "Editors",
+    "chapter_dir": "01-basics",
+    "section_dir": "03-editors"
+  }, {
+    "slug": "widgets",
+    "title": "Widgets",
+    "chapter_dir": "01-basics",
+    "section_dir": "04-widgets"
+  }]
+}, {
+  "title": "Live Coding with the Default Language",
+  "sections": [{
+    "slug": "introduction",
+    "title": "Introduction to the Default Language",
+    "chapter_dir": "02-live-coding",
+    "section_dir": "01-introduction"
+  }, {
+    "slug": "ins and outs",
+    "title": "Inputs and outputs",
+    "chapter_dir": "02-live-coding",
+    "section_dir": "02-inout"
+  },
+  {
+    "slug": "variables",
+    "title": "Variables",
+    "chapter_dir": "02-live-coding",
+    "section_dir": "03-variables"
+  },
+  {
+    "slug": "sampling",
+    "title": "Playing samples",
+    "chapter_dir": "02-live-coding",
+    "section_dir": "04-sampling"
+  },
+  {
+    "slug": "mapping",
+    "title": "Mapping",
+    "chapter_dir": "02-live-coding",
+    "section_dir": "05-mapping"
+  },
+  {
+    "slug": "sequencing",
+    "title": "Basic sequencing and clocks",
+    "chapter_dir": "02-live-coding",
+    "section_dir": "06-sequencing"
+  },
+  {
+    "slug": "sequencing",
+    "title": "The ratio sequencer",
+    "chapter_dir": "02-live-coding",
+    "section_dir": "07-ratioseq"
+  }
+  ]
+}, {
+  "title": "Machine Learning",
+  "sections": [{
+    "slug": "introduction",
+    "title": "Introduction to Machine Learning",
+    "chapter_dir": "03-machine-learning",
+    "section_dir": "01-introduction"
+  },
+  {
+    "slug": "streaming from LC to JS",
+    "title": "Sending data to the JS window",
+    "chapter_dir": "03-machine-learning",
+    "section_dir": "02-streaming-lc-ml"
+  }, {
+    "slug": "streaming from JS to LC",
+    "title": "Sending data from the JS window",
+    "chapter_dir": "03-machine-learning",
+    "section_dir": "03-streaming-ml-lc"
+  }, {
+    "slug": "streaming both ways",
+    "title": "Streaming in both directions",
+    "chapter_dir": "03-machine-learning",
+    "section_dir": "04-streaming-both-ways"
+  }, {
+    "slug": "creating buffers",
+    "title": "Creating buffers in the JS window",
+    "chapter_dir": "03-machine-learning",
+    "section_dir": "05-creating-buffers"
+  }, {
+    "slug": "libraries",
+    "title": "Using external libraries",
+    "chapter_dir": "03-machine-learning",
+    "section_dir": "06-ml-libraries"
+  }, {
+    "slug": "live reinforcement learning",
+    "title": "A machine learning powered sequencer",
+    "chapter_dir": "03-machine-learning",
+    "section_dir": "07-rl-gosling"
+  }, {
+    "slug": "regression with FM synthesis",
+    "title": "FM synthesis, controlled by a neural network",
+    "chapter_dir": "03-machine-learning",
+    "section_dir": "08-fm-regression"
+  }, {
+    "slug": "exploring parameter spaces",
+    "title": "Parameter space exploration",
+    "chapter_dir": "03-machine-learning",
+    "section_dir": "09-regression2"
+  }, {
+    "slug": "sequencing with reinforcement learning",
+    "title": "Interactive reinforcement learning",
+    "chapter_dir": "03-machine-learning",
+    "section_dir": "10-rl-sequencing"
+  }]
+}, {
+  "title": "Language Design",
+  "sections": [{
+    "slug": "introduction",
+    "title": "Introduction to Language Design",
+    "chapter_dir": "04-language-design",
+    "section_dir": "01-introduction"
+  },
+  {
+    "slug": "structure-bnf-notation",
+    "title": "BNF Structure and Notation",
+    "chapter_dir": "04-language-design",
+    "section_dir": "02-structure-bnf-notation"
+  },
+  {
+    "slug": "regular-expressions",
+    "title": "Lexer and Regular Expressions",
+    "chapter_dir": "04-language-design",
+    "section_dir": "03-lexer-regular-expressions"
+  },
+  {
+    "slug": "grammar-rules",
+    "title": "Grammar Rules",
+    "chapter_dir": "04-language-design",
+    "section_dir": "04-grammar-rules"
+  }, {
+    "slug": "recursion and lists",
+    "title": "Recursion and Lists",
+    "chapter_dir": "04-language-design",
+    "section_dir": "05-recursion-lists"
+  },
+  {
+		"slug": "semantic-actions",
+		"title": "Semantic Actions with Intermediate Language",
+		"chapter_dir": "04-language-design",
+		"section_dir": "06-semantic-actions-intermediate-language"
+	}]
+}]

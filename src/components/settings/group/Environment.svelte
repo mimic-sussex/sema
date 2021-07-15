@@ -5,7 +5,7 @@
   } from '../../../stores/common.js';
 
   import { isActive } from "@roxi/routify";
-	import { authStore } from '../../../auth'
+	// import { authStore } from '../../../stores/auth.js'
 
 	import {
     onMount,
@@ -19,7 +19,7 @@
       ;
 
 
-	const { user, signout } = authStore;
+	// const { user, signout } = authStore;
 
   import {
     sidebarLiveCodeOptions,

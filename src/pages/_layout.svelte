@@ -10,12 +10,16 @@
 	// import AudioEngineStatus from '../components/settings/AudioEngineStatus.svelte';
   // import SiteColor from '../components/settings/SiteColor.svelte';
 
-  import { currentUser } from '../stores/user.js'
+  import {
+		// currentUser
+		username
+	} from '../stores/auth.js'
 
   import {
     tutorials,
     selected,
-    hydrateJSONcomponent,    items
+    hydrateJSONcomponent,
+		items
   } from '../stores/tutorial.js';
 
   import {
@@ -24,7 +28,7 @@
   } from '../stores/docs.js';
 
 
-  import { Engine } from 'sema-engine';
+  // import { Engine } from 'sema-engine';
   import Controller from "../engine/controller";
   let controller = new Controller(); // this will return the previously created Singleton instance
   let engine = controller.engine;
