@@ -57,6 +57,7 @@ export const dspCode = writable("");
 // export const modelEditorValue = writable(initModelEditorValue());
 export const modelEditorValue = writable("");
 
+export const rawConsoleLogs = writable("");
 
 // export const populateStoresWithFetchedProps = async (newItem) => {
 
