@@ -122,7 +122,7 @@ Now let's try to learn the snare pattern - type ```learn``` before 'snare' and e
 ```
 bpm 150;
 source kick*2;
-predict snare*2;
+learn snare*2;
 closedhat*1 1;
 ```
 
@@ -177,7 +177,7 @@ You can continue in this manner, teaching the model what to play based on differ
 3. Does it create any surprising results?  Did they sound good?
 4. What happens when you train to (a) higher losses? and (b) very low losses?
 5. What happens if you switch the source of a trained model?
-6. How does the model respond to learning more complex sequences?  
+6. How does the model respond to learning more complex sequences?
 7. Does the model train more easily with any particular style of rhythm?
 7. How does the model respond to patterns it hasn't heard before?
 
@@ -188,4 +188,4 @@ If at any time you want to start with a fresh model, just re-run the code in the
 
 #### Advanced Use
 
-This assumes some knowledge about neural network architecture.  The size of the layers is specified in the ```structure``` variable at the start of the JS script.  You can change this list to experiment with different architectures - just change the array and re-run the script.  
+This assumes some knowledge about neural network architecture.  The size of the layers is specified in the ```structure``` variable at the start of the JS script.  You can change this list to experiment with different architectures - just change the array and re-run the script.
