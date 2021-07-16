@@ -32,29 +32,39 @@
   //$: value = appendLog($rawConsoleLogs);//append;
 
   // append
+  let something = e => { /* console.log(...e); */ }
+
 
   function appendLog(rawlogs){
     localLogs = localLogs + rawlogs;
     localLogs = localLogs;
   }
 
-  addEventListener("onConsoleLogsUpdate", (e) => {
-    console.log("recieved event!!");
-    $rawConsoleLogs = logger.rawLog;
-  }
-  ); 
+  // addEventListener("onConsoleLogsUpdate", (e) => {
+  //   console.log("recieved event!!");
+  //   $rawConsoleLogs = logger.rawLog;
+  // }
+  // );
+
+	function eventListener(log){
+
+		console.log('Console')
+    console.log("loggers log:", logger.log);
+    console.log(logger.rawLog);
+
+    $rawConsoleLogs = log;
+	}
 
   onMount(async () => {
 
-    // if(!logger){
-      // logger = new Logger();
+    if(!logger){
+      logger = new Logger();
+    }
 
-    // }
-    console.log('Console')
-    console.log("loggers log:", logger.log);
-    console.log(logger.rawLog);
+		logger.addEventListener("onLog", eventListener)
+
     //append = append + logger.log
-    //log( id, name, type, className, lineNumbers, hasFocus, theme, background, component );
+    something( id, name, type, className, lineNumbers, hasFocus, theme, background, component );
   });
 
   onDestroy( async () => {
