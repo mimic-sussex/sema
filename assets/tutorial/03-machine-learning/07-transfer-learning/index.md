@@ -1,9 +1,15 @@
 # Transfer learning with Magenta models
 
+We are starting with transfer learning, a technique that make it trivial for live coders to use machine learning.
+In a nutshell, it consists in using pre-trained model off-the-shelf by accessing a configuration that contains all the model parameters.
 
+Google Magenta has made many of these models made available are available online and .
 
+`https://goo.gl/magenta/js-checkpoints`
 
+We are going to explore two model categories: Recurrent Neural Networks and Music Variational Autoencoders to generates sequences that can be played in Sema.
 
+For that we are going to receive messages containing sequences of notes from the Javascript scope which we can then use to generate audio. So, let's start by copying and pasting the following code to the live code editor:
 
 ```
 {120, 4}clk;
@@ -16,6 +22,14 @@
 ```
 
 ## Part 1: Transfer learning with Recurrent Neural Networks
+
+In the first part of the tutorial, we will be exploring how to use a pre-trained Recurrent Neural Network (RNN) for melody generation.
+
+The specific model configuration (basic_rnn) applies language modeling technique (one-hot encoding) to represent extracted melodies as input to the LSTM model for for melody generation.
+
+For training, all examples are transposed to the MIDI pitch range [48, 84]. Inputs and outputs should also be in this range.
+
+We can use a NoteSequence data object with MIDI notes as model input, and call `continueSequence` so that it generates a continuation sequence in the same style.
 
 ```
 //EXECUTE THESE SCRIPTS TO IMPORT TENSOR FLOW AND MAGENTA LIBRARIES
@@ -34,7 +48,7 @@ var mtof = m => Math.pow(2, (m - 69) / 12) * 440;
 var ftom = f => Math.round(12*Math.log2(f/440) + 69);
 ___
 
-// DEFINE A NOTE SEQUENCE "Piano Phase" Steve Reich
+// DEFINE A NOTE SEQUENCE E.G. "Piano Phase" Steve Reich
 var noteSeq = {
   notes: [
     {pitch: 73, startTime: 0.0, endTime: 0.5},
@@ -90,7 +104,12 @@ ___
 
 ## Part 2: Transfer learning with Music Variational Autoencoder
 
-A Music Variational Autoencoder is a machine learning model that has previously been trained on a lot of MIDI files, and has learned to generate melodies or ensembles. It represents each music sample as a vector of 256 features, and every different vector of 256 numbers sounds like a different piece of music.
+A Music Variational Autoencoder (VAE) is a machine learning model that has previously been trained on a lot of MIDI files, and has learned to generate melodies or ensembles.
+
+VAE represents each music sample as a vector of 256 features, and every different vector of 256 numbers sounds like a different piece of music.
+
+These latent vectors enable a set of latent space operations including sampling, interpolation, and attribute vector arithmetic.
+
 
 
 ```
@@ -128,7 +147,6 @@ async function sequence() {
 	console.log(notes)
 }
 
-
 mvae = new music_vae.MusicVAE('https://storage.googleapis.com/magentadata/js/checkpoints/music_vae/mel_2bar_small');
 
 mvae.initialize()
@@ -145,7 +163,6 @@ var	midime;
 
 midime = new mm.MidiMe({ epochs: 100 });
 midime.initialize();
-
 ___
 ```
 
