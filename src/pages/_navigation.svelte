@@ -20,7 +20,7 @@
   // update url parameters only when navigating tutorials
   $: if($params.chapter && $params.section) {
     // console.log(`navigation:url:${$url}:params:${$params}}`);
-    console.log(`navigation:url:${$params.chapter}:params:${$params.section}}`);
+    // console.log(`navigation:url:${$params.chapter}:params:${$params.section}}`);
     persistentParams = $params
 
     if(!controller){

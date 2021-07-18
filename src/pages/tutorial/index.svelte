@@ -43,7 +43,7 @@
 
   onMount( async () => {
 
-    console.log("tutorial - index");
+    // console.log("tutorial - index");
 
 		localStorage.setItem("tutorial-reloaded", true);
     if(!controller.samplesLoaded)

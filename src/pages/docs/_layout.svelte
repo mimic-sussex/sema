@@ -19,13 +19,13 @@
   //console.log($url())
   */
 
-  
+
   onMount( async () => {
     //promise = fetchMarkdown(doc);
-    console.log("DEBUG:routes/docs/_layout:onMount");
+    // console.log("DEBUG:routes/docs/_layout:onMount");
     //console.log('onMount', $chosenDocs)
     $redirect($url($chosenDocs));
-    console.log("$links on mount", $links);
+    // console.log("$links on mount", $links);
   });
 
 
@@ -135,7 +135,7 @@
 
 <div class='container-docs' data-routify="scroll-lock">
 
-  
+
   <ul class='sidebar-menu'>
     {#each $links as {path, name, file, subs}, i}
       {#if name == 'Welcome'}
@@ -149,7 +149,7 @@
               <ul>
                 {#each subs as {heading, route, active}}
                   <li>
-                    <a class='sub-nav-links' href={$url(path+'#'+route)} target="_self" 
+                    <a class='sub-nav-links' href={$url(path+'#'+route)} target="_self"
                     class:active={$isActive(route)}>
                       {heading}
                     </a>
@@ -161,7 +161,7 @@
       {/if}
     {/each}
   </ul>
-  
+
 
 
   <!--
@@ -172,7 +172,7 @@
 
   <!--<h2 class='sidebar-menu'>Reference</h2><br>-->
 
-  
+
   <!--
   <ul class='sidebar-menu'>
     {#await awaitLinks}
@@ -182,7 +182,7 @@
         <li>
 
           {#if name != 'Welcome'}<p style="display: inline" on:click={() => handleDropDown(path)}><i class="arrow up"></i></p>{/if}
-          
+
           <a  class='nav-links' href={$url(path)}
               class:active={$isActive(path)}
               >

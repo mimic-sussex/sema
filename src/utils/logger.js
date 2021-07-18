@@ -18,24 +18,24 @@ export default class Logger {
 	}
 
 	log(x) {
-		if (sendingToConsole) console.log(x)
+		// if (sendingToConsole) console.log(x)
 		renderer.append = x
     sessionStorage.console += x;
 	}
 
 	warn(x) {
-		if (sendingToConsole) console.warn(x)
+		// if (sendingToConsole) console.warn(x)
 		renderer.append = x
     sessionStorage.console += x;
 	}
 
 	info(x) {
-		if (sendingToConsole) console.info(x)
+		// if (sendingToConsole) console.info(x)
     sessionStorage.console += x;
 	}
 
 	error(x) {
-		if (sendingToConsole) console.info(x)
+		// if (sendingToConsole) console.info(x)
     sessionStorage.console += x;
 	}
 }

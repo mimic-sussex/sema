@@ -97,13 +97,13 @@
 
   onMount( async () => {
 
-    console.log("tutorial - chapter section");
+    // console.log("tutorial - chapter section");
 
     for (const item of $items)
       await populateCommonStoresWithFetchedProps(item)
 
     log(section);
-    console.log(`DEBUG:tutorial/${$params.chapter}/${$params.section}/ index`);
+    // console.log(`DEBUG:tutorial/${$params.chapter}/${$params.section}/ index`);
     // promise = fetchMarkdown($selected.chapter_dir, $selected.section_dir); // Reactive statement, var 'promise' reacts to 'section' changes
   });
 

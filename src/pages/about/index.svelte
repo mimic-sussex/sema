@@ -13,7 +13,7 @@
           Sema lets you compose and perform music in real time using simple live coding languages. It also enables you to customise these languages, create new ones, and infuse your live code with bespoke neural networks, using interactive workflows and small training data sets.
         </span>
       </p>
-      <div class='iframe-container'>
+      <!-- <div class='iframe-container'>
         <iframe class='iframe'
                 width="630" height="420"
                 title="Sema-demo"
@@ -21,7 +21,7 @@
 								crossOrigin="anonymous"
                 >
         </iframe>
-      </div>
+      </div> -->
       <p>
         <span>
         <span>

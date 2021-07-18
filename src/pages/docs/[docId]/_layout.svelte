@@ -19,26 +19,26 @@
       console.log(e);
     });
   */
-    
+
     ;
   //$: jumpToHash(promise);
-  
+
   function jumpToHash(){
     let regex = /(?<=\#).*/g;
     let section = window.location.href.match(regex);
-    
+
     window.onload = (event) => {
       //console.log("window LOADED");
       document.getElementById(location.hash).scrollIntoView({behavior: 'auto'});
     }
-    
+
     //console.log(document.getElementById(window.location.hash));
     //if (window.location.hash != null){
     //  document.getElementById(window.location.hash).scrollIntoView({behavior: 'auto'});
     //}
   }
 
-  
+
 
   let markdown;
   // sets chosenDocs in store to the current page so that its rememebered for when the user returns
@@ -83,19 +83,19 @@
 
   //$: docId = $params.docId; //get the doc part of the url
 
-  
+
 
   let fetchMarkdown = async (docId, links) => {
-    console.log("HERE last loaded doc", lastLoadedDoc);
-    console.log("HERE docId", docId);
+    // console.log("HERE last loaded doc", lastLoadedDoc);
+    // console.log("HERE docId", docId);
     if (docId == lastLoadedDoc){
-      return; 
+      return;
     }
     lastLoadedDoc = docId;
     //docId is the $params.id, the url slug
     let doc = findFileName(docId, links);
 
-    console.log('fetching markdown', doc)
+    // console.log('fetching markdown', doc)
     if(doc != undefined){ // There is a call with undefined value when navigating to Playground
       const res = await fetch(document.location.origin + `/docs/${doc}.md`)
       const text = await res.text();
@@ -115,7 +115,7 @@
               <code style="-moz-user-select: text; -html-user-select: text; -webkit-user-select: text; -ms-user-select: text; user-select: text; white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word;" id='code${codeID++}'>`
             );
         };
-        
+
       }
 
       } else {
@@ -123,7 +123,7 @@
       }
 
   }
-  
+
   function findFileName(path, links){
     if (links != undefined){
       for (let i = 0; i < links.length; i++) {
@@ -136,13 +136,13 @@
   }
 
   //$: if (docId) fetchMarkdown(docId);
-  
+
   //console.log("docId:", docId);
 
   onMount( async () => {
     //promise = fetchMarkdown(doc);
     console.log("DEBUG:routes/docs/"+$params.docId+"/_layout:onMount");
-    
+
   });
 
 
