@@ -130,10 +130,10 @@
   let evalDomCode = (code) => {
     try {
       let evalRes = eval(code);
-      // if (evalRes != undefined) {
-      //   // console.log(evalRes);
-      // }
-      // else console.log("done");
+      if (evalRes != undefined) {
+        // console.log(evalRes);
+      }
+      else console.log("done");
     }catch(e) {
       // console.log(`DOM Code eval exception: ${e}`);
     }

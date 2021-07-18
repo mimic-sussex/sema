@@ -209,12 +209,12 @@ export default {
 				{
 					src: [
 						'node_modules/sema-engine/maxi-processor.js',
-						'node_modules/sema-engine/sema-engine.wasmmodule.js',
-						'node_modules/sema-engine/open303.wasmmodule.js',
-						'node_modules/sema-engine/ringbuf.js',
-						'node_modules/sema-engine/transducers.js',
-						'node_modules/sema-engine/lalolib.js',
-						'node_modules/sema-engine/svd.js',
+						// 'node_modules/sema-engine/sema-engine.wasmmodule.js',
+						// 'node_modules/sema-engine/open303.wasmmodule.js',
+						// 'node_modules/sema-engine/ringbuf.js',
+						// 'node_modules/sema-engine/transducers.js',
+						// 'node_modules/sema-engine/lalolib.js',
+						// 'node_modules/sema-engine/svd.js',
 					],
 					// dest: `${buildDir}`,
 					dest: distDir,
