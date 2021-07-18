@@ -24,7 +24,7 @@
   export let className;
   export { className as class };
 
-  export let append = '';
+  // export let append = '';
 
   //let value = ``;
   let localLogs = '';
