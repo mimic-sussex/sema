@@ -1,9 +1,10 @@
 # Transfer learning with Magenta models
 
 We are starting with transfer learning, a technique that make it trivial for live coders to use machine learning.
-In a nutshell, it consists in using pre-trained model off-the-shelf by accessing a configuration that contains all the model parameters.
+In a nutshell, it consists in using models that we were previously trained on thousands of files.
 
-Google Magenta has made many of these models made available are available online and .
+These modes can be used off-the-shelf by accessing a configuration that contains all the model parameters.
+Google Magenta has made many of these models made available are available online.
 
 `https://goo.gl/magenta/js-checkpoints`
 
