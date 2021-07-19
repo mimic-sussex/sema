@@ -49,6 +49,7 @@
 
 
 
+
   let handleSelect = e => {
     try{
       // await tick();
@@ -60,6 +61,31 @@
       console.error("Error Selecting and loading tutorial environment", error);
     }
   }
+
+	const handleLeftButtonClick = e => {
+		try {
+      // await tick();
+      // $items = []; // refresh items to call onDestroy on each (learner need to terminate workers)
+      // localStorage.setItem("last-session-tutorial-url", `/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/`);
+      // $goto(`/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/`);
+		} catch (error) {
+      console.error("Error navigating tutorial environment", error);
+		}
+	}
+
+	const handleRightButtonClick = e => {
+		try {
+      // await tick();
+      $items = []; // refresh items to call onDestroy on each (learner need to terminate workers)
+
+			// if($selected.chapter_dir}/${$selected.section_dir
+
+      // localStorage.setItem("last-session-tutorial-url", `/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/`);
+      // $goto(`/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/`);
+		} catch (error) {
+      console.error("Error navigating loading tutorial environment", error);
+		}
+	}
 
   const update = (e, dataItem) => {
 
@@ -142,9 +168,13 @@
     >
 
     <div class="tutorial-navigator">
-      <button class="button-dark left">
+
+      <button class="button-dark left"
+							on:click={ e => handleLeftButtonClick(e) }
+							>
         ◄
       </button>
+
       <div class="combobox-dark middle">
         <!-- svelte-ignore a11y-no-onchange -->
         <select
@@ -157,7 +187,7 @@
                 {#if chapter.sections !== undefined}
                   {#each chapter.sections as section, i}
                     <!-- <option value={section}>{String.fromCharCode(i + 97)}. {section.title}</option> -->
-                    <option value={section}>{section.title}</option>
+                    <option value={section}>{i + 1}. {section.title}</option>
                   {/each}
                 {/if}
               </optgroup>
@@ -165,9 +195,13 @@
           {/if}
         </select>
       </div>
-      <button class="button-dark right">
+
+      <button class="button-dark right"
+							on:click={ e => handleRightButtonClick(e) }
+							>
         ►
       </button>
+
     </div>
 
     <div class="markdown-container">
