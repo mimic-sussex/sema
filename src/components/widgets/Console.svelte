@@ -27,18 +27,19 @@
   // export let append = '';
 
   //let value = ``;
-  let localLogs = '';
+  //let localLogs = '';
 
   //$: value = appendLog($rawConsoleLogs);//append;
 
   // append
   let something = e => { /* console.log(...e); */ }
 
-
+  /*
   function appendLog(rawlogs){
     localLogs = localLogs + rawlogs;
     localLogs = localLogs;
   }
+  */
 
   // addEventListener("onConsoleLogsUpdate", (e) => {
   //   console.log("recieved event!!");
@@ -47,12 +48,8 @@
   // );
 
 	function eventListener(log){
-
-		console.log('Console')
-    console.log("loggers log:", logger.log);
-    console.log(logger.rawLog);
-
-    $rawConsoleLogs = log;
+		console.log("recieving data in console");
+    $rawConsoleLogs = logger.rawLog;
 	}
 
   onMount(async () => {
