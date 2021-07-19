@@ -187,7 +187,7 @@
                 {#if chapter.sections !== undefined}
                   {#each chapter.sections as section, i}
                     <!-- <option value={section}>{String.fromCharCode(i + 97)}. {section.title}</option> -->
-                    <option value={section}>{i + 1}. {section.title}</option>
+                    <option value={section} >{i + 1}. {section.title}</option>
                   {/each}
                 {/if}
               </optgroup>
