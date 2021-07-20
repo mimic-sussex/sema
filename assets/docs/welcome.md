@@ -19,7 +19,7 @@ Welcome to the documentation of **sema**. Use the links below or the navigation 
 - Documentation about the JavaScript editor, where you may write any JS code such as machine learning models.
 
 
-[Maximilian](/maximilian-dsp-api)
+[Maximilian](maximilian-dsp-api)
 - Documentation on Maximilian, a multi-target audio synthesis and signal processing library on which Sema depends.
 
 <br>
