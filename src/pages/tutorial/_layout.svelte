@@ -89,32 +89,35 @@
 	}
 
 	const setPreviousTutorial = e => {
-
-		// if($tutorials.indexOf($selectedChapter) === 0){ // if 1st chapter
-		// 	// if last section of 1st chapter
-		// 	if($selectedChapter.sections.indexOf($selectedSection) === 0 ){
-		// 		// change chapter, set first section
-		// 		// $selectedChapter = $tutorials[$tutorials.indexOf($selectedChapter) + 1];
-		// 		// $selectedSection = $selectedChapter.sections[0];
+		if($tutorials.indexOf($selectedChapter) === 0){ // if 1st chapter
+			// if last section of 1st chapter
+			if($selectedChapter.sections.indexOf($selectedSection) === 0 ){
+				$selectedChapter = $tutorials[$tutorials.length - 1];
+				$selectedSection = $selectedChapter.sections[$selectedChapter.sections.length - 1];
+			}
+			else // if intermediate section, skip to 1st chapters' next section
+				$selectedSection = $selectedChapter.sections[$selectedChapter.sections.indexOf($selectedSection) - 1];
+		}
+		else { // of last chapter
+			if(0 === $selectedChapter.sections.indexOf($selectedSection)){  // if last section of last chapter
+				$selectedChapter = $tutorials[$tutorials.indexOf($selectedChapter) - 1];
+				$selectedSection = $selectedChapter.sections[$selectedChapter.sections.length - 1];
+			}
+			else
+				// if intermediate section, skip to last chapters' next section
+				$selectedSection = $selectedChapter.sections[$selectedChapter.sections.indexOf($selectedSection) - 1];
+		}
+		// else { // if 1st chapter
+		// 	// if last section of last chapter
+		// 	if($selectedChapter.sections.length === $selectedChapter.sections.indexOf($selectedSection) + 1 ){
+		// 		// return;
+		// 		$selectedChapter = $tutorials[$tutorials.indexOf($selectedChapter) + 1];
+		// 		$selectedSection = $selectedChapter.sections[0];
 		// 	}
 		// 	else // if intermediate section, skip to 1st chapters' next section
-		// 		$selectedSection = $selectedChapter.sections[$selectedChapter.sections.indexOf($selectedSection) - 1];
+		// 		$selectedSection = $selectedChapter.sections[$selectedChapter.sections.indexOf($selectedSection) + 1];
 		// }
-
-		// // 	if($tutorials.isIndexOf($selectedChapter) === 0)
-		// // 		if($selectedChapter.sections.isIndexOf($selectedSection) === 0) /* do nothing */ ;
-		// // 		else if($selectedChapter.sections.length === $selectedChapter.sections.isIndexOf($selectedSection) - 1){
-		// // 			// change chapter, set first section
-		// // 			$selectedChapter = $tutorials[$tutorials.isIndexOf($selectedChapter) + 1];
-		// // 			$selectedSection = $selectedChapter.sections[0];
-		// // 		}
-		// // 		else // if intermediate section, skip to next chapters' section
-		// // 			$selectedSection = $selectedChapter.sections[$selectedChapter.sections.isIndexOf($selectedSection) + 1];
-		// // 	else if($tutorials.isIndexOf($selectedChapter) === $tutorials.length - 1) /* do nothing */ ;
-
-
-    // // $goto(`/tutorial/${$selectedSection.chapter_dir}/${$selectedSection.section_dir}/`);
-    // // // $goto(`/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/`);
+    $goto(`/tutorial/${$selectedSection.chapter_dir}/${$selectedSection.section_dir}/`);
 
 	}
 
