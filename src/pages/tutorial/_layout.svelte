@@ -107,16 +107,6 @@
 				// if intermediate section, skip to last chapters' next section
 				$selectedSection = $selectedChapter.sections[$selectedChapter.sections.indexOf($selectedSection) - 1];
 		}
-		// else { // if 1st chapter
-		// 	// if last section of last chapter
-		// 	if($selectedChapter.sections.length === $selectedChapter.sections.indexOf($selectedSection) + 1 ){
-		// 		// return;
-		// 		$selectedChapter = $tutorials[$tutorials.indexOf($selectedChapter) + 1];
-		// 		$selectedSection = $selectedChapter.sections[0];
-		// 	}
-		// 	else // if intermediate section, skip to 1st chapters' next section
-		// 		$selectedSection = $selectedChapter.sections[$selectedChapter.sections.indexOf($selectedSection) + 1];
-		// }
     $goto(`/tutorial/${$selectedSection.chapter_dir}/${$selectedSection.section_dir}/`);
 
 	}
@@ -126,9 +116,7 @@
       // await tick();
       $items = []; // refresh items to call onDestroy on each (learner need to terminate workers)
 			setPreviousTutorial();
-    	// $goto(`/tutorial/${$selectedSection.chapter_dir}/${$selectedSection.section_dir}/`);
-			// localStorage.setItem("last-session-tutorial-url", `/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/`);
-      // $goto(`/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/`);
+			localStorage.setItem("last-session-tutorial-url", `/tutorial/${$selectedSection.chapter_dir}/${$selectedSection.section_dir}/`);
 		} catch (error) {
       console.error("Error navigating tutorial environment", error);
 		}
@@ -139,10 +127,7 @@
       // await tick();
       $items = []; // refresh items to call onDestroy on each (learner need to terminate workers)
 			setNextTutorial();
-	    // $goto(`/tutorial/${$selectedSection.chapter_dir}/${$selectedSection.section_dir}/`);
-			// $goto(`/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/`);
-      // localStorage.setItem("last-session-tutorial-url", `/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/`);
-      // $goto(`/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/`);
+      localStorage.setItem("last-session-tutorial-url", `/tutorial/${$selectedSection.chapter_dir}/${$selectedSection.section_dir}/`);
 		} catch (error) {
       console.error("Error navigating loading tutorial environment", error);
 		}
@@ -152,7 +137,7 @@
     try{
       // await tick();
       $items = []; // refresh items to call onDestroy on each (learner need to terminate workers)
-      // localStorage.setItem("last-session-tutorial-url", `/tutorial/${$selectedSection.chapter_dir}/${$selectedSection.section_dir}/`);
+      localStorage.setItem("last-session-tutorial-url", `/tutorial/${$selectedSection.chapter_dir}/${$selectedSection.section_dir}/`);
 			$selectedChapter = $tutorials.filter(chapter => chapter.sections.includes($selectedSection)).shift();
       $goto(`/tutorial/${$selectedSection.chapter_dir}/${$selectedSection.section_dir}/`);
     }
