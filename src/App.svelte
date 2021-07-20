@@ -17,20 +17,21 @@
       engine,
       logger;
 
+	// console.log('init');
+
   /**
    * This async IIFE tests the browser in which Sema is loading for WAAPI Audio Worklet support
    * It either succeeds and dynamically imports the sema-engine OR fails graciously
    * * This is invoked even if load happens through Playground or Tutorial via client side routing
    * */
   ( async () => {
-    // Detect Firefox early otherwise audio engine needs to be initialised for a fail to be detected [Firefox fix]
+    // [DEPRECATED]: Detect Firefox early otherwise audio engine needs to be initialised for a fail to be detected [Firefox fix]
     // if (/firefox/i.test(navigator.userAgent)){
     //   console.error('Firefox detected: unsupported browser')
     //   unsupportedBrowser = true;
     // }
     // else {
       // Need a dynamic import to prevent the AudioWorkletNode inside the audioEngine module from loading [Safari fix]
-      // import("../node_modules/sema-engine/sema-engine.mjs")
       import("sema-engine")
         .then((module) => {
           // Apply in Inversion of Control with constructor injection
@@ -43,7 +44,7 @@
 
 
 	function onMouseMove(e) {
-		messaging.publish("mouse-xy", [e.clientX / window.innerWidth, e.clientY / window.innerHeight]);
+		// messaging.publish("mouse-xy", [e.clientX / window.innerWidth, e.clientY / window.innerHeight]);
 	}
 	document.addEventListener('mousemove', onMouseMove);
 

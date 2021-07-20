@@ -189,7 +189,7 @@ export default class Controller {
 	async importSamplesAsync(sampleList) {
 		return await new Promise(async (resolve, reject) => {
 			// let sampleCounter = sampleList.length;
-			let sampleCounter = 9
+			let sampleCounter = 11;
 			await import(`../../assets/samples/909.wav`) // need to use the samples relative path to the src, not in public,
 				.then((e) => {
 					this.engine.loadSample(e.default, `/samples/${e.default}`)

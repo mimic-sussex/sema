@@ -9,7 +9,7 @@ import { spassr } from 'spassr'
 import getConfig from '@roxi/routify/lib/utils/config'
 import autoPreprocess from 'svelte-preprocess'
 import postcssImport from 'postcss-import'
-import { injectManifest } from 'rollup-plugin-workbox'
+// import { injectManifest } from 'rollup-plugin-workbox'
 import copy from 'rollup-plugin-copy'
 import url from '@rollup/plugin-url'
 import dynamicImportVariables from 'rollup-plugin-dynamic-import-variables'
@@ -43,8 +43,9 @@ const onwarn = (warning, warn) =>  {
 const serve = () => ({
     writeBundle: async () => {
         const options = {
-            assetsDir: [assetsDir, distDir],
-            entrypoint: `${assetsDir}/__app.html`,
+            // assetsDir: [assetsDir, distDir],
+            // entrypoint: `${assetsDir}/__app.html`,
+            entrypoint: `${distDir}/index.html`,
             script: `${buildDir}/main.js`
         }
 
@@ -53,19 +54,16 @@ const serve = () => ({
 					...options,
 					port: 5001,
 					middleware: (server) => {
-						// server.use(cors());
-
-
 						server.use((req, res, next) => {
 							res.set({
 								'Cross-Origin-Opener-Policy': 'same-origin',
 								'Cross-Origin-Embedder-Policy': 'require-corp',
 								'Cross-Origin-Resource-Policy': 'cross-origin',
 								'Access-Control-Allow-Origin': [
-									// 'livereload.js?snipver=1',
-									// '/livereload.js?snipver=1',
 									'http://localhost:35729/livereload.js?snipver=1',
 									'http://localhost:35729/',
+									// 'http://localhost:35730/livereload.js?snipver=1',
+									// 'http://localhost:35730/',
 									'https://www.youtube.com/embed/Qw4sYnTj-Ow?t=27s',
 									'*',
 								],
@@ -167,7 +165,7 @@ const serve = () => ({
     }
 })
 
-const copyToDist = () => ({ writeBundle() { copySync(assetsDir, distDir) } })
+// const copyToDist = () => ({ writeBundle() { copySync(assetsDir, distDir) } })
 
 
 export default {
@@ -179,7 +177,7 @@ export default {
 		format: 'esm',
 		dir: buildDir,
 		// for performance, disabling filename hashing in development
-		// chunkFileNames: `[name]${(production && '-[hash]') || ''}.js`,
+		chunkFileNames: `[name]${(production && '-[hash]') || ''}.js`,
 	},
 	plugins: [
 		svelte({
@@ -200,28 +198,27 @@ export default {
 					// ! and have them emitted (not inlined) by the plugin-URL
 					src: [
 						'!*/(__index.html)',
-						'!assets/samples/*',
+						// '!assets/samples/*',
 						// `!${assetsDir}/samples/*`,
-						`${assetsDir}/*`,
+						// `!${assetsDir}/samples/*`,
+						`!${assetsDir}/samples`,
+						// `${assetsDir}/*`,
 					],
 					dest: distDir,
 				},
 				{
-					src: [
-						'node_modules/sema-engine/maxi-processor.js',
-						// 'node_modules/sema-engine/sema-engine.wasmmodule.js',
-						// 'node_modules/sema-engine/open303.wasmmodule.js',
-						// 'node_modules/sema-engine/ringbuf.js',
-						// 'node_modules/sema-engine/transducers.js',
-						// 'node_modules/sema-engine/lalolib.js',
-						// 'node_modules/sema-engine/svd.js',
-					],
+					src: [`${assetsDir}/__app.html`],
+					dest: distDir,
+					rename: 'index.html',
+				},
+				{
+					src: ['node_modules/sema-engine/maxi-processor.js'],
 					// dest: `${buildDir}`,
 					dest: distDir,
 				},
 			],
 			copyOnce: true,
-			flatten: false,
+			flatten: true,
 			verbose: true,
 		}),
 
@@ -237,30 +234,36 @@ export default {
 				'assets/languages/**/code.sem',
 				'assets/learners/**/*.tf',
 				'assets/layouts/*.json',
+				'assets/samples/*.wav',
 			], // options
-			include: ['**/*.wav'],
+			// include: ['**/*.wav'],
 			warnOnError: true,
 		}),
 		// globImport(),
 		url({
 			// include: ['**/*.wav'],
+
 			include: ['assets/samples/*.wav'],
+
 			// include: ['**/*.wav'],
 			// publicPath: 'samples',
 			limit: 10, // 10 kb
 			// // publicPath: '/batman/',
 			emitFiles: true,
 			fileName: '[name][extname]', // '[name][extname]' 'dist/build/'
-			// sourceDir: join(__dirname, 'assets/samples'), // 'dist/assets/samples'
+			// sourceDir: join(__dirname, assets/samples'), // 'dist/assets/samples'
 			// sourceDir: join(__dirname, 'src/samples'), // 'dist/assets/samples'
 			sourceDir: __dirname, // 'dist/build/assets/samples'
+			// destDir: join(__dirname, 'dist'), // 'dist/assets/samples'
+			destDir: join(__dirname, 'dist/samples'), // 'dist/assets/samples'
+			verbose: true,
 			// sourceDir: join(__dirname, 'src/samples'), // 'dist/assets/samples'
-			destDir: join(__dirname, 'dist/sema-engine/samples'), // 'dist/assets/samples'
 			// destDir: join(__dirname, `${distDir}/sema-engine/samples`), // 'dist/assets/samples'
 			// destDir: __dirname,
 		}),
 		json(),
 		string({
+			// Converts text files to modules:
 			include: [
 				'assets/languages/**/grammar.ne',
 				'assets/languages/**/code.sem',
@@ -276,25 +279,26 @@ export default {
 		!production && !isNollup && serve(),
 		!production && !isNollup && livereload(distDir), // refresh entire window when code is updated
 		!production && isNollup && Hmr({ inMemory: true, public: assetsDir }), // refresh only updated code
-		{
-			// provide node environment on the client
-			transform: (code) => ({
-				code: code.replace(
-					/process\.env\.NODE_ENV/g,
-					`"${process.env.NODE_ENV}"`
-				),
-				map: { mappings: '' },
-			}),
-		},
-		injectManifest({
-			globDirectory: assetsDir,
-			globPatterns: ['**/*.{js,css,svg}', '__app.html'],
-			swSrc: `src/sw.js`,
-			swDest: `${distDir}/serviceworker.js`,
-			maximumFileSizeToCacheInBytes: 10000000, // 10 MB,
-			mode: 'production',
-		}),
-		production && copyToDist(),
+		// {
+		// 	// provide node environment on the client
+		// 	transform: (code) => ({
+		// 		code: code.replace(
+		// 			/process\.env\.NODE_ENV/g,
+		// 			`"${process.env.NODE_ENV}"`
+		// 		),
+		// 		map: { mappings: '' },
+		// 	}),
+		// },
+		// injectManifest({
+		// 	globDirectory: assetsDir,
+		// 	globPatterns: ['**/*.{js,css,svg}', '__app.html'],
+		// 	swSrc: `src/sw.js`,
+		// 	swDest: `${distDir}/serviceworker.js`,
+		// 	maximumFileSizeToCacheInBytes: 10000000, // 10 MB,
+		// 	mode: 'production',
+		// }),
+		production,
+		// production && copyToDist(),
 		// production && livereload(distDir),
 	],
 	watch: {
