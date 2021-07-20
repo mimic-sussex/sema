@@ -60,12 +60,17 @@ Once you have sema running as a node application, you can load it on your browse
 
 ## Hardware acceleration:
 
-Hardware acceleration will have a drastic effect in Tensorflow.js model training speed. To enable it in Chrome:
+Hardware acceleration will have a drastic effect in Tensorflow.js model training speed.
 
+To enable it in Chrome:
 * Navigate to chrome://settings
 * Click the **Advanced ▼** button at the bottom of the page
 * In the **System** section, ensure the **Use hardware acceleration when available** checkbox is checked (relaunch Chrome for changes to take effect)
 
+To enable in Firefox:
+- Go to `about:preferences`
+- Scroll till you reach the **Performance section**, or simply search for "performance"
+- Enable **recommended performance settings**, this will enable hardware acceleration if and when it is available
 
 ## Linux Users
 
