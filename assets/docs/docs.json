@@ -7,6 +7,8 @@
 
   {"path":"./javascript-editor-utils", "name":"JavaScript Editor", "file":"javascript-editor-utils", "subs":[]},
 
+  {"path":"./machine-learning", "name":"Machine Learning", "file":"machine-learning", "subs":[]},
+
   {"path":"./load-sound-files", "name":"Load Sound Files", "file":"sample-loading", "subs":[]},
   
   {"path":"./maximilian-dsp-api", "name":"Maximilian API", "file":"maximilian-dsp-api", "subs":[]}

@@ -9,7 +9,7 @@ When you have explored this tutorial and want to start to make your music, you w
 
 ### How to use this tutorial
 
-We recommended that you go from start to finish. You can navigate the Table of Contents via the dropdown menu above (click 'Introduction').
+We recommend that you go from start to finish. You can navigate the Table of Contents via the dropdown menu above (click 'Introduction').
 
 * Part 1, *Basics* starts with the basics of the playground interface, including layouts, the live coding editors and all the available widgets.
 

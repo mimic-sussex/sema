@@ -1,6 +1,6 @@
 # Sema 0.X.Y Documentation
 
-Welcome to the documentation of **sema**. Use the links below or the navigation bar on the left side of the window to navigate to different sections of the reference. If you are looking to learn in a more beginner friendly manner we reccomend starting with the [tutorial](../tutorial).
+Welcome to the documentation of **sema**. Use the links below or the navigation bar on the left side of the window to navigate to different sections of the reference. If you are looking to learn in a more beginner friendly manner we reccomend starting with the [tutorial](../tutorial). If you want to know more technical information please checkout the [wiki](https://github.com/mimic-sussex/sema/wiki).
 
 <br>
 
