@@ -131,7 +131,7 @@ Anti-aliased saw wave
 >{500}sawn;
 ```
 
-# noiz
+# Noise
 
 White noise
 
@@ -201,7 +201,7 @@ Arguments:
 
 ### The ```\```operator
 
-Samples are preloaded when the audio engine starts up. A list of samples can be found in https://github.com/mimic-sussex/sema/tree/master/assets/samples
+Samples are preloaded when the audio engine starts up. A list of samples can be found [here](load-sound-files).
 
 Play a sample once with a trigger, using ```\``` followed by the sample name.
 
@@ -453,7 +453,7 @@ Arguments:
 - `pow` : power of
 - `abs` : absolute value
 
-# Operators over lists:
+## Operators over Lists
 
 Sum signals: (this will clip in this example:)
 
@@ -474,7 +474,7 @@ Multiply signals:
 `{{400}sin,{600}sin,{200}sin}prod`
 
 
-# mapping values
+# Mapping Values
 
 - `blin` : bipolar linear map from range -1,1 to range between arg 2 and arg 3
 - `ulin` : unipolar linear map from range 0,1 to range between arg 2 and arg 3
@@ -485,7 +485,7 @@ Multiply signals:
 - `linexp` : arbitrary exponential map from range between arg 2 and 3, to range between arg 4 and arg 5
 
 
-# lists
+# Lists
 
 Some functions have lists as arguments, or return lists.  Lists are enclosed in square brackets, and contain signals, separated by commas, e.g.
 
@@ -505,9 +505,11 @@ Individual list elements can be accessed with the ```at``` function, with two ar
 ```
 
 
-# communication to the JS window
+# Communication to the JS Window
 
 ### Send data:
+
+Communication to the JavaScript window is done using the `toJS` command. For example:
 
 10 times per second (argument 1) on channel 0 (argument 2). The third argument is signal to send (in this case the output of `{1}sin`).
 
@@ -530,7 +532,7 @@ In the live code editor:
 
 to receive data on channel 0
 
-In the model/js editor:
+In the JS editor:
 
 ```
 output(100,0)
@@ -541,7 +543,7 @@ Note: to separate the two functions in the model window you use three or more un
 ```
 __________
 ```
-# mouse input
+# Mouse Input
 
 Use `{}mouseX` and `{}mouseY`
 

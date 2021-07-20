@@ -1,62 +1,15 @@
-[{
-  "title": "Elements of the default language",
-  "file": "docs/default-livecoding-language.md",
-  "sections": [{
-    "slug": "audio-outputs",
-    "title": "Audio Outputs"
-  }, {
-    "slug": "audio-input",
-    "title": "Audio Input"
-  }, {
-    "slug": "oscillators",
-    "title": "Oscillators"
-  }, {
-    "slug": "control",
-    "title": "Control"
-  }, {
-    "slug": "envelopes",
-    "title": "Envelopes"
-  }, {
-    "slug": "sample-slicing",
-    "title": "Sample Slicing"
-  }, {
-    "slug": "filters",
-    "title": "Filters"
-  }, {
-    "slug": "operators",
-    "title": "Operators"
-  }, {
-    "slug": "operators-over-lists",
-    "title": "Operators over Lists"
-  }, {
-    "slug": "mapping-values",
-    "title": "Mapping values"
-  }, {
-    "slug": "lists",
-    "title": "Lists"
-  }, {
-    "slug": "communication-to-the-js-window",
-    "title": "Communication to the JS window"
-  }, {
-    "slug": "mouse-input",
-    "title": "Mouse Input"
-  }, {
-    "slug": "machine-listening",
-    "title": "Machine Listening"
-  }, {
-    "slug": "triggers",
-    "title": "Triggers"
-  }, {
-    "slug": "conversion",
-    "title": "Conversion"
-  }, {
-    "slug": "sequencing",
-    "title": "Sequencing"
-  }, {
-    "slug": "data",
-    "title": "Data"
-  }, {
-    "slug": "debugging",
-    "title": "Debugging"
-  }]
-}]
+[
+  {"path":"./welcome", "name":"Welcome", "file":"welcome", "subs":[]},
+
+  {"path":"./default-language", "name":"Default Language", "file":"default-livecoding-language", "subs":[]},
+
+  {"path":"./intermediate-language", "name":"Intermediate Language", "file":"sema-intermediate-language", "subs":[]},
+
+  {"path":"./javascript-editor-utils", "name":"JavaScript Editor", "file":"javascript-editor-utils", "subs":[]},
+
+  {"path":"./machine-learning", "name":"Machine Learning", "file":"machine-learning", "subs":[]},
+
+  {"path":"./load-sound-files", "name":"Load Sound Files", "file":"sample-loading", "subs":[]},
+  
+  {"path":"./maximilian-dsp-api", "name":"Maximilian API", "file":"maximilian-dsp-api", "subs":[]}
+]

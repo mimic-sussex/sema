@@ -1,6 +1,4 @@
-# Maximilian Documentation
-
-### maxiAudio ###
+# maxiAudio
 
 This the audio context. You must always have one to produce sound with maxiLib
 
@@ -28,7 +26,7 @@ the current value of the audio output
 
 <br><br>
 
-### maxiSample ###
+# maxiSample
 
 Stores and plays an audio sample
 
@@ -54,7 +52,7 @@ returns true if sample is loaded
 
 <br><br>
 
-### maxiTimestretch ###
+# maxiTimestretch
 
 plays a sample at different rates leaving pitch unchanged
 
@@ -85,7 +83,7 @@ Useful for ending sample play back
 
 <br><br>
 
-### maxiPitchShift ###
+# maxiPitchShift
 
 plays a sample at different pitches leaving the speed unchanged
 
@@ -117,7 +115,7 @@ Useful for ending sample play back
 
 <br><br>
 
-### maxiPitchStretch ###
+# maxiPitchStretch
 
 plays a sample with independent control of pitch and speed
 
@@ -149,7 +147,7 @@ useful for resetting a sound
 
 <br><br>
 
-### maxiDelay ###
+# maxiDelay
 
 A simple delay line
 
@@ -165,7 +163,7 @@ process a signal with delay
 
 <br><br>
 
-### maxiOsc ###
+# maxiOsc
 
 An oscillator with methods for a number of waveforms
 
@@ -199,7 +197,7 @@ reset the phase to a specific value
 
 <br><br>
 
-### maxiEnv ###
+# maxiEnv
 
 An adsr envelope.
 
@@ -223,7 +221,7 @@ An adsr envelope.
 
 <br><br>
 
-### maxiFilter ###
+# maxiFilter
 
 A bunch of useful filter methods
 
@@ -245,7 +243,9 @@ A highpass resonant filter. Returns the filtered frequency.
 - cutoff = cutoff frequency in Hz
 - resonance = a value between 0.0 & 10.0
 
-### maxiFFT ###
+<br><br>
+
+# maxiFFT
 
 #### methods ####
 
@@ -277,10 +277,9 @@ get the decibels of a particular bin
 
 perform the conversion on all bins
 
-
-
 <br><br>
-### convert ###
+
+# convert
 
 A collection of conversion functions. Currently numbering one !
 
@@ -291,7 +290,8 @@ A collection of conversion functions. Currently numbering one !
 pass a midi value and its frequency is returned
 
 <br><br>
-### maxiMix ###
+
+# maxiMix
 
 A multichannel mixer.
 
@@ -306,7 +306,8 @@ Makes a stereo mix.
 - pan = a value between 0 & 1
 
 <br><br>
-### maxiTools ###
+
+# maxiTools
 
 #### methods ####
 
