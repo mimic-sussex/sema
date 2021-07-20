@@ -1,6 +1,23 @@
-# Loading Sound Files in Sema
+# Default Samples
 
-You can load sound files in Sema through the JS window.  Sound files can either be sent to the signal engine as buffers, or used within the JS window (for example to train a machine learning model).
+A range of samples are included by default in sema.
+
+- `909`: Snare
+- `909b`: Kick
+- `909closed`: Closed hi-hat
+- `909open`: Open hi-hat
+- `click`: Clicking sound
+- `spade`: Spade sound
+- `boom2`: Explosion sound
+- `boom`: Explosion sound
+- `machine`: Mechanical sound
+- `patterndrone2`: Drone sound
+- `convol5`: Scraping sound
+
+
+# Loading External Sound Files
+
+You can load additional sound files in Sema through the JS window.  Sound files can either be sent to the signal engine as buffers, or used within the JS window (for example to train a machine learning model).
 
 ## Make the files available over a web connection (local or remote)
 
@@ -34,7 +51,7 @@ asset.decodeToBuffer(function(buffer) {
 
 ```
 
-## Play
+## Play sample
 
 In the livecoding window (using the default language):
 

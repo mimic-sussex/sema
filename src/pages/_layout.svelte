@@ -138,7 +138,7 @@
   }
 
   let fetchAndLoadDocsNavLinks = async () => {
-    const res1 = await fetch(document.location.origin + `/docs/docsnew.json`);
+    const res1 = await fetch(document.location.origin + `/docs/docs.json`);
     const json = await res1.json();
     if (res1.ok){
       let tmpLinks = json;

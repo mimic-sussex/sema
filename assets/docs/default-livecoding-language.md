@@ -131,7 +131,7 @@ Anti-aliased saw wave
 >{500}sawn;
 ```
 
-# noiz
+# Noise
 
 White noise
 
@@ -453,7 +453,7 @@ Arguments:
 - `pow` : power of
 - `abs` : absolute value
 
-# Operators over lists:
+## Operators over Lists
 
 Sum signals: (this will clip in this example:)
 
@@ -474,7 +474,7 @@ Multiply signals:
 `{{400}sin,{600}sin,{200}sin}prod`
 
 
-# mapping values
+# Mapping Values
 
 - `blin` : bipolar linear map from range -1,1 to range between arg 2 and arg 3
 - `ulin` : unipolar linear map from range 0,1 to range between arg 2 and arg 3
@@ -485,7 +485,7 @@ Multiply signals:
 - `linexp` : arbitrary exponential map from range between arg 2 and 3, to range between arg 4 and arg 5
 
 
-# lists
+# Lists
 
 Some functions have lists as arguments, or return lists.  Lists are enclosed in square brackets, and contain signals, separated by commas, e.g.
 
@@ -505,7 +505,7 @@ Individual list elements can be accessed with the ```at``` function, with two ar
 ```
 
 
-# communication to the JS window
+# Communication to the JS Window
 
 ### Send data:
 
@@ -541,7 +541,7 @@ Note: to separate the two functions in the model window you use three or more un
 ```
 __________
 ```
-# mouse input
+# Mouse Input
 
 Use `{}mouseX` and `{}mouseY`
 

@@ -62,7 +62,7 @@ in the live code window (default language):
 
 
 
-# graphics
+# Graphics
 
 You can create graphics from the ML window.  To enable this, you need to run your code in the top level DOM scope instead of the ML scope which runs in a worker thread.  You can do this in two ways:
 
