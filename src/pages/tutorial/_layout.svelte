@@ -51,10 +51,6 @@
   let gap = [2, 2];
 
 
-
-
-
-
 	const setNextTutorial = e => {
 		if($tutorials.indexOf($selectedChapter) === 0){ // if 1st chapter
 			// if last section of 1st chapter
@@ -66,23 +62,13 @@
 			else // if intermediate section, skip to 1st chapters' next section
 				$selectedSection = $selectedChapter.sections[$selectedChapter.sections.indexOf($selectedSection) + 1];
 		}
-		else if($tutorials.indexOf($selectedChapter) === $tutorials.length - 1 ){ // of last chapter
+		else { // of last chapter
 			if($selectedChapter.sections.length === $selectedChapter.sections.indexOf($selectedSection) + 1){  // if last section of last chapter
 				$selectedChapter = $tutorials[0];
 				$selectedSection = $selectedChapter.sections[0];
 			}
 			else
 				// if intermediate section, skip to last chapters' next section
-				$selectedSection = $selectedChapter.sections[$selectedChapter.sections.indexOf($selectedSection) + 1];
-		}
-		else { // if 1st chapter
-			// if last section of last chapter
-			if($selectedChapter.sections.length === $selectedChapter.sections.indexOf($selectedSection) + 1 ){
-				// return;
-				$selectedChapter = $tutorials[$tutorials.indexOf($selectedChapter) + 1];
-				$selectedSection = $selectedChapter.sections[0];
-			}
-			else // if intermediate section, skip to 1st chapters' next section
 				$selectedSection = $selectedChapter.sections[$selectedChapter.sections.indexOf($selectedSection) + 1];
 		}
     $goto(`/tutorial/${$selectedSection.chapter_dir}/${$selectedSection.section_dir}/`);
@@ -111,25 +97,14 @@
 
 	}
 
-	const handleLeftButtonClick = e => {
+	const handleButtonClick = e => {
 		try {
       // await tick();
       $items = []; // refresh items to call onDestroy on each (learner need to terminate workers)
-			setPreviousTutorial();
+			e? setNextTutorial(): setPreviousTutorial();
 			localStorage.setItem("last-session-tutorial-url", `/tutorial/${$selectedSection.chapter_dir}/${$selectedSection.section_dir}/`);
 		} catch (error) {
       console.error("Error navigating tutorial environment", error);
-		}
-	}
-
-	const handleRightButtonClick = e => {
-		try {
-      // await tick();
-      $items = []; // refresh items to call onDestroy on each (learner need to terminate workers)
-			setNextTutorial();
-      localStorage.setItem("last-session-tutorial-url", `/tutorial/${$selectedSection.chapter_dir}/${$selectedSection.section_dir}/`);
-		} catch (error) {
-      console.error("Error navigating loading tutorial environment", error);
 		}
 	}
 
@@ -230,7 +205,7 @@
     <div class="tutorial-navigator">
 
       <button class="button-dark left"
-							on:click={ e => handleLeftButtonClick(e) }
+							on:click={ e => handleButtonClick(0) }
 							>
         ◄
       </button>
@@ -257,7 +232,7 @@
       </div>
 
       <button class="button-dark right"
-							on:click={ e => handleRightButtonClick(e) }
+							on:click={ e => handleButtonClick(1) }
 							>
         ►
       </button>
