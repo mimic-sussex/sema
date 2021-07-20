@@ -1,6 +1,57 @@
+# Code Blocks
+
+Code blocks in the JavaScript (JS) window are seperated by three or more underscores. 
+- Blocks are run using Ctrl+Enter (Windows, Linux) or Command+Enter (Mac). 
+- Single lines are run using Shift+Enter
+
+Code blocks can be thought of as independent cells of code that can be run independently e.g.
+
+```
+//scope: you can define local or global variables
+
+let x="local variable";
+var y="global variable";
+console.log(y)
+console.log(x)
+_____
+
+console.log(y) 
+console.log(x) //x was a local variable in the last block so this will cause an error
+```
+
 # Communicating with the audio engine
 
-The audio engine sends data with @toJS.  This sends a data item, and a channel number, which is routed to the 'input' function in the ML window.  You can reply with the output function, e.g.
+## Sending Data
+In order to send data to audio engine you must create a output channel to send it on. You can create multiple output channels, but use different channel numbers.
+
+The function `createOutputChannel` takes two arguments:
+
+1. a channel number
+2. the block size of the data
+
+example usage:
+
+```
+var channel0 = createOutputChannel(0, 1);
+
+____
+
+channel0.send(200)
+```
+
+To send larger values at once in arrays. Set the block size of the data to the size of the array e.g.
+
+```
+var params = createOutputChannel(0, 3);
+___
+
+params.send([1, 1.03, 4])
+```
+
+
+## Recieving Data
+
+The audio engine sends data with @toJS.  This sends a data item, and a channel number, which is routed to the 'input' function in the JS window.  You can reply with the output function, e.g.
 
 ```
 input = (x, id) => {
@@ -10,6 +61,35 @@ input = (x, id) => {
 	output(prediction, 0)
 };
 
+```
+
+# Create a buffer and send it to the audio engine
+
+in the ML window:
+
+```
+a = new Float32Array(1000);
+
+for(let i=0; i < a.length; i++) {
+	a[i] = Math.sin(i/2) + (Math.random() -0.5);
+	a[i] *= 1.0-(i/a.length);
+}
+sema.sendBuffer("newbuf",a)
+```
+
+in the live code window (default language):
+
+```
+{{1}imp}\newbuf
+```
+
+
+# Loading external libraries
+
+You can load any external libraries with the importscripts functionality. For example to load tensorflow.js
+
+```
+importScripts("https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.4.0/dist/tf.min.js");
 ```
 
 # Data storage and loading
@@ -39,28 +119,6 @@ sema.loadF32Array(fn,
 ```
 sema.pbcopy("some text to copy to the clipboard")
 ```
-
-# Create a buffer and send it to the audio engine
-
-in the ML window:
-
-```
-a = new Float32Array(1000);
-
-for(let i=0; i < a.length; i++) {
-	a[i] = Math.sin(i/2) + (Math.random() -0.5);
-	a[i] *= 1.0-(i/a.length);
-}
-sema.sendBuffer("newbuf",a)
-```
-
-in the live code window (default language):
-
-```
-{{1}imp}\newbuf
-```
-
-
 
 # Graphics
 

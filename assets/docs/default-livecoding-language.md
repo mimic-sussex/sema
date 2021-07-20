@@ -201,7 +201,7 @@ Arguments:
 
 ### The ```\```operator
 
-Samples are preloaded when the audio engine starts up. A list of samples can be found in https://github.com/mimic-sussex/sema/tree/master/assets/samples
+Samples are preloaded when the audio engine starts up. A list of samples can be found [here](load-sound-files).
 
 Play a sample once with a trigger, using ```\``` followed by the sample name.
 
@@ -509,6 +509,8 @@ Individual list elements can be accessed with the ```at``` function, with two ar
 
 ### Send data:
 
+Communication to the JavaScript window is done using the `toJS` command. For example:
+
 10 times per second (argument 1) on channel 0 (argument 2). The third argument is signal to send (in this case the output of `{1}sin`).
 
 In the live code editor:
@@ -530,7 +532,7 @@ In the live code editor:
 
 to receive data on channel 0
 
-In the model/js editor:
+In the JS editor:
 
 ```
 output(100,0)
