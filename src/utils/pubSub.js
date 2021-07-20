@@ -57,7 +57,7 @@ class PubSub {
 		if (this.topics[topic]) {
 			this.topics[topic].map(subscriber => subscriber.callback(data));
 		}
-		return this;
+		// return this;
 	}
 }
 

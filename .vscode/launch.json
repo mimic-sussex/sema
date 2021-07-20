@@ -5,34 +5,12 @@
   "version": "0.2.0",
   "configurations": [
 
-
-    {
-      "name": "Launch via NPM",
-      "request": "launch",
-      "runtimeArgs": [
-        "run-script",
-        "build"
-      ],
-      "runtimeExecutable": "npm",
-      "skipFiles": [
-        "<node_internals>/**"
-      ],
-      "type": "pwa-node"
-    },
-    {
-      "name": "Launch Chrome",
-      "request": "launch",
-      "type": "pwa-chrome",
-      "url": "http://localhost:5001",
-      "webRoot": "${workspaceFolder}/dist"
-    },
-    {
-      "name": "Launch Chromium against localhost",
-      "type": "chrome",
-      "request": "launch",
-      "url": "http://localhost:5001/",
-      "webRoot": "${workspaceRoot}/dist",
-      "runtimeExecutable": "/usr/bin/chromium",
-    },
+		{
+			"name": "Launch Chrome",
+			"request": "launch",
+			"type": "pwa-chrome",
+			"url": "http://localhost:5001",
+			"webRoot": "${workspaceFolder}/dist/"
+		},
   ]
 }

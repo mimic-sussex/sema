@@ -47,8 +47,7 @@
 
 		localStorage.setItem("tutorial-reloaded", true);
     if(!controller.samplesLoaded)
-      // controller.init('http://localhost:5000/sema-engine');
-      controller.init(document.location.origin + '/sema-engine');
+      controller.init(document.location.origin);
 
     promise = fetchMarkdown($selected.chapter_dir, $selected.section_dir); // Reactive statement, var 'promise' reacts to 'section' changes
     // console.log(`index:url:${$params.chapter}:params:${$params.section}}`);

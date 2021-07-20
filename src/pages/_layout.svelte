@@ -15,7 +15,10 @@
   import {
     tutorials,
     selected,
-    hydrateJSONcomponent,    items
+		selectedSection,
+		selectedChapter,
+    hydrateJSONcomponent,
+		items
   } from '../stores/tutorial.js';
 
   import {
@@ -94,7 +97,10 @@
       .then(r => r.json())
       .then(json => {
         $tutorials = json;
-        $selected = $tutorials[0].sections[0];
+        // $selected = $tutorials[0].sections[0];
+        $selectedChapter = $tutorials[0];
+        $selectedSection = $selectedChapter.sections[0];
+
         $ready();
       }).catch( () => new Error('Fetching tutorial.json failed'));
 	}
@@ -166,14 +172,14 @@
   }
 
   onMount( async () => {
-    // console.log("DEBUG:routes/_layout:onMount");
+    console.log("DEBUG:routes/_layout:onMount");
     // console.log($params);
 
     // If application loads from index page, entry is through here
     // otherwise, it loads first from playground/index or tutorial/_layout
     // so no need to re-initialise controller here
-    if(!controller.initializing && !controller.samplesLoaded)
-      await controller.init(document.location.origin +'/sema-engine');
+    // if(!controller.initializing && !controller.samplesLoaded)
+    //   await controller.init(document.location.origin +'/sema-engine');
 
   });
 

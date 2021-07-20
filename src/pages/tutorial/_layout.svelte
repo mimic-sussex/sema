@@ -15,10 +15,13 @@
 
   import {
     tutorials,
-    selected,
+    // selected,
+		selectedChapter,
+    selectedSection,
     items,
     hydrateJSONcomponent,
     populateStoresWithFetchedProps
+
   } from '../../stores/tutorial.js';
 
   import {
@@ -50,23 +53,78 @@
 
 
 
-  let handleSelect = e => {
-    try{
-      // await tick();
-      $items = []; // refresh items to call onDestroy on each (learner need to terminate workers)
-      localStorage.setItem("last-session-tutorial-url", `/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/`);
-      $goto(`/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/`);
-    }
-    catch(error){
-      console.error("Error Selecting and loading tutorial environment", error);
-    }
-  }
+
+
+	const setNextTutorial = e => {
+		if($tutorials.indexOf($selectedChapter) === 0){ // if 1st chapter
+			// if last section of 1st chapter
+			if($selectedChapter.sections.length === $selectedChapter.sections.indexOf($selectedSection) + 1 ){
+				// change chapter, set first section
+				$selectedChapter = $tutorials[$tutorials.indexOf($selectedChapter) + 1];
+				$selectedSection = $selectedChapter.sections[0];
+			}
+			else // if intermediate section, skip to 1st chapters' next section
+				$selectedSection = $selectedChapter.sections[$selectedChapter.sections.indexOf($selectedSection) + 1];
+		}
+		else if($tutorials.indexOf($selectedChapter) === $tutorials.length - 1 ){ // of last chapter
+			if($selectedChapter.sections.length === $selectedChapter.sections.indexOf($selectedSection) + 1){  // if last section of last chapter
+				$selectedChapter = $tutorials[0];
+				$selectedSection = $selectedChapter.sections[0];
+			}
+			else
+				// if intermediate section, skip to last chapters' next section
+				$selectedSection = $selectedChapter.sections[$selectedChapter.sections.indexOf($selectedSection) + 1];
+		}
+		else { // if 1st chapter
+			// if last section of last chapter
+			if($selectedChapter.sections.length === $selectedChapter.sections.indexOf($selectedSection) + 1 ){
+				// return;
+				$selectedChapter = $tutorials[$tutorials.indexOf($selectedChapter) + 1];
+				$selectedSection = $selectedChapter.sections[0];
+			}
+			else // if intermediate section, skip to 1st chapters' next section
+				$selectedSection = $selectedChapter.sections[$selectedChapter.sections.indexOf($selectedSection) + 1];
+		}
+    $goto(`/tutorial/${$selectedSection.chapter_dir}/${$selectedSection.section_dir}/`);
+	}
+
+	const setPreviousTutorial = e => {
+
+		// if($tutorials.indexOf($selectedChapter) === 0){ // if 1st chapter
+		// 	// if last section of 1st chapter
+		// 	if($selectedChapter.sections.indexOf($selectedSection) === 0 ){
+		// 		// change chapter, set first section
+		// 		// $selectedChapter = $tutorials[$tutorials.indexOf($selectedChapter) + 1];
+		// 		// $selectedSection = $selectedChapter.sections[0];
+		// 	}
+		// 	else // if intermediate section, skip to 1st chapters' next section
+		// 		$selectedSection = $selectedChapter.sections[$selectedChapter.sections.indexOf($selectedSection) - 1];
+		// }
+
+		// // 	if($tutorials.isIndexOf($selectedChapter) === 0)
+		// // 		if($selectedChapter.sections.isIndexOf($selectedSection) === 0) /* do nothing */ ;
+		// // 		else if($selectedChapter.sections.length === $selectedChapter.sections.isIndexOf($selectedSection) - 1){
+		// // 			// change chapter, set first section
+		// // 			$selectedChapter = $tutorials[$tutorials.isIndexOf($selectedChapter) + 1];
+		// // 			$selectedSection = $selectedChapter.sections[0];
+		// // 		}
+		// // 		else // if intermediate section, skip to next chapters' section
+		// // 			$selectedSection = $selectedChapter.sections[$selectedChapter.sections.isIndexOf($selectedSection) + 1];
+		// // 	else if($tutorials.isIndexOf($selectedChapter) === $tutorials.length - 1) /* do nothing */ ;
+
+
+    // // $goto(`/tutorial/${$selectedSection.chapter_dir}/${$selectedSection.section_dir}/`);
+    // // // $goto(`/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/`);
+
+	}
 
 	const handleLeftButtonClick = e => {
 		try {
       // await tick();
-      // $items = []; // refresh items to call onDestroy on each (learner need to terminate workers)
-      // localStorage.setItem("last-session-tutorial-url", `/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/`);
+      $items = []; // refresh items to call onDestroy on each (learner need to terminate workers)
+			setPreviousTutorial();
+    	// $goto(`/tutorial/${$selectedSection.chapter_dir}/${$selectedSection.section_dir}/`);
+			// localStorage.setItem("last-session-tutorial-url", `/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/`);
       // $goto(`/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/`);
 		} catch (error) {
       console.error("Error navigating tutorial environment", error);
@@ -77,15 +135,29 @@
 		try {
       // await tick();
       $items = []; // refresh items to call onDestroy on each (learner need to terminate workers)
-
-			// if($selected.chapter_dir}/${$selected.section_dir
-
+			setNextTutorial();
+	    // $goto(`/tutorial/${$selectedSection.chapter_dir}/${$selectedSection.section_dir}/`);
+			// $goto(`/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/`);
       // localStorage.setItem("last-session-tutorial-url", `/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/`);
       // $goto(`/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/`);
 		} catch (error) {
       console.error("Error navigating loading tutorial environment", error);
 		}
 	}
+
+  let handleSelect = e => {
+    try{
+      // await tick();
+      $items = []; // refresh items to call onDestroy on each (learner need to terminate workers)
+      // localStorage.setItem("last-session-tutorial-url", `/tutorial/${$selectedSection.chapter_dir}/${$selectedSection.section_dir}/`);
+			$selectedChapter = $tutorials.filter(chapter => chapter.sections.includes($selectedSection)).shift();
+      $goto(`/tutorial/${$selectedSection.chapter_dir}/${$selectedSection.section_dir}/`);
+    }
+    catch(error){
+      console.error("Error Selecting and loading tutorial environment", error);
+    }
+  }
+
 
   const update = (e, dataItem) => {
 
@@ -123,10 +195,10 @@
 
   onMount( async () => {
 
-    // console.log("DEBUG:routes/tutorial/_layout:onMount");
+    console.log("DEBUG:routes/tutorial/_layout:onMount");
 
     if(!controller.samplesLoaded){
-      controller.init(document.location.origin + '/sema-engine');
+      controller.init(document.location.origin);
       $goto(localStorage.getItem("last-session-tutorial-url"));
     }
 
@@ -178,7 +250,7 @@
       <div class="combobox-dark middle">
         <!-- svelte-ignore a11y-no-onchange -->
         <select
-                bind:value={ $selected }
+                bind:value={ $selectedSection }
                 on:change={ e => handleSelect(e) }
                 >
           {#if $tutorials !== undefined}
@@ -205,7 +277,7 @@
     </div>
 
     <div class="markdown-container">
-      <slot scoped={ $selected } />
+      <slot scoped={ $selectedSection } />
     </div>
   </div>
 
