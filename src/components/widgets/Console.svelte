@@ -48,7 +48,7 @@
   // );
 
 	function eventListener(log){
-		console.log("recieving data in console");
+		console.log(log);
     $rawConsoleLogs = logger.rawLog;
 	}
 

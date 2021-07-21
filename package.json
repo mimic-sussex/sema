@@ -77,7 +77,6 @@
 		"nearley": "^2.20.1",
 		"regl": "^2.1.0",
 		"rollup-plugin-workbox": "^6.1.1",
-		"sema-engine": "^0.1.3",
 		"svelte-codemirror": "git+https://github.com/frantic0/svelte-codemirror.git",
 		"svelte-preprocess": "^4.0.9",
 		"timidity": "^1.3.0",
