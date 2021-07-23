@@ -1,6 +1,6 @@
 <script>
 
-  import { onMount, onDestroy } from "svelte/internal";
+  import { onMount, onDestroy, beforeUpdate, afterUpdate } from "svelte/internal";
   //import Logger from "../../utils/logger";
 
   import { Logger } from 'sema-engine';
@@ -9,9 +9,6 @@
 
   let logger = new Logger();
   //logger.setStore($rawConsoleLogs); //store is set to logger log property so that it updates with it.
-
-  let textArea;
-
 
   export let id;
   export let name;
@@ -46,11 +43,28 @@
   //   $rawConsoleLogs = logger.rawLog;
   // }
   // );
+  
+  //to make the console scroll when new logs are added
+  let textArea;
+  let autoscroll;
+
+  beforeUpdate(() => {
+    autoscroll = textArea && (textArea.offsetHeight + textArea.scrollTop) > (textArea.scrollHeight - 20);
+  });
+
+  afterUpdate(() => {
+    if (autoscroll) textArea.scrollTo(0, textArea.scrollHeight);
+  });
 
 	function eventListener(log){
 		console.log(log);
     $rawConsoleLogs = logger.rawLog;
 	}
+
+  function clearLogs(){
+    logger.clear();
+    $rawConsoleLogs = "";
+  }
 
   onMount(async () => {
 
@@ -59,6 +73,9 @@
     }
 
 		logger.addEventListener("onLog", eventListener)
+
+    //clear the log on Console mount!
+    clearLogs();
 
     //append = append + logger.log
     something( id, name, type, className, lineNumbers, hasFocus, theme, background, component );
@@ -91,7 +108,17 @@
     width: 100%;
     height: 100%;
     resize: none;
+    color: red;
     overflow-y: scroll;
+    overflow-x: scroll;
+  }
+
+  .console-logs {
+
+  }
+
+  .console-warns {
+
   }
 
 </style>
