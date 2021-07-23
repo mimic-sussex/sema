@@ -150,18 +150,31 @@ These oscillators are from Martin Finke's PolyBLEP library https://github.com/ma
 The functions all take one or two arguments: a frequency and an optional pulse width (betweeo 0 and 1). The functions are as follows:
 
 sinb: sin 
+
 cosb: cosine 
+
 trib: triangle
+
 sqrb: square
+
 rectb: rectangle
+
 sawb: saw
+
 rampb: ramp
+
 modtrib: modified triangle
+
 modsqrb: modified square
+
 hrecsinb: half-rectified sine
+
 frecsinb: fully rectified sine
+
 tripulb: triangle-pulse
+
 trapb: fixed trapezoid
+
 vtrapb: variable trapezoid
 
 Lastly, there is a function with modulatable choice of waveform
