@@ -52,6 +52,11 @@
     $rawConsoleLogs = logger.rawLog;
 	}
 
+  function clearLogs(){
+    logger.clear();
+    $rawConsoleLogs = "";
+  }
+
   onMount(async () => {
 
     if(!logger){
@@ -59,6 +64,9 @@
     }
 
 		logger.addEventListener("onLog", eventListener)
+
+    //clear the log on Console mount!
+    clearLogs();
 
     //append = append + logger.log
     something( id, name, type, className, lineNumbers, hasFocus, theme, background, component );
@@ -91,7 +99,17 @@
     width: 100%;
     height: 100%;
     resize: none;
+    color: red;
     overflow-y: scroll;
+    overflow-x: scroll;
+  }
+
+  .console-logs {
+
+  }
+
+  .console-warns {
+
   }
 
 </style>
