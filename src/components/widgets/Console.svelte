@@ -1,6 +1,6 @@
 <script>
 
-  import { onMount, onDestroy } from "svelte/internal";
+  import { onMount, onDestroy, beforeUpdate, afterUpdate } from "svelte/internal";
   //import Logger from "../../utils/logger";
 
   import { Logger } from 'sema-engine';
@@ -9,9 +9,6 @@
 
   let logger = new Logger();
   //logger.setStore($rawConsoleLogs); //store is set to logger log property so that it updates with it.
-
-  let textArea;
-
 
   export let id;
   export let name;
@@ -46,6 +43,18 @@
   //   $rawConsoleLogs = logger.rawLog;
   // }
   // );
+  
+  //to make the console scroll when new logs are added
+  let textArea;
+  let autoscroll;
+
+  beforeUpdate(() => {
+    autoscroll = textArea && (textArea.offsetHeight + textArea.scrollTop) > (textArea.scrollHeight - 20);
+  });
+
+  afterUpdate(() => {
+    if (autoscroll) textArea.scrollTo(0, textArea.scrollHeight);
+  });
 
 	function eventListener(log){
 		console.log(log);
