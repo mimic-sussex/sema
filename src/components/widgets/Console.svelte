@@ -27,11 +27,19 @@
     processor: true,
     main: true,
     learner: true,
-    warn: false,
-    log: false,
-    info: false,
-    error: false,
+    "warn": true,
+    "log": true,
+    "info": true,
+    "error": true,
   }
+
+  let totals = {
+    error: 0,
+    info: 0,
+    warn: 0,
+    log: 0,
+  }
+
 
 
   // export let append = '';
@@ -70,10 +78,11 @@
   });
 
 	function eventListener(log){
-		console.log(log);
     $rawConsoleLogs = logger.rawLog;
     $consoleLogs = logger.log;
     console.log($consoleLogs);
+    countTypes(logger.log);
+    console.log(totals)
 	}
 
   function clearLogs(){
@@ -81,6 +90,21 @@
     logger.clear();
     $rawConsoleLogs = "";
     $consoleLogs = [];
+  }
+
+  function countTypes(newlog){
+    let mr = newlog[newlog.length -1] //most recent event on console
+    if (mr.type == "error"){
+      totals.error++;
+    } else if( mr.type == "info"){
+      totals.info++;
+    } else if (mr.type == "log"){
+      totals.log++;
+    } else if (mr.type == "warn"){
+      totals.warn++;
+    } else{
+      return;
+    }
   }
 
   onMount(async () => {
@@ -144,8 +168,9 @@
     background: none;
     margin-top: 5px;
     padding: 0px 0px;
-    border: 2px solid white;
+    border: 0px solid white;
     padding: 4px 6px;
+    align-items: left;
   }
 
   .button:hover {
@@ -158,11 +183,12 @@
 
   .console-settings{
     overflow: hidden;
-    background-color: #333;
+    background-color: #1d1d1d;
     position: fixed; /* Set the navbar to fixed position */
     width: 80%; /* Full width */
-    height: 10%;
+    height: 5%;
     display: flex;
+    flex-direction: wrap;
     justify-content: space-between;
     align-items: center;
     padding: 10px 10%;
@@ -177,50 +203,71 @@
     display: inline-block;
     font-family: monospace;
     text-decoration: underline;
+    font-weight: bold;
   }
+
+  .totals-text {
+    display: inline-block;
+    font-weight: bold;
+    font-family: monospace;
+  }
+
+  form {
+    padding: 10px 10px;
+    align: right;
+  }
+
 
 </style>
 
 <div class='console-container scrollable-textarea' bind:this={textArea}>
-
+ 
+  
+  
   <div class="console-settings">
 
-    <button type="button" class="button" on:click={clearLogs}>🚫</button>
     
-    <p class="section-header">Filter Source: </p>
+    <form>
+      <p class="section-header">Filter Source: </p>
 
-    <input type="checkbox" id="PROCESSOR" name="PROCESSOR" bind:checked={filter.processor}>
-    <label for="PROCESSOR">Processor</label>
+      <input type="checkbox" id="PROCESSOR" name="PROCESSOR" bind:checked={filter.processor}>
+      <label for="PROCESSOR">Processor</label>
 
-    <input type="checkbox" id="MAIN" name="MAIN" bind:checked={filter.main}>
-    <label for="MAIN">Main</label>
+      <input type="checkbox" id="MAIN" name="MAIN" bind:checked={filter.main}>
+      <label for="MAIN">Main</label>
 
-    <input type="checkbox" id="LEARNER" name="LEARNER" bind:checked={filter.learner}>
+      <input type="checkbox" id="LEARNER" name="LEARNER" bind:checked={filter.learner}>
     <label for="LEARNER">Learner</label>
+    </form>
 
-    <!--
-    <p class="section-header">Filter Level: </p>
+    <form>
+    <p class="section-header">Filter Type: </p>
 
-    <input type="checkbox" id="level-log" name="level-log" bind:checked={filter.log}>
-    <label for="level-log">logs</label>
+    <input type="checkbox" id="level-log" name="level-log" bind:checked={filter["log"]}>
+      <label for="level-log">logs</label>
 
-    <input type="checkbox" id="level-error" name="level-error" bind:checked={filter.error}>
-    <label for="level-error">errors</label>
-    -->
+      <input type="checkbox" id="level-error" name="level-error" bind:checked={filter["error"]}>
+      <label for="level-error">errors</label>
+
+      <input type="checkbox" id="level-warn" name="level-warn" bind:checked={filter["warn"]}>
+      <label for="level-warn">warns</label>
+      
+      <input type="checkbox" id="level-info" name="level-info" bind:checked={filter["info"]}>
+      <label for="level-info">info</label>
+    </form>
+
+    <p class="totals-text">⚠️{totals.warn}</p>
+    <p class="totals-text">❗{totals.error}</p>
+    <button type="button" class="button" on:click={clearLogs}>🚫</button>
 
   </div>
-  <!--
-  <input type="checkbox" id={logger.type.processor} name={logger.type.processor}
-         checked>
-  <label for={logger.type.processor}>Processor</label>
-  -->
 
   {#each $consoleLogs as {func, payload, source, type}, i}
-    {#if source == logger.types.processor && filter.processor != false}
+    {#if source == logger.types.processor && filter.processor != false && filter[type] != false}
       <pre readonly class='console-PROCESSOR'>{source}{payload}</pre>
-    {:else if source == logger.types.learner && filter.learner != false}
+    {:else if source == logger.types.learner && filter.learner != false && filter[type] != false}
       <pre readonly class='console-LEARNER'>{source}{payload}</pre>
-    {:else if source == logger.types.main && filter.main != false}
+    {:else if source == logger.types.main && filter.main != false && filter[type] != false}
       <pre readonly class='console-MAIN'>{source}{payload}</pre>
     {/if}
 
