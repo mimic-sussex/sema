@@ -59,6 +59,8 @@ export const modelEditorValue = writable("");
 
 export const rawConsoleLogs = writable("");
 
+export const consoleLogs = writable("");
+
 // export const populateStoresWithFetchedProps = async (newItem) => {
 
 
