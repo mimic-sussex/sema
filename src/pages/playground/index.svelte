@@ -285,7 +285,7 @@
     // No need to create re-initialise controller again here
     if(!controller.initializing && !controller.samplesLoaded)
       // controller.init('http://localhost:5000/sema-engine');
-      await controller.init(document.location.origin);
+      await controller.init(document.location.origin + '/build/');
 
     // console.log('Playground index: onMount ');
 

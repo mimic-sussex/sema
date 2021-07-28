@@ -1,8 +1,8 @@
 {
   "background_color": "#ffffff",
   "theme_color": "#E938C2",
-  "name": "Routify app",
-  "short_name": "Routify app",
+  "name": "Sema",
+  "short_name": "Sema",
   "start_url": "/",
   "display": "standalone",
   "icons": [
