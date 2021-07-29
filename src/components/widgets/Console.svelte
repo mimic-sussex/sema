@@ -101,10 +101,17 @@
 
 <style>
 
+  .parent-container {
+    width: 100%;
+    height: 100%;
+  }
   .console-container {
     /* position: relative; */
     width: 100%;
-    height: 100%;
+    height: 90%;
+    /* padding-top: 5%; */
+    /* padding-bottom: 5%; */
+    /* column-count: 2; */
     border: none;
     overflow-y: scroll;
   }
@@ -117,10 +124,12 @@
 	}
 
   .console-textarea {
+    vertical-align: bottom;
     width: 100%;
     height: 100%;
     resize: none;
     color: white;
+    border: none;
     overflow-y: scroll;
   }
 
@@ -154,10 +163,11 @@
   }
 
   .console-settings{
+    vertical-align: top;
     overflow: hidden;
-    background-color: #1d1d1d;
-    position: fixed; /* Set the navbar to fixed position */
-    width: 80%; /* Full width */
+    background-color: #333;/*#1d1d1d;*/
+    /* position: fixed; Set the navbar to fixed position */
+    /*width: 80%; /* Full width */
     height: 5%;
     display: flex;
     flex-direction: wrap;
@@ -192,48 +202,47 @@
 
 </style>
 
+
+<div class=parent-container>
+<div class="console-settings">
+
+  <form>
+    <p class="section-header">Origin: </p>
+
+    <input type="checkbox" id="PROCESSOR" name="PROCESSOR" bind:checked={filter.processor}>
+    <label for="PROCESSOR">Processor</label>
+
+    <input type="checkbox" id="MAIN" name="MAIN" bind:checked={filter.main}>
+    <label for="MAIN">Main</label>
+
+    <input type="checkbox" id="LEARNER" name="LEARNER" bind:checked={filter.learner}>
+  <label for="LEARNER">Learner</label>
+  </form>
+
+  <form>
+  <p class="section-header">Log Level: </p>
+
+  <input type="checkbox" id="level-log" name="level-log" bind:checked={filter["log"]}>
+    <label for="level-log">logs</label>
+
+    <input type="checkbox" id="level-error" name="level-error" bind:checked={filter["error"]}>
+    <label for="level-error">errors</label>
+
+    <input type="checkbox" id="level-warn" name="level-warn" bind:checked={filter["warn"]}>
+    <label for="level-warn">warns</label>
+    
+    <input type="checkbox" id="level-info" name="level-info" bind:checked={filter["info"]}>
+    <label for="level-info">info</label>
+  </form>
+
+  <p class="totals-text">⚠️{totals.warn}</p>
+  <p class="totals-text">❗{totals.error}</p>
+  <button type="button" class="button" on:click={clearLogs}>🚫</button>
+
+</div>
+
 <div class='console-container scrollable-textarea' bind:this={textArea}>
  
-  
-  
-  <div class="console-settings">
-
-    
-    <form>
-      <p class="section-header">Filter Origin: </p>
-
-      <input type="checkbox" id="PROCESSOR" name="PROCESSOR" bind:checked={filter.processor}>
-      <label for="PROCESSOR">Processor</label>
-
-      <input type="checkbox" id="MAIN" name="MAIN" bind:checked={filter.main}>
-      <label for="MAIN">Main</label>
-
-      <input type="checkbox" id="LEARNER" name="LEARNER" bind:checked={filter.learner}>
-    <label for="LEARNER">Learner</label>
-    </form>
-
-    <form>
-    <p class="section-header">Filter Type: </p>
-
-    <input type="checkbox" id="level-log" name="level-log" bind:checked={filter["log"]}>
-      <label for="level-log">logs</label>
-
-      <input type="checkbox" id="level-error" name="level-error" bind:checked={filter["error"]}>
-      <label for="level-error">errors</label>
-
-      <input type="checkbox" id="level-warn" name="level-warn" bind:checked={filter["warn"]}>
-      <label for="level-warn">warns</label>
-      
-      <input type="checkbox" id="level-info" name="level-info" bind:checked={filter["info"]}>
-      <label for="level-info">info</label>
-    </form>
-
-    <p class="totals-text">⚠️{totals.warn}</p>
-    <p class="totals-text">❗{totals.error}</p>
-    <button type="button" class="button" on:click={clearLogs}>🚫</button>
-
-  </div>
-
   {#each $consoleLogs as {func, payload, origin, logLevel}, i}
     {#if origin == logger.originTypes.processor && filter.processor != false && filter[logLevel] != false}
       <pre readonly class='console-PROCESSOR'>{origin}{payload}</pre>
@@ -244,6 +253,7 @@
     {/if}
   {/each}
 
+</div>
 </div>
 
 
