@@ -69,9 +69,6 @@
     <button class="button-dark"
             on:click={ closeOverlay }
             >Cancel</button>
-    <br>
-    <br>
-  
 	</div>
 
 </div>
