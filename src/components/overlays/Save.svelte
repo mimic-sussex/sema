@@ -48,7 +48,8 @@
     <path d="M48.4 26.5c-.9 0-1.7.7-1.7 1.7v11.6h-43.3v-11.6c0-.9-.7-1.7-1.7-1.7s-1.7.7-1.7 1.7v13.2c0 .9.7 1.7 1.7 1.7h46.7c.9 0 1.7-.7 1.7-1.7v-13.2c0-1-.7-1.7-1.7-1.7zm-24.5 6.1c.3.3.8.5 1.2.5.4 0 .9-.2 1.2-.5l10-11.6c.7-.7.7-1.7 0-2.4s-1.7-.7-2.4 0l-7.1 8.3v-25.3c0-.9-.7-1.7-1.7-1.7s-1.7.7-1.7 1.7v25.3l-7.1-8.3c-.7-.7-1.7-.7-2.4 0s-.7 1.7 0 2.4l10 11.6z"></path>
   </svg>
   <!-- <p class="save-overlay-text"><span style="font-weight: 1500;">Enter the name for the record</span></p> -->
-	<label for="name">Enter a name for the project (8 to 15 alphanumeric characters):</label>
+	<!-- <label for="name">(Project names should contain 8 to 15 alphanumeric characters)</label> -->
+
 	<input 	bind:this={ input }
 					bind:value={ filename }
 					type="text"
@@ -57,7 +58,9 @@
 					required
 					minlength="8"
 					maxlength="15"
-					size="10"
+          size="10"
+          placeholder="Enter a Project Name"
+          title="Project names should contain 8 to 15 alphanumeric characters"
 					>
   <div class="save-overlay-button-container">
 		<button class="button-dark"
@@ -66,6 +69,9 @@
     <button class="button-dark"
             on:click={ closeOverlay }
             >Cancel</button>
+    <br>
+    <br>
+  
 	</div>
 
 </div>
@@ -99,7 +105,7 @@
     font-weight: 400;
     cursor: pointer;
     color:white;
-    
+
     line-height: 1.3;
     max-width: 100%;
     box-sizing: border-box;
@@ -169,9 +175,14 @@
     display: inline-flex;
   }
 
+  .box-icon {
+    padding: 20px 20px 20px 20px;
+  }
+
 	input:invalid {
   	border: 2px dashed red;
 	}
+  
 
 
 </style>
