@@ -172,7 +172,8 @@
   }
 
   onMount( async () => {
-    console.log("DEBUG:routes/_layout:onMount");
+    // console.log("DEBUG:routes/_layout:onMount");
+
     // console.log($params);
 
     // If application loads from index page, entry is through here

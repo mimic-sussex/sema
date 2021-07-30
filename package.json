@@ -18,7 +18,7 @@
 		"dev:nollup": "run-p routify nollup",
 		"dev-dynamic": "cross-env BUNDLING=dynamic npm run dev",
 		"build": "routify -b && rollup -c",
-		"serve": "spassr --port 5001 --ssr",
+		"serve": "spassr --port 5000 --ssr",
 		"export": "spank",
 		"rollup": "rollup -cw",
 		"nollup": "nollup -c --verbose",

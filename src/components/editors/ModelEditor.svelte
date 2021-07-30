@@ -217,22 +217,22 @@
     // clearTimeout(timeout);
   }
 
-  let postToModelAsync = modelCode => {
-    if(window.Worker){
-      let modelWorkerAsync = new Promise((res, rej) => {
-        // posts model code received from editor to worker
-        // console.log('DEBUG:ModelEditor:postToModelAsync:catch')
+  // function postToModelAsync (modelCode){
+  //   if(window.Worker){
+  //     let modelWorkerAsync = new Promise((res, rej) => {
+  //       // posts model code received from editor to worker
+  //       // console.log('DEBUG:ModelEditor:postToModelAsync:catch')
 
-      })
-      .then(outputs => {
+  //     })
+  //     .then(outputs => {
 
-      })
-      .catch(e => {
-        // console.log('DEBUG:ModelEditor:parserWorkerAsync:catch')
-        // console.log(e);
-      });
-    }
-  }
+  //     })
+  //     .catch(e => {
+  //       // console.log('DEBUG:ModelEditor:parserWorkerAsync:catch')
+  //       // console.log(e);
+  //     });
+  //   }
+  // }
 
   function onModelEditorValueChange(){
     //don't need to save on every key stroke

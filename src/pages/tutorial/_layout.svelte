@@ -160,7 +160,8 @@
 
     console.log("DEBUG:routes/tutorial/_layout:onMount");
     if(!controller.samplesLoaded){
-      controller.init(document.location.origin);
+      controller.init(document.location.origin + '/build/');
+      $goto(localStorage.getItem("last-session-tutorial-url"));
     }
 
     if($items.length === 0 && localStorage["last-session-tutorial-url"]){
