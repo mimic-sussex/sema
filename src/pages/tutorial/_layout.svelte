@@ -159,7 +159,6 @@
   onMount( async () => {
 
     console.log("DEBUG:routes/tutorial/_layout:onMount");
-
     if(!controller.samplesLoaded){
       controller.init(document.location.origin + '/build/');
       $goto(localStorage.getItem("last-session-tutorial-url"));
@@ -178,6 +177,8 @@
       await populateCommonStoresWithFetchedProps(item);
       updateItemPropsWithCommonStoreValues(item)
     }
+
+    $goto(localStorage.getItem("last-session-tutorial-url"));
   });
 
   onDestroy(() => {

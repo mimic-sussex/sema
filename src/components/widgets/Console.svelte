@@ -1,14 +1,9 @@
 <script>
 
   import { onMount, onDestroy, beforeUpdate, afterUpdate } from "svelte/internal";
-  //import Logger from "../../utils/logger";
 
   import { Logger } from 'sema-engine';
   import { rawConsoleLogs, consoleLogs } from '../../stores/common.js'
-
-
-  let logger = new Logger();
-  //logger.setStore($rawConsoleLogs); //store is set to logger log property so that it updates with it.
 
   export let id;
   export let name;
@@ -21,6 +16,7 @@
   export let className;
   export { className as class };
 
+  let logger = new Logger();
 
   //filter levels, by default log everything
   let filter = {
@@ -33,6 +29,7 @@
     "error": true,
   }
 
+  // to keep track of the total number of logLevel types
   let totals = {
     error: 0,
     info: 0,
@@ -40,30 +37,7 @@
     log: 0,
   }
 
-
-
-  // export let append = '';
-
-  //let value = ``;
-  //let localLogs = '';
-
-  //$: value = appendLog($rawConsoleLogs);//append;
-
-  // append
   let something = e => { /* console.log(...e); */ }
-
-  /*
-  function appendLog(rawlogs){
-    localLogs = localLogs + rawlogs;
-    localLogs = localLogs;
-  }
-  */
-
-  // addEventListener("onConsoleLogsUpdate", (e) => {
-  //   console.log("recieved event!!");
-  //   $rawConsoleLogs = logger.rawLog;
-  // }
-  // );
   
   //to make the console scroll when new logs are added
   let textArea;
@@ -81,7 +55,7 @@
     $rawConsoleLogs = logger.rawLog;
     $consoleLogs = logger.log;
     console.log($consoleLogs);
-    countTypes(logger.log);
+    countLogLevels(logger.log);
     console.log(totals)
 	}
 
@@ -92,15 +66,15 @@
     $consoleLogs = [];
   }
 
-  function countTypes(newlog){
+  function countLogLevels(newlog){
     let mr = newlog[newlog.length -1] //most recent event on console
-    if (mr.type == "error"){
+    if (mr.logLevel == "error"){
       totals.error++;
-    } else if( mr.type == "info"){
+    } else if( mr.t == "info"){
       totals.info++;
-    } else if (mr.type == "log"){
+    } else if (mr.logLevel == "log"){
       totals.log++;
-    } else if (mr.type == "warn"){
+    } else if (mr.logLevel == "warn"){
       totals.warn++;
     } else{
       return;
@@ -114,8 +88,6 @@
     }
 
 		logger.addEventListener("onLog", eventListener);
-    console.log("TYPES", logger.types);
-    //append = append + logger.log
     something( id, name, type, className, lineNumbers, hasFocus, theme, background, component );
   });
 
@@ -129,10 +101,17 @@
 
 <style>
 
+  .parent-container {
+    width: 100%;
+    height: 100%;
+  }
   .console-container {
     /* position: relative; */
     width: 100%;
-    height: 100%;
+    height: 90%;
+    /* padding-top: 5%; */
+    /* padding-bottom: 5%; */
+    /* column-count: 2; */
     border: none;
     overflow-y: scroll;
   }
@@ -145,10 +124,12 @@
 	}
 
   .console-textarea {
+    vertical-align: bottom;
     width: 100%;
     height: 100%;
     resize: none;
     color: white;
+    border: none;
     overflow-y: scroll;
   }
 
@@ -182,10 +163,11 @@
   }
 
   .console-settings{
+    vertical-align: top;
     overflow: hidden;
-    background-color: #1d1d1d;
-    position: fixed; /* Set the navbar to fixed position */
-    width: 80%; /* Full width */
+    background-color: #333;/*#1d1d1d;*/
+    /* position: fixed; Set the navbar to fixed position */
+    /*width: 80%; /* Full width */
     height: 5%;
     display: flex;
     flex-direction: wrap;
@@ -220,61 +202,58 @@
 
 </style>
 
+
+<div class=parent-container>
+<div class="console-settings">
+
+  <form>
+    <p class="section-header">Origin: </p>
+
+    <input type="checkbox" id="PROCESSOR" name="PROCESSOR" bind:checked={filter.processor}>
+    <label for="PROCESSOR">Processor</label>
+
+    <input type="checkbox" id="MAIN" name="MAIN" bind:checked={filter.main}>
+    <label for="MAIN">Main</label>
+
+    <input type="checkbox" id="LEARNER" name="LEARNER" bind:checked={filter.learner}>
+  <label for="LEARNER">Learner</label>
+  </form>
+
+  <form>
+  <p class="section-header">Log Level: </p>
+
+  <input type="checkbox" id="level-log" name="level-log" bind:checked={filter["log"]}>
+    <label for="level-log">logs</label>
+
+    <input type="checkbox" id="level-error" name="level-error" bind:checked={filter["error"]}>
+    <label for="level-error">errors</label>
+
+    <input type="checkbox" id="level-warn" name="level-warn" bind:checked={filter["warn"]}>
+    <label for="level-warn">warns</label>
+    
+    <input type="checkbox" id="level-info" name="level-info" bind:checked={filter["info"]}>
+    <label for="level-info">info</label>
+  </form>
+
+  <p class="totals-text">⚠️{totals.warn}</p>
+  <p class="totals-text">❗{totals.error}</p>
+  <button type="button" class="button" on:click={clearLogs}>🚫</button>
+
+</div>
+
 <div class='console-container scrollable-textarea' bind:this={textArea}>
  
-  
-  
-  <div class="console-settings">
-
-    
-    <form>
-      <p class="section-header">Filter Source: </p>
-
-      <input type="checkbox" id="PROCESSOR" name="PROCESSOR" bind:checked={filter.processor}>
-      <label for="PROCESSOR">Processor</label>
-
-      <input type="checkbox" id="MAIN" name="MAIN" bind:checked={filter.main}>
-      <label for="MAIN">Main</label>
-
-      <input type="checkbox" id="LEARNER" name="LEARNER" bind:checked={filter.learner}>
-    <label for="LEARNER">Learner</label>
-    </form>
-
-    <form>
-    <p class="section-header">Filter Type: </p>
-
-    <input type="checkbox" id="level-log" name="level-log" bind:checked={filter["log"]}>
-      <label for="level-log">logs</label>
-
-      <input type="checkbox" id="level-error" name="level-error" bind:checked={filter["error"]}>
-      <label for="level-error">errors</label>
-
-      <input type="checkbox" id="level-warn" name="level-warn" bind:checked={filter["warn"]}>
-      <label for="level-warn">warns</label>
-      
-      <input type="checkbox" id="level-info" name="level-info" bind:checked={filter["info"]}>
-      <label for="level-info">info</label>
-    </form>
-
-    <p class="totals-text">⚠️{totals.warn}</p>
-    <p class="totals-text">❗{totals.error}</p>
-    <button type="button" class="button" on:click={clearLogs}>🚫</button>
-
-  </div>
-
-  {#each $consoleLogs as {func, payload, source, type}, i}
-    {#if source == logger.types.processor && filter.processor != false && filter[type] != false}
-      <pre readonly class='console-PROCESSOR'>{source}{payload}</pre>
-    {:else if source == logger.types.learner && filter.learner != false && filter[type] != false}
-      <pre readonly class='console-LEARNER'>{source}{payload}</pre>
-    {:else if source == logger.types.main && filter.main != false && filter[type] != false}
-      <pre readonly class='console-MAIN'>{source}{payload}</pre>
+  {#each $consoleLogs as {func, payload, origin, logLevel}, i}
+    {#if origin == logger.originTypes.processor && filter.processor != false && filter[logLevel] != false}
+      <pre readonly class='console-PROCESSOR'>{origin}{payload}</pre>
+    {:else if origin == logger.originTypes.learner && filter.learner != false && filter[logLevel] != false}
+      <pre readonly class='console-LEARNER'>{origin}{payload}</pre>
+    {:else if origin == logger.originTypes.main && filter.main != false && filter[logLevel] != false}
+      <pre readonly class='console-MAIN'>{origin}{payload}</pre>
     {/if}
-
-    <!-- <pre readonly bind:this={ textArea } class='console-textarea'>{ type }</pre> -->
   {/each}
-  <!-- <pre readonly bind:this={ textArea } class='console-textarea'>{ $rawConsoleLogs }</pre> -->
 
+</div>
 </div>
 
 
