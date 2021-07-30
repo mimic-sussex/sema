@@ -8,7 +8,7 @@ Here's an example of a sample player in the default language
 >{{1}imp}\909b;
 ```
 
-```\909b``` is the name of a sample, taken from the list of preloaded samples here: [samples](samples).  You can also generate samples from the machine learning window (see the tutorials in the next section).
+```\909b``` is the name of a sample, taken from the list of preloaded samples here: [samples](/docs/load-sound-files).  You can also generate samples from the machine learning window (see the tutorials in the next section).
 
 Preceeding the sample name is a single parameter, a signal. When this signal cross from below to above zero, the sample is triggered. In this case we're using an impulse generator, which generates an impulse once a second to trigger the sample.  You can listen to this on its own by moving the ```>``` operator.
 
