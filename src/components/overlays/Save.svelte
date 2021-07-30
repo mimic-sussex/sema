@@ -98,7 +98,8 @@
     font-family: sans-serif;
     font-weight: 400;
     cursor: pointer;
-
+    color:white;
+    
     line-height: 1.3;
     max-width: 100%;
     box-sizing: border-box;
