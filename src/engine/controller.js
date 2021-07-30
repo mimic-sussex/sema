@@ -124,11 +124,14 @@ export default class Controller {
 				// this.engine.createSharedBuffer(channelId, ttype, blockSize)
 
 				// Lazy load all samples imported from assets
+
+				// this.samplesLoaded = await this.importSamples()
 				this.samplesLoaded = await this.importSamplesAsync()
+
 				console.log('samples loaded')
 
 				// Connect Analysers loaded from the store need to pass callbacks after they load
-				this.engine.connectAnalysers()
+				// this.engine.connectAnalysers()
 
         this.initializing = false;
 				// Change engine status on settings bar
@@ -182,6 +185,41 @@ export default class Controller {
 		return importAll(r)
 	}
 
+
+	// async importSamples(){
+
+	// 	await new Promise(async (resolve, reject) => {
+	// 		// let sampleCounter = sampleList.length;
+	// 		let sampleCounter = 11;
+	// 		// await import(`../../assets/samples/909.wav`) // need to use the samples relative path to the src, not in public,
+	// 			// .then((e) => {
+	// 			try {
+	// 				this.engine.loadSample('909', `909.wav`)
+	// 				// if (--sampleCounter <= 0) resolve(true)
+	// 				// console.log(`loading sample: ${e.default}`)
+	// 			}
+	// 			catch(err) {
+	// 				console.error(`Error Engine lazy loading sample: ${err}`)
+	// 				reject(err)
+	// 			}
+
+	// 	})
+	// }
+
+	async importSample(path){
+		// e.g `../../assets/samples/909.wav`
+		await import(path) // need to use he samples relative path to the src, not in public,
+			.then((e) => {
+				this.engine.loadSample(e.default, `./${e.default}`)
+				if (--sampleCounter <= 0) resolve(true)
+				console.log(`loading sample: ${e.default}`)
+			})
+			.catch((err) => {
+				console.error(`Error Engine lazy loading sample: ${err}`)
+				reject(err)
+			})
+  }
+
 	/**
 	 *
 	 * @returns
@@ -190,9 +228,10 @@ export default class Controller {
 		return await new Promise(async (resolve, reject) => {
 			// let sampleCounter = sampleList.length;
 			let sampleCounter = 11;
+
 			await import(`../../assets/samples/909.wav`) // need to use the samples relative path to the src, not in public,
 				.then((e) => {
-					this.engine.loadSample(e.default, `/samples/${e.default}`)
+					this.engine.loadSample(e.default, `./${e.default}`)
 					if (--sampleCounter <= 0) resolve(true)
 					console.log(`loading sample: ${e.default}`)
 				})
@@ -204,7 +243,7 @@ export default class Controller {
 
 			await import(`../../assets/samples/909b.wav`) // need to use the samples relative path to the src, not in public,
 				.then((e) => {
-					this.engine.loadSample(e.default, `/samples/${e.default}`)
+					this.engine.loadSample(e.default, `./${e.default}`)
 					if (--sampleCounter <= 0) resolve(true)
 					console.log(`loading sample: ${e.default}`)
 				})
@@ -216,7 +255,7 @@ export default class Controller {
 
 			await import(`../../assets/samples/909closed.wav`) // need to use the samples relative path to the src, not in public,
 				.then((e) => {
-					this.engine.loadSample(e.default, `/samples/${e.default}`)
+					this.engine.loadSample(e.default, `./${e.default}`)
 					if (--sampleCounter <= 0) resolve(true)
 					console.log(`loading sample: ${e.default}`)
 				})
@@ -228,7 +267,7 @@ export default class Controller {
 
 			await import(`../../assets/samples/909open.wav`) // need to use the samples relative path to the src, not in public,
 				.then((e) => {
-					this.engine.loadSample(e.default, `/samples/${e.default}`)
+					this.engine.loadSample(e.default, `./${e.default}`)
 					if (--sampleCounter <= 0) resolve(true)
 					console.log(`loading sample: ${e.default}`)
 				})
@@ -240,7 +279,7 @@ export default class Controller {
 
 			await import(`../../assets/samples/click.wav`) // need to use the samples relative path to the src, not in public,
 				.then((e) => {
-					this.engine.loadSample(e.default, `/samples/${e.default}`)
+					this.engine.loadSample(e.default, `./${e.default}`)
 					if (--sampleCounter <= 0) resolve(true)
 					console.log(`loading sample: ${e.default}`)
 				})
@@ -251,7 +290,7 @@ export default class Controller {
 
 			await import(`../../assets/samples/spade.wav`) // need to use the samples relative path to the src, not in public,
 				.then((e) => {
-					this.engine.loadSample(e.default, `/samples/${e.default}`)
+					this.engine.loadSample(e.default, `./${e.default}`)
 					if (--sampleCounter <= 0) resolve(true)
 					console.log(`loading sample: ${e.default}`)
 				})
@@ -262,7 +301,7 @@ export default class Controller {
 
 			await import(`../../assets/samples/boom2.wav`) // need to use the samples relative path to the src, not in public,
 				.then((e) => {
-					this.engine.loadSample(e.default, `/samples/${e.default}`)
+					this.engine.loadSample(e.default, `./${e.default}`)
 					if (--sampleCounter <= 0) resolve(true)
 					console.log(`loading sample: ${e.default}`)
 				})
@@ -273,7 +312,7 @@ export default class Controller {
 
 			await import(`../../assets/samples/boom.wav`) // need to use the samples relative path to the src, not in public,
 				.then((e) => {
-					this.engine.loadSample(e.default, `/samples/${e.default}`)
+					this.engine.loadSample(e.default, `./${e.default}`)
 					if (--sampleCounter <= 0) resolve(true)
 					console.log(`loading sample: ${e.default}`)
 				})
@@ -284,7 +323,7 @@ export default class Controller {
 
 			await import(`../../assets/samples/machine.wav`) // need to use the samples relative path to the src, not in public,
 				.then((e) => {
-					this.engine.loadSample(e.default, `/samples/${e.default}`)
+					this.engine.loadSample(e.default, `./${e.default}`)
 					if (--sampleCounter <= 0) resolve(true)
 					console.log(`loading sample: ${e.default}`)
 				})
@@ -295,7 +334,7 @@ export default class Controller {
 
 			await import(`../../assets/samples/patterndrone2.wav`) // need to use the samples relative path to the src, not in public,
 				.then((e) => {
-					this.engine.loadSample(e.default, `/samples/${e.default}`)
+					this.engine.loadSample(e.default, `./${e.default}`)
 					if (--sampleCounter <= 0) resolve(true)
 					console.log(`loading sample: ${e.default}`)
 				})
@@ -306,7 +345,7 @@ export default class Controller {
 
 			await import(`../../assets/samples/convol5.wav`) // need to use the samples relative path to the src, not in public,
 				.then((e) => {
-					this.engine.loadSample(e.default, `/samples/${e.default}`)
+					this.engine.loadSample(e.default, `./${e.default}`)
 					if (--sampleCounter <= 0) resolve(true)
 					console.log(`loading sample: ${e.default}`)
 				})

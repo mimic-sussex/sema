@@ -14,11 +14,11 @@ import { injectManifest } from 'rollup-plugin-workbox'
 import copy from 'rollup-plugin-copy'
 import url from '@rollup/plugin-url'
 import dynamicImportVariables from 'rollup-plugin-dynamic-import-variables'
-import { join } from 'path'
+// import { join } from 'path'
 import { string } from 'rollup-plugin-string'
 import workerLoader from 'rollup-plugin-web-worker-loader'
 import { wasm } from '@rollup/plugin-wasm'
-import sourcemaps from 'rollup-plugin-sourcemaps'
+// import sourcemaps from 'rollup-plugin-sourcemaps'
 import json from '@rollup/plugin-json'
 // import cors from 'cors';
 
@@ -47,10 +47,10 @@ const serve = () => ({
     writeBundle: async () => {
         const options = {
             // assetsDir: [assetsDir, distDir],
-            assetsDir: distDir,
-            entrypoint: `${assetsDir}/__app.html`,
             // entrypoint: `${assetsDir}/index.html`,
             // entrypoint: `${distDir}/index.html`,
+            assetsDir: distDir,
+            entrypoint: `${assetsDir}/__app.html`,
             script: `${buildDir}/main.js`
         }
 
@@ -67,8 +67,6 @@ const serve = () => ({
 								'Access-Control-Allow-Origin': [
 									'http://localhost:35729/livereload.js?snipver=1',
 									'http://localhost:35729/',
-									// 'http://localhost:35730/livereload.js?snipver=1',
-									// 'http://localhost:35730/',
 									'https://www.youtube.com/embed/Qw4sYnTj-Ow?t=27s',
 									'*',
 								],
@@ -76,60 +74,9 @@ const serve = () => ({
 								'Access-Control-Allow-Headers':
 									'Content-Type, X-Requested-With, Content-Type, Accept',
 							})
-							console.log('Time1: %d', Date.now())
+							// console.log('Time1: %d', Date.now())
 							next()
 						})
-
-						// server.get(
-						// 		'/',
-						// 	function (req, res, next) {
-						// 		res.set({
-						// 			'Cross-Origin-Resource-Policy': 'same-site',
-						// 			'Access-Control-Allow-Origin': ['*'],
-						// 			'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE',
-						// 			'Access-Control-Allow-Headers':
-						// 				'Content-Type, X-Requested-With, Content-Type, Accept',
-						// 		})
-						// 		console.log('Time2: %d', Date.now())
-						// 		next()
-						// 	}
-						// )
-
-						// server.get(
-						// 	// 'livereload.js?snipver=1',
-						// 	'http://localhost:35729/livereload.js?snipver=1',
-						// 	// cors(),
-						// 	function (req, res) {
-						// 		console.log('livereload')
-						// 		res.set({
-						// 			'Cross-Origin-Resource-Policy': 'same-site',
-						// 			'Access-Control-Allow-Origin': [
-						// 				'*',
-						// 			],
-						// 			'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE',
-						// 			'Access-Control-Allow-Headers':
-						// 				'Content-Type, X-Requested-With, Content-Type, Accept',
-						// 		})
-						// 		console.log('Time3: %d', Date.now())
-						// 		next()
-						// 	}
-						// )
-
-						// server.get(
-						// 	// 'Qw4sYnTj-Ow?t=27s',
-						// 	'https://www.youtube.com/embed/Qw4sYnTj-Ow?t=27s',
-						// 	// cors(),
-						// 	function (req, res) {
-						// 	res.set({
-						// 		'Cross-Origin-Resource-Policy': 'cross-origin',
-						// 		'Access-Control-Allow-Origin': ['*'],
-						// 		'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE',
-						// 		'Access-Control-Allow-Headers':
-						// 			'Content-Type, X-Requested-With, Content-Type, Accept',
-						// 	})
-						// 	console.log('Time4: %d', Date.now())
-						// 	next()
-						// })
 					}
 				})
 
@@ -217,14 +164,16 @@ export default {
 					// ! and have them emitted (not inlined) by the plugin-URL
 					src: [
 						'!*/(__index.html)',
-						// '!assets/samples/*',
-						// `!${assetsDir}/samples/*`,
-						// `!${assetsDir}/samples/*`,
-						// `!${assetsDir}/samples`,
-						// `${assetsDir}/*`,
 						`${assetsDir}/tutorial/`,
 						`${assetsDir}/learners/`,
 						`${assetsDir}/languages/`,
+						`${assetsDir}/docs/`,
+						`${assetsDir}/images/`,
+						// '!assets/samples/*',
+						// `${assetsDir}/samples/`,
+						// `!${assetsDir}/samples/*`,
+						// `!${assetsDir}/samples`,
+						// `${assetsDir}/*`,
 					],
 					dest: distDir,
 				},
@@ -263,25 +212,26 @@ export default {
 		}),
 		// globImport(),
 		url({
+			// exclude: ['**/*.wav'],
 			include: ['**/*.wav'],
-
+			emitFiles: true,
+			fileName: '[name][extname]', // '[name][extname]' 'dist/build/'
+			sourceDir: __dirname, // 'dist/build/assets/samples'
+			verbose: true,
+			limit: 0, // all files copied,
+			// destDir: join(__dirname, `${distDir}/samples/`), // 'dist/assets/samples'
 			// include: ['assets/samples/*.wav'],
 
 			// include: ['**/*.wav'],
 			// publicPath: 'samples',
 			// limit: 10, // 10 kb
 			// // publicPath: '/batman/',
-			emitFiles: true,
-			fileName: '[name][extname]', // '[name][extname]' 'dist/build/'
 			// sourceDir: join(__dirname, assets/samples'), // 'dist/assets/samples'
 			// sourceDir: join(__dirname, 'src/samples'), // 'dist/assets/samples'
-			sourceDir: __dirname, // 'dist/build/assets/samples'
 			// destDir: join(__dirname, 'dist'), // 'dist/assets/samples'
 			// destDir: join(__dirname, 'dist/samples'), // 'dist/assets/samples'
 
-			verbose: true,
 			// sourceDir: join(__dirname, 'src/samples'), // 'dist/assets/samples'
-			// destDir: join(__dirname, `${distDir}/sema-engine/samples`), // 'dist/assets/samples'
 			// destDir: __dirname,
 		}),
 		json(),
@@ -296,8 +246,7 @@ export default {
 		}),
 		workerLoader(),
 		wasm(),
-		sourcemaps(),
-
+		// sourcemaps(),
 		production && terser(),
 		!production && !isNollup && serve(),
 		!production && !isNollup && livereload(distDir), // refresh entire window when code is updated
@@ -315,7 +264,7 @@ export default {
 		injectManifest({
 			globDirectory: assetsDir,
 			// globPatterns: ['**/*.{js,css,svg}', '__app.html'],
-			globPatterns: ['**/*.{js,css,svg,ne}', '__app.html'],
+			globPatterns: ['**/*.{js,css,svg,ne,wav}', '__app.html'],
 			swSrc: `src/sw.js`,
 			swDest: `${distDir}/serviceworker.js`,
 			maximumFileSizeToCacheInBytes: 10000000, // 10 MB,
