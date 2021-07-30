@@ -66,6 +66,12 @@
     }
   };
 
+  //reopen new links in a tab
+  renderer.link = function(href, title, text) {
+    let link = marked.Renderer.prototype.link.apply(this, arguments);
+    return link.replace("<a","<a target='_blank'");
+  };
+
   marked.use({ renderer });
 
   /*
