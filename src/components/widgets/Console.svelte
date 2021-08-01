@@ -4,6 +4,7 @@
 
   import { Logger } from 'sema-engine';
   import { rawConsoleLogs, consoleLogs } from '../../stores/common.js'
+  import Inspect from 'svelte-inspect';
 
   export let id;
   export let name;
@@ -79,6 +80,18 @@
     } else{
       return;
     }
+  }
+
+  //for processing payloads. deals with if there is an object in the log and flattens it.
+  function processPayload(payload) {
+    let newLoad = [];
+    for (var i = 0; i < payload.length; i++) {
+      if (typeof payload[i] === "object"){
+        let curStr = JSON.stringify(payload[i]);
+        newLoad.push(curStr);
+      } else { newLoad.push(payload[i])}
+    }
+    return newLoad;
   }
 
   onMount(async () => {
@@ -242,14 +255,14 @@
 </div>
 
 <div class='console-container scrollable-textarea' bind:this={textArea}>
- 
+  
   {#each $consoleLogs as {func, payload, origin, logLevel}, i}
     {#if origin == logger.originTypes.processor && filter.processor != false && filter[logLevel] != false}
-      <pre readonly class='console-PROCESSOR'>{origin}{payload}</pre>
+        <pre readonly class='console-PROCESSOR'>{origin}{processPayload(payload)}</pre>
     {:else if origin == logger.originTypes.learner && filter.learner != false && filter[logLevel] != false}
-      <pre readonly class='console-LEARNER'>{origin}{payload}</pre>
+      <pre readonly class='console-LEARNER'>{origin}{processPayload(payload)}</pre>
     {:else if origin == logger.originTypes.main && filter.main != false && filter[logLevel] != false}
-      <pre readonly class='console-MAIN'>{origin}{payload}</pre>
+      <pre readonly class='console-MAIN'>{origin}{processPayload(payload)}</pre>
     {/if}
   {/each}
 
