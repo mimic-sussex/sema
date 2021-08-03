@@ -3,7 +3,7 @@
   import { tick, onMount, onDestroy} from 'svelte';
   import { url, params, ready, isActive, route, afterPageLoad} from "@roxi/routify";
   import marked from 'marked';
-  //import hljs from 'highlight.js';
+  import hljs from 'highlight.js';
 
   import { links, chosenDocs } from '../../../stores/docs.js'
 
@@ -55,15 +55,18 @@
   const renderer = {
     heading(text, level) {
       const escapedText = text.toLowerCase().replace(/[^\w]+/g, '-');
-
-      return `
-              <h${level}>
-                <a name="${escapedText}" class="anchor" href="#${escapedText}" id="#${escapedText}" target="_self">
-                  <span class="header-link"></span>
-                #
-                </a>
-                ${text}
-              </h${level}>`;
+      if (level == 1){
+        return `
+                <h${level}>
+                  <a name="${escapedText}" class="anchor" href="#${escapedText}" id="#${escapedText}" target="_self">
+                    <span class="header-link"></span>
+                  #
+                  </a>
+                  ${text}
+                </h${level}>`;
+      } else {
+        return ` <h${level}>${text}</h${level}>`;
+      }
     }
   };
 
@@ -89,15 +92,20 @@
   marked.use({ renderer });
 
   /*
-  //make marked renderer make links open in a new tab
-  let renderer = new marked.Renderer();
-  renderer.link = function(href, title, text) {
-    let link = marked.Renderer.prototype.link.apply(this, arguments);
-    return link.replace("<a","<a target='_blank'");
-  };
-
   marked.setOptions({
-    renderer: renderer
+    renderer: renderer,
+    highlight: function(code, lang) {
+      const hljs = hljs;
+      const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+      return hljs.highlight(code, { language }).value;
+    },
+    pedantic: false,
+    gfm: true,
+    breaks: false,
+    sanitize: false,
+    smartLists: true,
+    smartypants: false,
+    xhtml: false
   });
   */
 
@@ -188,6 +196,8 @@
     padding: 10px 20px 0px 10px;
     /* background: #aaaaaa; */
     overflow-y: auto;
+    /* scrollbar-color: #6969dd #e0e0e0; these scroll bar options work for firefox not for chrome TODO */
+    /* scrollbar-width: thin; */
   }
 
 </style>
