@@ -97,8 +97,9 @@
     background-color: #999;
     border-radius: 5px;
     overflow-y: auto;
-    height: calc(100vh - 86px);
+    height: calc(100vh - 58px);
     bottom:0;
+    margin: 0px 0px 0px 0px;
   }
 
   .nav-links-title {
