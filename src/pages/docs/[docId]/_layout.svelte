@@ -3,6 +3,7 @@
   import { tick, onMount, onDestroy} from 'svelte';
   import { url, params, ready, isActive, route, afterPageLoad} from "@roxi/routify";
   import marked from 'marked';
+  //import hljs from 'highlight.js';
 
   import { links, chosenDocs } from '../../../stores/docs.js'
 
@@ -71,6 +72,19 @@
     let link = marked.Renderer.prototype.link.apply(this, arguments);
     return link.replace("<a","<a target='_blank'");
   };
+
+
+  /*
+  marked.setOptions({
+    highlight: function (code, lang, _callback) {
+      if (hljs.getLanguage(lang)) {
+        return hljs.highlight(lang, code).value
+      } else {
+        return hljs.highlightAuto(code).value
+      }
+    },
+  })
+  */
 
   marked.use({ renderer });
 
