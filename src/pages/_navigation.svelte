@@ -83,9 +83,18 @@
 
   }
 
+	.container-session {
+		padding-right: 1em;
+	}
+
   .path-light {
     fill: black;
   }
+
+	.container {
+		margin-left: 1em;
+	}
+
 
   .path-dark {
     fill: white;
@@ -98,6 +107,13 @@
   a:hover {
     text-decoration: none;
   }
+
+	.session-avatar {
+		width: 32px;
+		height: 32px;
+		padding-bottom: 0.2em;
+
+	}
 
 </style>
 
@@ -560,15 +576,16 @@
 		{/each}
 	</div>
 
-	<div>
+	<div class='container-session'>
 		{#if $user}
 			<a href="/admin"
         style='color: {$siteMode === 'dark'? 'white': 'black'};'
       >
       <!-- admin</a> -->
       { $username }</a>
-			<img src={ $avatarSrc }
-			     alt="profile - { $username }" />
+			<img 	class='session-avatar'
+						src={ $avatarSrc }
+			     	alt="profile - { $username }" />
 			<a href="#signout" on:click={ signOut }
         style='color: {$siteMode === 'dark'? 'white': 'black'};'
         >
