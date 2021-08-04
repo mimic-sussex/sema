@@ -14,8 +14,8 @@
 <script>
 	import { user } from "../../stores/user"
 	import { supabase } from "../../db/client"
-	import Auth from "./Auth.svelte"
-	import Profile from "./Profile.svelte"
+	import Auth from "../../components/login/Auth.svelte"
+	import Profile from "../../components/login/Profile.svelte"
 
 	user.set(supabase.auth.user())
 
