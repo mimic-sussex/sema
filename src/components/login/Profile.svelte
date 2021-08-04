@@ -1,12 +1,18 @@
 <script>
   import { supabase } from '../../db/client'
-  import { user } from '../../stores/user'
+  import {
+		user,
+		username,
+		website,
+		avatar_url,
+		loggedIn
+	} from '../../stores/user'
   import Avatar from './Avatar.svelte'
 
   let loading = true
-  let username = null
-  let website = null
-  let avatar_url = null
+  // let username = null
+  // let website = null
+  // let avatar_url = null
 
   async function getProfile() {
     try {
@@ -22,14 +28,15 @@
       if (error && status !== 406) throw error
 
       if (data) {
-        username = data.username
-        website = data.website
-        avatar_url = data.avatar_url
+        $username = data.username
+        $website = data.website
+        $avatar_url = data.avatar_url
       }
     } catch (error) {
       alert(error.message)
     } finally {
       loading = false
+			$loggedIn = true
     }
   }
 
@@ -40,9 +47,9 @@
 
       const updates = {
         id: user.id,
-        username,
-        website,
-        avatar_url,
+        username: $username,
+        website: $website,
+        avatar_url: $avatar_url,
         updated_at: new Date(),
       }
 
@@ -67,41 +74,56 @@
       alert(error.message)
     } finally {
       loading = false
+			$loggedIn = false
     }
-
   }
+
 </script>
 
-<form use:getProfile class="form-widget" on:submit|preventDefault={updateProfile}>
-  <Avatar bind:path={avatar_url} on:upload={updateProfile} />
-
+<form use:getProfile class="form-widget"
+			on:submit|preventDefault={ updateProfile }
+			>
+  <Avatar bind:path={ $avatar_url }
+					on:upload={ updateProfile }
+					/>
   <div>
     <label for="email">Email</label>
-    <input id="email" type="text" value={$user.email} disabled />
+    <input 	id="email"
+						type="text"
+						value={ $user.email }
+						disabled
+						/>
   </div>
   <div>
     <label for="username">Name</label>
     <input
       id="username"
       type="text"
-      bind:value={username}
-    />
+      bind:value={ $username }
+    	/>
   </div>
   <div>
     <label for="website">Website</label>
     <input
       id="website"
       type="website"
-      bind:value={website}
-    />
+      bind:value={ $website }
+    	/>
   </div>
 
   <div>
-    <input type="submit" class="button block primary" value={loading ? 'Loading ...' : 'Update'} disabled={loading}/>
+    <input type="submit"
+						class="button block primary"
+						value={ loading ? 'Loading ...' : 'Update'}
+						disabled={ loading }
+						/>
   </div>
 
   <div>
-    <button class="button block" on:click={signOut} disabled={loading}>
+    <button class="button block"
+						on:click={ signOut }
+						disabled={ loading }
+						>
       Sign Out
     </button>
   </div>

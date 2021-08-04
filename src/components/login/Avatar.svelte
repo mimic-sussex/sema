@@ -1,6 +1,9 @@
 <script>
   import { createEventDispatcher } from 'svelte';
   import { supabase } from '../../db/client'
+  import {
+		avatarSrc
+	} from '../../stores/user'
 
   export let path;
   export let size = "10em"
@@ -16,7 +19,7 @@
       const { data, error } = await supabase.storage.from('avatars').download(path)
       if (error) throw error
 
-      src = URL.createObjectURL(data)
+      $avatarSrc = src = URL.createObjectURL(data)
     } catch (error) {
       console.error('Error downloading image: ', error.message)
     }
@@ -36,8 +39,8 @@
       const filePath = `${fileName}`
 
       let { error: uploadError } = await supabase.storage
-        .from('avatars')
-        .upload(filePath, file)
+																					.from('avatars')
+																					.upload(filePath, file)
 
       if (uploadError) throw uploadError
 
@@ -49,14 +52,15 @@
       uploading = false
     }
   }
+
 </script>
     <div>
       {#if path}
         <img use:downloadImage
-          {src}
+          { src }
           alt="Avatar"
           class="avatar image"
-          style="height: {size}; width: {size};"
+          style="height: { size }; width: { size };"
         />
       {:else}
         <div class="avatar no-image" style="height: {size}; width: {size};" />
@@ -64,7 +68,7 @@
 
       <div style="width: {size};">
         <label class="button primary block" for="single">
-          {uploading ? 'Uploading ...' : 'Upload'}
+          { uploading ? 'Uploading ...' : 'Upload'}
         </label>
         <input
           style="visibility: hidden; position:absolute;"
@@ -72,8 +76,8 @@
           id="single"
           accept="image/*"
           bind:files
-          on:change={uploadAvatar}
-          disabled={uploading}
+          on:change={ uploadAvatar }
+          disabled={ uploading }
         />
       </div>
     </div>

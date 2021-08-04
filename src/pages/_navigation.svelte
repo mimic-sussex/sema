@@ -1,13 +1,18 @@
 <script>
-
   import { isActive, url, params } from "@roxi/routify";
-	import { authStore } from '../auth'
+
+	import {
+		avatarSrc,
+		loggedIn,
+		user,
+		username
+	 } from '../stores/user';
+
   import { siteMode } from "../stores/common";
+  import { supabase } from '../db/client';
 
   import Controller from "../engine/controller";
   let controller = new Controller(); // this will return the previously created Singleton instance
-
-	const { user, signout } = authStore
 
 	const links = [
 		['/playground', 'playground'],
@@ -30,6 +35,19 @@
     // does an async hush
     controller.stop();
   }
+
+  async function signOut() {
+    try {
+      let { error } = await supabase.auth.signOut()
+      if (error) throw error
+    } catch (error) {
+      alert(error.message)
+    } finally {
+			$loggedIn = false
+    }
+  }
+
+
 </script>
 
 <style>
@@ -547,9 +565,11 @@
 			<a href="/admin"
         style='color: {$siteMode === 'dark'? 'white': 'black'};'
       >
-      admin</a>
-			<img src={$user.picture} alt="profile - {$user.nickname}" />
-			<a href="#signout" on:click={signout}
+      <!-- admin</a> -->
+      { $username }</a>
+			<img src={ $avatarSrc }
+			     alt="profile - { $username }" />
+			<a href="#signout" on:click={ signOut }
         style='color: {$siteMode === 'dark'? 'white': 'black'};'
         >
         signout</a>
