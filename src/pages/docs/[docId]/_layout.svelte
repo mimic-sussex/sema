@@ -155,8 +155,77 @@
   }
 
   function findFileName(path, links){
+    console.log("finding file name for", path, links);
+
     if (links != undefined){
       for (let i = 0; i < links.length; i++) {
+        console.log("i", i, links.length);
+        
+        if (links[i]['container'] == true){
+          let children = links[i]['children'];
+
+          for (let j = 0; j < children.length; j++){
+
+            //check if it has children itself TODO make this recursive (but for now we limit to 3 levels so okay)
+            if (children[j].container ==  true){
+              let grandChildren = children[j].children;
+              //findFileName(path, children[j]);
+              for (let k = 0; k < grandChildren.length; k++){
+                if (grandChildren[k]['path'] == './'+path){
+                  return grandChildren[k]['file'];
+                }
+              }
+
+            } else {
+              console.log(j);
+
+              console.log("comparing", links[i]['children'][j]['path'], "and", './'+path);
+
+              if (links[i]['children'][j]['path'] == './'+path){
+                console.log("found!");
+                return links[i]['children'][j]['file'];
+              }
+
+            }
+          }
+
+        }
+        
+      }
+    }
+  }
+
+    /*
+        if (links[i]['container'] == true){
+          
+          contents = links[i]['children'];
+
+          for (let i = 0; i < contents.length; i++){
+            
+            if (contents[i].container == true){
+              return 'test';
+            } 
+            else {
+              console.log("path here", path);
+              if (contents[i]['path'] == ('./'+path)) {
+                return contents[i]['file'];
+              }
+            }
+          }
+        } else {
+          console.log("no container")
+        }
+
+      }
+    } else {
+      return "getting-started/about";
+    }
+
+  }
+  */
+          
+
+/*
         if (links[i]['path'] == ('./'+path)){
           //console.log('here ./'+path);
           return links[i]['file'];
@@ -164,6 +233,7 @@
       }
     }
   }
+  */
 
   //$: if (docId) fetchMarkdown(docId);
 
@@ -172,14 +242,14 @@
   onMount( async () => {
     //promise = fetchMarkdown(doc);
     console.log("DEBUG:routes/docs/"+$params.docId+"/_layout:onMount");
-    console.log(location.hash);
+    // console.log(location.hash);
     $hashSection = location.hash;
     //console.log("get element by id", document.getElementById(location.hash))
     //document.getElementById($hashSection).scrollIntoView({behavior: 'auto'});
-    document.querySelectorAll('a').forEach((el) => {
-      console.log("elements in DOM", el);
+    // document.querySelectorAll('a').forEach((el) => {
+      // console.log("elements in DOM", el);
       // hljs.highlightElement(el);
-    });
+    // });
   });
 
 
@@ -187,7 +257,7 @@
     //console.log('loaded ' + page.title)
     console.log(window.location.href);
     lastLoadedDoc = ""; //reset lastLoadedDocument
-    console.log("hash log on page load", $hashSection);
+    // console.log("hash log on page load", $hashSection);
     
     // $goto($hashSection);
     

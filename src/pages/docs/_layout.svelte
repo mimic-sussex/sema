@@ -4,7 +4,7 @@
   import { onMount, setContext } from 'svelte';
   import marked from 'marked';
   import CollapsibleSection from './CollapsibleSection.svelte';
-
+  import Tree from './Tree.svelte'
   import { links, chosenDocs, hashSection } from '../../stores/docs.js';
 
   /*
@@ -29,6 +29,31 @@
     // console.log("$links on mount", $links);
   });
 
+
+
+  let data = {
+		title:'x', 
+		children:[
+			{
+				title:'y', 
+				children:[
+					{
+						title:'z',
+						children:[
+							{
+								title:'a', 
+							}			
+						]
+					},
+					{
+						title:'u', 
+					}			
+				]
+			}			
+    ]
+    
+    
+	}
 
 </script>
 
@@ -136,9 +161,57 @@
 </svelte:head>
 
 <div class='container-docs' data-routify="scroll-lock">
-
-
+  
   <ul class='sidebar-menu'>
+    {#each $links as link}
+      <Tree node={link} let:node></Tree>
+    {/each}
+  </ul>
+
+  <!--
+  <ul class='sidebar-menu'>
+    {#each $links as link}
+      {#if link.container == true} 
+        {#each link.children as childs1}
+          {#if childs1.container == true} 
+            {#each childs1.children as {container, name, file, path, subs}, i}
+              <CollapsibleSection headerText={name} path={path}>
+                <div class="dropdown-content">
+                  <ul>
+                    {#each subs as {heading, route, active}}
+                      <li>
+                        <a class='sub-nav-links' href={$url(path+'#'+route)} target="_self"
+                        class:active={$isActive(route)}>
+                          {heading}
+                        </a>
+                    </li>
+                    {/each}
+                  </ul>
+                </div>
+              </CollapsibleSection>
+            {/each}
+          {:else}
+            <CollapsibleSection headerText={childs1.name} path={childs1.path}>
+              <div class="dropdown-content">
+                <ul>
+                  {#each childs1.subs as {heading, route, active}}
+                    <li>
+                      <a class='sub-nav-links' href={$url(childs1.path+'#'+route)} target="_self"
+                      class:active={$isActive(route)}>
+                        {heading}
+                      </a>
+                  </li>
+                  {/each}
+                </ul>
+              </div>
+            </CollapsibleSection>
+          {/if}
+        {/each}
+      {/if}
+    {/each}
+  </ul>
+  -->
+    <!--
     {#each $links as {path, name, file, subs}, i}
       {#if name == 'Welcome'}
         <h2>
@@ -162,7 +235,8 @@
         </CollapsibleSection>
       {/if}
     {/each}
-  </ul>
+    -->
+  
 
 
 

@@ -9,20 +9,17 @@
   let expanded = false
 </script>
 
-<div class="collapsible">
+<div class="hash-collapsible">
   
   
       <button aria-expanded={expanded} on:click={() => expanded = !expanded}>
         
-        <!--
         <a  class='nav-links' href={$url(path)}
               class:active={$isActive(path)}
               >
             {headerText}
           </a>
-        -->
-        <h3>{headerText}</h3>
-
+        
         <svg viewBox="0 0 20 20" fill="none" >
         <path class="vert" d="M10 1V19" stroke="black" stroke-width="2"/>
         <path d="M1 10L19 10" stroke="black" stroke-width="2"/>
@@ -36,7 +33,7 @@
 </div>
 
 <style>
-.collapsible {
+.hash-collapsible {
   border-bottom: 1px solid var(--gray-light, #eee);
 }
 

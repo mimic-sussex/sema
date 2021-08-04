@@ -141,6 +141,7 @@
     const res1 = await fetch(document.location.origin + `/docs/docs.json`);
     const json = await res1.json();
     if (res1.ok){
+      console.log("fetch and load nav links getting called2");
       let tmpLinks = json;
       let tmpChosenDocs = tmpLinks[0].path;
 
@@ -165,7 +166,7 @@
             }
           }
         }
-        // console.log("tmpLinks", tmpLinks);
+        console.log("tmpLinks", tmpLinks);
         $links = tmpLinks;
         $chosenDocs = tmpChosenDocs;
     }
