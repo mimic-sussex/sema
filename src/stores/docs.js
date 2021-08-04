@@ -4,3 +4,4 @@ let docsLandingPage = './welcome'; // when /docs is loaded the welcome page shou
 
 export let links = writable([]);
 export let chosenDocs = writable(docsLandingPage);
+export let hashSection = writable("");

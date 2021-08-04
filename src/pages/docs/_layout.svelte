@@ -5,7 +5,7 @@
   import marked from 'marked';
   import CollapsibleSection from './CollapsibleSection.svelte';
 
-  import { links, chosenDocs } from '../../stores/docs.js';
+  import { links, chosenDocs, hashSection } from '../../stores/docs.js';
 
   /*
   $: match = $route.path.match(/\/docs\/([^\/]+)\//);
@@ -25,6 +25,7 @@
     // console.log("DEBUG:routes/docs/_layout:onMount");
     //console.log('onMount', $chosenDocs)
     $redirect($url($chosenDocs));
+    //console.log("get element by id", document.getElementById($hashSection))
     // console.log("$links on mount", $links);
   });
 

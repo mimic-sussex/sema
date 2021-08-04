@@ -1,11 +1,11 @@
 <script>
 
   import { tick, onMount, onDestroy} from 'svelte';
-  import { url, params, ready, isActive, route, afterPageLoad} from "@roxi/routify";
+  import { url, params, ready, isActive, route, afterPageLoad, beforeUrlChange, goto} from "@roxi/routify";
   import marked from 'marked';
   import hljs from 'highlight.js';
 
-  import { links, chosenDocs } from '../../../stores/docs.js'
+  import { links, chosenDocs, hashSection} from '../../../stores/docs.js'
 
 
   $: setLastVisitedPage($params.docId);
@@ -116,6 +116,8 @@
   let fetchMarkdown = async (docId, links) => {
     // console.log("HERE last loaded doc", lastLoadedDoc);
     // console.log("HERE docId", docId);
+    console.log("hash on fetching markdown", location.hash, $hashSection);
+
     if (docId == lastLoadedDoc){
       return;
     }
@@ -170,13 +172,25 @@
   onMount( async () => {
     //promise = fetchMarkdown(doc);
     console.log("DEBUG:routes/docs/"+$params.docId+"/_layout:onMount");
-
+    console.log(location.hash);
+    $hashSection = location.hash;
+    //console.log("get element by id", document.getElementById(location.hash))
+    //document.getElementById($hashSection).scrollIntoView({behavior: 'auto'});
+    document.querySelectorAll('a').forEach((el) => {
+      console.log("elements in DOM", el);
+      // hljs.highlightElement(el);
+    });
   });
 
 
   $afterPageLoad(page => {
-    console.log('loaded ' + page.title)
+    //console.log('loaded ' + page.title)
+    console.log(window.location.href);
     lastLoadedDoc = ""; //reset lastLoadedDocument
+    console.log("hash log on page load", $hashSection);
+    
+    // $goto($hashSection);
+    
     /*
     console.log("HERE location.hash before if", location.hash);
     if (location.hash != null || location.hash == ""){
@@ -185,7 +199,6 @@
     }
     */
   })
-
 
 </script>
 
@@ -201,7 +214,6 @@
   }
 
 </style>
-
 
 <div class="markdown-container">
   {#if $links != []}
