@@ -2,6 +2,7 @@
 	import { Router } from '@roxi/routify'
 	import { routes } from '../.routify/routes'
 	import { authStore } from './auth.js'
+	import { supabase } from './db/client'
 
   import Controller from "./engine/controller";
   import Logger from './utils/logger.js';

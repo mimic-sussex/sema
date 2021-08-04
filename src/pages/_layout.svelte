@@ -10,7 +10,7 @@
 	// import AudioEngineStatus from '../components/settings/AudioEngineStatus.svelte';
   // import SiteColor from '../components/settings/SiteColor.svelte';
 
-  import { currentUser } from '../stores/user.js'
+  import { user } from '../stores/user.js'
 
   import {
     tutorials,
