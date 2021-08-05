@@ -137,41 +137,6 @@
     persistentParams = $params
   }
 
-  let fetchAndLoadDocsNavLinks1 = async () => {
-    const res1 = await fetch(document.location.origin + `/docs/docs.json`);
-    const json = await res1.json();
-    if (res1.ok){
-      console.log("fetch and load nav links getting called2");
-      let tmpLinks = json;
-      let tmpChosenDocs = tmpLinks[0].path;
-
-      for (let i=0;i<tmpLinks.length;i++){
-          let currentHeadings = [];
-          if(tmpLinks[i].file != undefined){ // There is a call with undefined value when navigating to Playground
-            const res = await fetch(document.location.origin + `/docs/${tmpLinks[i].file}.md`)
-            const text = await res.text();
-            if (res.ok) {
-              //get tokens from the marked lexer
-              let tokens = marked.lexer(text);
-              //loop through them
-              for (let i=0; i<tokens.length; i++){
-                if (tokens[i].type == "heading" && tokens[i].depth == 1){
-                  let heading = tokens[i].text;
-                  currentHeadings.push({heading: heading , route: heading.replace(/\s+/g, '-').toLowerCase(), active:false})
-                }
-              }
-              tmpLinks[i].subs = currentHeadings;
-            } else {
-              throw new Error(text);
-            }
-          }
-        }
-        console.log("tmpLinks", tmpLinks);
-        $links = tmpLinks;
-        $chosenDocs = tmpChosenDocs;
-    }
-  }
-
   let fetchAndLoadDocsNavLinks = async () => {
     const res1 = await fetch(document.location.origin + `/docs/docs.json`);
     const json = await res1.json();
