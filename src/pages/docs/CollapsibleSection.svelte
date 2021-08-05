@@ -57,7 +57,7 @@ button {
 }
 
 button:hover {
-  color: #333;
+  background-color: #333;
 }
 
 button[aria-expanded="true"] {

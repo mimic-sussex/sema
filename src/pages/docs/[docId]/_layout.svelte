@@ -264,7 +264,7 @@
   .markdown-container {
     height: calc(100vh - 48px); /* this fixed scrolling issue */
     padding: 10px 20px 0px 10px;
-    background-color: #212121;
+    background-color: #151515;
     /* background: #aaaaaa; */
     overflow-y: auto;
     /* scrollbar-color: #6969dd #e0e0e0; these scroll bar options work for firefox not for chrome TODO */
