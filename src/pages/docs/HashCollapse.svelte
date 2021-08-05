@@ -1,30 +1,44 @@
 
 <script>
   import { url, isActive } from "@roxi/routify";
-
+  import { subHeadingsInMenu } from '../../stores/docs.js';
   //based on https://svelte.dev/repl/a5f4d395b15a44d48a6b2239ef705fc4?version=3.35.0  
   export let headerText;
   export let path;
+  export let subs;
 
   let expanded = false
+
+  function handleClick(){
+    //expanded = !expanded;
+    $subHeadingsInMenu = subs.subs;
+    console.log("handleclick for hash collapse being called", subs);
+  }
+
 </script>
 
 <div class="hash-collapsible">
-  
-  
-      <button aria-expanded={expanded} on:click={() => expanded = !expanded}>
+
+
+      <a class='nav-links' href={$url(path)} class:active={$isActive(path)} on:click={handleClick}>{headerText}</a>
+      <!--
+      <button aria-expanded={expanded} on:click={() => handleClick()}>
         
-        <a  class='nav-links' href={$url(path)}
+        <li><a  class='nav-links' href={$url(path)}
               class:active={$isActive(path)}
               >
             {headerText}
           </a>
+        </li>
         
+        <!--
         <svg viewBox="0 0 20 20" fill="none" >
         <path class="vert" d="M10 1V19" stroke="black" stroke-width="2"/>
         <path d="M1 10L19 10" stroke="black" stroke-width="2"/>
         </svg>
+        
       </button>
+      -->
   
   
   <div class='contents' hidden={!expanded}>
@@ -33,52 +47,37 @@
 </div>
 
 <style>
+  
 .hash-collapsible {
-  border-bottom: 1px solid var(--gray-light, #eee);
+  /* border-bottom: 1px solid var(--gray-light, #eee); */
 }
 
-h3 {
-  margin: 0;
-}
+a.button {
+  -webkit-appearance: button;
+  -moz-appearance: button;
+  appearance: button;
 
-button {
-  background-color: var(--background, #949090);
-  color: var(--gray-darkest, #282828);
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  border: 5px;
-  margin: 0;
-  padding: 0.5em 0.5em;
-}
-
-button[aria-expanded="true"] {
-  border-bottom: 1px solid var(--gray-light, #eee);
-  background-color: var(--background, #5b5757);
-}
-
-button[aria-expanded="true"] .vert {
-    display: none;
-}
-
-button:focus svg{
-    outline: 2px solid;
-}
-
-button [aria-expanded="true"] rect {
-    fill: currentColor;
-}
-
-svg {
-    height: 0.6em;
-    width: 0.6em;
-    justify-content: flex-end;
+  text-decoration: none;
+  color: initial;
 }
 
 .nav-links {
+  -webkit-appearance: button;
+  -moz-appearance: button;
+  appearance: button;
+
+  text-decoration: none;
+  color: initial;
   text-align: left;
   justify-content: flex-start;
   color:white;
+  width: 100%;
+  display:inline-block;
+  padding: 4px 4px 4px 4px;
+}
+
+.nav-links:hover {
+  background-color: #333;
 }
 
 </style>

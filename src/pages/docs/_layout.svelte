@@ -5,7 +5,7 @@
   import marked from 'marked';
   import CollapsibleSection from './CollapsibleSection.svelte';
   import Tree from './Tree.svelte'
-  import { links, chosenDocs, hashSection } from '../../stores/docs.js';
+  import { links, chosenDocs, hashSection, subHeadingsInMenu } from '../../stores/docs.js';
 
   /*
   $: match = $route.path.match(/\/docs\/([^\/]+)\//);
@@ -108,9 +108,9 @@
   .container-docs {
     display: grid;
   	grid-template-areas:
-  		"header header"
-      "sidebar settings"
-  		"sidebar layout";
+  		"header header header"
+      "sidebar-menu markdown-container sub-headings-menu"
+  		"sidebar-menu markdown-container sub-headings-menu";
     grid-template-columns: 260px 1fr;
     grid-template-rows: auto 1fr;
     /* color: #999999; */
@@ -120,8 +120,9 @@
     display: flex;
     flex-direction: column;
     padding: 20px 2px 0px 2px;
-    background-color: #999;
-    border-radius: 5px;
+    background-color: #212121;/*#999;*/
+    /* border-radius: 5px; */
+    border-right: 1px solid white;
     overflow-y: auto;
     height: calc(100vh - 58px);
     bottom:0;
@@ -151,6 +152,18 @@
   }
   .header-docs {
     grid-area: header;
+  }
+
+  .sub-headings-container {
+    background-color: #212121;
+    color: white;
+    width: 200px;
+    border-left: 1px solid white;
+  }
+
+  .sub-headings-menu {
+    overflow-y: auto;
+    color:white;
   }
 
 
@@ -284,13 +297,27 @@
     {/await}
   </div>
   -->
-
+  
   <div>
-
     <slot>
       <!-- optional fallback -->
       <!--inject the markdown here-->
     </slot>
+  </div>
+  <div class="sub-headings-container">
+    {#each $subHeadingsInMenu as subs}
+      
+        <ul class="sub-headings-menu">
+          <li> <!--the url bit below should have a path tag eg /docs/default-language-->
+            <a class='sub-nav-links' href={$url('#'+subs.route)} target="_self"
+            class:active={$isActive(subs.route)}> <!-- TODO should this be route?-->
+              {subs.heading}
+            </a>
+          </li>
+        
+        </ul>
+
+    {/each}
   </div>
 
 </div>

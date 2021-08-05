@@ -39,19 +39,8 @@
 </CollapsibleSection>
 {:else}
 
-  <HashCollapse headerText={node.title} path={node.path}>
-    <div class="dropdown-content">
-      <ul>
-        {#each node.subs as {heading, route, active}}
-          <li>
-            <a class='sub-nav-links' href={$url(node.path+'#'+route)} target="_self"
-            class:active={$isActive(route)}> <!-- TODO should this be route?-->
-              {heading}
-            </a>
-          </li>
-        {/each}
-      </ul>
-    </div>
+  <HashCollapse headerText={node.title} path={node.path} subs={node}>
+    
   </HashCollapse>
   <!--
   <li>

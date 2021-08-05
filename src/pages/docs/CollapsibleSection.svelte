@@ -55,6 +55,10 @@ button {
   padding: 0.5em 0.5em;
 }
 
+button:hover {
+  color: white;
+}
+
 button[aria-expanded="true"] {
   border-bottom: 1px solid var(--gray-light, #eee);
   background-color: var(--background, #5b5757);
@@ -67,6 +71,8 @@ button[aria-expanded="true"] .vert {
 button:focus svg{
     outline: 2px solid;
 }
+
+
 
 button [aria-expanded="true"] rect {
     fill: currentColor;

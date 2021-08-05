@@ -5,3 +5,4 @@ let docsLandingPage = './about'; // when /docs is loaded the welcome page should
 export let links = writable([]);
 export let chosenDocs = writable(docsLandingPage);
 export let hashSection = writable("");
+export let subHeadingsInMenu = writable([]) //current subheadings open in the sidebar menu
