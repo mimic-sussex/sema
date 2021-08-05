@@ -12,7 +12,7 @@
     padding: 0 0 0 var(--indent);
     margin: 0 0 0 var(--indent);
     list-style: none;
-    border-left: 1px solid #eee;
+    /* border-left: 1px solid #eee; */
   }
   li {
     padding: 0;

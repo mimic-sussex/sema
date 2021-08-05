@@ -41,11 +41,12 @@
 }
 
 h3 {
+  color: #f5f6f7;
   margin: 0;
 }
 
 button {
-  background-color: var(--background, #949090);
+  background-color: var(--background, #212121);
   color: var(--gray-darkest, #282828);
   display: flex;
   justify-content: space-between;
@@ -56,12 +57,12 @@ button {
 }
 
 button:hover {
-  color: white;
+  color: #333;
 }
 
 button[aria-expanded="true"] {
   border-bottom: 1px solid var(--gray-light, #eee);
-  background-color: var(--background, #5b5757);
+  background-color: var(--background, #333);
 }
 
 button[aria-expanded="true"] .vert {
@@ -87,7 +88,7 @@ svg {
 .nav-links {
   text-align: left;
   justify-content: flex-start;
-  color:white;
+  color: #f5f6f7;
 }
 
 </style>

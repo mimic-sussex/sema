@@ -58,7 +58,7 @@
       if (level == 1){
         return `
                 <h${level}>
-                  <a name="${escapedText}" class="anchor" href="#${escapedText}" id="#${escapedText}" target="_self">
+                  <a name="${escapedText}" class="anchor" href="#${escapedText}" id="#${escapedText}" target="_self" style="color:#333">
                     <span class="header-link"></span>
                   #
                   </a>

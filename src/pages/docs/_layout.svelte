@@ -106,6 +106,7 @@
   }
 
   .container-docs {
+    background-color: #212121;
     display: grid;
   	grid-template-areas:
   		"header header header"
@@ -136,10 +137,6 @@
     color:white;
   }
 
-  .sub-nav-links {
-    color:black;
-    font-size: 14px;
-  }
 
   .sidebar-item {
     padding: 5px 5px 0px 5px;
@@ -158,12 +155,27 @@
     background-color: #212121;
     color: white;
     width: 200px;
+    height: calc(100vh - 58px);
     border-left: 1px solid white;
   }
 
   .sub-headings-menu {
+    display: flex;
+    flex-direction: column;
     overflow-y: auto;
+  }
+
+  .sub-nav-links {
     color:white;
+    font-size: 14px;
+    padding: 4px 4px 4px 4px;
+    width: 80%;
+    display:inline-block;
+    padding: 4px 4px 4px 4px;
+  }
+
+  .sub-nav-links:hover {
+    background-color: #333;
   }
 
 
@@ -305,19 +317,15 @@
     </slot>
   </div>
   <div class="sub-headings-container">
-    {#each $subHeadingsInMenu as subs}
-      
-        <ul class="sub-headings-menu">
-          <li> <!--the url bit below should have a path tag eg /docs/default-language-->
-            <a class='sub-nav-links' href={$url('#'+subs.route)} target="_self"
-            class:active={$isActive(subs.route)}> <!-- TODO should this be route?-->
-              {subs.heading}
-            </a>
-          </li>
-        
-        </ul>
-
-    {/each}
+    <ul class="sub-headings-menu">
+      {#each $subHeadingsInMenu as subs}
+              <!--the url bit below should have a path tag eg /docs/default-language-->
+              <a class='sub-nav-links' href={$url('#'+subs.route)} target="_self"
+              class:active={$isActive(subs.route)}> <!-- TODO should this be route?-->
+                {subs.heading}
+              </a>
+      {/each}
+    </ul>
   </div>
 
 </div>
