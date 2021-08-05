@@ -137,7 +137,7 @@
     persistentParams = $params
   }
 
-  let fetchAndLoadDocsNavLinks = async () => {
+  let fetchAndLoadDocsNavLinks1 = async () => {
     const res1 = await fetch(document.location.origin + `/docs/docs.json`);
     const json = await res1.json();
     if (res1.ok){
@@ -170,6 +170,48 @@
         $links = tmpLinks;
         $chosenDocs = tmpChosenDocs;
     }
+  }
+
+  let fetchAndLoadDocsNavLinks = async () => {
+    const res1 = await fetch(document.location.origin + `/docs/docs.json`);
+    const json = await res1.json();
+    if (res1.ok){
+      let tmpLinks = json;
+      //let tmpChosenDocs = tmpLinks[0].path;
+      let result =  await getSubs(tmpLinks);
+      $links = result;
+    }
+  }
+
+  //get subheadings for a page based on the h1 headers in the .md file.
+  async function getSubs(list){
+    for (let i=0;i<list.length;i++){
+        let currentHeadings = [];
+        if (list[i].container == true){
+          getSubs(list[i].children);
+        } else {
+          //get headings for that child
+          if(list[i].file != undefined){ // There is a call with undefined value when navigating to Playground
+            const res = await fetch(document.location.origin + `/docs/${list[i].file}.md`)
+            const text = await res.text();
+            if (res.ok) {
+              //get tokens from the marked lexer
+              let tokens = marked.lexer(text);
+              //loop through them
+              for (let i=0; i<tokens.length; i++){
+                if (tokens[i].type == "heading" && tokens[i].depth == 1){
+                  let heading = tokens[i].text;
+                  currentHeadings.push({heading: heading , route: heading.replace(/\s+/g, '-').toLowerCase(), active:false})
+                }
+              }
+              list[i].subs = currentHeadings;
+            } else {
+              throw new Error(text);
+            }
+          }
+        }
+    }
+    return list
   }
 
   onMount( async () => {

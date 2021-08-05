@@ -42,7 +42,6 @@
   <HashCollapse headerText={node.title} path={node.path}>
     <div class="dropdown-content">
       <ul>
-        {node.title}
         {#each node.subs as {heading, route, active}}
           <li>
             <a class='sub-nav-links' href={$url(node.path+'#'+route)} target="_self"

@@ -116,8 +116,7 @@
   let fetchMarkdown = async (docId, links) => {
     // console.log("HERE last loaded doc", lastLoadedDoc);
     // console.log("HERE docId", docId);
-    console.log("hash on fetching markdown", location.hash, $hashSection);
-
+    //console.log("hash on fetching markdown", location.hash, $hashSection, links);
     if (docId == lastLoadedDoc){
       return;
     }
@@ -159,13 +158,9 @@
 
     if (links != undefined){
       for (let i = 0; i < links.length; i++) {
-        console.log("i", i, links.length);
-        
         if (links[i]['container'] == true){
           let children = links[i]['children'];
-
           for (let j = 0; j < children.length; j++){
-
             //check if it has children itself TODO make this recursive (but for now we limit to 3 levels so okay)
             if (children[j].container ==  true){
               let grandChildren = children[j].children;
@@ -175,22 +170,14 @@
                   return grandChildren[k]['file'];
                 }
               }
-
             } else {
-              console.log(j);
-
-              console.log("comparing", links[i]['children'][j]['path'], "and", './'+path);
-
-              if (links[i]['children'][j]['path'] == './'+path){
-                console.log("found!");
-                return links[i]['children'][j]['file'];
+              if (children[j]['path'] == './'+path){
+                return children[j]['file'];
               }
 
             }
           }
-
         }
-        
       }
     }
   }
