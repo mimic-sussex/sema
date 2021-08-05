@@ -1,16 +1,28 @@
+
 <script>
 	import { Router } from '@roxi/routify'
 	import { routes } from '../.routify/routes'
-	import { authStore } from './auth.js'
+	// import { authStore } from './auth.js'
 	import { supabase } from './db/client'
+	import { user } from "./stores/user"
 
   import Controller from "./engine/controller";
   import Logger from './utils/logger.js';
   import { PubSub } from './utils/pubSub.js';
   let messaging = new PubSub();
 
+	// const init = () => {
+		// user.set(supabase.auth.user())
+		// supabase.auth.onAuthStateChange((_, session) => {
+		// 	user.set(session.user)
+		// })
+	// }
+
+
+
 	// we need to queue our init till after Routify has been initialized
 	setTimeout(() => window.routify.inBrowser && authStore.init())
+	// setTimeout(() => window.routify.inBrowser && init())
 
   // $unsupportedBrowser
   let unsupportedBrowser,

@@ -5,18 +5,19 @@
 		username,
 		website,
 		avatar_url,
-		loggedIn
+		loggedIn,
+		loading
 	} from '../../stores/user'
   import Avatar from './Avatar.svelte'
 
-  let loading = true
+  // let loading = true
   // let username = null
   // let website = null
   // let avatar_url = null
 
   async function getProfile() {
     try {
-      loading = true
+      $loading = true
       const user = supabase.auth.user()
 
       let { data, error, status } = await supabase
@@ -35,14 +36,14 @@
     } catch (error) {
       alert(error.message)
     } finally {
-      loading = false
+      $loading = false
 			$loggedIn = true
     }
   }
 
   async function updateProfile() {
     try {
-      loading = true
+      $loading = true
       const user = supabase.auth.user()
 
       const updates = {
@@ -61,19 +62,19 @@
     } catch (error) {
       alert(error.message)
     } finally {
-      loading = false
+      $loading = false
     }
   }
 
   async function signOut() {
     try {
-      loading = true
+      $loading = true
       let { error } = await supabase.auth.signOut()
       if (error) throw error
     } catch (error) {
       alert(error.message)
     } finally {
-      loading = false
+      $loading = false
 			$loggedIn = false
     }
   }
@@ -119,12 +120,12 @@
 						/>
   </div>
 
-  <div>
+  <!-- <div>
     <button class="button block"
 						on:click={ signOut }
 						disabled={ loading }
 						>
       Sign Out
     </button>
-  </div>
+  </div> -->
 </form>
