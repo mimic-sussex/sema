@@ -7,11 +7,12 @@
   export let path;
   export let subs;
 
-  let expanded = false
+  export let expanded = false
 
   function handleClick(){
     //expanded = !expanded;
     //$subHeadingsInMenu = subs.subs;
+    console.log("path on click", path, $isActive($url(path)), $url(path), $url())
     console.log("handleclick for hash collapse being called", subs);
   }
 
@@ -20,7 +21,7 @@
 <div class="hash-collapsible">
 
 
-      <a class='nav-links' href={$url(path)} class:active={$isActive(path)} on:click={handleClick}>{headerText}</a>
+      <a class='nav-links' href={$url(path)} class:active={$isActive($url(path))} on:click={handleClick} aria-current="{ $isActive(path)? 'page' : undefined}">{headerText}</a>
       <!--
       <button aria-expanded={expanded} on:click={() => handleClick()}>
         
@@ -77,6 +78,11 @@ a.button {
 }
 
 .nav-links:hover {
+  background-color: #333;
+}
+
+
+[aria-current] {
   background-color: #333;
 }
 

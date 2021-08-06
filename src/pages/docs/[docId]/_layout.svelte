@@ -108,7 +108,7 @@
     xhtml: false
   });
   */
- 
+
   let fetchMarkdown = async (docId, links) => {
     // console.log("HERE last loaded doc", lastLoadedDoc);
     // console.log("HERE docId", docId);
@@ -235,6 +235,7 @@
     /* scrollbar-color: #6969dd #e0e0e0; these scroll bar options work for firefox not for chrome TODO */
     /* scrollbar-width: thin; */
   }
+  
 
 </style>
 
