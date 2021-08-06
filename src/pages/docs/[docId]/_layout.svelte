@@ -108,11 +108,7 @@
     xhtml: false
   });
   */
-
-  //$: docId = $params.docId; //get the doc part of the url
-
-
-
+ 
   let fetchMarkdown = async (docId, links) => {
     // console.log("HERE last loaded doc", lastLoadedDoc);
     // console.log("HERE docId", docId);
@@ -145,6 +141,7 @@
             );
         };
         
+        //get and set subheadings based on the markdown file.
         let currentHeadings = []
         let tokens = marked.lexer(text);
             //loop through them
@@ -193,49 +190,6 @@
     }
   }
 
-    /*
-        if (links[i]['container'] == true){
-          
-          contents = links[i]['children'];
-
-          for (let i = 0; i < contents.length; i++){
-            
-            if (contents[i].container == true){
-              return 'test';
-            } 
-            else {
-              console.log("path here", path);
-              if (contents[i]['path'] == ('./'+path)) {
-                return contents[i]['file'];
-              }
-            }
-          }
-        } else {
-          console.log("no container")
-        }
-
-      }
-    } else {
-      return "getting-started/about";
-    }
-
-  }
-  */
-          
-
-/*
-        if (links[i]['path'] == ('./'+path)){
-          //console.log('here ./'+path);
-          return links[i]['file'];
-        }
-      }
-    }
-  }
-  */
-
-  //$: if (docId) fetchMarkdown(docId);
-
-  //console.log("docId:", docId);
 
   onMount( async () => {
     //promise = fetchMarkdown(doc);
