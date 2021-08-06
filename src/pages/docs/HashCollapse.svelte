@@ -11,7 +11,7 @@
 
   function handleClick(){
     //expanded = !expanded;
-    $subHeadingsInMenu = subs.subs;
+    //$subHeadingsInMenu = subs.subs;
     console.log("handleclick for hash collapse being called", subs);
   }
 

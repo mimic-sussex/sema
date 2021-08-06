@@ -141,14 +141,17 @@
     const res1 = await fetch(document.location.origin + `/docs/docs.json`);
     const json = await res1.json();
     if (res1.ok){
-      let tmpLinks = json;
+      //let tmpLinks = json;
       //let tmpChosenDocs = tmpLinks[0].path;
-      let result =  await getSubs(tmpLinks);
-      $links = result;
+      $links = json
+      //let result =  await getSubs(tmpLinks);
+      //$links = result;
     }
   }
 
   //get subheadings for a page based on the h1 headers in the .md file.
+  //redundant, now we just get these when loading the markdown.
+  /* 
   async function getSubs(list){
     for (let i=0;i<list.length;i++){
         let currentHeadings = [];
@@ -178,6 +181,7 @@
     }
     return list
   }
+  */
 
   onMount( async () => {
     // console.log("DEBUG:routes/_layout:onMount");

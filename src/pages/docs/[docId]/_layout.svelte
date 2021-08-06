@@ -5,8 +5,8 @@
   import marked from 'marked';
   import hljs from 'highlight.js';
 
-  import { links, chosenDocs, hashSection} from '../../../stores/docs.js'
-
+  import { links, chosenDocs, hashSection, subHeadingsInMenu } from '../../../stores/docs.js'
+  import { slide, fly, fade} from 'svelte/transition'
 
   $: setLastVisitedPage($params.docId);
   $: promise = fetchMarkdown($params.docId, $links); //promise is reactive to changes in url docId and links since they load asynchrynously
@@ -144,6 +144,17 @@
               <code style="-moz-user-select: text; -html-user-select: text; -webkit-user-select: text; -ms-user-select: text; user-select: text; white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word;" id='code${codeID++}'>`
             );
         };
+        
+        let currentHeadings = []
+        let tokens = marked.lexer(text);
+            //loop through them
+            for (let i=0; i<tokens.length; i++){
+              if (tokens[i].type == "heading" && tokens[i].depth == 1){
+                let heading = tokens[i].text;
+                currentHeadings.push({heading: heading , route: heading.replace(/\s+/g, '-').toLowerCase(), active:false})
+              }
+            }
+        $subHeadingsInMenu = currentHeadings;
 
       }
 
@@ -273,14 +284,14 @@
 
 </style>
 
-<div class="markdown-container">
+<div class="markdown-container" in:slide>
   {#if $links != []}
     {#await promise}
       <p>...waiting</p>
     {:then number}
       <div class="markdown-output">{@html markdown}</div>
     {:catch error}
-      <p style="color: red">no markdown :(</p>
+      <p style="color: red">no markdown</p>
     {/await}
   {/if}
 </div>

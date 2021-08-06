@@ -6,7 +6,7 @@
   import CollapsibleSection from './CollapsibleSection.svelte';
   import Tree from './Tree.svelte'
   import { links, chosenDocs, hashSection, subHeadingsInMenu } from '../../stores/docs.js';
-
+  import { slide, fly, fade} from 'svelte/transition'
   /*
   $: match = $route.path.match(/\/docs\/([^\/]+)\//);
   $: active = match && match[1];
@@ -19,41 +19,126 @@
   //console.log($url())
   */
 
+  //$: getSubsOnReload($links); //watch for changes in $links as onMount they are empty
+
 
   onMount( async () => {
     //promise = fetchMarkdown(doc);
     // console.log("DEBUG:routes/docs/_layout:onMount");
     //console.log('onMount', $chosenDocs)
     $redirect($url($chosenDocs));
+    console.log("$chosenDocs", $chosenDocs);
+    
+    //getSubsOnReload();
     //console.log("get element by id", document.getElementById($hashSection))
     // console.log("$links on mount", $links);
   });
 
+  /*
+  function getSubsOnReload(links){
+    if ($subHeadingsInMenu != undefined){
+      if ($subHeadingsInMenu.length == 0){
+        
+        if (links != undefined){
+          if (links.length != 0){
+            console.log("bleh");
+            let result = getSubs($chosenDocs, links);
+            console.log("results", result);
+            $subHeadingsInMenu = result.subs;
+          }
+        }
+        console.log("subheadings now", $subHeadingsInMenu);
+      }
+    }
+  }
+  /*
+  function getSubs(list){
+    //console.log("list", list);
+    for (let i=0;i<list.length;i++){
+      if (list[i].container == true){
+          getSubs(list[i].children);
+        } else {
+          //loop through children
+          children = list[i].children
+          for (j=0; j<children.length; j++){
+            if(children[j].file != undefined){
+              if (children[j].path)
+            }
+          }
+          if(list[i].file != undefined){
+            if (list[i].path == $chosenDocs){
+              return list[i].subs;
+            }
+          }
+      }
+    }
+  }
+  */
+  /*
+  function getSubs(path, links){
+    console.log("links" ,links);
+    if (links != undefined){
+      for (let i = 0; i < links.length; i++) {
+        if (links[i]['container'] == true){
+          let children = links[i]['children'];
+          for (let j = 0; j < children.length; j++){
+            //check if it has children itself TODO make this recursive (but for now we limit to 3 levels so okay)
+            if (children[j].container ==  true){
+              let grandChildren = children[j].children;
+              //findFileName(path, children[j]);
+              for (let k = 0; k < grandChildren.length; k++){
+                if (grandChildren[k]['path'] == path){
+                  console.log("found1", grandChildren[k]);
+                  return grandChildren[k];
+                }
+              }
+            } else {
+              if (children[j]['path'] == path){
+                //console.log(foundchildren[j])
+                console.log("found2", children[j]);
+                console.log("found3", links[i]['children'][j]);
+                return children[j];
+              }
 
+            }
+          }
+        }
+      }
+    }
+  }
+  */
 
-  let data = {
-		title:'x', 
-		children:[
-			{
-				title:'y', 
-				children:[
-					{
-						title:'z',
-						children:[
-							{
-								title:'a', 
-							}			
-						]
-					},
-					{
-						title:'u', 
-					}			
-				]
-			}			
-    ]
-    
-    
-	}
+  /*
+  async function getSubs(list){
+    for (let i=0;i<list.length;i++){
+        let currentHeadings = [];
+        if (list[i].container == true){
+          getSubs(list[i].children);
+        } else {
+          //get headings for that child
+          if(list[i].file != undefined){ // There is a call with undefined value when navigating to Playground
+            const res = await fetch(document.location.origin + `/docs/${list[i].file}.md`)
+            const text = await res.text();
+            if (res.ok) {
+              //get tokens from the marked lexer
+              let tokens = marked.lexer(text);
+              //loop through them
+              for (let i=0; i<tokens.length; i++){
+                if (tokens[i].type == "heading" && tokens[i].depth == 1){
+                  let heading = tokens[i].text;
+                  currentHeadings.push({heading: heading , route: heading.replace(/\s+/g, '-').toLowerCase(), active:false})
+                }
+              }
+              list[i].subs = currentHeadings;
+            } else {
+              throw new Error(text);
+            }
+          }
+        }
+    }
+    return list
+  }
+  */
 
 </script>
 
@@ -321,7 +406,7 @@
       {#each $subHeadingsInMenu as subs}
               <!--the url bit below should have a path tag eg /docs/default-language-->
               <a class='sub-nav-links' href={$url('#'+subs.route)} target="_self"
-              class:active={$isActive(subs.route)}> <!-- TODO should this be route?-->
+              class:active={$isActive(subs.route)} in:slide> <!-- TODO should this be route?-->
                 {subs.heading}
               </a>
       {/each}
