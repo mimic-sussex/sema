@@ -13,11 +13,16 @@
   
   
       <button aria-expanded={expanded} on:click={() => expanded = !expanded}>
+        
+        <!--
         <a  class='nav-links' href={$url(path)}
               class:active={$isActive(path)}
               >
             {headerText}
           </a>
+        -->
+        <h3>{headerText}</h3>
+
         <svg viewBox="0 0 20 20" fill="none" >
         <path class="vert" d="M10 1V19" stroke="black" stroke-width="2"/>
         <path d="M1 10L19 10" stroke="black" stroke-width="2"/>
@@ -36,11 +41,12 @@
 }
 
 h3 {
+  color: #f5f6f7;
   margin: 0;
 }
 
 button {
-  background-color: var(--background, #949090);
+  background-color: var(--background, #212121);
   color: var(--gray-darkest, #282828);
   display: flex;
   justify-content: space-between;
@@ -50,9 +56,13 @@ button {
   padding: 0.5em 0.5em;
 }
 
+button:hover {
+  background-color: #333;
+}
+
 button[aria-expanded="true"] {
   border-bottom: 1px solid var(--gray-light, #eee);
-  background-color: var(--background, #5b5757);
+  background-color: var(--background, #333);
 }
 
 button[aria-expanded="true"] .vert {
@@ -62,6 +72,8 @@ button[aria-expanded="true"] .vert {
 button:focus svg{
     outline: 2px solid;
 }
+
+
 
 button [aria-expanded="true"] rect {
     fill: currentColor;
@@ -76,7 +88,7 @@ svg {
 .nav-links {
   text-align: left;
   justify-content: flex-start;
-  color:white;
+  color: #f5f6f7;
 }
 
 </style>

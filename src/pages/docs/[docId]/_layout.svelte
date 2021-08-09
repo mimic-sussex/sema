@@ -1,11 +1,12 @@
 <script>
 
   import { tick, onMount, onDestroy} from 'svelte';
-  import { url, params, ready, isActive, route, afterPageLoad} from "@roxi/routify";
+  import { url, params, ready, isActive, route, afterPageLoad, beforeUrlChange, goto} from "@roxi/routify";
   import marked from 'marked';
+  import hljs from 'highlight.js';
 
-  import { links, chosenDocs } from '../../../stores/docs.js'
-
+  import { links, chosenDocs, hashSection, subHeadingsInMenu } from '../../../stores/docs.js'
+  import { slide, fly, fade} from 'svelte/transition'
 
   $: setLastVisitedPage($params.docId);
   $: promise = fetchMarkdown($params.docId, $links); //promise is reactive to changes in url docId and links since they load asynchrynously
@@ -54,15 +55,18 @@
   const renderer = {
     heading(text, level) {
       const escapedText = text.toLowerCase().replace(/[^\w]+/g, '-');
-
-      return `
-              <h${level}>
-                <a name="${escapedText}" class="anchor" href="#${escapedText}" id="#${escapedText}" target="_self">
-                  <span class="header-link"></span>
-                #
-                </a>
-                ${text}
-              </h${level}>`;
+      if (level == 1){
+        return `
+                <h${level}>
+                  <a name="${escapedText}" class="anchor" href="#${escapedText}" id="#${escapedText}" target="_self" style="color:#333">
+                    <span class="header-link"></span>
+                  #
+                  </a>
+                  ${text}
+                </h${level}>`;
+      } else {
+        return ` <h${level}>${text}</h${level}>`;
+      }
     }
   };
 
@@ -72,28 +76,43 @@
     return link.replace("<a","<a target='_blank'");
   };
 
+
+  /*
+  marked.setOptions({
+    highlight: function (code, lang, _callback) {
+      if (hljs.getLanguage(lang)) {
+        return hljs.highlight(lang, code).value
+      } else {
+        return hljs.highlightAuto(code).value
+      }
+    },
+  })
+  */
+
   marked.use({ renderer });
 
   /*
-  //make marked renderer make links open in a new tab
-  let renderer = new marked.Renderer();
-  renderer.link = function(href, title, text) {
-    let link = marked.Renderer.prototype.link.apply(this, arguments);
-    return link.replace("<a","<a target='_blank'");
-  };
-
   marked.setOptions({
-    renderer: renderer
+    renderer: renderer,
+    highlight: function(code, lang) {
+      const hljs = hljs;
+      const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+      return hljs.highlight(code, { language }).value;
+    },
+    pedantic: false,
+    gfm: true,
+    breaks: false,
+    sanitize: false,
+    smartLists: true,
+    smartypants: false,
+    xhtml: false
   });
   */
-
-  //$: docId = $params.docId; //get the doc part of the url
-
-
 
   let fetchMarkdown = async (docId, links) => {
     // console.log("HERE last loaded doc", lastLoadedDoc);
     // console.log("HERE docId", docId);
+    //console.log("hash on fetching markdown", location.hash, $hashSection, links);
     if (docId == lastLoadedDoc){
       return;
     }
@@ -121,6 +140,18 @@
               <code style="-moz-user-select: text; -html-user-select: text; -webkit-user-select: text; -ms-user-select: text; user-select: text; white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word;" id='code${codeID++}'>`
             );
         };
+        
+        //get and set subheadings based on the markdown file.
+        let currentHeadings = []
+        let tokens = marked.lexer(text);
+            //loop through them
+            for (let i=0; i<tokens.length; i++){
+              if (tokens[i].type == "heading" && tokens[i].depth == 1){
+                let heading = tokens[i].text;
+                currentHeadings.push({heading: heading , route: heading.replace(/\s+/g, '-').toLowerCase(), active:false})
+              }
+            }
+        $subHeadingsInMenu = currentHeadings;
 
       }
 
@@ -131,30 +162,57 @@
   }
 
   function findFileName(path, links){
+    console.log("finding file name for", path, links);
+
     if (links != undefined){
       for (let i = 0; i < links.length; i++) {
-        if (links[i]['path'] == ('./'+path)){
-          //console.log('here ./'+path);
-          return links[i]['file'];
+        if (links[i]['container'] == true){
+          let children = links[i]['children'];
+          for (let j = 0; j < children.length; j++){
+            //check if it has children itself TODO make this recursive (but for now we limit to 3 levels so okay)
+            if (children[j].container ==  true){
+              let grandChildren = children[j].children;
+              //findFileName(path, children[j]);
+              for (let k = 0; k < grandChildren.length; k++){
+                if (grandChildren[k]['path'] == './'+path){
+                  return grandChildren[k]['file'];
+                }
+              }
+            } else {
+              if (children[j]['path'] == './'+path){
+                return children[j]['file'];
+              }
+
+            }
+          }
         }
       }
     }
   }
 
-  //$: if (docId) fetchMarkdown(docId);
-
-  //console.log("docId:", docId);
 
   onMount( async () => {
     //promise = fetchMarkdown(doc);
     console.log("DEBUG:routes/docs/"+$params.docId+"/_layout:onMount");
-
+    // console.log(location.hash);
+    $hashSection = location.hash;
+    //console.log("get element by id", document.getElementById(location.hash))
+    //document.getElementById($hashSection).scrollIntoView({behavior: 'auto'});
+    // document.querySelectorAll('a').forEach((el) => {
+      // console.log("elements in DOM", el);
+      // hljs.highlightElement(el);
+    // });
   });
 
 
   $afterPageLoad(page => {
-    console.log('loaded ' + page.title)
+    //console.log('loaded ' + page.title)
+    console.log(window.location.href);
     lastLoadedDoc = ""; //reset lastLoadedDocument
+    // console.log("hash log on page load", $hashSection);
+    
+    // $goto($hashSection);
+    
     /*
     console.log("HERE location.hash before if", location.hash);
     if (location.hash != null || location.hash == ""){
@@ -164,29 +222,31 @@
     */
   })
 
-
 </script>
 
 
 <style>
   .markdown-container {
-    height: calc(100vh - 86px); /* this fixed scrolling issue */
+    height: calc(100vh - 48px); /* this fixed scrolling issue */
     padding: 10px 20px 0px 10px;
+    background-color: #151515;
     /* background: #aaaaaa; */
     overflow-y: auto;
+    /* scrollbar-color: #6969dd #e0e0e0; these scroll bar options work for firefox not for chrome TODO */
+    /* scrollbar-width: thin; */
   }
+  
 
 </style>
 
-
-<div class="markdown-container">
+<div class="markdown-container" in:slide>
   {#if $links != []}
     {#await promise}
       <p>...waiting</p>
     {:then number}
       <div class="markdown-output">{@html markdown}</div>
     {:catch error}
-      <p style="color: red">no markdown :(</p>
+      <p style="color: red">no markdown</p>
     {/await}
   {/if}
 </div>

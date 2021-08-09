@@ -638,6 +638,11 @@ import { siteMode } from "../../stores/common";
     -webkit-box-shadow:  2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0)
   }
 
+  /*for the dropdown menu of the comboboxes, we set the color to fix css issue on linux
+  and windows*/
+  .dropdown-content {
+    color: black;
+  }
 
 
 </style>
@@ -662,7 +667,7 @@ import { siteMode } from "../../stores/common";
               cursor={ () => ( $isSelectLiveCodeEditorDisabled ? 'not-allowed' : 'pointer') }
               >
         {#each $sidebarLiveCodeOptions as liveCodeOption}
-          <option disabled={ liveCodeOption.disabled }
+          <option class="dropdown-content" disabled={ liveCodeOption.disabled }
                   value={liveCodeOption}
                   >
             {liveCodeOption.text}
@@ -684,7 +689,7 @@ import { siteMode } from "../../stores/common";
               cursor={ () => ( $isSelectModelEditorDisabled ? 'not-allowed' : 'pointer' )}
               >
         {#each $sidebarModelOptions as modelOption}
-          <option disabled={modelOption.disabled}
+          <option class="dropdown-content" disabled={modelOption.disabled}
                   value={modelOption}
                   >
             { modelOption.text }
@@ -703,7 +708,7 @@ import { siteMode } from "../../stores/common";
               on:click={ () => $sidebarDebuggerOptions[0].disabled = true  }
               >
         {#each $sidebarDebuggerOptions as debuggerOption}
-          <option disabled={ debuggerOption.disabled }
+          <option class="dropdown-content" disabled={ debuggerOption.disabled }
                   value={ debuggerOption }>
             { debuggerOption.text }
           </option>

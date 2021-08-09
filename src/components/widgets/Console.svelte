@@ -5,6 +5,7 @@
   import { Logger } from 'sema-engine';
   import { rawConsoleLogs, consoleLogs } from '../../stores/common.js'
   import Inspect from 'svelte-inspect';
+  // import beautify from 'js-beautify';
 
   export let id;
   export let name;
@@ -37,6 +38,29 @@
     warn: 0,
     log: 0,
   }
+
+  /*
+  let beautifyOptions = {
+    "indent_size": "2",
+    "indent_char": " ",
+    "max_preserve_newlines": "1",
+    "preserve_newlines": true,
+    "keep_array_indentation": true,
+    "break_chained_methods": true,
+    "indent_scripts": "normal",
+    "brace_style": "collapse",
+    "space_in_empty_paren": true,
+    "space_before_conditional": true,
+    "unescape_strings": true,
+    "jslint_happy": false,
+    "end_with_newline": false,
+    "wrap_line_length": "70",
+    "indent_inner_html": false,
+    "comma_first": true,
+    "e4x": false,
+    "indent_empty_lines": false
+  };
+  */
 
   let something = e => { /* console.log(...e); */ }
   
@@ -88,6 +112,7 @@
     for (var i = 0; i < payload.length; i++) {
       if (typeof payload[i] === "object"){
         let curStr = JSON.stringify(payload[i]);
+        //let curStr = beautify(payload[i], beautifyOptions);
         newLoad.push(curStr);
       } else { newLoad.push(payload[i])}
     }

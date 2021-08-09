@@ -1,11 +1,16 @@
 <script>
-  import { onMount, onDestroy } from 'svelte';
+  import { onMount, onDestroy, afterUpdate} from 'svelte';
 
 
   import { dspCode } from '../../stores/common.js'
   import beautify from 'js-beautify';
+  //import hljs from 'highlight.js';
   import hljs from 'highlight.js/lib/core';
   import javascript from 'highlight.js/lib/languages/javascript';
+
+  // import Highlight from "svelte-highlight";
+  // import typescript from "svelte-highlight/src/languages/typescript";
+  import github from "svelte-highlight/src/styles/github";
 
 
   export let id;
@@ -18,10 +23,23 @@
   export let className;
   export { className as class };
 
+  $: highlightOnChange($dspCode); //highlight the dsp code when it changes
+
+  function highlightOnChange(code) {
+    console.log("triggered");
+    hljs.highlightAll();
+    document.querySelectorAll('pre code').forEach((el) => {
+      console.log(el);
+      // hljs.highlightElement(el);
+    });
+  }
+
+  $: code = `const add = (a: number, b: number) => a + b;`;
 
   let log = e => { /* console.log(...e); */ }
 
   hljs.registerLanguage('javascript', javascript);
+  
   // export let items;
 
   let beautifyOptions = {
@@ -47,12 +65,17 @@
 
 
   onMount(async () => {
-
+    //hljs.highlightAll();
     // messaging.subscribe(`${id}-analyser-data`, e => updateAnalyserByteData(e) );
     log( id, name, type, className, hasFocus, theme, background, component );
 
   });
 
+  //after a dom update, highlightAll
+  afterUpdate(() => {
+    // console.log("DOM update, highlight time");
+    //hljs.highlightAll();
+  });
 
 </script>
 
@@ -108,12 +131,18 @@
 
 </style>
 
+
+<svelte:head>
+    {@html github}
+</svelte:head>
+
 <div class='container-dsp-code-output scrollable'>
   {#if $dspCode}
-  <span class="dspCode-function-bloc-header">Setup:</span>
-  <pre class='prewrap'> { beautify($dspCode.setup, beautifyOptions)  } </pre>
-  <span class="dspCode-function-bloc-header">Loop:</span>
-  <pre class='prewrap'> { beautify($dspCode.loop, beautifyOptions) } </pre>
+    <!-- <Highlight language="{typescript}" {code} /> -->
+    <span class="dspCode-function-bloc-header">Setup:</span>
+    <pre class='prewrap language-javascript'><code>{beautify($dspCode.setup, beautifyOptions)}</code></pre>
+    <span class="dspCode-function-bloc-header">Loop:</span>
+    <pre class='prewrap'><code> { beautify($dspCode.loop, beautifyOptions) }</code></pre>
   <!-- <pre> { JSON.stringify($dspCode.loop, null, 2) } </pre> -->
   {/if}
 </div>

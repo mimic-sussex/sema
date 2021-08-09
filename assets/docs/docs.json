@@ -1,15 +1,89 @@
 [
-  {"path":"./welcome", "name":"Welcome", "file":"welcome", "subs":[]},
+  {"container": true, "title":"Getting Started" ,"children":
+    [
+      {"container":false, 
+        "title":"About", 
+        "file":"getting-started/about",
+        "path":"./about", "subs":[]
+      },
 
-  {"path":"./default-language", "name":"Default Language", "file":"default-livecoding-language", "subs":[]},
+      {
+        "container":false,
+        "title":"What can you create in Sema?",
+        "file":"getting-started/what-can-you-create-in-sema",
+        "path":"./what-can-you-create-in-sema",
+        "subs":[]
+      },
 
-  {"path":"./intermediate-language", "name":"Intermediate Language", "file":"sema-intermediate-language", "subs":[]},
+      {"container":false,
+        "title":"Community",
+        "file":"getting-started/community",
+        "path":"./community",
+        "subs":[]}
+    ]
+  },
 
-  {"path":"./javascript-editor-utils", "name":"JavaScript Editor", "file":"javascript-editor-utils", "subs":[]},
+  {"container": true, "title":"Playground", "children":
+    [
+      {
+        "container":false,
+        "title":"Getting around",
+        "file":"playground/getting-around",
+        "path":"./getting-around",
+        "subs":[]
+      },
+      
+      {
+        "container":false,
+        "title":"Settings Bar",
+        "file":"playground/settings-bar",
+        "path":"./settings-bar",
+        "subs":[]
+      },
+      
+      {"container":false, "title":"Editors", "file":"playground/editors", "path":"./editors", "subs":[]},
+      
+      {"container":false, "title":"Debug Tools", "file":"playground/debug-tools", "path":"./debug-tools", "subs":[]},
+      
+      {"container":false, "title":"Visualisers", "file":"playground/visualisers", "path":"./visualisers", "subs":[]}
+    ]
+  },
 
-  {"path":"./machine-learning", "name":"Machine Learning", "file":"machine-learning", "subs":[]},
+  {"container": true, "title":"Live coding", "children":
+    [
+      {"container":false, "title":"Signal Processing", "file":"live-coding/signal-processing", "path":"./signal-processing", "subs":[]},
+      {"container":false, "title":"Sequencing", "file":"live-coding/sequencing", "path":"./sequencing", "subs":[]},
+      {"container":false, "title":"Variables", "file":"live-coding/variables", "path":"./variables", "subs":[]},
+      {"container":false, "title":"Sample Playback", "file":"live-coding/sample-playback", "path":"./sample-playback", "subs":[]},
+      {"container":false, "title":"Mappings", "file":"live-coding/mappings", "path":"./mappings", "subs":[]},
+      {"container":true, "title":"Languages", "children":
+        [
+          {"container":false, "title":"Default Language", "file":"live-coding/languages/default-language", "path":"./default-language", "subs":[]},
+          {"container":false, "title":"Rubber Duckling", "file":"live-coding/languages/rubber-duckling", "path":"./rubber-duckling", "subs":[]},
+          {"container":false, "title":"Quaverseries", "file":"live-coding/languages/quaverseries", "path":"./quaverseries", "subs":[]},
+          {"container":false, "title":"Nibble", "file":"live-coding/languages/nibble", "path":"./nibble", "subs":[]}
 
-  {"path":"./load-sound-files", "name":"Load Sound Files", "file":"sample-loading", "subs":[]},
-  
-  {"path":"./maximilian-dsp-api", "name":"Maximilian API", "file":"maximilian-dsp-api", "subs":[]}
+        ]
+      }
+
+    ]
+  },
+
+  {"container": true, "title":"Machine Learning", "children":
+    [
+      {"container":false, "title":"Introduction to JS editor & ML", "file":"machine-learning/intro-JS-and-ML-in-sema", "path":"./intro-JS-and-ML-in-sema", "subs":[]},
+      {"container":false, "title":"Loading Libraries", "file":"machine-learning/loading-libraries", "path":"./loading-libraries", "subs":[]},
+      {"container":false, "title":"Hardware Acceleration", "file":"machine-learning/hardware-acceleration", "path":"./hardware-acceleration", "subs":[]},
+      {"container":false, "title":"JavaScript Editor API", "file":"machine-learning/js-editor-api", "path":"./js-editor-api", "subs":[]}
+    ]
+  },
+
+  {"container": true, "title":"Language Creation", "children":
+    [
+      {"container":false, "title":"Introduction to Language Creation", "file":"language-creation/intro-to-language-creation", "path":"./intro-to-language-creation", "subs":[]},
+      {"container":false, "title":"How to use the grammar editor", "file":"language-creation/how-to-use-grammar-editor", "path":"./how-to-use-grammar-editor", "subs":[]},
+      {"container":false, "title":"Intermediate Language Reference", "file":"language-creation/intermediate-language", "path":"./intermediate-language", "subs":[]},
+      {"container":false, "title":"Maximillian Reference", "file":"language-creation/maximilian-dsp-api", "path":"./maximilian-dsp-api", "subs":[]}
+    ]
+  }
 ]

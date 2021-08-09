@@ -746,3 +746,7 @@ Send a value to the javascript console, once per second
 ```
 {{0.1}pha}poll;
 ```
+____
+
+Writing good documentation that is up-to-date is difficult. If you notice a mistake, help us out.
+[Open a PR for this file](https://github.com/mimic-sussex/sema/blob/develop/assets/docs/default-livecoding-language.md)

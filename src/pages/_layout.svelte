@@ -141,13 +141,26 @@
     const res1 = await fetch(document.location.origin + `/docs/docs.json`);
     const json = await res1.json();
     if (res1.ok){
-      let tmpLinks = json;
-      let tmpChosenDocs = tmpLinks[0].path;
+      //let tmpLinks = json;
+      //let tmpChosenDocs = tmpLinks[0].path;
+      $links = json
+      //let result =  await getSubs(tmpLinks);
+      //$links = result;
+    }
+  }
 
-      for (let i=0;i<tmpLinks.length;i++){
-          let currentHeadings = [];
-          if(tmpLinks[i].file != undefined){ // There is a call with undefined value when navigating to Playground
-            const res = await fetch(document.location.origin + `/docs/${tmpLinks[i].file}.md`)
+  //get subheadings for a page based on the h1 headers in the .md file.
+  //redundant, now we just get these when loading the markdown.
+  /* 
+  async function getSubs(list){
+    for (let i=0;i<list.length;i++){
+        let currentHeadings = [];
+        if (list[i].container == true){
+          getSubs(list[i].children);
+        } else {
+          //get headings for that child
+          if(list[i].file != undefined){ // There is a call with undefined value when navigating to Playground
+            const res = await fetch(document.location.origin + `/docs/${list[i].file}.md`)
             const text = await res.text();
             if (res.ok) {
               //get tokens from the marked lexer
@@ -159,17 +172,16 @@
                   currentHeadings.push({heading: heading , route: heading.replace(/\s+/g, '-').toLowerCase(), active:false})
                 }
               }
-              tmpLinks[i].subs = currentHeadings;
+              list[i].subs = currentHeadings;
             } else {
               throw new Error(text);
             }
           }
         }
-        // console.log("tmpLinks", tmpLinks);
-        $links = tmpLinks;
-        $chosenDocs = tmpChosenDocs;
     }
+    return list
   }
+  */
 
   onMount( async () => {
     // console.log("DEBUG:routes/_layout:onMount");
