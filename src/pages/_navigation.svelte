@@ -93,6 +93,27 @@
 		padding-right: 1em;
 	}
 
+	.flexbox-session {
+		display: flex;
+		flex-direction: row;
+		flex-wrap:  wrap;
+		align-content: flex-start;
+		justify-content: flex-end;
+	}
+
+	.container-session-avatar {
+
+	}
+
+	.session-avatar {
+		width: 32px;
+		height: 32px;
+		padding-left: 0.5em;
+		padding-top: 0.2em;
+		padding-right: 0.5em;
+		/* padding-bottom: 0.2em; */
+
+	}
   .path-light {
     fill: black;
   }
@@ -114,12 +135,6 @@
     text-decoration: none;
   }
 
-	.session-avatar {
-		width: 32px;
-		height: 32px;
-		padding-bottom: 0.2em;
-
-	}
 
 </style>
 
@@ -583,30 +598,34 @@
 	</div>
 
 	<div class='container-session'>
-		{#if $user}
-      {#if $username }
-				<a href="/admin"
+		<div class='flexbox-session'>
+			{#if $user}
+				{#if $username }
+					<a href="/admin"
+						style='color: {$siteMode === 'dark'? 'white': 'black'};'
+						>
+					{ $username }</a>
+					<div class='container-session-avatar'>
+						<img 	class='session-avatar'
+									src={ $avatarSrc }
+									alt="{ $username }" />
+					</div>
+				{:else}
+					<a href="/admin"
+						style='color: {$siteMode === 'dark'? 'white': 'black'};'
+						>
+					admin</a>
+				{/if}
+				<a href="#signout" on:click={ signOut }
 					style='color: {$siteMode === 'dark'? 'white': 'black'};'
 					>
-				{ $username }</a>
-				<img 	class='session-avatar'
-							src={ $avatarSrc }
-							alt="{ $username }" />
+				signout</a>
 			{:else}
-				<a href="/admin"
+				<a href="/login"
 					style='color: {$siteMode === 'dark'? 'white': 'black'};'
 					>
-				admin</a>
+					login</a>
 			{/if}
-			<a href="#signout" on:click={ signOut }
-				style='color: {$siteMode === 'dark'? 'white': 'black'};'
-				>
-			signout</a>
-		{:else}
-			<a href="/login"
-        style='color: {$siteMode === 'dark'? 'white': 'black'};'
-        >
-        login</a>
-		{/if}
+		</div>
 	</div>
 </nav>
