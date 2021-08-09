@@ -11,18 +11,19 @@
   import { PubSub } from './utils/pubSub.js';
   let messaging = new PubSub();
 
-	// const init = () => {
-		// user.set(supabase.auth.user())
-		// supabase.auth.onAuthStateChange((_, session) => {
-		// 	user.set(session.user)
-		// })
-	// }
+	const init = () => {
+		user.set(supabase.auth.user())
+		supabase.auth.onAuthStateChange((_, session) => {
+			user.set(session.user)
+		})
+	}
 
 
 
 	// we need to queue our init till after Routify has been initialized
-	setTimeout(() => window.routify.inBrowser && authStore.init())
+	// setTimeout(() => window.routify.inBrowser && authStore.init())
 	// setTimeout(() => window.routify.inBrowser && init())
+	setTimeout(() => window.routify.inBrowser )
 
   // $unsupportedBrowser
   let unsupportedBrowser,

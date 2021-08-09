@@ -42,6 +42,10 @@ input, button, select  {
 	border-radius: 2px;
 }
 
+input{
+	color: white;
+}
+
 textarea {
     /* -webkit-writing-mode: horizontal-tb !important; */
     /* text-rendering: auto; */

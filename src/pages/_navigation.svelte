@@ -36,6 +36,12 @@
     controller.stop();
   }
 
+	user.set(supabase.auth.user())
+
+	supabase.auth.onAuthStateChange((_, session) => {
+		user.set(session.user)
+	})
+
   async function signOut() {
     try {
       let { error } = await supabase.auth.signOut()

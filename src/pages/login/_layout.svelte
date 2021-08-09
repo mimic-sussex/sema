@@ -1,7 +1,8 @@
 <script>
-	import { authStore } from '../../auth'
+	// import { authStore } from '../../auth'
+	import { user } from "../../stores/user"
 	import { redirect } from '@roxi/routify'
-	const { user } = authStore
+	// const { user } = authStore
 
 	/**
 	 *  We don't want the login page to visible to logged in user, so we redirect them

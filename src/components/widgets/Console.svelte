@@ -4,7 +4,7 @@
 
   import { Logger } from 'sema-engine';
   import { rawConsoleLogs, consoleLogs } from '../../stores/common.js'
-  import Inspect from 'svelte-inspect';
+  // import Inspect from 'svelte-inspect';
 
   export let id;
   export let name;
@@ -39,7 +39,7 @@
   }
 
   let something = e => { /* console.log(...e); */ }
-  
+
   //to make the console scroll when new logs are added
   let textArea;
   let autoscroll;
@@ -243,7 +243,7 @@
 
     <input type="checkbox" id="level-warn" name="level-warn" bind:checked={filter["warn"]}>
     <label for="level-warn">warns</label>
-    
+
     <input type="checkbox" id="level-info" name="level-info" bind:checked={filter["info"]}>
     <label for="level-info">info</label>
   </form>
@@ -255,7 +255,7 @@
 </div>
 
 <div class='console-container scrollable-textarea' bind:this={textArea}>
-  
+
   {#each $consoleLogs as {func, payload, origin, logLevel}, i}
     {#if origin == logger.originTypes.processor && filter.processor != false && filter[logLevel] != false}
         <pre readonly class='console-PROCESSOR'>{origin}{processPayload(payload)}</pre>
@@ -272,11 +272,11 @@
 
 <!--
 <div class='console-container scrollable-textarea'>
-  
+
   <pre readonly
       bind:this={ textArea }
 
-      
+
       class='console-textarea'
       >{ $rawConsoleLogs }</pre>
 

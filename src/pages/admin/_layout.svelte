@@ -1,6 +1,6 @@
 <script>
 	import { ready } from '@roxi/routify'
-	import { authStore } from '../../auth.js'
+	// import { authStore } from '../../auth.js'
 
   import {
 		user,

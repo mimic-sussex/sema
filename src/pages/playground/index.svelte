@@ -1,7 +1,8 @@
 <script>
-	import { authStore } from '../../auth'
+	// import { authStore } from '../../auth'
 	import { redirect } from '@roxi/routify'
-	const { user } = authStore
+	// const { user } = authStore
+	import { user } from "../../stores/user"
 
   import {
     onMount,

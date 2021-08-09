@@ -1,23 +1,23 @@
 <script>
 	import { onMount, onDestroy } from 'svelte';
-	import Inspect from 'svelte-inspect';
+	// import Inspect from 'svelte-inspect';
 
-  const CustomInspect = Inspect.configure({
-    palette: {
-      selection: 'hotpink',
-      blue: 'dodgerblue',
-      black: 'white',
-      gray: 'white',
-      pink: 'white',
-      brown: 'white',
-      yellow: 'white',
-      orange: 'white',
-      purple: 'white',
-      blue: 'white',
-      red: 'white',
-      white: 'white'
-    }
-  });
+  // const CustomInspect = Inspect.configure({
+  //   palette: {
+  //     selection: 'hotpink',
+  //     blue: 'dodgerblue',
+  //     black: 'white',
+  //     gray: 'white',
+  //     pink: 'white',
+  //     brown: 'white',
+  //     yellow: 'white',
+  //     orange: 'white',
+  //     purple: 'white',
+  //     blue: 'white',
+  //     red: 'white',
+  //     white: 'white'
+  //   }
+  // });
 
 
 
@@ -172,17 +172,17 @@
 					<div style="overflow-y: scroll; height:auto;"
 								class='inspect'
 								>
-						<Inspect.Inverted value={ $liveCodeAbstractSyntaxTree }
+						<!-- <Inspect.Inverted value={ $liveCodeAbstractSyntaxTree }
 														depth={7}
-														/>
+														/> -->
 					</div>
 				{:else}
 					<div style="overflow-y: scroll; height:auto;"
 								class='inspect'
 								>
-						<Inspect value={ $liveCodeAbstractSyntaxTree }
+						<!-- <Inspect value={ $liveCodeAbstractSyntaxTree }
 														depth={7}
-														/>
+														/> -->
 
 					</div>
 				{/if}
