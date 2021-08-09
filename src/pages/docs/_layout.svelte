@@ -10,7 +10,7 @@
 
   onMount( async () => {
     console.log("DEBUG:routes/docs/_layout:onMount");
-    $redirect($url($chosenDocs));
+    $redirect($url($chosenDocs+$hashSection)); //jump back to the page and section that user was last on
   });
 
 </script>

@@ -10,6 +10,7 @@
 
   $: setLastVisitedPage($params.docId);
   $: promise = fetchMarkdown($params.docId, $links); //promise is reactive to changes in url docId and links since they load asynchrynously
+  //$: jumpOnLoad(markdown);
   let lastLoadedDoc = "";//$chosenDocs;
   /*
   $: promise.then(value => {
@@ -142,6 +143,7 @@
         };
         
         //get and set subheadings based on the markdown file.
+        //for section navigation on the right of screen.
         let currentHeadings = []
         let tokens = marked.lexer(text);
             //loop through them
@@ -151,8 +153,7 @@
                 currentHeadings.push({heading: heading , route: heading.replace(/\s+/g, '-').toLowerCase(), active:false})
               }
             }
-        $subHeadingsInMenu = currentHeadings;
-
+        $subHeadingsInMenu = currentHeadings; //populate store
       }
 
       } else {
@@ -202,8 +203,19 @@
       // console.log("elements in DOM", el);
       // hljs.highlightElement(el);
     // });
+    setupMutator();
   });
 
+  function jumpOnLoad(markdown){
+    console.log("no markdown yet")
+    if (markdown){
+      console.log("markdown:)", markdown);
+      console.log("hash sections", $hashSection);
+      console.log(document.getElementsByClassName("anchor"));
+      document.getElementById($hashSection).scrollIntoView({behavior: 'auto'});
+    }
+    
+  }
 
   $afterPageLoad(page => {
     //console.log('loaded ' + page.title)
@@ -222,6 +234,67 @@
     */
   })
 
+  function onLoad(){
+    console.log("testing onload");
+    console.log(document.getElementsByClassName("anchor"));
+    //console.log(document.querySelectorAll("*"));
+    console.log("hashSection", $hashSection)
+    document.getElementById($hashSection).scrollIntoView({behavior: 'auto'});
+  }
+
+  window.addEventListener('load', (event) => {
+    console.log('page is fully loaded');
+    document.getElementsByClassName("anchor");
+    /*
+    document.querySelectorAll('a').forEach((el) => {
+      console.log("elements in DOM", el);
+      // hljs.highlightElement(el);
+    });
+    */
+  });
+
+  function setupMutator() {
+    // Select the node that will be observed for mutations
+    const targetNode = document.getElementById('mutator-test');
+
+    // Options for the observer (which mutations to observe)
+    const config = { attributes: true, childList: true, subtree: true };
+
+    // Callback function to execute when mutations are observed
+    const callback = function(mutationsList, observer) {
+        // Use traditional 'for loops' for IE 11
+        for(const mutation of mutationsList) {
+            if (mutation.type === 'childList') {
+                console.log('A child node has been added or removed.');
+                console.log(mutation.attributeName);
+                console.log(mutation.target.className);
+                if (mutation.target.className == "markdown-output"){
+                  console.log("markdown-output in DOM");
+                  
+                  if ($hashSection != ""){
+                    document.getElementById($hashSection).scrollIntoView({behavior: 'auto'});
+                    observer.disconnect();
+                  }
+                }
+                //if (mutation.target =)
+            }
+            else if (mutation.type === 'attributes') {
+                console.log('The ' + mutation.attributeName + ' attribute was modified.');
+            }
+        }
+    };
+
+    // Create an observer instance linked to the callback function
+    const observer = new MutationObserver(callback);
+
+    // Start observing the target node for configured mutations
+    observer.observe(targetNode, config);
+  }
+
+  function disconectObserver(observer){
+    observer.disconnect();
+  }
+
 </script>
 
 
@@ -239,7 +312,8 @@
 
 </style>
 
-<div class="markdown-container" in:slide>
+<!-- <button on:click={onLoad}></button> -->
+<div id="mutator-test" class="markdown-container" in:slide>
   {#if $links != []}
     {#await promise}
       <p>...waiting</p>

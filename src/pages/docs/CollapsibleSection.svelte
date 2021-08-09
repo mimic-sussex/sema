@@ -6,13 +6,16 @@
   export let headerText;
   export let path;
 
-  let expanded = false
+  export let expanded = true;
+
+  let checkPage = true;
+
 </script>
 
 <div class="collapsible">
   
   
-      <button aria-expanded={expanded} on:click={() => expanded = !expanded}>
+      <button aria-expanded={expanded} on:click={() => expanded = !expanded} aria-current={checkPage}>
         
         <!--
         <a  class='nav-links' href={$url(path)}
@@ -79,6 +82,10 @@ button [aria-expanded="true"] rect {
     fill: currentColor;
 }
 
+button [aria-current] {
+  background-color: red;
+}
+
 svg {
     height: 0.6em;
     width: 0.6em;
@@ -90,5 +97,7 @@ svg {
   justify-content: flex-start;
   color: #f5f6f7;
 }
+
+
 
 </style>
