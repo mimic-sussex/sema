@@ -11,6 +11,8 @@
 		loading
 	} from '../../stores/user'
 
+	import Profile from "../../components/login/Profile.svelte"
+
 	import Login from '../login/index.svelte'
 	// const { user, authenticated, loading } = authStore
 
@@ -25,13 +27,14 @@
 <div class="admin-module" class:not-authed={!$user}>
 	{#if !window.routify.inBrowser}
 		Hello bot. This page is only available to humans.
+	{:else if $user}
+		<slot />
 	{:else if $loading}
 		<div class="center-all">
 			<h1>Loading...</h1>
 		</div>
-	{:else if $user}
-		<slot />
 	{:else}
-		<Login />
+		<!-- <Login /> -->
+		<!-- <Profile/> -->
 	{/if}
 </div>

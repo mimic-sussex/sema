@@ -584,18 +584,24 @@
 
 	<div class='container-session'>
 		{#if $user}
-			<a href="/admin"
-        style='color: {$siteMode === 'dark'? 'white': 'black'};'
-      >
-      <!-- admin</a> -->
-      { $username }</a>
-			<img 	class='session-avatar'
-						src={ $avatarSrc }
-			     	alt="profile - { $username }" />
+      {#if $username }
+				<a href="/admin"
+					style='color: {$siteMode === 'dark'? 'white': 'black'};'
+					>
+				{ $username }</a>
+				<img 	class='session-avatar'
+							src={ $avatarSrc }
+							alt="{ $username }" />
+			{:else}
+				<a href="/admin"
+					style='color: {$siteMode === 'dark'? 'white': 'black'};'
+					>
+				admin</a>
+			{/if}
 			<a href="#signout" on:click={ signOut }
-        style='color: {$siteMode === 'dark'? 'white': 'black'};'
-        >
-        signout</a>
+				style='color: {$siteMode === 'dark'? 'white': 'black'};'
+				>
+			signout</a>
 		{:else}
 			<a href="/login"
         style='color: {$siteMode === 'dark'? 'white': 'black'};'

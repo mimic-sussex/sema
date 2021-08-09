@@ -48,7 +48,7 @@ input{
 <div class="container-login"
 			>
 	{#if $user}
-			<Profile />
+			<!-- <Profile /> -->
 	{:else}
 		<div class="container-supabase-auth"
 					style="padding: 50px 0 100px 0;"
