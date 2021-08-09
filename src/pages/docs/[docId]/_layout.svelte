@@ -10,37 +10,8 @@
 
   $: setLastVisitedPage($params.docId);
   $: promise = fetchMarkdown($params.docId, $links); //promise is reactive to changes in url docId and links since they load asynchrynously
-  //$: jumpOnLoad(markdown);
   let lastLoadedDoc = "";//$chosenDocs;
-  /*
-  $: promise.then(value => {
-      jumpToHash();
-    }, reason => {
-      console.log("no hash sad");
-    }).catch(e => {
-      console.log(e);
-    });
-  */
-
-    ;
-  //$: jumpToHash(promise);
-
-  function jumpToHash(){
-    let regex = /(?<=\#).*/g;
-    let section = window.location.href.match(regex);
-
-    window.onload = (event) => {
-      //console.log("window LOADED");
-      document.getElementById(location.hash).scrollIntoView({behavior: 'auto'});
-    }
-
-    //console.log(document.getElementById(window.location.hash));
-    //if (window.location.hash != null){
-    //  document.getElementById(window.location.hash).scrollIntoView({behavior: 'auto'});
-    //}
-  }
-
-
+  //$: setLastVisitedSection(location.hash);
 
   let markdown;
   // sets chosenDocs in store to the current page so that its rememebered for when the user returns
@@ -49,8 +20,9 @@
     //console.log("chosen docs:)", $chosenDocs);
   }
 
-  //const links = getContext('links');
-  //console.log("links inner", $links);
+  function setLastVisitedSection(){
+    $hashSection = location.hash;
+  }
 
   //custom renderer to make headers have anchor links
   const renderer = {
@@ -206,52 +178,16 @@
     setupMutator();
   });
 
-  function jumpOnLoad(markdown){
-    console.log("no markdown yet")
-    if (markdown){
-      console.log("markdown:)", markdown);
-      console.log("hash sections", $hashSection);
-      console.log(document.getElementsByClassName("anchor"));
-      document.getElementById($hashSection).scrollIntoView({behavior: 'auto'});
-    }
-    
-  }
+
 
   $afterPageLoad(page => {
     //console.log('loaded ' + page.title)
     console.log(window.location.href);
     lastLoadedDoc = ""; //reset lastLoadedDocument
-    // console.log("hash log on page load", $hashSection);
     
-    // $goto($hashSection);
-    
-    /*
-    console.log("HERE location.hash before if", location.hash);
-    if (location.hash != null || location.hash == ""){
-      console.log("HERE location.hash on page load", location.hash);
-      document.getElementById(location.hash).scrollIntoView({behavior: 'auto'});
-    }
-    */
   })
 
-  function onLoad(){
-    console.log("testing onload");
-    console.log(document.getElementsByClassName("anchor"));
-    //console.log(document.querySelectorAll("*"));
-    console.log("hashSection", $hashSection)
-    document.getElementById($hashSection).scrollIntoView({behavior: 'auto'});
-  }
 
-  window.addEventListener('load', (event) => {
-    console.log('page is fully loaded');
-    document.getElementsByClassName("anchor");
-    /*
-    document.querySelectorAll('a').forEach((el) => {
-      console.log("elements in DOM", el);
-      // hljs.highlightElement(el);
-    });
-    */
-  });
 
   function setupMutator() {
     // Select the node that will be observed for mutations
@@ -266,13 +202,12 @@
         for(const mutation of mutationsList) {
             if (mutation.type === 'childList') {
                 console.log('A child node has been added or removed.');
-                console.log(mutation.attributeName);
                 console.log(mutation.target.className);
                 if (mutation.target.className == "markdown-output"){
                   console.log("markdown-output in DOM");
                   
                   if ($hashSection != ""){
-                    document.getElementById($hashSection).scrollIntoView({behavior: 'auto'});
+                    document.getElementById($hashSection).scrollIntoView({behavior: 'smooth'});
                     observer.disconnect();
                   }
                 }
@@ -289,10 +224,6 @@
 
     // Start observing the target node for configured mutations
     observer.observe(targetNode, config);
-  }
-
-  function disconectObserver(observer){
-    observer.disconnect();
   }
 
 </script>
