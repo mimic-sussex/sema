@@ -11,7 +11,8 @@
   $: setLastVisitedPage($params.docId);
   $: promise = fetchMarkdown($params.docId, $links); //promise is reactive to changes in url docId and links since they load asynchrynously
   let lastLoadedDoc = "";//$chosenDocs;
-  //$: setLastVisitedSection(location.hash);
+  $: setLastVisitedSection(location.hash);
+  $: console.log("hash change", location.hash);
 
   let markdown;
   // sets chosenDocs in store to the current page so that its rememebered for when the user returns
@@ -21,6 +22,7 @@
   }
 
   function setLastVisitedSection(){
+    console.log("hash is changing", location.hash);
     $hashSection = location.hash;
   }
 
@@ -50,42 +52,10 @@
   };
 
 
-  /*
-  marked.setOptions({
-    highlight: function (code, lang, _callback) {
-      if (hljs.getLanguage(lang)) {
-        return hljs.highlight(lang, code).value
-      } else {
-        return hljs.highlightAuto(code).value
-      }
-    },
-  })
-  */
-
   marked.use({ renderer });
 
-  /*
-  marked.setOptions({
-    renderer: renderer,
-    highlight: function(code, lang) {
-      const hljs = hljs;
-      const language = hljs.getLanguage(lang) ? lang : 'plaintext';
-      return hljs.highlight(code, { language }).value;
-    },
-    pedantic: false,
-    gfm: true,
-    breaks: false,
-    sanitize: false,
-    smartLists: true,
-    smartypants: false,
-    xhtml: false
-  });
-  */
 
   let fetchMarkdown = async (docId, links) => {
-    // console.log("HERE last loaded doc", lastLoadedDoc);
-    // console.log("HERE docId", docId);
-    //console.log("hash on fetching markdown", location.hash, $hashSection, links);
     if (docId == lastLoadedDoc){
       return;
     }
@@ -135,8 +105,7 @@
   }
 
   function findFileName(path, links){
-    console.log("finding file name for", path, links);
-
+    //console.log("finding file name for", path, links);
     if (links != undefined){
       for (let i = 0; i < links.length; i++) {
         if (links[i]['container'] == true){
@@ -165,65 +134,59 @@
 
 
   onMount( async () => {
-    //promise = fetchMarkdown(doc);
     console.log("DEBUG:routes/docs/"+$params.docId+"/_layout:onMount");
-    // console.log(location.hash);
-    $hashSection = location.hash;
-    //console.log("get element by id", document.getElementById(location.hash))
-    //document.getElementById($hashSection).scrollIntoView({behavior: 'auto'});
-    // document.querySelectorAll('a').forEach((el) => {
-      // console.log("elements in DOM", el);
-      // hljs.highlightElement(el);
-    // });
+    $hashSection = location.hash; //get the hash portion of url and stick in store to jump to once markdown is loaded.
     setupMutator();
   });
 
 
 
   $afterPageLoad(page => {
-    //console.log('loaded ' + page.title)
-    console.log(window.location.href);
     lastLoadedDoc = ""; //reset lastLoadedDocument
-    
-  })
+  });
 
 
-
+  // monitors changes in markdown-container
+  //waits till markdown is rendered as html then jumps to hash location
   function setupMutator() {
     // Select the node that will be observed for mutations
-    const targetNode = document.getElementById('mutator-test');
-
+    const targetNode = document.getElementById('markdown-container');
     // Options for the observer (which mutations to observe)
-    const config = { attributes: true, childList: true, subtree: true };
+    const config = { attributes: false, childList: true, subtree: true };
 
     // Callback function to execute when mutations are observed
     const callback = function(mutationsList, observer) {
         // Use traditional 'for loops' for IE 11
         for(const mutation of mutationsList) {
             if (mutation.type === 'childList') {
-                console.log('A child node has been added or removed.');
-                console.log(mutation.target.className);
-                if (mutation.target.className == "markdown-output"){
-                  console.log("markdown-output in DOM");
-                  
-                  if ($hashSection != ""){
-                    document.getElementById($hashSection).scrollIntoView({behavior: 'smooth'});
-                    observer.disconnect();
-                  }
+                if (mutation.target.className == "markdown-output" && $hashSection != ""){
+                  jumpToHash();
+                  endMutator(observer);
                 }
-                //if (mutation.target =)
-            }
-            else if (mutation.type === 'attributes') {
-                console.log('The ' + mutation.attributeName + ' attribute was modified.');
             }
         }
     };
 
     // Create an observer instance linked to the callback function
     const observer = new MutationObserver(callback);
-
     // Start observing the target node for configured mutations
     observer.observe(targetNode, config);
+  }
+
+  function endMutator(observer){
+    console.log("disconecting observer");
+    observer.disconnect();
+  }
+
+  function jumpToHash(){
+    document.getElementById($hashSection).scrollIntoView({behavior: 'smooth'});
+  }
+
+  function highlightCode(){
+    // document.querySelectorAll('a').forEach((el) => {
+      // console.log("elements in DOM", el);
+      // hljs.highlightElement(el);
+    // });
   }
 
 </script>
@@ -244,7 +207,7 @@
 </style>
 
 <!-- <button on:click={onLoad}></button> -->
-<div id="mutator-test" class="markdown-container" in:slide>
+<div id="markdown-container" class="markdown-container" in:slide>
   {#if $links != []}
     {#await promise}
       <p>...waiting</p>

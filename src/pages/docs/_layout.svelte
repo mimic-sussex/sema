@@ -13,6 +13,10 @@
     $redirect($url($chosenDocs+$hashSection)); //jump back to the page and section that user was last on
   });
 
+  function updateHash(hash){
+    $hashSection = "#"+hash;
+  }
+
 </script>
 
 
@@ -136,6 +140,10 @@
     background-color: #333;
   }
 
+  [aria-current] {
+    background-color: #333;
+  }
+
 
 </style>
 
@@ -162,7 +170,7 @@
       {#each $subHeadingsInMenu as subs}
               <!--the url bit below should have a path tag eg /docs/default-language-->
               <a class='sub-nav-links' href={$url('#'+subs.route)} target="_self"
-              class:active={$isActive(subs.route)} in:slide> <!-- TODO should this be route?-->
+              class:active={$isActive(subs.route)} on:click={() => updateHash(subs.route)} in:slide> <!-- TODO should this be route?-->
                 {subs.heading}
               </a>
       {/each}
