@@ -37,7 +37,7 @@
 		width: 32px;
 		height: 32px;
 		/* padding-left: 0.5em; */
-		padding-top: 0.2em;
+		padding-top: 0.4em;
 		/* padding-right: 0.5em; */
 		/* padding-bottom: 0.2em; */
 	}

@@ -9,6 +9,7 @@
 
 	.container-admin {
 		height: 100%;
+
 		margin-left: auto;
 		margin-right: auto;
 		/* padding-top: 2em; */
@@ -26,7 +27,7 @@
 
 	.container-profile {
 		grid-area: profile;
-		margin-left: 1em;
+		/* margin-left: 1em; */
 		margin-right: 1em;
 	}
 

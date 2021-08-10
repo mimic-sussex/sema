@@ -1,14 +1,14 @@
 <script>
 
 	let records = [
-		{ name: "record1", updated: Date.now(), isPublic: true, },
-		{ name: "record1", updated: Date.now(), isPublic: true, },
-		{ name: "record1", updated: Date.now() },
-		{ name: "record1", updated: Date.now() },
-		{ name: "record1", updated: Date.now() },
-		{ name: "record1", updated: Date.now(), isPublic: true, },
-		{ name: "record1", updated: Date.now() },
-		{ name: "record1", updated: Date.now() },
+		{ name: "Rachmaninoff electro", updated: Date.now(), isPublic: true, },
+		{ name: "in C", updated: Date.now(), isPublic: true, },
+		{ name: "quad modulators", updated: Date.now() },
+		{ name: "piano—phase—copy", updated: Date.now() },
+		{ name: "loops", updated: Date.now() },
+		{ name: "As I awake, I fell into the abyss", updated: Date.now(), isPublic: true, },
+		{ name: "ALGORAVE", updated: Date.now() },
+		{ name: "semibreve-demos", updated: Date.now() },
 		{ name: "record1", updated: Date.now(), isPublic: true, },
 		{ name: "record1", updated: Date.now() },
 	]
@@ -20,14 +20,32 @@
 
 <style>
 
+.record-name {
+	display: inline-block;
+	/* font-style: italic; */
+	font-weight: bold;
+	font-size: 22px;
+	padding-right: 0.5em;
+	min-width: 20rem;
+	max-width: 20rem;
+}
 
+.record {
+	margin-bottom: 0.5em;
+
+
+}
 </style>
 
 <div class='container-records'>
 	<ul>
 		{#each records as record}
-			<li>
-				<a href="playground"> <p><strong>{ record.name } </strong></p></a>
+			<li class='record'>
+				<a href="playground">
+					<span class='record-name'
+								>{ record.name }
+					</span>
+				</a>
 				last updated: { getDateStringFormat(record.updated) } {( record.isPublic ? " — Public": '' )}
 			</li>
 	{/each}
