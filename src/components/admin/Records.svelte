@@ -1,5 +1,17 @@
 <script>
 
+	let records = [
+		{ name: "record1", updated: Date.now(), isPublic: true, },
+		{ name: "record1", updated: Date.now(), isPublic: true, },
+		{ name: "record1", updated: Date.now() },
+		{ name: "record1", updated: Date.now() },
+		{ name: "record1", updated: Date.now() },
+		{ name: "record1", updated: Date.now(), isPublic: true, },
+		{ name: "record1", updated: Date.now() },
+		{ name: "record1", updated: Date.now() },
+		{ name: "record1", updated: Date.now(), isPublic: true, },
+		{ name: "record1", updated: Date.now() },
+	]
 
 </script>
 
@@ -8,13 +20,14 @@
 
 </style>
 
-
 <div class='container-records'>
 	<ul>
-		<li>record 1</li>
-		<li>record 2</li>
-		<li>record 3</li>
-		<li>record 4</li>
-		<li>record 5</li>
+		{#each records as record}
+			<li>
+				<a href="playground">
+				{record.name} – {record.updated} — {( record.isPublic ? "Public": '' )}
+				</a>
+			</li>
+	{/each}
 	</ul>
 </div>

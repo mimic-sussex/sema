@@ -36,14 +36,14 @@
 	.session-avatar {
 		width: 32px;
 		height: 32px;
-		padding-left: 0.5em;
+		/* padding-left: 0.5em; */
 		padding-top: 0.2em;
-		padding-right: 0.5em;
+		/* padding-right: 0.5em; */
 		/* padding-bottom: 0.2em; */
 	}
 
   a {
-    padding: 0.5em 0em 0.35em 0em;
+    /* padding: 0.5em 0em 0.35em 0em; */
   }
 
   a:hover {

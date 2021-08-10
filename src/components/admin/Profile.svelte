@@ -117,7 +117,7 @@
     color: #ccc;
   }
 
-  .input {
+  input {
     position: relative;
     font-size: 0.875rem;
     line-height: 1.25rem;

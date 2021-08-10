@@ -103,10 +103,10 @@
   .path-dark {
     fill: white;
   }
-
+/*
   a {
     padding: 0.5em 0em 0.35em 0em;
-  }
+  } */
 
   a:hover {
     text-decoration: none;
