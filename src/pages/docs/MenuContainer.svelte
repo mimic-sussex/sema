@@ -22,7 +22,6 @@
         }
       }
       if (children[i].path == $chosenDocs){
-        console.log("child is loaded expand");
         expanded = true;
       }
     }

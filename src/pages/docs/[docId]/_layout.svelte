@@ -8,10 +8,12 @@
   import { links, chosenDocs, hashSection, subHeadingsInMenu } from '../../../stores/docs.js'
   import { slide, fly, fade} from 'svelte/transition'
 
+  import {DOMWatcher} from '../watchDOM.js'
+
   $: setLastVisitedPage($params.docId);
   $: promise = fetchMarkdown($params.docId, $links); //promise is reactive to changes in url docId and links since they load asynchrynously
   let lastLoadedDoc = "";//to keep track of the last loaded page of documentation
-
+  let domWatcher; //for storing the DOMWatcher
   let markdown;
   // sets chosenDocs in store to the current page so that its rememebered for when the user returns
   function setLastVisitedPage(){
@@ -125,63 +127,32 @@
     }
   }
 
+  function jumpToHash(){
+    if ($hashSection){
+      console.log("jumping", $hashSection);
+      let elem = document.getElementById($hashSection);
+      if (elem){
+        elem.scrollIntoView({behavior: 'smooth'});
+      }
+    }
+  }
 
   onMount( async () => {
     console.log("DEBUG:routes/docs/"+$params.docId+"/_layout:onMount");
     $hashSection = location.hash; //get the hash portion of url and stick in store to jump to once markdown is loaded.
-    setupMutator();
+    //setupMutator();
+    domWatcher = new DOMWatcher("markdown-container", "markdown-output", jumpToHash);
+    console.log(domWatcher);
+    domWatcher.start();
   });
 
-
+  onDestroy( async () => {
+    domWatcher.stop(); //make sure dom watcher is disconected.
+  });
 
   $afterPageLoad(page => {
     lastLoadedDoc = ""; //reset lastLoadedDocument
   });
-
-
-  // monitors changes in markdown-container
-  //waits till markdown is rendered as html then jumps to hash location
-  function setupMutator() {
-    // Select the node that will be observed for mutations
-    const targetNode = document.getElementById('markdown-container');
-    // Options for the observer (which mutations to observe)
-    const config = { attributes: false, childList: true, subtree: true };
-
-    // Callback function to execute when mutations are observed
-    const callback = function(mutationsList, observer) {
-        // Use traditional 'for loops' for IE 11
-        for(const mutation of mutationsList) {
-            if (mutation.type === 'childList') {
-                if (mutation.target.className == "markdown-output" && $hashSection != ""){
-                  jumpToHash();
-                  endMutator(observer);
-                }
-            }
-        }
-    };
-
-    // Create an observer instance linked to the callback function
-    const observer = new MutationObserver(callback);
-    // Start observing the target node for configured mutations
-    observer.observe(targetNode, config);
-  }
-
-  function endMutator(observer){
-    console.log("disconecting observer");
-    observer.disconnect();
-  }
-
-  function jumpToHash(){
-    document.getElementById($hashSection).scrollIntoView({behavior: 'smooth'});
-  }
-
-  function highlightCode(){
-    // document.querySelectorAll('a').forEach((el) => {
-      // console.log("elements in DOM", el);
-      // hljs.highlightElement(el);
-    // });
-  }
-
 </script>
 
 
