@@ -18,7 +18,7 @@
 
 </script>
 
-<div class="hash-collapsible">
+<div class="menu-item">
 
 
       <a class='nav-links' href={$url(path)} class:active={$isActive($url(path))} on:click={handleClick} aria-current="{ $isActive(path)? 'page' : undefined}">{headerText}</a>
@@ -49,7 +49,7 @@
 
 <style>
   
-.hash-collapsible {
+.menu-item {
   /* border-bottom: 1px solid var(--gray-light, #eee); */
 }
 

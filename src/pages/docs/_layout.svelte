@@ -3,8 +3,8 @@
   import { url, route, isActive, goto, params, redirect} from "@roxi/routify";
   import { onMount, setContext } from 'svelte';
   import marked from 'marked';
-  import CollapsibleSection from './CollapsibleSection.svelte';
-  import Tree from './Tree.svelte'
+  // import MenuContainer from './MenuContainer.svelte';
+  import MenuTree from './MenuTree.svelte'
   import { links, chosenDocs, hashSection, subHeadingsInMenu } from '../../stores/docs.js';
   import { slide, fly, fade} from 'svelte/transition'
 
@@ -155,7 +155,7 @@
   
   <ul class='sidebar-menu'>
     {#each $links as link}
-      <Tree node={link} let:node></Tree>
+      <MenuTree node={link} let:node></MenuTree>
     {/each}
   </ul>
   

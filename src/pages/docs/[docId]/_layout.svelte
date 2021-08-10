@@ -10,20 +10,13 @@
 
   $: setLastVisitedPage($params.docId);
   $: promise = fetchMarkdown($params.docId, $links); //promise is reactive to changes in url docId and links since they load asynchrynously
-  let lastLoadedDoc = "";//$chosenDocs;
-  $: setLastVisitedSection(location.hash);
-  $: console.log("hash change", location.hash);
+  let lastLoadedDoc = "";//to keep track of the last loaded page of documentation
 
   let markdown;
   // sets chosenDocs in store to the current page so that its rememebered for when the user returns
   function setLastVisitedPage(){
     $chosenDocs = './'+$params.docId;
-    //console.log("chosen docs:)", $chosenDocs);
-  }
-
-  function setLastVisitedSection(){
-    console.log("hash is changing", location.hash);
-    $hashSection = location.hash;
+    console.log("chosen docs:)", $chosenDocs);
   }
 
   //custom renderer to make headers have anchor links

@@ -1,6 +1,6 @@
 <script>
-  import CollapsibleSection from './CollapsibleSection.svelte';
-  import HashCollapse from './HashCollapse.svelte';
+  import MenuContainer from './MenuContainer.svelte';
+  import MenuItem from './MenuItem.svelte';
   import { url, isActive } from "@roxi/routify";
   export let node;
   let children = node.children;
@@ -26,7 +26,7 @@
 <slot node={node}></slot>
 
 {#if children}
-<CollapsibleSection headerText={node.title} path="undefined">
+<MenuContainer headerText={node.title} path="undefined" children={node.children}>
 <ul>
     {#each children as childNode}
     <li>
@@ -36,12 +36,12 @@
     </li>
     {/each}
 </ul>
-</CollapsibleSection>
+</MenuContainer>
 {:else}
 
-  <HashCollapse headerText={node.title} path={node.path} subs={node}>
+  <MenuItem headerText={node.title} path={node.path} subs={node}>
     
-  </HashCollapse>
+  </MenuItem>
   <!--
   <li>
     <a  class='nav-links-title' href={$url(node.path)} class:active={$isActive(node.path)}>{node.title}</a>
