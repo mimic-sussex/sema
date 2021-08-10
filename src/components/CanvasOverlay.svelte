@@ -41,9 +41,8 @@
 
   canvas {
     background-color: rgba(0, 0, 0, 0.0);
-
-   display: block;
-   visibility: hidden;
+		display: block;
+		visibility: hidden;
   }
 </style>
 

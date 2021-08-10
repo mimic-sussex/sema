@@ -1,13 +1,20 @@
 <script>
-
   import { isActive, url, params } from "@roxi/routify";
-	import { authStore } from '../auth'
+
+	import {
+		avatarSrc,
+		loggedIn,
+		user,
+		username
+	 } from '../stores/user';
+
+	import Session from '../components/navigation/Session.svelte';
+
   import { siteMode } from "../stores/common";
+  import { supabase } from '../db/client';
 
   import Controller from "../engine/controller";
   let controller = new Controller(); // this will return the previously created Singleton instance
-
-	const { user, signout } = authStore
 
 	const links = [
 		['/playground', 'playground'],
@@ -30,6 +37,25 @@
     // does an async hush
     controller.stop();
   }
+
+	user.set(supabase.auth.user())
+
+	supabase.auth.onAuthStateChange((_, session) => {
+		user.set(session.user)
+	})
+
+  async function signOut() {
+    try {
+      let { error } = await supabase.auth.signOut()
+      if (error) throw error
+    } catch (error) {
+      alert(error.message)
+    } finally {
+			$loggedIn = false
+    }
+  }
+
+
 </script>
 
 <style>
@@ -65,6 +91,11 @@
 
   }
 
+	.container-session {
+		padding-right: 1em;
+	}
+
+
   .path-light {
     fill: black;
   }
@@ -72,14 +103,15 @@
   .path-dark {
     fill: white;
   }
-
+/*
   a {
     padding: 0.5em 0em 0.35em 0em;
-  }
+  } */
 
   a:hover {
     text-decoration: none;
   }
+
 
 </style>
 
@@ -542,22 +574,7 @@
 		{/each}
 	</div>
 
-	<div>
-		{#if $user}
-			<a href="/admin"
-        style='color: {$siteMode === 'dark'? 'white': 'black'};'
-      >
-      admin</a>
-			<img src={$user.picture} alt="profile - {$user.nickname}" />
-			<a href="#signout" on:click={signout}
-        style='color: {$siteMode === 'dark'? 'white': 'black'};'
-        >
-        signout</a>
-		{:else}
-			<a href="/login"
-        style='color: {$siteMode === 'dark'? 'white': 'black'};'
-        >
-        login</a>
-		{/if}
+	<div class='container-session'>
+		<Session />
 	</div>
 </nav>
