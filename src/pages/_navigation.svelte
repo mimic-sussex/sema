@@ -8,6 +8,8 @@
 		username
 	 } from '../stores/user';
 
+	import Session from '../components/navigation/Session.svelte';
+
   import { siteMode } from "../stores/common";
   import { supabase } from '../db/client';
 
@@ -93,35 +95,10 @@
 		padding-right: 1em;
 	}
 
-	.flexbox-session {
-		display: flex;
-		flex-direction: row;
-		flex-wrap:  wrap;
-		align-content: flex-start;
-		justify-content: flex-end;
-	}
 
-	.container-session-avatar {
-
-	}
-
-	.session-avatar {
-		width: 32px;
-		height: 32px;
-		padding-left: 0.5em;
-		padding-top: 0.2em;
-		padding-right: 0.5em;
-		/* padding-bottom: 0.2em; */
-
-	}
   .path-light {
     fill: black;
   }
-
-	.container {
-		margin-left: 1em;
-	}
-
 
   .path-dark {
     fill: white;
@@ -598,34 +575,6 @@
 	</div>
 
 	<div class='container-session'>
-		<div class='flexbox-session'>
-			{#if $user}
-				{#if $username }
-					<a href="/admin"
-						style='color: {$siteMode === 'dark'? 'white': 'black'};'
-						>
-					{ $username }</a>
-					<div class='container-session-avatar'>
-						<img 	class='session-avatar'
-									src={ $avatarSrc }
-									alt="{ $username }" />
-					</div>
-				{:else}
-					<a href="/admin"
-						style='color: {$siteMode === 'dark'? 'white': 'black'};'
-						>
-					admin</a>
-				{/if}
-				<a href="#signout" on:click={ signOut }
-					style='color: {$siteMode === 'dark'? 'white': 'black'};'
-					>
-				signout</a>
-			{:else}
-				<a href="/login"
-					style='color: {$siteMode === 'dark'? 'white': 'black'};'
-					>
-					login</a>
-			{/if}
-		</div>
+		<Session />
 	</div>
 </nav>

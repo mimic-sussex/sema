@@ -8,7 +8,8 @@
 		loggedIn,
 		loading
 	} from '../../stores/user'
-  import Avatar from './Avatar.svelte'
+
+  import Avatar from '../login/Avatar.svelte'
 
   // let loading = true
   // let username = null

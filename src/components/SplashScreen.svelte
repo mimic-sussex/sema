@@ -70,7 +70,7 @@
   }
 </style>
 
-<div class="overlay" style='visibility:{$audioEngineStatus}'>
+<div class="overlay" style='visibility:{ $audioEngineStatus }'>
   <button class="button-start-audio" on:click={handleClick}>
     <div class="logo-container">
       <img {src} class="sema-logo" alt="sema logo">

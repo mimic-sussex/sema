@@ -11,7 +11,7 @@
 		loading
 	} from '../../stores/user'
 
-	import Profile from "../../components/login/Profile.svelte"
+	// import Profile fro../../components/admin/Profile.sveltelte"
 
 	import Login from '../login/index.svelte'
 	// const { user, authenticated, loading } = authStore
@@ -33,8 +33,5 @@
 		<div class="center-all">
 			<h1>Loading...</h1>
 		</div>
-	{:else}
-		<!-- <Login /> -->
-		<!-- <Profile/> -->
 	{/if}
 </div>

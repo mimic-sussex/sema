@@ -3,7 +3,7 @@
 	import { supabase } from "../../db/client"
 	// import Auth from "../../components/login/Auth.svelte"
 	import Auth from 'supabase-ui-svelte'
-	import Profile from "../../components/login/Profile.svelte"
+	// import Profile from "../../components/admin/Profile.svelte"
 
 	// user.set(supabase.auth.user())
 
