@@ -23,8 +23,8 @@
 .record-name {
 	display: inline-block;
 	/* font-style: italic; */
-	font-weight: bold;
-	font-size: 22px;
+	/* font-weight: bold; */
+	font-size: 18px;
 	padding-right: 0.5em;
 	min-width: 20rem;
 	max-width: 20rem;

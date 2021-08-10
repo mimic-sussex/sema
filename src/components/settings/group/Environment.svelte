@@ -12,6 +12,8 @@
     onDestroy
   } from 'svelte';
 
+	import { supabase } from  "../../../db/client";
+
   import { Engine } from 'sema-engine';
 
   let engine,
@@ -67,7 +69,7 @@
     $isDeleteOverlayVisible = true;
   }
 
-  function storeEnvironment(){
+  async function storeEnvironment(){
 
     $isUploadOverlayVisible = false;
     $isSaveOverlayVisible = true;
@@ -76,6 +78,12 @@
     // Key – playground-2020-03-02T15:48:31.080Z,
     // Value: [{"2":{"fixed":false,"resizable":true,"draggable":true,"min":{"w":1,"h":1},"max":{}, ...]
 
+		const name = "x";
+		const newPlayground = await supabase
+														.from('playgrounds')
+														.insert({ name, content: $items })
+
+		console.log('store–env')
 
     loadEnvironmentSnapshotEntries();
   }
