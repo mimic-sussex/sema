@@ -6,6 +6,8 @@
 		username
 	 } from '../../stores/user';
 
+	import { redirect } from '@roxi/routify'
+
   import { siteMode } from "../../stores/common";
   import { supabase } from '../../db/client';
 
@@ -17,6 +19,8 @@
       alert(error.message)
     } finally {
 			$loggedIn = false
+			$redirect('/login')
+			$user = null;
     }
   }
 
