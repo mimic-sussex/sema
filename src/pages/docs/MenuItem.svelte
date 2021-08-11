@@ -83,7 +83,9 @@ a.button {
 
 
 [aria-current] {
-  background-color: #333;
+  background-color: #404040;
+  font-weight: bold;
+  /* transition-delay:0.1s; */
 }
 
 </style>

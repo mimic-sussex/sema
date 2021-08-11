@@ -10,7 +10,7 @@
 
   // import Highlight from "svelte-highlight";
   // import typescript from "svelte-highlight/src/languages/typescript";
-  import github from "svelte-highlight/src/styles/github";
+  import atomOneDark from "svelte-highlight/src/styles/atom-one-dark";
 
 
   export let id;
@@ -133,7 +133,7 @@
 
 
 <svelte:head>
-    {@html github}
+    {@html atomOneDark}
 </svelte:head>
 
 <div class='container-dsp-code-output scrollable'>

@@ -3,7 +3,11 @@
   import { tick, onMount, onDestroy} from 'svelte';
   import { url, params, ready, isActive, route, afterPageLoad, beforeUrlChange, goto} from "@roxi/routify";
   import marked from 'marked';
-  import hljs from 'highlight.js';
+
+  import hljs from 'highlight.js/lib/core';
+  import javascript from 'highlight.js/lib/languages/javascript';
+  hljs.registerLanguage('javascript', javascript);
+  import github from "svelte-highlight/src/styles/atom-one-dark";
 
   import { links, chosenDocs, hashSection, subHeadingsInMenu } from '../../../stores/docs.js'
   import { slide, fly, fade} from 'svelte/transition'
@@ -18,7 +22,7 @@
   // sets chosenDocs in store to the current page so that its rememebered for when the user returns
   function setLastVisitedPage(){
     $chosenDocs = './'+$params.docId;
-    console.log("chosen docs:)", $chosenDocs);
+    //console.log("chosen docs:)", $chosenDocs);
   }
 
   //custom renderer to make headers have anchor links
@@ -48,10 +52,18 @@
 
 
   marked.use({ renderer });
-
+  marked.setOptions({
+    highlight: function(code, lang){
+      //const language = hljs.getLanguage('javascript') ? lang : 'plaintext';
+      //console.log(hljs.listLanguages());
+      //console.log(language);
+      //return hljs.highlight(code, {language:"javascript", ignoreIllegals:true}).value;
+      return hljs.highlightAuto(code).value;
+    }
+  });
 
   let fetchMarkdown = async (docId, links) => {
-    if (docId == lastLoadedDoc){
+    if (docId == lastLoadedDoc){ //prevent the markdown being fetched again when someone clicks an anchor
       return;
     }
     lastLoadedDoc = docId;
@@ -75,7 +87,7 @@
             "<pre><code>",
             `<pre style="margin-top:-25px">
               <button style="font-size:70%; text-align: center; float: right; z-index: 1000; top: 30px; position: relative;" type="button" onclick="copyCode('code${codeID}')">copy</button>
-              <code style="-moz-user-select: text; -html-user-select: text; -webkit-user-select: text; -ms-user-select: text; user-select: text; white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word;" id='code${codeID++}'>`
+              <code style="-moz-user-select: text; -html-user-select: text; -webkit-user-select: text; -ms-user-select: text; user-select: text; white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word;" id='code${codeID++}; class="hljs javascript"'>`
             );
         };
         
@@ -127,9 +139,14 @@
     }
   }
 
+  function onMarkdownInDOM(){
+    jumpToHash();
+    //highlightCode();
+  }
+
   function jumpToHash(){
     if ($hashSection){
-      console.log("jumping", $hashSection);
+      //console.log("jumping", $hashSection);
       let elem = document.getElementById($hashSection);
       if (elem){
         elem.scrollIntoView({behavior: 'smooth'});
@@ -137,12 +154,16 @@
     }
   }
 
+  function highlightCode(){
+    console.log("highlighting code!");
+    hljs.highlightAll();
+  }
+
   onMount( async () => {
     console.log("DEBUG:routes/docs/"+$params.docId+"/_layout:onMount");
     $hashSection = location.hash; //get the hash portion of url and stick in store to jump to once markdown is loaded.
     //setupMutator();
-    domWatcher = new DOMWatcher("markdown-container", "markdown-output", jumpToHash);
-    console.log(domWatcher);
+    domWatcher = new DOMWatcher("markdown-container", "markdown-output", onMarkdownInDOM);
     domWatcher.start();
   });
 
@@ -166,15 +187,18 @@
     /* scrollbar-color: #6969dd #e0e0e0; these scroll bar options work for firefox not for chrome TODO */
     /* scrollbar-width: thin; */
   }
-  
 
 </style>
+
+<svelte:head>
+    {@html github}
+</svelte:head>
 
 <!-- <button on:click={onLoad}></button> -->
 <div id="markdown-container" class="markdown-container" in:slide>
   {#if $links != []}
     {#await promise}
-      <p>...waiting</p>
+      <p>...</p>
     {:then number}
       <div class="markdown-output">{@html markdown}</div>
     {:catch error}

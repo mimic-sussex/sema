@@ -138,6 +138,7 @@
 
   .sub-nav-links:hover {
     background-color: #333;
+    /* transition-delay:1s; */
   }
 
   [aria-current] {
