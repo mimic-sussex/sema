@@ -1,12 +1,36 @@
 
 <script>
   import { url, isActive } from "@roxi/routify";
-
+  import { chosenDocs } from '../../stores/docs.js';;
+  import { onMount } from 'svelte';
   //based on https://svelte.dev/repl/a5f4d395b15a44d48a6b2239ef705fc4?version=3.35.0  
   export let headerText;
   export let path;
+  export let children;
+  export let expanded = false;
 
-  let expanded = false
+  //check if child is the loaded page, if so expand the container.
+  function checkIfChildLoaded () {
+    for (let i =0; i< children.length; i++){
+      if (children[i].children){
+        let grandChildren = children[i].children;
+        for (let j =0; j< grandChildren.length; j++){
+          
+          if (grandChildren[j].path == $chosenDocs){
+            expanded = true;
+          }
+        }
+      }
+      if (children[i].path == $chosenDocs){
+        expanded = true;
+      }
+    }
+  }
+
+  onMount( async () => {
+    checkIfChildLoaded();
+  });
+
 </script>
 
 <div class="collapsible">
@@ -90,5 +114,7 @@ svg {
   justify-content: flex-start;
   color: #f5f6f7;
 }
+
+
 
 </style>

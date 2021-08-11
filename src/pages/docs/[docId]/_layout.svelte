@@ -8,48 +8,18 @@
   import { links, chosenDocs, hashSection, subHeadingsInMenu } from '../../../stores/docs.js'
   import { slide, fly, fade} from 'svelte/transition'
 
+  import {DOMWatcher} from '../watchDOM.js'
+
   $: setLastVisitedPage($params.docId);
   $: promise = fetchMarkdown($params.docId, $links); //promise is reactive to changes in url docId and links since they load asynchrynously
-  let lastLoadedDoc = "";//$chosenDocs;
-  /*
-  $: promise.then(value => {
-      jumpToHash();
-    }, reason => {
-      console.log("no hash sad");
-    }).catch(e => {
-      console.log(e);
-    });
-  */
-
-    ;
-  //$: jumpToHash(promise);
-
-  function jumpToHash(){
-    let regex = /(?<=\#).*/g;
-    let section = window.location.href.match(regex);
-
-    window.onload = (event) => {
-      //console.log("window LOADED");
-      document.getElementById(location.hash).scrollIntoView({behavior: 'auto'});
-    }
-
-    //console.log(document.getElementById(window.location.hash));
-    //if (window.location.hash != null){
-    //  document.getElementById(window.location.hash).scrollIntoView({behavior: 'auto'});
-    //}
-  }
-
-
-
+  let lastLoadedDoc = "";//to keep track of the last loaded page of documentation
+  let domWatcher; //for storing the DOMWatcher
   let markdown;
   // sets chosenDocs in store to the current page so that its rememebered for when the user returns
   function setLastVisitedPage(){
     $chosenDocs = './'+$params.docId;
-    //console.log("chosen docs:)", $chosenDocs);
+    console.log("chosen docs:)", $chosenDocs);
   }
-
-  //const links = getContext('links');
-  //console.log("links inner", $links);
 
   //custom renderer to make headers have anchor links
   const renderer = {
@@ -77,42 +47,10 @@
   };
 
 
-  /*
-  marked.setOptions({
-    highlight: function (code, lang, _callback) {
-      if (hljs.getLanguage(lang)) {
-        return hljs.highlight(lang, code).value
-      } else {
-        return hljs.highlightAuto(code).value
-      }
-    },
-  })
-  */
-
   marked.use({ renderer });
 
-  /*
-  marked.setOptions({
-    renderer: renderer,
-    highlight: function(code, lang) {
-      const hljs = hljs;
-      const language = hljs.getLanguage(lang) ? lang : 'plaintext';
-      return hljs.highlight(code, { language }).value;
-    },
-    pedantic: false,
-    gfm: true,
-    breaks: false,
-    sanitize: false,
-    smartLists: true,
-    smartypants: false,
-    xhtml: false
-  });
-  */
 
   let fetchMarkdown = async (docId, links) => {
-    // console.log("HERE last loaded doc", lastLoadedDoc);
-    // console.log("HERE docId", docId);
-    //console.log("hash on fetching markdown", location.hash, $hashSection, links);
     if (docId == lastLoadedDoc){
       return;
     }
@@ -142,6 +80,7 @@
         };
         
         //get and set subheadings based on the markdown file.
+        //for section navigation on the right of screen.
         let currentHeadings = []
         let tokens = marked.lexer(text);
             //loop through them
@@ -151,8 +90,7 @@
                 currentHeadings.push({heading: heading , route: heading.replace(/\s+/g, '-').toLowerCase(), active:false})
               }
             }
-        $subHeadingsInMenu = currentHeadings;
-
+        $subHeadingsInMenu = currentHeadings; //populate store
       }
 
       } else {
@@ -162,8 +100,7 @@
   }
 
   function findFileName(path, links){
-    console.log("finding file name for", path, links);
-
+    //console.log("finding file name for", path, links);
     if (links != undefined){
       for (let i = 0; i < links.length; i++) {
         if (links[i]['container'] == true){
@@ -190,38 +127,32 @@
     }
   }
 
+  function jumpToHash(){
+    if ($hashSection){
+      console.log("jumping", $hashSection);
+      let elem = document.getElementById($hashSection);
+      if (elem){
+        elem.scrollIntoView({behavior: 'smooth'});
+      }
+    }
+  }
 
   onMount( async () => {
-    //promise = fetchMarkdown(doc);
     console.log("DEBUG:routes/docs/"+$params.docId+"/_layout:onMount");
-    // console.log(location.hash);
-    $hashSection = location.hash;
-    //console.log("get element by id", document.getElementById(location.hash))
-    //document.getElementById($hashSection).scrollIntoView({behavior: 'auto'});
-    // document.querySelectorAll('a').forEach((el) => {
-      // console.log("elements in DOM", el);
-      // hljs.highlightElement(el);
-    // });
+    $hashSection = location.hash; //get the hash portion of url and stick in store to jump to once markdown is loaded.
+    //setupMutator();
+    domWatcher = new DOMWatcher("markdown-container", "markdown-output", jumpToHash);
+    console.log(domWatcher);
+    domWatcher.start();
   });
 
+  onDestroy( async () => {
+    domWatcher.stop(); //make sure dom watcher is disconected.
+  });
 
   $afterPageLoad(page => {
-    //console.log('loaded ' + page.title)
-    console.log(window.location.href);
     lastLoadedDoc = ""; //reset lastLoadedDocument
-    // console.log("hash log on page load", $hashSection);
-    
-    // $goto($hashSection);
-    
-    /*
-    console.log("HERE location.hash before if", location.hash);
-    if (location.hash != null || location.hash == ""){
-      console.log("HERE location.hash on page load", location.hash);
-      document.getElementById(location.hash).scrollIntoView({behavior: 'auto'});
-    }
-    */
-  })
-
+  });
 </script>
 
 
@@ -239,7 +170,8 @@
 
 </style>
 
-<div class="markdown-container" in:slide>
+<!-- <button on:click={onLoad}></button> -->
+<div id="markdown-container" class="markdown-container" in:slide>
   {#if $links != []}
     {#await promise}
       <p>...waiting</p>

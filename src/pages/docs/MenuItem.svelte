@@ -1,7 +1,7 @@
 
 <script>
   import { url, isActive } from "@roxi/routify";
-  import { subHeadingsInMenu } from '../../stores/docs.js';
+  import { subHeadingsInMenu, hashSection } from '../../stores/docs.js';
   //based on https://svelte.dev/repl/a5f4d395b15a44d48a6b2239ef705fc4?version=3.35.0  
   export let headerText;
   export let path;
@@ -12,13 +12,13 @@
   function handleClick(){
     //expanded = !expanded;
     //$subHeadingsInMenu = subs.subs;
-    console.log("path on click", path, $isActive($url(path)), $url(path), $url())
-    console.log("handleclick for hash collapse being called", subs);
+    //console.log("path on click", path, $isActive($url(path)), $url(path), $url())
+    //console.log("handleclick for hash collapse being called", subs);
   }
 
 </script>
 
-<div class="hash-collapsible">
+<div class="menu-item">
 
 
       <a class='nav-links' href={$url(path)} class:active={$isActive($url(path))} on:click={handleClick} aria-current="{ $isActive(path)? 'page' : undefined}">{headerText}</a>
@@ -49,7 +49,7 @@
 
 <style>
   
-.hash-collapsible {
+.menu-item {
   /* border-bottom: 1px solid var(--gray-light, #eee); */
 }
 
