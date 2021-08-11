@@ -194,8 +194,13 @@
     <ul class="sub-headings-menu">
       {#each $subHeadingsInMenu as subs}
               <!--the url bit below should have a path tag eg /docs/default-language-->
-              <a class='sub-nav-links' href={$url('#'+subs.route)} target="_self"
-              class:active={$isActive(subs.route)} on:click={() => updateHash(subs.route)} in:slide> <!-- TODO should this be route?-->
+              <a class='sub-nav-links' 
+              href={$url('#'+subs.route)} 
+              target="_self"
+              class:active={$isActive(subs.route)}
+              aria-current={ '#'+subs.route==$hashSection ? true : undefined} 
+              on:click={() => updateHash(subs.route)} 
+              in:slide> <!-- TODO should this be route?-->
                 {subs.heading}
               </a>
       {/each}

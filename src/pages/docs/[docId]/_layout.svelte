@@ -15,7 +15,7 @@
   import {DOMWatcher} from '../watchDOM.js'
 
 
-  let headings;
+  let headings; // to store all the heading elements from the page. (for scroll functionality)
 
 
   $: setLastVisitedPage($params.docId);
@@ -146,23 +146,7 @@
   function onMarkdownInDOM(){
     jumpToHash();
     headings = document.querySelectorAll('h1 a[name]');
-    //scrollTracker();
     //highlightCode();
-  }
-
-  function scrollTracker(){
-    const headings = document.querySelectorAll('h1 a[name]');
-    console.log("headings", headings);
-    document.addEventListener('scroll', (e) => {
-      console.log("scrolling");
-      headings.forEach(ha => {
-        const rect = ha.getBoundingClientRect();
-        if(rect.top > 0 && rect.top < 150) {
-          const location = window.location.toString().split('#')[0];
-          history.replaceState(null, null, location + '#' + ha.name);
-        }
-      });
-    });
   }
 
   function jumpToHash(){
@@ -189,16 +173,13 @@
   });
 
   function scrollHandler (){
-    
-    //$subHeadingsInMenu
-    //console.log(headings);
+    // use? $subHeadingsInMenu instead of grabbing headings
     headings.forEach(ha => {
       const rect = ha.getBoundingClientRect();
-      // if (ha.name =="audio-outputs"){
-        //console.log(ha.name, rect.top)
-      // }
       if(rect.top > 0 && rect.top < 150) {
-        console.log("scrolled passed", ha.name);
+        //console.log("scrolled passed", ha.name);
+        //console.log($hashSection);
+        $hashSection = '#'+ha.name;
         //const location = window.location.toString().split('#')[0];
        // history.replaceState(null, null, location + '#' + ha.name);
       }
