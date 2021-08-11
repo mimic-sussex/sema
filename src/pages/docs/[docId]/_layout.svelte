@@ -14,6 +14,10 @@
 
   import {DOMWatcher} from '../watchDOM.js'
 
+
+  let headings;
+
+
   $: setLastVisitedPage($params.docId);
   $: promise = fetchMarkdown($params.docId, $links); //promise is reactive to changes in url docId and links since they load asynchrynously
   let lastLoadedDoc = "";//to keep track of the last loaded page of documentation
@@ -141,7 +145,24 @@
 
   function onMarkdownInDOM(){
     jumpToHash();
+    headings = document.querySelectorAll('h1 a[name]');
+    //scrollTracker();
     //highlightCode();
+  }
+
+  function scrollTracker(){
+    const headings = document.querySelectorAll('h1 a[name]');
+    console.log("headings", headings);
+    document.addEventListener('scroll', (e) => {
+      console.log("scrolling");
+      headings.forEach(ha => {
+        const rect = ha.getBoundingClientRect();
+        if(rect.top > 0 && rect.top < 150) {
+          const location = window.location.toString().split('#')[0];
+          history.replaceState(null, null, location + '#' + ha.name);
+        }
+      });
+    });
   }
 
   function jumpToHash(){
@@ -149,7 +170,7 @@
       //console.log("jumping", $hashSection);
       let elem = document.getElementById($hashSection);
       if (elem){
-        elem.scrollIntoView({behavior: 'smooth'});
+        elem.scrollIntoView({behavior: 'auto'});
       }
     }
   }
@@ -166,6 +187,23 @@
     domWatcher = new DOMWatcher("markdown-container", "markdown-output", onMarkdownInDOM);
     domWatcher.start();
   });
+
+  function scrollHandler (){
+    
+    //$subHeadingsInMenu
+    //console.log(headings);
+    headings.forEach(ha => {
+      const rect = ha.getBoundingClientRect();
+      // if (ha.name =="audio-outputs"){
+        //console.log(ha.name, rect.top)
+      // }
+      if(rect.top > 0 && rect.top < 150) {
+        console.log("scrolled passed", ha.name);
+        //const location = window.location.toString().split('#')[0];
+       // history.replaceState(null, null, location + '#' + ha.name);
+      }
+    });
+  }
 
   onDestroy( async () => {
     domWatcher.stop(); //make sure dom watcher is disconected.
@@ -195,7 +233,7 @@
 </svelte:head>
 
 <!-- <button on:click={onLoad}></button> -->
-<div id="markdown-container" class="markdown-container" in:slide>
+<div id="markdown-container" class="markdown-container" in:slide on:scroll={scrollHandler}>
   {#if $links != []}
     {#await promise}
       <p>...</p>
