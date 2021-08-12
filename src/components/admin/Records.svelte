@@ -1,16 +1,25 @@
 <script>
 
+
+  import {
+    isSaveOverlayVisible,
+    loadEnvironmentSnapshotEntries,
+		items,
+		name,
+		uuid
+  } from "../../stores/playground.js"
+
 	let records = [
-		{ name: "Rachmaninoff electro", updated: Date.now(), isPublic: true, },
-		{ name: "in C", updated: Date.now(), isPublic: true, },
-		{ name: "quad modulators", updated: Date.now() },
-		{ name: "piano—phase—copy", updated: Date.now() },
-		{ name: "loops", updated: Date.now() },
-		{ name: "As I awake, I fell into the abyss", updated: Date.now(), isPublic: true, },
-		{ name: "ALGORAVE", updated: Date.now() },
-		{ name: "semibreve-demos", updated: Date.now() },
-		{ name: "record1", updated: Date.now(), isPublic: true, },
-		{ name: "record1", updated: Date.now() },
+		{ uuid: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', name: "Rachmaninoff electro", updated: Date.now(), isPublic: true, },
+		{ uuid: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12', name: "in C", updated: Date.now(), isPublic: true, },
+		{ uuid: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a13', name: "quad modulators", updated: Date.now() },
+		{ uuid: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a14', name: "piano—phase—copy", updated: Date.now() },
+		{ uuid: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a15', name: "loops", updated: Date.now() },
+		{ uuid: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a16', name: "As I awake, I fell into the abyss", updated: Date.now(), isPublic: true, },
+		{ uuid: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a17', name: "ALGORAVE", updated: Date.now() },
+		{ uuid: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a18', name: "semibreve-demos", updated: Date.now() },
+		{ uuid: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a19', name: "record1", updated: Date.now(), isPublic: true, },
+		{ uuid: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a10', name: "record1", updated: Date.now() },
 	]
 
 	const getDateStringFormat = d => (new Date(d)).toISOString().slice(0, 19).replace(/-/g, "/").replace("T", " ");
@@ -41,7 +50,9 @@
 	<ul>
 		{#each records as record}
 			<li class='record'>
-				<a href="playground">
+				<a href="playground/{record.uuid}"
+						on:click="{ () => $name = record.name }"
+						>
 					<span class='record-name'
 								>{ record.name }
 					</span>

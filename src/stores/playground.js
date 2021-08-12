@@ -46,6 +46,8 @@ import new_learner_template               from '../../assets/learners/new/new.tf
 // import music_rnn_example                  from "../machineLearning/magenta/music-rnn.tf";
 
 
+export const name = writable("");
+export const uuid = writable("");
 
 export const isUploadOverlayVisible = writable(false);
 export const isSaveOverlayVisible = writable(false)

@@ -58,6 +58,7 @@
 
   import * as doNotZip from 'do-not-zip';
 	import downloadBlob from '../../../utils/downloadBlob.js';
+// import { link } from 'fs';
 
   let handleClick = () => {
     window.localStorage["tutorial-" + new Date(Date.now()).toISOString()] = JSON.stringify($items)
@@ -78,12 +79,24 @@
     // Key – playground-2020-03-02T15:48:31.080Z,
     // Value: [{"2":{"fixed":false,"resizable":true,"draggable":true,"min":{"w":1,"h":1},"max":{}, ...]
 
-		const name = "x";
+		const name = "x1234",
+					isPublic = true,
+					created = Date.now(),
+					updated = Date.now()
+					;
+
 		const newPlayground = await supabase
 														.from('playgrounds')
-														.insert({ name, content: $items })
+														.insert({ name,
+																			content: $items,
+																			created,
+																			updated,
+																			isPublic
+																			})
 
 		console.log('store–env')
+
+		console.log(newPlayground)
 
     loadEnvironmentSnapshotEntries();
   }
