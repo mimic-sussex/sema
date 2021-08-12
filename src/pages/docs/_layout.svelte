@@ -4,11 +4,12 @@
   import { onMount, setContext } from 'svelte';
   import marked from 'marked';
   // import MenuContainer from './MenuContainer.svelte';
-  import MenuTree from './MenuTree.svelte'
+  import MenuTree from './MenuTree.svelte';
+  import Search from './Search.svelte';
   import { links, chosenDocs, hashSection, subHeadingsInMenu } from '../../stores/docs.js';
   import { slide, fly, fade} from 'svelte/transition';
   
-  //import docsearch from '@docsearch/js';
+  // import docsearch from '@docsearch/js';
 
   //import docsearch from 'docsearch.js'
   // import docsearch from '../../../node_modules/docsearch/js';
@@ -25,12 +26,11 @@
 
   /*
   docsearch({
-    container: '#docsearch',
+    inputSelector: '#search',
     indexName: 'docsearch',
     apiKey: '25626fae796133dc1e734c6bcaaeac3c',
   });
   */
-  
   
 
 </script>
@@ -162,10 +162,6 @@
     background-color: #333;
   }
 
-  .docsearch {
-    height: 10%;
-  }
-
 </style>
 
 <svelte:head>
@@ -176,10 +172,8 @@
 
 <div class='container-docs' data-routify="scroll-lock">
   
-  <!-- <input type=text class='docsearch'> -->
-
   <ul class='sidebar-menu'>
-    
+    <Search></Search>
     {#each $links as link}
       <MenuTree node={link} let:node></MenuTree>
     {/each}

@@ -14,10 +14,6 @@
 
   import {DOMWatcher} from '../watchDOM.js'
 
-
-  let headings; // to store all the heading elements from the page. (for scroll functionality)
-
-
   $: setLastVisitedPage($params.docId);
   $: promise = fetchMarkdown($params.docId, $links); //promise is reactive to changes in url docId and links since they load asynchrynously
   let lastLoadedDoc = "";//to keep track of the last loaded page of documentation
@@ -173,24 +169,6 @@
     domWatcher.start();
   });
 
-  function scrollHandlerOld (){
-    console.log("scroll handler", headings);
-    // use? $subHeadingsInMenu instead of grabbing headings
-    if (headings){
-      console.log("headings exist");
-      headings.forEach(ha => {
-        const rect = ha.getBoundingClientRect();
-        if(rect.top > 0 && rect.top < 150) {
-          console.log("scrolled passed", ha.name, "hash Section", $hashSection);
-          //console.log($hashSection);
-          $hashSection = '#'+ha.name;
-          //const location = window.location.toString().split('#')[0];
-        // history.replaceState(null, null, location + '#' + ha.name);
-        }
-      });
-    }
-  }
-
   function scrollHandler(){
     if ($subHeadingsInMenu){
       $subHeadingsInMenu.forEach(ha => {
@@ -202,6 +180,8 @@
             //console.log("scrolled passed", ha.name, "hash Section", $hashSection);
             //console.log($hashSection);
             $hashSection = elem.id;
+            //const location = window.location.toString().split('#')[0];
+            // history.replaceState(null, null, location + '#' + ha.name);
           }
         }
       });
