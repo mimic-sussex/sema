@@ -107,7 +107,6 @@
               }
             }
         $subHeadingsInMenu = currentHeadings; //populate store
-        console.log("currentHeadings", currentHeadings);
       }
 
       } else {
@@ -197,11 +196,13 @@
       $subHeadingsInMenu.forEach(ha => {
         let elem = document.getElementById("#"+ha.route)
         //if (elem.id == )
-        const rect = elem.getBoundingClientRect();
-        if(rect.top > 0 && rect.top < 150) {
-          //console.log("scrolled passed", ha.name, "hash Section", $hashSection);
-          //console.log($hashSection);
-          $hashSection = elem.id;
+        if (elem){
+          const rect = elem.getBoundingClientRect();
+          if(rect.top > 0 && rect.top < 150) {
+            //console.log("scrolled passed", ha.name, "hash Section", $hashSection);
+            //console.log($hashSection);
+            $hashSection = elem.id;
+          }
         }
       });
     }
