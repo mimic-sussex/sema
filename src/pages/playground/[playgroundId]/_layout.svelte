@@ -23,7 +23,6 @@
 <div>
 	{ $params.playgroundId }
   { $name }
-	{ "asdfasdf" }
 	<!-- { params }
 	{ url }
 	{ url }

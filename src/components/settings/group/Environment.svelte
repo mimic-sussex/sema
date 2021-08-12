@@ -81,8 +81,8 @@
 
 		const name = "x1234",
 					isPublic = true,
-					created = Date.now(),
-					updated = Date.now()
+					created = new Date().toISOString(),
+					updated = created
 					;
 
 		const newPlayground = await supabase
