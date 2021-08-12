@@ -16,6 +16,7 @@
   onMount( async () => {
     console.log("DEBUG:routes/docs/_layout:onMount");
     $redirect($url($chosenDocs+$hashSection)); //jump back to the page and section that user was last on
+    console.log("hash section on mount",$hashSection);
   });
 
   function updateHash(hash){

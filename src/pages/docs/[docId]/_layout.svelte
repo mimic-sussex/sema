@@ -107,6 +107,7 @@
               }
             }
         $subHeadingsInMenu = currentHeadings; //populate store
+        console.log("currentHeadings", currentHeadings);
       }
 
       } else {
@@ -143,9 +144,10 @@
     }
   }
 
+  //gets called when markdown-output exists
   function onMarkdownInDOM(){
     jumpToHash();
-    headings = document.querySelectorAll('h1 a[name]');
+    //headings = document.querySelectorAll('h1 a[name]');
     //highlightCode();
   }
 
@@ -160,7 +162,7 @@
   }
 
   function highlightCode(){
-    console.log("highlighting code!");
+    //console.log("highlighting code!");
     hljs.highlightAll();
   }
 
@@ -172,18 +174,37 @@
     domWatcher.start();
   });
 
-  function scrollHandler (){
+  function scrollHandlerOld (){
+    console.log("scroll handler", headings);
     // use? $subHeadingsInMenu instead of grabbing headings
-    headings.forEach(ha => {
-      const rect = ha.getBoundingClientRect();
-      if(rect.top > 0 && rect.top < 150) {
-        //console.log("scrolled passed", ha.name);
-        //console.log($hashSection);
-        $hashSection = '#'+ha.name;
-        //const location = window.location.toString().split('#')[0];
-       // history.replaceState(null, null, location + '#' + ha.name);
-      }
-    });
+    if (headings){
+      console.log("headings exist");
+      headings.forEach(ha => {
+        const rect = ha.getBoundingClientRect();
+        if(rect.top > 0 && rect.top < 150) {
+          console.log("scrolled passed", ha.name, "hash Section", $hashSection);
+          //console.log($hashSection);
+          $hashSection = '#'+ha.name;
+          //const location = window.location.toString().split('#')[0];
+        // history.replaceState(null, null, location + '#' + ha.name);
+        }
+      });
+    }
+  }
+
+  function scrollHandler(){
+    if ($subHeadingsInMenu){
+      $subHeadingsInMenu.forEach(ha => {
+        let elem = document.getElementById("#"+ha.route)
+        //if (elem.id == )
+        const rect = elem.getBoundingClientRect();
+        if(rect.top > 0 && rect.top < 150) {
+          //console.log("scrolled passed", ha.name, "hash Section", $hashSection);
+          //console.log($hashSection);
+          $hashSection = elem.id;
+        }
+      });
+    }
   }
 
   onDestroy( async () => {
