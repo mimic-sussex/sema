@@ -32,6 +32,24 @@
     .docsearch {
     display: flex;
     flex-direction: column;
+    padding: 0.5em 0.5em;
+    border: 5px;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  :global(.algolia-autocomplete) {
+    display: block !important; /* DocSearch adds inline styles, !important helps us take control */
+  }
+  :global(div
+      .algolia-autocomplete.algolia-autocomplete-left
+      .ds-dropdown-menu),
+  :global(div
+      .algolia-autocomplete.algolia-autocomplete-right
+      .ds-dropdown-menu) {
+    left: 0 !important; /* DocSearch adds inline styles, !important helps us take control */
+    min-width: unset;
+    max-width: unset;
   }
 </style>
 
