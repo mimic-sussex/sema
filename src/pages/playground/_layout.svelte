@@ -20,6 +20,11 @@
   import Settings from '../../components/settings/Settings.svelte';
   // import Dashboard from '../components/layouts/Dashboard.svelte';
 
+	import {
+		supabase,
+		updatePlayground
+	} from '../../db/client';
+
 
   import Grid from "svelte-grid";
   import gridHelp from "svelte-grid/build/helper";
@@ -41,7 +46,9 @@
     isUploadOverlayVisible,
     isDeleteOverlayVisible,
     isSaveOverlayVisible,
-    items
+		name,
+		uuid,
+		items
   } from  "../../stores/playground.js"
 
   import {
@@ -129,9 +136,8 @@
         $focusedItemProperties = itemProperties;
         // set unfocused items through the rest of the list
         $items = $items.map(i => i === item ? ({ ...i, ['hasFocus']: true }) : ({ ...i, ['hasFocus']: false }) );
-        // $items = $items.map(i => i === item ? { ...i, [e.detail.prop]: e.detail.value } : i)
-        //set focused item
 
+				updatePlayground($uuid, $name, $items);
       }
       catch(error){
         console.error("Error Playground.setFocused: setting item focuses" );
@@ -185,6 +191,7 @@
         const newItem = setLayoutResponsiveness(item);
 
         $items = [ ...$items, ...[newItem] ]
+				updatePlayground($uuid, $name, $items);
         // console.log("DEBUG:playground:addItem:", newItem);
       }
       catch (error){
@@ -218,6 +225,7 @@
           dataItem.data[e.detail.prop] = e.detail.value;
           // Update item and items collection by filtering out version with old value and concating update version
           $items = [...$items.filter(i => i !== dataItem), ...[dataItem]]
+					updatePlayground($uuid, $name, $items);
         }
         else if(e.detail.prop === "hasFocus"){
           setFocused(dataItem);
@@ -255,8 +263,10 @@
 
     remove.bind(null, item); // remove dashboard item binding
     delete item.component;
-    $items = $items.filter( i => i.id !== item.id);
 
+
+    $items = $items.filter( i => i.id !== item.id);
+		updatePlayground($uuid, $name, $items);
     // console.log("DEBUG:dashboard:remove:");
     // console.log($items);
   }
@@ -266,13 +276,15 @@
   }
 
   const onAdjust = e => {
-    // console.log("DEBUG:dashboard:onAdjust:", e.detail);
+    console.log("DEBUG:dashboard:onAdjust:", e.detail);
     $items = $items; // call a re-render
+		updatePlayground($uuid, $name, $items);
   };
 
   const onChildMount = e => {
-    // console.log("DEBUG:dashboard:onChildMount:", e.detail);
+    console.log("DEBUG:dashboard:onChildMount:", e.detail);
     $items = $items; // call a re-render
+		updatePlayground($uuid, $name, $items);
   };
 
 
@@ -302,7 +314,8 @@
 
     addSubscriptionToken = messaging.subscribe('playground-add', e => addItem(e) );
     unsubscribeItemsChangeCallback = items.subscribe(value => {
-      //console.log('Playground items changed: ', value );
+      console.log('Playground items changed: ', value );
+			updatePlayground($uuid, $name, $items);
     });
   });
 
@@ -313,7 +326,7 @@
 
     messaging.unsubscribe(addSubscriptionToken);
     // messaging.unsubscribe(resetSubscriptionToken);
-    // unsubscribeItemsChangeCallback();
+    unsubscribeItemsChangeCallback();
     resetStores();
   });
 

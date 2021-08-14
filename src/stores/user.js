@@ -9,3 +9,5 @@ export const username = writable('');
 export const website = writable('');
 export const avatar_url = writable('');
 export const avatarSrc = writable(null);
+
+export const records = writable(null);

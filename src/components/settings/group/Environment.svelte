@@ -12,7 +12,10 @@
     onDestroy
   } from 'svelte';
 
-	import { supabase } from  "../../../db/client";
+	import {
+		supabase,
+		updatePlayground
+	} from  "../../../db/client";
 
   import { Engine } from 'sema-engine';
 
@@ -93,51 +96,17 @@
   }
 
   async function storeEnvironment(){
-
-    $isUploadOverlayVisible = false;
-    $isSaveOverlayVisible = true;
-    $isDeleteOverlayVisible = false;
-    // Add to playground history, e.g.
-    // Key – playground-2020-03-02T15:48:31.080Z,
-    // Value: [{"2":{"fixed":false,"resizable":true,"draggable":true,"min":{"w":1,"h":1},"max":{}, ...]
-
-		// const name = "x1234",
-
-
-		let updatedPlayground;
 		try {
-			updatedPlayground = await supabase
-				.from('playgrounds')
-				.update({
-					name: $name,
-					content: $items,
-					updated : new Date().toISOString()
-				})
-				.eq('id', $uuid)
+			$isUploadOverlayVisible = false;
+			$isSaveOverlayVisible = true;
+			$isDeleteOverlayVisible = false;
+
+			updatePlayground($name, $items);
+
+			loadEnvironmentSnapshotEntries();
 		} catch (error) {
 			console.error(error);
 		}
-		finally {
-
-		}
-
-
-		// const isPublic = true,
-		// 			created = new Date().toISOString(),
-		// 			updated = created
-		// 			;
-
-		// const newPlayground = await supabase
-		// 												.from('playgrounds')
-		// 												.insert({
-		// 													name: $name,
-		// 													content: $items,
-		// 													created,
-		// 													updated,
-		// 													isPublic
-		// 												})
-
-    loadEnvironmentSnapshotEntries();
   }
 
   function loadEnvironment(){
@@ -504,7 +473,7 @@
 		resize: none;
 		white-space: nowrap;
 		overflow-x: scroll;
-		height: 2.4em;
+		height: 2.3em;
     padding: 0.7em 1.2em 0.7em 1em;
 		margin-top: 0.3em;
 		margin-right: 0.3em;

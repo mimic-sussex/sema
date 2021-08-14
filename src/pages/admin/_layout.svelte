@@ -24,6 +24,10 @@
 	$ready()
 </script>
 
+<svelte:head>
+	<title>Sema – Admin</title>
+</svelte:head>
+
 <div class="admin-module" class:not-authed={!$user}>
 	{#if !window.routify.inBrowser}
 		Hello bot. This page is only available to humans.

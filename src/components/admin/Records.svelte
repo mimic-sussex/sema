@@ -2,6 +2,9 @@
 
 	import { onMount } from 'svelte';
 
+	import {
+		records
+	} from '../../stores/user'
 
   import { supabase } from '../../db/client'
 
@@ -16,36 +19,15 @@
 
 	const getDateStringFormat = d => (new Date(d)).toISOString().slice(0, 19).replace(/-/g, "/").replace("T", " ");
 
-	let records = [];
-	// records = [
-	// 	{ uuid: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', name: "Rachmaninoff electro", updated: Date.now(), isPublic: true, },
-	// 	{ uuid: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12', name: "in C", updated: Date.now(), isPublic: true, },
-	// 	{ uuid: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a13', name: "quad modulators", updated: Date.now() },
-	// 	{ uuid: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a14', name: "piano—phase—copy", updated: Date.now() },
-	// 	{ uuid: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a15', name: "loops", updated: Date.now() },
-	// 	{ uuid: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a16', name: "As I awake, I fell into the abyss", updated: Date.now(), isPublic: true, },
-	// 	{ uuid: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a17', name: "ALGORAVE", updated: Date.now() },
-	// 	{ uuid: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a18', name: "semibreve-demos", updated: Date.now() },
-	// 	{ uuid: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a19', name: "record1", updated: Date.now(), isPublic: true, },
-	// 	{ uuid: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a10', name: "record1", updated: Date.now() },
-	// ]
-
 	const setPlaygroundFromRecord = record => {
-
 		try {
 			$name = record.name;
 			$uuid = record.id;
-			console.log(record.content);
-			// console.log(JSON.parse(record.content));
 			$items = record.content.map(item => hydrateJSONcomponent(item));
-			// console.log(record.content);
 		} catch (error) {
 			console.error(error)
 		}
-
 	}
-
-
 
 	const fetchRecords = async () => {
 		try {
@@ -65,7 +47,7 @@
 		}
 	}
 
-	$: records = fetchRecords(); //promise is reactive to changes in url docId and links since they load asynchrynously
+	$: $records = fetchRecords(); //promise is reactive to changes in url docId and links since they load asynchrynously
 
 	onMount ( async () => {
 
@@ -94,20 +76,21 @@
 
 
 <div class='container-records'>
-	{#await records}
+	{#await $records }
     <p>...waiting</p>
-  {:then records}
+  {:then records }
 		<ul>
-			{#each records as record}
+			{#each records as record }
 				<li class='record'>
-					<a href="playground/{record.id}"
+					<a href="playground/{ record.id }"
 							on:click={ setPlaygroundFromRecord(record) }
 							>
 						<span class='record-name'
 									>{ record.name }
 						</span>
 					</a>
-					last updated: { getDateStringFormat(record.updated) } {( record.isPublic ? " — Public": '' )}
+					last updated: { getDateStringFormat(record.updated) }
+					{( record.isPublic ? " — Public": '' )}
 				</li>
 		{/each}
 		</ul>
