@@ -7,6 +7,7 @@
 
   import {
     isSaveOverlayVisible,
+		hydrateJSONcomponent,
     loadEnvironmentSnapshotEntries,
 		items,
 		name,
@@ -29,33 +30,44 @@
 	// 	{ uuid: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a10', name: "record1", updated: Date.now() },
 	// ]
 
+	const setPlaygroundFromRecord = record => {
+
+		try {
+			$name = record.name;
+			$uuid = record.id;
+			console.log(record.content);
+			// console.log(JSON.parse(record.content));
+			$items = record.content.map(item => hydrateJSONcomponent(item));
+			// console.log(record.content);
+		} catch (error) {
+			console.error(error)
+		}
+
+	}
+
+
+
 	const fetchRecords = async () => {
-
-		console.log('getRecords');
-
-		const playgrounds = await supabase
-			.from('playgrounds')
-			.select(`
-				id,
-				name,
-				content,
-				created,
-				updated,
-				isPublic
-			`)
-			// .eq('public', true)
-
-		console.log(playgrounds.data);
-
-		return playgrounds.data
+		try {
+			const playgrounds = await supabase
+				.from('playgrounds')
+				.select(`
+					id,
+					name,
+					content,
+					created,
+					updated,
+					isPublic
+				`)
+			return playgrounds.data
+		} catch (error) {
+			console.error(error)
+		}
 	}
 
 	$: records = fetchRecords(); //promise is reactive to changes in url docId and links since they load asynchrynously
 
-
 	onMount ( async () => {
-
-
 
 	})
 
@@ -89,7 +101,7 @@
 			{#each records as record}
 				<li class='record'>
 					<a href="playground/{record.id}"
-							on:click="{ () => $name = record.name }"
+							on:click={ setPlaygroundFromRecord(record) }
 							>
 						<span class='record-name'
 									>{ record.name }

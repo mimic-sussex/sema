@@ -74,16 +74,14 @@
 				.from('playgrounds')
 				.update({
 					name: $name,
-					updated : Date.now().toISOString()
+					updated : new Date().toISOString()
 				})
 				.eq('id', $uuid)
 		} catch (error) {
-			console.log(error);
-
+			console.error(error);
 		}
 		finally {
-			console.log('nameChange');
-			console.log(updatedPlayground);
+
 		}
 	}
 
@@ -104,25 +102,40 @@
     // Value: [{"2":{"fixed":false,"resizable":true,"draggable":true,"min":{"w":1,"h":1},"max":{}, ...]
 
 		// const name = "x1234",
-		const isPublic = true,
-					created = new Date().toISOString(),
-					updated = created
-					;
 
-		const newPlayground = await supabase
-														.from('playgrounds')
-														.insert({ name: $name,
-																			content: $items,
-																			created,
-																			updated,
-																			isPublic
-																			})
 
-		console.log('store–env')
+		let updatedPlayground;
+		try {
+			updatedPlayground = await supabase
+				.from('playgrounds')
+				.update({
+					name: $name,
+					content: $items,
+					updated : new Date().toISOString()
+				})
+				.eq('id', $uuid)
+		} catch (error) {
+			console.error(error);
+		}
+		finally {
 
-		console.log(typeof newPlayground.data[0].id)
+		}
 
-		$uuid = newPlayground.data[0].id;
+
+		// const isPublic = true,
+		// 			created = new Date().toISOString(),
+		// 			updated = created
+		// 			;
+
+		// const newPlayground = await supabase
+		// 												.from('playgrounds')
+		// 												.insert({
+		// 													name: $name,
+		// 													content: $items,
+		// 													created,
+		// 													updated,
+		// 													isPublic
+		// 												})
 
     loadEnvironmentSnapshotEntries();
   }
@@ -149,7 +162,7 @@
 
   function downloadEnvironment(){
 
-    let timestamp = new Date(Date.now()).toISOString();
+    let timestamp = new Date().toISOString();
 
     // Create blob from current playround state and filtered content from editor widgets
     const blob = doNotZip.toBlob($items
@@ -491,8 +504,9 @@
 		resize: none;
 		white-space: nowrap;
 		overflow-x: scroll;
-		height: 2.5em;
-    padding: 0.7em 1em 0.7em 1em;
+		height: 2.4em;
+    padding: 0.7em 1.2em 0.7em 1em;
+		margin-top: 0.3em;
 		margin-right: 0.3em;
 		color: white;
 		background:#212121;
@@ -504,6 +518,7 @@
 <input type="text"
 				bind:value={ $name }
 				on:change={ onNameChange }
+        style="{( $isActive('/playground') )? `visibility:visible;`: `visibility:collapse`}; margin-left: 2px;"
 				/>
 
 
