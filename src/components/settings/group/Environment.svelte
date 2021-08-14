@@ -54,6 +54,7 @@
     // assignNewID,
     hydrateJSONcomponent,
     loadEnvironmentSnapshotEntries,
+		uuid,
 		name
   } from '../../../stores/playground.js'
 
@@ -64,6 +65,28 @@
   let handleClick = () => {
     window.localStorage["tutorial-" + new Date(Date.now()).toISOString()] = JSON.stringify($items)
   }
+
+	const onNameChange = async () => {
+
+		let updatedPlayground;
+		try {
+			updatedPlayground = await supabase
+				.from('playgrounds')
+				.update({
+					name: $name,
+					updated : Date.now().toISOString()
+				})
+				.eq('id', $uuid)
+		} catch (error) {
+			console.log(error);
+
+		}
+		finally {
+			console.log('nameChange');
+			console.log(updatedPlayground);
+		}
+	}
+
 
   function resetEnvironment(){
     $isUploadOverlayVisible = false;
@@ -97,7 +120,9 @@
 
 		console.log('store–env')
 
-		console.log(newPlayground)
+		console.log(typeof newPlayground.data[0].id)
+
+		$uuid = newPlayground.data[0].id;
 
     loadEnvironmentSnapshotEntries();
   }
@@ -466,14 +491,20 @@
 		resize: none;
 		white-space: nowrap;
 		overflow-x: scroll;
-		height: 2em;
+		height: 2.5em;
+    padding: 0.7em 1em 0.7em 1em;
+		margin-right: 0.3em;
 		color: white;
-		background:rgb(0, 0, 0);
+		background:#212121;
+		border: 0.5px solid #ffffff61;
 	}
 
 </style>
 
-<input type="text" bind:value={ $name } />
+<input type="text"
+				bind:value={ $name }
+				on:change={ onNameChange }
+				/>
 
 
 
