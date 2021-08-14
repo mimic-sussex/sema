@@ -53,7 +53,8 @@
     items,
     // assignNewID,
     hydrateJSONcomponent,
-    loadEnvironmentSnapshotEntries
+    loadEnvironmentSnapshotEntries,
+		name
   } from '../../../stores/playground.js'
 
   import * as doNotZip from 'do-not-zip';
@@ -79,15 +80,15 @@
     // Key – playground-2020-03-02T15:48:31.080Z,
     // Value: [{"2":{"fixed":false,"resizable":true,"draggable":true,"min":{"w":1,"h":1},"max":{}, ...]
 
-		const name = "x1234",
-					isPublic = true,
+		// const name = "x1234",
+		const isPublic = true,
 					created = new Date().toISOString(),
 					updated = created
 					;
 
 		const newPlayground = await supabase
 														.from('playgrounds')
-														.insert({ name,
+														.insert({ name: $name,
 																			content: $items,
 																			created,
 																			updated,
@@ -154,6 +155,7 @@
 </script>
 
 <style>
+
 
   .icon-container {
     width: 10px;
@@ -460,14 +462,24 @@
   }
 
 
+	input {
+		resize: none;
+		white-space: nowrap;
+		overflow-x: scroll;
+		height: 2em;
+		color: white;
+		background:rgb(0, 0, 0);
+	}
 
 </style>
+
+<input type="text" bind:value={ $name } />
 
 
 
         <!-- style="{( $fullScreen && $isActive('/playground') )? `visibility:visible;`: `visibility:hidden`}; ! important;" -->
 <!-- svelte-ignore a11y-no-onchange -->
-<select class="combobox-dark"
+<!-- <select class="combobox-dark"
         title="load environment"
         bind:value={ $selectedLoadEnvironmentOption }
         on:change={ () => loadEnvironment() }
@@ -538,7 +550,7 @@
       { loadEnvironmentOption.text }
     </option>
   {/each}
-</select>
+</select> -->
 
         <!-- style="{( $fullScreen && $isActive('/playground') )? `visibility:visible;`: `visibility:hidden`}; margin-left: 2px;" -->
 <!-- SAVE -->
