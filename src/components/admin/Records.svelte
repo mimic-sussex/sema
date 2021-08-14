@@ -1,5 +1,9 @@
 <script>
 
+	import { onMount } from 'svelte';
+
+
+  import { supabase } from '../../db/client'
 
   import {
     isSaveOverlayVisible,
@@ -9,21 +13,51 @@
 		uuid
   } from "../../stores/playground.js"
 
-	let records = [
-		{ uuid: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', name: "Rachmaninoff electro", updated: Date.now(), isPublic: true, },
-		{ uuid: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12', name: "in C", updated: Date.now(), isPublic: true, },
-		{ uuid: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a13', name: "quad modulators", updated: Date.now() },
-		{ uuid: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a14', name: "piano—phase—copy", updated: Date.now() },
-		{ uuid: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a15', name: "loops", updated: Date.now() },
-		{ uuid: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a16', name: "As I awake, I fell into the abyss", updated: Date.now(), isPublic: true, },
-		{ uuid: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a17', name: "ALGORAVE", updated: Date.now() },
-		{ uuid: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a18', name: "semibreve-demos", updated: Date.now() },
-		{ uuid: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a19', name: "record1", updated: Date.now(), isPublic: true, },
-		{ uuid: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a10', name: "record1", updated: Date.now() },
-	]
-
 	const getDateStringFormat = d => (new Date(d)).toISOString().slice(0, 19).replace(/-/g, "/").replace("T", " ");
 
+	let records = [];
+	// records = [
+	// 	{ uuid: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', name: "Rachmaninoff electro", updated: Date.now(), isPublic: true, },
+	// 	{ uuid: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12', name: "in C", updated: Date.now(), isPublic: true, },
+	// 	{ uuid: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a13', name: "quad modulators", updated: Date.now() },
+	// 	{ uuid: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a14', name: "piano—phase—copy", updated: Date.now() },
+	// 	{ uuid: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a15', name: "loops", updated: Date.now() },
+	// 	{ uuid: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a16', name: "As I awake, I fell into the abyss", updated: Date.now(), isPublic: true, },
+	// 	{ uuid: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a17', name: "ALGORAVE", updated: Date.now() },
+	// 	{ uuid: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a18', name: "semibreve-demos", updated: Date.now() },
+	// 	{ uuid: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a19', name: "record1", updated: Date.now(), isPublic: true, },
+	// 	{ uuid: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a10', name: "record1", updated: Date.now() },
+	// ]
+
+	const fetchRecords = async () => {
+
+		console.log('getRecords');
+
+		const playgrounds = await supabase
+			.from('playgrounds')
+			.select(`
+				id,
+				name,
+				content,
+				created,
+				updated,
+				isPublic
+			`)
+			// .eq('public', true)
+
+		console.log(playgrounds.data);
+
+		return playgrounds.data
+	}
+
+	$: records = fetchRecords(); //promise is reactive to changes in url docId and links since they load asynchrynously
+
+
+	onMount ( async () => {
+
+
+
+	})
 
 </script>
 
@@ -46,19 +80,26 @@
 }
 </style>
 
+
 <div class='container-records'>
-	<ul>
-		{#each records as record}
-			<li class='record'>
-				<a href="playground/{record.uuid}"
-						on:click="{ () => $name = record.name }"
-						>
-					<span class='record-name'
-								>{ record.name }
-					</span>
-				</a>
-				last updated: { getDateStringFormat(record.updated) } {( record.isPublic ? " — Public": '' )}
-			</li>
-	{/each}
-	</ul>
+	{#await records}
+    <p>...waiting</p>
+  {:then records}
+		<ul>
+			{#each records as record}
+				<li class='record'>
+					<a href="playground/{record.id}"
+							on:click="{ () => $name = record.name }"
+							>
+						<span class='record-name'
+									>{ record.name }
+						</span>
+					</a>
+					last updated: { getDateStringFormat(record.updated) } {( record.isPublic ? " — Public": '' )}
+				</li>
+		{/each}
+		</ul>
+	{:catch error}
+    <p style="color: red">no records</p>
+  {/await}
 </div>
