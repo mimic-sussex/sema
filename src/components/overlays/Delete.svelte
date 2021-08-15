@@ -16,9 +16,6 @@
     sidebarDebuggerOptions
   } from '../../stores/playground.js';
 
-	import {
-		createPlayground
-	} from '../../db/client';
 
 
 	import { onMount, onDestroy } from 'svelte';

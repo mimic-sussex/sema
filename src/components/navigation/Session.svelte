@@ -6,7 +6,8 @@
 		avatarSrc,
 		loggedIn,
 		user,
-		userName
+		userName,
+
 	 } from '../../stores/user';
 
 	import { redirect } from '@roxi/routify'
@@ -28,6 +29,28 @@
   }
 
 
+  // async function fetchProfile() {
+  //   try {
+  //     // $loading = true
+
+  //     let { username, website, avatar_url } = await getUserProfile()
+
+  //     if ( username && website && avatar_url) {
+  //       $userName = username
+  //       // $websiteURL = website
+  //       // $avatarURL = avatar_url
+  //     }
+  //   } catch (error) {
+  //     alert(error.message)
+  //   } finally {
+  //     // $loading = false
+	// 		$loggedIn = true
+  //   }
+	// 	console.log('getProfile')
+  // }
+
+
+	// $: profile = fetchProfile();
 
 </script>
 
@@ -70,9 +93,15 @@
 				>
 			{ $userName }</a>
 			<div class='container-session-avatar'>
-				<img 	class='session-avatar'
+				<!-- {#await profile }
+					<img 	class='session-avatar'
+							src={ null }
+							alt={ null } />
+				{:then number } -->
+					<img 	class='session-avatar'
 							src={ $avatarSrc }
 							alt="{ $userName }" />
+			  <!-- {/await} -->
 			</div>
 		{:else}
 			<a href="/admin"

@@ -15,6 +15,11 @@
 		loading
 	} from '../stores/user'
 
+	import {
+		uuid,
+  } from  "../stores/playground.js"
+
+
 	import Session from '../components/navigation/Session.svelte';
 
   import { siteMode } from "../stores/common";
@@ -23,7 +28,8 @@
   let controller = new Controller(); // this will return the previously created Singleton instance
 
 	const links = [
-		['/playground', 'playground'],
+		// [`/playground`, 'playground'],
+		[`/playground/${$uuid}`, 'playground'],
 		['/tutorial', 'tutorial'],
 		['/docs', 'documentation'],
 		['/about', 'about'],
@@ -47,36 +53,6 @@
 	// ( () =>	$loggedIn = true )()
 
 
-  async function getProfile() {
-    try {
-      $loading = true
-
-      let { username, website, avatar_url } = await getUserProfile()
-
-      if ( username && website && avatar_url) {
-        $userName = username
-        $websiteURL = website
-        $avatarURL = avatar_url
-      }
-    } catch (error) {
-      alert(error.message)
-    } finally {
-      $loading = false
-			$loggedIn = true
-    }
-		console.log('getProfile')
-  }
-
-
-
-	$: $user = supabase.auth.user()
-	// user.set(supabase.auth.user())
-
-
-
-	supabase.auth.onAuthStateChange((_, session) => {
-		user.set(session.user)
-	})
 
   async function signOut() {
     try {
