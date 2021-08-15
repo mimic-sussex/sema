@@ -14,7 +14,8 @@
 
 	import {
 		supabase,
-		updatePlayground
+		updatePlayground,
+		createPlayground
 	} from  "../../../db/client";
 
   import { Engine } from 'sema-engine';
@@ -53,6 +54,7 @@
     isSaveOverlayVisible,
     isUploadOverlayVisible,
     isDeleteOverlayVisible,
+		isNewOverlayVisible,
     items,
     // assignNewID,
     hydrateJSONcomponent,
@@ -70,21 +72,10 @@
   }
 
 	const onNameChange = async () => {
-
-		let updatedPlayground;
 		try {
-			updatedPlayground = await supabase
-				.from('playgrounds')
-				.update({
-					name: $name,
-					updated : new Date().toISOString()
-				})
-				.eq('id', $uuid)
+			updatePlayground($uuid, $name, $items)
 		} catch (error) {
 			console.error(error);
-		}
-		finally {
-
 		}
 	}
 
@@ -92,16 +83,29 @@
   function resetEnvironment(){
     $isUploadOverlayVisible = false;
     $isSaveOverlayVisible = false;
+		$isNewOverlayVisible = false;
     $isDeleteOverlayVisible = true;
   }
 
-  async function storeEnvironment(){
+  async function newEnvironment(){
+		try {
+			$isUploadOverlayVisible = false;
+			$isSaveOverlayVisible = false;
+			$isDeleteOverlayVisible = false;
+			$isNewOverlayVisible = true;
+
+			// $items = data.content.map(item => hydrateJSONcomponent(item))
+			// loadEnvironmentSnapshotEntries();
+		} catch (error) {
+			console.error(error);
+		}
+  }
+  function storeEnvironment(){
 		try {
 			$isUploadOverlayVisible = false;
 			$isSaveOverlayVisible = true;
 			$isDeleteOverlayVisible = false;
-
-			updatePlayground($name, $items);
+			$isNewOverlayVisible = false;
 
 			loadEnvironmentSnapshotEntries();
 		} catch (error) {
@@ -127,6 +131,7 @@
     $isUploadOverlayVisible = true;
     $isSaveOverlayVisible = false;
     $isDeleteOverlayVisible = false;
+		$isNewOverlayVisible = false;
   }
 
   function downloadEnvironment(){
@@ -570,7 +575,56 @@
         <!-- style="{( $fullScreen && $isActive('/playground') )? `visibility:visible;`: `visibility:hidden`}; margin-left: 2px;" -->
 <!-- SAVE -->
 <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
-        title="save environment"
+        title="new project"
+        style="{( $isActive('/playground') )? `visibility:visible;`: `visibility:collapse`}; margin-left: 2px;"
+        on:click={ () => newEnvironment() }
+        >
+  <div class="icon-container">
+    {#if $siteMode === 'dark' }
+      <svg version="1.1"
+        id="Layer_1"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        x="0px" y="0px"
+        viewBox="0 0 512 512"
+        style="enable-background:new 0 0 512 512;width:15px;"
+        class="light-mode"
+        xml:space="preserve"
+        >
+        <g id="XMLID_1_">
+          <path id="XMLID_9_" d="M466.5,0h-381L0,83.6v382.8C0,491.6,20.4,512,45.5,512h420.9c25.1,0,45.5-20.4,45.5-45.5V45.5
+            C512,20.4,491.6,0,466.5,0z M256.5,150.5c-57.6,0-105,47.4-105,105s47.4,105,105,105s105-47.4,105-105
+            S314.1,150.5,256.5,150.5z M256.5,330.8c-41.8,0-75.3-33.5-75.3-75.3s33.5-75.3,75.3-75.3s75.3,33.5,75.3,75.3
+            S298.3,330.8,256.5,330.8z"/>
+        </g>
+      </svg>
+    {:else if $siteMode === 'light' }
+      <svg  version="1.1"
+            id="Layer_1"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            x="0px" y="0px"
+            style="enable-background:new 0 0 512 512; width:15px;"
+            viewBox="0 0 512 512"
+            xml:space="preserve"
+            >
+        <g>
+          <path id="XMLID_9_" d="M466.5,0h-381L0,83.6v382.8C0,491.6,20.4,512,45.5,512h420.9c25.1,0,45.5-20.4,45.5-45.5V45.5
+            C512,20.4,491.6,0,466.5,0z M392.1,29.7v60.4H151.5V29.7H392.1z M91.1,481.3v-30.7h330.8v29.7H91.1V481.3z M482.3,465.5
+            c0,8.4-6.5,14.9-14.9,14.9h-15.8V420H61.3v60.4H46.5c-8.4,0-14.9-6.5-14.9-14.9V95.7l67.8-66h22.3v90.1h301.1V29.7h45.5
+            c8.4,0,14.9,6.5,14.9,14.9v420.9H482.3z M256.5,150.5c-57.6,0-105,47.4-105,105s47.4,105,105,105s105-47.4,105-105
+            S314.1,150.5,256.5,150.5z M256.5,330.8c-41.8,0-75.3-33.5-75.3-75.3s33.5-75.3,75.3-75.3s75.3,33.5,75.3,75.3
+            S298.3,330.8,256.5,330.8z"/>
+        </g>
+      </svg>
+    {/if}
+  </div>
+</button>
+
+
+
+<button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
+        title="save project"
         style="{( $isActive('/playground') )? `visibility:visible;`: `visibility:collapse`}; margin-left: 2px;"
         on:click={ () => storeEnvironment() }
         >
@@ -622,7 +676,7 @@
         <!-- style="{ ( $fullScreen && $isActive('/playground') ) ? `visibility:visible;`: `visibility:hidden`}" -->
 <!-- DELETE -->
 <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
-        title="clear environment"
+        title="clear project"
         style="{ ( $isActive('/playground') ) ? `visibility:visible;`: `visibility:collapse`}"
         on:click={ () => resetEnvironment() }
         >
@@ -673,7 +727,7 @@
 </button>
 
 <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
-        title="download environment"
+        title="download project"
         style="padding: 0.2em 0.4em 0.8em 0.6em ! important;"
         on:click={ () => downloadEnvironment() }
         >
@@ -754,7 +808,7 @@
 
 
 <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
-        title="upload environment"
+        title="upload project"
         style="{( $isActive('/playground') ) ? `visibility:visible;`: `visibility:collapse`}; padding: 0.2em 0.4em 0.8em 0.6em ! important;"
         on:click={ () => uploadEnvironment() }
         >
@@ -833,7 +887,7 @@
         <!-- style="{ $fullScreen? `visibility:visible;`: `visibility:hidden`}; padding: 0.25em 0.3em 0.75em 0.7em;" -->
 <!-- SHARE -->
 <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
-        title="share environment"
+        title="share project"
         style="padding: 0.25em 0.3em 0.75em 0.7em;"
         on:click={ handleClick }>
   <div class="icon-container">

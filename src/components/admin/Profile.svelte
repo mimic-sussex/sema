@@ -1,10 +1,15 @@
 <script>
-  import { supabase } from '../../db/client'
+
+  import {
+		supabase,
+		getUserProfile
+	} from '../../db/client'
+
   import {
 		user,
-		username,
-		website,
-		avatar_url,
+		userName,
+		websiteURL,
+		avatarURL,
 		loggedIn,
 		loading
 	} from '../../stores/user'
@@ -16,23 +21,17 @@
   // let website = null
   // let avatar_url = null
 
+
   async function getProfile() {
     try {
       $loading = true
-      const user = supabase.auth.user()
 
-      let { data, error, status } = await supabase
-        .from('profiles')
-        .select(`username, website, avatar_url`)
-        .eq('id', user.id)
-        .single()
+      let { username, website, avatar_url } = await getUserProfile()
 
-      if (error && status !== 406) throw error
-
-      if (data) {
-        $username = data.username
-        $website = data.website
-        $avatar_url = data.avatar_url
+      if ( username && website && avatar_url) {
+        $userName = username
+        $websiteURL = website
+        $avatarURL = avatar_url
       }
     } catch (error) {
       alert(error.message)
@@ -43,6 +42,7 @@
 		console.log('getProfile')
   }
 
+
   async function updateProfile() {
     try {
       $loading = true
@@ -50,10 +50,10 @@
 
       const updates = {
         id: user.id,
-        username: $username,
-        website: $website,
-        avatar_url: $avatar_url,
-        updated_at: new Date(),
+        username: $userName,
+        website: $websiteURL,
+        avatar_url: $avatarURL,
+        updated_at: new Date().toISOString(),
       }
 
       let { error } = await supabase.from('profiles').upsert(updates, {
@@ -68,6 +68,8 @@
     }
 		console.log('UpdateProfile')
   }
+
+
 
   async function signOut() {
     try {
@@ -131,7 +133,7 @@
 <form use:getProfile class="form-widget"
 			on:submit|preventDefault={ updateProfile }
 			>
-  <Avatar bind:path={ $avatar_url }
+  <Avatar bind:path={ $avatarURL }
 					on:upload={ updateProfile }
 					/>
   <div>
@@ -147,7 +149,7 @@
     <input
       id="username"
       type="text"
-      bind:value={ $username }
+      bind:value={ $userName }
     	/>
   </div>
   <div>
@@ -155,7 +157,7 @@
     <input
       id="website"
       type="website"
-      bind:value={ $website }
+      bind:value={ $websiteURL }
     	/>
   </div>
 

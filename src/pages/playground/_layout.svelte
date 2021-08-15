@@ -14,6 +14,7 @@
   // import { compile } from '../node_modules/sema-engine/sema-engines';
 
   import Delete from '../../components/overlays/Delete.svelte';
+  import New from '../../components/overlays/New.svelte';
   import Save from '../../components/overlays/Save.svelte';
   import Upload from '../../components/overlays/Upload.svelte';
   import Sidebar from '../../components/playground/Sidebar.svelte';
@@ -45,6 +46,7 @@
     focusedItemProperties,
     isUploadOverlayVisible,
     isDeleteOverlayVisible,
+    isNewOverlayVisible,
     isSaveOverlayVisible,
 		name,
 		uuid,
@@ -191,6 +193,7 @@
         const newItem = setLayoutResponsiveness(item);
 
         $items = [ ...$items, ...[newItem] ]
+
 				updatePlayground($uuid, $name, $items);
         // console.log("DEBUG:playground:addItem:", newItem);
       }
@@ -272,19 +275,19 @@
   }
 
   const onClickCloseOverlay = () => {
-    $isUploadOverlayVisible = $isSaveOverlayVisible = $isDeleteOverlayVisible = false;
+    $isNewOverlayVisible = $isUploadOverlayVisible = $isSaveOverlayVisible = $isDeleteOverlayVisible = false;
   }
 
   const onAdjust = e => {
     console.log("DEBUG:dashboard:onAdjust:", e.detail);
     $items = $items; // call a re-render
-		updatePlayground($uuid, $name, $items);
+		// updatePlayground($uuid, $name, $items);
   };
 
   const onChildMount = e => {
     console.log("DEBUG:dashboard:onChildMount:", e.detail);
     $items = $items; // call a re-render
-		updatePlayground($uuid, $name, $items);
+		// updatePlayground($uuid, $name, $items);
   };
 
 
@@ -315,7 +318,7 @@
     addSubscriptionToken = messaging.subscribe('playground-add', e => addItem(e) );
     unsubscribeItemsChangeCallback = items.subscribe(value => {
       console.log('Playground items changed: ', value );
-			updatePlayground($uuid, $name, $items);
+			// updatePlayground($uuid, $name, $items);
     });
   });
 
@@ -581,7 +584,7 @@
   </div>
 
   <div  class="upload-overlay-container"
-        style='visibility:{ ( $isUploadOverlayVisible || $isDeleteOverlayVisible || $isSaveOverlayVisible ) ? "visible" : "hidden"}'
+        style='visibility:{ ( $isNewOverlayVisible || $isUploadOverlayVisible || $isDeleteOverlayVisible || $isSaveOverlayVisible ) ? "visible" : "hidden"}'
         >
     <span class='close-overlay'
           on:click={ () => onClickCloseOverlay() }
@@ -594,6 +597,8 @@
       <Delete />
 		{:else if $isSaveOverlayVisible }
       <Save />
+		{:else if $isNewOverlayVisible }
+      <New />
 		{/if}
 
   </div>

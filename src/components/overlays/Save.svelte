@@ -4,8 +4,13 @@
     isSaveOverlayVisible,
     loadEnvironmentSnapshotEntries,
 		items,
+		uuid,
 		name
   } from  "../../stores/playground.js"
+
+	import {
+		updatePlayground
+	} from '../../db/client';
 
 	import { onMount, onDestroy } from 'svelte';
 
@@ -19,6 +24,10 @@
   const saveEnvironment = () => {
 
 		let localStorageEntry =	"playground-" + new Date(Date.now()).toISOString()+'-'+ $name
+
+		updatePlayground($uuid, $name, $items);
+
+
 
 		if($name && !window.localStorage[localStorageEntry]){
 			window.localStorage[localStorageEntry] = JSON.stringify($items);

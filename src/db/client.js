@@ -5,6 +5,50 @@ const supabaseAnonKey = __api.env.SUPABASE_ANON_KEY
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
+export async function getUserProfile() {
+  try {
+    const user = supabase.auth.user()
+    let { data, error, status } = await supabase
+      .from('profiles')
+      .select(`username, website, avatar_url`)
+      .eq('id', user.id)
+      .single()
+
+    if (error && status !== 406) throw error
+		return data
+	}
+	catch(error){
+		console.error(error);
+	}
+}
+
+export const createPlayground = async () => {
+	if(supabase){
+		const timestamp = new Date().toISOString()
+		let newPlayground;
+		try {
+			newPlayground = await supabase
+				.from('playgrounds')
+				.insert({
+					name: 'new playground',
+					content: [],
+					created: timestamp,
+					updated: timestamp,
+					isPublic: true,
+				})
+				.single()
+
+				console.log('newPlayground')
+				console.log(newPlayground)
+				return newPlayground.data;
+		} catch (error) {
+			console.error(error)
+		}
+	}
+	else
+		throw new Error('Supabase client has not been created')
+}
+
 export const updatePlayground = async (uuid, name, content) => {
 	if(supabase && name && content){
 		let updatedPlayground

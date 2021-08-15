@@ -4,9 +4,9 @@
 
   import {
 		user,
-		username,
-		website,
-		avatar_url,
+		userName,
+		websiteURL,
+		avatarURL,
 		loggedIn,
 		loading
 	} from '../../stores/user'

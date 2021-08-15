@@ -1,17 +1,23 @@
 <script>
   import { isActive, url, params } from "@roxi/routify";
 
-	import {
-		avatarSrc,
-		loggedIn,
+  import {
+		supabase,
+		getUserProfile
+	} from '../db/client'
+
+  import {
 		user,
-		username
-	 } from '../stores/user';
+		userName,
+		websiteURL,
+		avatarURL,
+		loggedIn,
+		loading
+	} from '../stores/user'
 
 	import Session from '../components/navigation/Session.svelte';
 
   import { siteMode } from "../stores/common";
-  import { supabase } from '../db/client';
 
   import Controller from "../engine/controller";
   let controller = new Controller(); // this will return the previously created Singleton instance
@@ -19,7 +25,7 @@
 	const links = [
 		['/playground', 'playground'],
 		['/tutorial', 'tutorial'],
-		['/docs', 'reference'],
+		['/docs', 'documentation'],
 		['/about', 'about'],
 	]
 
@@ -38,7 +44,35 @@
     controller.stop();
   }
 
-	user.set(supabase.auth.user())
+	// ( () =>	$loggedIn = true )()
+
+
+  async function getProfile() {
+    try {
+      $loading = true
+
+      let { username, website, avatar_url } = await getUserProfile()
+
+      if ( username && website && avatar_url) {
+        $userName = username
+        $websiteURL = website
+        $avatarURL = avatar_url
+      }
+    } catch (error) {
+      alert(error.message)
+    } finally {
+      $loading = false
+			$loggedIn = true
+    }
+		console.log('getProfile')
+  }
+
+
+
+	$: $user = supabase.auth.user()
+	// user.set(supabase.auth.user())
+
+
 
 	supabase.auth.onAuthStateChange((_, session) => {
 		user.set(session.user)
@@ -92,7 +126,7 @@
   }
 
 	.container-session {
-		padding-right: 1em;
+		/* padding-right: 1em; */
 	}
 
 

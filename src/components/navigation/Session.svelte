@@ -1,9 +1,12 @@
 <script>
+
+  import { isActive, url, params } from "@roxi/routify";
+
 	import {
 		avatarSrc,
 		loggedIn,
 		user,
-		username
+		userName
 	 } from '../../stores/user';
 
 	import { redirect } from '@roxi/routify'
@@ -59,15 +62,17 @@
 
 <div class='container-session-group'>
 	{#if $user}
-		{#if $username }
+		{#if $userName }
+			<!-- TODO -->
+			<!-- aria-current="{ $isActive(path)? 'page' : undefined}" -->
 			<a href="/admin"
 				style='color: {$siteMode === 'dark'? 'white': 'black'};'
 				>
-			{ $username }</a>
+			{ $userName }</a>
 			<div class='container-session-avatar'>
 				<img 	class='session-avatar'
 							src={ $avatarSrc }
-							alt="{ $username }" />
+							alt="{ $userName }" />
 			</div>
 		{:else}
 			<a href="/admin"
