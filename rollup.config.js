@@ -21,7 +21,8 @@ import { wasm } from '@rollup/plugin-wasm'
 // import sourcemaps from 'rollup-plugin-sourcemaps'
 import json from '@rollup/plugin-json'
 // import cors from 'cors';
-
+import replace from '@rollup/plugin-replace'
+import { config } from 'dotenv'
 /**
  * How is this used
  */
@@ -156,6 +157,15 @@ export default {
 				}),
 			],
 		}),
+		replace({
+			preventAssignment: true,
+			__api: JSON.stringify({
+				env: {
+					isProd: production,
+					...config().parsed, // attached the .env config
+				},
+			}),
+		}),
 		copy({
 			targets: [
 				{
@@ -261,6 +271,7 @@ export default {
 				map: { mappings: '' },
 			}),
 		},
+
 		injectManifest({
 			globDirectory: assetsDir,
 			// globPatterns: ['**/*.{js,css,svg}', '__app.html'],
