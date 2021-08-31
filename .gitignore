@@ -76,7 +76,6 @@ public/
 **/.history
 /src/tmp/
 .routify
-package-lock.json
 jspm_packages/
 
 
