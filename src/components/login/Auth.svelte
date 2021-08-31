@@ -4,6 +4,8 @@
   let loading = false
   let email;
 
+
+
   const handleLogin = async () => {
     try {
       loading = true
@@ -18,19 +20,26 @@
   }
 </script>
 
-<form class="row flex flex-center" on:submit|preventDefault={handleLogin}>
+<form class="row flex flex-center"
+			on:submit|preventDefault={ handleLogin }
+			>
   <div class="col-6 form-widget">
-    <p class="description">Sign in via magic link with your email below</p>
+    <p class="description">
+			Sign in via magic link with your email below
+		</p>
     <div>
       <input
         class="inputField"
         type="email"
         placeholder="Your email"
-        bind:value={email}
+        bind:value={ email }
       />
     </div>
     <div>
-      <input type="submit" class='button block' value={loading ? "Loading" : "Send magic link"} disabled={loading} />
+      <input type="submit"
+							class='button block'
+							value={ loading ? "Loading" : "Send magic link" }
+							disabled={ loading } />
     </div>
   </div>
 </form>

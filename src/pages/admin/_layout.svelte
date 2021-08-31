@@ -4,9 +4,9 @@
 
   import {
 		user,
-		username,
-		website,
-		avatar_url,
+		userName,
+		websiteURL,
+		avatarURL,
 		loggedIn,
 		loading
 	} from '../../stores/user'
@@ -23,6 +23,10 @@
 	 **/
 	$ready()
 </script>
+
+<svelte:head>
+	<title>Sema – Admin</title>
+</svelte:head>
 
 <div class="admin-module" class:not-authed={!$user}>
 	{#if !window.routify.inBrowser}

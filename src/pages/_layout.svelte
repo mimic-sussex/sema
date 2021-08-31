@@ -9,8 +9,19 @@
 	// import SignOut from '../components/user/SignOut.svelte';
 	// import AudioEngineStatus from '../components/settings/AudioEngineStatus.svelte';
   // import SiteColor from '../components/settings/SiteColor.svelte';
+  import {
+		supabase,
+		getUserProfile
+	} from '../db/client'
 
-  import { user } from '../stores/user.js'
+  import {
+		user,
+		userName,
+		websiteURL,
+		avatarURL,
+		loggedIn,
+		loading
+	} from '../stores/user'
 
   import {
     tutorials,
@@ -34,7 +45,7 @@
 
   import {
     sidebarLiveCodeOptions,
-    loadEnvironmentSnapshotEntries
+    loadEnvironmentSnapshotEntries,
   } from '../stores/playground.js'
 
   import {
@@ -46,6 +57,19 @@
     updateItemPropsWithFetchedValues,
     engineStatus
   } from '../stores/common.js';
+
+
+	// $: $user = ( async () => supabase.auth.user() )()
+	// $: ( async () => {
+	// 	supabase.auth.user()
+	// })()
+	$: user.set(supabase.auth.user())
+
+	supabase.auth.onAuthStateChange((_, session) => {
+		user.set(session.user)
+	})
+
+	$: getProfile();
 
   $: loadSidebarLiveCodeOptions();
   $: loadEnvironmentSnapshotEntries();
@@ -63,6 +87,31 @@
         $engineStatus = 'paused';
     }
   });
+
+
+  async function getProfile() {
+    try {
+      $loading = true
+
+      let { username, website, avatar_url } = await getUserProfile()
+
+      if ( username && website && avatar_url) {
+        $userName = username
+        $websiteURL = website
+        $avatarURL = avatar_url
+      }
+    } catch (error) {
+      // alert(error.message)
+    } finally {
+      $loading = false
+			$loggedIn = true
+    }
+		console.log('getProfile')
+  }
+
+
+
+
 
   /**
    * Loads language options from language service and set grammar and default code sources
@@ -151,7 +200,7 @@
 
   //get subheadings for a page based on the h1 headers in the .md file.
   //redundant, now we just get these when loading the markdown.
-  /* 
+  /*
   async function getSubs(list){
     for (let i=0;i<list.length;i++){
         let currentHeadings = [];

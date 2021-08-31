@@ -1,25 +1,37 @@
 <script>
   import { isActive, url, params } from "@roxi/routify";
 
-	import {
-		avatarSrc,
-		loggedIn,
+  import {
+		supabase,
+		getUserProfile
+	} from '../db/client'
+
+  import {
 		user,
-		username
-	 } from '../stores/user';
+		userName,
+		websiteURL,
+		avatarURL,
+		loggedIn,
+		loading
+	} from '../stores/user'
+
+	import {
+		uuid,
+  } from  "../stores/playground.js"
+
 
 	import Session from '../components/navigation/Session.svelte';
 
   import { siteMode } from "../stores/common";
-  import { supabase } from '../db/client';
 
   import Controller from "../engine/controller";
   let controller = new Controller(); // this will return the previously created Singleton instance
 
 	const links = [
-		['/playground', 'playground'],
+		// [`/playground`, 'playground'],
+		[`/playground/${$uuid}`, 'playground'],
 		['/tutorial', 'tutorial'],
-		['/docs', 'reference'],
+		['/docs', 'documentation'],
 		['/about', 'about'],
 	]
 
@@ -38,11 +50,9 @@
     controller.stop();
   }
 
-	user.set(supabase.auth.user())
+	// ( () =>	$loggedIn = true )()
 
-	supabase.auth.onAuthStateChange((_, session) => {
-		user.set(session.user)
-	})
+
 
   async function signOut() {
     try {
@@ -92,7 +102,7 @@
   }
 
 	.container-session {
-		padding-right: 1em;
+		/* padding-right: 1em; */
 	}
 
 

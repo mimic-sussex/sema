@@ -3,12 +3,19 @@
   import {
     isSaveOverlayVisible,
     loadEnvironmentSnapshotEntries,
-		items
+		items,
+		uuid,
+		name
   } from  "../../stores/playground.js"
+
+	import {
+		updatePlayground
+	} from '../../db/client';
 
 	import { onMount, onDestroy } from 'svelte';
 
-	let filename, input;
+	// let filename, input;
+	let input;
 
   const closeOverlay = () => {
     $isSaveOverlayVisible = false;
@@ -16,14 +23,18 @@
 
   const saveEnvironment = () => {
 
-		let localStorageEntry =	"playground-" + new Date(Date.now()).toISOString()+'-'+filename
+		let localStorageEntry =	"playground-" + new Date(Date.now()).toISOString()+'-'+ $name
 
-		if(filename && !window.localStorage[localStorageEntry]){
+		updatePlayground($uuid, $name, $items);
+
+
+
+		if($name && !window.localStorage[localStorageEntry]){
 			window.localStorage[localStorageEntry] = JSON.stringify($items);
 			loadEnvironmentSnapshotEntries();
 			$isSaveOverlayVisible = false;
 		}
-		else if (window.localStorage[filename]){
+		else if (window.localStorage[$name]){
 
 
 		}
@@ -51,7 +62,7 @@
 	<!-- <label for="name">(Project names should contain 8 to 15 alphanumeric characters)</label> -->
 
 	<input 	bind:this={ input }
-					bind:value={ filename }
+					bind:value={ $name }
 					type="text"
 					id="name"
 					name="name"
@@ -179,7 +190,7 @@
 	input:invalid {
   	border: 2px dashed red;
 	}
-  
+
 
 
 </style>

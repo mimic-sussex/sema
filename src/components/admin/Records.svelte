@@ -1,20 +1,57 @@
 <script>
 
-	let records = [
-		{ name: "Rachmaninoff electro", updated: Date.now(), isPublic: true, },
-		{ name: "in C", updated: Date.now(), isPublic: true, },
-		{ name: "quad modulators", updated: Date.now() },
-		{ name: "piano—phase—copy", updated: Date.now() },
-		{ name: "loops", updated: Date.now() },
-		{ name: "As I awake, I fell into the abyss", updated: Date.now(), isPublic: true, },
-		{ name: "ALGORAVE", updated: Date.now() },
-		{ name: "semibreve-demos", updated: Date.now() },
-		{ name: "record1", updated: Date.now(), isPublic: true, },
-		{ name: "record1", updated: Date.now() },
-	]
+	import { onMount } from 'svelte';
+
+	import {
+		records
+	} from '../../stores/user'
+
+  import { supabase } from '../../db/client'
+
+  import {
+    isSaveOverlayVisible,
+		hydrateJSONcomponent,
+    loadEnvironmentSnapshotEntries,
+		items,
+		name,
+		uuid
+  } from "../../stores/playground.js"
 
 	const getDateStringFormat = d => (new Date(d)).toISOString().slice(0, 19).replace(/-/g, "/").replace("T", " ");
 
+	const setPlaygroundFromRecord = record => {
+		try {
+			$name = record.name;
+			$uuid = record.id;
+			$items = record.content.map(item => hydrateJSONcomponent(item));
+		} catch (error) {
+			console.error(error)
+		}
+	}
+
+	const fetchRecords = async () => {
+		try {
+			const playgrounds = await supabase
+				.from('playgrounds')
+				.select(`
+					id,
+					name,
+					content,
+					created,
+					updated,
+					isPublic
+				`)
+			return playgrounds.data
+		} catch (error) {
+			console.error(error)
+		}
+	}
+
+	$: $records = fetchRecords(); //promise is reactive to changes in url docId and links since they load asynchrynously
+
+	onMount ( async () => {
+
+	})
 
 </script>
 
@@ -23,8 +60,8 @@
 .record-name {
 	display: inline-block;
 	/* font-style: italic; */
-	font-weight: bold;
-	font-size: 22px;
+	/* font-weight: bold; */
+	font-size: 18px;
 	padding-right: 0.5em;
 	min-width: 20rem;
 	max-width: 20rem;
@@ -37,17 +74,27 @@
 }
 </style>
 
+
 <div class='container-records'>
-	<ul>
-		{#each records as record}
-			<li class='record'>
-				<a href="playground">
-					<span class='record-name'
-								>{ record.name }
-					</span>
-				</a>
-				last updated: { getDateStringFormat(record.updated) } {( record.isPublic ? " — Public": '' )}
-			</li>
-	{/each}
-	</ul>
+	{#await $records }
+    <p>...waiting</p>
+  {:then records }
+		<ul>
+			{#each records as record }
+				<li class='record'>
+					<a href="playground/{ record.id }"
+							on:click={ setPlaygroundFromRecord(record) }
+							>
+						<span class='record-name'
+									>{ record.name }
+						</span>
+					</a>
+					last updated: { getDateStringFormat(record.updated) }
+					{( record.isPublic ? " — Public": '' )}
+				</li>
+		{/each}
+		</ul>
+	{:catch error}
+    <p style="color: red">no records</p>
+  {/await}
 </div>

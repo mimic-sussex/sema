@@ -46,10 +46,13 @@ import new_learner_template               from '../../assets/learners/new/new.tf
 // import music_rnn_example                  from "../machineLearning/magenta/music-rnn.tf";
 
 
+export const name = writable("");
+export const uuid = writable("");
 
 export const isUploadOverlayVisible = writable(false);
 export const isSaveOverlayVisible = writable(false)
 export const isDeleteOverlayVisible = writable(false);
+export const isNewOverlayVisible = writable(false);
 
 export const cm_theme_cobalt = writable("");
 export const cm_theme_icecoder = writable("");

@@ -6,6 +6,7 @@
 
   import {
     isDeleteOverlayVisible,
+    isNewOverlayVisible,
     items,
     isSaveOverlayVisible,
     isUploadOverlayVisible,
@@ -13,9 +14,14 @@
     isSelectModelEditorDisabled,
     isAddGrammarEditorDisabled,
     isAddAnalyserDisabled,
-    sidebarDebuggerOptions
+    sidebarDebuggerOptions,
+		uuid,
+		name
   } from '../../stores/playground.js';
 
+	import {
+		createPlayground
+	} from '../../db/client';
 
 
 	import { onMount, onDestroy } from 'svelte';
@@ -24,29 +30,37 @@
     $isDeleteOverlayVisible = false;
   }
 
-  const resetEnvironment = () => {
+  const resetEnvironment = async () => {
 
     if(!engine)
       engine = new Engine();
 
     engine.hush();
 
+		let data = await createPlayground()
+
+		console.log('data')
+		console.log(data)
+		$uuid = data.id;
+		$name = data.name;
     $items = $items.slice($items.length);
 
     $isUploadOverlayVisible = false;
     $isSaveOverlayVisible = false;
     $isDeleteOverlayVisible = false;
+    $isNewOverlayVisible = false;
 
     $isSelectLiveCodeEditorDisabled = false;
     $isSelectModelEditorDisabled = false;
     $isAddGrammarEditorDisabled = false;
     $isAddAnalyserDisabled = false;
+
     $sidebarDebuggerOptions.map( option => option.disabled = false );
   }
 
   onMount( async () => {
     // engine = new Engine();
-		console.log("delete")
+		console.log("New")
   });
 
   onDestroy( () => {
@@ -55,8 +69,8 @@
 
 </script>
 
-<div  class="delete-overlay-component"
-      style='visibility:{ $isDeleteOverlayVisible ? "visible": "hidden"}'
+<div  class="new-overlay-component"
+      style='visibility:{ $isNewOverlayVisible ? "visible": "hidden"}'
       >
 
   <!-- <svg class="box-icon" xmlns="http://www.w3.org/2000/svg" width="50" height="43" viewBox="0 0 50 43"> -->
@@ -68,13 +82,13 @@
     <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
   </svg>
 
-  <p class="delete-overlay-text">
-    <span style="font-weight: 1500;">Are you sure you want to delete your content?</span>
+  <p class="new-overlay-text">
+    <span style="font-weight: 1500;">Are you sure you want to discard your content and create a new project?</span>
   </p>
-  <div class="delete-overlay-button-container">
+  <div class="new-overlay-button-container">
     <button class="button-dark"
             on:click={ resetEnvironment }
-            >Delete</button>
+            >New</button>
     <button class="button-dark"
             on:click={ closeOverlay }
             >Cancel</button>
@@ -147,11 +161,11 @@
     box-shadow:  -1px -1px 3px rgba(16, 16, 16, 0.4), 0.5px 0.5px 0.5px rgba(16, 16, 16, 0.04);
   }
 
-  .delete-overlay-button-container {
+  .new-overlay-button-container {
     display: inline-flex;
   }
 
-  .delete-overlay-component {
+  .new-overlay-component {
     width: 100%;
 		height:100%;
     display:flex;
@@ -162,7 +176,7 @@
   }
 
 
-  .delete-overlay-text {
+  .new-overlay-text {
     /* top:50%; */
 
     /* width: 100%; */

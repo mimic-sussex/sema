@@ -1,9 +1,13 @@
 <script>
+
+  import { isActive, url, params } from "@roxi/routify";
+
 	import {
 		avatarSrc,
 		loggedIn,
 		user,
-		username
+		userName,
+
 	 } from '../../stores/user';
 
 	import { redirect } from '@roxi/routify'
@@ -25,6 +29,28 @@
   }
 
 
+  // async function fetchProfile() {
+  //   try {
+  //     // $loading = true
+
+  //     let { username, website, avatar_url } = await getUserProfile()
+
+  //     if ( username && website && avatar_url) {
+  //       $userName = username
+  //       // $websiteURL = website
+  //       // $avatarURL = avatar_url
+  //     }
+  //   } catch (error) {
+  //     alert(error.message)
+  //   } finally {
+  //     // $loading = false
+	// 		$loggedIn = true
+  //   }
+	// 	console.log('getProfile')
+  // }
+
+
+	// $: profile = fetchProfile();
 
 </script>
 
@@ -59,15 +85,23 @@
 
 <div class='container-session-group'>
 	{#if $user}
-		{#if $username }
+		{#if $userName }
+			<!-- TODO -->
+			<!-- aria-current="{ $isActive(path)? 'page' : undefined}" -->
 			<a href="/admin"
 				style='color: {$siteMode === 'dark'? 'white': 'black'};'
 				>
-			{ $username }</a>
+			{ $userName }</a>
 			<div class='container-session-avatar'>
-				<img 	class='session-avatar'
+				<!-- {#await profile }
+					<img 	class='session-avatar'
+							src={ null }
+							alt={ null } />
+				{:then number } -->
+					<img 	class='session-avatar'
 							src={ $avatarSrc }
-							alt="{ $username }" />
+							alt="{ $userName }" />
+			  <!-- {/await} -->
 			</div>
 		{:else}
 			<a href="/admin"

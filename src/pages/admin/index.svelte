@@ -21,7 +21,7 @@
       "profile records"
   		"profile info";
 
-		grid-template-columns: auto 1fr;
+		grid-template-columns: 15em 1fr;
     grid-template-rows: auto auto 1fr;
 	}
 
