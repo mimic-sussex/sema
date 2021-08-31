@@ -1,12 +1,13 @@
 {
 	"name": "sema",
-	"version": "0.8.0",
+	"version": "0.9.0",
 	"repository": "https://github.com/mimic-sussex/sema",
 	"description": "Sema, a live coding language design and performance playground",
 	"author": "Francisco Bernardo <f.bernardo@sussex.ac.uk> (http://frantic0.com)",
 	"contributors": [
 		"Chris Kiefer <c.kiefer@sussex.ac.uk> (http://luuma.net)",
-		"Thor Magnusson <t.magnusson@sussex.ac.uk> (http://www.ixi-audio.net)"
+		"Thor Magnusson <t.magnusson@sussex.ac.uk> (http://www.ixi-audio.net)",
+		"Milo Beuzeval <mb743@sussex.ac.uk>"
 	],
 	"license": "MIT",
 	"engines": {
