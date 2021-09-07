@@ -1,7 +1,7 @@
 <script>
   import { onMount, onDestroy } from 'svelte';
 	import { metatags } from '@roxi/routify'
-  import ReGL from 'regl';
+  // import ReGL from 'regl';
   // import mouse from 'mouse-change';
   // import regl as RGL from 'regl';
 
