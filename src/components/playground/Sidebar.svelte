@@ -725,6 +725,7 @@ import { siteMode } from "../../stores/common";
       </button>
     </div>
 
+    <!--
     <div>
       <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' } controls"
               on:click={ () => dispatchAdd('visualiser') }
@@ -740,6 +741,7 @@ import { siteMode } from "../../stores/common";
         MIDI
       </button>
     </div>
+    -->
 
     <br>
 
