@@ -57,7 +57,7 @@
 
 
   const handleClickFullScreen = () => {
-    setFullScreenMode(document.querySelector("#routify-app"), isFullScreen());
+    setFullScreenMode(document.querySelector("#sema"), isFullScreen());
   }
 
 </script>
