@@ -5,7 +5,7 @@
   import { onMount } from 'svelte';
   //based on https://svelte.dev/repl/a5f4d395b15a44d48a6b2239ef705fc4?version=3.35.0  
   export let headerText;
-  export let path;
+  //export let path;
   export let children;
   export let expanded = false;
 
@@ -48,8 +48,8 @@
         <h3>{headerText}</h3>
 
         <svg viewBox="0 0 20 20" fill="none" >
-        <path class="vert" d="M10 1V19" stroke="black" stroke-width="2"/>
-        <path d="M1 10L19 10" stroke="black" stroke-width="2"/>
+        <path class="vert" d="M10 1V19" stroke="white" stroke-width="3"/>
+        <path d="M1 10L19 10" stroke="white" stroke-width="3"/>
         </svg>
       </button>
   
