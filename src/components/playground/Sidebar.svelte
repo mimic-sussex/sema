@@ -335,6 +335,33 @@ import { siteMode } from "../../stores/common";
     -webkit-box-shadow:  2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
   }
 
+  .combobox-light:disabled {
+    display: block;
+    font-size: medium;
+    font-family: sans-serif;
+    font-weight: 400;
+    cursor: not-allowed;
+    color: #888;
+    line-height: 1.3;
+    padding: 0.7em 1em 0.7em 1em;
+    width: 8em;
+    box-sizing: border-box;
+    margin: 0;
+    border: 0 solid #333;
+    text-align: left;
+    border-radius: .6em;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: rgba(16, 16, 16, 0.04);
+    background-repeat: no-repeat, repeat;
+    background-position: right .7em top 50%, 0 0;
+    background-size: .65em auto, 100%;
+    box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
+    -moz-box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
+    -webkit-box-shadow:  2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
+  }
+
 
 
   .combobox-dark {
@@ -418,6 +445,34 @@ import { siteMode } from "../../stores/common";
     -moz-box-shadow: 5px 5px 20px -5px rgba(0,0,0,0.75), -5px -5px 20px rgba(255, 255, 255, 0.954);
     box-shadow: 2px 2px 3px rgb(0, 0, 0), -1px -1px 3px #ffffff61;
   }
+
+  .combobox-dark:disabled {
+    display: block;
+    font-size: medium;
+    font-family: sans-serif;
+    font-weight: 400;
+    cursor: not-allowed;
+    color: #888;
+    line-height: 1.3;
+    padding: 0.7em 1em 0.7em 1em;
+    width: 8em;
+    box-sizing: border-box;
+    margin: 0;
+    border: 0 solid #333;
+    text-align: left;
+    border-radius: .6em;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: rgba(16, 16, 16, 0.04);
+    background-repeat: no-repeat, repeat;
+    background-position: right .7em top 50%, 0 0;
+    background-size: .65em auto, 100%;
+    -webkit-box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
+    -moz-box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
+    box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
+  }
+
   .button-dark {
     display: block;
     font-size: medium;
@@ -519,24 +574,12 @@ import { siteMode } from "../../stores/common";
     box-shadow:  -1px -1px 3px rgba(16, 16, 16, 0.4), 0.5px 0.5px 0.5px rgba(16, 16, 16, 0.04);
   }
 
-  .group-labels {
-    padding-left:5px;
-    margin-bottom: 10px;
-  }
-
-  .group-label {
-    /* color: #666; */
-    font-size: medium;
-    font-family: sans-serif;
-    font-weight: 400
-  }
-
   .button-dark:disabled {
     display: block;
     font-size: medium;
     font-family: sans-serif;
     font-weight: 400;
-    cursor: pointer;
+    cursor: not-allowed;
     color: #888;
     line-height: 1.3;
     padding: 0.7em 1em 0.7em 1em;
@@ -556,6 +599,18 @@ import { siteMode } from "../../stores/common";
     box-shadow: 2px 2px 3px rgb(0, 0, 0), -1px -1px 3px #ffffff61;
     -moz-box-shadow: 2px 2px 3px rgb(0, 0, 0), -1px -1px 3px #ffffff61;
     -webkit-box-shadow: 2px 2px 3px rgb(0, 0, 0), -1px -1px 3px #ffffff61;
+  }
+
+  .group-labels {
+    padding-left:5px;
+    margin-bottom: 10px;
+  }
+
+  .group-label {
+    /* color: #666; */
+    font-size: medium;
+    font-family: sans-serif;
+    font-weight: 400
   }
 
   .button-light {
@@ -653,7 +708,7 @@ import { siteMode } from "../../stores/common";
   <div class="layout-sidebar-group-widgets-container">
 
     <div class="group-labels" >
-      <span class="group-label">Windows</span>
+      <span class="group-label">Widgets</span>
     </div>
     <!-- Live Code Combobox Selector -->
     <div class="controls">
@@ -751,7 +806,7 @@ import { siteMode } from "../../stores/common";
   <div class="layout-sidebar-group-properties-container">
 
     <div class="group-labels" >
-      <span class="group-label">Window Settings</span>
+      <span class="group-label">Widget Settings</span>
     </div>
     <div>
       <ItemProps></ItemProps>
