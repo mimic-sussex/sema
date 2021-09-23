@@ -22,7 +22,7 @@
   let markdown;
 
   let fetchMarkdown = async (chapter, section) => {
-
+    console.log("markdown", chapter, section);
     if(chapter != undefined && section != undefined){ // There is a call with undefined value when navigating to Playground
       const res = await fetch(document.location.origin + `/tutorial/${chapter}/${section}/index.md`)
       const text = await res.text();
@@ -48,7 +48,7 @@
 		localStorage.setItem("tutorial-reloaded", true);
     if(!controller.samplesLoaded)
       controller.init(document.location.origin);
-
+    console.log("index mount", $selected);
     promise = fetchMarkdown($selected.chapter_dir, $selected.section_dir); // Reactive statement, var 'promise' reacts to 'section' changes
     // console.log(`index:url:${$params.chapter}:params:${$params.section}}`);
     // console.log($url())

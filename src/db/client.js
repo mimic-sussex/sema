@@ -4,10 +4,13 @@ const supabaseUrl = __api.env.SUPABASE_URL
 const supabaseAnonKey = __api.env.SUPABASE_ANON_KEY
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+console.log("supabase!", supabase);
 
 export async function getUserProfile() {
   try {
-    const user = supabase.auth.user()
+	const user = supabase.auth.user()
+	console.log("user" ,user);
+	
     let { data, error, status } = await supabase
       .from('profiles')
       .select(`username, website, avatar_url`)
@@ -50,6 +53,9 @@ export const createPlayground = async () => {
 }
 
 export const updatePlayground = async (uuid, name, content) => {
+	console.log("updating playground", supabase);
+	console.log("name",name);
+	console.log("content", content);
 	if(supabase && name && content){
 		let updatedPlayground
 		try {

@@ -26,7 +26,7 @@
 <slot node={node}></slot>
 
 {#if children}
-<MenuContainer headerText={node.title} path="undefined" children={node.children}>
+<MenuContainer headerText={node.title} children={node.children}>
 <ul>
     {#each children as childNode}
     <li>
@@ -39,7 +39,7 @@
 </MenuContainer>
 {:else}
 
-  <MenuItem headerText={node.title} path={node.path} subs={node}>
+  <MenuItem headerText={node.title} path={node.path}>
     
   </MenuItem>
   <!--

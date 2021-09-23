@@ -157,13 +157,13 @@
   };
 
   onMount( async () => {
-
     console.log("DEBUG:routes/tutorial/_layout:onMount");
     if(!controller.samplesLoaded){
+      console.warn("samples loaded");
       controller.init(document.location.origin + '/build/');
       $goto(localStorage.getItem("last-session-tutorial-url"));
     }
-
+    console.log(localStorage.getItem("last-session-tutorial-url"));
     if($items.length === 0 && localStorage["last-session-tutorial-url"]){
       let sessionTutorialURL = document.location.origin + localStorage.getItem("last-session-tutorial-url") + 'layout.json'
       let json = await fetch(sessionTutorialURL)
@@ -178,7 +178,7 @@
       updateItemPropsWithCommonStoreValues(item)
     }
 
-    $goto(localStorage.getItem("last-session-tutorial-url"));
+    //$goto(localStorage.getItem("last-session-tutorial-url"));
   });
 
   onDestroy(() => {

@@ -51,7 +51,7 @@
   };
 
 
-  marked.use({ renderer });
+  marked.use({ renderer });  
   marked.setOptions({
     highlight: function(code, lang){
       //const language = hljs.getLanguage('javascript') ? lang : 'plaintext';
@@ -87,7 +87,7 @@
             "<pre><code>",
             `<pre style="margin-top:-25px">
               <button style="font-size:70%; text-align: center; float: right; z-index: 1000; top: 30px; position: relative;" type="button" onclick="copyCode('code${codeID}')">copy</button>
-              <code style="-moz-user-select: text; -html-user-select: text; -webkit-user-select: text; -ms-user-select: text; user-select: text; white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word;" id='code${codeID++}; class="hljs javascript"'>`
+              <code style="-moz-user-select: text; -html-user-select: text; -webkit-user-select: text; -ms-user-select: text; user-select: text; white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word;" id='code${codeID++}'>`
             );
         };
         
