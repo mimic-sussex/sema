@@ -1,6 +1,6 @@
 <script>
 
-  import { isActive, url, params } from "@roxi/routify";
+  import { isActive, url, params, redirect } from "@roxi/routify";
 
 	import {
 		avatarSrc,
@@ -9,8 +9,6 @@
 		userName,
 
 	 } from '../../stores/user';
-
-	import { redirect } from '@roxi/routify'
 
   import { siteMode } from "../../stores/common";
   import { supabase } from '../../db/client';

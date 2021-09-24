@@ -59,7 +59,7 @@
 
 .container-records {
 	overflow: auto;
-	width: 1000px;
+	width: 100%;
 }
 
 .record-name {

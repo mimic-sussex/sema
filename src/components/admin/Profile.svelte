@@ -27,14 +27,24 @@
       $loading = true
 
       let { username, website, avatar_url } = await getUserProfile()
-
-      if ( username && website && avatar_url) {
-        $userName = username
-        $websiteURL = website
-        $avatarURL = avatar_url
-      } else if (username == null){
-        alert("Please choose a unique username for your account");
+      console.log(console.log("output of getUserProfile", username, website, avatar_url));
+      if (username){
+        $userName = username;
       }
+      if (website){
+        $websiteURL = website;
+      }
+      if (avatar_url){
+        $avatarURL = avatar_url;
+      }
+      
+      
+      // if ( username && website && avatar_url) {
+      //   $userName = username;
+      //   $websiteURL = website;
+      //   $avatarURL = avatar_url;
+      // }
+      
     } catch (error) {
       alert(error.message)
     } finally {
