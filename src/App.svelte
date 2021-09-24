@@ -12,6 +12,7 @@
   let messaging = new PubSub();
 
 	const init = () => {
+    console.log(".user in init", user);
 		user.set(supabase.auth.user())
 		supabase.auth.onAuthStateChange((_, session) => {
 			user.set(session.user)

@@ -15,10 +15,12 @@
 
   async function signOut() {
     try {
-      let { error } = await supabase.auth.signOut()
+			let { error } = await supabase.auth.signOut()
+			//$redirect('/login')
       if (error) throw error
     } catch (error) {
-      alert(error.message)
+	  	console.log(error.message, "SINGING OUT");
+      alert(error.message);
     } finally {
 			$loggedIn = false
 			$redirect('/login')
