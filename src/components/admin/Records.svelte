@@ -48,7 +48,7 @@
 	}
 
 	$: $records = fetchRecords(); //promise is reactive to changes in url docId and links since they load asynchrynously
-
+	
 	onMount ( async () => {
 
 	})
@@ -56,6 +56,11 @@
 </script>
 
 <style>
+
+.container-records {
+	overflow: auto;
+	width: 1000px;
+}
 
 .record-name {
 	display: inline-block;
@@ -76,25 +81,32 @@
 
 
 <div class='container-records'>
+	
+		
 	{#await $records }
-    <p>...waiting</p>
-  {:then records }
-		<ul>
-			{#each records as record }
-				<li class='record'>
-					<a href="playground/{ record.id }"
-							on:click={ setPlaygroundFromRecord(record) }
-							>
-						<span class='record-name'
-									>{ record.name }
-						</span>
-					</a>
-					last updated: { getDateStringFormat(record.updated) }
-					{( record.isPublic ? " — Public": '' )}
-				</li>
-		{/each}
-		</ul>
+		<p>...waiting</p>
+	{:then $records }
+		{#if $records != null}
+			<ul>
+				{#each $records as record }
+					<li class='record'>
+						<a href="playground/{ record.id }"
+								on:click={ setPlaygroundFromRecord(record) }
+								>
+							<span class='record-name'
+										>{ record.name }
+							</span>
+						</a>
+						last updated: { getDateStringFormat(record.updated) }
+						{( record.isPublic ? " — Public": '' )}
+					</li>
+			{/each}
+			</ul>
+		{:else}
+			<p style="color: red">No projects yet! Navigate to the playground to make one.</p>
+		{/if}
 	{:catch error}
-    <p style="color: red">no records</p>
-  {/await}
+		<p style="color: red">promise not fulfilled</p>
+	{/await}
+
 </div>

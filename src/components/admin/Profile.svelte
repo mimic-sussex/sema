@@ -32,6 +32,8 @@
         $userName = username
         $websiteURL = website
         $avatarURL = avatar_url
+      } else if (username == null){
+        alert("Please choose a unique username for your account");
       }
     } catch (error) {
       alert(error.message)
