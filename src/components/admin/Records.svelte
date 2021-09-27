@@ -52,6 +52,56 @@
 	onMount ( async () => {
 
 	})
+	
+	const getMyProjects = async () => {
+
+		try {
+			const user = supabase.auth.user()
+			
+			const playgrounds = await supabase
+			.from('playgrounds')
+			.select(`
+					id,
+					name,
+					content,
+					created,
+					updated,
+					isPublic
+				`)
+			.eq('author', user.id)
+			.order('updated', {ascending:true})
+
+			$records = playgrounds.data;
+		} catch(error){
+			console.error(error)
+		}
+		
+	}
+
+
+	const getAllProjects = async () => {
+		try {
+			const user = supabase.auth.user()
+			
+			const playgrounds = await supabase
+			.from('playgrounds')
+			.select(`
+					id,
+					name,
+					content,
+					created,
+					updated,
+					isPublic
+				`)
+			.eq('isPublic', true)
+			.order('updated', {ascending:true})
+
+			$records = playgrounds.data;
+		} catch(error){
+			console.error(error)
+		}
+	}
+
 
 </script>
 
@@ -79,6 +129,8 @@
 }
 </style>
 
+<button on:click={getMyProjects} >My Projects</button>
+<button on:click={getAllProjects}>Browse Projects</button>
 
 <div class='container-records'>
 	
@@ -98,7 +150,7 @@
 							</span>
 						</a>
 						last updated: { getDateStringFormat(record.updated) }
-						{( record.isPublic ? " — Public": '' )}
+						{( record.isPublic ? " — Public": 'Private' )}
 					</li>
 			{/each}
 			</ul>

@@ -33,24 +33,34 @@ export const createPlayground = async () => {
 	if(supabase){
 		const timestamp = new Date().toISOString()
 		let newPlayground;
-		try {
-			newPlayground = await supabase
-				.from('playgrounds')
-				.insert({
-					name: 'new playground',
-					content: [],
-					created: timestamp,
-					updated: timestamp,
-					isPublic: true,
-				})
-				.single()
 
-				console.log('newPlayground')
-				console.log(newPlayground)
-				return newPlayground.data;
-		} catch (error) {
+		try {
+			const user = supabase.auth.user()
+			try {
+				newPlayground = await supabase
+					.from('playgrounds')
+					.insert({
+						name: 'new playground',
+						content: [],
+						created: timestamp,
+						updated: timestamp,
+						isPublic: true,
+						readOnly: true,
+						author: user.id
+					})
+					.single()
+	
+					console.log('newPlayground')
+					console.log(newPlayground)
+					return newPlayground.data;
+			} catch (error) {
+				console.error(error)
+			}
+		}
+		catch(error){
 			console.error(error)
 		}
+		
 	}
 	else
 		throw new Error('Supabase client has not been created')
@@ -60,6 +70,7 @@ export const updatePlayground = async (uuid, name, content) => {
 	console.log("updating playground", supabase);
 	console.log("name",name);
 	console.log("content", content);
+	console.log("supabase in uypdate playground!", supabase);
 	if(supabase && name && content){
 		let updatedPlayground
 		try {
