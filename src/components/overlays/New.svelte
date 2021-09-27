@@ -27,7 +27,7 @@
 	import { onMount, onDestroy } from 'svelte';
 
   const closeOverlay = () => {
-    $isDeleteOverlayVisible = false;
+    $isNewOverlayVisible = false;
   }
 
   const resetEnvironment = async () => {
