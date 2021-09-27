@@ -92,17 +92,19 @@
 				style='color: {$siteMode === 'dark'? 'white': 'black'};'
 				>
 			{ $userName }</a>
-			<div class='container-session-avatar'>
-				<!-- {#await profile }
-					<img 	class='session-avatar'
-							src={ null }
-							alt={ null } />
-				{:then number } -->
-					<img 	class='session-avatar'
-							src={ $avatarSrc }
-							alt="{ $userName }" />
-			  <!-- {/await} -->
-			</div>
+			{#if $avatarSrc}
+				<div class='container-session-avatar'>
+					<!-- {#await profile }
+						<img 	class='session-avatar'
+								src={ null }
+								alt={ null } />
+					{:then number } -->
+						<img 	class='session-avatar'
+								src={ $avatarSrc }
+								alt="{ $userName }" />
+					<!-- {/await} -->
+				</div>
+			{/if}
 		{:else}
 			<a href="/admin"
 				style='color: { $siteMode === 'dark'? 'white': 'black' };'
