@@ -54,7 +54,8 @@
     isSaveOverlayVisible,
     isUploadOverlayVisible,
     isDeleteOverlayVisible,
-		isNewOverlayVisible,
+    isNewOverlayVisible,
+    isShareOverlayVisible,
     items,
     // assignNewID,
     hydrateJSONcomponent,
@@ -69,6 +70,16 @@
 
   let handleClick = () => {
     window.localStorage["tutorial-" + new Date(Date.now()).toISOString()] = JSON.stringify($items)
+  }
+
+  let shareProjectLink = () => {
+    //isShareOverlayVisible
+    console.log('Sharing project!');
+    $isUploadOverlayVisible = false;
+    $isSaveOverlayVisible = false;
+		$isNewOverlayVisible = false;
+    $isDeleteOverlayVisible = false;
+    $isShareOverlayVisible = true;
   }
 
 	const onNameChange = async () => {
@@ -489,9 +500,11 @@
 
 </style>
 
+<!--NAME PROJECT TEXT BOX-->
 <input type="text"
 				bind:value={ $name }
-				on:change={ onNameChange }
+        on:change={ onNameChange }
+        placeholder='Project Name'
         style="{( $isActive('/playground') )? `visibility:visible;`: `visibility:collapse`}; margin-left: 2px;"
 				/>
 
@@ -889,7 +902,7 @@
 <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
         title="share project"
         style="padding: 0.25em 0.3em 0.75em 0.7em;"
-        on:click={ handleClick }>
+        on:click={ shareProjectLink }>
   <div class="icon-container">
     {#if $siteMode === 'dark' }
 

@@ -17,6 +17,7 @@
   import New from '../../components/overlays/New.svelte';
   import Save from '../../components/overlays/Save.svelte';
   import Upload from '../../components/overlays/Upload.svelte';
+  import Share from '../../components/overlays/Share.svelte';
   import Sidebar from '../../components/playground/Sidebar.svelte';
   import Settings from '../../components/settings/Settings.svelte';
   // import Dashboard from '../components/layouts/Dashboard.svelte';
@@ -48,6 +49,7 @@
     isDeleteOverlayVisible,
     isNewOverlayVisible,
     isSaveOverlayVisible,
+    isShareOverlayVisible,
 		name,
 		uuid,
 		items
@@ -599,6 +601,8 @@
       <Save />
 		{:else if $isNewOverlayVisible }
       <New />
+    {:else if $isShareOverlayVisible}
+      <Share/>
 		{/if}
 
   </div>
