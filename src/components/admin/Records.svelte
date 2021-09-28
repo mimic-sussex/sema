@@ -53,6 +53,8 @@
 
 	})
 
+
+	//get all the projects of the current user from the database
 	const getMyProjects = async () => {
 
 		try {
@@ -82,6 +84,7 @@
 	}
 
 
+	//get all public projects in the database
 	const getAllProjects = async () => {
 		try {
 
@@ -109,10 +112,49 @@
 
 
 	const forkProject = async (id) => {
-		
+		console.log("Forking project", id);
+		//grab row to copy
+		try {
+
+			const user = supabase.auth.user() //get user to set new author id for fork
+
+			const playground = await supabase
+			.from('playgrounds')
+			.select(`
+					id,
+					name,
+					content,
+					created,
+					updated,
+					isPublic,
+					author
+				`)
+			.eq('id', id) //check if project id matches
+			.single()
+
+
+				const forkground = await supabase
+					.from('playgrounds')
+					.insert([
+						{ 
+							name: "Fork of " + playground.data.name, 
+							content:playground.data.content, 
+							created: playground.data.created,
+							updated: playground.data.updated,
+							isPublic: playground.data.isPublic,
+							author:user.id
+						}
+					])
+		} 
+		catch(error){
+			console.error(error)
+		}
 	}
 
 	const shareProject = async (id) => {
+		console.log(id);
+		navigator.clipboard.writeText(id);
+		window.alert("Project ID copied");
 	}
 
 	const deleteProject = async (id) => {
@@ -269,6 +311,8 @@ label {
 						{#if record.author}
 							{#if record.author.username}
 								{record.author.username}
+							{:else}
+								No Username
 							{/if}
 						{/if}
 					</td>
@@ -289,8 +333,8 @@ label {
 
 							</button>
 							<div class="dropdown-content">
-								<a href="" on:click={forkProject}>Fork</a>
-								<a href="" on:click={shareProject}>Share</a>
+								<a href="#" on:click={forkProject(record.id)}>Fork</a>
+								<a href="#" on:click={shareProject(record.id)}>Share</a>
 								<a href="#" on:click={deleteProject(record.id)}>Delete</a>
 							</div>
 						</div> 
