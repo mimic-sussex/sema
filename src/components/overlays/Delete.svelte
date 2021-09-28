@@ -18,7 +18,8 @@
 
 
 
-	import { onMount, onDestroy } from 'svelte';
+  import { onMount, onDestroy } from 'svelte';
+  import { fly, fade } from 'svelte/transition';
 
   const closeOverlay = () => {
     $isDeleteOverlayVisible = false;
@@ -55,7 +56,8 @@
 
 </script>
 
-<div  class="delete-overlay-component"
+<div  in:fly="{{ y: 200, duration: 300 }}" out:fade
+      class="delete-overlay-component"
       style='visibility:{ $isDeleteOverlayVisible ? "visible": "hidden"}'
       >
 

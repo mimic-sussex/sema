@@ -1,9 +1,5 @@
 <script>
 
-  import { Engine } from 'sema-engine';
-
-  let engine;
-
   import {
     isShareOverlayVisible,
     isDeleteOverlayVisible,
@@ -20,10 +16,6 @@
 		name
   } from '../../stores/playground.js';
 
-	import {
-		createPlayground
-	} from '../../db/client';
-
 
   import { onMount, onDestroy } from 'svelte';
   import { fly, fade } from 'svelte/transition';
@@ -32,9 +24,12 @@
     $isShareOverlayVisible = false;
   }
 
+  function makeTweet(){
+    return "https://twitter.com/intent/tweet?text="+window.location.href;
+  }
   const copyToClipboard = () => {
     navigator.clipboard.writeText(window.location.href);
-    console.log('current uuid', $uuid)
+    console.log('current uuid', $uuid);
   }
   
 
@@ -50,7 +45,7 @@
 </script>
 
 <div  in:fly="{{ y: 200, duration: 300 }}" out:fade
-      class="new-overlay-component"
+      class="share-overlay-component"
       style='visibility:{ $isShareOverlayVisible ? "visible": "hidden"}'
       >
 
@@ -79,13 +74,17 @@
         </g>
       </svg>
 
-  <p class="new-overlay-text">
+  <p class="share-overlay-text">
     <span style="font-weight: 1500;">Share your project via a unique project URL</span>
   </p>
-  <div class="new-overlay-button-container">
+  <div class="share-overlay-button-container">
     <button class="button-dark"
             on:click={ copyToClipboard }
             >Copy Link</button>
+    <a class="twitter-share-button"
+            href="https://twitter.com/intent/tweet?text=Checkout my project on "
+            data-size="large">
+          Tweet</a>
     <button class="button-dark"
             on:click={ closeOverlay }
             >Cancel</button>
@@ -163,11 +162,11 @@
     box-shadow:  -1px -1px 3px rgba(16, 16, 16, 0.4), 0.5px 0.5px 0.5px rgba(16, 16, 16, 0.04);
   }
 
-  .new-overlay-button-container {
+  .share-overlay-button-container {
     display: inline-flex;
   }
 
-  .new-overlay-component {
+  .share-overlay-component {
     width: 100%;
 		height:100%;
     display:flex;
@@ -175,10 +174,11 @@
     align-items:center;
 		flex-direction:column;
     font-size:16px;
+    background-color: rgba(16,12,12,0.8);
   }
 
 
-  .new-overlay-text {
+  .share-overlay-text {
     /* top:50%; */
 
     /* width: 100%; */
