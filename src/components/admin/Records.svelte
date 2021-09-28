@@ -47,12 +47,12 @@
 		}
 	}
 
-	$: $records = fetchRecords(); //promise is reactive to changes in url docId and links since they load asynchrynously
-	
+	$: $records = getAllProjects();//fetchRecords(); //promise is reactive to changes in url docId and links since they load asynchrynously
+
 	onMount ( async () => {
 
 	})
-	
+
 	const getMyProjects = async () => {
 
 		try {
@@ -66,11 +66,14 @@
 					content,
 					created,
 					updated,
-					isPublic
+					isPublic,
+					author (
+						username
+					)
 				`)
 			.eq('author', user.id)
 			.order('updated', {ascending:true})
-
+			
 			$records = playgrounds.data;
 		} catch(error){
 			console.error(error)
@@ -91,11 +94,14 @@
 					content,
 					created,
 					updated,
-					isPublic
+					isPublic,
+					author (
+						username
+					)
 				`)
 			.eq('isPublic', true)
 			.order('updated', {ascending:true})
-
+			
 			$records = playgrounds.data;
 		} catch(error){
 			console.error(error)
@@ -149,7 +155,12 @@
 										>{ record.name }
 							</span>
 						</a>
-						last updated: { getDateStringFormat(record.updated) }
+						{#if record.author}
+							{#if record.author.username}
+								author: {record.author.username}
+							{/if}
+						{/if}
+						last updated: { "—" + getDateStringFormat(record.updated) }
 						{( record.isPublic ? " — Public": 'Private' )}
 					</li>
 			{/each}
