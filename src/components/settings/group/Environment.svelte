@@ -73,8 +73,6 @@
   }
 
   let shareProjectLink = () => {
-    //isShareOverlayVisible
-    console.log('Sharing project!');
     $isUploadOverlayVisible = false;
     $isSaveOverlayVisible = false;
 		$isNewOverlayVisible = false;
@@ -94,7 +92,8 @@
   function resetEnvironment(){
     $isUploadOverlayVisible = false;
     $isSaveOverlayVisible = false;
-		$isNewOverlayVisible = false;
+    $isNewOverlayVisible = false;
+    $isShareOverlayVisible = false;
     $isDeleteOverlayVisible = true;
   }
 
@@ -102,7 +101,8 @@
 		try {
 			$isUploadOverlayVisible = false;
 			$isSaveOverlayVisible = false;
-			$isDeleteOverlayVisible = false;
+      $isDeleteOverlayVisible = false;
+      $isShareOverlayVisible = false;
 			$isNewOverlayVisible = true;
 
 			// $items = data.content.map(item => hydrateJSONcomponent(item))
@@ -115,7 +115,8 @@
 		try {
 			$isUploadOverlayVisible = false;
 			$isSaveOverlayVisible = true;
-			$isDeleteOverlayVisible = false;
+      $isDeleteOverlayVisible = false;
+      $isShareOverlayVisible = false;
 			$isNewOverlayVisible = false;
 
 			loadEnvironmentSnapshotEntries();
@@ -142,6 +143,7 @@
     $isUploadOverlayVisible = true;
     $isSaveOverlayVisible = false;
     $isDeleteOverlayVisible = false;
+    $isShareOverlayVisible = false;
 		$isNewOverlayVisible = false;
   }
 
