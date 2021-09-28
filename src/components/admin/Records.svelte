@@ -130,9 +130,12 @@
 
 .record {
 	margin-bottom: 0.5em;
-
-
 }
+
+table {
+	width:100%;
+}
+
 </style>
 
 <button on:click={getMyProjects} >My Projects</button>
@@ -145,28 +148,56 @@
 		<p>...waiting</p>
 	{:then $records }
 		{#if $records != null}
-			<ul>
+			<table>
+				<tr>
+					<th>Name</th>
+					<th>Visibility</th>
+					<th>Author</th>
+					<th>Updated</th>
+					<th>Options</th> <!--Fork or delete (depending on permissions)-->
+				</tr>
+
 				{#each $records as record }
-					<li class='record'>
+					<tr>
+
+						<td>
 						<a href="playground/{ record.id }"
 								on:click={ setPlaygroundFromRecord(record) }
 								>
-							<span class='record-name'
-										>{ record.name }
-							</span>
-						</a>
+								<span class='record-name'
+								>{ record.name }
+								</span>
+						</td>
+					
+					
+					<td>
+						{( record.isPublic ? "Public": 'Private' )}
+					</td>
+
+					<td>
 						{#if record.author}
 							{#if record.author.username}
-								author: {record.author.username}
+								{record.author.username}
 							{/if}
 						{/if}
-						last updated: { "—" + getDateStringFormat(record.updated) }
-						{( record.isPublic ? " — Public": 'Private' )}
-					</li>
-			{/each}
-			</ul>
+					</td>
+
+					<td>
+						{ getDateStringFormat(record.updated) }
+					</td>
+
+					<td>
+						<button>Fork</button>
+					</td>
+
+				</tr>
+
+					
+				{/each}
+			</table>
+
 		{:else}
-			<p style="color: red">No projects yet! Navigate to the playground to make one.</p>
+			<p style="color: red">No projects yet. Go to the playground and make one!</p>
 		{/if}
 	{:catch error}
 		<p style="color: red">promise not fulfilled</p>
