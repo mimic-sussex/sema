@@ -84,8 +84,7 @@
 
 	const getAllProjects = async () => {
 		try {
-			const user = supabase.auth.user()
-			
+
 			const playgrounds = await supabase
 			.from('playgrounds')
 			.select(`
@@ -106,6 +105,30 @@
 		} catch(error){
 			console.error(error)
 		}
+	}
+
+
+	const forkProject = async (id) => {
+		
+	}
+
+	const shareProject = async (id) => {
+	}
+
+	const deleteProject = async (id) => {
+		console.log("deleting project with id", id);
+
+		try {
+			const user = supabase.auth.user()
+			
+			const playgrounds = await supabase
+			.from('playgrounds')
+			.delete()
+			.match({'author': user.id, 'id': id})
+		} catch(error){
+			console.error(error)
+		}
+		//need to grab currently selected project list again
 	}
 
 
@@ -154,7 +177,49 @@ label {
 	padding: 0px 1em 0px 8px;
 }
     
+.dropdown {
+  float: left;
+  overflow: hidden;
+}
+.dropdown .dropbtn {
+  font-size: 16px;  
+  border: none;
+  outline: none;
+  color: white;
+  padding: 14px 16px;
+  background-color: inherit;
+  font-family: inherit;
+  margin: 0;
+}
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
 
+.dropdown-content a {
+  float: none;
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+
+.dropdown-content a:hover {
+  background-color: #ddd;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown:hover .dropbtn {
+  background-color: #282828;
+}
 
 </style>
 <!-- 
@@ -213,7 +278,24 @@ label {
 					</td>
 
 					<td>
-						<button>Fork</button>
+						<!-- <button>Fork</button> -->
+						
+						<div class="dropdown">
+							<button class="dropbtn">
+
+								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-sliders" viewBox="0 0 16 16">
+									<path fill-rule="evenodd" d="M11.5 2a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM9.05 3a2.5 2.5 0 0 1 4.9 0H16v1h-2.05a2.5 2.5 0 0 1-4.9 0H0V3h9.05zM4.5 7a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM2.05 8a2.5 2.5 0 0 1 4.9 0H16v1H6.95a2.5 2.5 0 0 1-4.9 0H0V8h2.05zm9.45 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm-2.45 1a2.5 2.5 0 0 1 4.9 0H16v1h-2.05a2.5 2.5 0 0 1-4.9 0H0v-1h9.05z"/>
+								</svg>
+
+							</button>
+							<div class="dropdown-content">
+								<a href="" on:click={forkProject}>Fork</a>
+								<a href="" on:click={shareProject}>Share</a>
+								<a href="#" on:click={deleteProject(record.id)}>Delete</a>
+							</div>
+						</div> 
+
+
 					</td>
 
 				</tr>
