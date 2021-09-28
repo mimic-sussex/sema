@@ -136,10 +136,36 @@ table {
 	width:100%;
 }
 
-</style>
+input[type=radio] {
+  float: left;
+  clear: none;
+  margin: 2px 0 0 2px;
+}
 
+/* .container-project-filter {
+	display: inline-block;
+	width:100%;
+} */
+
+label {
+	float: left;
+	clear: none;
+	display: block;
+	padding: 0px 1em 0px 8px;
+}
+    
+
+
+</style>
+<!-- 
 <button on:click={getMyProjects} >My Projects</button>
-<button on:click={getAllProjects}>Browse Projects</button>
+<button on:click={getAllProjects}>Browse Projects</button> -->
+<div class="container-project-filter">
+	<input type="radio" id="my-projects-radio" name="project-filter" value="my-projects" on:click={getMyProjects}>
+	<label for="my-projects-radio">My Projects</label>
+	<input type="radio" id="all-projects-radio" name="project-filter" value="all-projects" checked on:click={getAllProjects}>
+	<label for="my-projects-radio">Browse All Projects</label>
+</div>
 
 <div class='container-records'>
 	
