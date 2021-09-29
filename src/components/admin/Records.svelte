@@ -18,6 +18,8 @@
 		uuid
   } from "../../stores/playground.js"
 
+	let projectPage = 'all-projects';
+
 	const getDateStringFormat = d => (new Date(d)).toISOString().slice(0, 19).replace(/-/g, "/").replace("T", " ");
 
 	const setPlaygroundFromRecord = record => {
@@ -49,6 +51,18 @@
 	}
 
 	$: $records = getAllProjects();//fetchRecords(); //promise is reactive to changes in url docId and links since they load asynchrynously
+	$: updateProjectPage(projectPage);
+
+	const updateProjectPage = async (projectPage) => {
+		if (projectPage == 'my-projects'){
+			console.log('refreshing my-projects page', projectPage)
+			getMyProjects();
+		} else {
+			console.log('refreshing all-projects page', projectPage)
+			getAllProjects();
+		}
+	}
+
 
 	onMount ( async () => {
 
@@ -134,18 +148,21 @@
 			.single()
 
 
-				const forkground = await supabase
-					.from('playgrounds')
-					.insert([
-						{ 
-							name: "Fork of " + playground.data.name, 
-							content:playground.data.content, 
-							created: playground.data.created,
-							updated: playground.data.updated,
-							isPublic: playground.data.isPublic,
-							author:user.id
-						}
-					])
+			const forkground = await supabase
+				.from('playgrounds')
+				.insert([
+					{ 
+						name: "Fork of " + playground.data.name, 
+						content:playground.data.content, 
+						created: playground.data.created,
+						updated: playground.data.updated,
+						isPublic: playground.data.isPublic,
+						author:user.id
+					}
+				])
+			
+			updateProjectPage(projectPage);
+				
 		} 
 		catch(error){
 			console.error(error)
@@ -168,6 +185,9 @@
 			.from('playgrounds')
 			.delete()
 			.match({'author': user.id, 'id': id})
+
+			updateProjectPage(projectPage);
+
 		} catch(error){
 			console.error(error)
 		}
@@ -177,12 +197,16 @@
 	const toggleVisibility = async (id, state) => {
 
 		try {
-		const user = supabase.auth.user()
+			const user = supabase.auth.user()
 
-		const playground = await supabase
-			.from('playgrounds')
-			.update({isPublic: state})
-			.match({id: id, author: user.id})
+			const playground = await supabase
+				.from('playgrounds')
+				.update({isPublic: state})
+				.match({id: id, author: user.id})
+			
+
+			updateProjectPage(projectPage);
+		
 		}
 		catch(error){
 			console.error(error)
@@ -286,16 +310,20 @@ label {
 
 .visibility-icon:hover {
 	cursor:pointer;
+	fill: #282828;
 }
 
 </style>
 <!-- 
 <button on:click={getMyProjects} >My Projects</button>
 <button on:click={getAllProjects}>Browse Projects</button> -->
+
+<p>{projectPage} selected</p>
+
 <div class="container-project-filter">
-	<input type="radio" id="my-projects-radio" name="project-filter" value="my-projects" on:click={getMyProjects}>
+	<input type="radio" id="my-projects-radio" name="project-filter" value="my-projects" bind:group={projectPage}>
 	<label for="my-projects-radio">My Projects</label>
-	<input type="radio" id="all-projects-radio" name="project-filter" value="all-projects" checked on:click={getAllProjects}>
+	<input type="radio" id="all-projects-radio" name="project-filter" value="all-projects" bind:group={projectPage}>
 	<label for="my-projects-radio">Browse All Projects</label>
 </div>
 
@@ -367,9 +395,9 @@ label {
 
 							</button>
 							<div class="dropdown-content">
-								<a href="#" on:click={forkProject(record.id)}>Fork</a>
-								<a href="#" on:click={shareProject(record.id)}>Share</a>
-								<a href="#" on:click={deleteProject(record.id)}>Delete</a>
+								<a href={'#'} on:click={forkProject(record.id)}>Fork</a>
+								<a href={'#'} on:click={shareProject(record.id)}>Share</a>
+								<a href={'#'} on:click={deleteProject(record.id)}>Delete</a>
 							</div>
 						</div> 
 
