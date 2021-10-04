@@ -142,6 +142,7 @@
   .parent-container {
     width: 100%;
     height: 100%;
+    overflow:hidden;
   }
   .console-container {
     /* position: relative; */
@@ -183,14 +184,28 @@
     color: white;
   }
 
-  .button {
+  .clear-button {
     background: none;
     margin-top: 5px;
     padding: 0px 0px;
     border: 0px solid white;
     padding: 4px 6px;
     align-items: left;
+    font-family: monospace;
   }
+
+  .clear-svg {
+    fill: white;
+  }
+
+  .warns-svg {
+    fill: yellow;
+  }
+
+  .errors-svg {
+    fill: red;
+  }
+
 
   .button:hover {
     background-color: grey;
@@ -208,10 +223,21 @@
     /*width: 80%; /* Full width */
     height: 5%;
     display: flex;
-    flex-direction: wrap;
-    justify-content: space-between;
+    /* justify-content: space-between; */
     align-items: center;
     padding: 10px 10%;
+  }
+
+  .clear-and-totals-container {
+
+  }
+
+  .origin-container {
+    
+  }
+
+  .log-level-container {
+
   }
 
   label {
@@ -236,62 +262,112 @@
     padding: 10px 10px;
     align: right;
   }
+  
+  /* toggle buttons */
+  .active {
+    background-color: grey;
+  }
 
+  button {
+    font-family: monospace;
+    padding: 1px 2px 1px 2px;
+    border: none;
+    /* background: none; */
+  }
 
 </style>
 
 
 <div class=parent-container>
-<div class="console-settings">
+  <div class="console-settings">
 
-  <form>
-    <p class="section-header">Origin: </p>
+    <div class = clear-and-totals-container>
 
-    <input type="checkbox" id="PROCESSOR" name="PROCESSOR" bind:checked={filter.processor}>
-    <label for="PROCESSOR">Processor</label>
+      <button type="clear-button" class="button" on:click={clearLogs}>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="clear-svg" viewBox="0 0 16 16">
+          <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+          <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+        </svg>
+      </button>
 
-    <input type="checkbox" id="MAIN" name="MAIN" bind:checked={filter.main}>
-    <label for="MAIN">Main</label>
+      <p class="totals-text">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="warns-svg" viewBox="0 0 16 16">
+          <path d="M5.338 1.59a61.44 61.44 0 0 0-2.837.856.481.481 0 0 0-.328.39c-.554 4.157.726 7.19 2.253 9.188a10.725 10.725 0 0 0 2.287 2.233c.346.244.652.42.893.533.12.057.218.095.293.118a.55.55 0 0 0 .101.025.615.615 0 0 0 .1-.025c.076-.023.174-.061.294-.118.24-.113.547-.29.893-.533a10.726 10.726 0 0 0 2.287-2.233c1.527-1.997 2.807-5.031 2.253-9.188a.48.48 0 0 0-.328-.39c-.651-.213-1.75-.56-2.837-.855C9.552 1.29 8.531 1.067 8 1.067c-.53 0-1.552.223-2.662.524zM5.072.56C6.157.265 7.31 0 8 0s1.843.265 2.928.56c1.11.3 2.229.655 2.887.87a1.54 1.54 0 0 1 1.044 1.262c.596 4.477-.787 7.795-2.465 9.99a11.775 11.775 0 0 1-2.517 2.453 7.159 7.159 0 0 1-1.048.625c-.28.132-.581.24-.829.24s-.548-.108-.829-.24a7.158 7.158 0 0 1-1.048-.625 11.777 11.777 0 0 1-2.517-2.453C1.928 10.487.545 7.169 1.141 2.692A1.54 1.54 0 0 1 2.185 1.43 62.456 62.456 0 0 1 5.072.56z"/>
+          <path d="M7.001 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.553.553 0 0 1-1.1 0L7.1 4.995z"/>
+        </svg>
+        {totals.warn}</p>
+      <p class="totals-text">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="errors-svg" viewBox="0 0 16 16">
+          <path d="M6.95.435c.58-.58 1.52-.58 2.1 0l6.515 6.516c.58.58.58 1.519 0 2.098L9.05 15.565c-.58.58-1.519.58-2.098 0L.435 9.05a1.482 1.482 0 0 1 0-2.098L6.95.435zm1.4.7a.495.495 0 0 0-.7 0L1.134 7.65a.495.495 0 0 0 0 .7l6.516 6.516a.495.495 0 0 0 .7 0l6.516-6.516a.495.495 0 0 0 0-.7L8.35 1.134z"/>
+          <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z"/>
+        </svg>
+        {totals.error}</p>
+      
+    </div>
 
-    <input type="checkbox" id="LEARNER" name="LEARNER" bind:checked={filter.learner}>
-  <label for="LEARNER">Learner</label>
-  </form>
+    <hr style="width: 1px; height: 20px; display: inline-block;">
 
-  <form>
-  <p class="section-header">Log Level: </p>
+    <div class=origin-container>
 
-  <input type="checkbox" id="level-log" name="level-log" bind:checked={filter["log"]}>
-    <label for="level-log">logs</label>
+      <button  class:active={filter.processor} on:click="{() => filter.processor = !filter.processor}">Processor</button>
+      <button  class:active={filter.main} on:click="{() => filter.main = !filter.main}">Main</button>
+      <button  class:active={filter.learner} on:click="{() => filter.learner = !filter.learner}">Learner</button>
 
-    <input type="checkbox" id="level-error" name="level-error" bind:checked={filter["error"]}>
-    <label for="level-error">errors</label>
+      <!-- <form>
+        <p class="section-header">Origin: </p>
 
-    <input type="checkbox" id="level-warn" name="level-warn" bind:checked={filter["warn"]}>
-    <label for="level-warn">warns</label>
+        <input type="checkbox" id="PROCESSOR" name="PROCESSOR" bind:checked={filter.processor}>
+        <label for="PROCESSOR">Processor</label>
 
-    <input type="checkbox" id="level-info" name="level-info" bind:checked={filter["info"]}>
-    <label for="level-info">info</label>
-  </form>
+        <input type="checkbox" id="MAIN" name="MAIN" bind:checked={filter.main}>
+        <label for="MAIN">Main</label>
 
-  <p class="totals-text">⚠️{totals.warn}</p>
-  <p class="totals-text">❗{totals.error}</p>
-  <button type="button" class="button" on:click={clearLogs}>🚫</button>
+        <input type="checkbox" id="LEARNER" name="LEARNER" bind:checked={filter.learner}>
+      <label for="LEARNER">Learner</label>
+      </form> -->
+    </div>
 
-</div>
+    <hr style="width: 1px; height: 20px; display: inline-block;">
 
-<div class='console-container scrollable-textarea' bind:this={textArea}>
+    <div class=log-level-container>
 
-  {#each $consoleLogs as {func, payload, origin, logLevel}, i}
-    {#if origin == logger.originTypes.processor && filter.processor != false && filter[logLevel] != false}
-        <pre readonly class='console-PROCESSOR'>{origin}{processPayload(payload)}</pre>
-    {:else if origin == logger.originTypes.learner && filter.learner != false && filter[logLevel] != false}
-      <pre readonly class='console-LEARNER'>{origin}{processPayload(payload)}</pre>
-    {:else if origin == logger.originTypes.main && filter.main != false && filter[logLevel] != false}
-      <pre readonly class='console-MAIN'>{origin}{processPayload(payload)}</pre>
-    {/if}
-  {/each}
+      <button  class:active={filter["log"]} on:click="{() => filter["log"] = !filter["log"]}">logs</button>
+      <button  class:active={filter["error"]} on:click="{() => filter["error"] = !filter["error"]}">errors</button>
+      <button  class:active={filter["warn"]} on:click="{() => filter["warn"] = !filter["warn"]}">warns</button>
+      <button  class:active={filter["info"]} on:click="{() => filter["info"] = !filter["info"]}">info</button>
 
-</div>
+      <!-- <form>
+      <p class="section-header">Log Level: </p>
+
+      <input type="checkbox" id="level-log" name="level-log" bind:checked={filter["log"]}>
+        <label for="level-log">logs</label>
+
+        <input type="checkbox" id="level-error" name="level-error" bind:checked={filter["error"]}>
+        <label for="level-error">errors</label>
+
+        <input type="checkbox" id="level-warn" name="level-warn" bind:checked={filter["warn"]}>
+        <label for="level-warn">warns</label>
+
+        <input type="checkbox" id="level-info" name="level-info" bind:checked={filter["info"]}>
+        <label for="level-info">info</label>
+      </form> -->
+    </div>
+
+  </div>
+
+  <div class='console-container scrollable-textarea' bind:this={textArea}>
+
+    {#each $consoleLogs as {func, payload, origin, logLevel}, i}
+      {#if origin == logger.originTypes.processor && filter.processor != false && filter[logLevel] != false}
+          <pre readonly class='console-PROCESSOR'>{origin}{processPayload(payload)}</pre>
+      {:else if origin == logger.originTypes.learner && filter.learner != false && filter[logLevel] != false}
+        <pre readonly class='console-LEARNER'>{origin}{processPayload(payload)}</pre>
+      {:else if origin == logger.originTypes.main && filter.main != false && filter[logLevel] != false}
+        <pre readonly class='console-MAIN'>{origin}{processPayload(payload)}</pre>
+      {/if}
+    {/each}
+
+  </div>
 </div>
 
 
