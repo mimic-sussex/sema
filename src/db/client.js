@@ -67,10 +67,8 @@ export const createPlayground = async () => {
 }
 
 export const updatePlayground = async (uuid, name, content) => {
-	console.log("updating playground", supabase);
-	console.log("name",name);
-	console.log("content", content);
-	console.log("supabase in uypdate playground!", supabase);
+	console.log("DEBUG: updatePlayground", uuid, name, content);
+	
 	if(supabase && name && content){
 		let updatedPlayground
 		try {

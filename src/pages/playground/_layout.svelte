@@ -238,7 +238,7 @@
       }
     }
     catch(error){
-      console.log(`Erro updating component: ${dataItem}`, error);
+      console.log(`Error updating component: ${dataItem}`, error);
     }
 
   }
@@ -297,8 +297,6 @@
   let container;
 
   onMount( async () => {
-
-    // console.log('Playground mount: ');
 
     // No need to create re-initialise controller again here
     if(!controller.initializing && !controller.samplesLoaded)
