@@ -144,15 +144,42 @@
     height: 100%;
     overflow:hidden;
   }
+  
   .console-container {
     /* position: relative; */
     width: 100%;
     height: 90%;
+    background-color: #151515;
     /* padding-top: 5%; */
     /* padding-bottom: 5%; */
     /* column-count: 2; */
     border: none;
     overflow-y: scroll;
+    
+  }
+
+  .console-settings-container{
+    vertical-align: top;
+    overflow: hidden;
+    background-color: #272822;/*#1d1d1d;*/
+    /* position: fixed; Set the navbar to fixed position */
+    /*width: 80%; /* Full width */
+    height: 5%;
+    display: flex;
+    /* justify-content: space-between; */
+    align-items: center;
+    padding: 10px 10%;
+  }
+
+  .clear-and-totals-container {
+  }
+
+  .origin-container {
+    
+  }
+
+  .log-level-container {
+
   }
 
 	.scrollable-textarea {
@@ -184,7 +211,7 @@
     color: white;
   }
 
-  .clear-button {
+  /* .clear-button {
     background: none;
     margin-top: 5px;
     padding: 0px 0px;
@@ -192,7 +219,7 @@
     padding: 4px 6px;
     align-items: left;
     font-family: monospace;
-  }
+  } */
 
   .clear-svg {
     fill: white;
@@ -215,30 +242,7 @@
     background-color: white;
   }
 
-  .console-settings{
-    vertical-align: top;
-    overflow: hidden;
-    background-color: #333;/*#1d1d1d;*/
-    /* position: fixed; Set the navbar to fixed position */
-    /*width: 80%; /* Full width */
-    height: 5%;
-    display: flex;
-    /* justify-content: space-between; */
-    align-items: center;
-    padding: 10px 10%;
-  }
-
-  .clear-and-totals-container {
-
-  }
-
-  .origin-container {
-    
-  }
-
-  .log-level-container {
-
-  }
+  
 
   label {
     display: inline-block;
@@ -279,7 +283,7 @@
 
 
 <div class=parent-container>
-  <div class="console-settings">
+  <div class="console-settings-container">
 
     <div class = clear-and-totals-container>
 
@@ -296,6 +300,7 @@
           <path d="M7.001 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.553.553 0 0 1-1.1 0L7.1 4.995z"/>
         </svg>
         {totals.warn}</p>
+
       <p class="totals-text">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="errors-svg" viewBox="0 0 16 16">
           <path d="M6.95.435c.58-.58 1.52-.58 2.1 0l6.515 6.516c.58.58.58 1.519 0 2.098L9.05 15.565c-.58.58-1.519.58-2.098 0L.435 9.05a1.482 1.482 0 0 1 0-2.098L6.95.435zm1.4.7a.495.495 0 0 0-.7 0L1.134 7.65a.495.495 0 0 0 0 .7l6.516 6.516a.495.495 0 0 0 .7 0l6.516-6.516a.495.495 0 0 0 0-.7L8.35 1.134z"/>
