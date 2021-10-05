@@ -13,6 +13,27 @@ A range of samples are included by default in sema.
 - `machine`: Mechanical sound
 - `patterndrone2`: Drone sound
 - `convol5`: Scraping sound
+- `hapsi`
+- `elstatic-old1`
+- `dentist-old1`
+- `flash-old1`
+- `paper`
+- `elstatic-old1`
+- `clicks1`
+- `zzzz`
+- `xylophone`
+- `rotatingIron`
+- `convol2`
+- `crackle3`
+- `chainSpade`
+- `birta`
+- `InsectBee2`
+- `Macrosemia`
+- `lookout`
+- `ravi`
+- `dorje`
+- `woodsamp`
+- `holeMONO`
 
 
 # Loading External Sound Files

@@ -27,12 +27,23 @@
       $loading = true
 
       let { username, website, avatar_url } = await getUserProfile()
-
-      if ( username && website && avatar_url) {
-        $userName = username
-        $websiteURL = website
-        $avatarURL = avatar_url
+      if (username){
+        $userName = username;
       }
+      if (website){
+        $websiteURL = website;
+      }
+      if (avatar_url){
+        $avatarURL = avatar_url;
+      }
+      
+      
+      // if ( username && website && avatar_url) {
+      //   $userName = username;
+      //   $websiteURL = website;
+      //   $avatarURL = avatar_url;
+      // }
+      
     } catch (error) {
       alert(error.message)
     } finally {
@@ -132,10 +143,13 @@
 
 <form use:getProfile class="form-widget"
 			on:submit|preventDefault={ updateProfile }
-			>
+      >
+  {#if $avatarURL != null}    
   <Avatar bind:path={ $avatarURL }
 					on:upload={ updateProfile }
-					/>
+          />
+  {/if}
+  {#if $user != null}
   <div>
     <label for="email">Email</label>
     <input 	id="email"
@@ -144,6 +158,8 @@
 						disabled
 						/>
   </div>
+  {/if}
+
   <div>
     <label for="username">Name</label>
     <input
@@ -152,6 +168,7 @@
       bind:value={ $userName }
     	/>
   </div>
+
   <div>
     <label for="website">Website</label>
     <input
@@ -164,7 +181,7 @@
   <div>
     <input type="submit"
 						class="button block primary"
-						value={ $loading ? 'Loading ...' : 'Update'}
+						value={ $loading ? 'Loading ...' : 'Update Profile'}
 						disabled={ $loading }
 						/>
   </div>
