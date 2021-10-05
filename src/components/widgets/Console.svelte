@@ -161,7 +161,8 @@
   .console-settings-container{
     vertical-align: top;
     overflow: hidden;
-    background-color: #272822;/*#1d1d1d;*/
+    white-space:nowrap;
+    background-color: #212121;/*#1d1d1d;*/
     /* position: fixed; Set the navbar to fixed position */
     /*width: 80%; /* Full width */
     height: 5%;
@@ -171,7 +172,11 @@
     padding: 10px 10%;
   }
 
-  .clear-and-totals-container {
+  .clear-container {
+  }
+
+  .totals-container {
+
   }
 
   .origin-container {
@@ -233,15 +238,6 @@
     fill: red;
   }
 
-
-  .button:hover {
-    background-color: grey;
-  }
-
-  .button:active {
-    background-color: white;
-  }
-
   
 
   label {
@@ -276,7 +272,21 @@
     font-family: monospace;
     padding: 1px 2px 1px 2px;
     border: none;
-    /* background: none; */
+  }
+
+  .clear-button {
+    font-family: monospace;
+    padding: 1px 2px 1px 2px;
+    border: none;
+    background: none;
+  }
+
+  .clear-button:hover {
+    background-color: grey;
+  }
+
+  .clear-button:active {
+    background-color: transparent;
   }
 
 </style>
@@ -285,15 +295,41 @@
 <div class=parent-container>
   <div class="console-settings-container">
 
-    <div class = clear-and-totals-container>
+    <div class = clear-container>
 
-      <button type="clear-button" class="button" on:click={clearLogs}>
+      <button type="clear-button" class="clear-button" on:click={clearLogs}>
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="clear-svg" viewBox="0 0 16 16">
           <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
           <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
         </svg>
       </button>
 
+    </div>
+
+    <hr style="height: 20px; display: inline-block;">
+
+    <div class=origin-container>
+
+      <button  class:active={filter.processor} on:click="{() => filter.processor = !filter.processor}">Processor</button>
+      <button  class:active={filter.main} on:click="{() => filter.main = !filter.main}">Main</button>
+      <button  class:active={filter.learner} on:click="{() => filter.learner = !filter.learner}">Learner</button>
+
+    </div>
+
+    <hr style="height: 20px; display: inline-block;">
+
+    <div class=log-level-container>
+
+      <button  class:active={filter["log"]} on:click="{() => filter["log"] = !filter["log"]}">logs</button>
+      <button  class:active={filter["error"]} on:click="{() => filter["error"] = !filter["error"]}">errors</button>
+      <button  class:active={filter["warn"]} on:click="{() => filter["warn"] = !filter["warn"]}">warns</button>
+      <button  class:active={filter["info"]} on:click="{() => filter["info"] = !filter["info"]}">info</button>
+
+    </div>
+
+    <hr style="height: 20px; display: inline-block;">
+
+    <div class = totals-container>
       <p class="totals-text">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="warns-svg" viewBox="0 0 16 16">
           <path d="M5.338 1.59a61.44 61.44 0 0 0-2.837.856.481.481 0 0 0-.328.39c-.554 4.157.726 7.19 2.253 9.188a10.725 10.725 0 0 0 2.287 2.233c.346.244.652.42.893.533.12.057.218.095.293.118a.55.55 0 0 0 .101.025.615.615 0 0 0 .1-.025c.076-.023.174-.061.294-.118.24-.113.547-.29.893-.533a10.726 10.726 0 0 0 2.287-2.233c1.527-1.997 2.807-5.031 2.253-9.188a.48.48 0 0 0-.328-.39c-.651-.213-1.75-.56-2.837-.855C9.552 1.29 8.531 1.067 8 1.067c-.53 0-1.552.223-2.662.524zM5.072.56C6.157.265 7.31 0 8 0s1.843.265 2.928.56c1.11.3 2.229.655 2.887.87a1.54 1.54 0 0 1 1.044 1.262c.596 4.477-.787 7.795-2.465 9.99a11.775 11.775 0 0 1-2.517 2.453 7.159 7.159 0 0 1-1.048.625c-.28.132-.581.24-.829.24s-.548-.108-.829-.24a7.158 7.158 0 0 1-1.048-.625 11.777 11.777 0 0 1-2.517-2.453C1.928 10.487.545 7.169 1.141 2.692A1.54 1.54 0 0 1 2.185 1.43 62.456 62.456 0 0 1 5.072.56z"/>
@@ -308,54 +344,6 @@
         </svg>
         {totals.error}</p>
       
-    </div>
-
-    <hr style="width: 1px; height: 20px; display: inline-block;">
-
-    <div class=origin-container>
-
-      <button  class:active={filter.processor} on:click="{() => filter.processor = !filter.processor}">Processor</button>
-      <button  class:active={filter.main} on:click="{() => filter.main = !filter.main}">Main</button>
-      <button  class:active={filter.learner} on:click="{() => filter.learner = !filter.learner}">Learner</button>
-
-      <!-- <form>
-        <p class="section-header">Origin: </p>
-
-        <input type="checkbox" id="PROCESSOR" name="PROCESSOR" bind:checked={filter.processor}>
-        <label for="PROCESSOR">Processor</label>
-
-        <input type="checkbox" id="MAIN" name="MAIN" bind:checked={filter.main}>
-        <label for="MAIN">Main</label>
-
-        <input type="checkbox" id="LEARNER" name="LEARNER" bind:checked={filter.learner}>
-      <label for="LEARNER">Learner</label>
-      </form> -->
-    </div>
-
-    <hr style="width: 1px; height: 20px; display: inline-block;">
-
-    <div class=log-level-container>
-
-      <button  class:active={filter["log"]} on:click="{() => filter["log"] = !filter["log"]}">logs</button>
-      <button  class:active={filter["error"]} on:click="{() => filter["error"] = !filter["error"]}">errors</button>
-      <button  class:active={filter["warn"]} on:click="{() => filter["warn"] = !filter["warn"]}">warns</button>
-      <button  class:active={filter["info"]} on:click="{() => filter["info"] = !filter["info"]}">info</button>
-
-      <!-- <form>
-      <p class="section-header">Log Level: </p>
-
-      <input type="checkbox" id="level-log" name="level-log" bind:checked={filter["log"]}>
-        <label for="level-log">logs</label>
-
-        <input type="checkbox" id="level-error" name="level-error" bind:checked={filter["error"]}>
-        <label for="level-error">errors</label>
-
-        <input type="checkbox" id="level-warn" name="level-warn" bind:checked={filter["warn"]}>
-        <label for="level-warn">warns</label>
-
-        <input type="checkbox" id="level-info" name="level-info" bind:checked={filter["info"]}>
-        <label for="level-info">info</label>
-      </form> -->
     </div>
 
   </div>
