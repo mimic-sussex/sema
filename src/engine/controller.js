@@ -354,7 +354,227 @@ export default class Controller {
 					reject(err)
 				})
 
-			// sampleCounter++;
+				await import(`../../assets/samples/hapsi.wav`) // need to use the samples relative path to the src, not in public,
+				.then((e) => {
+					this.engine.loadSample(e.default, `./${e.default}`)
+					if (--sampleCounter <= 0) resolve(true)
+					console.log(`loading sample: ${e.default}`)
+				})
+				.catch((err) => {
+					console.error(`Error Engine lazy loading sample: ${err}`)
+					reject(err)
+				})
+
+				await import(`../../assets/samples/elstatic-old1.wav`) // need to use the samples relative path to the src, not in public,
+				.then((e) => {
+					this.engine.loadSample(e.default, `./${e.default}`)
+					if (--sampleCounter <= 0) resolve(true)
+					console.log(`loading sample: ${e.default}`)
+				})
+				.catch((err) => {
+					console.error(`Error Engine lazy loading sample: ${err}`)
+					reject(err)
+				})
+
+				await import(`../../assets/samples/dentist-old1.wav`) // need to use the samples relative path to the src, not in public,
+				.then((e) => {
+					this.engine.loadSample(e.default, `./${e.default}`)
+					if (--sampleCounter <= 0) resolve(true)
+					console.log(`loading sample: ${e.default}`)
+				})
+				.catch((err) => {
+					console.error(`Error Engine lazy loading sample: ${err}`)
+					reject(err)
+				})
+
+				await import(`../../assets/samples/flash-old1.wav`) // need to use the samples relative path to the src, not in public,
+				.then((e) => {
+					this.engine.loadSample(e.default, `./${e.default}`)
+					if (--sampleCounter <= 0) resolve(true)
+					console.log(`loading sample: ${e.default}`)
+				})
+				.catch((err) => {
+					console.error(`Error Engine lazy loading sample: ${err}`)
+					reject(err)
+				})
+
+				await import(`../../assets/samples/paper.wav`) // need to use the samples relative path to the src, not in public,
+				.then((e) => {
+					this.engine.loadSample(e.default, `./${e.default}`)
+					if (--sampleCounter <= 0) resolve(true)
+					console.log(`loading sample: ${e.default}`)
+				})
+				.catch((err) => {
+					console.error(`Error Engine lazy loading sample: ${err}`)
+					reject(err)
+				})
+
+				await import(`../../assets/samples/clicks1.wav`) // need to use the samples relative path to the src, not in public,
+				.then((e) => {
+					this.engine.loadSample(e.default, `./${e.default}`)
+					if (--sampleCounter <= 0) resolve(true)
+					console.log(`loading sample: ${e.default}`)
+				})
+				.catch((err) => {
+					console.error(`Error Engine lazy loading sample: ${err}`)
+					reject(err)
+				})
+
+				await import(`../../assets/samples/zzzz.wav`) // need to use the samples relative path to the src, not in public,
+				.then((e) => {
+					this.engine.loadSample(e.default, `./${e.default}`)
+					if (--sampleCounter <= 0) resolve(true)
+					console.log(`loading sample: ${e.default}`)
+				})
+				.catch((err) => {
+					console.error(`Error Engine lazy loading sample: ${err}`)
+					reject(err)
+				})
+
+				await import(`../../assets/samples/xylophone.wav`) // need to use the samples relative path to the src, not in public,
+				.then((e) => {
+					this.engine.loadSample(e.default, `./${e.default}`)
+					if (--sampleCounter <= 0) resolve(true)
+					console.log(`loading sample: ${e.default}`)
+				})
+				.catch((err) => {
+					console.error(`Error Engine lazy loading sample: ${err}`)
+					reject(err)
+				})
+
+				await import(`../../assets/samples/rotatingIron.wav`) // need to use the samples relative path to the src, not in public,
+				.then((e) => {
+					this.engine.loadSample(e.default, `./${e.default}`)
+					if (--sampleCounter <= 0) resolve(true)
+					console.log(`loading sample: ${e.default}`)
+				})
+				.catch((err) => {
+					console.error(`Error Engine lazy loading sample: ${err}`)
+					reject(err)
+				})
+
+				await import(`../../assets/samples/convol2.wav`) // need to use the samples relative path to the src, not in public,
+				.then((e) => {
+					this.engine.loadSample(e.default, `./${e.default}`)
+					if (--sampleCounter <= 0) resolve(true)
+					console.log(`loading sample: ${e.default}`)
+				})
+				.catch((err) => {
+					console.error(`Error Engine lazy loading sample: ${err}`)
+					reject(err)
+				})
+
+				await import(`../../assets/samples/crackle3.wav`) // need to use the samples relative path to the src, not in public,
+				.then((e) => {
+					this.engine.loadSample(e.default, `./${e.default}`)
+					if (--sampleCounter <= 0) resolve(true)
+					console.log(`loading sample: ${e.default}`)
+				})
+				.catch((err) => {
+					console.error(`Error Engine lazy loading sample: ${err}`)
+					reject(err)
+				})
+
+				await import(`../../assets/samples/chainSpade.wav`) // need to use the samples relative path to the src, not in public,
+				.then((e) => {
+					this.engine.loadSample(e.default, `./${e.default}`)
+					if (--sampleCounter <= 0) resolve(true)
+					console.log(`loading sample: ${e.default}`)
+				})
+				.catch((err) => {
+					console.error(`Error Engine lazy loading sample: ${err}`)
+					reject(err)
+				})
+
+				await import(`../../assets/samples/birta.wav`) // need to use the samples relative path to the src, not in public,
+				.then((e) => {
+					this.engine.loadSample(e.default, `./${e.default}`)
+					if (--sampleCounter <= 0) resolve(true)
+					console.log(`loading sample: ${e.default}`)
+				})
+				.catch((err) => {
+					console.error(`Error Engine lazy loading sample: ${err}`)
+					reject(err)
+				})
+
+				await import(`../../assets/samples/InsectBee2.wav`) // need to use the samples relative path to the src, not in public,
+				.then((e) => {
+					this.engine.loadSample(e.default, `./${e.default}`)
+					if (--sampleCounter <= 0) resolve(true)
+					console.log(`loading sample: ${e.default}`)
+				})
+				.catch((err) => {
+					console.error(`Error Engine lazy loading sample: ${err}`)
+					reject(err)
+				})
+
+				await import(`../../assets/samples/Macrosemia.wav`) // need to use the samples relative path to the src, not in public,
+				.then((e) => {
+					this.engine.loadSample(e.default, `./${e.default}`)
+					if (--sampleCounter <= 0) resolve(true)
+					console.log(`loading sample: ${e.default}`)
+				})
+				.catch((err) => {
+					console.error(`Error Engine lazy loading sample: ${err}`)
+					reject(err)
+				})
+
+				await import(`../../assets/samples/lookout.wav`) // need to use the samples relative path to the src, not in public,
+				.then((e) => {
+					this.engine.loadSample(e.default, `./${e.default}`)
+					if (--sampleCounter <= 0) resolve(true)
+					console.log(`loading sample: ${e.default}`)
+				})
+				.catch((err) => {
+					console.error(`Error Engine lazy loading sample: ${err}`)
+					reject(err)
+				})
+
+				await import(`../../assets/samples/ravi.wav`) // need to use the samples relative path to the src, not in public,
+				.then((e) => {
+					this.engine.loadSample(e.default, `./${e.default}`)
+					if (--sampleCounter <= 0) resolve(true)
+					console.log(`loading sample: ${e.default}`)
+				})
+				.catch((err) => {
+					console.error(`Error Engine lazy loading sample: ${err}`)
+					reject(err)
+				})
+
+				await import(`../../assets/samples/dorje.wav`) // need to use the samples relative path to the src, not in public,
+				.then((e) => {
+					this.engine.loadSample(e.default, `./${e.default}`)
+					if (--sampleCounter <= 0) resolve(true)
+					console.log(`loading sample: ${e.default}`)
+				})
+				.catch((err) => {
+					console.error(`Error Engine lazy loading sample: ${err}`)
+					reject(err)
+				})
+
+				await import(`../../assets/samples/woodsamp.wav`) // need to use the samples relative path to the src, not in public,
+				.then((e) => {
+					this.engine.loadSample(e.default, `./${e.default}`)
+					if (--sampleCounter <= 0) resolve(true)
+					console.log(`loading sample: ${e.default}`)
+				})
+				.catch((err) => {
+					console.error(`Error Engine lazy loading sample: ${err}`)
+					reject(err)
+				})
+
+				await import(`../../assets/samples/holeMONO.wav`) // need to use the samples relative path to the src, not in public,
+				.then((e) => {
+					this.engine.loadSample(e.default, `./${e.default}`)
+					if (--sampleCounter <= 0) resolve(true)
+					console.log(`loading sample: ${e.default}`)
+				})
+				.catch((err) => {
+					console.error(`Error Engine lazy loading sample: ${err}`)
+					reject(err)
+				})
+				
+			// sampleCounter++;			
 		})
 	}
 }
