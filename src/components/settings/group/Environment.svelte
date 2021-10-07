@@ -54,7 +54,8 @@
     isSaveOverlayVisible,
     isUploadOverlayVisible,
     isDeleteOverlayVisible,
-		isNewOverlayVisible,
+    isNewOverlayVisible,
+    isShareOverlayVisible,
     items,
     // assignNewID,
     hydrateJSONcomponent,
@@ -71,6 +72,14 @@
     window.localStorage["tutorial-" + new Date(Date.now()).toISOString()] = JSON.stringify($items)
   }
 
+  let shareProjectLink = () => {
+    $isUploadOverlayVisible = false;
+    $isSaveOverlayVisible = false;
+		$isNewOverlayVisible = false;
+    $isDeleteOverlayVisible = false;
+    $isShareOverlayVisible = true;
+  }
+
 	const onNameChange = async () => {
 		try {
 			updatePlayground($uuid, $name, $items)
@@ -83,7 +92,8 @@
   function resetEnvironment(){
     $isUploadOverlayVisible = false;
     $isSaveOverlayVisible = false;
-		$isNewOverlayVisible = false;
+    $isNewOverlayVisible = false;
+    $isShareOverlayVisible = false;
     $isDeleteOverlayVisible = true;
   }
 
@@ -91,7 +101,8 @@
 		try {
 			$isUploadOverlayVisible = false;
 			$isSaveOverlayVisible = false;
-			$isDeleteOverlayVisible = false;
+      $isDeleteOverlayVisible = false;
+      $isShareOverlayVisible = false;
 			$isNewOverlayVisible = true;
 
 			// $items = data.content.map(item => hydrateJSONcomponent(item))
@@ -104,7 +115,8 @@
 		try {
 			$isUploadOverlayVisible = false;
 			$isSaveOverlayVisible = true;
-			$isDeleteOverlayVisible = false;
+      $isDeleteOverlayVisible = false;
+      $isShareOverlayVisible = false;
 			$isNewOverlayVisible = false;
 
 			loadEnvironmentSnapshotEntries();
@@ -131,6 +143,7 @@
     $isUploadOverlayVisible = true;
     $isSaveOverlayVisible = false;
     $isDeleteOverlayVisible = false;
+    $isShareOverlayVisible = false;
 		$isNewOverlayVisible = false;
   }
 
@@ -489,9 +502,11 @@
 
 </style>
 
+<!--NAME PROJECT TEXT BOX-->
 <input type="text"
 				bind:value={ $name }
-				on:change={ onNameChange }
+        on:change={ onNameChange }
+        placeholder='Project Name'
         style="{( $isActive('/playground') )? `visibility:visible;`: `visibility:collapse`}; margin-left: 2px;"
 				/>
 
@@ -889,7 +904,7 @@
 <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
         title="share project"
         style="padding: 0.25em 0.3em 0.75em 0.7em;"
-        on:click={ handleClick }>
+        on:click={ shareProjectLink }>
   <div class="icon-container">
     {#if $siteMode === 'dark' }
 

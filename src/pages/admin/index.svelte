@@ -34,8 +34,9 @@
 	.container-records {
 		grid-area: records;
 		margin-right: 1em;
-		overflow-y: scroll;
+		overflow-y: auto;
 		height: 100%;
+		width: 100%;
 	}
 
 </style>
