@@ -5,9 +5,9 @@
     "children": [
       {
         "container": false,
-        "title": "About",
-        "file": "getting-started/about",
-        "path": "./about",
+        "title": "What Is Sema?",
+        "file": "getting-started/whatissema",
+        "path": "./whatissema",
         "subs": []
       },
       {
@@ -73,37 +73,9 @@
     "children": [
       {
         "container": false,
-        "title": "Signal Processing",
-        "file": "live-coding/signal-processing",
-        "path": "./signal-processing",
-        "subs": []
-      },
-      {
-        "container": false,
-        "title": "Sequencing",
-        "file": "live-coding/sequencing",
-        "path": "./sequencing",
-        "subs": []
-      },
-      {
-        "container": false,
-        "title": "Variables",
-        "file": "live-coding/variables",
-        "path": "./variables",
-        "subs": []
-      },
-      {
-        "container": false,
-        "title": "Sample Playback",
-        "file": "live-coding/sample-playback",
-        "path": "./sample-playback",
-        "subs": []
-      },
-      {
-        "container": false,
-        "title": "Mappings",
-        "file": "live-coding/mappings",
-        "path": "./mappings",
+        "title": "Sample Loading",
+        "file": "live-coding/sample-loading",
+        "path": "./sample-loading",
         "subs": []
       },
       {
