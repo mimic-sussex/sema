@@ -4,7 +4,7 @@
     fullScreen
   } from '../../../stores/common.js';
 
-  import { isActive } from "@roxi/routify";
+  import { isActive, goto, url } from "@roxi/routify";
 	// import { authStore } from '../../../auth'
 
 	import {
@@ -15,7 +15,8 @@
 	import {
 		supabase,
 		updatePlayground,
-		createPlayground
+    createPlayground,
+    forkPlayground
 	} from  "../../../db/client";
 
   import { Engine } from 'sema-engine';
@@ -61,8 +62,14 @@
     hydrateJSONcomponent,
     loadEnvironmentSnapshotEntries,
 		uuid,
-		name
-  } from '../../../stores/playground.js'
+    name,
+    allowEdits,
+    author
+  } from '../../../stores/playground'
+
+  import {
+    user
+  } from '../../../stores/user'
 
   import * as doNotZip from 'do-not-zip';
 	import downloadBlob from '../../../utils/downloadBlob.js';
@@ -82,11 +89,27 @@
 
 	const onNameChange = async () => {
 		try {
-			updatePlayground($uuid, $name, $items)
+			updatePlayground($uuid, $name, $items, $allowEdits, $user)
 		} catch (error) {
 			console.error(error);
 		}
-	}
+  }
+  
+  //give option to fork project when it is read only (allowEdits false)
+  const forkProject = async () => {
+    console.log("DEBUG: Forking playground as is readOnly")
+    if ($uuid){
+      
+      let fork = await forkPlayground($uuid);
+      $uuid = fork.id;
+      $name = fork.name;
+      $items = fork.content.map(item => hydrateJSONcomponent(item));
+      //$goto($url(`/playground/${$uuid}`));
+      window.history.pushState("", "", `/playground/${$uuid}`); //changes the url without realoading;
+    }
+    else
+      throw new Error ('Cant find UUID for project')
+  }
 
 
   function resetEnvironment(){
@@ -498,7 +521,12 @@
 		color: white;
 		background:#212121;
 		border: 0.5px solid #ffffff61;
-	}
+  }
+  
+  .no-changes-link {
+    color: grey;
+    text-decoration: underline;
+  }
 
 </style>
 
@@ -507,10 +535,18 @@
 				bind:value={ $name }
         on:change={ onNameChange }
         placeholder='Project Name'
-        style="{( $isActive('/playground') )? `visibility:visible;`: `visibility:collapse`}; margin-left: 2px;"
-				/>
+        style="{( $isActive(`/playground`) )? `visibility:visible;`: `visibility:collapse`}; margin-left: 2px;" 
+        />
 
+<!--if playground loaded is readonly say that user doesnt have permission to save-->
 
+{#if $allowEdits == false && $user.id != $author}
+  <a href={'#'} class="no-changes-link" 
+  on:click={forkProject} 
+  title="You do not have permission to save this playground. To save your changes, click to make a copy."
+  style="{( $isActive('/playground') )? `visibility:visible;`: `visibility:collapse`}; margin-left: 2px;"
+  >Changes will not be saved</a>
+{/if}
 
         <!-- style="{( $fullScreen && $isActive('/playground') )? `visibility:visible;`: `visibility:hidden`}; ! important;" -->
 <!-- svelte-ignore a11y-no-onchange -->

@@ -16,7 +16,9 @@
     isAddAnalyserDisabled,
     sidebarDebuggerOptions,
 		uuid,
-		name
+    name,
+    allowEdits,
+    author
   } from '../../stores/playground.js';
 
 	import {
@@ -44,6 +46,8 @@
 		$uuid = data.id;
 		$name = data.name;
     $items = $items.slice($items.length);
+    $allowEdits = data.allowEdits;
+    $author = data.author;
 
     $isUploadOverlayVisible = false;
     $isSaveOverlayVisible = false;

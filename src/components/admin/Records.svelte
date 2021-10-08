@@ -4,10 +4,11 @@
 	import { slide } from 'svelte/transition';
 
 	import {
-		records
+		records,
+		user
 	} from '../../stores/user'
 
-  import { supabase } from '../../db/client'
+  import { supabase, forkPlayground } from '../../db/client'
 
   import {
     isSaveOverlayVisible,
@@ -15,8 +16,10 @@
     loadEnvironmentSnapshotEntries,
 		items,
 		name,
-		uuid
-  } from "../../stores/playground.js"
+		uuid,
+		allowEdits,
+		author
+	} from "../../stores/playground.js"
 
 	let projectPage = 'all-projects';
 
@@ -27,10 +30,41 @@
 			$name = record.name;
 			$uuid = record.id;
 			$items = record.content.map(item => hydrateJSONcomponent(item));
+			$allowEdits = record.allowEdits;
+			$author = record.author;
+			console.log("setting author", $author);
+			// $readOnly = true;
+			// console.log("USER", $user);
+			// setAllowEdits(record.allowEdits, record.author);
+			//console.log("blah blah");
+			// console.log("document is allowEdits", $readOnly);
 		} catch (error) {
 			console.error(error)
 		}
 	}
+
+	// const setAllowEdits = async (allowEdits, author) => {
+	// 	try{
+	// 		//console.log("author ok!",$readOnly);
+	// 		const userCheck = supabase.auth.user();
+			
+	// 		if (allowEdits == false){
+	// 			//but the author is the owner
+	// 			if (author == userCheck){
+	// 				$readOnly = false;
+					
+	// 			} else {
+	// 				$readOnly = true;
+	// 			}
+	// 		}
+	// 		// if true anyone can edit
+	// 		else if (allowEdits == true){
+	// 			$readOnly = false;
+	// 		}
+	// 	} catch (error){
+	// 		console.error(error)
+	// 	}
+	// }
 
 	const fetchRecords = async () => {
 		try {
@@ -56,11 +90,12 @@
 
 	//updates which list of projects is on display (my projects or all projects)
 	const updateProjectPage = async (projectPage) => {
+		console.log("Updating project page", projectPage);
 		if (projectPage == 'my-projects'){
-			console.log('refreshing my-projects page', projectPage)
+			// console.log('refreshing my-projects page', projectPage)
 			getMyProjects();
 		} else {
-			console.log('refreshing all-projects page', projectPage)
+			// console.log('refreshing all-projects page', projectPage)
 			getAllProjects();
 		}
 	}
@@ -88,7 +123,8 @@
 					isPublic,
 					author (
 						username
-					)
+					),
+					allowEdits
 				`)
 			.eq('author', user.id)
 			.order('updated', {ascending:true})
@@ -116,7 +152,8 @@
 					isPublic,
 					author (
 						username
-					)
+					),
+					allowEdits
 				`)
 			.eq('isPublic', true)
 			.order('updated', {ascending:true})
@@ -130,45 +167,8 @@
 
 	const forkProject = async (id) => {
 		console.log("Forking project", id);
-		//grab row to copy
-		try {
-
-			const user = supabase.auth.user() //get user to set new author id for fork
-
-			const playground = await supabase
-			.from('playgrounds')
-			.select(`
-					id,
-					name,
-					content,
-					created,
-					updated,
-					isPublic,
-					author
-				`)
-			.eq('id', id) //check if project id matches
-			.single()
-
-
-			const forkground = await supabase
-				.from('playgrounds')
-				.insert([
-					{ 
-						name: "Fork of " + playground.data.name, 
-						content:playground.data.content, 
-						created: playground.data.created,
-						updated: playground.data.updated,
-						isPublic: playground.data.isPublic,
-						author:user.id
-					}
-				])
-			
-			updateProjectPage(projectPage);
-				
-		} 
-		catch(error){
-			console.error(error)
-		}
+		await forkPlayground(id);
+		updateProjectPage(projectPage);
 	}
 
 	const shareProject = async (id) => {
@@ -224,6 +224,8 @@
 .container-records {
 	overflow: auto;
 	width: 100%;
+	height: 80%;
+	margin-bottom: 100px;
 	/* background-color: #333; */
 }
 
@@ -248,7 +250,8 @@ table {
 }
 
 th {
-	text-align:left
+	text-align:left;
+	color: #ccc;
 }
 
 .record-entry:hover {
@@ -324,7 +327,7 @@ label {
 .container-project-filter {
 	/* display: inline-block; */
 	/* width:100%; */
-	border-bottom: 1px solid white;
+	border-bottom: 1px solid #ccc;
 }
 
 .project-tab {
@@ -341,7 +344,8 @@ button {
 }
 
 .project-tab-selected {
-	border-bottom: 3px solid white;
+	border-bottom: 3px solid #ccc;
+	color: white;
 	/* background-color: red; */
 }
 
@@ -396,6 +400,7 @@ button {
 				<tr>
 					<th>Name</th>
 					<th>Visibility</th>
+					<th>Allow edits</th>
 					<th>Author</th>
 					<th>Updated</th>
 					<th>Options</th> <!--Fork or delete (depending on permissions)-->
@@ -405,7 +410,6 @@ button {
 					<tr class="record-entry">
 						<td>
 						<a class="file-name" href="playground/{ record.id }"
-								on:click={ setPlaygroundFromRecord(record) }
 								>
 								<span class='record-name'
 								>{ record.name }
@@ -424,6 +428,19 @@ button {
 								</svg>
 							{/if}
 						</td>
+
+						<td>
+							{#if record.allowEdits}
+								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
+									<path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/>
+								</svg>
+							{:else}
+								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+									<path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+								</svg>
+							{/if}
+
+						<td>
 
 						<td>
 							{#if record.author}

@@ -1,6 +1,6 @@
 <script>
 	// import { authStore } from '../../auth'
-	import { redirect } from '@roxi/routify'
+	import { redirect, params } from '@roxi/routify'
 	// const { user } = authStore
 	import { user } from "../../stores/user"
 
@@ -24,7 +24,8 @@
 
 	import {
 		supabase,
-		updatePlayground
+    updatePlayground,
+    fetchPlayground
 	} from '../../db/client';
 
 
@@ -52,7 +53,9 @@
     isShareOverlayVisible,
 		name,
 		uuid,
-		items
+    items,
+    allowEdits,
+    author
   } from  "../../stores/playground.js"
 
   import {
@@ -141,7 +144,7 @@
         // set unfocused items through the rest of the list
         $items = $items.map(i => i === item ? ({ ...i, ['hasFocus']: true }) : ({ ...i, ['hasFocus']: false }) );
 
-				updatePlayground($uuid, $name, $items);
+				updatePlayground($uuid, $name, $items, $allowEdits, $user);
       }
       catch(error){
         console.error("Error Playground.setFocused: setting item focuses" );
@@ -196,7 +199,7 @@
 
         $items = [ ...$items, ...[newItem] ]
 
-				updatePlayground($uuid, $name, $items);
+				updatePlayground($uuid, $name, $items, $allowEdits, $user);
         // console.log("DEBUG:playground:addItem:", newItem);
       }
       catch (error){
@@ -230,7 +233,7 @@
           dataItem.data[e.detail.prop] = e.detail.value;
           // Update item and items collection by filtering out version with old value and concating update version
           $items = [...$items.filter(i => i !== dataItem), ...[dataItem]]
-					updatePlayground($uuid, $name, $items);
+					updatePlayground($uuid, $name, $items, $allowEdits, $user);
         }
         else if(e.detail.prop === "hasFocus"){
           setFocused(dataItem);
@@ -271,7 +274,7 @@
 
 
     $items = $items.filter( i => i.id !== item.id);
-		updatePlayground($uuid, $name, $items);
+		updatePlayground($uuid, $name, $items, $allowEdits, $user);
     // console.log("DEBUG:dashboard:remove:");
     // console.log($items);
   }
@@ -304,6 +307,21 @@
       await controller.init(document.location.origin + '/build/');
 
     // console.log('Playground index: onMount ');
+    console.log("DEBUG: playground mount params", $params.playgroundId);
+
+    if ($params.playgroundId){
+      //if there playground/something try look it up in db
+
+      let playground = await fetchPlayground($params.playgroundId);
+      // console.log('fork!');
+      // console.log(fork);
+      $uuid = playground.id;
+      $name = playground.name;
+      $items = playground.content.map(item => hydrateJSONcomponent(item));
+      $allowEdits = playground.allowEdits;
+      $author = playground.author;
+
+    }
 
     // Sequentially fetch data from individual items' properties into language design workflow stores
     for (const item of $items)

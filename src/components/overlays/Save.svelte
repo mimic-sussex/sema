@@ -5,8 +5,13 @@
     loadEnvironmentSnapshotEntries,
 		items,
 		uuid,
-		name
-  } from  "../../stores/playground.js"
+    name,
+    allowEdits
+  } from  "../../stores/playground.js";
+
+  import {
+    user
+  } from "../../stores/user.js";
 
 	import {
 		updatePlayground
@@ -25,7 +30,7 @@
 
 		let localStorageEntry =	"playground-" + new Date(Date.now()).toISOString()+'-'+ $name
 
-		updatePlayground($uuid, $name, $items);
+		updatePlayground($uuid, $name, $items, $allowEdits, $user);
 
 
 
