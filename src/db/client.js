@@ -45,7 +45,7 @@ export const createPlayground = async () => {
 						created: timestamp,
 						updated: timestamp,
 						isPublic: true,
-						readOnly: true,
+						allowEdits: true,
 						author: user.id
 					})
 					.single()
@@ -66,23 +66,149 @@ export const createPlayground = async () => {
 		throw new Error('Supabase client has not been created')
 }
 
-export const updatePlayground = async (uuid, name, content) => {
-	console.log("DEBUG: updatePlayground", uuid, name, content);
-	
-	if(supabase && name && content){
-		let updatedPlayground
+export const updatePlayground = async (uuid, name, content, allowEdits, user) => {
+	// console.log("DEBUG: updatePlayground", uuid, name, content, allowEdits, user);
+	if (supabase) {
+
+		//check user exists. if it doesnt grab the current user
+		if (!user){
+			user = supabase.auth.user();
+		}
+
+		//if allow edits is true anyone can update.
+		if (allowEdits){
+			if(uuid && name && content){
+				let updatedPlayground
+				try {
+					updatedPlayground = await supabase
+						.from('playgrounds')
+						.update({
+							name,
+							content,
+							updated: new Date().toISOString(),
+						})
+						.eq('id', uuid)
+				} catch (error) {
+					console.error(error)
+				}
+			}
+		} 
+		// only allow if the user is also the author of the project
+		else if (allowEdits == false) {
+			if(uuid && name && content){
+				let updatedPlayground
+				try {
+					updatedPlayground = await supabase
+						.from('playgrounds')
+						.update({
+							name,
+							content,
+							updated: new Date().toISOString(),
+						})
+						.match({'id': uuid, author: user.id});
+						// .eq('author', user); //if author matches the user
+				} catch (error) {
+					console.error(error)
+				}
+			}
+		}
+		 
+	}
+	else
+		throw new Error('Supabase client has not been created')
+}
+
+//fetch playground data for a given uuid
+export const fetchPlayground = async (uuid) => {
+
+	if (supabase){
 		try {
-			updatedPlayground = await supabase
+			const playgrounds = await supabase
 				.from('playgrounds')
-				.update({
+				.select(`
+					id,
 					name,
 					content,
-					updated: new Date().toISOString(),
-				})
+					created,
+					updated,
+					isPublic,
+					author,
+					allowEdits
+				`)
 				.eq('id', uuid)
+				.single()
+
+				return playgrounds.data;
+	
 		} catch (error) {
-			console.error(error)
+			console.error(error);
 		}
+	}	
+	else
+		throw new Error('Supabase client has not been created')
+
+
+}
+
+export const forkPlayground = async (id) => {
+	console.log("Forking project", id);
+	
+	if (supabase){
+		const timestamp = new Date().toISOString()
+		let forkground;
+
+		try {
+			const user = supabase.auth.user() //get user to set new author id for fork
+			try {
+				//get project to fork
+				const playground = await supabase
+				.from('playgrounds')
+				.select(`
+						id,
+						name,
+						content,
+						created,
+						updated,
+						isPublic,
+						author,
+						allowEdits
+					`)
+				.eq('id', id) //check if project id matches
+				.single()
+
+				//make fork
+				forkground = await supabase
+					.from('playgrounds')
+					.insert([
+						{ 
+							name: "Fork of " + playground.data.name, 
+							content:playground.data.content, 
+							created: timestamp,
+							updated: timestamp,
+							isPublic: playground.data.isPublic,
+							author:user.id,
+							allowEdits:playground.data.allowEdits
+						}
+					])
+					.single();
+
+					console.log("new fork");
+					console.log(forkground);
+					return forkground.data;
+				} catch (error) {
+					console.error(error);
+				}
+		} 
+		catch(error){
+			console.error(error);
+		}
+	} else
+		throw new Error('Supabase client has not been created')
+}
+
+export const overrideAllowEdits = async(id, user) => {
+	if (supabase){
+
 	}
 	else
 		throw new Error('Supabase client has not been created')

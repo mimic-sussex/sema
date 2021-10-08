@@ -147,7 +147,8 @@
     /* border: solid 5px #aaaaaa; eee*/
     border-radius: 5px;
     /* height: 85vh; */
-    background: #999;
+    background: #212121;
+    color: #ccc;
     /* Chrome 49+ */
 		/* -webkit-user-select: all; */
     /* Firefox 43+ */
