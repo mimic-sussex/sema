@@ -29,11 +29,25 @@
 
 	const links = [
 		// [`/playground`, 'playground'],
-		[`/playground/${$uuid}`, 'playground'],
+		[`/playground`, 'playground'],
 		['/tutorial', 'tutorial'],
 		['/docs', 'documentation'],
 		['/about', 'about'],
 	]
+
+  let persistentUUID = {playgroundId: ''};
+
+  $: if ($params.playgroundId){
+    persistentUUID = $params;
+    console.log("DEBUG:" , persistentUUID, $params);
+
+    if(!controller){
+      controller = new Controller();
+    }
+
+    // does an async hush
+    controller.stop();
+  }
 
   let persistentParams = { chapter: '01-basics', section: '01-introduction' };
   // update url parameters only when navigating tutorials
@@ -41,7 +55,6 @@
     // console.log(`navigation:url:${$url}:params:${$params}}`);
     // console.log(`navigation:url:${$params.chapter}:params:${$params.section}}`);
     persistentParams = $params
-
     if(!controller){
       controller = new Controller();
     }
@@ -77,7 +90,9 @@
     /* font-weight: bold; */
     /* background-color: #cc33ff; */
     /* box-shadow: 0 2px #FF6A00; */
-    box-shadow: 0 0.15em #ccc;
+    box-shadow: 0 0.15em #ccc; /*white underline on nav links*/
+    position: relative; /* to keep the white underline on top!*/
+    z-index: 1; /*keeps white underline on top for the documentation case where things load into DOM async and slowly*/
   }
 
   .container-logo {
@@ -564,12 +579,20 @@
   </div>
 	<div class='container-links'>
 		{#each links as [path, name]}
-      {#if path==`tutorial`}
+      {#if name==`tutorial`}
         <div>
           <a class:active={$isActive(path)}
               style='color: {$siteMode === 'dark'? 'white': 'black'};'
               aria-current="{ $isActive(path)? 'page' : undefined}"
-              href={ $url('/tutorial/:chapter/:section/', persistentParams ) }>Tutorial</a>
+              href={ $url('/tutorial/:chapter/:section/', persistentParams ) }>{name}</a>
+        </div>
+      {:else if name==`playground`}
+        <div>
+          <!-- Accessible Rich Internet Applications – aria-current – Indicates the element that represents the current item within a container or set of related elements.-->
+          <a  class:active={$isActive(path)}
+              style='color: {$siteMode === 'dark'? 'white': 'black'};'
+              aria-current="{ $isActive(path)? 'page' : undefined}"
+              href={ $url('/playground/:playgroundId', persistentUUID)}>{name}</a>
         </div>
       {:else}
         <div>
