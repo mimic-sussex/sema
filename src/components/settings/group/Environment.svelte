@@ -57,6 +57,7 @@
     isDeleteOverlayVisible,
     isNewOverlayVisible,
     isShareOverlayVisible,
+    isDoesNotExistOverlayVisible,
     items,
     // assignNewID,
     hydrateJSONcomponent,
@@ -87,6 +88,7 @@
     $isSaveOverlayVisible = false;
 		$isNewOverlayVisible = false;
     $isDeleteOverlayVisible = false;
+    $isDoesNotExistOverlayVisible = false;
     $isShareOverlayVisible = true;
   }
 
@@ -120,6 +122,7 @@
     $isSaveOverlayVisible = false;
     $isNewOverlayVisible = false;
     $isShareOverlayVisible = false;
+    $isDoesNotExistOverlayVisible = false;
     $isDeleteOverlayVisible = true;
   }
 
@@ -129,6 +132,7 @@
 			$isSaveOverlayVisible = false;
       $isDeleteOverlayVisible = false;
       $isShareOverlayVisible = false;
+      $isDoesNotExistOverlayVisible =false;
 			$isNewOverlayVisible = true;
 
 			// $items = data.content.map(item => hydrateJSONcomponent(item))
@@ -143,6 +147,7 @@
 			$isSaveOverlayVisible = true;
       $isDeleteOverlayVisible = false;
       $isShareOverlayVisible = false;
+      $isDoesNotExistOverlayVisible = false;
 			$isNewOverlayVisible = false;
 
 			loadEnvironmentSnapshotEntries();
@@ -170,6 +175,7 @@
     $isSaveOverlayVisible = false;
     $isDeleteOverlayVisible = false;
     $isShareOverlayVisible = false;
+    $isDoesNotExistOverlayVisible = false;
 		$isNewOverlayVisible = false;
   }
 

@@ -18,6 +18,7 @@
   import Save from '../../components/overlays/Save.svelte';
   import Upload from '../../components/overlays/Upload.svelte';
   import Share from '../../components/overlays/Share.svelte';
+  import DoesNotExist from '../../components/overlays/DoesNotExist.svelte';
   import Sidebar from '../../components/playground/Sidebar.svelte';
   import Settings from '../../components/settings/Settings.svelte';
   // import Dashboard from '../components/layouts/Dashboard.svelte';
@@ -51,6 +52,7 @@
     isNewOverlayVisible,
     isSaveOverlayVisible,
     isShareOverlayVisible,
+    isDoesNotExistOverlayVisible,
 		name,
 		uuid,
     items,
@@ -280,7 +282,7 @@
   }
 
   const onClickCloseOverlay = () => {
-    $isNewOverlayVisible = $isUploadOverlayVisible = $isSaveOverlayVisible = $isDeleteOverlayVisible = false;
+    $isNewOverlayVisible = $isUploadOverlayVisible = $isSaveOverlayVisible = $isDeleteOverlayVisible = $isShareOverlayVisible = $isDoesNotExistOverlayVisible = false;
   }
 
   const onAdjust = e => {
@@ -325,6 +327,7 @@
         if (playground == null){
           //cant find playground with that ID.
           console.log("DEBUG: cant find playground with that uuid.")
+          $isDoesNotExistOverlayVisible = true;
           // $isNewOverlayVisible = true;
         } else {
           console.error(error)
@@ -617,7 +620,7 @@
   </div>
 
   <div  class="upload-overlay-container"
-        style='visibility:{ ( $isNewOverlayVisible || $isUploadOverlayVisible || $isDeleteOverlayVisible || $isSaveOverlayVisible ) ? "visible" : "hidden"}'
+        style='visibility:{ ( $isNewOverlayVisible || $isUploadOverlayVisible || $isDeleteOverlayVisible || $isSaveOverlayVisible || $isShareOverlayVisible ||$isDoesNotExistOverlayVisible) ? "visible" : "hidden"}'
         >
     <span class='close-overlay'
           on:click={ () => onClickCloseOverlay() }
@@ -634,6 +637,8 @@
       <New />
     {:else if $isShareOverlayVisible}
       <Share/>
+    {:else if $isDoesNotExistOverlayVisible}
+      <DoesNotExist/>
 		{/if}
 
   </div>
