@@ -311,15 +311,30 @@
 
     if ($params.playgroundId){
       //if there playground/something try look it up in db
+      let playground;
+      try {
+        playground = await fetchPlayground($params.playgroundId);
+        // console.log('fork!');
+        // console.log(fork);
+        $uuid = playground.id;
+        $name = playground.name;
+        $items = playground.content.map(item => hydrateJSONcomponent(item));
+        $allowEdits = playground.allowEdits;
+        $author = playground.author;
+      } catch (error) {
+        if (playground == null){
+          //cant find playground with that ID.
+          console.log("DEBUG: cant find playground with that uuid.")
+          // $isNewOverlayVisible = true;
+        } else {
+          console.error(error)
+        }
+        // if (playground == null){
+        //   //pop up overlay that playground doesnt exist!
+        //   console.log("playground doesnt exist. make your own.")
+        // }
 
-      let playground = await fetchPlayground($params.playgroundId);
-      // console.log('fork!');
-      // console.log(fork);
-      $uuid = playground.id;
-      $name = playground.name;
-      $items = playground.content.map(item => hydrateJSONcomponent(item));
-      $allowEdits = playground.allowEdits;
-      $author = playground.author;
+      }
 
     }
 

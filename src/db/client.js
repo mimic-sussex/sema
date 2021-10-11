@@ -108,7 +108,11 @@ export const updatePlayground = async (uuid, name, content, allowEdits, user) =>
 						.match({'id': uuid, author: user.id});
 						// .eq('author', user); //if author matches the user
 				} catch (error) {
-					console.error(error)
+					if (user == null){
+						//user doesnt exist (probably not logged in). dont update playground.
+					} else { // might be some other error. log it.
+						console.error(error)
+					}
 				}
 			}
 		}
