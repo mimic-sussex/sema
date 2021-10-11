@@ -68,12 +68,15 @@
   } from '../../../stores/playground'
 
   import {
-    user
+    user,
+    loggedIn
   } from '../../../stores/user'
 
   import * as doNotZip from 'do-not-zip';
 	import downloadBlob from '../../../utils/downloadBlob.js';
 // import { link } from 'fs';
+
+  $: permission = checkPermissions($loggedIn, $allowEdits, $user, $author);
 
   let handleClick = () => {
     window.localStorage["tutorial-" + new Date(Date.now()).toISOString()] = JSON.stringify($items)
@@ -197,7 +200,18 @@
     engine = null;
 	});
 
+  function checkPermissions(loggedIn, allowEdits, user, author){
+    console.log("DEBUG: checkPermissions");
+    if (user != null){
+      //check if they have permissions to edit the playground
+      if (allowEdits == false && user.id != author){
+        return true
+      } else {
+        return false;
+      }
+    }
 
+  }
 
 
 </script>
@@ -540,10 +554,17 @@
 
 <!--if playground loaded is readonly say that user doesnt have permission to save-->
 
-{#if $allowEdits == false && $user.id != $author}
+
+{#if ($loggedIn || !$user) && permission}
   <a href={'#'} class="no-changes-link" 
   on:click={forkProject} 
   title="You do not have permission to save this playground. To save your changes, click to make a copy."
+  style="{( $isActive('/playground') )? `visibility:visible;`: `visibility:collapse`}; margin-left: 2px;"
+  >Changes will not be saved</a>
+{:else}
+  <!-- <p> {$loggedIn} {$user} Not logged in</p> -->
+  <a href={'/login'} class="no-changes-link" 
+  title="Your changes will not be saved since you are not logged in. Click here to Login/Sign up."
   style="{( $isActive('/playground') )? `visibility:visible;`: `visibility:collapse`}; margin-left: 2px;"
   >Changes will not be saved</a>
 {/if}

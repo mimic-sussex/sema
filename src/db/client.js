@@ -12,7 +12,7 @@ export async function getUserProfile() {
 	console.log("Current User: " ,user);
 	if (user == null){
 		console.warn("no user data available, no one is logged in probably.");
-		return null;
+		return {username: null, website: null, avatar_url: null};
 	}
 	
     let { data, error, status } = await supabase
@@ -203,14 +203,6 @@ export const forkPlayground = async (id) => {
 			console.error(error);
 		}
 	} else
-		throw new Error('Supabase client has not been created')
-}
-
-export const overrideAllowEdits = async(id, user) => {
-	if (supabase){
-
-	}
-	else
 		throw new Error('Supabase client has not been created')
 }
 

@@ -92,7 +92,6 @@
   async function getProfile() {
     try {
       $loading = true
-
       let { username, website, avatar_url } = await getUserProfile()
       if (username){
         $userName = username;
@@ -111,7 +110,7 @@
       }
       */
     } catch (error) {
-      // alert(error.message)
+      alert(error.message)
     } finally {
       $loading = false
 			$loggedIn = true
