@@ -29,6 +29,17 @@ export async function getUserProfile() {
 	}
 }
 
+export const checkUser = async () => {
+	if (supabase){
+		try {
+			const user = supabase.auth.user() 
+			return user;
+		} catch (error) {
+			console.error(error);
+		}		
+	}
+}
+
 export const createPlayground = async () => {
 	if(supabase){
 		const timestamp = new Date().toISOString()
@@ -58,7 +69,11 @@ export const createPlayground = async () => {
 			}
 		}
 		catch(error){
-			console.error(error)
+			if (user == null){
+				console.log('DEBUG: No user cant make playground');
+			}else{
+				console.error(error)
+			}
 		}
 		
 	}

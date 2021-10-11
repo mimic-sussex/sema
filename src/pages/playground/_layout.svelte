@@ -326,9 +326,8 @@
       } catch (error) {
         if (playground == null){
           //cant find playground with that ID.
-          console.log("DEBUG: cant find playground with that uuid.")
-          $isDoesNotExistOverlayVisible = true;
-          // $isNewOverlayVisible = true;
+          $isDoesNotExistOverlayVisible = true; //trigger overlay
+
         } else {
           console.error(error)
         }
