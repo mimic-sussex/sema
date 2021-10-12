@@ -22,6 +22,10 @@
 	} from "../../stores/playground.js"
 
 	let projectPage = 'all-projects';
+	let projectLoadRange = {start:0, end:8};
+	let currentPageNum = 0;
+	let totalPageNum = 0;
+	let totalProjectNum = 0;
 
 	const getDateStringFormat = d => (new Date(d)).toISOString().slice(0, 19).replace(/-/g, "/").replace("T", " ");
 
@@ -84,8 +88,9 @@
 		}
 	}
 
-	$: $records = getAllProjects();//fetchRecords(); //promise is reactive to changes in url docId and links since they load asynchrynously
+	$: $records = getAllProjects();//fetchRecords();
 	$: updateProjectPage(projectPage); //reactive statement reacts to changes in projectPage variable
+	$: getTotalNumProjects(projectPage);
 
 
 	//updates which list of projects is on display (my projects or all projects)
@@ -127,6 +132,7 @@
 					allowEdits
 				`)
 			.eq('author', user.id)
+			.range(projectLoadRange.start, projectLoadRange.end)
 			.order('updated', {ascending:true})
 			
 			$records = playgrounds.data;
@@ -156,6 +162,7 @@
 					allowEdits
 				`)
 			.eq('isPublic', true)
+			.range(projectLoadRange.start, projectLoadRange.end)
 			.order('updated', {ascending:true})
 			
 			$records = playgrounds.data;
@@ -215,6 +222,82 @@
 		}
 	}
 
+	//calculate the next range of 
+	const getNextProjects = async () => {
+
+		totalProjectNum = await getTotalNumProjects(projectPage);
+
+		console.log("DEBUG: get next projects");
+		projectLoadRange.start += 8;
+		projectLoadRange.end += 8;
+
+		let step = 8;
+
+		let newStart = projectLoadRange.start + step
+		if ( newStart > totalProjectNum - step ){
+			newStart = totalProjectNum - step;
+		}
+		projectLoadRange.start = newStart;
+		
+		let newEnd = projectLoadRange.end + step;
+		let currentPageNum =+ 1
+		let newPageNum = currentPageNum + 1
+		if (newEnd > totalProjectNum){
+			newEnd = totalProjectNum;
+			newPageNum = currentPageNum; //dont change page num
+		}
+		projectLoadRange.end = newEnd
+		currentPageNum = newPageNum
+
+		console.log(projectLoadRange)
+		
+		console.log("totalProjects", totalProjectNum)
+		updateProjectPage(projectPage);
+	}
+
+	const getPreviousProjects = async () => {
+		console.log("DEBUG: get previous projects")
+		let step = 8;
+
+		let newStart = projectLoadRange.start - step
+		if ( newStart < 0 ){
+			newStart = 0; //hard limit is 0
+		}
+		projectLoadRange.start = newStart
+
+		let newEnd = projectLoadRange.end - step;
+		if (newEnd < step){
+			newEnd = step
+		}
+		projectLoadRange.end = newEnd
+
+		console.log(projectLoadRange)
+		totalProjectNum = await getTotalNumProjects(projectPage);
+		
+		updateProjectPage(projectPage);
+	}
+
+	const getTotalNumProjects = async (projectPage) => {
+
+		if (projectPage = 'my-projects'){
+
+			const user = supabase.auth.user()
+
+			const { data, count } = await supabase
+				.from('playgrounds')
+				.select('*', { count: 'exact' })
+				.eq('author', user.id)
+				console.log(data.length, count);
+				return count;
+		}
+		else if (projectPage == 'all-projects') {
+			const { data, count } = await supabase
+				.from('playgrounds')
+				.select('*', { count: 'exact' })
+				console.log(data.length, count);
+				return count;
+		}
+	}
 
 
 </script>
@@ -222,11 +305,18 @@
 <style>
 
 .container-records {
-	overflow: auto;
+	/* overflow: auto; */
 	width: 100%;
 	height: 80%;
 	margin-bottom: 100px;
 	/* background-color: #333; */
+}
+
+.page-controls-container{
+	display:flex;
+	width: 100%;
+	border-top: 1px solid #ccc;
+	justify-content: space-between;
 }
 
 .record-name {
@@ -504,7 +594,13 @@ button {
 				{/each}
 			</table>
 
-			<!-- <button>New Project</button> -->
+			<div class='page-controls-container'>
+				<a href={'#'} on:click={getPreviousProjects} >Previous</a>
+				<!-- <span style='float:center'>Page {currentPageNum} of {totalPageNum} | total project num {totalProjectNum} </span> -->
+				<a href={'#'} on:click={getNextProjects}>Next</a>
+			</div>
+			<!-- <button on:click={() => blah}>Previous Page</button> -->
+			<!-- <button on:click={() => getNextProjects}>Next Page</button> -->
 
 		{:else}
 			<p style="color: red">No projects yet. Go to the playground and make one!</p>

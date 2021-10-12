@@ -9,7 +9,7 @@
 
 	.container-admin {
 		height: 100%;
-
+		overflow:auto;
 		margin-left: auto;
 		margin-right: auto;
 		/* padding-top: 2em; */
@@ -34,7 +34,7 @@
 	.container-records {
 		grid-area: records;
 		margin-right: 1em;
-		overflow-y: auto;
+		/* overflow-y: auto; */
 		height: 100%;
 		width: 100%;
 	}

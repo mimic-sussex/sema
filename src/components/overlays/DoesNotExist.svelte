@@ -90,7 +90,7 @@
 </script>
 
 <div  in:fly="{{ y: 200, duration: 300 }}" out:fade
-      class="new-overlay-component"
+      class="doesnotexist-overlay-component"
       style='visibility:{ $isDoesNotExistOverlayVisible ? "visible": "hidden"}'
       >
 
@@ -104,10 +104,10 @@
       <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z"/>
     </svg>
 
-    <p class="new-overlay-text">
+    <p class="doesnotexist-overlay-text">
       <span style="font-weight: 1500;">Project could not be found. Are you sure the URL is correct?</span>
     </p>
-    <div class="new-overlay-button-container">
+    <div class="doesnotexist-overlay-button-container">
       <button class="button-dark"
               on:click={ resetEnvironment }
               >New</button>
@@ -121,10 +121,10 @@
       <path d="M10.828.122A.5.5 0 0 1 11 .5V1h.5A1.5 1.5 0 0 1 13 2.5V15h1.5a.5.5 0 0 1 0 1h-13a.5.5 0 0 1 0-1H3V1.5a.5.5 0 0 1 .43-.495l7-1a.5.5 0 0 1 .398.117zM11.5 2H11v13h1V2.5a.5.5 0 0 0-.5-.5zM4 1.934V15h6V1.077l-6 .857z"/>
     </svg>
 
-    <p class="new-overlay-text">
+    <p class="doesnotexist-overlay-text">
       <span style="font-weight: 1500;">You need to login to make a new playground. </span>
     </p>
-    <div class="new-overlay-button-container">
+    <div class="doesnotexist-overlay-button-container">
       <button class="button-dark"
               on:click={ $goto('/login') }
               >Login</button>
@@ -201,11 +201,11 @@
     box-shadow:  -1px -1px 3px rgba(16, 16, 16, 0.4), 0.5px 0.5px 0.5px rgba(16, 16, 16, 0.04);
   }
 
-  .new-overlay-button-container {
+  .doesnotexist-overlay-button-container {
     display: inline-flex;
   }
 
-  .new-overlay-component {
+  .doesnotexist-overlay-component {
     width: 100%;
 		height:100%;
     display:flex;
@@ -216,7 +216,7 @@
   }
 
 
-  .new-overlay-text {
+  .doesnotexist-overlay-text {
     /* top:50%; */
 
     /* width: 100%; */
