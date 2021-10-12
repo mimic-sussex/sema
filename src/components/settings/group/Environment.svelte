@@ -208,15 +208,22 @@
 
   function checkPermissions(loggedIn, allowEdits, user, author){
     console.log("DEBUG: checkPermissions");
-    if (user != null){
-      //check if they have permissions to edit the playground
-      if (allowEdits == false && user.id != author){
-        return true
-      } else {
-        return false;
-      }
+    
+    if (allowEdits){
+      return true //anyone can edit
+    } 
+    else if (!allowEdits){
+      if (user != null){ 
+        
+        if (user.id == author){
+          return true
+        } else {
+          return false
+        }
+      }  else {
+        return false
+      } 
     }
-
   }
 
 
@@ -559,16 +566,14 @@
         />
 
 <!--if playground loaded is readonly say that user doesnt have permission to save-->
-
-
-{#if ($loggedIn || !$user) && permission}
+{#if !permission && $user != null}
   <a href={'#'} class="no-changes-link" 
   on:click={forkProject} 
   title="You do not have permission to save this playground. To save your changes, click to make a copy."
   style="{( $isActive('/playground') )? `visibility:visible;`: `visibility:collapse`}; margin-left: 2px;"
   >Changes will not be saved</a>
-{:else}
-  <!-- <p> {$loggedIn} {$user} Not logged in</p> -->
+{:else if (!$user) }
+  <!-- <p> {$loggedIn} {$user} {permission}</p> -->
   <a href={'/login'} class="no-changes-link" 
   title="Your changes will not be saved since you are not logged in. Click here to Login/Sign up."
   style="{( $isActive('/playground') )? `visibility:visible;`: `visibility:collapse`}; margin-left: 2px;"
