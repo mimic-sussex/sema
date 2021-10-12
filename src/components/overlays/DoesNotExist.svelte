@@ -29,6 +29,7 @@
 
 
   import { onMount, onDestroy } from 'svelte';
+  import { fly, fade } from 'svelte/transition';
   
   import { goto } from "@roxi/routify";
 
@@ -88,7 +89,8 @@
 
 </script>
 
-<div  class="new-overlay-component"
+<div  in:fly="{{ y: 200, duration: 300 }}" out:fade
+      class="new-overlay-component"
       style='visibility:{ $isDoesNotExistOverlayVisible ? "visible": "hidden"}'
       >
 
