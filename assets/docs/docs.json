@@ -83,11 +83,24 @@
         "title": "Languages",
         "children": [
           {
-            "container": false,
-            "title": "Default Language",
-            "file": "live-coding/languages/default-language",
-            "path": "./default-language",
-            "subs": []
+            "container": true,
+            "title": "Default",
+            "children": [
+              {
+                "container": false,
+                "title": "Overview",
+                "file": "live-coding/languages/default/default-language",
+                "path": "./default-language",
+                "subs": []    
+              },
+              {
+                "container": false,
+                "title": "Inputs and Outputs",
+                "file": "live-coding/languages/default/ins-outs",
+                "path": "./ins-outs",
+                "subs": []    
+              }
+            ]
           },
           {
             "container": false,
