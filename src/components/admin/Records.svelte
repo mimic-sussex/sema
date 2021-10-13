@@ -281,8 +281,8 @@
 		projectLoadRange.start = newStart
 
 		let newEnd = projectLoadRange.end - step;
-		if (newEnd < step){
-			newEnd = step
+		if (newEnd < projectLoadRange.start + step){
+			newEnd = projectLoadRange.start + step;
 		}
 		projectLoadRange.end = newEnd
 
