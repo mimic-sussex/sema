@@ -311,13 +311,11 @@
     // console.log('Playground index: onMount ');
     console.log("DEBUG: playground mount params", $params.playgroundId);
 
+    //if there is a playground/SOMETHINg in the url try look it up in the DB
     if ($params.playgroundId){
-      //if there playground/something try look it up in db
       let playground;
       try {
         playground = await fetchPlayground($params.playgroundId);
-        // console.log('fork!');
-        // console.log(fork);
         $uuid = playground.id;
         $name = playground.name;
         $items = playground.content.map(item => hydrateJSONcomponent(item));
@@ -326,18 +324,11 @@
       } catch (error) {
         if (playground == null){
           //cant find playground with that ID.
-          $isDoesNotExistOverlayVisible = true; //trigger overlay
-
+          $isDoesNotExistOverlayVisible = true; //trigger overlay DoesNotExist
         } else {
           console.error(error)
         }
-        // if (playground == null){
-        //   //pop up overlay that playground doesnt exist!
-        //   console.log("playground doesnt exist. make your own.")
-        // }
-
       }
-
     }
 
     // Sequentially fetch data from individual items' properties into language design workflow stores
