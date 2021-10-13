@@ -58,6 +58,7 @@
       $items = $items.slice($items.length);
       $allowEdits = data.allowEdits;
       $author = data.author;
+      window.history.pushState("", "", `/playground/${$uuid}`); //put the new UUID in the URL without reloading
 
       $isUploadOverlayVisible = false;
       $isSaveOverlayVisible = false;
