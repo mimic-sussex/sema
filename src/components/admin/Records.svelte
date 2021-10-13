@@ -22,11 +22,9 @@
 	} from "../../stores/playground.js"
 
 	let projectPage = 'all-projects';
-	let projectLoadRange = {start:0, end:8};
-	let currentPageNum = 0;
-	let totalPageNum = 0;
+	let projectLoadStep = 8;
+	let projectLoadRange = {start:0, end:projectLoadStep};
 	let totalProjectNum = 0;
-
 
 	const getDateStringFormat = d => (new Date(d)).toISOString().slice(0, 19).replace(/-/g, "/").replace("T", " ");
 
@@ -229,15 +227,15 @@
 		totalProjectNum = await getTotalNumProjects(projectPage);
 
 		console.log("DEBUG: get next projects");
-		projectLoadRange.start += 8;
-		projectLoadRange.end += 8;
+		// projectLoadRange.start += 8;
+		// projectLoadRange.end += 8;
 
-		let step = 8;
+		let step = projectLoadStep;
 
 		let newStart = projectLoadRange.start + step
-		if ( newStart > totalProjectNum - step ){
-			newStart = totalProjectNum - step;
-		}
+		// if ( newStart > totalProjectNum - step ){
+		// 	newStart = totalProjectNum - step;
+		// }
 		projectLoadRange.start = newStart;
 		
 		let newEnd = projectLoadRange.end + step;
@@ -258,7 +256,7 @@
 
 	const getPreviousProjects = async () => {
 		console.log("DEBUG: get previous projects")
-		let step = 8;
+		let step = projectLoadStep;
 
 		let newStart = projectLoadRange.start - step
 		if ( newStart < 0 ){
@@ -296,6 +294,7 @@
 			const { data, count } = await supabase
 				.from('playgrounds')
 				.select('*', { count: 'exact' })
+				.eq('isPublic', true);
 				// console.log(data.length, count);
 				console.log('data all-projects', data);
 
@@ -480,8 +479,8 @@ button {
 	<input type="radio" id="all-projects-radio" name="project-filter" value="all-projects" bind:group={projectPage}>
 	<label for="my-projects-radio">Browse All Projects</label> -->
 
-	<button class:project-tab-selected={projectPage == "my-projects"} on:click={() => projectPage = "my-projects"}>My Projects</button>
-	<button class:project-tab-selected={projectPage == "all-projects"} on:click={() => projectPage = "all-projects"}>All Projects</button>
+	<button class:project-tab-selected={projectPage == "my-projects"} on:click={() => {projectPage = "my-projects"; projectLoadRange = {start:0, end:projectLoadStep};}}>My Projects</button>
+	<button class:project-tab-selected={projectPage == "all-projects"} on:click={() => {projectPage = "all-projects"; projectLoadRange = {start:0, end:projectLoadStep};}}>All Projects</button>
 
 </div>
 
@@ -601,11 +600,13 @@ button {
 
 			<div class='page-controls-container'>
 				<a href={'#'} on:click={getPreviousProjects} 
-				style="{( projectLoadRange.start <= 0 )? `visibility:collapse;`: `visibility:visible`}">Previous</a>
+				style="{( projectLoadRange.start <= 0 )? `visibility:collapse;`: `visibility:visible`}; color:#ccc;">Previous</a>
 
-				<span style='float:center'>Page {currentPageNum} of {totalPageNum} | (Total number of projects {totalProjectNum}) </span>
+				<span style='float:center; color:#ccc'>
+					Page { Math.ceil(projectLoadRange.end / projectLoadStep) } of { Math.ceil(totalProjectNum / projectLoadStep)} | Total number of projects: {totalProjectNum} 
+				</span>
 				<a href={'#'} on:click={getNextProjects}
-				style="{( projectLoadRange.end >= totalProjectNum )? `visibility:collapse;`: `visibility:visible`}">Next</a>
+				style="{( projectLoadRange.end >= totalProjectNum )? `visibility:collapse;`: `visibility:visible`}; color:#ccc;">Next</a>
 			</div>
 			<!-- <button on:click={() => blah}>Previous Page</button> -->
 			<!-- <button on:click={() => getNextProjects}>Next Page</button> -->
