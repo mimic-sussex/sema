@@ -27,6 +27,7 @@
 	let totalPageNum = 0;
 	let totalProjectNum = 0;
 
+
 	const getDateStringFormat = d => (new Date(d)).toISOString().slice(0, 19).replace(/-/g, "/").replace("T", " ");
 
 	const setPlaygroundFromRecord = record => {
@@ -279,22 +280,26 @@
 
 	const getTotalNumProjects = async (projectPage) => {
 
-		if (projectPage = 'my-projects'){
-
+		if (projectPage == 'my-projects'){
 			const user = supabase.auth.user()
 
 			const { data, count } = await supabase
 				.from('playgrounds')
 				.select('*', { count: 'exact' })
 				.eq('author', user.id)
-				console.log(data.length, count);
+				console.log('data my-projects', data);
+				// console.log(data.length, count);
+				totalProjectNum = count;
 				return count;
 		}
 		else if (projectPage == 'all-projects') {
 			const { data, count } = await supabase
 				.from('playgrounds')
 				.select('*', { count: 'exact' })
-				console.log(data.length, count);
+				// console.log(data.length, count);
+				console.log('data all-projects', data);
+
+				totalProjectNum = count;
 				return count;
 		}
 	}
@@ -595,9 +600,12 @@ button {
 			</table>
 
 			<div class='page-controls-container'>
-				<a href={'#'} on:click={getPreviousProjects} >Previous</a>
-				<!-- <span style='float:center'>Page {currentPageNum} of {totalPageNum} | total project num {totalProjectNum} </span> -->
-				<a href={'#'} on:click={getNextProjects}>Next</a>
+				<a href={'#'} on:click={getPreviousProjects} 
+				style="{( projectLoadRange.start <= 0 )? `visibility:collapse;`: `visibility:visible`}">Previous</a>
+
+				<span style='float:center'>Page {currentPageNum} of {totalPageNum} | (Total number of projects {totalProjectNum}) </span>
+				<a href={'#'} on:click={getNextProjects}
+				style="{( projectLoadRange.end >= totalProjectNum )? `visibility:collapse;`: `visibility:visible`}">Next</a>
 			</div>
 			<!-- <button on:click={() => blah}>Previous Page</button> -->
 			<!-- <button on:click={() => getNextProjects}>Next Page</button> -->
