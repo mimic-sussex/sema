@@ -366,6 +366,10 @@ th {
 	color: #ccc;
 }
 
+td {
+	text-align:center;
+}
+
 .record-entry:hover {
 	background-color: #333;
 }
@@ -431,7 +435,7 @@ label {
 	background-color: #282828;
 }
 
-.visibility-icon:hover {
+.toggle-icon:hover {
 	cursor:pointer;
 	fill: #282828;
 }
@@ -523,7 +527,7 @@ button {
 						<td>
 						<a class="file-name" href="playground/{ record.id }"
 								>
-								<span class='record-name'
+								<span class='record-name' style='text-align:left;'
 								>{ record.name }
 								</span>
 						</td>
@@ -535,7 +539,7 @@ button {
 								width="16" 
 								height="16" 
 								fill="currentColor" 
-								class="visibility-icon" 
+								class="toggle-icon" 
 								viewBox="0 0 16 16" 
 								on:click={toggleVisibility(record.id, false)}>
 									<title>Public. This project will appear in the 'All Projects' tab.</title>
@@ -546,7 +550,7 @@ button {
 								width="16" 
 								height="16" 
 								fill="currentColor" 
-								class="visibility-icon" 
+								class="toggle-icon" 
 								viewBox="0 0 16 16" 
 								on:click={toggleVisibility(record.id, true)}>
 									<title>Private. This project will only appear in the 'My Projects' tab.</title>
@@ -561,7 +565,7 @@ button {
 								width="16" 
 								height="16" 
 								fill="currentColor" 
-								class="bi bi-check-circle" 
+								class="toggle-icon" 
 								viewBox="0 0 16 16"
 								on:click={toggleAllowEdits(record.id, false)}
 								>
@@ -574,7 +578,7 @@ button {
 								width="16" 
 								height="16" 
 								fill="currentColor" 
-								class="bi bi-x-circle" 
+								class="toggle-icon" 
 								viewBox="0 0 16 16"
 								on:click={toggleAllowEdits(record.id, true)}
 								>
@@ -583,8 +587,7 @@ button {
 									<path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
 								</svg>
 							{/if}
-
-						<td>
+						</td>
 
 						<td>
 							{#if record.author}
