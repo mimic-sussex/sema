@@ -60,7 +60,7 @@
 		"spassr": "^2.6.0",
 		"svelte": "^3.23.2",
 		"svelte-grid": "^4.0.1",
-		"svelte-inspect": "^0.1.2",
+		"svelte-json-tree-auto": "^0.1.0",
 		"workbox-cli": "^6.1.5"
 	},
 	"routify": {
