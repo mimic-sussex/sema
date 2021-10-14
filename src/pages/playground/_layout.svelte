@@ -1,6 +1,6 @@
 <script>
 	// import { authStore } from '../../auth'
-	import { redirect, params } from '@roxi/routify'
+	import { redirect, params, goto } from '@roxi/routify'
 	// const { user } = authStore
 	import { user } from "../../stores/user"
 
@@ -301,16 +301,8 @@
 
   let container;
 
-  onMount( async () => {
-
-    // No need to create re-initialise controller again here
-    if(!controller.initializing && !controller.samplesLoaded)
-      // controller.init('http://localhost:5000/sema-engine');
-      await controller.init(document.location.origin + '/build/');
-
-    // console.log('Playground index: onMount ');
-    console.log("DEBUG: playground mount params", $params.playgroundId);
-
+  //loads playground from url params if they exist and if not from local storage.
+  const loadPlayground = async () => {
     //if there is a playground/SOMETHINg in the url try look it up in the DB
     if ($params.playgroundId){
       let playground;
@@ -321,6 +313,29 @@
         $items = playground.content.map(item => hydrateJSONcomponent(item));
         $allowEdits = playground.allowEdits;
         $author = playground.author;
+
+        //write url to local storage
+        localStorage.setItem("last-session-playground-uuid", `${$uuid}`);
+      } catch (error) {
+        if (playground == null){
+          //cant find playground with that ID.
+          $isDoesNotExistOverlayVisible = true; //trigger overlay DoesNotExist
+        } else {
+          console.error(error)
+        }
+      }
+    } else if (localStorage.getItem("last-session-playground-uuid")) {
+      let playground
+      try {
+        console.log("going to url in local storage", localStorage.getItem("last-session-playground-uuid"))
+        // $goto('/playground/'+localStorage.getItem("last-session-playground-uuid"));
+        playground = await fetchPlayground(localStorage.getItem("last-session-playground-uuid"));
+        $uuid = playground.id;
+        $name = playground.name;
+        $items = playground.content.map(item => hydrateJSONcomponent(item));
+        $allowEdits = playground.allowEdits;
+        $author = playground.author;
+        window.history.pushState("", "", `/playground/${$uuid}`); //put the new UUID in the URL without reloading
       } catch (error) {
         if (playground == null){
           //cant find playground with that ID.
@@ -330,6 +345,20 @@
         }
       }
     }
+  }
+
+
+  onMount( async () => {
+
+    // No need to create re-initialise controller again here
+    if(!controller.initializing && !controller.samplesLoaded)
+      // controller.init('http://localhost:5000/sema-engine');
+      await controller.init(document.location.origin + '/build/');
+
+    // console.log('Playground index: onMount ');
+    console.log("DEBUG: playground mount params", $params.playgroundId);
+
+    loadPlayground();
 
     // Sequentially fetch data from individual items' properties into language design workflow stores
     for (const item of $items)
