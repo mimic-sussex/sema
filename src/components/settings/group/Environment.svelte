@@ -811,7 +811,7 @@
 
 <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
         title="download project"
-        style="padding: 0.2em 0.4em 0.8em 0.6em ! important;"
+        style="{( $isActive('/playground') ) ? `visibility:visible;`: `visibility:collapse`}; padding: 0.2em 0.4em 0.8em 0.6em ! important;"
         on:click={ () => downloadEnvironment() }
         >
   <div class="icon-container">
@@ -875,7 +875,7 @@
 <!-- SHARE -->
 <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
         title="share project"
-        style="padding: 0.25em 0.3em 0.75em 0.7em;"
+        style="{( $isActive('/playground') ) ? `visibility:visible;`: `visibility:collapse`}; padding: 0.2em 0.4em 0.8em 0.6em ! important;"
         on:click={ shareProjectLink }>
   <div class="icon-container">
     {#if $siteMode === 'dark' }
