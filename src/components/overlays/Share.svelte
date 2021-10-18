@@ -25,7 +25,7 @@
   }
 
   function makeTweet(){
-    window.open(`https://twitter.com/intent/tweet?text=Check out my project on https://sema.codes/sema.codes/playground/${$uuid}`);
+    window.open(`https://twitter.com/intent/tweet?text=Check out my project on https://dev.sema.codes/playground/${$uuid}`);
     //return "https://twitter.com/intent/tweet?text="+window.location.href;
   }
   const copyToClipboard = () => {
