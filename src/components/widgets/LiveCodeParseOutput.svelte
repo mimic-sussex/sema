@@ -211,7 +211,7 @@
 					<div style="overflow-y: scroll; height:auto;"
 								class='inspect'
                 >
-                <JSONTree { value } />
+                <!-- <JSONTree { value } /> -->
 						<!-- <Inspect.Inverted value={ $liveCodeAbstractSyntaxTree }
 														depth={7}
 														/> -->
@@ -220,7 +220,7 @@
 					<div style="overflow-y: scroll; height:auto;"
 								class='inspect'
                 >
-                <JSONTree { value } />
+                <!-- <JSONTree { value } /> -->
 						<!-- <Inspect value={ $liveCodeAbstractSyntaxTree }
 														depth={7}
 														/> -->
