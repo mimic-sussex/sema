@@ -12,7 +12,7 @@ export async function getUserProfile() {
 	console.log("Current User: " ,user);
 	if (user == null){
 		console.warn("no user data available, no one is logged in probably.");
-		return null;
+		return {username: null, website: null, avatar_url: null};
 	}
 	
     let { data, error, status } = await supabase
@@ -26,6 +26,17 @@ export async function getUserProfile() {
 	}
 	catch(error){
 		console.error(error);
+	}
+}
+
+export const checkUser = async () => {
+	if (supabase){
+		try {
+			const user = supabase.auth.user() 
+			return user;
+		} catch (error) {
+			console.error(error);
+		}		
 	}
 }
 
@@ -58,7 +69,11 @@ export const createPlayground = async () => {
 			}
 		}
 		catch(error){
-			console.error(error)
+			if (user == null){
+				console.log('DEBUG: No user cant make playground');
+			}else{
+				console.error(error)
+			}
 		}
 		
 	}
@@ -108,7 +123,11 @@ export const updatePlayground = async (uuid, name, content, allowEdits, user) =>
 						.match({'id': uuid, author: user.id});
 						// .eq('author', user); //if author matches the user
 				} catch (error) {
-					console.error(error)
+					if (user == null){
+						//user doesnt exist (probably not logged in). dont update playground.
+					} else { // might be some other error. log it.
+						console.error(error)
+					}
 				}
 			}
 		}
@@ -203,14 +222,6 @@ export const forkPlayground = async (id) => {
 			console.error(error);
 		}
 	} else
-		throw new Error('Supabase client has not been created')
-}
-
-export const overrideAllowEdits = async(id, user) => {
-	if (supabase){
-
-	}
-	else
 		throw new Error('Supabase client has not been created')
 }
 

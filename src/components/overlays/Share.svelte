@@ -25,7 +25,8 @@
   }
 
   function makeTweet(){
-    return "https://twitter.com/intent/tweet?text="+window.location.href;
+    window.open(`https://twitter.com/intent/tweet?text=Check out my project on https://dev.sema.codes/playground/${$uuid}`);
+    //return "https://twitter.com/intent/tweet?text="+window.location.href;
   }
   const copyToClipboard = () => {
     navigator.clipboard.writeText(window.location.href);
@@ -81,10 +82,15 @@
     <button class="button-dark"
             on:click={ copyToClipboard }
             >Copy Link</button>
-    <a class="twitter-share-button"
+    
+    <button class="button-dark"
+            on:click={ makeTweet }
+            >Tweet</button>
+
+    <!-- <a class="twitter-share-button"
             href="https://twitter.com/intent/tweet?text=Checkout my project on "
             data-size="large">
-          Tweet</a>
+          Tweet</a> -->
     <button class="button-dark"
             on:click={ closeOverlay }
             >Cancel</button>

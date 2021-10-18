@@ -1,6 +1,6 @@
 <script>
 	// import { authStore } from '../../auth'
-	import { redirect, params } from '@roxi/routify'
+	import { redirect, params, goto } from '@roxi/routify'
 	// const { user } = authStore
 	import { user } from "../../stores/user"
 
@@ -18,6 +18,7 @@
   import Save from '../../components/overlays/Save.svelte';
   import Upload from '../../components/overlays/Upload.svelte';
   import Share from '../../components/overlays/Share.svelte';
+  import DoesNotExist from '../../components/overlays/DoesNotExist.svelte';
   import Sidebar from '../../components/playground/Sidebar.svelte';
   import Settings from '../../components/settings/Settings.svelte';
   // import Dashboard from '../components/layouts/Dashboard.svelte';
@@ -51,6 +52,7 @@
     isNewOverlayVisible,
     isSaveOverlayVisible,
     isShareOverlayVisible,
+    isDoesNotExistOverlayVisible,
 		name,
 		uuid,
     items,
@@ -280,7 +282,7 @@
   }
 
   const onClickCloseOverlay = () => {
-    $isNewOverlayVisible = $isUploadOverlayVisible = $isSaveOverlayVisible = $isDeleteOverlayVisible = false;
+    $isNewOverlayVisible = $isUploadOverlayVisible = $isSaveOverlayVisible = $isDeleteOverlayVisible = $isShareOverlayVisible = $isDoesNotExistOverlayVisible = false;
   }
 
   const onAdjust = e => {
@@ -299,6 +301,53 @@
 
   let container;
 
+  //loads playground from url params if they exist and if not from local storage.
+  const loadPlayground = async () => {
+    //if there is a playground/SOMETHINg in the url try look it up in the DB
+    if ($params.playgroundId){
+      let playground;
+      try {
+        playground = await fetchPlayground($params.playgroundId);
+        $uuid = playground.id;
+        $name = playground.name;
+        $items = playground.content.map(item => hydrateJSONcomponent(item));
+        $allowEdits = playground.allowEdits;
+        $author = playground.author;
+
+        //write url to local storage
+        localStorage.setItem("last-session-playground-uuid", `${$uuid}`);
+      } catch (error) {
+        if (playground == null){
+          //cant find playground with that ID.
+          $isDoesNotExistOverlayVisible = true; //trigger overlay DoesNotExist
+        } else {
+          console.error(error)
+        }
+      }
+    } else if (localStorage.getItem("last-session-playground-uuid")) {
+      let playground
+      try {
+        console.log("going to url in local storage", localStorage.getItem("last-session-playground-uuid"))
+        // $goto('/playground/'+localStorage.getItem("last-session-playground-uuid"));
+        playground = await fetchPlayground(localStorage.getItem("last-session-playground-uuid"));
+        $uuid = playground.id;
+        $name = playground.name;
+        $items = playground.content.map(item => hydrateJSONcomponent(item));
+        $allowEdits = playground.allowEdits;
+        $author = playground.author;
+        window.history.pushState("", "", `/playground/${$uuid}`); //put the new UUID in the URL without reloading
+      } catch (error) {
+        if (playground == null){
+          //cant find playground with that ID.
+          $isDoesNotExistOverlayVisible = true; //trigger overlay DoesNotExist
+        } else {
+          console.error(error)
+        }
+      }
+    }
+  }
+
+
   onMount( async () => {
 
     // No need to create re-initialise controller again here
@@ -309,19 +358,7 @@
     // console.log('Playground index: onMount ');
     console.log("DEBUG: playground mount params", $params.playgroundId);
 
-    if ($params.playgroundId){
-      //if there playground/something try look it up in db
-
-      let playground = await fetchPlayground($params.playgroundId);
-      // console.log('fork!');
-      // console.log(fork);
-      $uuid = playground.id;
-      $name = playground.name;
-      $items = playground.content.map(item => hydrateJSONcomponent(item));
-      $allowEdits = playground.allowEdits;
-      $author = playground.author;
-
-    }
+    loadPlayground();
 
     // Sequentially fetch data from individual items' properties into language design workflow stores
     for (const item of $items)
@@ -602,7 +639,7 @@
   </div>
 
   <div  class="upload-overlay-container"
-        style='visibility:{ ( $isNewOverlayVisible || $isUploadOverlayVisible || $isDeleteOverlayVisible || $isSaveOverlayVisible ) ? "visible" : "hidden"}'
+        style='visibility:{ ( $isNewOverlayVisible || $isUploadOverlayVisible || $isDeleteOverlayVisible || $isSaveOverlayVisible || $isShareOverlayVisible ||$isDoesNotExistOverlayVisible) ? "visible" : "hidden"}'
         >
     <span class='close-overlay'
           on:click={ () => onClickCloseOverlay() }
@@ -619,6 +656,8 @@
       <New />
     {:else if $isShareOverlayVisible}
       <Share/>
+    {:else if $isDoesNotExistOverlayVisible}
+      <DoesNotExist/>
 		{/if}
 
   </div>
@@ -653,7 +692,7 @@
 
 
       <div class='chrome'
-        style="background: rgba(25, 25, 25, 0.6);"
+        style="background: #1c1c1c;"
         >
         <div class='move'>
           <svg version="1.1"

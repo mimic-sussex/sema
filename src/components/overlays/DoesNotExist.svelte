@@ -1,10 +1,11 @@
 <script>
-
   import { Engine } from 'sema-engine';
 
   let engine;
 
   import {
+    isDoesNotExistOverlayVisible,
+    isShareOverlayVisible,
     isDeleteOverlayVisible,
     isNewOverlayVisible,
     items,
@@ -29,11 +30,11 @@
 
   import { onMount, onDestroy } from 'svelte';
   import { fly, fade } from 'svelte/transition';
-
+  
   import { goto } from "@roxi/routify";
 
   const closeOverlay = () => {
-    $isNewOverlayVisible = false;
+    $isDoesNotExistOverlayVisible = false;
   }
 
   //whether to display need to login button
@@ -58,7 +59,6 @@
       $items = $items.slice($items.length);
       $allowEdits = data.allowEdits;
       $author = data.author;
-      window.history.pushState("", "", `/playground/${$uuid}`); //put the new UUID in the URL without reloading
 
       $isUploadOverlayVisible = false;
       $isSaveOverlayVisible = false;
@@ -80,7 +80,7 @@
 
   onMount( async () => {
     // engine = new Engine();
-		console.log("New")
+		console.log("Project does not exist.")
   });
 
   onDestroy( () => {
@@ -90,8 +90,8 @@
 </script>
 
 <div  in:fly="{{ y: 200, duration: 300 }}" out:fade
-      class="new-overlay-component"
-      style='visibility:{ $isNewOverlayVisible ? "visible": "hidden"}'
+      class="doesnotexist-overlay-component"
+      style='visibility:{ $isDoesNotExistOverlayVisible ? "visible": "hidden"}'
       >
 
   <!-- <svg class="box-icon" xmlns="http://www.w3.org/2000/svg" width="50" height="43" viewBox="0 0 50 43"> -->
@@ -99,33 +99,32 @@
   <!-- </svg> -->
 
   {#if !needToLogin}
-  <svg xmlns="http://www.w3.org/2000/svg" width="320" height="100" fill="currentColor" class="bi bi-cloud-plus" viewBox="0 0 16 16">
-    <path fill-rule="evenodd" d="M8 5.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V10a.5.5 0 0 1-1 0V8.5H6a.5.5 0 0 1 0-1h1.5V6a.5.5 0 0 1 .5-.5z"/>
-    <path d="M4.406 3.342A5.53 5.53 0 0 1 8 2c2.69 0 4.923 2 5.166 4.579C14.758 6.804 16 8.137 16 9.773 16 11.569 14.502 13 12.687 13H3.781C1.708 13 0 11.366 0 9.318c0-1.763 1.266-3.223 2.942-3.593.143-.863.698-1.723 1.464-2.383zm.653.757c-.757.653-1.153 1.44-1.153 2.056v.448l-.445.049C2.064 6.805 1 7.952 1 9.318 1 10.785 2.23 12 3.781 12h8.906C13.98 12 15 10.988 15 9.773c0-1.216-1.02-2.228-2.313-2.228h-.5v-.5C12.188 4.825 10.328 3 8 3a4.53 4.53 0 0 0-2.941 1.1z"/>
-  </svg>
+    <svg xmlns="http://www.w3.org/2000/svg" width="320" height="100" fill="currentColor" class="bi bi-exclamation-diamond" viewBox="0 0 16 16">
+      <path d="M6.95.435c.58-.58 1.52-.58 2.1 0l6.515 6.516c.58.58.58 1.519 0 2.098L9.05 15.565c-.58.58-1.519.58-2.098 0L.435 9.05a1.482 1.482 0 0 1 0-2.098L6.95.435zm1.4.7a.495.495 0 0 0-.7 0L1.134 7.65a.495.495 0 0 0 0 .7l6.516 6.516a.495.495 0 0 0 .7 0l6.516-6.516a.495.495 0 0 0 0-.7L8.35 1.134z"/>
+      <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z"/>
+    </svg>
 
-  <p class="new-overlay-text">
-    <span style="font-weight: 1500;">Are you sure you want to discard your content and create a new project?</span>
-  </p>
-  <div class="new-overlay-button-container">
-    <button class="button-dark"
-            on:click={ resetEnvironment }
-            >New</button>
-    
-    <button class="button-dark"
-    on:click={ closeOverlay }
-    >Cancel</button>
-  </div>
+    <p class="doesnotexist-overlay-text">
+      <span style="font-weight: 1500;">Project could not be found. Are you sure the URL is correct?</span>
+    </p>
+    <div class="doesnotexist-overlay-button-container">
+      <button class="button-dark"
+              on:click={ resetEnvironment }
+              >New</button>
+      <button class="button-dark"
+              on:click={ closeOverlay }
+              >Cancel</button>
+    </div>
   {:else}
     <svg xmlns="http://www.w3.org/2000/svg" width="320" height="100" fill="currentColor" class="bi bi-door-open" viewBox="0 0 16 16">
       <path d="M8.5 10c-.276 0-.5-.448-.5-1s.224-1 .5-1 .5.448.5 1-.224 1-.5 1z"/>
       <path d="M10.828.122A.5.5 0 0 1 11 .5V1h.5A1.5 1.5 0 0 1 13 2.5V15h1.5a.5.5 0 0 1 0 1h-13a.5.5 0 0 1 0-1H3V1.5a.5.5 0 0 1 .43-.495l7-1a.5.5 0 0 1 .398.117zM11.5 2H11v13h1V2.5a.5.5 0 0 0-.5-.5zM4 1.934V15h6V1.077l-6 .857z"/>
     </svg>
 
-    <p class="new-overlay-text">
+    <p class="doesnotexist-overlay-text">
       <span style="font-weight: 1500;">You need to login to make a new playground. </span>
     </p>
-    <div class="new-overlay-button-container">
+    <div class="doesnotexist-overlay-button-container">
       <button class="button-dark"
               on:click={ $goto('/login') }
               >Login</button>
@@ -134,9 +133,6 @@
       >Cancel</button>
     </div>
   {/if}
-
-    
-  
 </div>
 
 <style>
@@ -205,11 +201,11 @@
     box-shadow:  -1px -1px 3px rgba(16, 16, 16, 0.4), 0.5px 0.5px 0.5px rgba(16, 16, 16, 0.04);
   }
 
-  .new-overlay-button-container {
+  .doesnotexist-overlay-button-container {
     display: inline-flex;
   }
 
-  .new-overlay-component {
+  .doesnotexist-overlay-component {
     width: 100%;
 		height:100%;
     display:flex;
@@ -220,7 +216,7 @@
   }
 
 
-  .new-overlay-text {
+  .doesnotexist-overlay-text {
     /* top:50%; */
 
     /* width: 100%; */

@@ -28,6 +28,8 @@
     siteMode
   } from "../../stores/common.js";
 
+  import JSONTree from 'svelte-json-tree-auto';
+
   export let id;
   export let name;
 	export let type;
@@ -47,6 +49,14 @@
 
 	let showAST = false;
 
+  $: getAST(showAST)
+  let value = {};
+  function getAST(showAST){
+    if (showAST){
+      value = $liveCodeAbstractSyntaxTree[0];
+    }
+  }
+
   onMount(async () => {
     log( id, name, type, className, lineNumbers, hasFocus, theme, background, component );
 
@@ -54,7 +64,7 @@
 
   onDestroy(async () => {
 
-	});
+  });
 
 </script>
 
@@ -171,7 +181,10 @@
 				{#if $siteMode === 'dark' }
 					<div style="overflow-y: scroll; height:auto;"
 								class='inspect'
-								>
+                >
+                
+                <JSONTree { value } />
+                
 						<!-- <Inspect.Inverted value={ $liveCodeAbstractSyntaxTree }
 														depth={7}
 														/> -->
@@ -179,7 +192,9 @@
 				{:else}
 					<div style="overflow-y: scroll; height:auto;"
 								class='inspect'
-								>
+                >
+                
+                <JSONTree { value } />
 						<!-- <Inspect value={ $liveCodeAbstractSyntaxTree }
 														depth={7}
 														/> -->
@@ -195,7 +210,8 @@
 				{#if $siteMode === 'dark' }
 					<div style="overflow-y: scroll; height:auto;"
 								class='inspect'
-								>
+                >
+                <!-- <JSONTree { value } /> -->
 						<!-- <Inspect.Inverted value={ $liveCodeAbstractSyntaxTree }
 														depth={7}
 														/> -->
@@ -203,7 +219,8 @@
 				{:else}
 					<div style="overflow-y: scroll; height:auto;"
 								class='inspect'
-								>
+                >
+                <!-- <JSONTree { value } /> -->
 						<!-- <Inspect value={ $liveCodeAbstractSyntaxTree }
 														depth={7}
 														/> -->

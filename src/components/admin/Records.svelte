@@ -21,7 +21,10 @@
 		author
 	} from "../../stores/playground.js"
 
-	let projectPage = 'all-projects';
+	let projectPage = 'my-projects';
+	let projectLoadStep = 8;
+	let projectLoadRange = {start:0, end:projectLoadStep};
+	let totalProjectNum = 0;
 
 	const getDateStringFormat = d => (new Date(d)).toISOString().slice(0, 19).replace(/-/g, "/").replace("T", " ");
 
@@ -84,8 +87,9 @@
 		}
 	}
 
-	$: $records = getAllProjects();//fetchRecords(); //promise is reactive to changes in url docId and links since they load asynchrynously
+	$: $records = getAllProjects();//fetchRecords();
 	$: updateProjectPage(projectPage); //reactive statement reacts to changes in projectPage variable
+	$: getTotalNumProjects(projectPage);
 
 
 	//updates which list of projects is on display (my projects or all projects)
@@ -127,6 +131,7 @@
 					allowEdits
 				`)
 			.eq('author', user.id)
+			.range(projectLoadRange.start, projectLoadRange.end)
 			.order('updated', {ascending:true})
 			
 			$records = playgrounds.data;
@@ -156,6 +161,7 @@
 					allowEdits
 				`)
 			.eq('isPublic', true)
+			.range(projectLoadRange.start, projectLoadRange.end)
 			.order('updated', {ascending:true})
 			
 			$records = playgrounds.data;
@@ -215,6 +221,103 @@
 		}
 	}
 
+	const toggleAllowEdits = async (id, state) => {
+		try {
+			const user = supabase.auth.user()
+
+			const playground = await supabase
+				.from('playgrounds')
+				.update({allowEdits: state})
+				.match({id: id, author: user.id})
+			
+			updateProjectPage(projectPage);
+		}
+		catch(error){
+			console.error(error)
+		}
+	}
+
+	//calculate the next range of 
+	const getNextProjects = async () => {
+
+		totalProjectNum = await getTotalNumProjects(projectPage);
+
+		console.log("DEBUG: get next projects");
+		// projectLoadRange.start += 8;
+		// projectLoadRange.end += 8;
+
+		let step = projectLoadStep;
+
+		let newStart = projectLoadRange.start + step
+		// if ( newStart > totalProjectNum - step ){
+		// 	newStart = totalProjectNum - step;
+		// }
+		projectLoadRange.start = newStart;
+		
+		let newEnd = projectLoadRange.end + step;
+		let currentPageNum =+ 1
+		let newPageNum = currentPageNum + 1
+		if (newEnd > totalProjectNum){
+			newEnd = totalProjectNum;
+			newPageNum = currentPageNum; //dont change page num
+		}
+		projectLoadRange.end = newEnd
+		currentPageNum = newPageNum
+
+		console.log(projectLoadRange)
+		
+		console.log("totalProjects", totalProjectNum)
+		updateProjectPage(projectPage);
+	}
+
+	const getPreviousProjects = async () => {
+		console.log("DEBUG: get previous projects")
+		let step = projectLoadStep;
+
+		let newStart = projectLoadRange.start - step
+		if ( newStart < 0 ){
+			newStart = 0; //hard limit is 0
+		}
+		projectLoadRange.start = newStart
+
+		let newEnd = projectLoadRange.end - step;
+		if (newEnd < projectLoadRange.start + step){
+			newEnd = projectLoadRange.start + step;
+		}
+		projectLoadRange.end = newEnd
+
+		console.log(projectLoadRange)
+		totalProjectNum = await getTotalNumProjects(projectPage);
+		
+		updateProjectPage(projectPage);
+	}
+
+	const getTotalNumProjects = async (projectPage) => {
+
+		if (projectPage == 'my-projects'){
+			const user = supabase.auth.user()
+
+			const { data, count } = await supabase
+				.from('playgrounds')
+				.select('*', { count: 'exact' })
+				.eq('author', user.id)
+				console.log('data my-projects', data);
+				// console.log(data.length, count);
+				totalProjectNum = count;
+				return count;
+		}
+		else if (projectPage == 'all-projects') {
+			const { data, count } = await supabase
+				.from('playgrounds')
+				.select('*', { count: 'exact' })
+				.eq('isPublic', true);
+				// console.log(data.length, count);
+				console.log('data all-projects', data);
+
+				totalProjectNum = count;
+				return count;
+		}
+	}
 
 
 </script>
@@ -222,11 +325,20 @@
 <style>
 
 .container-records {
-	overflow: auto;
+	/* overflow: auto; */
 	width: 100%;
 	height: 80%;
 	margin-bottom: 100px;
 	/* background-color: #333; */
+}
+
+.page-controls-container{
+	display:flex;
+	/* position:fixed;
+	bottom: 0; */
+	width: 100%;
+	border-top: 1px solid #ccc;
+	justify-content: space-between;
 }
 
 .record-name {
@@ -252,6 +364,10 @@ table {
 th {
 	text-align:left;
 	color: #ccc;
+}
+
+td {
+	text-align:center;
 }
 
 .record-entry:hover {
@@ -319,7 +435,7 @@ label {
 	background-color: #282828;
 }
 
-.visibility-icon:hover {
+.toggle-icon:hover {
 	cursor:pointer;
 	fill: #282828;
 }
@@ -385,12 +501,12 @@ button {
 	<input type="radio" id="all-projects-radio" name="project-filter" value="all-projects" bind:group={projectPage}>
 	<label for="my-projects-radio">Browse All Projects</label> -->
 
-	<button class:project-tab-selected={projectPage == "my-projects"} on:click={() => projectPage = "my-projects"}>My Projects</button>
-	<button class:project-tab-selected={projectPage == "all-projects"} on:click={() => projectPage = "all-projects"}>All Projects</button>
+	<button class:project-tab-selected={projectPage == "my-projects"} on:click={() => {projectPage = "my-projects"; projectLoadRange = {start:0, end:projectLoadStep};}}>My Projects</button>
+	<button class:project-tab-selected={projectPage == "all-projects"} on:click={() => {projectPage = "all-projects"; projectLoadRange = {start:0, end:projectLoadStep};}}>All Projects</button>
 
 </div>
 
-<div class='container-records' in:slide>	
+<div class='container-records'>	
 		
 	{#await $records }
 		<p>...waiting</p>
@@ -411,7 +527,7 @@ button {
 						<td>
 						<a class="file-name" href="playground/{ record.id }"
 								>
-								<span class='record-name'
+								<span class='record-name' style='text-align:left;'
 								>{ record.name }
 								</span>
 						</td>
@@ -419,11 +535,25 @@ button {
 						<td>
 							<!-- {( record.isPublic ? "Public": 'Private' )} -->
 							{#if record.isPublic}
-								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="visibility-icon" viewBox="0 0 16 16" on:click={toggleVisibility(record.id, false)}>
+								<svg xmlns="http://www.w3.org/2000/svg" 
+								width="16" 
+								height="16" 
+								fill="currentColor" 
+								class="toggle-icon" 
+								viewBox="0 0 16 16" 
+								on:click={toggleVisibility(record.id, false)}>
+									<title>Public. This project will appear in the 'All Projects' tab.</title>
 									<path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm7.5-6.923c-.67.204-1.335.82-1.887 1.855A7.97 7.97 0 0 0 5.145 4H7.5V1.077zM4.09 4a9.267 9.267 0 0 1 .64-1.539 6.7 6.7 0 0 1 .597-.933A7.025 7.025 0 0 0 2.255 4H4.09zm-.582 3.5c.03-.877.138-1.718.312-2.5H1.674a6.958 6.958 0 0 0-.656 2.5h2.49zM4.847 5a12.5 12.5 0 0 0-.338 2.5H7.5V5H4.847zM8.5 5v2.5h2.99a12.495 12.495 0 0 0-.337-2.5H8.5zM4.51 8.5a12.5 12.5 0 0 0 .337 2.5H7.5V8.5H4.51zm3.99 0V11h2.653c.187-.765.306-1.608.338-2.5H8.5zM5.145 12c.138.386.295.744.468 1.068.552 1.035 1.218 1.65 1.887 1.855V12H5.145zm.182 2.472a6.696 6.696 0 0 1-.597-.933A9.268 9.268 0 0 1 4.09 12H2.255a7.024 7.024 0 0 0 3.072 2.472zM3.82 11a13.652 13.652 0 0 1-.312-2.5h-2.49c.062.89.291 1.733.656 2.5H3.82zm6.853 3.472A7.024 7.024 0 0 0 13.745 12H11.91a9.27 9.27 0 0 1-.64 1.539 6.688 6.688 0 0 1-.597.933zM8.5 12v2.923c.67-.204 1.335-.82 1.887-1.855.173-.324.33-.682.468-1.068H8.5zm3.68-1h2.146c.365-.767.594-1.61.656-2.5h-2.49a13.65 13.65 0 0 1-.312 2.5zm2.802-3.5a6.959 6.959 0 0 0-.656-2.5H12.18c.174.782.282 1.623.312 2.5h2.49zM11.27 2.461c.247.464.462.98.64 1.539h1.835a7.024 7.024 0 0 0-3.072-2.472c.218.284.418.598.597.933zM10.855 4a7.966 7.966 0 0 0-.468-1.068C9.835 1.897 9.17 1.282 8.5 1.077V4h2.355z"/>
 								</svg>
 							{:else}
-								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="visibility-icon" viewBox="0 0 16 16" on:click={toggleVisibility(record.id, true)}>
+								<svg xmlns="http://www.w3.org/2000/svg" 
+								width="16" 
+								height="16" 
+								fill="currentColor" 
+								class="toggle-icon" 
+								viewBox="0 0 16 16" 
+								on:click={toggleVisibility(record.id, true)}>
+									<title>Private. This project will only appear in the 'My Projects' tab.</title>
 									<path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zM5 8h6a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/>
 								</svg>
 							{/if}
@@ -431,16 +561,33 @@ button {
 
 						<td>
 							{#if record.allowEdits}
-								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
-									<path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/>
+								<svg xmlns="http://www.w3.org/2000/svg" 
+								width="16" 
+								height="16" 
+								fill="currentColor" 
+								class="toggle-icon" 
+								viewBox="0 0 16 16"
+								on:click={toggleAllowEdits(record.id, false)}
+								>
+									<title>True. Anyone with the link can edit this project.</title>
+									<path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+									<path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
 								</svg>
 							{:else}
-								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+								<svg xmlns="http://www.w3.org/2000/svg" 
+								width="16" 
+								height="16" 
+								fill="currentColor" 
+								class="toggle-icon" 
+								viewBox="0 0 16 16"
+								on:click={toggleAllowEdits(record.id, true)}
+								>
+									<title>False. Only the author may edit this project.</title>
+									<path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
 									<path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
 								</svg>
 							{/if}
-
-						<td>
+						</td>
 
 						<td>
 							{#if record.author}
@@ -504,7 +651,18 @@ button {
 				{/each}
 			</table>
 
-			<!-- <button>New Project</button> -->
+			<div class='page-controls-container'>
+				<a href={'#'} on:click={getPreviousProjects} 
+				style="{( projectLoadRange.start <= 0 )? `visibility:collapse;`: `visibility:visible`}; color:#ccc;">Previous</a>
+
+				<span style='float:center; color:#ccc'>
+					Page { Math.ceil(projectLoadRange.end / projectLoadStep) } of { Math.ceil(totalProjectNum / projectLoadStep)} | Total number of projects: {totalProjectNum} 
+				</span>
+				<a href={'#'} on:click={getNextProjects}
+				style="{( projectLoadRange.end >= totalProjectNum )? `visibility:collapse;`: `visibility:visible`}; color:#ccc;">Next</a>
+			</div>
+			<!-- <button on:click={() => blah}>Previous Page</button> -->
+			<!-- <button on:click={() => getNextProjects}>Next Page</button> -->
 
 		{:else}
 			<p style="color: red">No projects yet. Go to the playground and make one!</p>

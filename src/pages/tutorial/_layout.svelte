@@ -272,7 +272,7 @@
     >
 
       <div class='chrome'
-          style="background: rgba(25, 25, 25, 0.6);"
+          style="background: #1c1c1c;"
           >
           <div class='item-header-type'>
             <span>{ dataItem.data.type }</span>
