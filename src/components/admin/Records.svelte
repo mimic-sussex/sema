@@ -22,6 +22,7 @@
 	} from "../../stores/playground.js"
 
 	let projectPage = 'my-projects';
+	let orderBy = {col:'updated', ascending:false}; //column to order by, by default when it was updated.
 	let projectLoadStep = 8;
 	let projectLoadRange = {start:0, end:projectLoadStep};
 	let totalProjectNum = 0;
@@ -69,32 +70,36 @@
 	// 	}
 	// }
 
-	const fetchRecords = async () => {
-		try {
-			const playgrounds = await supabase
-				.from('playgrounds')
-				.select(`
-					id,
-					name,
-					content,
-					created,
-					updated,
-					isPublic
-				`)
-			return playgrounds.data
-		} catch (error) {
-			console.error(error)
-		}
-	}
+	// const fetchRecords = async () => {
+	// 	try {
+	// 		const playgrounds = await supabase
+	// 			.from('playgrounds')
+	// 			.select(`
+	// 				id,
+	// 				name,
+	// 				content,
+	// 				created,
+	// 				updated,
+	// 				isPublic
+	// 			`)
+	// 		return playgrounds.data
+	// 	} catch (error) {
+	// 		console.error(error)
+	// 	}
+	// }
 
 	$: $records = getAllProjects();//fetchRecords();
-	$: updateProjectPage(projectPage); //reactive statement reacts to changes in projectPage variable
+	$: updateProjectPage(projectPage, orderBy); //reactive statement reacts to changes in projectPage variable
 	$: getTotalNumProjects(projectPage);
 
 
-	//updates which list of projects is on display (my projects or all projects)
-	const updateProjectPage = async (projectPage) => {
-		console.log("Updating project page", projectPage);
+	onMount ( async () => {
+
+	})
+
+		//updates which list of projects is on display (my projects or all projects)
+		const updateProjectPage = async (projectPage, orderBy) => {
+		console.log("Updating project page", projectPage, "ordering by", orderBy);
 		if (projectPage == 'my-projects'){
 			// console.log('refreshing my-projects page', projectPage)
 			getMyProjects();
@@ -103,11 +108,6 @@
 			getAllProjects();
 		}
 	}
-
-
-	onMount ( async () => {
-
-	})
 
 
 	//get all the projects of the current user from the database
@@ -132,7 +132,7 @@
 				`)
 			.eq('author', user.id)
 			.range(projectLoadRange.start, projectLoadRange.end)
-			.order('updated', {ascending:true})
+			.order(orderBy.col, {ascending:orderBy.ascending})
 			
 			$records = playgrounds.data;
 		} catch(error){
@@ -162,7 +162,7 @@
 				`)
 			.eq('isPublic', true)
 			.range(projectLoadRange.start, projectLoadRange.end)
-			.order('updated', {ascending:true})
+			.order(orderBy.col, {ascending:orderBy.ascending})
 			
 			$records = playgrounds.data;
 		} catch(error){
@@ -319,6 +319,16 @@
 		}
 	}
 
+	const sortAlphabetical = (projects) => {
+		console.log("sort alphabetical")
+		projects.sort(function(a, b) {
+				var textA = a.name.toUpperCase();
+				var textB = b.name.toUpperCase();
+				return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+		});
+		return projects;
+	}
+
 
 </script>
 
@@ -368,6 +378,10 @@ th {
 
 td {
 	text-align:center;
+}
+
+.table-header:hover {
+	cursor: pointer;
 }
 
 .record-entry:hover {
@@ -513,12 +527,32 @@ button {
 	{:then $records }
 		{#if $records != null}
 			<table>
+
 				<tr>
-					<th>Name</th>
-					<th>Visibility</th>
-					<th>Allow edits</th>
-					<th>Author</th>
-					<th>Updated</th>
+					<th 
+					class="table-header" 
+					on:click={() => {orderBy = {col:'name', ascending:true }} }
+					>Name</th>
+					
+					<th 
+					class="table-header" 
+					on:click={()=>{orderBy = {col:'isPublic', ascending:true }}} 
+					>Visibility</th>
+					
+					<th 
+					class="table-header" 
+					on:click={()=>{orderBy = {col:'allowEdits', ascending:true }}} 
+					>Allow edits</th>
+
+					<th 
+					class="table-header" 
+					on:click={()=>{orderBy = {col:'author', ascending:true }}}
+					>Author</th>
+
+					<th class="table-header" 
+					on:click={()=>{orderBy = {col:'updated', ascending:false }}}
+					>Updated</th>
+
 					<th>Options</th> <!--Fork or delete (depending on permissions)-->
 				</tr>
 
