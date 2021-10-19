@@ -156,8 +156,23 @@
       .then(json => {
         $tutorials = json;
         // $selected = $tutorials[0].sections[0];
-        $selectedChapter = $tutorials[0];
-        $selectedSection = $selectedChapter.sections[0];
+        console.log("DEBUG: fetchAndLoadDefaultTutorial", $selectedSection, $selectedChapter);
+        
+        // if section and chapter exists in local storage get that otherwise set to first
+        let fetchedSection = localStorage.getItem("last-session-tutorial-section");
+        let fetchedChapter = localStorage.getItem("last-session-tutorial-chapter");
+        if (fetchedSection != null){
+          $selectedSection = JSON.parse(fetchedSection);
+        } else {
+          $selectedSection = $selectedChapter.sections[0];
+        }
+        if (fetchedChapter != null){
+          $selectedChapter = JSON.parse(fetchedChapter);
+        } else {
+          $selectedChapter = $tutorials[0];
+        }
+        // $selectedChapter = $tutorials[0];
+        // $selectedSection = $selectedChapter.sections[0];
 
         $ready();
       }).catch( () => new Error('Fetching tutorial.json failed'));

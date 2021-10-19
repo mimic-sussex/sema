@@ -102,7 +102,9 @@
       // await tick();
       $items = []; // refresh items to call onDestroy on each (learner need to terminate workers)
 			e? setNextTutorial(): setPreviousTutorial();
-			localStorage.setItem("last-session-tutorial-url", `/tutorial/${$selectedSection.chapter_dir}/${$selectedSection.section_dir}/`);
+      localStorage.setItem("last-session-tutorial-url", `/tutorial/${$selectedSection.chapter_dir}/${$selectedSection.section_dir}/`);
+      localStorage.setItem("last-session-tutorial-section", JSON.stringify($selectedSection));
+      localStorage.setItem("last-session-tutorial-chapter", JSON.stringify($selectedChapter));
 		} catch (error) {
       console.error("Error navigating tutorial environment", error);
 		}
@@ -113,7 +115,12 @@
       // await tick();
       $items = []; // refresh items to call onDestroy on each (learner need to terminate workers)
       localStorage.setItem("last-session-tutorial-url", `/tutorial/${$selectedSection.chapter_dir}/${$selectedSection.section_dir}/`);
-			$selectedChapter = $tutorials.filter(chapter => chapter.sections.includes($selectedSection)).shift();
+      
+      console.log("selectedSection!!!", $selectedSection)
+
+      $selectedChapter = $tutorials.filter(chapter => chapter.sections.includes($selectedSection)).shift();
+      localStorage.setItem("last-session-tutorial-section", JSON.stringify($selectedSection));
+      localStorage.setItem("last-session-tutorial-chapter", JSON.stringify($selectedChapter));
       $goto(`/tutorial/${$selectedSection.chapter_dir}/${$selectedSection.section_dir}/`);
     }
     catch(error){
@@ -172,6 +179,20 @@
       $items = json.map( item => hydrateJSONcomponent(item) );
     }
 
+    //if section and chapter exists in local storage get that otherwise set to first
+    // let fetchedSection = localStorage.getItem("last-session-tutorial-section");
+    // let fetchedChapter = localStorage.getItem("last-session-tutorial-chapter");
+    // if (fetchedSection != null){
+    //   $selectedSection = JSON.parse(fetchedSection);
+    // } else {
+    //   $selectedSection = $selectedChapter.sections[0];
+    // }
+    // if (fetchedChapter != null){
+    //   $selectedChapter = JSON.parse(fetchedChapter);
+    // } else {
+    //   $selectedChapter = $tutorials[0];
+    // }
+
     for (const item of $items){
       await updateItemPropsWithFetchedValues(item);
       await populateCommonStoresWithFetchedProps(item);
@@ -222,8 +243,14 @@
               <optgroup label="{i + 1}. {chapter.title}">
                 {#if chapter.sections !== undefined}
                   {#each chapter.sections as section, i}
-                    <!-- <option value={section}>{String.fromCharCode(i + 97)}. {section.title}</option> -->
-                    <option value={section} >{i + 1}. {section.title}</option>
+                    {#if $selectedSection}
+                      {#if section.title == $selectedSection.title}
+                        <option value={section} selected=true>{i + 1}. {section.title}</option>
+                      {:else}
+                        <option value={section} >{i + 1}. {section.title}</option>
+                      {/if}
+                    {/if}
+                    <!-- <option value={section}>{String.fromCharCode(i + 97)}. {section.title}</option> -->                    
                   {/each}
                 {/if}
               </optgroup>
