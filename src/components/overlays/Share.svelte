@@ -16,6 +16,7 @@
 		name
   } from '../../stores/playground.js';
 
+  export let id;
 
   import { onMount, onDestroy } from 'svelte';
   import { fly, fade } from 'svelte/transition';
@@ -25,12 +26,13 @@
   }
 
   function makeTweet(){
-    window.open(`https://twitter.com/intent/tweet?text=Check out my project on https://dev.sema.codes/playground/${$uuid}`);
+    window.open(`https://twitter.com/intent/tweet?text=Check out my project on https://dev.sema.codes/playground/${id}`);
     //return "https://twitter.com/intent/tweet?text="+window.location.href;
   }
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(window.location.href);
-    console.log('current uuid', $uuid);
+    // navigator.clipboard.writeText(window.location.href);
+    navigator.clipboard.writeText(`https://dev.sema.codes/playground/${id}`);
+    console.log('current uuid', id);
   }
   
 
@@ -45,7 +47,7 @@
 
 </script>
 
-<div  in:fly="{{ y: 200, duration: 300 }}" out:fade
+<div  in:fly="{{ y: 200, duration: 300 }}"
       class="share-overlay-component"
       style='visibility:{ $isShareOverlayVisible ? "visible": "hidden"}'
       >

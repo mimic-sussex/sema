@@ -8,10 +8,13 @@
 		user
 	} from '../../stores/user'
 
-  import { supabase, forkPlayground } from '../../db/client'
+  import { supabase, forkPlayground, deletePlayground } from '../../db/client'
+
+	import Share from '../../components/overlays/Share.svelte';
 
   import {
-    isSaveOverlayVisible,
+		isSaveOverlayVisible,
+		isShareOverlayVisible,
 		hydrateJSONcomponent,
     loadEnvironmentSnapshotEntries,
 		items,
@@ -27,66 +30,10 @@
 	let projectLoadRange = {start:0, end:projectLoadStep};
 	let totalProjectNum = 0;
 
+	//ID of project that user clicks to share
+	let shareID = $uuid; //set it to $uuid by default;
+
 	const getDateStringFormat = d => (new Date(d)).toISOString().slice(0, 19).replace(/-/g, "/").replace("T", " ");
-
-	const setPlaygroundFromRecord = record => {
-		try {
-			$name = record.name;
-			$uuid = record.id;
-			$items = record.content.map(item => hydrateJSONcomponent(item));
-			$allowEdits = record.allowEdits;
-			$author = record.author;
-			console.log("setting author", $author);
-			// $readOnly = true;
-			// console.log("USER", $user);
-			// setAllowEdits(record.allowEdits, record.author);
-			//console.log("blah blah");
-			// console.log("document is allowEdits", $readOnly);
-		} catch (error) {
-			console.error(error)
-		}
-	}
-
-	// const setAllowEdits = async (allowEdits, author) => {
-	// 	try{
-	// 		//console.log("author ok!",$readOnly);
-	// 		const userCheck = supabase.auth.user();
-			
-	// 		if (allowEdits == false){
-	// 			//but the author is the owner
-	// 			if (author == userCheck){
-	// 				$readOnly = false;
-					
-	// 			} else {
-	// 				$readOnly = true;
-	// 			}
-	// 		}
-	// 		// if true anyone can edit
-	// 		else if (allowEdits == true){
-	// 			$readOnly = false;
-	// 		}
-	// 	} catch (error){
-	// 		console.error(error)
-	// 	}
-	// }
-
-	// const fetchRecords = async () => {
-	// 	try {
-	// 		const playgrounds = await supabase
-	// 			.from('playgrounds')
-	// 			.select(`
-	// 				id,
-	// 				name,
-	// 				content,
-	// 				created,
-	// 				updated,
-	// 				isPublic
-	// 			`)
-	// 		return playgrounds.data
-	// 	} catch (error) {
-	// 		console.error(error)
-	// 	}
-	// }
 
 	$: $records = getAllProjects();//fetchRecords();
 	$: updateProjectPage(projectPage, orderBy); //reactive statement reacts to changes in projectPage variable
@@ -95,7 +42,7 @@
 
 	onMount ( async () => {
 
-	})
+	});
 
 		//updates which list of projects is on display (my projects or all projects)
 		const updateProjectPage = async (projectPage, orderBy) => {
@@ -179,27 +126,15 @@
 
 	const shareProject = async (id) => {
 		console.log(id);
-		navigator.clipboard.writeText(id);
-		window.alert("Project ID copied");
+		// navigator.clipboard.writeText(`https://dev.sema.codes/playground/${id}`);
+		shareID = id;
+		$isShareOverlayVisible = true;
+		// window.alert("Project ID copied");
 	}
 
 	const deleteProject = async (id) => {
-		console.log("deleting project with id", id);
-
-		try {
-			const user = supabase.auth.user()
-			
-			const playgrounds = await supabase
-			.from('playgrounds')
-			.delete()
-			.match({'author': user.id, 'id': id})
-
-			updateProjectPage(projectPage);
-
-		} catch(error){
-			console.error(error)
-		}
-		//need to grab currently selected project list again
+		await deletePlayground(id);
+		updateProjectPage(projectPage);
 	}
 
 	const toggleVisibility = async (id, state) => {
@@ -319,17 +254,6 @@
 		}
 	}
 
-	const sortAlphabetical = (projects) => {
-		console.log("sort alphabetical")
-		projects.sort(function(a, b) {
-				var textA = a.name.toUpperCase();
-				var textB = b.name.toUpperCase();
-				return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
-		});
-		return projects;
-	}
-
-
 </script>
 
 <style>
@@ -379,6 +303,9 @@ th {
 td {
 	text-align:center;
 }
+
+tr:nth-child(even) {background: #212121}
+tr:nth-child(odd) {background: #151515}
 
 .table-header:hover {
 	cursor: pointer;
@@ -502,6 +429,19 @@ button {
 	fill: grey;
 }
 
+.overlay-container {
+	grid-area: layout;
+	z-index: 1000;
+	background-color: rgba(16,12,12,0.8);
+	visibility: hidden;
+	width: 100%;
+
+	/* display:flex; */
+	/* justify-content:center;
+	align-items:center; */
+	font-size:16px;
+}
+
 </style>
 <!-- 
 <button on:click={getMyProjects} >My Projects</button>
@@ -521,6 +461,12 @@ button {
 </div>
 
 <div class='container-records'>	
+
+	<div class="overlay-container">
+		{#if $isShareOverlayVisible}
+			<Share id={shareID}/>
+		{/if}
+	</div>
 		
 	{#await $records }
 		<p>...waiting</p>
