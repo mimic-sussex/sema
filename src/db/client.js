@@ -169,6 +169,21 @@ export const fetchPlayground = async (uuid) => {
 
 }
 
+export const deletePlayground = async (id) => {
+	console.log("Deleting project with id", id);
+	try {
+		const user = supabase.auth.user()
+		
+		const playgrounds = await supabase
+		.from('playgrounds')
+		.delete()
+		.match({'author': user.id, 'id': id})
+
+	} catch(error){
+		console.error(error)
+	}
+}
+
 export const forkPlayground = async (id) => {
 	console.log("Forking project", id);
 	
