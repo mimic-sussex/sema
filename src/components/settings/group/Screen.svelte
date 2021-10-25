@@ -65,11 +65,28 @@
 <style>
 
   .button-dark {
+    padding: 20;
+		background-color: #262a2e;
+/* 		margin: 0,0,0,0; */
+		color: white;
+		border: none;
+		width: 49px;
+  	height: 49px;
+/*   	margin: 12px 0px 12px 12px; */
+  	padding: 7px 10px 8px 8px;
+  	border-radius: 5px;
+  	background-color: #262a2e;
+  }
+
+  .button-dark:hover {
+    background-color: blue;
+  }
+
+  /* .button-dark {
     width: 2.5em;
     height: 2.5em;
     display: block;
     font-size: medium;
-    /* font-size: 12px; */
     font-family: sans-serif;
     font-weight: 400;
     cursor: pointer;
@@ -80,7 +97,6 @@
     box-sizing: border-box;
     border: 0 solid #333;
     text-align: left;
-    /* margin-top: 5px; */
     margin-right: 5px;
     border-radius: .6em;
     -moz-appearance: none;
@@ -101,7 +117,6 @@
     height: 2.5em;
     display: block;
     font-size: medium;
-    /* font-size: 12px; */
     font-family: sans-serif;
     font-weight: 500;
     cursor: pointer;
@@ -112,7 +127,6 @@
     box-sizing: border-box;
     border: 0 solid #333;
     text-align: left;
-    /* margin-top: 5px; */
     margin-right: 5px;
     border-radius: .6em;
     -moz-appearance: none;
@@ -125,7 +139,7 @@
     -webkit-box-shadow: 2px 2px 5px rgba(0,0,0),-0.5px -0.5px 3px rgb(34, 34, 34);
     -moz-box-shadow: 2px 2px 5px rgba(0,0,0), -0.5px -0.5px 3px rgb(34, 34, 34);;
     box-shadow: 2px 2px 3px rgb(0, 0, 0), -1px -1px 3px #ffffff61;
-  }
+  } */
   .button-dark:active {
     width: 2.5em;
     height: 2.5em;
