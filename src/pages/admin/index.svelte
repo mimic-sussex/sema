@@ -47,10 +47,13 @@
 	}
 
 	.overlay-container {
-    z-index: 1000;
+		position: absolute;
+    /* z-index: 1000; */
+		visibility: hidden;
     background-color: rgba(16,12,12,0.8);
-    visibility: hidden;
+    
     width: 100%;
+		height:100%;
 
     /* display:flex; */
     /* justify-content:center;

@@ -124,6 +124,7 @@
   }
 
   .delete-overlay-component {
+    background-color: rgba(16,12,12,0.8);
     width: 100%;
 		height:100%;
     display:flex;
