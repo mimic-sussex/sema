@@ -35,13 +35,13 @@
 
 	const getDateStringFormat = d => (new Date(d)).toISOString().slice(0, 19).replace(/-/g, "/").replace("T", " ");
 
-	$: $records = getAllProjects();//fetchRecords();
+	// $: $records = getAllProjects();//fetchRecords();
 	$: updateProjectPage(projectPage, orderBy); //reactive statement reacts to changes in projectPage variable
 	$: getTotalNumProjects(projectPage);
 
 
 	onMount ( async () => {
-
+		
 	});
 
 		//updates which list of projects is on display (my projects or all projects)
@@ -430,7 +430,6 @@ button {
 }
 
 .overlay-container {
-	grid-area: layout;
 	z-index: 1000;
 	background-color: rgba(16,12,12,0.8);
 	visibility: hidden;
