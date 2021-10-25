@@ -3,6 +3,7 @@
   import { onMount, onDestroy } from "svelte";
 
   import ItemProps from './ItemProps.svelte';
+  import Mouse from '../settings/group/Mouse.svelte';
 
   import {
     sidebarLiveCodeOptions,
@@ -778,6 +779,10 @@ import { siteMode } from "../../stores/common";
               >
         analyser
       </button>
+    </div>
+
+    <div>
+      <Mouse />
     </div>
 
     <!--
