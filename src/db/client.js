@@ -259,3 +259,14 @@ export const updateSession = async (uuid, name, content) => {
 	else
 		throw new Error('Supabase client has not been created')
 }
+
+export const deleteAccount = async() => {
+	try {
+		const user = supabase.auth.user()
+		await supabase.rpc('delete_user', {useruuid: user.id})
+		//then signout the user
+		await supabase.auth.signOut()
+	} catch (error){
+		console.log(error)
+	}
+}
