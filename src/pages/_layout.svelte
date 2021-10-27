@@ -150,7 +150,7 @@
    * Fetches Tutorial table of contents and sets default tutorial (Basics/Introduction)
   */
   let fetchAndLoadDefaultTutorial = () => {
-
+  
 		fetch(document.location.origin + `/tutorial/tutorial.json`)
       .then(r => r.json())
       .then(json => {
@@ -161,18 +161,47 @@
         // if section and chapter exists in local storage get that otherwise set to first
         let fetchedSection = localStorage.getItem("last-session-tutorial-section");
         let fetchedChapter = localStorage.getItem("last-session-tutorial-chapter");
-        if (fetchedSection != null){
-          $selectedSection = JSON.parse(fetchedSection);
-        } else {
-          $selectedSection = $selectedChapter.sections[0];
-        }
-        if (fetchedChapter != null){
-          $selectedChapter = JSON.parse(fetchedChapter);
-        } else {
-          $selectedChapter = $tutorials[0];
-        }
-        // $selectedChapter = $tutorials[0];
-        // $selectedSection = $selectedChapter.sections[0];
+        
+        if (fetchedChapter != null && fetchedSection != null) {
+          fetchedChapter = JSON.parse(fetchedChapter);
+          fetchedSection = JSON.parse(fetchedSection);
+          // have to set selectedChapter and selectedSection from tutorials otherwise
+          // values are not equal when comparing values in next and previous buttons
+          let i;
+          for (i=0; i<$tutorials.length; i++){
+            if ($tutorials[i].title == fetchedChapter.title){
+              $selectedChapter = $tutorials[i];
+              break;
+            }
+          }
+          console.log($selectedChapter);
+          console.log("DEBUG:", $tutorials[0], $selectedChapter, ($tutorials[0] == $selectedChapter));
+          let j;
+          for (j=0; j<$tutorials[i].sections.length; j++){
+            if($tutorials[i].sections[j].slug == fetchedSection.slug){
+              $selectedSection = $tutorials[i].sections[j];
+              break;
+            }
+          }
+      } else {
+        $selectedChapter = $tutorials[0];
+        $selectedSection = $selectedChapter.sections[0];
+      }
+        // if (fetchedChapter != null){
+        //   $selectedChapter = JSON.parse(fetchedChapter);
+        //   console.log('parsed chapter')
+        // } else {
+        //   $selectedChapter = $tutorials[0];
+        //   console.log("grabbed chapter from tut")
+        // }
+
+        // if (fetchedSection != null){
+        //   $selectedSection = JSON.parse(fetchedSection);
+        //   console.log('parsed section')
+        // } else {
+        //   $selectedSection = $selectedChapter.sections[0];
+        //   console.log('grabbed section from tut');
+        // }
 
         $ready();
       }).catch( () => new Error('Fetching tutorial.json failed'));
