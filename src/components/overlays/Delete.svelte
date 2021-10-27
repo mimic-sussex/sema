@@ -16,7 +16,11 @@
     sidebarDebuggerOptions
   } from '../../stores/playground.js';
 
-
+  import {
+    deletePlayground,
+    createProject,
+    checkUser
+	} from '../../db/client';
 
   import { onMount, onDestroy } from 'svelte';
   import { fly, fade } from 'svelte/transition';

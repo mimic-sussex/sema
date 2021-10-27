@@ -2,7 +2,7 @@
 
   import {
 		supabase,
-		getUserProfile
+    getUserProfile,
 	} from '../../db/client'
 
   import {
@@ -12,7 +12,11 @@
 		avatarURL,
 		loggedIn,
 		loading
-	} from '../../stores/user'
+  } from '../../stores/user'
+  
+  import {
+    isDeleteAccountOverlayVisible
+  } from '../../stores/profile.js'
 
   import Avatar from '../login/Avatar.svelte'
 
@@ -125,6 +129,18 @@
     /* padding: 5px 3px 8px 35px; */
   }
 
+  button {
+    font-weight: 300;
+    background: transparent;
+    border-radius: 0.375rem;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #ccc;
+    box-sizing: border-box;
+    display: block;
+    flex: 1;
+  }
+
   .icon {
     position: absolute;
     margin: 7px;
@@ -184,6 +200,10 @@
 						value={ $loading ? 'Loading ...' : 'Update Profile'}
 						disabled={ $loading }
 						/>
+  </div>
+
+  <div>
+    <button on:click={() => $isDeleteAccountOverlayVisible = true}>Delete Account</button>
   </div>
 
   <!-- <div>

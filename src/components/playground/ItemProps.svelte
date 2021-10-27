@@ -99,7 +99,7 @@
 
   onMount(() => {
     // console.log("DEBUG:routes/playground:sidebar:onMount")
-
+    console.log("DEBUG: on mount itemProps", $focusedItem);
     // itemDeletionSubscriptionToken = messaging.subscribe("plaground-item-deletion", activateSelectOnItemDeletion);
   })
 
@@ -108,6 +108,18 @@
 
     // messaging.unsubscribe(itemDeletionSubscriptionToken);
   });
+
+  function toggleLineNumbers(){
+    console.log("DEBUG: Toggle line numbers", $focusedItem.data.lineNumbers, typeof $focusedItem.data.lineNumbers)
+    if ($focusedItem.data.lineNumbers == true){
+      $focusedItem.data.lineNumbers = false;
+    }
+    else if ($focusedItem.data.lineNumbers == false){
+      $focusedItem.data.lineNumbers = true;
+    }
+    console.log("DEBUG: Toggle line numbers", $focusedItem.data.lineNumbers, typeof $focusedItem.data.lineNumbers)
+    // $items = $items;
+  }
 
 </script>
 
@@ -495,14 +507,15 @@
   <div>
     {#each $focusedItemProperties as itemProp }
 
-      {#if itemProp.lineNumbers }
+      {#if itemProp.lineNumbers == true || itemProp.lineNumbers == false }
 
         <div class="controls">
           <label class="input-dark">numbers
             <input  type="checkbox"
                     class="checkbox-input"
                     checked="checked"
-                    value={$focusedItem.lineNumbers}
+                    
+                    on:click={toggleLineNumbers}
                     >
             <span  class="checkbox-span"></span>
           </label>

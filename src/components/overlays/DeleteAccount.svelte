@@ -1,44 +1,23 @@
 <script>
 
   import {
-    isShareOverlayVisible,
-    isDeleteOverlayVisible,
-    isNewOverlayVisible,
-    items,
-    isSaveOverlayVisible,
-    isUploadOverlayVisible,
-    isSelectLiveCodeEditorDisabled,
-    isSelectModelEditorDisabled,
-    isAddGrammarEditorDisabled,
-    isAddAnalyserDisabled,
-    sidebarDebuggerOptions,
-		uuid,
-		name
-  } from '../../stores/playground.js';
+    isDeleteAccountOverlayVisible,
+  } from '../../stores/profile.js';
 
-  export let id;
+  import {
+    deleteAccount
+	} from '../../db/client';
 
   import { onMount, onDestroy } from 'svelte';
   import { fly, fade } from 'svelte/transition';
 
   const closeOverlay = () => {
-    $isShareOverlayVisible = false;
+    $isDeleteAccountOverlayVisible = false;
   }
-
-  function makeTweet(){
-    window.open(`https://twitter.com/intent/tweet?text=Check out my project on https://dev.sema.codes/playground/${id}`);
-    //return "https://twitter.com/intent/tweet?text="+window.location.href;
-  }
-  const copyToClipboard = () => {
-    // navigator.clipboard.writeText(window.location.href);
-    navigator.clipboard.writeText(`https://dev.sema.codes/playground/${id}`);
-    console.log('current uuid', id);
-  }
-  
 
   onMount( async () => {
     // engine = new Engine();
-		console.log("Share")
+		console.log("delete")
   });
 
   onDestroy( () => {
@@ -47,52 +26,27 @@
 
 </script>
 
-<div  in:fly="{{ y: 200, duration: 300 }}"
-      class="share-overlay-component"
-      style='visibility:{ $isShareOverlayVisible ? "visible": "hidden"}'
+<div  in:fly="{{ y: 200, duration: 300 }}" out:fade
+      class="delete-overlay-component"
+      style='visibility:{ $isDeleteAccountOverlayVisible ? "visible": "hidden"}'
       >
 
-  <svg version="1.1"
-            id="Layer_1"
-            xmlns="http://www.w3.org/2000/svg"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            x="0px" y="0px"
-            viewBox="0 0 512 512"
-            class='dark-mode'
-            style="enable-background:new 0 0 512 512;"
-            xml:space="preserve"
-            width='320'
-            height='100'
-            >
-        <g>
-          <path class="st0"
-            d="M404.9,0c45.1,0,81.5,37.1,81.5,82.8c0,45.7-36.5,82.8-81.5,82.8c-24.2,0-46-10.7-60.9-27.7l-160.9,88.1
-            c3.6,9.3,5.5,19.5,5.5,30.1c0,13.9-3.3,26.9-9.3,38.4l153.8,95.4c13.8-25.8,40.7-43.4,71.7-43.4c45.1,0,81.5,37.1,81.5,82.8
-            c0,45.7-36.5,82.8-81.5,82.8s-81.5-37.1-81.5-82.8l0.1-3.5L156.3,322.1c-13.7,10.5-30.7,16.7-49.1,16.7
-            c-45.1,0-81.5-37.1-81.5-82.8s36.5-82.8,81.5-82.8c21.8,0,41.6,8.7,56.3,22.9l163.4-89.4c-2.2-7.5-3.4-15.5-3.4-23.8
-            C323.4,37.1,359.8,0,404.9,0z M404.9,382.1c-25.4,0-46.1,21-46.1,47.1c0,26,20.7,47.1,46.1,47.1s46.1-21,46.1-47.1
-            C451,403.1,430.3,382.1,404.9,382.1z M107.1,208.9c-25.4,0-46.1,21-46.1,47.1s20.7,47.1,46.1,47.1s46.1-21,46.1-47.1
-            S132.5,208.9,107.1,208.9z M404.9,35.7c-25.4,0-46.1,21-46.1,47.1c0,26,20.7,47.1,46.1,47.1s46.1-21,46.1-47.1
-            C451,56.8,430.3,35.7,404.9,35.7z"/>
-        </g>
-      </svg>
+  <!-- <svg class="box-icon" xmlns="http://www.w3.org/2000/svg" width="50" height="43" viewBox="0 0 50 43"> -->
+    <!-- <path d="M48.4 26.5c-.9 0-1.7.7-1.7 1.7v11.6h-43.3v-11.6c0-.9-.7-1.7-1.7-1.7s-1.7.7-1.7 1.7v13.2c0 .9.7 1.7 1.7 1.7h46.7c.9 0 1.7-.7 1.7-1.7v-13.2c0-1-.7-1.7-1.7-1.7zm-24.5 6.1c.3.3.8.5 1.2.5.4 0 .9-.2 1.2-.5l10-11.6c.7-.7.7-1.7 0-2.4s-1.7-.7-2.4 0l-7.1 8.3v-25.3c0-.9-.7-1.7-1.7-1.7s-1.7.7-1.7 1.7v25.3l-7.1-8.3c-.7-.7-1.7-.7-2.4 0s-.7 1.7 0 2.4l10 11.6z"></path> -->
+  <!-- </svg> -->
 
-  <p class="share-overlay-text">
-    <span style="font-weight: 1500;">Share your project via a unique project URL</span>
+  <svg xmlns="http://www.w3.org/2000/svg" width="320" height="100" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16" >
+    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+    <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+  </svg>
+
+  <p class="delete-overlay-text">
+    <span style="font-weight: 1500;">Are you sure you want to delete your account?</span>
   </p>
-  <div class="share-overlay-button-container">
+  <div class="delete-overlay-button-container">
     <button class="button-dark"
-            on:click={ copyToClipboard }
-            >Copy Link</button>
-    
-    <button class="button-dark"
-            on:click={ makeTweet }
-            >Tweet</button>
-
-    <!-- <a class="twitter-share-button"
-            href="https://twitter.com/intent/tweet?text=Checkout my project on "
-            data-size="large">
-          Tweet</a> -->
+            on:click={ deleteAccount }
+            >Delete</button>
     <button class="button-dark"
             on:click={ closeOverlay }
             >Cancel</button>
@@ -100,11 +54,6 @@
 </div>
 
 <style>
-
-  svg {
-    fill: white;
-  }
-
   .button-dark {
     width: 5.5em;
     height: 2.5em;
@@ -170,11 +119,12 @@
     box-shadow:  -1px -1px 3px rgba(16, 16, 16, 0.4), 0.5px 0.5px 0.5px rgba(16, 16, 16, 0.04);
   }
 
-  .share-overlay-button-container {
+  .delete-overlay-button-container {
     display: inline-flex;
   }
 
-  .share-overlay-component {
+  .delete-overlay-component {
+    background-color: rgba(16,12,12,0.8);
     width: 100%;
 		height:100%;
     display:flex;
@@ -182,11 +132,10 @@
     align-items:center;
 		flex-direction:column;
     font-size:16px;
-    background-color: rgba(16,12,12,0.8);
   }
 
 
-  .share-overlay-text {
+  .delete-overlay-text {
     /* top:50%; */
 
     /* width: 100%; */

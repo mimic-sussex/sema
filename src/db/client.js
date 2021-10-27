@@ -169,6 +169,21 @@ export const fetchPlayground = async (uuid) => {
 
 }
 
+export const deletePlayground = async (id) => {
+	console.log("Deleting project with id", id);
+	try {
+		const user = supabase.auth.user()
+		
+		const playgrounds = await supabase
+		.from('playgrounds')
+		.delete()
+		.match({'author': user.id, 'id': id})
+
+	} catch(error){
+		console.error(error)
+	}
+}
+
 export const forkPlayground = async (id) => {
 	console.log("Forking project", id);
 	
@@ -243,4 +258,15 @@ export const updateSession = async (uuid, name, content) => {
 	}
 	else
 		throw new Error('Supabase client has not been created')
+}
+
+export const deleteAccount = async() => {
+	try {
+		const user = supabase.auth.user()
+		await supabase.rpc('delete_user', {useruuid: user.id})
+		//then signout the user
+		await supabase.auth.signOut()
+	} catch (error){
+		console.log(error)
+	}
 }

@@ -55,6 +55,7 @@
     isSaveOverlayVisible,
     isUploadOverlayVisible,
     isDeleteOverlayVisible,
+    isClearOverlayVisible,
     isNewOverlayVisible,
     isShareOverlayVisible,
     isDoesNotExistOverlayVisible,
@@ -88,6 +89,7 @@
     $isSaveOverlayVisible = false;
 		$isNewOverlayVisible = false;
     $isDeleteOverlayVisible = false;
+    $isClearOverlayVisible = false;
     $isDoesNotExistOverlayVisible = false;
     $isShareOverlayVisible = true;
   }
@@ -117,13 +119,14 @@
   }
 
 
-  function resetEnvironment(){
+  function clearEnvironment(){
     $isUploadOverlayVisible = false;
     $isSaveOverlayVisible = false;
     $isNewOverlayVisible = false;
     $isShareOverlayVisible = false;
     $isDoesNotExistOverlayVisible = false;
-    $isDeleteOverlayVisible = true;
+    $isDeleteOverlayVisible = false;
+    $isClearOverlayVisible = true;
   }
 
   async function newEnvironment(){
@@ -131,6 +134,7 @@
 			$isUploadOverlayVisible = false;
 			$isSaveOverlayVisible = false;
       $isDeleteOverlayVisible = false;
+      $isClearOverlayVisible = false;
       $isShareOverlayVisible = false;
       $isDoesNotExistOverlayVisible =false;
 			$isNewOverlayVisible = true;
@@ -146,6 +150,7 @@
 			$isUploadOverlayVisible = false;
 			$isSaveOverlayVisible = true;
       $isDeleteOverlayVisible = false;
+      $isClearOverlayVisible = false;
       $isShareOverlayVisible = false;
       $isDoesNotExistOverlayVisible = false;
 			$isNewOverlayVisible = false;
@@ -174,6 +179,7 @@
     $isUploadOverlayVisible = true;
     $isSaveOverlayVisible = false;
     $isDeleteOverlayVisible = false;
+    $isClearOverlayVisible = false;
     $isShareOverlayVisible = false;
     $isDoesNotExistOverlayVisible = false;
 		$isNewOverlayVisible = false;
@@ -757,11 +763,11 @@
 
 
         <!-- style="{ ( $fullScreen && $isActive('/playground') ) ? `visibility:visible;`: `visibility:hidden`}" -->
-<!-- DELETE -->
+<!-- CLEAR -->
 <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
         title="clear project"
         style="{ ( $isActive('/playground') ) ? `visibility:visible;`: `visibility:collapse`}"
-        on:click={ () => resetEnvironment() }
+        on:click={ () => clearEnvironment() }
         >
   <div class="icon-container">
     {#if $siteMode === 'dark' }

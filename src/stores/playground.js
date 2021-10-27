@@ -54,6 +54,7 @@ export const author = writable(""); //the author of the playground
 export const isUploadOverlayVisible = writable(false);
 export const isSaveOverlayVisible = writable(false)
 export const isDeleteOverlayVisible = writable(false);
+export const isClearOverlayVisible = writable(false);
 export const isNewOverlayVisible = writable(false);
 export const isShareOverlayVisible = writable(false);
 export const isDoesNotExistOverlayVisible = writable(false);

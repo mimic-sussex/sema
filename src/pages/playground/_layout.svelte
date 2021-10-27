@@ -14,6 +14,7 @@
   // import { compile } from '../node_modules/sema-engine/sema-engines';
 
   import Delete from '../../components/overlays/Delete.svelte';
+  import Clear from '../../components/overlays/Clear.svelte';
   import New from '../../components/overlays/New.svelte';
   import Save from '../../components/overlays/Save.svelte';
   import Upload from '../../components/overlays/Upload.svelte';
@@ -49,6 +50,7 @@
     focusedItemProperties,
     isUploadOverlayVisible,
     isDeleteOverlayVisible,
+    isClearOverlayVisible,
     isNewOverlayVisible,
     isSaveOverlayVisible,
     isShareOverlayVisible,
@@ -142,6 +144,7 @@
 
         item.data.hasFocus = true;
         $focusedItem = item;
+        console.log("DEBUG: focusedItem in setFocused, lineNumbers:", $focusedItem.data.lineNumbers);
         $focusedItemProperties = itemProperties;
         // set unfocused items through the rest of the list
         $items = $items.map(i => i === item ? ({ ...i, ['hasFocus']: true }) : ({ ...i, ['hasFocus']: false }) );
@@ -282,7 +285,7 @@
   }
 
   const onClickCloseOverlay = () => {
-    $isNewOverlayVisible = $isUploadOverlayVisible = $isSaveOverlayVisible = $isDeleteOverlayVisible = $isShareOverlayVisible = $isDoesNotExistOverlayVisible = false;
+    $isNewOverlayVisible = $isUploadOverlayVisible = $isSaveOverlayVisible = $isDeleteOverlayVisible = $isClearOverlayVisible= $isShareOverlayVisible = $isDoesNotExistOverlayVisible = false;
   }
 
   const onAdjust = e => {
@@ -639,7 +642,7 @@
   </div>
 
   <div  class="upload-overlay-container"
-        style='visibility:{ ( $isNewOverlayVisible || $isUploadOverlayVisible || $isDeleteOverlayVisible || $isSaveOverlayVisible || $isShareOverlayVisible ||$isDoesNotExistOverlayVisible) ? "visible" : "hidden"}'
+        style='visibility:{ ( $isNewOverlayVisible || $isUploadOverlayVisible || $isDeleteOverlayVisible || $isClearOverlayVisible || $isSaveOverlayVisible || $isShareOverlayVisible ||$isDoesNotExistOverlayVisible) ? "visible" : "hidden"}'
         >
     <span class='close-overlay'
           on:click={ () => onClickCloseOverlay() }
@@ -650,12 +653,14 @@
       <Upload />
 		{:else if $isDeleteOverlayVisible }
       <Delete />
+    {:else if $isClearOverlayVisible}
+      <Clear />
 		{:else if $isSaveOverlayVisible }
       <Save />
 		{:else if $isNewOverlayVisible }
       <New />
     {:else if $isShareOverlayVisible}
-      <Share/>
+      <Share id={$uuid}/>
     {:else if $isDoesNotExistOverlayVisible}
       <DoesNotExist/>
 		{/if}
