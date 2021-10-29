@@ -3,14 +3,14 @@
 In this tutorial, you will need to open the JavaScript console.  You can do this in Chrome by opening the 'Developer Tools' (F12 key) and choosing the console tab.
 
 
-In the default language, you can use ```fromJS``` to receive data from the JS window.  You can also use this in the Sema type system for custom languages.
+In the default language, you can use ```fromJS``` to receive data from the JS (JavaScript editor) window.  You can also use this in the Sema type system for custom languages.
 The first argument is the channel number on which to receive data. A second optional argument controls timing, we'll look at that later.
 
 ## Sending single value streams
 
 Let's start with a simple example.
 
-In the LC window:
+In the LC (Livecode editor) window:
 ```
 :freq:{0}fromJS;
 >{:freq:}saw;
