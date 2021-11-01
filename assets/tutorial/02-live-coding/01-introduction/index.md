@@ -27,4 +27,4 @@ A parameter can also be another function:
 
 this mixes two saw waves together, slightly detuned.
 
-The default language is a simple functional language, and this is the basic syntax.  Follow the tutorials below to explore more features.
+The default language is a simple functional language, and this is the basic syntax.  Navigate to the next tutorial to explore more features.
