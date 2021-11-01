@@ -144,7 +144,7 @@
 
         item.data.hasFocus = true;
         $focusedItem = item;
-        console.log("DEBUG: focusedItem in setFocused, lineNumbers:", $focusedItem.data.lineNumbers);
+        // console.log("DEBUG: focusedItem in setFocused, lineNumbers:", $focusedItem.data.lineNumbers);
         $focusedItemProperties = itemProperties;
         // set unfocused items through the rest of the list
         $items = $items.map(i => i === item ? ({ ...i, ['hasFocus']: true }) : ({ ...i, ['hasFocus']: false }) );
@@ -330,7 +330,7 @@
     } else if (localStorage.getItem("last-session-playground-uuid")) {
       let playground
       try {
-        console.log("going to url in local storage", localStorage.getItem("last-session-playground-uuid"))
+        // console.log("going to url in local storage", localStorage.getItem("last-session-playground-uuid"))
         // $goto('/playground/'+localStorage.getItem("last-session-playground-uuid"));
         playground = await fetchPlayground(localStorage.getItem("last-session-playground-uuid"));
         $uuid = playground.id;
@@ -359,7 +359,6 @@
       await controller.init(document.location.origin + '/build/');
 
     // console.log('Playground index: onMount ');
-    console.log("DEBUG: playground mount params", $params.playgroundId);
 
     loadPlayground();
 

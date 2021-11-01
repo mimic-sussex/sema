@@ -115,7 +115,7 @@
       $loading = false
 			$loggedIn = true
     }
-		console.log('getProfile')
+		
   }
 
 
@@ -156,7 +156,7 @@
       .then(json => {
         $tutorials = json;
         // $selected = $tutorials[0].sections[0];
-        console.log("DEBUG: fetchAndLoadDefaultTutorial", $selectedSection, $selectedChapter);
+        // console.log("DEBUG: fetchAndLoadDefaultTutorial", $selectedSection, $selectedChapter);
         
         // if section and chapter exists in local storage get that otherwise set to first
         let fetchedSection = localStorage.getItem("last-session-tutorial-section");
@@ -174,8 +174,7 @@
               break;
             }
           }
-          console.log($selectedChapter);
-          console.log("DEBUG:", $tutorials[0], $selectedChapter, ($tutorials[0] == $selectedChapter));
+          // console.log("DEBUG:", $tutorials[0], $selectedChapter, ($tutorials[0] == $selectedChapter));
           let j;
           for (j=0; j<$tutorials[i].sections.length; j++){
             if($tutorials[i].sections[j].slug == fetchedSection.slug){

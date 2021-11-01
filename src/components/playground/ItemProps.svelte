@@ -99,7 +99,7 @@
 
   onMount(() => {
     // console.log("DEBUG:routes/playground:sidebar:onMount")
-    console.log("DEBUG: on mount itemProps", $focusedItem);
+    
     // itemDeletionSubscriptionToken = messaging.subscribe("plaground-item-deletion", activateSelectOnItemDeletion);
   })
 

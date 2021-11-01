@@ -54,7 +54,7 @@
       $loading = false
 			$loggedIn = true
     }
-		console.log('getProfile')
+		
   }
 
 
