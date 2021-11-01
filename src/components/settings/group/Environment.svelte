@@ -213,8 +213,6 @@
 	});
 
   function checkPermissions(loggedIn, allowEdits, user, author){
-    console.log("DEBUG: checkPermissions");
-    
     if (allowEdits){
       return true //anyone can edit
     } 

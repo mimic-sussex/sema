@@ -39,7 +39,6 @@
 
   $: if ($params.playgroundId){
     persistentUUID = $params;
-    console.log("DEBUG:" , persistentUUID, $params);
 
     if(!controller){
       controller = new Controller();

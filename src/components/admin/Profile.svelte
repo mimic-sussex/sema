@@ -54,7 +54,7 @@
       $loading = false
 			$loggedIn = true
     }
-		console.log('getProfile')
+		
   }
 
 
@@ -160,11 +160,11 @@
 <form use:getProfile class="form-widget"
 			on:submit|preventDefault={ updateProfile }
       >
-  {#if $avatarURL != null}    
+  <!-- {#if $avatarURL != null}    
   <Avatar bind:path={ $avatarURL }
 					on:upload={ updateProfile }
           />
-  {/if}
+  {/if} -->
   {#if $user != null}
   <div>
     <label for="email">Email</label>
