@@ -47,8 +47,8 @@
       //   $websiteURL = website;
       //   $avatarURL = avatar_url;
       // }
-      
     } catch (error) {
+      // console.log("DEBUG:",$userName, $websiteURL, $avatarURL);
       alert(error.message)
     } finally {
       $loading = false
@@ -139,6 +139,7 @@
     box-sizing: border-box;
     display: block;
     flex: 1;
+    color:red;
   }
 
   .icon {
