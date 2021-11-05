@@ -18,8 +18,13 @@
 
 <style>
 	
+	.settingsContainer-container{
+		margin: 5px 0px 5px 0px;
+	}
+
 	.container {
 		background-color: #3a4147;
+		border-radius: 5px;
 		width:100%;
 		height:100%;
 	}
@@ -28,24 +33,24 @@
 		background-color: #262a2e;
 		/* border-top-right-radius: 5px;
 		border-bottom-right-radius: 5px; */
-		display:inline-block;
-		margin-right: -4px; /*hacky method of getting them side by side no gap*/
+		/* display:inline-block; */
+		/* margin-right: -4px; hacky method of getting them side by side no gap */
+		display:flex;
+		align-items:center;
+		border-radius: 5px;
 	}
 	
-	button {
+	.button-launcher {
 		padding: 20;
 		background-color: #262a2e;
-/* 		margin: 0,0,0,0; */
 		color: white;
 		border: none;
-		width: 49px;
-  	height: 49px;
-  	margin: 12px 0px 12px 12px;
-  	padding: 7px 10px 8px 8px;
+		width: 42px;
+  	height: 42px;
+  	margin: 8px 8px 8px 8px;
+  	/* padding: 7px 10px 8px 8px; */
   	border-radius: 5px;
   	background-color: #262a2e;
-		/* box-shadow: -4px -2px 16px 0 rgba(195, 200, 205, 0.26), 4px 4px 18px 0 rgba(0, 0, 0, 0.8);
-    background-image: linear-gradient(112deg, #24272b 80%, #222529 124%); */
 	}
 	
 	svg{
@@ -54,29 +59,36 @@
 	
 </style>
 
-<div class="container">
-	
-		<button class="side-by-side" on:click={openMe}>
+<div class="settingsContainer-container">
 
-				<slot name="icon"></slot>
+	<div class="side-by-side">
+		
+			<button class="button-launcher" on:click={openMe}>
+
+					<slot name="icon"></slot>
+
+					<!-- Dots icon -->
+					<!-- <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
+						<path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
+					</svg> -->
+					
+			</button>
+		
+		<div class='side-by-side'>
+
+			<!-- <SettingsContainer open={open}> -->
 				
-		</button>
-	
-	<div class='side-by-side'>
+			<!-- </SettingsContainer> -->
+			
+			{#if open}
+				<div>
+					<slot name="section1"></slot>
+					<slot name="section2"></slot>
+				</div>
+			{/if}
 
-    <!-- <SettingsContainer open={open}> -->
-      
-		<!-- </SettingsContainer> -->
-    
-    {#if open}
-			<div>
-				<slot name="section1"></slot>
-				<slot name="section2"></slot>
-			</div>
-    {/if}
+		</div>
 
 	</div>
 
-	
-	
 </div>

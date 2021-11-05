@@ -233,27 +233,33 @@
 
 
   .icon-container {
-    width: 10px;
-    height: 10px;
+    /* width: 10px; */
+    /* height: 10px; */
+    display:flex;
+    justify-content:center;
+    align-items:center;
   }
 
-  
   .button-dark {
-    /* padding: 20; */
+		padding: 20;
 		background-color: #262a2e;
-/* 		margin: 0,0,0,0; */
-		color: white;
+		color: grey;
 		border: none;
-		width: 49px;
-  	height: 40px;
-/*   	margin: 12px 0px 12px 12px; */
-  	/* padding: 7px 10px 8px 8px; */
+    width: 42px;
+  	/* height: 42px; */
+  	margin: 8px 8px 8px 8px;
   	border-radius: 5px;
   	background-color: #262a2e;
-  }
+	}
 
   .button-dark:hover {
-    background-color: blue;
+    /* background-color: blue; */
+    color: white;
+  }
+
+  .button-dark:active{
+    color: white;
+    background-color: grey;
   }
 
   /* .button-dark {
@@ -310,13 +316,12 @@
     -moz-box-shadow: 2px 2px 5px rgba(0,0,0), -0.5px -0.5px 3px rgb(34, 34, 34);;
     box-shadow: 2px 2px 3px rgb(0, 0, 0), -1px -1px 3px #ffffff61;
   } */
-  .button-dark:active {
+  /* .button-dark:active {
     width: 2.5em;
     height: 2.5em;
     padding: 0.2em 0.2em 0.8em 0.8em;
     display: block;
     font-size: medium;
-    /* font-size: 12px; */
     font-family: sans-serif;
     font-weight: 400;
     cursor: pointer;
@@ -324,22 +329,16 @@
     line-height: 1.3;
     max-width: 100%;
     box-sizing: border-box;
-    /* margin-top: 5px; */
     margin-right: 5px;
-    /* border: 0 solid #333; */
     text-align: left;
     -moz-appearance: none;
     -webkit-appearance: none;
     appearance: none;
     background-color:  rgba(16, 16, 16, 0.04);
     background-repeat: no-repeat, repeat;
-    /* background-position: right .7em top 50%, 0 0; */
     background-size: .65em auto, 100%;
-    /* -webkit-box-shadow: -1px -1px 1px rgb(34, 34, 34), 2px 2px 5px rgba(0,0,0),;
-    -moz-box-shadow: -1px -1px 1px rgb(34, 34, 34), 2px 2px 5px rgba(0,0,0), ;
-    box-shadow:  -1px -1px 3px #ffffff61, 2px 2px 3px rgb(0, 0, 0); */
     box-shadow:  -1px -1px 3px rgba(16, 16, 16, 0.4), 0.5px 0.5px 0.5px rgba(16, 16, 16, 0.04);
-  }
+  } */
 
 
   .light-mode {
@@ -357,7 +356,7 @@
   }
 
 
-  .button-light {
+  /* .button-light {
     width: 2.5em;
     height: 2.5em;
     display: block;
@@ -439,7 +438,7 @@
     box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
     -moz-box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
     -webkit-box-shadow:  2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0)
-  }
+  } */
 
 
 	input {
