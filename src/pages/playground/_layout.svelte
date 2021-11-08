@@ -143,6 +143,7 @@
         item.data.hasFocus = true;
         $focusedItem = item;
         $focusedItemProperties = itemProperties;
+        console.log("focusedItemproperties", $focusedItem, $focusedItemProperties);
         // set unfocused items through the rest of the list
         $items = $items.map(i => i === item ? ({ ...i, ['hasFocus']: true }) : ({ ...i, ['hasFocus']: false }) );
 

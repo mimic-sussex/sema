@@ -55,17 +55,17 @@
     }
   }
 
-  let handleConnectInputStream = async () => {
+  // let handleConnectInputStream = async () => {
 
-    if(!engine){
-      engine = new Engine();
-    }
-    if( !$inputStreamConnected ) {
-      $inputStreamConnected = await engine.connectMediaStream();
-    } else {
-      $inputStreamConnected = await engine.disconnectMediaStream();
-    }
-  }
+  //   if(!engine){
+  //     engine = new Engine();
+  //   }
+  //   if( !$inputStreamConnected ) {
+  //     $inputStreamConnected = await engine.connectMediaStream();
+  //   } else {
+  //     $inputStreamConnected = await engine.disconnectMediaStream();
+  //   }
+  // }
 
 
   onMount( async () => {

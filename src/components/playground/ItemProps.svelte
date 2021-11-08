@@ -494,7 +494,6 @@
 
   <div>
     {#each $focusedItemProperties as itemProp }
-
       {#if itemProp.lineNumbers }
 
         <div class="controls">
