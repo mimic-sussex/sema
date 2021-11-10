@@ -1,3 +1,5 @@
+# GRAMMAR EDITOR
+
 # Lexer [or tokenizer] definition with language lexemes [or tokens]
 @{%
 
@@ -7,17 +9,21 @@ const lexer = moo.compile({
   paramBegin:     /{/,
   listEnd:        /\]/,
   listBegin:      /\[/,
+  lambdaEnd:        /\)/,
+  lambdaBegin:      /\(/,
+  lambdaVarListEnd: /\@/,
   dacoutCh:       /\>[0-9]+/,
   dacout:         /\>/,
-  variable:       /:[a-zA-Z0-9]+:/,
+  variable1:       { match: /:[a-zA-Z0-9]+:/, value: x => x.slice(1,x.length-1)},
+  variable2:       { match: /[a-zA-Z0-9]+:/, value: x => x.slice(0,x.length-1)},
   sample:         { match: /\\[a-zA-Z0-9]+/, lineBreaks: true, value: x => x.slice(1, x.length)},
   slice:          { match: /\|[a-zA-Z0-9]+/, lineBreaks: true, value: x => x.slice(1, x.length)},
   stretch:        { match: /\@[a-zA-Z0-9]+/, lineBreaks: true, value: x => x.slice(1, x.length)},
   clockTrig:      /0t-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?\b/,
-	number:         /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?\b/,
+  number:         /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?\b/,
   semicolon:      /;/,
   funcName:       /[a-zA-Z][a-zA-Z0-9]*/,
-	string:					{ match: /'[a-zA-Z0-9]+'/, value: x => x.slice(1,x.length-1)},
+  string:         { match: /'[a-zA-Z0-9]+'/, value: x => x.slice(1,x.length-1)},
   comment:        /\/\/[^\n]*/,
   ws:             { match: /\s+/, lineBreaks: true},
 });
@@ -55,7 +61,7 @@ Expression ->
   ParameterList _ %stretch
   {% d => sema.synth( 'stretch', d[0]['@params'].concat( [ sema.str( d[2].value ) ] ) ) %}
   |
-  %variable _ Expression
+  Variable _ Expression
   {% d => sema.setvar( d[0].value, d[2] ) %}
   |
   %dacout _ Expression
@@ -63,6 +69,36 @@ Expression ->
   |
   %dacoutCh _ Expression
   {% d => sema.synth( 'dac', [d[2], sema.num(d[0].value.substr(1))] ) %}
+  |
+  Variable _ Lambda
+  {% d => sema.setvar( d[0].value, d[2] ) %}
+  |
+  ParameterList _ Variable
+  {% d => ( { '@lambdacall': {'params':d[0]['@params'], 'lambda':d[2] }} ) %}
+
+  
+  
+Lambda ->
+  %lambdaBegin _ LambdaVarBlock _ Expression _ %lambdaEnd
+   {% d=> ({
+     	'@lambda':
+     		{'vars':d[2], 
+             'tree':d[4]}
+  	}) %}
+   
+LambdaVarBlock -> LambdaVarList _ %lambdaVarListEnd
+	{% d => (d[0] ) %}
+    
+LambdaVarList -> 
+  	_
+     {% d=> [] %}
+     |
+	Variable  
+	{% d => ( [ d[0] ] ) %}
+    |
+  	Variable _ %separator _ LambdaVarList
+  	{% d => [ d[0] ].concat(d[4]) %}
+
 
 ParameterList ->
   %paramBegin Params %paramEnd
@@ -71,7 +107,7 @@ ParameterList ->
 	%paramBegin _ %paramEnd
   {% d => ( { 'paramBegin': d[0], '@params': [], 'paramEnd': d[2] } ) %}
 
-
+  
 Params ->
   ParamElement
   {% d => ( [ d[0] ] ) %}
@@ -89,12 +125,13 @@ ParamElement ->
   Expression
   {% id %}
   |
-  %variable
+  Variable
   {% d => sema.getvar( d[0].value ) %}
   |
   %listBegin Params  %listEnd
   {% d => ( { '@list': d[1] } )%}
 
+Variable -> %variable1 {% id %} | %variable2 {% id %}
 
 # Whitespace
 
