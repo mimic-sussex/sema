@@ -79,7 +79,7 @@
 		"nearley": "^2.20.1",
 		"rollup-plugin-workbox": "^6.1.1",
 		"sema-engine": "smilo7/sema-engine#7963788ee01a353232238ef1cc927e9fbd2af0a6",
-		"supabase-ui-svelte": "git+https://github.com/joshnuss/supabase-ui-svelte",
+		"supabase-ui-svelte": "git+https://github.com/smilo7/supabase-ui-svelte",
 		"svelte-codemirror": "git+https://github.com/frantic0/svelte-codemirror.git",
 		"svelte-highlight": "^3.2.0",
 		"svelte-preprocess": "^4.0.9",
