@@ -50,9 +50,12 @@
 		if (projectPage == 'my-projects'){
 			// console.log('refreshing my-projects page', projectPage)
 			getMyProjects();
-		} else {
+		} else if (projectPage == 'all-projects'){
 			// console.log('refreshing all-projects page', projectPage)
 			getAllProjects();
+		} else if (projectPage == 'example-projects'){
+			console.log('getting example projects')
+			getExampleProjects();
 		}
 	}
 
@@ -108,6 +111,34 @@
 					allowEdits
 				`)
 			.eq('isPublic', true)
+			.range(projectLoadRange.start, projectLoadRange.end)
+			.order(orderBy.col, {ascending:orderBy.ascending})
+			
+			$records = playgrounds.data;
+		} catch(error){
+			console.error(error)
+		}
+	}
+
+	const getExampleProjects = async () => {
+		try {
+
+			const playgrounds = await supabase
+			.from('playgrounds')
+			.select(`
+					id,
+					name,
+					content,
+					created,
+					updated,
+					isPublic,
+					author (
+						username
+					),
+					allowEdits,
+					example
+				`)
+			.match({"isPublic": true, example: true})
 			.range(projectLoadRange.start, projectLoadRange.end)
 			.order(orderBy.col, {ascending:orderBy.ascending})
 			
@@ -454,8 +485,9 @@ button {
 	<input type="radio" id="all-projects-radio" name="project-filter" value="all-projects" bind:group={projectPage}>
 	<label for="my-projects-radio">Browse All Projects</label> -->
 
-	<button class:project-tab-selected={projectPage == "my-projects"} on:click={() => {projectPage = "my-projects"; projectLoadRange = {start:0, end:projectLoadStep};}}>My Projects</button>
-	<button class:project-tab-selected={projectPage == "all-projects"} on:click={() => {projectPage = "all-projects"; projectLoadRange = {start:0, end:projectLoadStep};}}>All Projects</button>
+	<button class:project-tab-selected={projectPage == "my-projects"} on:click={() => {projectPage = "my-projects"; projectLoadRange = {start:0, end:projectLoadStep};}}>My Playgrounds</button>
+	<button class:project-tab-selected={projectPage == "all-projects"} on:click={() => {projectPage = "all-projects"; projectLoadRange = {start:0, end:projectLoadStep};}}>All Playgrounds</button>
+	<button class:project-tab-selected={projectPage == "example-projects"} on:click={() => {projectPage = "example-projects"; projectLoadRange = {start:0, end:projectLoadStep};}}>Examples</button>
 
 </div>
 
