@@ -21,6 +21,10 @@
   import { onMount, onDestroy } from 'svelte';
   import { fly, fade } from 'svelte/transition';
 
+  // used to track whether the url has been copied to clipboard yet.
+  let copied = false;
+  let playgroundURL = window.location.href;
+
   const closeOverlay = () => {
     $isShareOverlayVisible = false;
   }
@@ -33,6 +37,7 @@
     // navigator.clipboard.writeText(window.location.href);
     navigator.clipboard.writeText(`https://dev.sema.codes/playground/${id}`);
     console.log('current uuid', id);
+    copied = true;
   }
   
 
@@ -52,6 +57,7 @@
       style='visibility:{ $isShareOverlayVisible ? "visible": "hidden"}'
       >
 
+  {#if !copied}
   <svg version="1.1"
             id="Layer_1"
             xmlns="http://www.w3.org/2000/svg"
@@ -80,6 +86,29 @@
   <p class="share-overlay-text">
     <span style="font-weight: 1500;">Share your project via a unique project URL</span>
   </p>
+
+  {:else if copied}
+    <div in:fly="{{ y: -200, duration: 300 }}">
+      <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor" class="bi bi-clipboard-check" viewBox="0 0 16 16">
+        <path style="fill:#65d9a5;" fill-rule="evenodd" d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
+        <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+        <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+      </svg>
+    </div>
+    <p class="share-overlay-text">
+      <span style="font-weight: 1500;">Link copied to clipboard!</span>
+    </p>
+  {/if}
+
+  <input  bind:value={playgroundURL}
+					type="text"
+					id="playground-url"
+					name="playground-url"
+          size="10"
+          placeholder="Playground URL"
+          title="Playground URL"
+					>
+
   <div class="share-overlay-button-container">
     <button class="button-dark"
             on:click={ copyToClipboard }
@@ -100,6 +129,28 @@
 </div>
 
 <style>
+
+  /* the tick path in  the clipboard icon*/
+  /* #copied-tick-id {
+    transition
+  } */
+
+  input[type=text] {
+		width: 33%;
+		padding: 12px 20px;
+		margin: 8px 0;
+		box-sizing: border-box;
+		border: 1px solid #aaa;
+		-webkit-transition: 0.5s;
+		transition: 0.5s;
+		outline: none;
+		color:white;
+		background-color: rgba(16, 16, 16, 0.04);
+	}
+
+	input[type=text]:focus {
+		border: 1px solid #555;
+	}
 
   svg {
     fill: white;

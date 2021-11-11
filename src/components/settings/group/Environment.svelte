@@ -17,7 +17,9 @@
 		updatePlayground,
     createPlayground,
     forkPlayground
-	} from  "../../../db/client";
+  } from  "../../../db/client";
+  
+  import Icon from "../../icons/Icon.svelte";
 
   import { Engine } from 'sema-engine';
 
@@ -604,7 +606,11 @@
     background-color: grey;
   }
 
+  
+
 </style>
+
+
 
 <!--NAME PROJECT TEXT BOX-->
 <input type="text"
@@ -613,6 +619,10 @@
         placeholder='Project Name'
         style="{( $isActive(`/playground`) )? `visibility:visible;`: `visibility:collapse`}; margin-left: 2px;" 
         />
+
+<!-- <div style='margin-left:2px;'>
+<Icon name='spinner' size=20/>
+</div> -->
 
 <!--if playground loaded is readonly say that user doesnt have permission to save-->
 {#if !permission && $user != null}
