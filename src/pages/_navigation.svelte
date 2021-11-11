@@ -159,7 +159,7 @@
               version="1.1"
               style='margin-top:auto;'
               inkscape:version="0.48.3.1 r9886"
-              class='spiral-logo'
+              class='{$siteMode === 'dark'? 'path-dark': 'path-light'}'
               width='25'
 
             >
