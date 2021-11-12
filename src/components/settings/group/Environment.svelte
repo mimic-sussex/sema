@@ -68,7 +68,8 @@
 		uuid,
     name,
     allowEdits,
-    author
+    author,
+    saving
   } from '../../../stores/playground'
 
   import {
@@ -620,10 +621,6 @@
         style="{( $isActive(`/playground`) )? `visibility:visible;`: `visibility:collapse`}; margin-left: 2px;" 
         />
 
-<!-- <div style='margin-left:2px;'>
-<Icon name='spinner' size=20/>
-</div> -->
-
 <!--if playground loaded is readonly say that user doesnt have permission to save-->
 {#if !permission && $user != null}
   <!-- <div class="no-changes-link-container"> -->
@@ -772,6 +769,13 @@
         style="{( $isActive('/playground') )? `visibility:visible;`: `visibility:collapse`}; margin-left: 2px;"
         on:click={ () => storeEnvironment() }
         >
+  
+  {#if $saving}
+    <div style=''>
+      <Icon name='spinner' size=20/>
+    </div>
+  {/if}
+
   <div class="icon-container">
     {#if $siteMode === 'dark' }
       <svg version="1.1"

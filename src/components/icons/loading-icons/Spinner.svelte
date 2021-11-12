@@ -15,12 +15,12 @@
     /* left: 50%; */
     width: 20px;
     height: 20px;
-    margin-top: -10px;
-    margin-left: -10px;
+    /* margin-top: -10px; */
+    /* margin-left: -10px; */
     border-radius: 50%;
-    border: 2px solid red;
+    border: 2px solid grey;
     border-top-color: #000;
-    animation: spinner .6s linear infinite;
+    animation: spinner .3s linear infinite;
   }
 </style>
 

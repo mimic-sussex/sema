@@ -1,5 +1,13 @@
 import { createClient } from '@supabase/supabase-js'
 
+import { get } from "svelte/store";
+import { saving } from "../stores/playground.js";
+
+export function add() {
+    var counterRef = get(counter);
+    counter.set(counterRef + 1);
+}
+
 const supabaseUrl = __api.env.SUPABASE_URL
 const supabaseAnonKey = __api.env.SUPABASE_ANON_KEY
 
@@ -54,8 +62,8 @@ export const createPlayground = async () => {
 						content: [],
 						created: timestamp,
 						updated: timestamp,
-						isPublic: true,
-						allowEdits: true,
+						isPublic: false,
+						allowEdits: false,
 						author: user.id
 					})
 					.single()
@@ -80,6 +88,7 @@ export const createPlayground = async () => {
 		throw new Error('Supabase client has not been created')
 }
 
+// This can now be simplified since RLS and policies implemented on the playgrounds table
 export const updatePlayground = async (uuid, name, content, allowEdits, user) => {
 	// console.log("DEBUG: updatePlayground", uuid, name, content, allowEdits, user);
 	if (supabase) {
@@ -92,6 +101,10 @@ export const updatePlayground = async (uuid, name, content, allowEdits, user) =>
 		//if allow edits is true anyone can update.
 		if (allowEdits){
 			if(uuid && name && content){
+
+				let savingRef = get(saving);
+				saving.set(!savingRef);
+				 
 				let updatedPlayground
 				try {
 					updatedPlayground = await supabase
@@ -110,6 +123,10 @@ export const updatePlayground = async (uuid, name, content, allowEdits, user) =>
 		// only allow if the user is also the author of the project
 		else if (allowEdits == false) {
 			if(uuid && name && content){
+
+				let savingRef = get(saving);
+				saving.set(!savingRef);
+
 				let updatedPlayground
 				try {
 					updatedPlayground = await supabase
@@ -130,6 +147,9 @@ export const updatePlayground = async (uuid, name, content, allowEdits, user) =>
 				}
 			}
 		}
+
+		let savingRef = get(saving);
+		saving.set(false);
 		 
 	}
 	else
