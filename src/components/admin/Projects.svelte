@@ -187,21 +187,22 @@
 		}
 	}
 
-	const toggleAllowEdits = async (id, state) => {
-		try {
-			const user = supabase.auth.user()
+	// Not allowing users to toggle allow edits until Realtime is set up
+	// const toggleAllowEdits = async (id, state) => {
+	// 	try {
+	// 		const user = supabase.auth.user()
 
-			const playground = await supabase
-				.from('playgrounds')
-				.update({allowEdits: state})
-				.match({id: id, author: user.id})
+	// 		const playground = await supabase
+	// 			.from('playgrounds')
+	// 			.update({allowEdits: state})
+	// 			.match({id: id, author: user.id})
 			
-			updateProjectPage(projectPage);
-		}
-		catch(error){
-			console.error(error)
-		}
-	}
+	// 		updateProjectPage(projectPage);
+	// 	}
+	// 	catch(error){
+	// 		console.error(error)
+	// 	}
+	// }
 
 	//calculate the next range of 
 	const getNextProjects = async () => {
@@ -516,10 +517,10 @@ button {
 					on:click={()=>{orderBy = {col:'isPublic', ascending:true }}} 
 					>Visibility</th>
 					
-					<th 
+					<!-- <th 
 					class="table-header" 
 					on:click={()=>{orderBy = {col:'allowEdits', ascending:true }}} 
-					>Allow edits</th>
+					>Allow edits</th> -->
 
 					<th 
 					class="table-header" 
@@ -570,7 +571,7 @@ button {
 							{/if}
 						</td>
 
-						<td>
+						<!-- <td>
 							{#if record.allowEdits}
 								<svg xmlns="http://www.w3.org/2000/svg" 
 								width="16" 
@@ -598,7 +599,7 @@ button {
 									<path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
 								</svg>
 							{/if}
-						</td>
+						</td> -->
 
 						<td>
 							{#if record.author}
