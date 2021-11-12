@@ -50,7 +50,7 @@
 		"rollup-plugin-dynamic-import-variables": "^1.1.0",
 		"rollup-plugin-glob-import": "^0.4.5",
 		"rollup-plugin-hot": "^0.0.31",
-		"rollup-plugin-livereload": "git+https://github.com/mimic-sussex/rollup-plugin-livereload.git",
+		"rollup-plugin-livereload": "^2.0.5",
 		"rollup-plugin-sourcemaps": "^0.6.3",
 		"rollup-plugin-string": "^3.0.0",
 		"rollup-plugin-svelte": "^5.2.3",
