@@ -201,7 +201,7 @@ Arguments:
 
 ### The ```\```operator
 
-Samples are preloaded when the audio engine starts up. A list of samples can be found [here](load-sound-files).
+Samples are preloaded when the audio engine starts up. A list of samples can be found [here](sample-loading).
 
 Play a sample once with a trigger, using ```\``` followed by the sample name.
 
