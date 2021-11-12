@@ -23,19 +23,19 @@
 
   // used to track whether the url has been copied to clipboard yet.
   let copied = false;
-  let playgroundURL = window.location.href;
+  let playgroundURL = `https://dev.sema.codes/playground/${id}`
 
   const closeOverlay = () => {
     $isShareOverlayVisible = false;
   }
 
   function makeTweet(){
-    window.open(`https://twitter.com/intent/tweet?text=Check out my project on https://dev.sema.codes/playground/${id}`);
+    window.open(`https://twitter.com/intent/tweet?text=Check out my project on ${playgroundURL}`);
     //return "https://twitter.com/intent/tweet?text="+window.location.href;
   }
   const copyToClipboard = () => {
     // navigator.clipboard.writeText(window.location.href);
-    navigator.clipboard.writeText(`https://dev.sema.codes/playground/${id}`);
+    navigator.clipboard.writeText(`${playgroundURL}`);
     console.log('current uuid', id);
     copied = true;
   }
