@@ -61,6 +61,7 @@
     isNewOverlayVisible,
     isShareOverlayVisible,
     isDoesNotExistOverlayVisible,
+    isProjectBrowserOverlayVisible,
     items,
     // assignNewID,
     hydrateJSONcomponent,
@@ -87,14 +88,64 @@
     window.localStorage["tutorial-" + new Date(Date.now()).toISOString()] = JSON.stringify($items)
   }
 
-  let shareProjectLink = () => {
-    $isUploadOverlayVisible = false;
+  let overlayStates = [
+    $isSaveOverlayVisible,
+    $isUploadOverlayVisible,
+    $isDeleteOverlayVisible,
+    $isClearOverlayVisible,
+    $isNewOverlayVisible,
+    $isShareOverlayVisible,
+    $isDoesNotExistOverlayVisible,
+    $isProjectBrowserOverlayVisible,
+  ];
+
+  // toggles given overlay switch all others off.
+  function toggleOverlay(overlay){
+    // //set all to false
+    // for (let i=0; i<overlayStates.length;i++){
+    //   overlayStates[i] = false;
+    // }
+
     $isSaveOverlayVisible = false;
-		$isNewOverlayVisible = false;
+    $isUploadOverlayVisible = false;
     $isDeleteOverlayVisible = false;
     $isClearOverlayVisible = false;
+    $isNewOverlayVisible = false;
+    $isShareOverlayVisible = false;
     $isDoesNotExistOverlayVisible = false;
-    $isShareOverlayVisible = true;
+    $isProjectBrowserOverlayVisible = false
+
+    //set given overlay to true
+    if (overlay == 'save'){
+      $isSaveOverlayVisible = true;
+    } else if (overlay == 'upload'){
+      $isUploadOverlayVisible = true;
+    } else if (overlay == 'delete'){
+      $isDeleteOverlayVisible = true;
+    } else if (overlay == 'clear'){
+      $isClearOverlayVisible = true;
+    } else if (overlay == 'new'){
+      $isNewOverlayVisible = true;
+    } else if (overlay == 'share'){
+      $isShareOverlayVisible = !$isShareOverlayVisible;
+    } else if (overlay == 'doesNotExist'){
+      $isDoesNotExistOverlayVisible = true;
+    } else if (overlay == 'projectBrowser'){
+      $isProjectBrowserOverlayVisible = true;
+    } else {
+      console.error('cant launch overlay', overlay);
+    }
+    // console.log('overlay states', overlayStates);
+  }
+
+  //seperate from toggleOverlay since project browser must be able to open and close from the launch button.
+  function toggleProjectBrowser () {
+    if($isProjectBrowserOverlayVisible == true){
+      $isProjectBrowserOverlayVisible = false;
+    } else {
+      $isProjectBrowserOverlayVisible = true;
+    }
+    // $isProjectBrowserOverlayVisible = !isProjectBrowserOverlayVisible;
   }
 
 	const onNameChange = async () => {
@@ -121,48 +172,84 @@
       throw new Error ('Cant find UUID for project')
   }
 
+  // let openProjectBrowser = () => {
+  //   $isUploadOverlayVisible = false;
+  //   $isSaveOverlayVisible = false;
+	// 	$isNewOverlayVisible = false;
+  //   $isDeleteOverlayVisible = false;
+  //   $isClearOverlayVisible = false;
+  //   $isDoesNotExistOverlayVisible = false;
+  //   $isShareOverlayVisible = false;
+  //   $isProjectBrowserOverlayVisible = true;
+  // }
 
-  function clearEnvironment(){
-    $isUploadOverlayVisible = false;
-    $isSaveOverlayVisible = false;
-    $isNewOverlayVisible = false;
-    $isShareOverlayVisible = false;
-    $isDoesNotExistOverlayVisible = false;
-    $isDeleteOverlayVisible = false;
-    $isClearOverlayVisible = true;
-  }
+  // let shareProjectLink = () => {
+  //   $isUploadOverlayVisible = false;
+  //   $isSaveOverlayVisible = false;
+	// 	$isNewOverlayVisible = false;
+  //   $isDeleteOverlayVisible = false;
+  //   $isClearOverlayVisible = false;
+  //   $isDoesNotExistOverlayVisible = false;
+  //   $isProjectBrowserOverlayVisible = false;
+  //   $isShareOverlayVisible = true;
+  // }
 
-  async function newEnvironment(){
-		try {
-			$isUploadOverlayVisible = false;
-			$isSaveOverlayVisible = false;
-      $isDeleteOverlayVisible = false;
-      $isClearOverlayVisible = false;
-      $isShareOverlayVisible = false;
-      $isDoesNotExistOverlayVisible =false;
-			$isNewOverlayVisible = true;
+  // function clearEnvironment(){
+  //   $isUploadOverlayVisible = false;
+  //   $isSaveOverlayVisible = false;
+  //   $isNewOverlayVisible = false;
+  //   $isShareOverlayVisible = false;
+  //   $isDoesNotExistOverlayVisible = false;
+  //   $isDeleteOverlayVisible = false;
+  //   $isProjectBrowserOverlayVisible = false;
+  //   $isClearOverlayVisible = true;
+  // }
 
-			// $items = data.content.map(item => hydrateJSONcomponent(item))
-			// loadEnvironmentSnapshotEntries();
-		} catch (error) {
-			console.error(error);
-		}
-  }
-  function storeEnvironment(){
-		try {
-			$isUploadOverlayVisible = false;
-			$isSaveOverlayVisible = true;
-      $isDeleteOverlayVisible = false;
-      $isClearOverlayVisible = false;
-      $isShareOverlayVisible = false;
-      $isDoesNotExistOverlayVisible = false;
-			$isNewOverlayVisible = false;
+  // async function newEnvironment(){
+	// 	try {
+	// 		$isUploadOverlayVisible = false;
+	// 		$isSaveOverlayVisible = false;
+  //     $isDeleteOverlayVisible = false;
+  //     $isClearOverlayVisible = false;
+  //     $isShareOverlayVisible = false;
+  //     $isDoesNotExistOverlayVisible = false;
+  //     $isProjectBrowserOverlayVisible = false;
+	// 		$isNewOverlayVisible = true;
 
-			loadEnvironmentSnapshotEntries();
-		} catch (error) {
-			console.error(error);
-		}
-  }
+	// 		// $items = data.content.map(item => hydrateJSONcomponent(item))
+	// 		// loadEnvironmentSnapshotEntries();
+	// 	} catch (error) {
+	// 		console.error(error);
+	// 	}
+  // }
+
+  //   function uploadEnvironment(){
+
+  // $isUploadOverlayVisible = true;
+  // $isSaveOverlayVisible = false;
+  // $isDeleteOverlayVisible = false;
+  // $isClearOverlayVisible = false;
+  // $isShareOverlayVisible = false;
+  // $isDoesNotExistOverlayVisible = false;
+  // $isProjectBrowserOverlayVisible = false;
+  // $isNewOverlayVisible = false;
+  // }
+  // function storeEnvironment(){
+	// 	try {
+	// 		$isUploadOverlayVisible = false;
+	// 		$isSaveOverlayVisible = true;
+  //     $isDeleteOverlayVisible = false;
+  //     $isClearOverlayVisible = false;
+  //     $isShareOverlayVisible = false;
+  //     $isDoesNotExistOverlayVisible = false;
+  //     $isProjectBrowserOverlayVisible = false;
+	// 		$isNewOverlayVisible = false;
+
+	// 		loadEnvironmentSnapshotEntries();
+	// 	} catch (error) {
+	// 		console.error(error);
+	// 	}
+  // }
 
   function loadEnvironment(){
 
@@ -177,16 +264,7 @@
     $isLoadEnvironmentOptionsDisabled = true;
   }
 
-  function uploadEnvironment(){
-
-    $isUploadOverlayVisible = true;
-    $isSaveOverlayVisible = false;
-    $isDeleteOverlayVisible = false;
-    $isClearOverlayVisible = false;
-    $isShareOverlayVisible = false;
-    $isDoesNotExistOverlayVisible = false;
-		$isNewOverlayVisible = false;
-  }
+  
 
   //no longer used REMOVE
   function downloadEnvironmentAsZip(){
@@ -621,6 +699,27 @@
         style="{( $isActive(`/playground`) )? `visibility:visible;`: `visibility:collapse`}; margin-left: 2px;" 
         />
 
+<!-- Project browser launcher -->
+<button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
+title="project browser"
+style="{( $isActive('/playground') )? `visibility:visible;`: `visibility:collapse`}; margin-left: -50px;"
+on:click={ () => toggleProjectBrowser()}>
+
+  <div class='icon-container'>
+    <svg xmlns="http://www.w3.org/2000/svg" 
+    width="16" 
+    height="16" 
+    fill="currentColor" 
+    class="bi bi-chevron-down" 
+    viewBox="0 0 16 16"
+    style='{ ($isProjectBrowserOverlayVisible)? 'transform: rotate(0deg)' :'transform: rotate(180deg)'}'
+    >
+      <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+    </svg>
+  </div>
+</button>
+
+
 <!--if playground loaded is readonly say that user doesnt have permission to save-->
 {#if !permission && $user != null}
   <!-- <div class="no-changes-link-container"> -->
@@ -714,11 +813,12 @@
 </select> -->
 
         <!-- style="{( $fullScreen && $isActive('/playground') )? `visibility:visible;`: `visibility:hidden`}; margin-left: 2px;" -->
-<!-- SAVE -->
+
+<!-- NEW -->
 <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
         title="new project"
         style="{( $isActive('/playground') )? `visibility:visible;`: `visibility:collapse`}; margin-left: 2px;"
-        on:click={ () => newEnvironment() }
+        on:click={ () => toggleOverlay('new') }
         >
   <div class="icon-container">
     {#if $siteMode === 'dark' }
@@ -767,7 +867,7 @@
 <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
         title="save project"
         style="{( $isActive('/playground') )? `visibility:visible;`: `visibility:collapse`}; margin-left: 2px;"
-        on:click={ () => storeEnvironment() }
+        on:click={ () => toggleOverlay('save') }
         >
   
   {#if $saving}
@@ -826,7 +926,7 @@
 <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
         title="clear project"
         style="{ ( $isActive('/playground') ) ? `visibility:visible;`: `visibility:collapse`}"
-        on:click={ () => clearEnvironment() }
+        on:click={ () => toggleOverlay('clear') }
         >
   <div class="icon-container">
     {#if $siteMode === 'dark' }
@@ -959,11 +1059,11 @@
   </div>
 </button>
 
-
+<!-- UPLOAD -->
 <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
         title="upload project"
         style="{( $isActive('/playground') ) ? `visibility:visible;`: `visibility:collapse`}; padding: 0.2em 0.4em 0.8em 0.6em ! important;"
-        on:click={ () => uploadEnvironment() }
+        on:click={ () => toggleOverlay('upload') }
         >
   <div class="icon-container">
     {#if $siteMode === 'dark' }
@@ -996,7 +1096,7 @@
 <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
         title="share project"
         style="{( $isActive('/playground') ) ? `visibility:visible;`: `visibility:collapse`}; padding: 0.2em 0.4em 0.8em 0.6em ! important;"
-        on:click={ shareProjectLink }>
+        on:click={ () => toggleOverlay('share') }>
   <div class="icon-container">
     {#if $siteMode === 'dark' }
 

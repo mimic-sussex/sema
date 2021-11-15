@@ -2,6 +2,7 @@
 
 	import { onMount } from 'svelte';
 	import { slide } from 'svelte/transition';
+	import { isActive, url, goto} from "@roxi/routify";
 
 	import {
 		records,
@@ -15,6 +16,7 @@
   import {
 		isSaveOverlayVisible,
 		isShareOverlayVisible,
+		isProjectBrowserOverlayVisible,
 		hydrateJSONcomponent,
     loadEnvironmentSnapshotEntries,
 		items,
@@ -537,7 +539,9 @@ button {
 				{#each $records as record }
 					<tr class="record-entry">
 						<td>
-						<a class="file-name" href="playground/{ record.id }"
+						<a class="file-name" 
+						href="{( $isActive(`/playground`) )? `${record.id}` : `playground/${record.id}`}"
+						on:click={() => {$isProjectBrowserOverlayVisible = false} }
 								>
 								<span class='record-name' style='text-align:left;'
 								>{ record.name }

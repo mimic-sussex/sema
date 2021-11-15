@@ -20,6 +20,7 @@
   import Upload from '../../components/overlays/Upload.svelte';
   import Share from '../../components/overlays/Share.svelte';
   import DoesNotExist from '../../components/overlays/DoesNotExist.svelte';
+  import ProjectBrowser from '../../components/overlays/ProjectBrowser.svelte';
   import Sidebar from '../../components/playground/Sidebar.svelte';
   import Settings from '../../components/settings/Settings.svelte';
   // import Dashboard from '../components/layouts/Dashboard.svelte';
@@ -55,6 +56,7 @@
     isSaveOverlayVisible,
     isShareOverlayVisible,
     isDoesNotExistOverlayVisible,
+    isProjectBrowserOverlayVisible,
 		name,
 		uuid,
     items,
@@ -79,6 +81,8 @@
   import Controller from "../../engine/controller";
   let controller = new Controller(); // this will return the previously created Singleton instance
   let engine = controller.engine;
+
+  $: loadPlayground($params.playgroundId)
 
   // const messaging = new PubSub();
 
@@ -662,6 +666,8 @@
       <Share id={$uuid}/>
     {:else if $isDoesNotExistOverlayVisible}
       <DoesNotExist/>
+    {:else if $isProjectBrowserOverlayVisible}
+      <ProjectBrowser/>
 		{/if}
 
   </div>
