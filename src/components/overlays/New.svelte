@@ -4,6 +4,8 @@
 
   let engine;
 
+  import { user } from "../../stores/user.js";
+
   import {
     isDeleteOverlayVisible,
     isNewOverlayVisible,
@@ -23,9 +25,9 @@
 
 	import {
     createPlayground,
-    checkUser
-	} from '../../db/client';
-
+    checkUser,
+    savePlayground
+  } from '../../db/client';
 
   import { onMount, onDestroy } from 'svelte';
   import { fly, fade } from 'svelte/transition';
@@ -47,6 +49,9 @@
     engine.hush();
 
     let user = await checkUser()
+
+    //save existing playground
+    savePlayground($uuid, $name, $items, $allowEdits, user);
 
     if ( user != null) {
       let data = await createPlayground()
@@ -105,7 +110,7 @@
   </svg>
 
   <p class="new-overlay-text">
-    <span style="font-weight: 1500;">Are you sure you want to discard your content and create a new project?</span>
+    <span style="font-weight: 1500;">Are you sure you want to make a new playground?</span>
   </p>
   <div class="new-overlay-button-container">
     <button class="button-dark"

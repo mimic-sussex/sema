@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js'
 
 import { get } from "svelte/store";
-import { saving } from "../stores/playground.js";
+import { items, saving, saveRequired } from "../stores/playground.js";
 
 export function add() {
     var counterRef = get(counter);
@@ -88,6 +88,14 @@ export const createPlayground = async () => {
 		throw new Error('Supabase client has not been created')
 }
 
+export const savePlayground = async (uuid, name, content, allowEdits, user) => {
+	if (get(saveRequired)){
+		await updatePlayground(uuid, name, content, allowEdits, user);
+		// $saveRequired = false;
+		saveRequired.set(false);
+	}
+}
+
 // This can now be simplified since RLS and policies implemented on the playgrounds table
 export const updatePlayground = async (uuid, name, content, allowEdits, user) => {
 	// console.log("DEBUG: updatePlayground", uuid, name, content, allowEdits, user);
@@ -148,6 +156,7 @@ export const updatePlayground = async (uuid, name, content, allowEdits, user) =>
 			}
 		}
 
+		//setting svelte store
 		let savingRef = get(saving);
 		saving.set(false);
 		 

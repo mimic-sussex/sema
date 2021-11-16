@@ -51,6 +51,7 @@ export const uuid = writable("");
 export const allowEdits = writable(""); //whether the playground is readOnly or not.
 export const author = writable(""); //the author of the playground
 
+export const saveRequired = writable(false); // we use this to keep track of whether a change that needs saving has happened.
 export const saving = writable(false); // whether the playground is currently being saved to the database 
 
 export const isUploadOverlayVisible = writable(false);

@@ -1,6 +1,6 @@
 <script>
 	// import { authStore } from '../../auth'
-	import { redirect, params, goto } from '@roxi/routify'
+	import { redirect, params, goto, beforeUrlChange } from '@roxi/routify'
 	// const { user } = authStore
 	import { user } from "../../stores/user"
 
@@ -28,7 +28,8 @@
 	import {
 		supabase,
     updatePlayground,
-    fetchPlayground
+    fetchPlayground,
+    savePlayground
 	} from '../../db/client';
 
 
@@ -61,7 +62,8 @@
 		uuid,
     items,
     allowEdits,
-    author
+    author,
+    saveRequired
   } from  "../../stores/playground.js"
 
   import {
@@ -152,8 +154,9 @@
         $focusedItemProperties = itemProperties;
         // set unfocused items through the rest of the list
         $items = $items.map(i => i === item ? ({ ...i, ['hasFocus']: true }) : ({ ...i, ['hasFocus']: false }) );
-
-				updatePlayground($uuid, $name, $items, $allowEdits, $user);
+        //USED
+        $saveRequired = true;
+				//updatePlayground($uuid, $name, $items, $allowEdits, $user);
       }
       catch(error){
         console.error("Error Playground.setFocused: setting item focuses" );
@@ -207,8 +210,9 @@
         const newItem = setLayoutResponsiveness(item);
 
         $items = [ ...$items, ...[newItem] ]
-
-				updatePlayground($uuid, $name, $items, $allowEdits, $user);
+        //USED
+        $saveRequired = true;
+				//updatePlayground($uuid, $name, $items, $allowEdits, $user);
         // console.log("DEBUG:playground:addItem:", newItem);
       }
       catch (error){
@@ -242,7 +246,9 @@
           dataItem.data[e.detail.prop] = e.detail.value;
           // Update item and items collection by filtering out version with old value and concating update version
           $items = [...$items.filter(i => i !== dataItem), ...[dataItem]]
-					updatePlayground($uuid, $name, $items, $allowEdits, $user);
+          //USED
+          $saveRequired = true;
+          //updatePlayground($uuid, $name, $items, $allowEdits, $user);
         }
         else if(e.detail.prop === "hasFocus"){
           setFocused(dataItem);
@@ -283,7 +289,9 @@
 
 
     $items = $items.filter( i => i.id !== item.id);
-		updatePlayground($uuid, $name, $items, $allowEdits, $user);
+    //USED
+    $saveRequired = true;
+    //updatePlayground($uuid, $name, $items, $allowEdits, $user);
     // console.log("DEBUG:dashboard:remove:");
     // console.log($items);
   }
@@ -354,6 +362,26 @@
     }
   }
 
+  const autoSaveCycle = async () => {
+      const interval = setInterval(async function() {
+        // updatePlayground($uuid, $name, $items, $allowEdits, $user)
+        //checkIfChanged($uuid, $items)
+        // console.log($saveRequired)
+        await savePlayground($uuid, $name, $items, $allowEdits, $user)
+        // if ($saveRequired){
+        //   updatePlayground($uuid, $name, $items, $allowEdits, $user);
+        //   $saveRequired = false;
+        // }
+      }, 10000); //save every 30 seconds
+  }
+
+  // export const savePlayground = async () => {
+  //   if ($saveRequired){
+  //     await updatePlayground($uuid, $name, $items, $allowEdits, $user);
+  //     $saveRequired = false;
+  //   }
+  // }
+
 
   onMount( async () => {
 
@@ -365,6 +393,7 @@
     // console.log('Playground index: onMount ');
 
     loadPlayground();
+    autoSaveCycle();
 
     // Sequentially fetch data from individual items' properties into language design workflow stores
     for (const item of $items)
@@ -394,6 +423,31 @@
     resetStores();
   });
 
+  $beforeUrlChange( async (event, route) => {
+    await savePlayground($uuid, $name, $items, $allowEdits, $user)
+    return true;
+  // if($saveRequired){
+  //   // alert('Please save your changes before leaving.')
+  //   await updatePlayground($uuid, $name, $items, $allowEdits, $user);
+  //   $saveRequired = false;
+  //   return true
+  // }
+  })
+
+  const beforeUnloadListener = async (event) => {
+    event.preventDefault();
+    await savePlayground($uuid, $name, $items, $allowEdits, $user);
+    return true;
+  };
+
+  $: addAndRemoveUnloadListener($saveRequired)
+  function addAndRemoveUnloadListener($saveRequired){
+    if ($saveRequired){
+      addEventListener("beforeunload", beforeUnloadListener, {capture: true});
+    } else {
+      removeEventListener("beforeunload", beforeUnloadListener, {capture: true});
+    }
+  }
 </script>
 
 
