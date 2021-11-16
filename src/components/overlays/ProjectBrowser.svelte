@@ -45,7 +45,7 @@
 
 </script>
 
-<div  in:fly="{{ y: 200, duration: 300 }}"
+<div  in:fly="{{ y: -50, duration: 300 }}"
       class="projectBrowser-overlay-component"
       style='visibility:{ $isProjectBrowserOverlayVisible ? "visible": "hidden"}'
       >
@@ -158,14 +158,19 @@
   }
 
   .projectBrowser-overlay-component {
-    width: 100%;
-		height:100%;
+    width: 60%;
+		/* height:100%; */
     display:flex;
     justify-content:center;
     align-items:center;
 		flex-direction:column;
     font-size:16px;
-    background-color: rgba(16,12,12,0.8);
+    /* background-color: rgba(16,12,12,0.8); */
+    background-color: #212121;
+    margin-left:auto;
+    margin-right:auto;
+    border-radius:5px;
+    box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
   }
 
 
