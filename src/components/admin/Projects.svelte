@@ -27,6 +27,8 @@
 	} from "../../stores/playground.js"
 
 	let projectPage = 'my-projects';
+	if (!$user) projectPage = 'example-projects';
+
 	let orderBy = {col:'updated', ascending:false}; //column to order by, by default when it was updated.
 	let projectLoadStep = 8;
 	let projectLoadRange = {start:0, end:projectLoadStep};
@@ -296,7 +298,7 @@
 	/* overflow: auto; */
 	width: 100%;
 	height: 80%;
-	margin-bottom: 100px;
+	margin-bottom: 20px;
 	/* background-color: #333; */
 }
 
@@ -417,8 +419,9 @@ label {
 
 .container-project-filter {
 	/* display: inline-block; */
-	/* width:100%; */
+	width:100%;
 	border-bottom: 1px solid #ccc;
+	font-size:18px;
 }
 
 .project-tab {
@@ -487,8 +490,10 @@ button {
 	<label for="my-projects-radio">My Projects</label>
 	<input type="radio" id="all-projects-radio" name="project-filter" value="all-projects" bind:group={projectPage}>
 	<label for="my-projects-radio">Browse All Projects</label> -->
-
-	<button class:project-tab-selected={projectPage == "my-projects"} on:click={() => {projectPage = "my-projects"; projectLoadRange = {start:0, end:projectLoadStep};}}>My Playgrounds</button>
+	
+	{#if $user}
+		<button class:project-tab-selected={projectPage == "my-projects"} on:click={() => {projectPage = "my-projects"; projectLoadRange = {start:0, end:projectLoadStep};}}>My Playgrounds</button>
+	{/if}
 	<button class:project-tab-selected={projectPage == "all-projects"} on:click={() => {projectPage = "all-projects"; projectLoadRange = {start:0, end:projectLoadStep};}}>All Playgrounds</button>
 	<button class:project-tab-selected={projectPage == "example-projects"} on:click={() => {projectPage = "example-projects"; projectLoadRange = {start:0, end:projectLoadStep};}}>Examples</button>
 
