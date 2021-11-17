@@ -272,7 +272,7 @@
 				.from('playgrounds')
 				.select('*', { count: 'exact' })
 				.eq('author', user.id)
-				console.log('data my-projects', data);
+				// console.log('data my-projects', data);
 				// console.log(data.length, count);
 				totalProjectNum = count;
 				return count;
@@ -283,8 +283,15 @@
 				.select('*', { count: 'exact' })
 				.eq('isPublic', true);
 				// console.log(data.length, count);
-				console.log('data all-projects', data);
+				// console.log('data all-projects', data);
 
+				totalProjectNum = count;
+				return count;
+		} else if (projectPage == 'example-projects'){
+			const { data, count } = await supabase
+				.from('playgrounds')
+				.select('*', { count: 'exact' })
+				.match({"isPublic": true, example: true})
 				totalProjectNum = count;
 				return count;
 		}
@@ -334,6 +341,9 @@ table {
 th {
 	text-align:left;
 	color: #ccc;
+	font-size:18px;
+	padding: 10px;
+	text-align:center;
 }
 
 td {
@@ -369,7 +379,7 @@ label {
 }
 
 .dropdown {
-  float: left;
+  float: center;
   overflow: hidden;
 }
 .dropdown .dropbtn {
@@ -381,6 +391,8 @@ label {
   background-color: inherit;
   font-family: inherit;
   margin: 0;
+	/* display: block;
+	margin: auto; */
 }
 .dropdown-content {
   display: none;
