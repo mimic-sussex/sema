@@ -5,6 +5,8 @@
     siteMode
   } from '../../../stores/common.js';
 
+  import { isActive } from "@roxi/routify";
+
   let engineLoaded = false;
 
   let handleClickSideBar = () => {
@@ -263,6 +265,7 @@
         <!-- style="{ $fullScreen? `visibility:visible;`: `visibility:hidden` }" -->
 <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
         title="sidebar visibility"
+        style="{( $isActive('/playground') )? `visibility:visible;`: `visibility:collapse`};"
         on:click={ handleClickSideBar }
         >
   <svg  version="1.1"
