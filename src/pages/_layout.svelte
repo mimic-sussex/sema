@@ -231,12 +231,13 @@
     }
   }
 
-  let persistentParams = { chapter: '01-basics', section: '01-introduction' };
-  // update url parameters only when navigating tutorials
-  $: if($params.chapter && $params.section) {
+  // This doesnt seem to be used anywhere and is rederfined in pages/navigation so commenting out for time being.
+  // let persistentParams = { chapter: '01-basics', section: '01-introduction' };
+  // // update url parameters only when navigating tutorials
+  // $: if($params.chapter && $params.section) {
 
-    persistentParams = $params
-  }
+  //   persistentParams = $params
+  // }
 
   let fetchAndLoadDocsNavLinks = async () => {
     const res1 = await fetch(document.location.origin + `/docs/docs.json`);
