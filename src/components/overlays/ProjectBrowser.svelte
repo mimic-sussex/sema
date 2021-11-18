@@ -36,7 +36,7 @@
 
   onMount( async () => {
     // engine = new Engine();
-		console.log("Share")
+		console.log("Project browser")
   });
 
   onDestroy( () => {
@@ -56,7 +56,7 @@
    
     <button class="button-dark"
             on:click={ closeOverlay }
-            >Cancel</button>
+            >Close</button>
   </div>
 </div>
 
@@ -169,6 +169,7 @@
     background-color: #212121;
     margin-left:auto;
     margin-right:auto;
+    margin-top:auto;
     border-radius:5px;
     box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
   }
