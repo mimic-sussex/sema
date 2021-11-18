@@ -234,7 +234,7 @@
     align-items:center;
 		flex-direction:column;
     font-size:16px;
-    background-color: rgba(16,12,12,0.8);
+    /* background-color: rgba(16,12,12,0.8); */
   }
 
 
