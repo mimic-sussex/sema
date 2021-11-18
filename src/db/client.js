@@ -268,6 +268,30 @@ export const forkPlayground = async (id) => {
 		throw new Error('Supabase client has not been created')
 }
 
+export const getExamplePlaygrounds = async () => {
+	try {
+
+		const playgrounds = await supabase
+		.from('playgrounds')
+		.select(`
+				id,
+				name,
+				content,
+				created,
+				updated,
+				isPublic,
+				author,
+				allowEdits,
+				example
+			`)
+		.match({"isPublic": true, example: true})
+		
+		return playgrounds.data;
+	} catch(error){
+		console.error(error)
+	}
+}
+
 export const updateSession = async (uuid, name, content) => {
 	if(supabase && name && content){
 		let updatedPlayground
