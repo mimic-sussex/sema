@@ -62,6 +62,7 @@ export const isNewOverlayVisible = writable(false);
 export const isShareOverlayVisible = writable(false);
 export const isDoesNotExistOverlayVisible = writable(false);
 export const isProjectBrowserOverlayVisible = writable(false);
+export const isPrivateOverlayVisible = writable(false);
 
 export const cm_theme_cobalt = writable("");
 export const cm_theme_icecoder = writable("");
