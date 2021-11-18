@@ -21,6 +21,7 @@
   import Share from '../../components/overlays/Share.svelte';
   import DoesNotExist from '../../components/overlays/DoesNotExist.svelte';
   import ProjectBrowser from '../../components/overlays/ProjectBrowser.svelte';
+  import Private from '../../components/overlays/Private.svelte';
   import Sidebar from '../../components/playground/Sidebar.svelte';
   import Settings from '../../components/settings/Settings.svelte';
   // import Dashboard from '../components/layouts/Dashboard.svelte';
@@ -29,9 +30,10 @@
 		supabase,
     updatePlayground,
     fetchPlayground,
-    savePlayground
-	} from '../../db/client';
-
+    savePlayground,
+    createPlayground,
+    getExamplePlaygrounds
+  } from '../../db/client';
 
   import Grid from "svelte-grid";
   import gridHelp from "svelte-grid/build/helper";
@@ -58,6 +60,7 @@
     isShareOverlayVisible,
     isDoesNotExistOverlayVisible,
     isProjectBrowserOverlayVisible,
+    isPrivateOverlayVisible,
 		name,
 		uuid,
     items,
@@ -316,63 +319,206 @@
 
   let container;
 
-  //loads playground from url params if they exist and if not from local storage.
   const loadPlayground = async () => {
-    //if there is a playground/SOMETHINg in the url try look it up in the DB
     if ($params.playgroundId){
       let playground;
       try {
         playground = await fetchPlayground($params.playgroundId);
-        $uuid = playground.id;
-        $name = playground.name;
-        $items = playground.content.map(item => hydrateJSONcomponent(item));
-        $allowEdits = playground.allowEdits;
-        $author = playground.author;
-
-        //write url to local storage
-        localStorage.setItem("last-session-playground-uuid", `${$uuid}`);
+        setPlayground(playground);
       } catch (error) {
-        if (playground == null){
-          //cant find playground with that ID.
+        if (playground == null){ //cant find playground with that ID.
           $isDoesNotExistOverlayVisible = true; //trigger overlay DoesNotExist
         } else {
           console.error(error)
         }
+      } finally {
+        console.log('finally update sidebar');
+        updateSidebar();
       }
-    } else if (localStorage.getItem("last-session-playground-uuid")) {
-      let playground
+    } else if ($user) {
+      let playground;
       try {
-        // console.log("going to url in local storage", localStorage.getItem("last-session-playground-uuid"))
-        // $goto('/playground/'+localStorage.getItem("last-session-playground-uuid"));
-        playground = await fetchPlayground(localStorage.getItem("last-session-playground-uuid"));
-        $uuid = playground.id;
-        $name = playground.name;
-        $items = playground.content.map(item => hydrateJSONcomponent(item));
-        $allowEdits = playground.allowEdits;
-        $author = playground.author;
-        window.history.pushState("", "", `/playground/${$uuid}`); //put the new UUID in the URL without reloading
-      } catch (error) {
-        if (playground == null){
-          //cant find playground with that ID.
-          $isDoesNotExistOverlayVisible = true; //trigger overlay DoesNotExist
+        playground = await getMostRecentEditedPlayground($user);
+        console.log('most recent ', playground);
+        if (playground.length == 0){
+          let newPlayground;
+          newPlayground = await createPlayground();
+          setPlayground(newPlayground);
+          window.history.pushState("", "", `/playground/${$uuid}`);
+          // $goto(`/playground/${$uuid}`)
         } else {
-          console.error(error)
+          setPlayground(playground[0])
+          window.history.pushState("", "", `/playground/${$uuid}`);
+          // $goto(`/playground/${$uuid}`)
         }
+      } catch (error){
+        console.log(error);
+      } finally {
+          updateSidebar();
+      }
+    } else { 
+      //choose random playground from examples
+      let playgrounds;
+      try {
+        playgrounds = await getExamplePlaygrounds()
+        let randomExample = playgrounds[Math.floor(Math.random() * playgrounds.length)]
+        setPlayground(randomExample);
+        window.history.pushState("", "", `/playground/${$uuid}`);
+        // $goto(`/playground/${$uuid}`)
+      } catch (error){
+        console.log(error)
+      } finally {
+        updateSidebar();
       }
     }
   }
 
+  const checkPermissionsForPlayground = (playground) => {
+    if (playground.isPublic){
+      return true; // public project everyone can view
+    } else if (playground.author == $user){
+      return true; // private project user is author
+    } else {
+      return false; // private project and $user is not author
+    }
+  }
+
+  const getMostRecentEditedPlayground = async (user) => {
+    let orderBy = {col:'updated', ascending:false};
+
+    try {
+			//const user = supabase.auth.user()
+			
+			const playgrounds = await supabase
+			.from('playgrounds')
+			.select(`
+					id,
+					name,
+					content,
+					created,
+					updated,
+					isPublic,
+					author (
+						username
+					),
+					allowEdits
+				`)
+			.eq('author', user.id)
+			.range(0, 0)
+      .order(orderBy.col, {ascending:orderBy.ascending})
+			
+			return playgrounds.data;
+		} catch(error){
+			console.error(error)
+		}
+  }
+
+  const updatePropsAndStores = async () =>{
+    for (const item of $items)
+      await updateItemPropsWithFetchedValues(item);
+
+    for (const item of $items)
+      await populateCommonStoresWithFetchedProps(item);
+
+    for (const item of $items)
+      updateItemPropsWithCommonStoreValues(item);
+  }
+
+  function updateSidebar(){
+    messaging.publish("changing-playground");
+  }
+
+  // //loads playground from url params if they exist and if not from local storage.
+  // const loadPlaygroundOld = async () => {
+  //   //if there is a playground/SOMETHINg in the url try look it up in the DB
+  //   if ($params.playgroundId){
+  //     let playground;
+  //     try {
+  //       playground = await fetchPlayground($params.playgroundId);
+
+  //       //check its not private
+  //       if (!playground.isPublic && playground.author != $user){
+  //         $isPrivateOverlayVisible = true;
+  //       } else {
+  //         setPlayground(playground);
+  //         //write url to local storage
+  //         localStorage.setItem("last-session-playground-uuid", `${$uuid}`);
+  //       }
+        
+  //     } catch (error) {
+  //       if (playground == null){ //cant find playground with that ID.
+  //         $isDoesNotExistOverlayVisible = true; //trigger overlay DoesNotExist
+  //       } else {
+  //         console.error(error)
+  //       }
+  //     }
+  //   } else if (localStorage.getItem("last-session-playground-uuid") && $user) {
+  //     let playground
+  //     try {
+  //       // console.log("going to url in local storage", localStorage.getItem("last-session-playground-uuid"))
+  //       // $goto('/playground/'+localStorage.getItem("last-session-playground-uuid"));
+  //       playground = await fetchPlayground(localStorage.getItem("last-session-playground-uuid"));
+
+  //       //check its not private
+  //       if (!playground.isPublic && playground.author != $user){
+  //         $isPrivateOverlayVisible = true;
+  //       } else {
+  //         setPlayground(playground);
+  //       }
+
+  //       window.history.pushState("", "", `/playground/${$uuid}`); //put the new UUID in the URL without reloading
+  //     } catch (error) {
+  //       if (playground == null){ //cant find playground with that ID.
+  //         $isDoesNotExistOverlayVisible = true; //trigger overlay DoesNotExist
+  //       } else {
+  //         console.error(error)
+  //       }
+  //     }
+  //   } else if (!params.playgroundId && !localStorage.getItem("last-session-playground-uuid") && $user){
+  //     //create a new playground
+  //     let playground;
+  //     try{
+  //       playground = await createPlayground();
+  //       // setPlayground(playground)
+  //       console.log("new playground ", playground)
+  //       $uuid = playground.id;
+  //       $name = playground.name;
+  //       $items = $items //make with the existing data in items (they might have made changes) //$items.slice($items.length);
+  //       $allowEdits = playground.allowEdits;
+  //       $author = playground.author;
+  //       window.history.pushState("", "", `/playground/${$uuid}`); //put the new UUID in the URL without reloading
+  //     } catch (error){
+  //       console.log(error)
+  //     }
+  //   } else if (!params.playgroundId && !localStorage.getItem("last-session-playground-uuid") && !$user){
+      
+  //     //choose random playground from examples
+  //     let playgrounds
+  //     try {
+  //       playgrounds = await getExamplePlaygrounds()
+  //       let randomExample = playgrounds[Math.floor(Math.random() * playgrounds.length)]
+  //       setPlayground(randomExample);
+  //       window.history.pushState("", "", `/playground/${$uuid}`);
+  //     } catch (error){
+  //       console.log(error)
+  //     }
+
+  //   }
+  // }
+
+  // set fetched playground row in svelte stores.
+  function setPlayground(playground) {
+    $uuid = playground.id;
+    $name = playground.name;
+    $items = playground.content.map(item => hydrateJSONcomponent(item));
+    $allowEdits = playground.allowEdits;
+    $author = playground.author;
+  }
+
   const autoSaveCycle = async () => {
       const interval = setInterval(async function() {
-        // updatePlayground($uuid, $name, $items, $allowEdits, $user)
-        //checkIfChanged($uuid, $items)
-        // console.log($saveRequired)
         await savePlayground($uuid, $name, $items, $allowEdits, $user)
-        // if ($saveRequired){
-        //   updatePlayground($uuid, $name, $items, $allowEdits, $user);
-        //   $saveRequired = false;
-        // }
-      }, 10000); //save every 30 seconds
+      }, 15000); //save every 15 seconds
   }
 
   // export const savePlayground = async () => {
@@ -699,7 +845,7 @@
   </div>
 
   <div  class="upload-overlay-container"
-        style='visibility:{ ( $isNewOverlayVisible || $isUploadOverlayVisible || $isDeleteOverlayVisible || $isClearOverlayVisible || $isSaveOverlayVisible || $isShareOverlayVisible ||$isDoesNotExistOverlayVisible) ? "visible" : "hidden"}'
+        style='visibility:{ ( $isNewOverlayVisible || $isUploadOverlayVisible || $isDeleteOverlayVisible || $isClearOverlayVisible || $isSaveOverlayVisible || $isShareOverlayVisible ||$isDoesNotExistOverlayVisible || $isPrivateOverlayVisible) ? "visible" : "hidden"}'
         >
     <span class='close-overlay'
           on:click={ () => onClickCloseOverlay() }
@@ -722,6 +868,8 @@
       <DoesNotExist/>
     {:else if $isProjectBrowserOverlayVisible}
       <ProjectBrowser/>
+    {:else if $isPrivateOverlayVisible}
+      <Private/>
 		{/if}
 
   </div>
