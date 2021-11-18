@@ -10,6 +10,8 @@
 
 	 } from '../../stores/user';
 
+	 import { persistentUUID } from '../../stores/navigation';
+
   import { siteMode } from "../../stores/common";
   import { supabase } from '../../db/client';
 
@@ -25,6 +27,10 @@
 			$loggedIn = false
 			$redirect('/login')
 			$user = null;
+			// localStorage.removeItem("last-session-playground-uuid"); // remove the last session from storage so this cant be accessed by any other user on machine
+			$persistentUUID = {playgroundId: ''}; //reset persistentUUID for playground (used by navigation)
+			// $params.playgroundId = '';
+			// console.log($params.playgroundId, $persistentUUID)
     }
   }
 
