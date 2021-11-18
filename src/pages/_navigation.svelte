@@ -19,6 +19,7 @@
 		uuid,
   } from  "../stores/playground.js"
 
+  import { persistentUUID } from "../stores/navigation.js";
 
 	import Session from '../components/navigation/Session.svelte';
 
@@ -35,10 +36,10 @@
 		['/about', 'about'],
 	]
 
-  let persistentUUID = {playgroundId: ''};
+  $persistentUUID = {playgroundId: ''};
 
   $: if ($params.playgroundId){
-    persistentUUID = $params;
+    $persistentUUID = $params;
 
     if(!controller){
       controller = new Controller();
@@ -65,17 +66,16 @@
 	// ( () =>	$loggedIn = true )()
 
 
-
-  async function signOut() {
-    try {
-      let { error } = await supabase.auth.signOut()
-      if (error) throw error
-    } catch (error) {
-      alert(error.message)
-    } finally {
-			$loggedIn = false
-    }
-  }
+  // async function signOut() {
+  //   try {
+  //     let { error } = await supabase.auth.signOut()
+  //     if (error) throw error
+  //   } catch (error) {
+  //     alert(error.message)
+  //   } finally {
+	// 		$loggedIn = false
+  //   }
+  // }
 
 
 </script>
@@ -591,7 +591,7 @@
           <a  class:active={$isActive(path)}
               style='color: {$siteMode === 'dark'? 'white': 'black'};'
               aria-current="{ $isActive(path)? 'page' : undefined}"
-              href={ $url('/playground/:playgroundId', persistentUUID)}>{name}</a>
+              href={ $url('/playground/:playgroundId', $persistentUUID )}>{name}</a>
         </div>
       {:else}
         <div>
