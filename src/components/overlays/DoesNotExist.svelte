@@ -69,8 +69,10 @@
       $isSelectModelEditorDisabled = false;
       $isAddGrammarEditorDisabled = false;
       $isAddAnalyserDisabled = false;
+      $isDoesNotExistOverlayVisible = false;
 
       $sidebarDebuggerOptions.map( option => option.disabled = false );
+      window.history.pushState("", "", `/playground/${$uuid}`);
     }
     else{
       console.log("you need to login")

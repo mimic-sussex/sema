@@ -42,10 +42,10 @@
   const messaging = new PubSub();
 
   let itemDeletionSubscriptionToken;
-
+  let changingPlaygroundSubscriptionToken;
 
 	import { createEventDispatcher } from 'svelte';
-import { siteMode } from "../../stores/common";
+  import { siteMode } from "../../stores/common";
 	const dispatch = createEventDispatcher();
 
 
@@ -155,7 +155,7 @@ import { siteMode } from "../../stores/common";
   function disableSelectDebuggerOption(itemType){
 
     if(itemType !== undefined)
-      if(itemType === 'grammarCompileOutput'){
+      if(itemType === 'console'){
         $sidebarDebuggerOptions[1].disabled = true;
       }
       else if(itemType === 'liveCodeParseOutput'){
@@ -164,7 +164,7 @@ import { siteMode } from "../../stores/common";
       else if(itemType === 'dspCode'){
         $sidebarDebuggerOptions[3].disabled = true;
       }
-      else if(itemType === 'console'){
+      else if(itemType === 'grammarCompileOutput'){
         $sidebarDebuggerOptions[4].disabled = true;
       }
       else if(itemType === 'storeInspector'){
@@ -178,7 +178,7 @@ import { siteMode } from "../../stores/common";
   function setDisabledOnSelectDebuggerOption(itemType, state){
 
     if(itemType !== undefined)
-      if(itemType === 'grammarCompileOutput'){
+      if(itemType === 'console'){
         $sidebarDebuggerOptions[1].disabled = state;
       }
       else if(itemType === 'liveCodeParseOutput'){
@@ -187,7 +187,7 @@ import { siteMode } from "../../stores/common";
       else if(itemType === 'dspCode'){
         $sidebarDebuggerOptions[3].disabled = state;
       }
-      else if(itemType === 'console'){
+      else if(itemType === 'grammarCompileOutput'){
         $sidebarDebuggerOptions[4].disabled = state;
       }
       else if(itemType === 'storeInspector'){
@@ -232,7 +232,7 @@ import { siteMode } from "../../stores/common";
 
 
   function setButtonsStateOnLoad(){
-
+    console.log('set button state on load');
     if($items.length > 0){
       for (const item of $items){
         switch (item.data.type) {
@@ -262,15 +262,33 @@ import { siteMode } from "../../stores/common";
     }
   }
 
+  function setButtonsStateOnChange(){
+    //set all to enabled first
+    $isSelectLiveCodeEditorDisabled = false;
+    $isSelectModelEditorDisabled = false;
+    $isAddGrammarEditorDisabled = false;
+    $isAddAnalyserDisabled = false;
+    $sidebarDebuggerOptions.map( option => option.disabled = false );
+    //then disable those which need disabling
+    setButtonsStateOnLoad()
+  }
+
 
   onMount(() => {
     setButtonsStateOnLoad();
     itemDeletionSubscriptionToken = messaging.subscribe("plaground-item-deletion", activateSelectOnItemDeletion);
+    changingPlaygroundSubscriptionToken = messaging.subscribe("changing-playground", setButtonsStateOnChange);
+    
+    //otherwise debugger dropdown doesnt come up with text.
+    $selectedDebuggerOption = $sidebarDebuggerOptions[0];
   })
 
   onDestroy(() => {
     messaging.unsubscribe(itemDeletionSubscriptionToken);
   });
+
+
+  
 
 </script>
 
@@ -704,7 +722,6 @@ import { siteMode } from "../../stores/common";
 
 
 <div class="sidebar">
-
   <div class="layout-sidebar-group-widgets-container">
 
     <div class="group-labels" >

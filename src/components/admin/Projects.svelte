@@ -2,6 +2,7 @@
 
 	import { onMount } from 'svelte';
 	import { slide } from 'svelte/transition';
+	import { isActive, url, goto} from "@roxi/routify";
 
 	import {
 		records,
@@ -15,6 +16,7 @@
   import {
 		isSaveOverlayVisible,
 		isShareOverlayVisible,
+		isProjectBrowserOverlayVisible,
 		hydrateJSONcomponent,
     loadEnvironmentSnapshotEntries,
 		items,
@@ -25,6 +27,8 @@
 	} from "../../stores/playground.js"
 
 	let projectPage = 'my-projects';
+	if (!$user) projectPage = 'example-projects';
+
 	let orderBy = {col:'updated', ascending:false}; //column to order by, by default when it was updated.
 	let projectLoadStep = 8;
 	let projectLoadRange = {start:0, end:projectLoadStep};
@@ -187,21 +191,22 @@
 		}
 	}
 
-	const toggleAllowEdits = async (id, state) => {
-		try {
-			const user = supabase.auth.user()
+	// Not allowing users to toggle allow edits until Realtime is set up
+	// const toggleAllowEdits = async (id, state) => {
+	// 	try {
+	// 		const user = supabase.auth.user()
 
-			const playground = await supabase
-				.from('playgrounds')
-				.update({allowEdits: state})
-				.match({id: id, author: user.id})
+	// 		const playground = await supabase
+	// 			.from('playgrounds')
+	// 			.update({allowEdits: state})
+	// 			.match({id: id, author: user.id})
 			
-			updateProjectPage(projectPage);
-		}
-		catch(error){
-			console.error(error)
-		}
-	}
+	// 		updateProjectPage(projectPage);
+	// 	}
+	// 	catch(error){
+	// 		console.error(error)
+	// 	}
+	// }
 
 	//calculate the next range of 
 	const getNextProjects = async () => {
@@ -267,7 +272,7 @@
 				.from('playgrounds')
 				.select('*', { count: 'exact' })
 				.eq('author', user.id)
-				console.log('data my-projects', data);
+				// console.log('data my-projects', data);
 				// console.log(data.length, count);
 				totalProjectNum = count;
 				return count;
@@ -278,8 +283,15 @@
 				.select('*', { count: 'exact' })
 				.eq('isPublic', true);
 				// console.log(data.length, count);
-				console.log('data all-projects', data);
+				// console.log('data all-projects', data);
 
+				totalProjectNum = count;
+				return count;
+		} else if (projectPage == 'example-projects'){
+			const { data, count } = await supabase
+				.from('playgrounds')
+				.select('*', { count: 'exact' })
+				.match({"isPublic": true, example: true})
 				totalProjectNum = count;
 				return count;
 		}
@@ -293,7 +305,7 @@
 	/* overflow: auto; */
 	width: 100%;
 	height: 80%;
-	margin-bottom: 100px;
+	margin-bottom: 20px;
 	/* background-color: #333; */
 }
 
@@ -329,6 +341,9 @@ table {
 th {
 	text-align:left;
 	color: #ccc;
+	font-size:18px;
+	padding: 10px;
+	text-align:center;
 }
 
 td {
@@ -364,7 +379,7 @@ label {
 }
 
 .dropdown {
-  float: left;
+  float: center;
   overflow: hidden;
 }
 .dropdown .dropbtn {
@@ -376,6 +391,8 @@ label {
   background-color: inherit;
   font-family: inherit;
   margin: 0;
+	/* display: block;
+	margin: auto; */
 }
 .dropdown-content {
   display: none;
@@ -414,8 +431,9 @@ label {
 
 .container-project-filter {
 	/* display: inline-block; */
-	/* width:100%; */
+	width:100%;
 	border-bottom: 1px solid #ccc;
+	font-size:18px;
 }
 
 .project-tab {
@@ -484,8 +502,10 @@ button {
 	<label for="my-projects-radio">My Projects</label>
 	<input type="radio" id="all-projects-radio" name="project-filter" value="all-projects" bind:group={projectPage}>
 	<label for="my-projects-radio">Browse All Projects</label> -->
-
-	<button class:project-tab-selected={projectPage == "my-projects"} on:click={() => {projectPage = "my-projects"; projectLoadRange = {start:0, end:projectLoadStep};}}>My Playgrounds</button>
+	
+	{#if $user}
+		<button class:project-tab-selected={projectPage == "my-projects"} on:click={() => {projectPage = "my-projects"; projectLoadRange = {start:0, end:projectLoadStep};}}>My Playgrounds</button>
+	{/if}
 	<button class:project-tab-selected={projectPage == "all-projects"} on:click={() => {projectPage = "all-projects"; projectLoadRange = {start:0, end:projectLoadStep};}}>All Playgrounds</button>
 	<button class:project-tab-selected={projectPage == "example-projects"} on:click={() => {projectPage = "example-projects"; projectLoadRange = {start:0, end:projectLoadStep};}}>Examples</button>
 
@@ -516,10 +536,10 @@ button {
 					on:click={()=>{orderBy = {col:'isPublic', ascending:true }}} 
 					>Visibility</th>
 					
-					<th 
+					<!-- <th 
 					class="table-header" 
 					on:click={()=>{orderBy = {col:'allowEdits', ascending:true }}} 
-					>Allow edits</th>
+					>Allow edits</th> -->
 
 					<th 
 					class="table-header" 
@@ -536,7 +556,9 @@ button {
 				{#each $records as record }
 					<tr class="record-entry">
 						<td>
-						<a class="file-name" href="playground/{ record.id }"
+						<a class="file-name" 
+						href="{( $isActive(`/playground`) )? `${record.id}` : `playground/${record.id}`}"
+						on:click={() => {$isProjectBrowserOverlayVisible = false} }
 								>
 								<span class='record-name' style='text-align:left;'
 								>{ record.name }
@@ -570,7 +592,7 @@ button {
 							{/if}
 						</td>
 
-						<td>
+						<!-- <td>
 							{#if record.allowEdits}
 								<svg xmlns="http://www.w3.org/2000/svg" 
 								width="16" 
@@ -598,7 +620,7 @@ button {
 									<path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
 								</svg>
 							{/if}
-						</td>
+						</td> -->
 
 						<td>
 							{#if record.author}

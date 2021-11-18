@@ -14,7 +14,8 @@
     isSelectModelEditorDisabled,
     isAddGrammarEditorDisabled,
     isAddAnalyserDisabled,
-    sidebarDebuggerOptions
+    sidebarDebuggerOptions,
+    saveRequired
   } from '../../stores/playground.js';
 
 
@@ -44,6 +45,9 @@
     $isAddGrammarEditorDisabled = false;
     $isAddAnalyserDisabled = false;
     $sidebarDebuggerOptions.map( option => option.disabled = false );
+
+    //make sure save is required after content is cleared.
+    $saveRequired = true;
   }
 
   onMount( async () => {

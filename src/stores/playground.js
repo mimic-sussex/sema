@@ -51,6 +51,9 @@ export const uuid = writable("");
 export const allowEdits = writable(""); //whether the playground is readOnly or not.
 export const author = writable(""); //the author of the playground
 
+export const saveRequired = writable(false); // we use this to keep track of whether a change that needs saving has happened.
+export const saving = writable(false); // whether the playground is currently being saved to the database 
+
 export const isUploadOverlayVisible = writable(false);
 export const isSaveOverlayVisible = writable(false)
 export const isDeleteOverlayVisible = writable(false);
@@ -58,6 +61,8 @@ export const isClearOverlayVisible = writable(false);
 export const isNewOverlayVisible = writable(false);
 export const isShareOverlayVisible = writable(false);
 export const isDoesNotExistOverlayVisible = writable(false);
+export const isProjectBrowserOverlayVisible = writable(false);
+export const isPrivateOverlayVisible = writable(false);
 
 export const cm_theme_cobalt = writable("");
 export const cm_theme_icecoder = writable("");
@@ -84,7 +89,7 @@ export const isSelectLiveCodeEditorDisabled = writable(false);
 // Store for TFJS model options in Sidebar component
 // export const sidebarModelOptions = writable([]);
 export const sidebarModelOptions = writable([
-	{ id: 0, disabled: false, text: `Javascript`, content: "" },
+	{ id: 0, disabled: false, text: `javascript`, content: "" },
 	{ id: 1, disabled: false, text: `hello-world`, content: hello_world_code_example },
 	{
 		id: 2,
