@@ -666,6 +666,12 @@
 		color: white;
 		background:#212121;
 		border: 0.5px solid #ffffff61;
+    /* border:none; */
+    box-shadow: 2px 2px 3px rgb(0 0 0), -0.5px -0.5px 3px #ffffff61;
+  }
+
+  input:disabled {
+    cursor:not-allowed;
   }
   
   .no-changes-link {
@@ -713,7 +719,7 @@
 
   .dropdown-button-dark {
     width: 2.5em;
-    height: 2.5em;
+    height: 2.3em;
     padding: 0.2em 0.2em 0.8em 0.8em;
     display: block;
     font-family: sans-serif;
@@ -724,19 +730,21 @@
     max-width: 100%;
     box-sizing: border-box;
     /* border: 0 solid #333; */
-    border: none;
+    /* border: none; */
+    border: 0.5px solid #ffffff61;
     text-align: left;
     margin-right: 5px;
     -moz-appearance: none;
     -webkit-appearance: none;
     appearance: none;
-    background-color:  rgba(16, 16, 16, 0.04);
+    background-color:  #212121;
     background-repeat: no-repeat, repeat;
     background-position: right .7em top 50%, 0 0;
     background-size: .65em auto, 100%;
     /* -webkit-box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61; */
     /* -moz-box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61; */
     /* box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61; */
+    z-index:1;
   }
 
   
@@ -1150,8 +1158,9 @@
   <input type="text"
           bind:value={ $name }
           on:change={ onNameChange }
-          placeholder='Project Name'
-          style="{( $isActive(`/playground`) )? `visibility:visible;`: `visibility:collapse`}; margin-left: 2px;" 
+          placeholder='Choose a project!'
+          style="{( $isActive(`/playground`) )? `visibility:visible;`: `visibility:collapse`}; margin-left: 2px;"
+          disabled={!$user}
           />
 
   <!-- Project browser launcher -->
@@ -1167,7 +1176,7 @@
       fill="currentColor" 
       class="bi bi-chevron-down" 
       viewBox="0 0 16 16"
-      style='{ ($isProjectBrowserOverlayVisible)? 'transform: rotate(0deg)' :'transform: rotate(180deg)'}'
+      style='{ ($isProjectBrowserOverlayVisible)? 'transform: rotate(180deg); transition: 0.3s;' :'transform: rotate(0deg); transition: 0.1s;'}'
       >
         <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
       </svg>
