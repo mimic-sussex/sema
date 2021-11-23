@@ -129,7 +129,8 @@ import { edit } from "marked/src/helpers";
           if( dspCode ){
             $DSP = dspCode;
             engine.eval(dspCode);
-            engineStatus.set('running');
+            //engineStatus.set('running');
+            $engineStatus = 'running';
             $liveCodeParseErrors = '';
           };
         }
@@ -151,7 +152,8 @@ import { edit } from "marked/src/helpers";
       }
       engine.hush();
       // engine.stop();
-      engineStatus.set('paused');
+      // engineStatus.set('paused');
+      $engineStatus = 'paused';
     }
   }
 
