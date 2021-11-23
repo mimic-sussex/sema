@@ -4,7 +4,7 @@
 :tune:{:arp:}sin;
 
 :bass:{{2}clp, [1,0,1,1], [50,0,50,50,0]}rsq;
-:sub:{{20000}clt, 1,{:bass:}tri}scop;
+:sub:{:bass:}tri;
 
 :trig1:{{2}clp, [1,1]}rsq;
 :speed:{{3}clp, [1,2], [1,2, {0.1}pha]}rsq;
