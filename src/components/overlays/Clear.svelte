@@ -2,7 +2,7 @@
 
   import { Engine } from 'sema-engine';
 
-  let engine;
+  // let engine;
 
   import {
     isDeleteOverlayVisible,
@@ -17,7 +17,13 @@
     sidebarDebuggerOptions,
     saveRequired
   } from '../../stores/playground.js';
+  
 
+  import { resetStores, engineStatus } from '../../stores/common.js'
+
+  import Controller from "../../engine/controller";
+  let controller = new Controller(); // this will return the previously created Singleton instance
+  let engine = controller.engine;
 
 
   import { onMount, onDestroy } from 'svelte';
@@ -31,8 +37,8 @@
 
     if(!engine)
       engine = new Engine();
-
-    engine.hush();
+    engine.stop();
+    $engineStatus = 'paused';
 
     $items = $items.slice($items.length);
 
@@ -48,6 +54,9 @@
 
     //make sure save is required after content is cleared.
     $saveRequired = true;
+
+    resetStores();
+    engine.play()
   }
 
   onMount( async () => {
