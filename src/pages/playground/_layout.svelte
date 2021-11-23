@@ -65,6 +65,7 @@
 		uuid,
     items,
     allowEdits,
+    isPublic,
     author,
     saveRequired
   } from  "../../stores/playground.js"
@@ -114,7 +115,7 @@
   let loadEnvironmentSubscriptionToken;
   let resetSubscriptionToken;
 
-  let unsubscribeItemsChangeCallback;
+  // let unsubscribeItemsChangeCallback;
 
   // const unsubscribePlaygroundItemsCallback = items.subscribe(value => {
   //   console.log('Playground items changed');
@@ -512,6 +513,7 @@
     $name = playground.name;
     $items = playground.content.map(item => hydrateJSONcomponent(item));
     $allowEdits = playground.allowEdits;
+    $isPublic = playground.isPublic;
     $author = playground.author;
   }
 
@@ -552,10 +554,11 @@
       updateItemPropsWithCommonStoreValues(item);
 
     addSubscriptionToken = messaging.subscribe('playground-add', e => addItem(e) );
-    unsubscribeItemsChangeCallback = items.subscribe(value => {
-      console.log('Playground items changed: ', value );
-			// updatePlayground($uuid, $name, $items);
-    });
+    // unsubscribeItemsChangeCallback = items.subscribe(value => {
+    //   console.log('Playground items changed: ', value );
+		// 	// updatePlayground($uuid, $name, $items);
+    // });
+
   });
 
   onDestroy(() => {
@@ -565,7 +568,7 @@
 
     messaging.unsubscribe(addSubscriptionToken);
     // messaging.unsubscribe(resetSubscriptionToken);
-    unsubscribeItemsChangeCallback();
+    // unsubscribeItemsChangeCallback();
     resetStores();
   });
 
