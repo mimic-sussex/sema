@@ -120,9 +120,12 @@ import { edit } from "marked/src/helpers";
           engine = new Engine();
 
         $liveCodeEditorValue = codeMirror.getValue();
-
+        // console.log("DEBUG: liveCodeEditorValue", $liveCodeEditorValue);
+        // console.log('DEBUG: ',$grammarEditorValue)
         // const { errors, dspCode } = compile( $grammarEditorValue, $liveCodeEditorValue );
         const { errors, livecodeParseTree } = parse( $grammarEditorValue, $liveCodeEditorValue );
+        // console.log('DEBUG: liveCodeParsetree', livecodeParseTree);
+        // console.log('DEBUG: parse errors', errors);
         if( livecodeParseTree ){
           $liveCodeAbstractSyntaxTree = livecodeParseTree;
           const { dspCode } = ASTreeToDSPcode(livecodeParseTree[0]);
