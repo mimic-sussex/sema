@@ -23,6 +23,8 @@
     author
   } from '../../stores/playground.js';
 
+  import { engineStatus } from '../../stores/common.js'
+
 	import {
     createPlayground,
     checkUser,
@@ -47,6 +49,7 @@
       engine = new Engine();
 
     engine.hush();
+    $engineStatus = 'paused';
 
     let user = await checkUser()
 
