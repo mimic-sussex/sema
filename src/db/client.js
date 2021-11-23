@@ -213,7 +213,7 @@ export const deletePlayground = async (id) => {
 }
 
 export const forkPlayground = async (id) => {
-	console.log("Forking project", id);
+	// console.log("Forking project", id);
 	
 	if (supabase){
 		const timestamp = new Date().toISOString()
@@ -253,9 +253,7 @@ export const forkPlayground = async (id) => {
 						}
 					])
 					.single();
-
-					console.log("new fork");
-					console.log(forkground);
+					
 					return forkground.data;
 				} catch (error) {
 					console.error(error);
