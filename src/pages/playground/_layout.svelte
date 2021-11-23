@@ -414,7 +414,18 @@
 		}
   }
 
-  const updatePropsAndStores = async () =>{
+  // set fetched playground row in svelte stores.
+  function setPlayground(playground) {
+    $uuid = playground.id;
+    $name = playground.name;
+    $items = playground.content.map(item => hydrateJSONcomponent(item));
+    $allowEdits = playground.allowEdits;
+    $isPublic = playground.isPublic;
+    $author = playground.author;
+    updateStoresWithProps();
+  }
+
+  const updateStoresWithProps = async () =>{
     for (const item of $items)
       await updateItemPropsWithFetchedValues(item);
 
@@ -506,16 +517,6 @@
 
   //   }
   // }
-
-  // set fetched playground row in svelte stores.
-  function setPlayground(playground) {
-    $uuid = playground.id;
-    $name = playground.name;
-    $items = playground.content.map(item => hydrateJSONcomponent(item));
-    $allowEdits = playground.allowEdits;
-    $isPublic = playground.isPublic;
-    $author = playground.author;
-  }
 
   const autoSaveCycle = async () => {
       const interval = setInterval(async function() {
