@@ -2,7 +2,7 @@
 
   import { Engine } from 'sema-engine';
 
-  // let engine;
+  let engine;
 
   import {
     isDeleteOverlayVisible,
@@ -21,11 +21,6 @@
 
   import { resetStores, engineStatus } from '../../stores/common.js'
 
-  import Controller from "../../engine/controller";
-  let controller = new Controller(); // this will return the previously created Singleton instance
-  let engine = controller.engine;
-
-
   import { onMount, onDestroy } from 'svelte';
   import { fly, fade } from 'svelte/transition';
 
@@ -37,7 +32,7 @@
 
     if(!engine)
       engine = new Engine();
-    engine.stop();
+    engine.hush();
     $engineStatus = 'paused';
 
     $items = $items.slice($items.length);
@@ -56,7 +51,8 @@
     $saveRequired = true;
 
     resetStores();
-    engine.play()
+    // engine.play()
+    // $engineStatus = 'running';
   }
 
   onMount( async () => {
