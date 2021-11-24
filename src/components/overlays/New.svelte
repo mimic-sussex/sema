@@ -59,8 +59,6 @@
     if ( user != null) {
       let data = await createPlayground()
 
-      console.log('data')
-      console.log(data)
       $uuid = data.id;
       $name = data.name;
       $items = $items.slice($items.length);
