@@ -65,6 +65,7 @@
 		uuid,
     items,
     allowEdits,
+    isPublic,
     author,
     saveRequired
   } from  "../../stores/playground.js"
@@ -114,7 +115,7 @@
   let loadEnvironmentSubscriptionToken;
   let resetSubscriptionToken;
 
-  let unsubscribeItemsChangeCallback;
+  // let unsubscribeItemsChangeCallback;
 
   // const unsubscribePlaygroundItemsCallback = items.subscribe(value => {
   //   console.log('Playground items changed');
@@ -413,7 +414,18 @@
 		}
   }
 
-  const updatePropsAndStores = async () =>{
+  // set fetched playground row in svelte stores.
+  function setPlayground(playground) {
+    $uuid = playground.id;
+    $name = playground.name;
+    $items = playground.content.map(item => hydrateJSONcomponent(item));
+    $allowEdits = playground.allowEdits;
+    $isPublic = playground.isPublic;
+    $author = playground.author;
+    updateStoresWithProps();
+  }
+
+  const updateStoresWithProps = async () =>{
     for (const item of $items)
       await updateItemPropsWithFetchedValues(item);
 
@@ -506,15 +518,6 @@
   //   }
   // }
 
-  // set fetched playground row in svelte stores.
-  function setPlayground(playground) {
-    $uuid = playground.id;
-    $name = playground.name;
-    $items = playground.content.map(item => hydrateJSONcomponent(item));
-    $allowEdits = playground.allowEdits;
-    $author = playground.author;
-  }
-
   const autoSaveCycle = async () => {
       const interval = setInterval(async function() {
         await savePlayground($uuid, $name, $items, $allowEdits, $user)
@@ -552,10 +555,11 @@
       updateItemPropsWithCommonStoreValues(item);
 
     addSubscriptionToken = messaging.subscribe('playground-add', e => addItem(e) );
-    unsubscribeItemsChangeCallback = items.subscribe(value => {
-      console.log('Playground items changed: ', value );
-			// updatePlayground($uuid, $name, $items);
-    });
+    // unsubscribeItemsChangeCallback = items.subscribe(value => {
+    //   console.log('Playground items changed: ', value );
+		// 	// updatePlayground($uuid, $name, $items);
+    // });
+
   });
 
   onDestroy(() => {
@@ -565,7 +569,7 @@
 
     messaging.unsubscribe(addSubscriptionToken);
     // messaging.unsubscribe(resetSubscriptionToken);
-    unsubscribeItemsChangeCallback();
+    // unsubscribeItemsChangeCallback();
     resetStores();
   });
 

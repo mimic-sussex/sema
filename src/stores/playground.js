@@ -49,6 +49,7 @@ import new_learner_template               from '../../assets/learners/new/new.tf
 export const name = writable("");
 export const uuid = writable("");
 export const allowEdits = writable(""); //whether the playground is readOnly or not.
+export const isPublic = writable(false); // whether the playground is public or private
 export const author = writable(""); //the author of the playground
 
 export const saveRequired = writable(false); // we use this to keep track of whether a change that needs saving has happened.
@@ -141,21 +142,21 @@ export const sidebarDebuggerOptions = writable([
 		content: "",
 	},
 	{
-		id: 1,
+		id: 2,
 		disabled: false,
 		type: `liveCodeParseOutput`,
 		text: `Live Code Parser`,
 		content: "",
 	},
 	{
-		id: 2,
+		id: 3,
 		disabled: false,
 		type: `dspCode`,
 		text: `DSP Code`,
 		content: "",
 	},
 	{
-		id: 3,
+		id: 4,
 		disabled: false,
 		type: `grammarCompileOutput`,
 		text: `Grammar Compiler`,
@@ -170,7 +171,7 @@ export const sidebarDebuggerOptions = writable([
 	// },
 ]);
 
-export let selectedDebuggerOption = writable({});
+export let selectedDebuggerOption = writable(sidebarDebuggerOptions[0]);
 export let isSelectDebuggerDisabled = writable(false);
 
 
@@ -781,10 +782,13 @@ export function sessionable(key, initialValue) {
 
 // Dashboard layout in items list
 // export const items = storable('playground', testItems) // localStorageWrapper
-export const items = storable(
-	'playground',
-	default_playground_layout.map((item) => hydrateJSONcomponent(item))
-) // localStorageWrapper
+
+export const items = writable([]);
+// export const items = storable(
+// 	'playground',
+// 	default_playground_layout.map((item) => hydrateJSONcomponent(item))
+// ) 
+// localStorageWrapper
 // export const items = storable("playground", originalItems); // localStorageWrapper
 
 // Dashboard SELECTED item which receives focus and has item controls loaded

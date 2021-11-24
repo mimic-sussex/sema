@@ -143,8 +143,8 @@
         break;
       case 'debugger':
         messaging.publish("playground-add", { type: selected.type });
-        disableSelectDebuggerOption(selected.type);
         $selectedDebuggerOption = $sidebarDebuggerOptions[0];
+        disableSelectDebuggerOption(selected.type);
         break;
       default:
         break;
@@ -280,7 +280,8 @@
     changingPlaygroundSubscriptionToken = messaging.subscribe("changing-playground", setButtonsStateOnChange);
     
     //otherwise debugger dropdown doesnt come up with text.
-    $selectedDebuggerOption = $sidebarDebuggerOptions[0];
+    // we set this now with the others in playground.js
+    // $selectedDebuggerOption = $sidebarDebuggerOptions[0];
   })
 
   onDestroy(() => {

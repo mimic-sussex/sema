@@ -2,7 +2,7 @@
 
 	import { onMount } from 'svelte';
 	import { slide } from 'svelte/transition';
-	import { isActive, url, goto} from "@roxi/routify";
+	import { isActive, url, goto } from "@roxi/routify";
 
 	import {
 		records,
@@ -80,7 +80,8 @@
 					updated,
 					isPublic,
 					author (
-						username
+						username,
+						id
 					),
 					allowEdits
 				`)
@@ -89,6 +90,7 @@
 			.order(orderBy.col, {ascending:orderBy.ascending})
 			
 			$records = playgrounds.data;
+			console.log('$records', $records);
 		} catch(error){
 			console.error(error)
 		}
@@ -110,7 +112,8 @@
 					updated,
 					isPublic,
 					author (
-						username
+						username,
+						id
 					),
 					allowEdits
 				`)
@@ -137,7 +140,8 @@
 					updated,
 					isPublic,
 					author (
-						username
+						username,
+						id
 					),
 					allowEdits,
 					example
@@ -155,8 +159,10 @@
 
 	const forkProject = async (id) => {
 		console.log("Forking project", id);
-		await forkPlayground(id);
-		updateProjectPage(projectPage);
+		let fork = await forkPlayground(id);
+		console.log("new fork id", fork.id);
+		$goto(`/playground/${fork.id}`);
+		// updateProjectPage(projectPage);
 	}
 
 	const shareProject = async (id) => {
@@ -322,7 +328,7 @@
 	display: inline-block;
 	/* font-style: italic; */
 	/* font-weight: bold; */
-	font-size: 18px;
+	font-size: medium;
 	padding-right: 0.5em;
 	min-width: 20rem;
 	max-width: 20rem;
@@ -567,7 +573,7 @@ button {
 
 						<td>
 							<!-- {( record.isPublic ? "Public": 'Private' )} -->
-							{#if record.isPublic}
+							{#if record.isPublic }
 								<svg xmlns="http://www.w3.org/2000/svg" 
 								width="16" 
 								height="16" 
@@ -663,15 +669,19 @@ button {
 											</svg>
 										</div>
 									</a>
-									
-									<a href={'#'} on:click={deleteProject(record.id)}>Delete
-										<div class="svg-icon-div">
-											<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="delete-icon" viewBox="0 0 16 16">
-												<path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
-												<path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
-											</svg>
-										</div>
-									</a>
+									<!-- Only show delete button if the logged in user is the author-->
+									{#if $user}
+										{#if record.author.id == $user.id}
+											<a href={'#'} on:click={deleteProject(record.id)}>Delete
+												<div class="svg-icon-div">
+													<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="delete-icon" viewBox="0 0 16 16">
+														<path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+														<path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+													</svg>
+												</div>
+											</a>
+										{/if}
+									{/if}
 								</div>
 							</div> 
 

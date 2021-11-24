@@ -23,6 +23,8 @@
     author
   } from '../../stores/playground.js';
 
+  import { engineStatus } from '../../stores/common.js'
+
 	import {
     createPlayground,
     checkUser,
@@ -47,6 +49,7 @@
       engine = new Engine();
 
     engine.hush();
+    $engineStatus = 'paused';
 
     let user = await checkUser()
 
@@ -56,8 +59,6 @@
     if ( user != null) {
       let data = await createPlayground()
 
-      console.log('data')
-      console.log(data)
       $uuid = data.id;
       $name = data.name;
       $items = $items.slice($items.length);
