@@ -79,9 +79,9 @@
 	function eventListener(log){
     $rawConsoleLogs = logger.rawLog;
     $consoleLogs = logger.log;
-    console.log($consoleLogs);
+    // console.log($consoleLogs);
     countLogLevels(logger.log);
-    console.log(totals)
+    // console.log(totals)
 	}
 
   function clearLogs(){
