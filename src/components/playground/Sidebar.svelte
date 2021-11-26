@@ -43,6 +43,7 @@
 
   let itemDeletionSubscriptionToken;
   let changingPlaygroundSubscriptionToken;
+  let disableSidebarSubscriptionToken;
 
 	import { createEventDispatcher } from 'svelte';
   import { siteMode } from "../../stores/common";
@@ -273,12 +274,24 @@
     setButtonsStateOnLoad()
   }
 
+  //disable all buttons
+  //we use this when the DoesNotExist overlay is triggered to make sure
+  //the user cant spawn any widgets
+  function disableAllButtons(){
+    //set all to enabled first
+    $isSelectLiveCodeEditorDisabled = true;
+    $isSelectModelEditorDisabled = true;
+    $isAddGrammarEditorDisabled = true;
+    $isAddAnalyserDisabled = true;
+    $sidebarDebuggerOptions.map( option => option.disabled = true );
+  }
+
 
   onMount(() => {
     setButtonsStateOnLoad();
     itemDeletionSubscriptionToken = messaging.subscribe("plaground-item-deletion", activateSelectOnItemDeletion);
     changingPlaygroundSubscriptionToken = messaging.subscribe("changing-playground", setButtonsStateOnChange);
-    
+    disableSidebarSubscriptionToken = messaging.subscribe("disable-sidebar", disableAllButtons);
     //otherwise debugger dropdown doesnt come up with text.
     // we set this now with the others in playground.js
     // $selectedDebuggerOption = $sidebarDebuggerOptions[0];
