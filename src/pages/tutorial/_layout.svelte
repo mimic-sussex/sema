@@ -5,6 +5,7 @@
   import gridHelp from "svelte-grid/build/helper";
 
   import Settings from '../../components/settings/Settings.svelte';
+  import Loading from '../../components/overlays/Loading.svelte';
   // import Dashboard from '../../components/layouts/Dashboard.svelte';
   // import Markdown from "../../components/tutorial/Markdown.svelte";
 
@@ -20,7 +21,8 @@
     selectedSection,
     items,
     hydrateJSONcomponent,
-    populateStoresWithFetchedProps
+    populateStoresWithFetchedProps,
+    isLoadingOverlayInTutorialVisible,
 
   } from '../../stores/tutorial.js';
 
@@ -160,9 +162,11 @@
   onMount( async () => {
     console.log("DEBUG:routes/tutorial/_layout:onMount");
     if(!controller.samplesLoaded){
+      $isLoadingOverlayInTutorialVisible = true;
       console.warn("samples loaded");
-      controller.init(document.location.origin + '/build/');
+      await controller.init(document.location.origin + '/build/');
       $goto(localStorage.getItem("last-session-tutorial-url"));
+      $isLoadingOverlayInTutorialVisible = false;
     }
     console.log(localStorage.getItem("last-session-tutorial-url"));
     if($items.length === 0 && localStorage["last-session-tutorial-url"]){
@@ -215,6 +219,14 @@
 </svelte:head>
 
 <div class="container">
+
+  <div class="overlay-container"
+  style='visibility:{ ( $isLoadingOverlayInTutorialVisible ) ? "visible" : "hidden"}'
+  >
+    {#if $isLoadingOverlayInTutorialVisible}
+      <Loading/>
+    {/if}
+  </div>
 
   <div class="tutorial-sidebar-container"
     bind:this={ container }
@@ -532,6 +544,15 @@
 
   .right {
     grid-column: 3;
+  }
+
+  .overlay-container {
+    grid-area: layout;
+    z-index: 1000;
+    background-color: rgba(16,12,12,0.8);
+    visibility: hidden;
+    width: 100%;
+    font-size:16px;
   }
 
 </style>
