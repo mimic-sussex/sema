@@ -2,14 +2,21 @@
 
 At the top of the screen, you have a set of links which enable you to navigate within Sema.
 
-Playground – explore live coding languages and machine learning in free-form ways
-Tutorial – this screen, the tutorial!
-Reference - reference documentation for the default language, API references and useful code snippets.
-About - about page, get to know more about the project.
+**Playground** – This is the main area of sema where you can make your own projects using any of the features of live coding, language creation and machine learning.
+
+**Tutorial** – this screen, the tutorial!
+
+**Documentation** - This is where you are now. It contains documentation for all areas of sema.
+
+**About** - about page, get to know more about the project.
+
+**Admin** - Only visible if you are logged in and will appear with your username. Here you can edit your profile and manage your projects.
+
+**Login/Signout** - Takes you to the login page, or signs you out of your account.
 
 
 # Dashboard
-The dashboard is the main area of interaction in Sema. By arranging widgets in the grid layout, you can view and interact with the information that matters most.
+Within the playground, the area where widgets such as the live code editor appear is called the dashboard. Here you can arrange widgets however you wish.
 
 All widgets share a few common interactions denoted by the following icons:
 
@@ -19,4 +26,6 @@ All widgets share a few common interactions denoted by the following icons:
 
     ⨼ – bottom-right corner, resizes the widget
 
-Go ahead and tweak the current layout to your preferences.
+# Sidebar
+To the left hand side of the screen in the playground is the sidebar. It is broken down into two sections as indicated by the headers. The 'Widgets' section lets you spawn widgets into the dashboard area such as the live code editor. Below this section, 'Widget Settings', lets you adjust the settings of the currently selected widget.
+
