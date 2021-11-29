@@ -22,6 +22,8 @@
   import DoesNotExist from '../../components/overlays/DoesNotExist.svelte';
   import ProjectBrowser from '../../components/overlays/ProjectBrowser.svelte';
   import Private from '../../components/overlays/Private.svelte';
+  import Loading from '../../components/overlays/Loading.svelte';
+  import LoadingPlayground from '../../components/overlays/LoadingPlayground.svelte';
   import Sidebar from '../../components/playground/Sidebar.svelte';
   import Settings from '../../components/settings/Settings.svelte';
   // import Dashboard from '../components/layouts/Dashboard.svelte';
@@ -61,6 +63,8 @@
     isDoesNotExistOverlayVisible,
     isProjectBrowserOverlayVisible,
     isPrivateOverlayVisible,
+    isLoadingOverlayVisible,
+    isLoadingPlaygroundOverlayVisible,
 		name,
 		uuid,
     items,
@@ -321,11 +325,14 @@
   let container;
 
   const loadPlayground = async () => {
+    $isLoadingPlaygroundOverlayVisible = true;
     if ($params.playgroundId){
       let playground;
       try {
         playground = await fetchPlayground($params.playgroundId);
         setPlayground(playground);
+        updateSidebar();
+        $isDoesNotExistOverlayVisible = false;
       } catch (error) {
         if (playground == null){ //cant find playground with that ID.
           $isDoesNotExistOverlayVisible = true; //trigger overlay DoesNotExist
@@ -334,7 +341,7 @@
         }
       } finally {
         console.log('finally update sidebar');
-        updateSidebar();
+        // updateSidebar();
       }
     } else if ($user) {
       let playground;
@@ -372,6 +379,7 @@
         updateSidebar();
       }
     }
+    $isLoadingPlaygroundOverlayVisible=false;
   }
 
   const checkPermissionsForPlayground = (playground) => {
@@ -535,10 +543,12 @@
   onMount( async () => {
 
     // No need to create re-initialise controller again here
-    if(!controller.initializing && !controller.samplesLoaded)
+    if(!controller.initializing && !controller.samplesLoaded){
       // controller.init('http://localhost:5000/sema-engine');
+      $isLoadingOverlayVisible = true;
       await controller.init(document.location.origin + '/build/');
-
+      $isLoadingOverlayVisible = false;
+    }
     // console.log('Playground index: onMount ');
 
     loadPlayground();
@@ -687,6 +697,15 @@
     /* display:flex; */
     /* justify-content:center;
     align-items:center; */
+    font-size:16px;
+  }
+
+  .project-browser-overlay-container{
+    grid-area: layout;
+    z-index: 1001;
+    background-color: rgba(16,12,12,0.8);
+    visibility: hidden;
+    width: 100%;
     font-size:16px;
   }
 
@@ -849,7 +868,7 @@
   </div>
 
   <div  class="upload-overlay-container"
-        style='visibility:{ ( $isNewOverlayVisible || $isUploadOverlayVisible || $isDeleteOverlayVisible || $isClearOverlayVisible || $isSaveOverlayVisible || $isShareOverlayVisible ||$isDoesNotExistOverlayVisible || $isPrivateOverlayVisible) ? "visible" : "hidden"}'
+        style='visibility:{ ( $isNewOverlayVisible || $isUploadOverlayVisible || $isDeleteOverlayVisible || $isClearOverlayVisible || $isSaveOverlayVisible || $isShareOverlayVisible || $isPrivateOverlayVisible || $isLoadingOverlayVisible || $isLoadingPlaygroundOverlayVisible ) ? "visible" : "hidden"}'
         >
     <span class='close-overlay'
           on:click={ () => onClickCloseOverlay() }
@@ -870,12 +889,22 @@
       <Share id={$uuid}/>
     {:else if $isDoesNotExistOverlayVisible}
       <DoesNotExist/>
-    {:else if $isProjectBrowserOverlayVisible}
-      <ProjectBrowser/>
+    <!-- {:else if $isProjectBrowserOverlayVisible}
+      <ProjectBrowser/> -->
     {:else if $isPrivateOverlayVisible}
       <Private/>
+    {:else if $isLoadingOverlayVisible}
+      <Loading/>
+    {:else if $isLoadingPlaygroundOverlayVisible}
+      <LoadingPlayground/>
 		{/if}
 
+  </div>
+
+  <div class='project-browser-overlay-container'>
+    {#if $isProjectBrowserOverlayVisible}
+      <ProjectBrowser/>
+    {/if}
   </div>
 
   <!-- <div  class="mouse-overlay-container" style='visibility:visible' -->
