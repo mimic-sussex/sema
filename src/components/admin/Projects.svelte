@@ -546,35 +546,35 @@ button {
 				<tr class="record-entry">
 					<td>
 						<div class='loading-bar'>
-						<ContentLoader primaryColor='#404040' secondaryColor='#ccc' speed={0.4+(i*0.01)} width="350" height="16">
+						<ContentLoader primaryColor='#404040' secondaryColor='#ccc' speed={0.4} width="350" height="16">
 							<rect x="0" y="0" rx="3" ry="3" width="342" height="16" />
 						</ContentLoader>
 					</div>
 					</td>
 					<td>
 						<div class='loading-bar'>
-						<ContentLoader primaryColor='#404040' secondaryColor='#ccc' speed={0.4+(i*0.01)} width="16" height="16">
+						<ContentLoader primaryColor='#404040' secondaryColor='#ccc' speed={0.4} width="16" height="16">
 							<rect x="0" y="0" rx="3" ry="3" width="16" height="16" />
 						</ContentLoader>
 					</div>
 					</td>
 					<td>
 						<div class='loading-bar'>
-						<ContentLoader primaryColor='#404040' secondaryColor='#ccc' speed={0.4+(i*0.01)} width="50" height="16">
+						<ContentLoader primaryColor='#404040' secondaryColor='#ccc' speed={0.4} width="50" height="16">
 							<rect x="0" y="0" rx="3" ry="3" width="50" height="16" />
 						</ContentLoader>
 					</div>
 					</td>
 					<td>
 						<div class='loading-bar'>
-						<ContentLoader primaryColor='#404040' secondaryColor='#ccc' speed={0.4+(i*0.01)} width="90" height="16">
+						<ContentLoader primaryColor='#404040' secondaryColor='#ccc' speed={0.4} width="90" height="16">
 							<rect x="0" y="0" rx="3" ry="3" width="90" height="16" />
 						</ContentLoader>
 					</div>
 					</td>
 					<td>
 						<div class='loading-bar'>
-						<ContentLoader primaryColor='#404040' secondaryColor='#ccc' speed={0.4+(i*0.01)} width="16" height="16">
+						<ContentLoader primaryColor='#404040' secondaryColor='#ccc' speed={0.4} width="16" height="16">
 							<rect x="0" y="0" rx="3" ry="3" width="16" height="16" />
 						</ContentLoader>
 					</div>
