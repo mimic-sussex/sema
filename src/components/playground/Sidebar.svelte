@@ -731,6 +731,10 @@
     color: black;
   }
 
+  .dropdown-content:disabled {
+    color:grey;
+  }
+
 
 </style>
 
