@@ -105,7 +105,7 @@
 
 
   .headline {
-    overflow-y: scroll;
+    /* overflow-y: scroll; */
     height:auto;
     margin-left: 5px;
     margin-bottom: 10px;
@@ -179,7 +179,7 @@
 				<br>
 				<!-- <div style="margin-left:5px"> -->
 				{#if $siteMode === 'dark' }
-					<div style="overflow-y: scroll; height:auto;"
+					<div style="height:auto;"
 								class='inspect'
                 >
                 
@@ -190,7 +190,7 @@
 														/> -->
 					</div>
 				{:else}
-					<div style="overflow-y: scroll; height:auto;"
+					<div style="height:auto;"
 								class='inspect'
                 >
                 

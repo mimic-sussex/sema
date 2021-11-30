@@ -53,7 +53,7 @@
 		//updates which list of projects is on display (my projects or all projects)
 		const updateProjectPage = async (projectPage, orderBy) => {
 		loading = true;
-		console.log("Updating project page", projectPage, "ordering by", orderBy);
+		// console.log("Updating project page", projectPage, "ordering by", orderBy);
 		if (projectPage == 'my-projects'){
 			// console.log('refreshing my-projects page', projectPage)
 			await getMyProjects();
@@ -61,7 +61,7 @@
 			// console.log('refreshing all-projects page', projectPage)
 			await getAllProjects();
 		} else if (projectPage == 'example-projects'){
-			console.log('getting example projects')
+			// console.log('getting example projects')
 			await getExampleProjects();
 		}
 		loading = false;
@@ -94,7 +94,6 @@
 			.order(orderBy.col, {ascending:orderBy.ascending})
 			
 			$records = playgrounds.data;
-			console.log('$records', $records);
 		} catch(error){
 			console.error(error)
 		}
@@ -162,15 +161,15 @@
 
 
 	const forkProject = async (id) => {
-		console.log("Forking project", id);
+		// console.log("Forking project", id);
 		let fork = await forkPlayground(id);
-		console.log("new fork id", fork.id);
+		// console.log("new fork id", fork.id);
 		$goto(`/playground/${fork.id}`);
 		// updateProjectPage(projectPage);
 	}
 
 	const shareProject = async (id) => {
-		console.log(id);
+		// console.log(id);
 		// navigator.clipboard.writeText(`https://dev.sema.codes/playground/${id}`);
 		shareID = id;
 		$isShareOverlayVisible = true;
@@ -223,7 +222,7 @@
 
 		totalProjectNum = await getTotalNumProjects(projectPage);
 
-		console.log("DEBUG: get next projects");
+		// console.log("DEBUG: get next projects");
 		// projectLoadRange.start += 8;
 		// projectLoadRange.end += 8;
 
@@ -245,14 +244,14 @@
 		projectLoadRange.end = newEnd
 		currentPageNum = newPageNum
 
-		console.log(projectLoadRange)
+		// console.log(projectLoadRange)
 		
-		console.log("totalProjects", totalProjectNum)
+		// console.log("totalProjects", totalProjectNum)
 		updateProjectPage(projectPage);
 	}
 
 	const getPreviousProjects = async () => {
-		console.log("DEBUG: get previous projects")
+		// console.log("DEBUG: get previous projects")
 		let step = projectLoadStep;
 
 		let newStart = projectLoadRange.start - step
@@ -267,7 +266,7 @@
 		}
 		projectLoadRange.end = newEnd
 
-		console.log(projectLoadRange)
+		// console.log(projectLoadRange)
 		totalProjectNum = await getTotalNumProjects(projectPage);
 		
 		updateProjectPage(projectPage);
