@@ -4,9 +4,18 @@ At the top of the screen, you have a set of links which enable you to navigate w
 
 **Playground** – This is the main area of sema where you can make your own projects using any of the features of live coding, language creation and machine learning.
 
-**Tutorial** – this screen, the tutorial!
+**Tutorial** – The tutorial is a structured guide to learning about all areas of sema. If you are new and want to learn step by step this is a good place to start. If you wish, you can also jump to the section you are most interested in. The tutorial has sections on:
+- [Basics](/tutorial/01-basics/01-introduction/)
+    
+- [Live coding with the default language](/tutorial/02-live-coding/01-introduction/)
+    
+- [Machine Learning](/tutorial/03-machine-learning/01-introduction/)
 
-**Documentation** - This is where you are now. It contains documentation for all areas of sema.
+- [Language Design](/tutorial/04-language-design/01-introduction/)
+
+If you prefer video based tutorials we have a [tutorial playlists on YouTube](https://www.youtube.com/channel/UCMJVYzJaZBNnKP6f0le7Lxg/playlists), albeit with a slightly older version of sema.
+
+**Documentation** - This is where you are now. It contains documentation for all areas of sema, broken down into the main areas of sema.
 
 **About** - about page, get to know more about the project.
 
