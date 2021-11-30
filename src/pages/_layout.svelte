@@ -59,6 +59,9 @@
     engineStatus
   } from '../stores/common.js';
 
+  import {
+    hideNavbar
+  } from '../stores/navigation.js';
 
 	// $: $user = ( async () => supabase.auth.user() )()
 	// $: ( async () => {
@@ -311,10 +314,13 @@
 
 
 <div class= "app { $siteMode === 'dark' ? 'app-dark': 'app-light' }">
+  
   <header>
-		<Navigation />
+    {#if !$hideNavbar}
+      <Navigation />
+    {/if}
 	</header>
-
+  
   <!-- {#if !$loading}
     {#if $userName && $user}
       <div style='width:100%;'>
