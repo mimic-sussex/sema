@@ -862,7 +862,9 @@
               S298.3,330.8,256.5,330.8z"/>
           </g>
         </svg> -->
-        <svg xmlns="http://www.w3.org/2000/svg" 
+
+        <!-- NEW LOGO DESIGN NOT READY YET -->
+        <!-- <svg xmlns="http://www.w3.org/2000/svg" 
         width="18" 
         height="18" 
         fill="rgb(133, 130, 130)" 
@@ -870,10 +872,16 @@
           <path d="M6 1 v 3 H 1 V 1 h 5 z M 1 0 a 1 1 0 0 0 -1 1 v 3 a 1 1 0 0 0 1 1 h 5 a 1 1 0 0 0 1 -1 V 1 a 1 1 0 0 0 -1 -1 H 1 z M 6 8 v 7 H 1 V 8 h 5 z M 1 7 a 1 1 0 0 0 -1 1 v 7 a 1 1 0 0 0 1 1 h 5 a 1 1 0 0 0 1 -1 V 8 a 1 1 0 0 0 -1 -1 H 1 z m 14 -6 v 7 h -5 V 1 h 5 z m -5 -1 a 1 1 0 0 0 -1 1 v 7 a 1 1 0 0 0 1 1 h 5 a 1 1 0 0 0 1 -1 V 1 a 1 1 0 0 0 -1 -1 h -5 z"/>
         
           <path d="M 15.4 13.2 a 2.8 2.8 90 1 1 -5.6 0 a 2.8 2.8 90 0 1 5.6 0 Z m -2.8 -1.6 a 0.4 0.4 90 0 0 -0.4 0.4 v 0.8 h -0.8 a 0.4 0.4 90 0 0 0 0.8 h 0.8 v 0.8 a 0.4 0.4 90 0 0 0.8 0 v -0.8 h 0.8 a 0.4 0.4 90 0 0 0 -0.8 h -0.8 v -0.8 a 0.4 0.4 90 0 0 -0.4 -0.4 Z"/>
+        </svg> -->
+        <!-- CLOUD PLUS ICON -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="rgb(133, 130, 130)" class="bi bi-cloud-plus" viewBox="0 0 16 16">
+          <path fill-rule="evenodd" d="M8 5.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V10a.5.5 0 0 1-1 0V8.5H6a.5.5 0 0 1 0-1h1.5V6a.5.5 0 0 1 .5-.5z"/>
+          <path d="M4.406 3.342A5.53 5.53 0 0 1 8 2c2.69 0 4.923 2 5.166 4.579C14.758 6.804 16 8.137 16 9.773 16 11.569 14.502 13 12.687 13H3.781C1.708 13 0 11.366 0 9.318c0-1.763 1.266-3.223 2.942-3.593.143-.863.698-1.723 1.464-2.383zm.653.757c-.757.653-1.153 1.44-1.153 2.056v.448l-.445.049C2.064 6.805 1 7.952 1 9.318 1 10.785 2.23 12 3.781 12h8.906C13.98 12 15 10.988 15 9.773c0-1.216-1.02-2.228-2.313-2.228h-.5v-.5C12.188 4.825 10.328 3 8 3a4.53 4.53 0 0 0-2.941 1.1z"/>
         </svg>
 
+
       {:else if $siteMode === 'light' }
-        <svg  version="1.1"
+        <!-- <svg  version="1.1"
               id="Layer_1"
               xmlns="http://www.w3.org/2000/svg"
               xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -890,6 +898,10 @@
               S314.1,150.5,256.5,150.5z M256.5,330.8c-41.8,0-75.3-33.5-75.3-75.3s33.5-75.3,75.3-75.3s75.3,33.5,75.3,75.3
               S298.3,330.8,256.5,330.8z"/>
           </g>
+        </svg> -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="rgb(133, 130, 130)" class="bi bi-cloud-plus" viewBox="0 0 16 16">
+          <path fill-rule="evenodd" d="M8 5.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V10a.5.5 0 0 1-1 0V8.5H6a.5.5 0 0 1 0-1h1.5V6a.5.5 0 0 1 .5-.5z"/>
+          <path d="M4.406 3.342A5.53 5.53 0 0 1 8 2c2.69 0 4.923 2 5.166 4.579C14.758 6.804 16 8.137 16 9.773 16 11.569 14.502 13 12.687 13H3.781C1.708 13 0 11.366 0 9.318c0-1.763 1.266-3.223 2.942-3.593.143-.863.698-1.723 1.464-2.383zm.653.757c-.757.653-1.153 1.44-1.153 2.056v.448l-.445.049C2.064 6.805 1 7.952 1 9.318 1 10.785 2.23 12 3.781 12h8.906C13.98 12 15 10.988 15 9.773c0-1.216-1.02-2.228-2.313-2.228h-.5v-.5C12.188 4.825 10.328 3 8 3a4.53 4.53 0 0 0-2.941 1.1z"/>
         </svg>
       {/if}
     </div>
@@ -965,7 +977,7 @@
           >
     <div class="icon-container">
       {#if $siteMode === 'dark' }
-        <svg version="1.1"
+        <!-- <svg version="1.1"
               id="Layer_1"
               xmlns="http://www.w3.org/2000/svg"
               xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -984,6 +996,10 @@
             <polygon points="342.248,289.395 309.285,322.358 276.322,289.395 255.109,310.608 288.072,343.571 255.109,376.533
               276.322,397.746 309.285,364.783 342.248,397.746 363.461,376.533 330.498,343.571 363.461,310.608 	"/>
           </g>
+        </svg> -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(133, 130, 130)" class="bi bi-x-lg" viewBox="0 0 16 16">
+          <path fill-rule="evenodd" d="M13.854 2.146a.5.5 0 0 1 0 .708l-11 11a.5.5 0 0 1-.708-.708l11-11a.5.5 0 0 1 .708 0Z"/>
+          <path fill-rule="evenodd" d="M2.146 2.146a.5.5 0 0 0 0 .708l11 11a.5.5 0 0 0 .708-.708l-11-11a.5.5 0 0 0-.708 0Z"/>
         </svg>
       {:else if $siteMode === 'light' }
         <svg version="1.1"
@@ -1008,10 +1024,10 @@
       {/if}
     </div>
   </button>
-
+  <!-- DOWNLOAD BUTTON -->
   <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
           title="download project"
-          style="{( $isActive('/playground') ) ? `visibility:visible;`: `visibility:collapse`}; padding: 0.2em 0.4em 0.8em 0.6em ! important;"
+          style="{( $isActive('/playground') ) ? `visibility:visible;`: `visibility:collapse`};"
           on:click={ () => downloadEnvironment() }
           >
     <div class="icon-container">
@@ -1042,7 +1058,7 @@
   <!-- UPLOAD -->
   <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
           title="upload project"
-          style="{( $isActive('/playground') ) ? `visibility:visible;`: `visibility:collapse`}; padding: 0.2em 0.4em 0.8em 0.6em ! important;"
+          style="{( $isActive('/playground') ) ? `visibility:visible;`: `visibility:collapse`};"
           on:click={ () => toggleOverlay('upload') }
           >
     <div class="icon-container">
@@ -1074,7 +1090,7 @@
   {#if $user} <!--if there is a user logged in-->
     <button id='fork-button' class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
             title="fork project (make a copy)"
-            style="{( $isActive('/playground') ) ? `visibility:visible;`: `visibility:collapse`}; padding: 0.2em 0.4em 0.8em 0.6em ! important;"
+            style="{( $isActive('/playground') ) ? `visibility:visible;`: `visibility:collapse`};"
             on:click={ () => forkProject() }
             >
       <div class="icon-container">
@@ -1114,7 +1130,7 @@
   {#if $params.playgroundId} <!-- if there is a playground uuid in the adress.-->
     <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
             title="share project"
-            style="{( $isActive('/playground') ) ? `visibility:visible;`: `visibility:collapse`}; padding: 0.2em 0.4em 0.8em 0.6em ! important;"
+            style="{( $isActive('/playground') ) ? `visibility:visible;`: `visibility:collapse`};"
             on:click={ () => toggleOverlay('share') }>
       <div class="icon-container">
         {#if $siteMode === 'dark' }
