@@ -20,6 +20,7 @@ import LiveCodeEditor from "../components/editors/LiveCodeEditor.svelte";
 import LiveCodeParseOutput from "../components/widgets/LiveCodeParseOutput.svelte";
 import GrammarCompileOutput from "../components/widgets/GrammarCompileOutput.svelte";
 import Analyser from "../components/widgets/Analyser.svelte";
+import Hydra from "../components/widgets/Hydra.svelte";
 import Visualiser from "../components/widgets/Visualiser.svelte";
 import StoreInspector from "../components/widgets/StoreInspector.svelte";
 import DSPCode from '../components/widgets/DSPCode.svelte'
@@ -199,6 +200,7 @@ export const sidebarVisualisationOptions = [
 ];
 
 export const isAddAnalyserDisabled = writable(false);
+export const isAddHydraDisabled = writable(false);
 
 
 export const editorThemes = [
@@ -558,6 +560,20 @@ export async function createNewItem (type, content){
 				2: gridHelp.item({ x: 0, y: 0, w: 1, h: 2 }),
 			};
 			break;
+		case "hydra":
+			data = {
+				component: Hydra,
+				background: '#191919',
+				mode: '',
+			};
+			layout = {
+				12: gridHelp.item({ x: 0, y: 0, w: 4, h: 4 }),
+				8: gridHelp.item({ x: 0, y: 0, w: 4, h: 4 }),
+				6: gridHelp.item({ x: 0, y: 0, w: 3, h: 3 }),
+				3: gridHelp.item({ x: 0, y: 0, w: 1, h: 2 }),
+				2: gridHelp.item({ x: 0, y: 0, w: 1, h: 2 }),
+			};
+			break;
 		case "visualiser":
 			data = {
 				component: Visualiser,
@@ -677,6 +693,9 @@ export function hydrateJSONcomponent (item){
 				break
 			case 'analyser':
 				item.data.component = Analyser
+				break
+			case 'hydra':
+				item.data.component = Hydra
 				break
 			case 'visualiser':
 				item.data.component = Visualiser

@@ -22,6 +22,7 @@
     isAddGrammarEditorDisabled,
 
     isAddAnalyserDisabled,
+    isAddHydraDisabled,
 
     sidebarDebuggerOptions,
     selectedDebuggerOption,
@@ -134,6 +135,10 @@
         messaging.publish("playground-add", { type: 'analyser' });
         $isAddAnalyserDisabled = true;
         break;
+      case 'hydra':
+        messaging.publish("playground-add", { type: 'hydra' });
+        $isAddHydraDisabled = true;
+        break;
       case 'visualiser':
         messaging.publish("playground-add", { type: 'visualiser' });
         // $isAddAnalyserDisabled = true;
@@ -215,6 +220,8 @@
         case 'analyser':
           $isAddAnalyserDisabled = false;
           break;
+        case 'hydra':
+          $isAddHydraDisabled = false;
         case 'grammarCompileOutput':
         case 'liveCodeParseOutput':
         case 'dspCode':
@@ -248,6 +255,8 @@
           case 'analyser':
             $isAddAnalyserDisabled = true;
             break;
+          case 'hydra':
+            $isAddHydraDisabled = true;
           case 'grammarCompileOutput':
           case 'liveCodeParseOutput':
           case 'dspCode':
@@ -268,6 +277,7 @@
     $isSelectModelEditorDisabled = false;
     $isAddGrammarEditorDisabled = false;
     $isAddAnalyserDisabled = false;
+    $isAddHydraDisabled = false;
     $sidebarDebuggerOptions.map( option => option.disabled = false );
     //then disable those which need disabling
     setButtonsStateOnLoad()
@@ -794,6 +804,15 @@
               disabled={ $isAddAnalyserDisabled }
               >
         analyser
+      </button>
+    </div>
+
+    <div>
+      <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' } controls"
+              on:click={ () => dispatchAdd('hydra') }
+              disabled={ $isAddHydraDisabled }
+              >
+        hydra
       </button>
     </div>
 
