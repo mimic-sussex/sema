@@ -22,6 +22,8 @@
     author
   } from '../../stores/playground.js';
 
+  import { engineStatus } from '../../stores/common.js'
+
 	import {
     createPlayground,
     checkUser
@@ -32,6 +34,9 @@
   import { fly, fade } from 'svelte/transition';
   
   import { goto } from "@roxi/routify";
+
+  import { PubSub } from "../../utils/pubSub.js";
+  const messaging = new PubSub();
 
   const closeOverlay = () => {
     $isDoesNotExistOverlayVisible = false;
@@ -46,6 +51,7 @@
       engine = new Engine();
 
     engine.hush();
+    $engineStatus = 'paused';
 
     let user = await checkUser()
 
@@ -82,6 +88,7 @@
 
   onMount( async () => {
     // engine = new Engine();
+    messaging.publish("disable-sidebar"); //so people cant spawn stuff while the overlay is up
 		console.log("Project does not exist.")
   });
 
@@ -113,9 +120,9 @@
       <button class="button-dark"
               on:click={ resetEnvironment }
               >New</button>
-      <button class="button-dark"
+      <!-- <button class="button-dark"
               on:click={ closeOverlay }
-              >Cancel</button>
+              >Cancel</button> -->
     </div>
   {:else}
     <svg xmlns="http://www.w3.org/2000/svg" width="320" height="100" fill="currentColor" class="bi bi-door-open" viewBox="0 0 16 16">

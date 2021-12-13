@@ -4,6 +4,7 @@
   import { tick, onMount, onDestroy } from 'svelte'
   import { ready, url, params } from "@roxi/routify";
   import marked from 'marked';
+  // import { fly } from 'svelte/transition';
 
 	// import UserObserver from '../components/user/UserObserver.svelte';
 	// import SignOut from '../components/user/SignOut.svelte';
@@ -58,6 +59,9 @@
     engineStatus
   } from '../stores/common.js';
 
+  import {
+    hideNavbar
+  } from '../stores/navigation.js';
 
 	// $: $user = ( async () => supabase.auth.user() )()
 	// $: ( async () => {
@@ -69,8 +73,7 @@
 		user.set(session.user)
 	})
 
-	$: getProfile();
-
+	
   $: loadSidebarLiveCodeOptions();
   $: loadEnvironmentSnapshotEntries();
   $: fetchAndLoadDefaultTutorial();
@@ -88,8 +91,9 @@
     }
   });
 
-
+  $: getProfile();
   async function getProfile() {
+    console.log('getting profile')
     try {
       $loading = true
       let { username, website, avatar_url } = await getUserProfile()
@@ -102,21 +106,14 @@
       if (avatar_url){
         $avatarURL = avatar_url;
       }
-      /*
-      if ( username && website && avatar_url) {
-        $userName = username;
-        $websiteURL = website;
-        $avatarURL = avatar_url;
-      }
-      */
     } catch (error) {
       alert(error.message)
     } finally {
       $loading = false
 			$loggedIn = true
     }
-		
   }
+  
 
 
 
@@ -286,6 +283,7 @@
   */
 
   onMount( async () => {
+    console.log('DEBUG: onMount! Root layout')
     // console.log("DEBUG:routes/_layout:onMount");
 
     // console.log($params);
@@ -316,9 +314,35 @@
 
 
 <div class= "app { $siteMode === 'dark' ? 'app-dark': 'app-light' }">
+  
   <header>
-		<Navigation />
+    {#if !$hideNavbar}
+      <Navigation />
+    {/if}
 	</header>
+  
+  <!-- {#if !$loading}
+    {#if $userName && $user}
+      <div style='width:100%;'>
+        <div style='float:right'>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell" viewBox="0 0 16 16">
+            <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zM8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z"/>
+          </svg>
+        </div>
+        <div transition:fly="{{ x: 200, duration: 500 }}">
+        <span style='
+        float:right; 
+        border: solid white 1px; 
+        padding: 5px 5px 5px 5px;
+        background: #212121;
+        border-radius: 5px;
+        box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
+        '>
+        Welcome to Sema! <br> You are now logged in. <br> Set a username at the admin page above</span>
+        </div>
+      </div>
+    {/if}
+  {/if} -->
 
 	<main>
 		<slot />

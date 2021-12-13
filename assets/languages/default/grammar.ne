@@ -1,5 +1,5 @@
 # GRAMMAR EDITOR
-
+# DEFAULT LANGUAGE GRAMMAR
 # Lexer [or tokenizer] definition with language lexemes [or tokens]
 @{%
 

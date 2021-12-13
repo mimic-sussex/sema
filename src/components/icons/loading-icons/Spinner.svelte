@@ -24,4 +24,4 @@
   }
 </style>
 
-<div id='spinnerid' class="spinner"></div>
+<div id='spinnerid' class="spinner" style={`width:${size}; height:${size}`}></div>

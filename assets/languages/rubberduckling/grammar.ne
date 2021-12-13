@@ -1,3 +1,6 @@
+# GRAMMAR EDITOR
+# RUBBER DUCKLING GRAMMAR
+
 # Lexer [or tokenizer] definition with language lexemes [or tokens]
 
 @{%

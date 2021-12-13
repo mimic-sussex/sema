@@ -19,6 +19,9 @@ let liveCode = "";
 let modelCode = "";
 let grammarCode = "";
 
+// overlay for when engine is loading up
+export const isLoadingOverlayInTutorialVisible = writable(false);
+
 /*******                                        ********/
 /*******                                        ********/
 /*******   Tutorial Language Design Stores    ********/
