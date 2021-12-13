@@ -453,7 +453,7 @@ Arguments:
 - `pow` : power of
 - `abs` : absolute value
 
-## Operators over Lists
+## Operators over Variable Length Parameters
 
 Sum signals: (this will clip in this example:)
 
@@ -483,6 +483,8 @@ Multiply signals:
 
 - `linlin` : arbitrary linear map from range between arg 2 and 3, to range between arg 4 and arg 5
 - `linexp` : arbitrary exponential map from range between arg 2 and 3, to range between arg 4 and arg 5
+
+
 
 
 # Lists

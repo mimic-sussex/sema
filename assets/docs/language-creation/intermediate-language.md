@@ -349,7 +349,7 @@ State variable filter
 5. Notch filter amount (0-1)
 
 
-# Machine Learning
+# Machine Learning and Communication with the Javascript Editor
 ## toJS
 Creates a transducer for sending a signal to a javascript model
  1. A trigger, on which to send data
