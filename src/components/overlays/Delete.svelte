@@ -18,7 +18,6 @@
 
   import {
     deletePlayground,
-    createProject,
     checkUser
 	} from '../../db/client';
 

@@ -1,7 +1,7 @@
 <script>
 
 	import Profile from "../../components/admin/Profile.svelte";
-	import Records from "../../components/admin/Records.svelte";
+	import Projects from "../../components/admin/Projects.svelte";
 	
 	//overlays
 	import DeleteAccount from "../../components/overlays/DeleteAccount.svelte";
@@ -82,7 +82,7 @@
 	</grid>
 
 	<grid class="container-records">
-		<Records />
+		<Projects />
 	</grid>
 
 </div>

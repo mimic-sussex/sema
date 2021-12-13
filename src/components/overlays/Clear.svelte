@@ -14,10 +14,12 @@
     isSelectModelEditorDisabled,
     isAddGrammarEditorDisabled,
     isAddAnalyserDisabled,
-    sidebarDebuggerOptions
+    sidebarDebuggerOptions,
+    saveRequired
   } from '../../stores/playground.js';
+  
 
-
+  import { resetStores, engineStatus } from '../../stores/common.js'
 
   import { onMount, onDestroy } from 'svelte';
   import { fly, fade } from 'svelte/transition';
@@ -30,8 +32,8 @@
 
     if(!engine)
       engine = new Engine();
-
     engine.hush();
+    $engineStatus = 'paused';
 
     $items = $items.slice($items.length);
 
@@ -44,6 +46,13 @@
     $isAddGrammarEditorDisabled = false;
     $isAddAnalyserDisabled = false;
     $sidebarDebuggerOptions.map( option => option.disabled = false );
+
+    //make sure save is required after content is cleared.
+    $saveRequired = true;
+
+    resetStores();
+    // engine.play()
+    // $engineStatus = 'running';
   }
 
   onMount( async () => {

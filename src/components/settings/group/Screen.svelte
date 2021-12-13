@@ -5,10 +5,20 @@
     siteMode
   } from '../../../stores/common.js';
 
+  import {
+    hideNavbar
+  } from '../../../stores/navigation.js';
+
+  import { isActive } from "@roxi/routify";
+
   let engineLoaded = false;
 
   let handleClickSideBar = () => {
     $sideBarVisible = !$sideBarVisible;
+  }
+
+  let handleClickNavbar = () => {
+    $hideNavbar = !$hideNavbar
   }
 
   const isFullScreen = () => {
@@ -263,6 +273,7 @@
         <!-- style="{ $fullScreen? `visibility:visible;`: `visibility:hidden` }" -->
 <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
         title="sidebar visibility"
+        style="{( $isActive('/playground') )? `visibility:visible;`: `visibility:collapse`};"
         on:click={ handleClickSideBar }
         >
   <svg  version="1.1"
@@ -289,6 +300,37 @@
     </g>
   </svg>
 </button>
+
+<button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
+        title="navbar visibility"
+        on:click={ handleClickNavbar }
+        >
+  <svg  version="1.1"
+        id="Layer_1"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        x="0px" y="0px"
+        viewBox="0 0 512 512"
+        class="sidebar"
+        xml:space="preserve"
+        style='transform: rotate(90deg);'
+        >
+    <style type="text/css">
+
+    </style>
+    <g>
+      <path class="st0"
+            d="M448,64H64c-17.7,0-32,14.3-32,32v320c0,17.7,14.3,32,32,32h384c17.7,0,32-14.3,32-32V96
+            C480,78.3,465.7,64,448,64z M64,32C28.6,32,0,60.6,0,96v320c0,35.4,28.6,64,64,64h384c35.4,0,64-28.6,64-64V96
+            c0-35.4-28.6-64-64-64H64z"
+            />
+      <rect x="128" y="64"
+            class="st0"
+            width="32" height="384"/>
+    </g>
+  </svg>
+</button>
+
 
 <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
         title="fullscreen mode"
