@@ -12,8 +12,6 @@
     createEventDispatcher
   } from 'svelte';
 
-  import ContextBar from './ContextBar/ContextBar.svelte'
-
   const dispatch = createEventDispatcher();
 
   import {
@@ -226,13 +224,7 @@ import { edit } from "marked/src/helpers";
 <div  bind:this={ container }
       class="codemirror-container layout-template-container scrollable"
       >
-  <!-- <ContextBar lineNumbers={lineNumbers}
-              hasFocus={hasFocus}
-              content={content}
-              grammarSource={grammarSource}
-              grammar={grammar}
-              /> -->
-  <ContextBar />
+  
   <CodeMirror bind:this={ codeMirror }
               bind:value={ content }
               on:change={ e => onChange(e) }

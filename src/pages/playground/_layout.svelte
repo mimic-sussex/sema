@@ -21,6 +21,7 @@
   import DoesNotExist from '../../components/overlays/DoesNotExist.svelte';
   import Sidebar from '../../components/playground/Sidebar.svelte';
   import Settings from '../../components/settings/Settings.svelte';
+  import ContextBar from '../../components/playground/ContextBar.svelte';
   // import Dashboard from '../components/layouts/Dashboard.svelte';
 
 	import {
@@ -116,6 +117,9 @@
     if(item){
       try {
         let itemProperties = [];
+
+        itemProperties.push({type: item.data.type}) //add the type regardless
+
         if( item.data.type === "liveCodeEditor" || item.data.type === "grammarEditor" || item.data.type === 'modelEditor' ){
           itemProperties = [ { lineNumbers: item.data.lineNumbers}, { theme: item.data.theme } ];
 
@@ -402,7 +406,8 @@
 
     grid-template-areas:
       "settings settings"
-      "sidebar layout";
+      "sidebar layout"
+      "context-bar context-bar";
   	/* background-color: #6f7262; */
     /* background-color: #212121; */
     /* overflow: hidden; */
@@ -425,7 +430,7 @@
 
   .settings-container {
     /* background: linear-gradient(150deg, rgba(0,18,1,1) 0%, rgba(7,5,17,1) 33%, rgba(16,12,12,1) 67%, rgb(12, 12, 12) 100%); */
-    background: #151515;
+    background-color: #3a4147;
     grid-area: settings;
     height: 100%;
     width: auto; /* width is defined by child */
@@ -495,7 +500,9 @@
     visibility: hidden;
   }
 
-
+  .context-bar-container {
+    grid-area: context-bar;
+  }
 
 
   :global(body) {
@@ -611,9 +618,9 @@
     height: calc(100%-2.5em);
   } */
 
- 	.scrollable {
-		flex: 1 1 auto;
-		margin: 0 0 0.5em 0;
+ 	.scrollable-area {
+		/* flex: 1 1 auto; */
+		/* margin: 0 0 0.5em 0; */
 		overflow-y: auto;
 	}
 
@@ -673,7 +680,11 @@
     <Settings/>
   </div>
 
-  <div class="dashboard-container { $siteMode === 'dark'? 'dashboard-container-dark' : 'dashboard-container-light'}  scrollable"
+  <div class='context-bar-container'>
+    <ContextBar/>
+  </div>
+
+  <div class="dashboard-container { $siteMode === 'dark'? 'dashboard-container-dark' : 'dashboard-container-light'} scrollable-area"
     bind:this={ container }
     >
     <Grid

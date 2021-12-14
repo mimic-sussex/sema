@@ -29,11 +29,11 @@
 
     // editorThemes,
     // selectedModel,
-  } from '../../../stores/playground.js';
+  } from '../../stores/playground.js';
 
-  import { siteMode } from "../../../stores/common.js";
+  import { siteMode } from "../../stores/common.js";
 
-  import { PubSub } from "../../../utils/pubSub.js";
+  import { PubSub } from "../../utils/pubSub.js";
   const messaging = new PubSub();
 
   import { createEventDispatcher } from 'svelte';
@@ -107,10 +107,19 @@
   // export let component;
   // export let className;
 
+  onMount( async () => {
+  
+    console.log('onMount context bar', $focusedItemProperties);
+  });
+
+  function logFocused(){
+    console.log($focusedItem.data.type);
+  }
+
 </script>
 
 <style>
-  .item-props-container{
+  .context-bar-container{
     
     width: 100%;
     display: flex;
@@ -120,7 +129,7 @@
     /* justify-content:space-between; */
     /* border-bottom: 1px solid #080808; */
     /* margin-left: 0.5em; */
-    background-color:#3a4147;
+    background-color:#262a2e;
 
   }
 
@@ -133,6 +142,19 @@
 		display:inline-flex;
 		align-items:center;
 		border-radius: 5px;
+    font-size:medium;
+  }
+
+  .input-dark{
+
+  }
+
+  .button-dark{
+    padding: 0;
+    margin: 0;
+    background-color: #262a2e;
+    color:white;
+    border: 0;
   }
 </style>
 
@@ -144,11 +166,31 @@
 
 </div> -->
 
-<div class="item-props-container">
+<div class="context-bar-container">
 
   <div>
+
+    <!-- {#if $focusedItem}
+      {$focusedItem.data.type}
+    {/if} -->
+    
+    <!-- {#if $focusedItem}
+      {#if focusedItem.data}
+        <button>{$focusedItem.data.type}<>
+      {/if}
+    {/if}
+     -->
+    <!-- <button on:click={ logFocused }>test</button> -->
     {#each $focusedItemProperties as itemProp }
-      {#if itemProp.lineNumbers }
+       <!-- {#if itemProp.type}
+        <div class="controls">
+        </div>
+        
+      {/if} -->
+      {#if itemProp.type}
+        {itemProp.type}
+        
+      {:else if itemProp.lineNumbers }
 
         <div class="controls">
           <label class="input-dark">numbers
