@@ -182,10 +182,7 @@
   
   
   <!-- <div style='width:7em; display: flex; {$fullScreen? `visibility:visible;`: `visibility:hidden`}; margin-left:2px' -->
-  <div style='width:9em; display: flex;  margin-left:2px'
-        >
-  
-  
+  <div>
     <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
             title="Mouse data"
             on:click={ handleClick }
