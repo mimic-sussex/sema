@@ -302,7 +302,7 @@ import { siteMode } from "../../stores/common";
   .layout-sidebar-group-widgets-container {
     /* height: 100%; */
     padding-top: 15px;
-    margin-left:3px;
+    margin-left: 0.5em;
     margin-right:2px;
     background-color: #262a2e;
     border-radius: 5px;
@@ -795,6 +795,26 @@ import { siteMode } from "../../stores/common";
       <div slot='content'>
         {#each $sidebarLiveCodeOptions as liveCodeOption}
           <p on:click={ () => dispatchAdd('live', liveCodeOption)}>{liveCodeOption.text}</p>
+        {/each}
+      </div>
+
+    </SidebarDropdown>
+
+    <SidebarDropdown>
+      <svg 
+        xmlns="http://www.w3.org/2000/svg" 
+        width="16" 
+        height="16" 
+        fill="currentColor" 
+        class="bi bi-plus-lg" 
+        viewBox="0 0 16 16" 
+        slot='icon'>
+        <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
+      </svg>
+
+      <div slot='content'>
+        {#each $sidebarModelOptions as modelOption}
+          <p on:click={ () => dispatchAdd('model', modelOption)}>{modelOption.text}</p>
         {/each}
       </div>
 
