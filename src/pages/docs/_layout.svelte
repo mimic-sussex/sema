@@ -173,7 +173,8 @@
 <div class='container-docs' data-routify="scroll-lock">
   
   <ul class='sidebar-menu'>
-    <Search></Search>
+    <!-- Commenting out search box until we have completed algolia search application -->
+    <!-- <Search></Search> -->
     {#each $links as link}
       <MenuTree node={link} let:node></MenuTree>
     {/each}

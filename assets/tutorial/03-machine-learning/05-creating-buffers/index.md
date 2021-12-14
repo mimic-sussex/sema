@@ -2,7 +2,7 @@
 
 In this tutorial, you will need to open the JavaScript console.  You can do this in Chrome by opening the 'Developer Tools' (F12 key) and choosing the console tab.
 
-Copy the code below into the LC and JS windows.  The LC code plays a buffer.  If it hasn't created yet, the code will still comppile but you won't hear anything.  Run the code in the JS window to fill the buffer with a sound, and then re-run the code in the LC window.
+Copy the code below into the LC and JS windows.  The LC code plays a buffer.  If it hasn't created yet, the code will still compile but you won't hear anything.  Run the code in the JS window to fill the buffer with a sound, and then re-run the code in the LC window.
 
 LC:
 

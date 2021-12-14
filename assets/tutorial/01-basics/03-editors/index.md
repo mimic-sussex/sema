@@ -4,7 +4,7 @@ Code editors are the most important widgets in Sema. There are three main types 
 
 * *LiveCode Editor*
 
-* *Model Editor*
+* *JavaScript Editor*
 
 * *Grammar Editor*
 
@@ -29,11 +29,11 @@ The LiveCode Editor also gives you commands through key combinations:
 * to comment out lines of code in the editor, use **cmd–/** (Mac) OR **ctrl–/** (Win/Linux) [*command+forwardslash*]
 
 
-## Model Editor
+## JavaScript Editor
 
-In the *Model Editor* you can use JavaScript to edit and create new machine learning models.
+In the *JavaScript Editor* you can use JavaScript to edit and create new machine learning models.
 
-Part 3 of this tutorial provides a more detailed walkthrough on how to use this editor to work with your neural networks and communicate with the LiveCode Editor.
+[Part 3](/tutorial/03-machine-learning/01-introduction/) of this tutorial provides a more detailed walkthrough on how to use this editor to work with your neural networks and communicate with the LiveCode Editor.
 
 
 ## Grammar Editor
@@ -42,7 +42,7 @@ The *Grammar Editor* enables you to customize and create a new language by defin
 
 This editor is *context-dependent* and bound to the language of the LiveCode editor. So give focus to you LiveCode editor to show the button to create the grammar Editor.
 
-Grammar editing and language design will be explained in more detail in Part 4 of this tutorial.
+Grammar editing and language design will be explained in more detail in [Part 4](/tutorial/04-language-design/01-introduction/) of this tutorial.
 
 
 <!-- You can also use Javascript to define regular expressions and  https://regex101.com/ -->

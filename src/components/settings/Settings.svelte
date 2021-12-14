@@ -28,6 +28,7 @@
 
   .screen-container {
     /* width: 7.5em; */
+    /* width: 10.0em;*/
     display:inline-flex;
     justify-content:space-between;
   }

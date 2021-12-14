@@ -4,11 +4,9 @@
 
   let engine;
 
-  import { user } from "../../stores/user.js";
-
   import {
     isDeleteOverlayVisible,
-    isNewOverlayVisible,
+    isClearOverlayVisible,
     items,
     isSaveOverlayVisible,
     isUploadOverlayVisible,
@@ -17,76 +15,49 @@
     isAddGrammarEditorDisabled,
     isAddAnalyserDisabled,
     sidebarDebuggerOptions,
-		uuid,
-    name,
-    allowEdits,
-    author
+    saveRequired
   } from '../../stores/playground.js';
+  
 
-  import { engineStatus } from '../../stores/common.js'
-
-	import {
-    createPlayground,
-    checkUser,
-    savePlayground
-  } from '../../db/client';
+  import { resetStores, engineStatus } from '../../stores/common.js'
 
   import { onMount, onDestroy } from 'svelte';
   import { fly, fade } from 'svelte/transition';
 
-  import { goto } from "@roxi/routify";
-
   const closeOverlay = () => {
-    $isNewOverlayVisible = false;
+    $isClearOverlayVisible = false;
   }
 
-  //whether to display need to login button
-  let needToLogin = false;
-
-  const resetEnvironment = async () => {
+  const clearEnvironment = () => {
 
     if(!engine)
       engine = new Engine();
-
     engine.hush();
     $engineStatus = 'paused';
 
-    let user = await checkUser()
+    $items = $items.slice($items.length);
 
-    //save existing playground
-    savePlayground($uuid, $name, $items, $allowEdits, user);
+    $isUploadOverlayVisible = false;
+    $isSaveOverlayVisible = false;
+    $isClearOverlayVisible = false;
 
-    if ( user != null) {
-      let data = await createPlayground()
+    $isSelectLiveCodeEditorDisabled = false;
+    $isSelectModelEditorDisabled = false;
+    $isAddGrammarEditorDisabled = false;
+    $isAddAnalyserDisabled = false;
+    $sidebarDebuggerOptions.map( option => option.disabled = false );
 
-      $uuid = data.id;
-      $name = data.name;
-      $items = $items.slice($items.length);
-      $allowEdits = data.allowEdits;
-      $author = data.author;
-      window.history.pushState("", "", `/playground/${$uuid}`); //put the new UUID in the URL without reloading
+    //make sure save is required after content is cleared.
+    $saveRequired = true;
 
-      $isUploadOverlayVisible = false;
-      $isSaveOverlayVisible = false;
-      $isDeleteOverlayVisible = false;
-      $isNewOverlayVisible = false;
-
-      $isSelectLiveCodeEditorDisabled = false;
-      $isSelectModelEditorDisabled = false;
-      $isAddGrammarEditorDisabled = false;
-      $isAddAnalyserDisabled = false;
-
-      $sidebarDebuggerOptions.map( option => option.disabled = false );
-    }
-    else{
-      console.log("you need to login")
-      needToLogin = true; //so login information displays
-    }
+    resetStores();
+    // engine.play()
+    // $engineStatus = 'running';
   }
 
   onMount( async () => {
     // engine = new Engine();
-		console.log("New")
+		// console.log("clear")
   });
 
   onDestroy( () => {
@@ -96,53 +67,35 @@
 </script>
 
 <div  in:fly="{{ y: 200, duration: 300 }}" out:fade
-      class="new-overlay-component"
-      style='visibility:{ $isNewOverlayVisible ? "visible": "hidden"}'
+      class="clear-overlay-component"
+      style='visibility:{ $isClearOverlayVisible ? "visible": "hidden"}'
       >
 
   <!-- <svg class="box-icon" xmlns="http://www.w3.org/2000/svg" width="50" height="43" viewBox="0 0 50 43"> -->
     <!-- <path d="M48.4 26.5c-.9 0-1.7.7-1.7 1.7v11.6h-43.3v-11.6c0-.9-.7-1.7-1.7-1.7s-1.7.7-1.7 1.7v13.2c0 .9.7 1.7 1.7 1.7h46.7c.9 0 1.7-.7 1.7-1.7v-13.2c0-1-.7-1.7-1.7-1.7zm-24.5 6.1c.3.3.8.5 1.2.5.4 0 .9-.2 1.2-.5l10-11.6c.7-.7.7-1.7 0-2.4s-1.7-.7-2.4 0l-7.1 8.3v-25.3c0-.9-.7-1.7-1.7-1.7s-1.7.7-1.7 1.7v25.3l-7.1-8.3c-.7-.7-1.7-.7-2.4 0s-.7 1.7 0 2.4l10 11.6z"></path> -->
   <!-- </svg> -->
 
-  {#if !needToLogin}
-  <svg xmlns="http://www.w3.org/2000/svg" width="320" height="100" fill="currentColor" class="bi bi-cloud-plus" viewBox="0 0 16 16">
-    <path fill-rule="evenodd" d="M8 5.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V10a.5.5 0 0 1-1 0V8.5H6a.5.5 0 0 1 0-1h1.5V6a.5.5 0 0 1 .5-.5z"/>
-    <path d="M4.406 3.342A5.53 5.53 0 0 1 8 2c2.69 0 4.923 2 5.166 4.579C14.758 6.804 16 8.137 16 9.773 16 11.569 14.502 13 12.687 13H3.781C1.708 13 0 11.366 0 9.318c0-1.763 1.266-3.223 2.942-3.593.143-.863.698-1.723 1.464-2.383zm.653.757c-.757.653-1.153 1.44-1.153 2.056v.448l-.445.049C2.064 6.805 1 7.952 1 9.318 1 10.785 2.23 12 3.781 12h8.906C13.98 12 15 10.988 15 9.773c0-1.216-1.02-2.228-2.313-2.228h-.5v-.5C12.188 4.825 10.328 3 8 3a4.53 4.53 0 0 0-2.941 1.1z"/>
+  <!-- <svg xmlns="http://www.w3.org/2000/svg" width="320" height="100" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16" >
+    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+    <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+  </svg> -->
+
+  <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor" class="bi bi-file-x" viewBox="0 0 16 16">
+    <path d="M6.146 6.146a.5.5 0 0 1 .708 0L8 7.293l1.146-1.147a.5.5 0 1 1 .708.708L8.707 8l1.147 1.146a.5.5 0 0 1-.708.708L8 8.707 6.854 9.854a.5.5 0 0 1-.708-.708L7.293 8 6.146 6.854a.5.5 0 0 1 0-.708z"/>
+    <path d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H4zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z"/>
   </svg>
 
-  <p class="new-overlay-text">
-    <span style="font-weight: 1500;">Are you sure you want to make a new playground?</span>
+  <p class="clear-overlay-text">
+    <span style="font-weight: 1500;">Are you sure you want to clear your content?</span>
   </p>
-  <div class="new-overlay-button-container">
+  <div class="clear-overlay-button-container">
     <button class="button-dark"
-            on:click={ resetEnvironment }
-            >New</button>
-    
+            on:click={ clearEnvironment }
+            >Clear</button>
     <button class="button-dark"
-    on:click={ closeOverlay }
-    >Cancel</button>
+            on:click={ closeOverlay }
+            >Cancel</button>
   </div>
-  {:else}
-    <svg xmlns="http://www.w3.org/2000/svg" width="320" height="100" fill="currentColor" class="bi bi-door-open" viewBox="0 0 16 16">
-      <path d="M8.5 10c-.276 0-.5-.448-.5-1s.224-1 .5-1 .5.448.5 1-.224 1-.5 1z"/>
-      <path d="M10.828.122A.5.5 0 0 1 11 .5V1h.5A1.5 1.5 0 0 1 13 2.5V15h1.5a.5.5 0 0 1 0 1h-13a.5.5 0 0 1 0-1H3V1.5a.5.5 0 0 1 .43-.495l7-1a.5.5 0 0 1 .398.117zM11.5 2H11v13h1V2.5a.5.5 0 0 0-.5-.5zM4 1.934V15h6V1.077l-6 .857z"/>
-    </svg>
-
-    <p class="new-overlay-text">
-      <span style="font-weight: 1500;">You need to login to make a new playground. </span>
-    </p>
-    <div class="new-overlay-button-container">
-      <button class="button-dark"
-              on:click={ $goto('/login') }
-              >Login</button>
-      <button class="button-dark"
-      on:click={ closeOverlay }
-      >Cancel</button>
-    </div>
-  {/if}
-
-    
-  
 </div>
 
 <style>
@@ -211,11 +164,11 @@
     box-shadow:  -1px -1px 3px rgba(16, 16, 16, 0.4), 0.5px 0.5px 0.5px rgba(16, 16, 16, 0.04);
   }
 
-  .new-overlay-button-container {
+  .clear-overlay-button-container {
     display: inline-flex;
   }
 
-  .new-overlay-component {
+  .clear-overlay-component {
     width: 100%;
 		height:100%;
     display:flex;
@@ -226,7 +179,7 @@
   }
 
 
-  .new-overlay-text {
+  .clear-overlay-text {
     /* top:50%; */
 
     /* width: 100%; */

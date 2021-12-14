@@ -1,51 +1,18 @@
 <script>
 
-  import { Engine } from 'sema-engine';
-
-  let engine;
+  import {
+    isDeleteAccountOverlayVisible,
+  } from '../../stores/profile.js';
 
   import {
-    isDeleteOverlayVisible,
-    items,
-    isSaveOverlayVisible,
-    isUploadOverlayVisible,
-    isSelectLiveCodeEditorDisabled,
-    isSelectModelEditorDisabled,
-    isAddGrammarEditorDisabled,
-    isAddAnalyserDisabled,
-    sidebarDebuggerOptions
-  } from '../../stores/playground.js';
-
-  import {
-    deletePlayground,
-    checkUser
+    deleteAccount
 	} from '../../db/client';
 
   import { onMount, onDestroy } from 'svelte';
   import { fly, fade } from 'svelte/transition';
 
   const closeOverlay = () => {
-    $isDeleteOverlayVisible = false;
-  }
-
-  const resetEnvironment = () => {
-
-    if(!engine)
-      engine = new Engine();
-
-    engine.hush();
-
-    $items = $items.slice($items.length);
-
-    $isUploadOverlayVisible = false;
-    $isSaveOverlayVisible = false;
-    $isDeleteOverlayVisible = false;
-
-    $isSelectLiveCodeEditorDisabled = false;
-    $isSelectModelEditorDisabled = false;
-    $isAddGrammarEditorDisabled = false;
-    $isAddAnalyserDisabled = false;
-    $sidebarDebuggerOptions.map( option => option.disabled = false );
+    $isDeleteAccountOverlayVisible = false;
   }
 
   onMount( async () => {
@@ -61,7 +28,7 @@
 
 <div  in:fly="{{ y: 200, duration: 300 }}" out:fade
       class="delete-overlay-component"
-      style='visibility:{ $isDeleteOverlayVisible ? "visible": "hidden"}'
+      style='visibility:{ $isDeleteAccountOverlayVisible ? "visible": "hidden"}'
       >
 
   <!-- <svg class="box-icon" xmlns="http://www.w3.org/2000/svg" width="50" height="43" viewBox="0 0 50 43"> -->
@@ -74,11 +41,11 @@
   </svg>
 
   <p class="delete-overlay-text">
-    <span style="font-weight: 1500;">Are you sure you want to delete your content?</span>
+    <span style="font-weight: 1500;">Are you sure you want to delete your account?</span>
   </p>
   <div class="delete-overlay-button-container">
     <button class="button-dark"
-            on:click={ resetEnvironment }
+            on:click={ deleteAccount }
             >Delete</button>
     <button class="button-dark"
             on:click={ closeOverlay }
@@ -157,6 +124,7 @@
   }
 
   .delete-overlay-component {
+    background-color: rgba(16,12,12,0.8);
     width: 100%;
 		height:100%;
     display:flex;

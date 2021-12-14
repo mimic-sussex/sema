@@ -5,6 +5,7 @@
   import gridHelp from "svelte-grid/build/helper";
 
   import Settings from '../../components/settings/Settings.svelte';
+  import Loading from '../../components/overlays/Loading.svelte';
   // import Dashboard from '../../components/layouts/Dashboard.svelte';
   // import Markdown from "../../components/tutorial/Markdown.svelte";
 
@@ -20,7 +21,8 @@
     selectedSection,
     items,
     hydrateJSONcomponent,
-    populateStoresWithFetchedProps
+    populateStoresWithFetchedProps,
+    isLoadingOverlayInTutorialVisible,
 
   } from '../../stores/tutorial.js';
 
@@ -52,15 +54,15 @@
 
 
 	const setNextTutorial = e => {
-		if($tutorials.indexOf($selectedChapter) === 0){ // if 1st chapter
+		if($tutorials.indexOf($selectedChapter) + 1 < $tutorials.length){ // if 1st chapter //NEW if anything but the last chapter
 			// if last section of 1st chapter
 			if($selectedChapter.sections.length === $selectedChapter.sections.indexOf($selectedSection) + 1 ){
 				// change chapter, set first section
 				$selectedChapter = $tutorials[$tutorials.indexOf($selectedChapter) + 1];
 				$selectedSection = $selectedChapter.sections[0];
 			}
-			else // if intermediate section, skip to 1st chapters' next section
-				$selectedSection = $selectedChapter.sections[$selectedChapter.sections.indexOf($selectedSection) + 1];
+      else // if intermediate section, skip to 1st chapters' next section
+        $selectedSection = $selectedChapter.sections[$selectedChapter.sections.indexOf($selectedSection) + 1];
 		}
 		else { // of last chapter
 			if($selectedChapter.sections.length === $selectedChapter.sections.indexOf($selectedSection) + 1){  // if last section of last chapter
@@ -71,38 +73,37 @@
 				// if intermediate section, skip to last chapters' next section
 				$selectedSection = $selectedChapter.sections[$selectedChapter.sections.indexOf($selectedSection) + 1];
 		}
-    $goto(`/tutorial/${$selectedSection.chapter_dir}/${$selectedSection.section_dir}/`);
-	}
-
-	const setPreviousTutorial = e => {
-		if($tutorials.indexOf($selectedChapter) === 0){ // if 1st chapter
-			// if last section of 1st chapter
+  }
+  
+  const setPreviousTutorial = e => {
+		if($tutorials.indexOf($selectedChapter) > 0 ){ //if anything but first chapter
+      //if first section of selected chapter -->change to previous chapter, and last section of that chapter
 			if($selectedChapter.sections.indexOf($selectedSection) === 0 ){
-				$selectedChapter = $tutorials[$tutorials.length - 1];
-				$selectedSection = $selectedChapter.sections[$selectedChapter.sections.length - 1];
-			}
-			else // if intermediate section, skip to 1st chapters' next section
-				$selectedSection = $selectedChapter.sections[$selectedChapter.sections.indexOf($selectedSection) - 1];
-		}
-		else { // of last chapter
-			if(0 === $selectedChapter.sections.indexOf($selectedSection)){  // if last section of last chapter
 				$selectedChapter = $tutorials[$tutorials.indexOf($selectedChapter) - 1];
 				$selectedSection = $selectedChapter.sections[$selectedChapter.sections.length - 1];
 			}
-			else
-				// if intermediate section, skip to last chapters' next section
-				$selectedSection = $selectedChapter.sections[$selectedChapter.sections.indexOf($selectedSection) - 1];
+      else 
+        $selectedSection = $selectedChapter.sections[$selectedChapter.sections.indexOf($selectedSection) - 1];
 		}
-    $goto(`/tutorial/${$selectedSection.chapter_dir}/${$selectedSection.section_dir}/`);
-
-	}
+    else { //first chapter
+			if($selectedChapter.sections.indexOf($selectedSection) === 0 ){ //if selected section of first chapter is the very first one
+				$selectedChapter = $tutorials[$tutorials.length - 1 ]; //set chapter to last
+				$selectedSection = $selectedChapter.sections[$selectedChapter.sections.length - 1]; //last section of last chapter
+			}
+			else
+        $selectedSection = $selectedChapter.sections[$selectedChapter.sections.indexOf($selectedSection) - 1];
+		}
+  }
 
 	const handleButtonClick = e => {
 		try {
       // await tick();
       $items = []; // refresh items to call onDestroy on each (learner need to terminate workers)
 			e? setNextTutorial(): setPreviousTutorial();
-			localStorage.setItem("last-session-tutorial-url", `/tutorial/${$selectedSection.chapter_dir}/${$selectedSection.section_dir}/`);
+      localStorage.setItem("last-session-tutorial-url", `/tutorial/${$selectedSection.chapter_dir}/${$selectedSection.section_dir}/`);
+      localStorage.setItem("last-session-tutorial-section", JSON.stringify($selectedSection));
+      localStorage.setItem("last-session-tutorial-chapter", JSON.stringify($selectedChapter));
+      $goto(`/tutorial/${$selectedSection.chapter_dir}/${$selectedSection.section_dir}/`);
 		} catch (error) {
       console.error("Error navigating tutorial environment", error);
 		}
@@ -113,7 +114,9 @@
       // await tick();
       $items = []; // refresh items to call onDestroy on each (learner need to terminate workers)
       localStorage.setItem("last-session-tutorial-url", `/tutorial/${$selectedSection.chapter_dir}/${$selectedSection.section_dir}/`);
-			$selectedChapter = $tutorials.filter(chapter => chapter.sections.includes($selectedSection)).shift();
+      $selectedChapter = $tutorials.filter(chapter => chapter.sections.includes($selectedSection)).shift();
+      localStorage.setItem("last-session-tutorial-section", JSON.stringify($selectedSection));
+      localStorage.setItem("last-session-tutorial-chapter", JSON.stringify($selectedChapter));
       $goto(`/tutorial/${$selectedSection.chapter_dir}/${$selectedSection.section_dir}/`);
     }
     catch(error){
@@ -159,9 +162,11 @@
   onMount( async () => {
     console.log("DEBUG:routes/tutorial/_layout:onMount");
     if(!controller.samplesLoaded){
+      $isLoadingOverlayInTutorialVisible = true;
       console.warn("samples loaded");
-      controller.init(document.location.origin + '/build/');
+      await controller.init(document.location.origin + '/build/');
       $goto(localStorage.getItem("last-session-tutorial-url"));
+      $isLoadingOverlayInTutorialVisible = false;
     }
     console.log(localStorage.getItem("last-session-tutorial-url"));
     if($items.length === 0 && localStorage["last-session-tutorial-url"]){
@@ -171,6 +176,22 @@
 
       $items = json.map( item => hydrateJSONcomponent(item) );
     }
+
+    console.log("DEBUG onMount tutorial!!", $selectedSection, selectedChapter, $tutorials);
+    // if section and chapter exists in local storage get that otherwise set to first
+    // let fetchedSection = localStorage.getItem("last-session-tutorial-section");
+    // let fetchedChapter = localStorage.getItem("last-session-tutorial-chapter");
+    // if (fetchedSection != null){
+    //   $selectedSection = JSON.parse(fetchedSection);
+    // } else {
+    //   $selectedSection = $selectedChapter.sections[0];
+    // }
+    // if (fetchedChapter != null){
+    //   $selectedChapter = JSON.parse(fetchedChapter);
+    // } else {
+    //   $selectedChapter = $tutorials[0];
+    // }
+    // console.log("DEBUG onMount tutorial!!2", $selectedSection, selectedChapter, $tutorials);
 
     for (const item of $items){
       await updateItemPropsWithFetchedValues(item);
@@ -199,6 +220,14 @@
 
 <div class="container">
 
+  <div class="overlay-container"
+  style='visibility:{ ( $isLoadingOverlayInTutorialVisible ) ? "visible" : "hidden"}'
+  >
+    {#if $isLoadingOverlayInTutorialVisible}
+      <Loading/>
+    {/if}
+  </div>
+
   <div class="tutorial-sidebar-container"
     bind:this={ container }
     >
@@ -222,8 +251,14 @@
               <optgroup label="{i + 1}. {chapter.title}">
                 {#if chapter.sections !== undefined}
                   {#each chapter.sections as section, i}
-                    <!-- <option value={section}>{String.fromCharCode(i + 97)}. {section.title}</option> -->
-                    <option value={section} >{i + 1}. {section.title}</option>
+                    {#if $selectedSection}
+                      {#if section.title == $selectedSection.title}
+                        <option value={section} selected=true>{i + 1}. {section.title}</option>
+                      {:else}
+                        <option value={section} >{i + 1}. {section.title}</option>
+                      {/if}
+                    {/if}
+                    <!-- <option value={section}>{String.fromCharCode(i + 97)}. {section.title}</option> -->                    
                   {/each}
                 {/if}
               </optgroup>
@@ -509,6 +544,15 @@
 
   .right {
     grid-column: 3;
+  }
+
+  .overlay-container {
+    grid-area: layout;
+    z-index: 1000;
+    background-color: rgba(16,12,12,0.8);
+    visibility: hidden;
+    width: 100%;
+    font-size:16px;
   }
 
 </style>

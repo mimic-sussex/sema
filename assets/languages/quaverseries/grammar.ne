@@ -1,4 +1,5 @@
 # GRAMMAR EDITOR
+# QUAVERSERIES GRAMMAR
 
 # Lexer [or tokenizer] definition with language lexemes [or tokens]
 @{%

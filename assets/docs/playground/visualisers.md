@@ -1,3 +1,2 @@
 # Audio Analyser
-
-# Visualiser
+Displays a visualisation of the audio frequencies currently playing.
