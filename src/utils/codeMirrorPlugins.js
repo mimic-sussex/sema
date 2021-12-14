@@ -17,6 +17,7 @@ import "codemirror/addon/search/jump-to-line.js";
 import "codemirror/addon/dialog/dialog.js";
 import "codemirror/addon/comment/comment.js";
 import "codemirror/addon/comment/continuecomment.js";
+import "codemirror/addon/display/panel.js";
 import "./hints/sema-show-hint.js"
 // import "codemirror/addon/dialog/dialog.css";
 // import 'codemirror/theme/idea.css';

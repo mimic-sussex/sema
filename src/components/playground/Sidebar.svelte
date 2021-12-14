@@ -3,6 +3,9 @@
   import { onMount, onDestroy } from "svelte";
 
   import ItemProps from './ItemProps.svelte';
+  import Mouse from '../widgets/devices/Mouse.svelte';
+  import Mic from '../widgets/devices/Mic.svelte';
+  import SidebarDropdown from './SidebarDropdown.svelte';
 
   import {
     sidebarLiveCodeOptions,
@@ -114,6 +117,7 @@
   function dispatchAdd(type, selected){
     // console.log(`DEBUG:Sidebar:dispatchAdd: /add/${type}/${selected.id}`);
     // console.log(selected.content);
+    console.log('DEBUG: dispatchAdd', type, selected);
 
     switch (type) {
       case 'live':
@@ -311,6 +315,7 @@
   .sidebar {
     /* width: 160px; */
     /* height: calc(100vh - 43px); */
+    width: 64px;
     height: 100%;
     margin-top: 0px;
     display: flex;
@@ -331,6 +336,8 @@
     padding-top: 15px;
     margin-left:3px;
     margin-right:2px;
+    background-color: #262a2e;
+    border-radius: 5px;
   }
 
   .layout-sidebar-group-properties-container {
@@ -340,13 +347,46 @@
     margin-right:2px;
   }
 
-  .combobox-light {
+  .combobox-dark{
+    padding: 20;
+		background-color: #262a2e;
+		color: grey;
+		border: none;
+    width: 42px;
+  	/* height: 42px; */
+  	margin: 8px 8px 8px 8px;
+  	border-radius: 5px;
+  	background-color: #262a2e;
+  }
+
+  .button-dark{
+    padding: 20;
+		background-color: #262a2e;
+		color: grey;
+		border: none;
+    width: 42px;
+  	/* height: 42px; */
+  	margin: 8px 8px 8px 8px;
+  	border-radius: 5px;
+  	background-color: #262a2e;
+  }
+
+  .button-dark:hover {
+    /* background-color: blue; */
+    color: white;
+  }
+
+  .button-dark:active{
+    color: white;
+    background-color: grey;
+  }
+
+  /* .combobox-light {
     display: block;
     font-size: medium;
     font-family: sans-serif;
     font-weight: 400;
     cursor: pointer;
-    /* color: #000; */
     line-height: 1.3;
     padding: 0.7em 1em 0.7em 1em;
     width: 8em;
@@ -546,20 +586,11 @@
     box-sizing: border-box;
     border: 0 solid #333;
     text-align: left;
-    /* box-shadow: 0 1px 0 0px rgba(4, 4, 4, 0.04); */
     border-radius: .6em;
-    /* border-right-color: rgba(34,37,45, 0.1);
-    border-right-style: solid;
-    border-right-width: 1px;
-    border-bottom-color: rgba(34,37,45, 0.1);
-    border-bottom-style: solid;
-    border-bottom-width: 1px; */
     -moz-appearance: none;
     -webkit-appearance: none;
     appearance: none;
     background-color:  linear-gradient(rgba(16, 16, 16, 0.8), rgba(16, 16, 16, 0.08));
-    /* background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007CB2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'),
-      linear-gradient(to bottom, #ffffff 0%,#e5e5e5 100%); */
     background-repeat: no-repeat, repeat;
     background-position: right .7em top 50%, 0 0;
     background-size: .65em auto, 100%;
@@ -577,32 +608,16 @@
     cursor: pointer;
     color: white;
     line-height: 1.3;
-    /* padding: 0.7em 1em 0.7em 1em; */
     width: 8em;
     max-width: 100%;
     box-sizing: border-box;
-    /* border: 0 solid #333; */
     text-align: left;
-    /* box-shadow: 0 1px 0 0px rgba(4, 4, 4, 0.04); */
-    /* border-radius: .6em; */
-    /* border-right-color: rgba(34,37,45, 0.1);
-    border-right-style: solid;
-    border-right-width: 1px;
-    border-bottom-color: rgba(34,37,45, 0.1);
-    border-bottom-style: solid;
-    border-bottom-width: 1px; */
     -moz-appearance: none;
     -webkit-appearance: none;
     appearance: none;
     background-color:  rgba(16, 16, 16, 0.04);;
-    /* background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007CB2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'),
-      linear-gradient(to bottom, #ffffff 0%,#e5e5e5 100%); */
     background-repeat: no-repeat, repeat;
-    /* background-position: right .7em top 50%, 0 0; */
     background-size: .65em auto, 100%;
-    /* -webkit-box-shadow: -1px -1px 1px rgb(34, 34, 34), 2px 2px 5px rgba(0,0,0),;
-    -moz-box-shadow: -1px -1px 1px rgb(34, 34, 34), 2px 2px 5px rgba(0,0,0), ;
-    box-shadow:  -1px -1px 3px #ffffff61, 2px 2px 3px rgb(0, 0, 0); */
     box-shadow:  -1px -1px 3px rgba(16, 16, 16, 0.4), 0.5px 0.5px 0.5px rgba(16, 16, 16, 0.04);
   }
 
@@ -631,18 +646,6 @@
     box-shadow: 2px 2px 3px rgb(0, 0, 0), -1px -1px 3px #ffffff61;
     -moz-box-shadow: 2px 2px 3px rgb(0, 0, 0), -1px -1px 3px #ffffff61;
     -webkit-box-shadow: 2px 2px 3px rgb(0, 0, 0), -1px -1px 3px #ffffff61;
-  }
-
-  .group-labels {
-    padding-left:5px;
-    margin-bottom: 10px;
-  }
-
-  .group-label {
-    /* color: #666; */
-    font-size: medium;
-    font-family: sans-serif;
-    font-weight: 400
   }
 
   .button-light {
@@ -723,12 +726,77 @@
     box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
     -moz-box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
     -webkit-box-shadow:  2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0)
+  } */
+
+  .group-labels {
+    padding-left:5px;
+    margin-bottom: 10px;
+  }
+
+  .group-label {
+    /* color: #666; */
+    font-size: medium;
+    font-family: sans-serif;
+    font-weight: 400
   }
 
   /*for the dropdown menu of the comboboxes, we set the color to fix css issue on linux
   and windows*/
-  .dropdown-content {
+  /* .dropdown-content {
     color: black;
+  } */
+
+  /* .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #282828;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+  } */
+
+  .dropdown {
+    float: left;
+    overflow: hidden;
+  }
+  .dropdown .dropbtn {
+    font-size: 16px;  
+    border: none;
+    outline: none;
+    color: white;
+    padding: 14px 16px;
+    background-color: inherit;
+    font-family: inherit;
+    margin: 0;
+  }
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #282828;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+  }
+
+  .dropdown-content a {
+    float: none;
+    color: #f9f9f9;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+  }
+
+  .dropdown-content a:hover {
+    background-color: #404040;
+  }
+
+  .dropdown:focus .dropdown-content {
+    display: block;
+  }
+
+  .dropdown:hover .dropbtn {
+    background-color: #282828;
   }
 
   .dropdown-content:disabled {
@@ -741,14 +809,72 @@
 
 <div class="sidebar">
   <div class="layout-sidebar-group-widgets-container">
-
-    <div class="group-labels" >
+    <!-- Widgets title -->
+    <!-- <div class="group-labels" >
       <span class="group-label">Widgets</span>
-    </div>
+    </div> -->
+
+
+    <SidebarDropdown>
+      <svg 
+        xmlns="http://www.w3.org/2000/svg" 
+        width="16" 
+        height="16" 
+        fill="currentColor" 
+        class="bi bi-plus-lg" 
+        viewBox="0 0 16 16" 
+        slot='icon'>
+        <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
+      </svg>
+
+      <div slot='content'>
+        {#each $sidebarLiveCodeOptions as liveCodeOption}
+          <p on:click={ () => dispatchAdd('live', liveCodeOption)}>{liveCodeOption.text}</p>
+        {/each}
+      </div>
+
+    </SidebarDropdown>
+
+    <SidebarDropdown 
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" 
+        width="16" 
+        height="16" 
+        fill="currentColor" 
+        class="bi bi-tools" 
+        viewBox="0 0 16 16" 
+        slot='icon'>
+        <path d="M1 0 0 1l2.2 3.081a1 1 0 0 0 .815.419h.07a1 1 0 0 1 .708.293l2.675 2.675-2.617 2.654A3.003 3.003 0 0 0 0 13a3 3 0 1 0 5.878-.851l2.654-2.617.968.968-.305.914a1 1 0 0 0 .242 1.023l3.356 3.356a1 1 0 0 0 1.414 0l1.586-1.586a1 1 0 0 0 0-1.414l-3.356-3.356a1 1 0 0 0-1.023-.242L10.5 9.5l-.96-.96 2.68-2.643A3.005 3.005 0 0 0 16 3c0-.269-.035-.53-.102-.777l-2.14 2.141L12 4l-.364-1.757L13.777.102a3 3 0 0 0-3.675 3.68L7.462 6.46 4.793 3.793a1 1 0 0 1-.293-.707v-.071a1 1 0 0 0-.419-.814L1 0zm9.646 10.646a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708zM3 11l.471.242.529.026.287.445.445.287.026.529L5 13l-.242.471-.026.529-.445.287-.287.445-.529.026L3 15l-.471-.242L2 14.732l-.287-.445L1.268 14l-.026-.529L1 13l.242-.471.026-.529.445-.287.287-.445.529-.026L3 11z"/>
+      </svg>
+
+      <div slot='content'>
+        {#each $sidebarDebuggerOptions as debuggerOption}
+          <p on:click={ () => dispatchAdd('live', debuggerOption)}>{debuggerOption.text}</p>
+        {/each}
+      </div>
+
+    </SidebarDropdown>
+
+
+    
+    <!-- <div class="dropdown">
+      <button class="dropbtn">
+
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+          <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
+        </svg>
+
+      </button>
+      <div class="dropdown-content">
+        {#each $sidebarLiveCodeOptions as liveCodeOption}
+          <p>{liveCodeOption.text}</p>
+        {/each}
+      </div>
+    </div>  -->
+
+
     <!-- Live Code Combobox Selector -->
-    <div class="controls">
-      <!-- on:click={ () => $sidebarLiveCodeOptions[0].disabled = true }  -->
-      <!-- svelte-ignore a11y-no-onchange -->
+    <!-- <div class="controls">
       <select class="{ $siteMode === 'dark'? 'combobox-dark' :'combobox-light'}"
               bind:value={ $selectedLiveCodeOption }
               on:change={ () => dispatchAdd('live', $selectedLiveCodeOption) }
@@ -764,13 +890,10 @@
           </option>
         {/each}
       </select>
-    </div>
+    </div> -->
 
     <!-- Model Combobox Selector -->
-    <div class="controls">
-      <!-- <select class="combobox" bind:value={$selectedTutorial} > -->
-      <!-- on:click={ () => $sidebarModelOptions[0].disabled = true }   -->
-      <!-- svelte-ignore a11y-no-onchange -->
+    <!-- <div class="controls">
       <select class="{ $siteMode === 'dark'? 'combobox-dark' :'combobox-light'}"
               bind:value={ $selectedModelOption }
               on:change={ () => dispatchAdd('model', $selectedModelOption) }
@@ -786,12 +909,11 @@
           </option>
         {/each}
       </select>
-    </div>
+    </div> -->
 
 
     <!-- Debuggers Combobox Selector -->
-    <div class="controls">
-      <!-- svelte-ignore a11y-no-onchange -->
+    <!-- <div class="controls">
       <select class="{ $siteMode === 'dark'? 'combobox-dark' :'combobox-light' }"
               bind:value={ $selectedDebuggerOption }
               on:change={ () => dispatchAdd('debugger', $selectedDebuggerOption) }
@@ -804,15 +926,27 @@
           </option>
         {/each}
       </select>
-    </div>
+    </div> -->
 
     <div>
       <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' } controls"
               on:click={ () => dispatchAdd('analyser') }
               disabled={ $isAddAnalyserDisabled }
               >
-        analyser
+              <div class='icon-container'>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-activity" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd" d="M6 2a.5.5 0 0 1 .47.33L10 12.036l1.53-4.208A.5.5 0 0 1 12 7.5h3.5a.5.5 0 0 1 0 1h-3.15l-1.88 5.17a.5.5 0 0 1-.94 0L6 3.964 4.47 8.171A.5.5 0 0 1 4 8.5H.5a.5.5 0 0 1 0-1h3.15l1.88-5.17A.5.5 0 0 1 6 2Z"/>
+                </svg>
+              </div>
       </button>
+    </div>
+
+    <div>
+      <Mouse />
+    </div>
+
+    <div>
+      <Mic />
     </div>
 
     <!--
@@ -838,7 +972,7 @@
   </div>
 
 
-  <div class="layout-sidebar-group-properties-container">
+  <!-- <div class="layout-sidebar-group-properties-container">
 
     <div class="group-labels" >
       <span class="group-label">Widget Settings</span>
@@ -850,7 +984,7 @@
     <br>
 
 
-  </div>
+  </div> -->
 
 
 
