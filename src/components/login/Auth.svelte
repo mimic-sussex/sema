@@ -1,4 +1,6 @@
-<script>
+<!-- no longer used supabase-ui-svelte is now used -->
+
+<!-- <script>
   import { supabase } from "../../db/client"
 
   let loading = false
@@ -42,4 +44,4 @@
 							disabled={ loading } />
     </div>
   </div>
-</form>
+</form> -->

@@ -1,15 +1,22 @@
 import { createClient } from '@supabase/supabase-js'
 
+import { get } from "svelte/store";
+import { items, saving, saveRequired } from "../stores/playground.js";
+
+export function add() {
+    var counterRef = get(counter);
+    counter.set(counterRef + 1);
+}
+
 const supabaseUrl = __api.env.SUPABASE_URL
 const supabaseAnonKey = __api.env.SUPABASE_ANON_KEY
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
-console.log("supabase!", supabase);
 
 export async function getUserProfile() {
   try {
 	const user = supabase.auth.user()
-	console.log("Current User: " ,user);
+	// console.log("Current User: " ,user);
 	if (user == null){
 		console.warn("no user data available, no one is logged in probably.");
 		return {username: null, website: null, avatar_url: null};
@@ -55,8 +62,8 @@ export const createPlayground = async () => {
 						content: [],
 						created: timestamp,
 						updated: timestamp,
-						isPublic: true,
-						allowEdits: true,
+						isPublic: false,
+						allowEdits: false,
 						author: user.id
 					})
 					.single()
@@ -81,6 +88,15 @@ export const createPlayground = async () => {
 		throw new Error('Supabase client has not been created')
 }
 
+export const savePlayground = async (uuid, name, content, allowEdits, user) => {
+	if (get(saveRequired)){
+		await updatePlayground(uuid, name, content, allowEdits, user);
+		// $saveRequired = false;
+		saveRequired.set(false);
+	}
+}
+
+// This can now be simplified since RLS and policies implemented on the playgrounds table
 export const updatePlayground = async (uuid, name, content, allowEdits, user) => {
 	// console.log("DEBUG: updatePlayground", uuid, name, content, allowEdits, user);
 	if (supabase) {
@@ -93,6 +109,10 @@ export const updatePlayground = async (uuid, name, content, allowEdits, user) =>
 		//if allow edits is true anyone can update.
 		if (allowEdits){
 			if(uuid && name && content){
+
+				let savingRef = get(saving);
+				saving.set(!savingRef);
+				 
 				let updatedPlayground
 				try {
 					updatedPlayground = await supabase
@@ -111,6 +131,10 @@ export const updatePlayground = async (uuid, name, content, allowEdits, user) =>
 		// only allow if the user is also the author of the project
 		else if (allowEdits == false) {
 			if(uuid && name && content){
+
+				let savingRef = get(saving);
+				saving.set(!savingRef);
+
 				let updatedPlayground
 				try {
 					updatedPlayground = await supabase
@@ -131,6 +155,10 @@ export const updatePlayground = async (uuid, name, content, allowEdits, user) =>
 				}
 			}
 		}
+
+		//setting svelte store
+		let savingRef = get(saving);
+		saving.set(false);
 		 
 	}
 	else
@@ -169,8 +197,23 @@ export const fetchPlayground = async (uuid) => {
 
 }
 
+export const deletePlayground = async (id) => {
+	console.log("Deleting project with id", id);
+	try {
+		const user = supabase.auth.user()
+		
+		const playgrounds = await supabase
+		.from('playgrounds')
+		.delete()
+		.match({'author': user.id, 'id': id})
+
+	} catch(error){
+		console.error(error)
+	}
+}
+
 export const forkPlayground = async (id) => {
-	console.log("Forking project", id);
+	// console.log("Forking project", id);
 	
 	if (supabase){
 		const timestamp = new Date().toISOString()
@@ -210,9 +253,7 @@ export const forkPlayground = async (id) => {
 						}
 					])
 					.single();
-
-					console.log("new fork");
-					console.log(forkground);
+					
 					return forkground.data;
 				} catch (error) {
 					console.error(error);
@@ -223,6 +264,30 @@ export const forkPlayground = async (id) => {
 		}
 	} else
 		throw new Error('Supabase client has not been created')
+}
+
+export const getExamplePlaygrounds = async () => {
+	try {
+
+		const playgrounds = await supabase
+		.from('playgrounds')
+		.select(`
+				id,
+				name,
+				content,
+				created,
+				updated,
+				isPublic,
+				author,
+				allowEdits,
+				example
+			`)
+		.match({"isPublic": true, example: true})
+		
+		return playgrounds.data;
+	} catch(error){
+		console.error(error)
+	}
 }
 
 export const updateSession = async (uuid, name, content) => {
@@ -243,4 +308,15 @@ export const updateSession = async (uuid, name, content) => {
 	}
 	else
 		throw new Error('Supabase client has not been created')
+}
+
+export const deleteAccount = async() => {
+	try {
+		const user = supabase.auth.user()
+		await supabase.rpc('delete_user', {useruuid: user.id})
+		//then signout the user
+		await supabase.auth.signOut()
+	} catch (error){
+		console.log(error)
+	}
 }

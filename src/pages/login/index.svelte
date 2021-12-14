@@ -54,7 +54,7 @@ input{
 					style="padding: 50px 0 100px 0;"
 			>
 			<Auth supabaseClient={ supabase }
-						providers={ ['github', 'google', 'discord'] }
+						providers={ ['github', 'discord'] }
 						socialButtonSize="large"
 						socialLayout='horizontal'
 						socialColors='false'

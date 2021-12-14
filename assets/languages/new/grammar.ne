@@ -1,4 +1,5 @@
 # GRAMMAR EDITOR
+# GRAMMAR TEMPLATE
 
 # Lexer [or tokenizer] definition with language lexemes [or tokens]
 @{%

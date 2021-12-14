@@ -45,7 +45,7 @@ The *Playground* provides specific commands for widget creation and playground r
 
 * **LiveCode Editor**  – add a liveCode editor, optionally selecting a language from the available
 
-* **Model Editor**  – add a machine learning model editor, optionally selecting a model from the available
+* **JavaScript Editor**  – add a Javascript Editor where you can edit machine learning models. Optionally selecting a model from the available
 
 * **Debuggers**  – add a widget to debug your code and understand what is happening under-the-hood
 
@@ -55,7 +55,7 @@ The *Playground* provides specific commands for widget creation and playground r
 
 Additionally there are commands dependent on the selected widget
 
-* **Grammar Editor**  – add a grammar editor to customize and create new languages (dependent on selected liveCode language)
+* **Grammar Editor**  – add a grammar editor to customize and create new languages (dependent on selected liveCode language).
 
 * **Restart**  – restart you ML model training workflow (ML dependent)
 

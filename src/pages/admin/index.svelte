@@ -1,7 +1,14 @@
 <script>
 
-	import Profile from "../../components/admin/Profile.svelte"
-	import Records from "../../components/admin/Records.svelte"
+	import Profile from "../../components/admin/Profile.svelte";
+	import Projects from "../../components/admin/Projects.svelte";
+	
+	//overlays
+	import DeleteAccount from "../../components/overlays/DeleteAccount.svelte";
+	
+	import {
+		isDeleteAccountOverlayVisible
+	} from '../../stores/profile.js';
 
 </script>
 
@@ -39,7 +46,28 @@
 		width: 100%;
 	}
 
+	.overlay-container {
+		position: absolute;
+    /* z-index: 1000; */
+		visibility: hidden;
+    background-color: rgba(16,12,12,0.8);
+    
+    width: 100%;
+		height:100%;
+
+    /* display:flex; */
+    /* justify-content:center;
+    align-items:center; */
+    font-size:16px;
+  }
+
 </style>
+
+<div class="overlay-container">
+	{#if $isDeleteAccountOverlayVisible}
+		<DeleteAccount />
+	{/if}
+</div>
 
 <div class="container-admin">
 	<grid class="container-profile-header">
@@ -54,7 +82,7 @@
 	</grid>
 
 	<grid class="container-records">
-		<Records />
+		<Projects />
 	</grid>
 
 </div>

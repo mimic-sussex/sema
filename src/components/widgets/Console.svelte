@@ -79,9 +79,9 @@
 	function eventListener(log){
     $rawConsoleLogs = logger.rawLog;
     $consoleLogs = logger.log;
-    console.log($consoleLogs);
+    // console.log($consoleLogs);
     countLogLevels(logger.log);
-    console.log(totals)
+    // console.log(totals)
 	}
 
   function clearLogs(){
@@ -352,11 +352,11 @@
 
     {#each $consoleLogs as {func, payload, origin, logLevel}, i}
       {#if origin == logger.originTypes.processor && filter.processor != false && filter[logLevel] != false}
-          <pre readonly class='console-PROCESSOR'>{origin}{processPayload(payload)}</pre>
+          <pre readonly class='console-PROCESSOR'>{origin}{`[${logLevel}]`}{processPayload(payload)}</pre>
       {:else if origin == logger.originTypes.learner && filter.learner != false && filter[logLevel] != false}
-        <pre readonly class='console-LEARNER'>{origin}{processPayload(payload)}</pre>
+        <pre readonly class='console-LEARNER'>{origin}{`[${logLevel}]`}{processPayload(payload)}</pre>
       {:else if origin == logger.originTypes.main && filter.main != false && filter[logLevel] != false}
-        <pre readonly class='console-MAIN'>{origin}{processPayload(payload)}</pre>
+        <pre readonly class='console-MAIN'>{origin}{`[${logLevel}]`}{processPayload(payload)}</pre>
       {/if}
     {/each}
 
