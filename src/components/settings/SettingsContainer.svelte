@@ -19,7 +19,7 @@
 <style>
 	
 	.settingsContainer-container{
-		margin: 5px 0px 5px 0px;
+		margin: 0.5em 0px 0.5em 0em;
 	}
 
 	.container {
