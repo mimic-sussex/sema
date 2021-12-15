@@ -696,14 +696,17 @@
   .upload-overlay-container {
     grid-area: layout;
     z-index: 1000;
-    background-color: rgba(16,12,12,0.8);
+    background-color: rgba(38,42,46,0.8);
     visibility: hidden;
-    width: 100%;
+    /* width: 50%; */
 
-    /* display:flex; */
-    /* justify-content:center;
+    /* display:flex;
+    justify-content:center;
     align-items:center; */
+
+    
     font-size:16px;
+    border-radius: 5px;
   }
 
   .project-browser-overlay-container{

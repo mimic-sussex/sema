@@ -84,7 +84,7 @@
   .icon-container {
     /* width: 10px; */
     /* height: 10px; */
-    display:flex;
+    /* display:flex; */
     justify-content:center;
     align-items:center;
   }
@@ -228,12 +228,13 @@
     /* display: flex;
     align-items: center;
     align-content: flex-end; */
-    width: 42px;
-    display: inline-block;
+    /* width: 42px; */
+    /* display: inline-block; */
   	/* height: 42px; */
-  	margin: 8px 8px 8px 8px;
-  	border-radius: 5px;
-  	background-color: #262a2e;
+  	/* margin: 8px 8px 8px 8px; */
+  	/* border-radius: 5px; */
+  	/* background-color: #262a2e; */
+    margin: 13px 0px 0px 0px;
   }
 
   .engine-sound-level-text {

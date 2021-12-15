@@ -352,7 +352,7 @@
   .icon-container {
     /* width: 10px; */
     /* height: 10px; */
-    display:flex;
+    /* display:flex; */
     justify-content:center;
     align-items:center;
   }
@@ -562,7 +562,7 @@
 		resize: none;
 		white-space: nowrap;
 		overflow-x: scroll;
-		height: 2.3em;
+		height: 2.0em;
     padding: 0.7em 1.2em 0.7em 1.2em;
 		margin-top: 0.3em;
 		margin-right: 0.3em;
@@ -622,9 +622,7 @@
 
   .dropdown-button-dark {
     width: 2.5em;
-    height: 2.3em;
-    padding: 0.2em 0.2em 0.8em 0.8em;
-    display: block;
+    height: 2.0em;
     font-family: sans-serif;
     font-weight: 400;
     cursor: pointer;
@@ -632,10 +630,8 @@
     line-height: 1.3;
     max-width: 100%;
     box-sizing: border-box;
-    /* border: 0 solid #333; */
-    /* border: none; */
     border: 0.5px solid #ffffff61;
-    text-align: left;
+    /* text-align: left; */
     margin-right: 5px;
     -moz-appearance: none;
     -webkit-appearance: none;
@@ -644,17 +640,17 @@
     background-repeat: no-repeat, repeat;
     background-position: right .7em top 50%, 0 0;
     background-size: .65em auto, 100%;
-    /* -webkit-box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61; */
-    /* -moz-box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61; */
-    /* box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61; */
     z-index:1;
   }
 
+  
+
   .playground-visibility-icon {
-    height: 2.5em;
+    height: 2.3em;
     margin-right: -24px;
     z-index: 1;
     padding-top:3px;
+    /* position:absolute; */
   }
   
 

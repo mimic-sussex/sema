@@ -77,7 +77,7 @@
   .icon-container {
     /* width: 10px; */
     /* height: 10px; */
-    display:flex;
+    /* display:flex; */
     justify-content:center;
     align-items:center;
   }
