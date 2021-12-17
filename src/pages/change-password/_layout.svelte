@@ -114,7 +114,7 @@
     border-style: solid;
     border-width: 1px;
     cursor: pointer;
-    display: inline-flex;
+    /* display: inline-flex; */
     gap: 0.5rem;
     align-items: center;
     position: relative;
