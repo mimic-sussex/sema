@@ -320,3 +320,13 @@ export const deleteAccount = async() => {
 		console.log(error)
 	}
 }
+
+export const updatePassword = async(newPassword) => {
+	const { user, error } = await supabase.auth.update({password: newPassword})
+	console.log('DEBUG: password updated')
+}
+
+export const updatePasswordNotLoggedIn = async(accessToken, newPassword) => { 
+	const { error, data } = await supabase.auth.api
+			.updateUser(accessToken, { password : new_password })
+};
