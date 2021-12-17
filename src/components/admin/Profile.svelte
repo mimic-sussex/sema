@@ -1,5 +1,7 @@
 <script>
 
+import { redirect } from '@roxi/routify'
+
   import {
 		supabase,
     getUserProfile,
@@ -201,6 +203,10 @@
 						value={ $loading ? 'Loading ...' : 'Update Profile'}
 						disabled={ $loading }
 						/>
+  </div>
+
+  <div>
+    <button style='color:#ccc;' on:click={() => $redirect('/change-password')}>Change Password</button>
   </div>
 
   <div>
