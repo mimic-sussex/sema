@@ -287,6 +287,15 @@
 				await engine.addLearner(id, learner)
       }
 
+      //subcribe to restart-ml message, made by restart button from itemProps.
+      messaging.subscribe('restart-ml', async () =>{ 
+        if (learner.worker){
+          learner.terminate()
+        }
+        learner = new Learner();
+				await engine.addLearner(id, learner)
+      });
+
       log( id, name, type, lineNumbers, className, hasFocus, theme, background, content, component );
     }
     catch(error){
