@@ -160,7 +160,6 @@
         $focusedItem = item;
         // console.log("DEBUG: focusedItem in setFocused, lineNumbers:", $focusedItem.data.lineNumbers);
         $focusedItemProperties = itemProperties;
-        console.log("focusedItemproperties", $focusedItem, $focusedItemProperties);
         // set unfocused items through the rest of the list
         $items = $items.map(i => i === item ? ({ ...i, ['hasFocus']: true }) : ({ ...i, ['hasFocus']: false }) );
         //USED
@@ -621,7 +620,7 @@
     grid-template-rows: auto 1fr;
 
     grid-template-areas:
-      "settings settings"
+      "sidebar settings"
       "sidebar layout";
   	/* background-color: #6f7262; */
     /* background-color: #212121; */
@@ -629,7 +628,7 @@
   }
   .sidebar-container {
     /* background: linear-gradient(150deg, rgba(0,18,1,1) 0%, rgba(7,5,17,1) 33%, rgba(16,12,12,1) 67%, rgb(12, 12, 12) 100%); */
-    background: #3a4147;
+    background: #151515;
     grid-area: sidebar;
     height: 100%;
     /* width: auto; width is defined by child */
@@ -666,7 +665,7 @@
   }
 
   .dashboard-container-dark {
-    background: #3a4147;
+    background: #212121;
   }
 
   .dashboard-container-light {

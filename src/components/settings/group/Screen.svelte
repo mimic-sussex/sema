@@ -74,34 +74,92 @@
 
 <style>
 
-  .icon-container {
-    /* width: 10px; */
-    /* height: 10px; */
-    display:flex;
-    justify-content:center;
-    align-items:center;
-  }
-
   .button-dark {
-		padding: 20;
-		background-color: #262a2e;
-		color: grey;
-		border: none;
-    width: 42px;
-  	/* height: 42px; */
-  	margin: 8px 8px 8px 8px;
-  	border-radius: 5px;
-  	background-color: #262a2e;
-	}
+    width: 2.5em;
+    height: 2.5em;
+    display: block;
+    font-size: medium;
+    /* font-size: 12px; */
+    font-family: sans-serif;
+    font-weight: 400;
+    cursor: pointer;
+    color: red;
+    line-height: 1.3;
+    padding: 0.6em 1em 0.5em 0.8em;
+    max-width: 100%;
+    box-sizing: border-box;
+    border: 0 solid #333;
+    text-align: left;
+    /* margin-top: 5px; */
+    margin-right: 5px;
+    border-radius: .6em;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    background-color:  rgba(16, 16, 16, 0.04);
+    background-repeat: no-repeat, repeat;
+    background-position: right .7em top 50%, 0 0;
+    background-size: .65em auto, 100%;
+    -webkit-box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
+    -moz-box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
+    box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
+
+  }
 
   .button-dark:hover {
-    /* background-color: blue; */
-    color: white;
+     width: 2.5em;
+    height: 2.5em;
+    display: block;
+    font-size: medium;
+    /* font-size: 12px; */
+    font-family: sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    color: red;
+    line-height: 1.3;
+    padding: 0.6em 1em 0.5em 0.8em;
+    max-width: 100%;
+    box-sizing: border-box;
+    border: 0 solid #333;
+    text-align: left;
+    /* margin-top: 5px; */
+    margin-right: 5px;
+    border-radius: .6em;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    background-color:  linear-gradient(rgba(16, 16, 16, 1), rgba(16, 16, 16, 0.08));
+    background-repeat: no-repeat, repeat;
+    background-position: right .7em top 50%, 0 0;
+    background-size: .65em auto, 100%;
+    -webkit-box-shadow: 2px 2px 5px rgba(0,0,0),-0.5px -0.5px 3px rgb(34, 34, 34);
+    -moz-box-shadow: 2px 2px 5px rgba(0,0,0), -0.5px -0.5px 3px rgb(34, 34, 34);;
+    box-shadow: 2px 2px 3px rgb(0, 0, 0), -1px -1px 3px #ffffff61;
   }
-
-  .button-dark:active{
-    color: white;
-    background-color: grey;
+  .button-dark:active {
+    width: 2.5em;
+    height: 2.5em;
+    display: block;
+    font-size: medium;
+    /* font-size: 12px; */
+    font-family: sans-serif;
+    font-weight: 400;
+    cursor: pointer;
+    color: red;
+    line-height: 1.3;
+    padding: 0.6em 1em 0.5em 0.8em;
+    max-width: 100%;
+    box-sizing: border-box;
+    /* margin-top: 5px; */
+    margin-right: 5px;
+    text-align: left;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    background-color:  rgba(16, 16, 16, 0.04);
+    background-repeat: no-repeat, repeat;
+    background-size: .65em auto, 100%;
+    box-shadow:  -1px -1px 3px rgba(16, 16, 16, 0.4), 0.5px 0.5px 0.5px rgba(16, 16, 16, 0.04);
   }
 
   .button-light {
