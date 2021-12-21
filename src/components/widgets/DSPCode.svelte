@@ -100,7 +100,7 @@
 
   .prewrap {
     display: inline-flexbox;
-    width: 100%;
+    /* width: 100%; */
     overflow-x: auto;
     white-space: pre-wrap;
     white-space: -moz-pre-wrap;
@@ -119,6 +119,7 @@
   .dspCode-function-bloc-header {
     /* color:red; */
     margin: 25px 10px 5px 5px;
+    font-family: monospace;
   }
 
   .headline {
@@ -126,6 +127,10 @@
     margin-top: 6px;
     margin-left: 20px;
     margin-bottom: 10px;
+  }
+
+  span {
+    font-family: monospace;
   }
 
 
@@ -138,11 +143,26 @@
 
 <div class='container-dsp-code-output scrollable'>
   {#if $dspCode}
+    
     <!-- <Highlight language="{typescript}" {code} /> -->
-    <span class="dspCode-function-bloc-header">Setup:</span>
-    <pre class='prewrap language-javascript'><code>{beautify($dspCode.setup, beautifyOptions)}</code></pre>
-    <span class="dspCode-function-bloc-header">Loop:</span>
-    <pre class='prewrap'><code> { beautify($dspCode.loop, beautifyOptions) }</code></pre>
+    
+    {#if $dspCode.error === 1}
+      <span class="dspCode-function-bloc-header">Setup:</span>
+      <pre class='prewrap language-javascript'><code>{beautify($dspCode.setup, beautifyOptions)}</code></pre>
+      <span class="dspCode-function-bloc-header">Loop:</span>
+      <pre class='prewrap'><code> { beautify($dspCode.loop, beautifyOptions) }</code></pre>
+      <span class="dspCode-function-bloc-header">Error message:</span>
+      <pre class='prewrap language-javascript'><code>{beautify($dspCode.errorMessage, beautifyOptions)}</code></pre>
+    {:else}
+      <span class="dspCode-function-bloc-header">Setup:</span>
+      <pre class='prewrap language-javascript'><code>{beautify($dspCode.setup, beautifyOptions)}</code></pre>
+      <span class="dspCode-function-bloc-header">Loop:</span>
+      <pre class='prewrap'><code> { beautify($dspCode.loop, beautifyOptions) }</code></pre>
+    {/if}
+    
   <!-- <pre> { JSON.stringify($dspCode.loop, null, 2) } </pre> -->
+  {:else}
+    <span>No code run yet. <br> Go to the live code editor and press cmd-Enter [Mac] OR ctrl-Enter [Win/Linux] to evaluate some code.</span>
   {/if}
+  
 </div>
