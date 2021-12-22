@@ -85,10 +85,14 @@
   }
 
   .headline {
-    overflow-y: scroll;
+    /* overflow-y: scroll; */
     height:auto;
     margin-left: 5px;
     margin-bottom: 10px;
+  }
+
+  span {
+    font-family: monospace;
   }
 
 </style>
