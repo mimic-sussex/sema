@@ -5,9 +5,11 @@
 	
 	//overlays
 	import DeleteAccount from "../../components/overlays/DeleteAccount.svelte";
+	import EditProfile from "../../components/admin/EditProfile.svelte"
 	
 	import {
-		isDeleteAccountOverlayVisible
+		isDeleteAccountOverlayVisible,
+		isEditAccountOverlayVisible
 	} from '../../stores/profile.js';
 
 </script>
@@ -66,6 +68,8 @@
 <div class="overlay-container">
 	{#if $isDeleteAccountOverlayVisible}
 		<DeleteAccount />
+	{:else if $isEditAccountOverlayVisible}
+		<EditProfile />
 	{/if}
 </div>
 
