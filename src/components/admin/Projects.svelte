@@ -36,6 +36,9 @@
 	let projectLoadRange = {start:0, end:projectLoadStep};
 	let totalProjectNum = 0;
 
+	let searchTerms = '';
+	let processedSearchTerms = '';
+
 	//ID of project that user clicks to share
 	let shareID = $uuid; //set it to $uuid by default;
 
@@ -44,14 +47,14 @@
 	// $: $records = getAllProjects();//fetchRecords();
 	$: updateProjectPage(projectPage, orderBy); //reactive statement reacts to changes in projectPage variable
 	$: getTotalNumProjects(projectPage);
-
+	$: processSearchTerms(searchTerms);
 
 	onMount ( async () => {
 		
 	});
 
-		//updates which list of projects is on display (my projects or all projects)
-		const updateProjectPage = async (projectPage, orderBy) => {
+	//updates which list of projects is on display (my projects or all projects)
+	const updateProjectPage = async (projectPage, orderBy) => {
 		loading = true;
 		// console.log("Updating project page", projectPage, "ordering by", orderBy);
 		if (projectPage == 'my-projects'){
@@ -67,35 +70,74 @@
 		loading = false;
 	}
 
+	function processSearchTerms(searchTerms){
+
+		projectLoadRange = {start:0, end:projectLoadStep}; //reset range so we get search results from page one
+
+		let trimmedTerms = searchTerms.trim()//trim any spaces on each end
+		console.log('search:trimmed terms',trimmedTerms)
+		// const arr = trimmedTerms.split(" ");
+		const arr = trimmedTerms.split(/(\s+)/);
+
+		let out = ``;
+
+		if (arr.length > 0){
+			for (let i=0; i<arr.length; i++){
+				if (arr[i] == " "){
+						out+= ' | '; //add an OR operator
+				} else {
+					out+= "'"+arr[i]+"'" +":*"; // "'"+arr[i]+"'" + ' | ' +
+				}
+			}
+			console.log('search:',out)
+			processedSearchTerms = out;
+			updateProjectPage(projectPage, orderBy);
+		}
+		else {
+			console.log('search: array too short')
+		}
+		
+	}
 
 	//get all the projects of the current user from the database
 	const getMyProjects = async () => {
-
+		let playgrounds;
+		let selectCols = `
+						id,
+						name,
+						content,
+						created,
+						updated,
+						isPublic,
+						author (
+							username,
+							id
+						),
+						allowEdits
+					`;
 		try {
-			const user = supabase.auth.user()
-			
-			const playgrounds = await supabase
-			.from('playgrounds')
-			.select(`
-					id,
-					name,
-					content,
-					created,
-					updated,
-					isPublic,
-					author (
-						username,
-						id
-					),
-					allowEdits
-				`)
-			.eq('author', user.id)
-			.range(projectLoadRange.start, projectLoadRange.end)
-			.order(orderBy.col, {ascending:orderBy.ascending})
-			
-			$records = playgrounds.data;
+			if (searchTerms != ''){
+				playgrounds = await supabase
+				.from('playgrounds')
+				.select(selectCols)
+				.eq('author', $user.id)
+				.range(projectLoadRange.start, projectLoadRange.end)
+				.order(orderBy.col, {ascending:orderBy.ascending})
+				.textSearch('name', `${processedSearchTerms}`)
+
+			} else {
+				playgrounds = await supabase
+				.from('playgrounds')
+				.select(selectCols)
+				.eq('author', $user.id)
+				.range(projectLoadRange.start, projectLoadRange.end)
+				.order(orderBy.col, {ascending:orderBy.ascending})
+			}
+
 		} catch(error){
 			console.error(error)
+		} finally {
+			$records = playgrounds.data;
 		}
 		
 	}
@@ -103,11 +145,8 @@
 
 	//get all public projects in the database
 	const getAllProjects = async () => {
-		try {
-
-			const playgrounds = await supabase
-			.from('playgrounds')
-			.select(`
+		let playgrounds;
+		let selectCols = `
 					id,
 					name,
 					content,
@@ -119,23 +158,34 @@
 						id
 					),
 					allowEdits
-				`)
-			.eq('isPublic', true)
-			.range(projectLoadRange.start, projectLoadRange.end)
-			.order(orderBy.col, {ascending:orderBy.ascending})
-			
-			$records = playgrounds.data;
+				`;
+		try {
+			if (searchTerms != '') {
+				playgrounds = await supabase
+				.from('playgrounds')
+				.select(selectCols)
+				.eq('isPublic', true)
+				.range(projectLoadRange.start, projectLoadRange.end)
+				.order(orderBy.col, {ascending:orderBy.ascending})
+				.textSearch('name', `${processedSearchTerms}`)
+			} else {
+				playgrounds = await supabase
+				.from('playgrounds')
+				.select(selectCols)
+				.eq('isPublic', true)
+				.range(projectLoadRange.start, projectLoadRange.end)
+				.order(orderBy.col, {ascending:orderBy.ascending})
+			}
 		} catch(error){
 			console.error(error)
+		} finally {
+			$records = playgrounds.data;
 		}
 	}
 
 	const getExampleProjects = async () => {
-		try {
-
-			const playgrounds = await supabase
-			.from('playgrounds')
-			.select(`
+		let playgrounds;
+		let selectCols = `
 					id,
 					name,
 					content,
@@ -148,14 +198,29 @@
 					),
 					allowEdits,
 					example
-				`)
-			.match({"isPublic": true, example: true})
-			.range(projectLoadRange.start, projectLoadRange.end)
-			.order(orderBy.col, {ascending:orderBy.ascending})
-			
-			$records = playgrounds.data;
+				`;
+		try {
+
+			if (searchTerms != ''){
+				playgrounds = await supabase
+				.from('playgrounds')
+				.select(selectCols)
+				.match({"isPublic": true, example: true})
+				.range(projectLoadRange.start, projectLoadRange.end)
+				.order(orderBy.col, {ascending:orderBy.ascending})
+				.textSearch('name', `${processedSearchTerms}`)
+			} else {
+				playgrounds = await supabase
+				.from('playgrounds')
+				.select(selectCols)
+				.match({"isPublic": true, example: true})
+				.range(projectLoadRange.start, projectLoadRange.end)
+				.order(orderBy.col, {ascending:orderBy.ascending})
+			}
 		} catch(error){
 			console.error(error)
+		} finally {
+			$records = playgrounds.data;
 		}
 	}
 
@@ -503,6 +568,31 @@ button {
 	padding: 14px 16px;
 }
 
+.search-box-container{
+	float:right;
+}
+
+.search-box {
+	/* font-size: 0.9rem; */
+	font-weight: 300;
+	background: transparent;
+	border-radius: 5px;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #ccc;
+	box-sizing: border-box;
+	/* display: block; */
+	/* flex: 1; */
+	padding: 2px 3px 2px 35px;
+	color:white;
+	/* display:inline; */
+	/* float:right; */
+}
+
+.search-icon{
+	margin-right: -32px;
+}
+
 </style>
 <!-- 
 <button on:click={getMyProjects} >My Projects</button>
@@ -521,7 +611,26 @@ button {
 	{/if}
 	<button class:project-tab-selected={projectPage == "all-projects"} on:click={() => {projectPage = "all-projects"; projectLoadRange = {start:0, end:projectLoadStep};}}>All Playgrounds</button>
 	<button class:project-tab-selected={projectPage == "example-projects"} on:click={() => {projectPage = "example-projects"; projectLoadRange = {start:0, end:projectLoadStep};}}>Examples</button>
+	
+	<!-- <div style='width:100%'></div> -->
 
+	<!-- <label for="fname">Search:</label> -->
+	<div class='search-box-container'>
+		<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" class='search-icon'>
+			<path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+		</svg>
+		<input bind:value={searchTerms} class='search-box' type="text" id="search-box" name="seach-box">
+
+		<!-- <button style='border-radius: 5px;
+		border-style: solid;
+		border-width: 1px;
+		border-color: #ccc;'>
+			<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gear-wide" viewBox="0 0 16 16">
+				<path d="M8.932.727c-.243-.97-1.62-.97-1.864 0l-.071.286a.96.96 0 0 1-1.622.434l-.205-.211c-.695-.719-1.888-.03-1.613.931l.08.284a.96.96 0 0 1-1.186 1.187l-.284-.081c-.96-.275-1.65.918-.931 1.613l.211.205a.96.96 0 0 1-.434 1.622l-.286.071c-.97.243-.97 1.62 0 1.864l.286.071a.96.96 0 0 1 .434 1.622l-.211.205c-.719.695-.03 1.888.931 1.613l.284-.08a.96.96 0 0 1 1.187 1.187l-.081.283c-.275.96.918 1.65 1.613.931l.205-.211a.96.96 0 0 1 1.622.434l.071.286c.243.97 1.62.97 1.864 0l.071-.286a.96.96 0 0 1 1.622-.434l.205.211c.695.719 1.888.03 1.613-.931l-.08-.284a.96.96 0 0 1 1.187-1.187l.283.081c.96.275 1.65-.918.931-1.613l-.211-.205a.96.96 0 0 1 .434-1.622l.286-.071c.97-.243.97-1.62 0-1.864l-.286-.071a.96.96 0 0 1-.434-1.622l.211-.205c.719-.695.03-1.888-.931-1.613l-.284.08a.96.96 0 0 1-1.187-1.186l.081-.284c.275-.96-.918-1.65-1.613-.931l-.205.211a.96.96 0 0 1-1.622-.434L8.932.727zM8 12.997a4.998 4.998 0 1 1 0-9.995 4.998 4.998 0 0 1 0 9.996z"/>
+			</svg>
+		</button> -->
+	</div>
+	
 </div>
 
 
