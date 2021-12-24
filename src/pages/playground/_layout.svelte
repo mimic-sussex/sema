@@ -787,6 +787,7 @@
     /* background: rgba(25, 25, 25, 0.6); */
     /* border-width: 1px 1px 1px 1px; */
     /* top: 1.4em; */
+    border-radius: 5px 5px 0px 0px;
     padding: 0.2em 0.1em 0.1em 0.1em;
     z-index: 1500;
   }
@@ -805,7 +806,10 @@
   .item-header-type {
     grid-column: 2/2;
     /* padding-top: 0.2em; */
+  }
 
+  .item-header-type:hover{
+    cursor: default;
   }
 
   .close {
@@ -837,9 +841,10 @@
     width: 100%;
     /* height: calc(100%-2.5em); */
     height: 100%;
-    border-radius: 0px;
-    border-top-left-radius: 0px;
-    border-bottom-right-radius: 0px;
+    /* border-radius: 0px; */
+    border-radius: 0px 0px 5px 5px;
+    /* border-top-left-radius: 0px; */
+    /* border-bottom-right-radius: 0px; */
     /* padding: 10px; */
     /* padding: 10px; */
     /* background: #FFF; */
@@ -952,7 +957,7 @@
 
 
       <div class='chrome'
-        style="background: #1c1c1c;"
+        style="background: #262a2e;"
         >
         <div class='move'>
           <svg version="1.1"

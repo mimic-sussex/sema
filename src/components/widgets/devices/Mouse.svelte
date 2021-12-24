@@ -124,9 +124,9 @@
     .button-dark {
       padding: 20;
       background-color: #262a2e;
-      color: grey;
+      color: #999;
       border: none;
-      width: 42px;
+      /* width: 42px; */
       /* height: 42px; */
       margin: 8px 8px 8px 8px;
       border-radius: 5px;
@@ -142,10 +142,14 @@
       color: white;
       background-color: grey;
     }
-  
+
+    .button-dark:disabled {
+      color:grey;
+      /* background-color:grey; */
+      cursor:not-allowed;
+    }
   
     path {
-  
       transform: translate(-3px, -5px)
     }
   
@@ -187,7 +191,7 @@
             title="Mouse data"
             on:click={ handleClick }
             >
-      <div class="icon-container">
+      <!-- <div class="icon-container"> -->
         {#if $mouseActivated }
           <svg  version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
                 x="0px" y="0px"

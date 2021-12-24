@@ -104,6 +104,8 @@
 		border-radius: 5px;
     height:50px;
     margin: 0.5em 0px 0.5em 0em;
+    /* box-shadow: -4px -2px 16px 0 rgba(195, 200, 205, 0.26), 4px 4px 18px 0 rgba(0, 0, 0, 0.8);
+    background-image: linear-gradient(162deg, #262b30 14%, #23262a 101%); */
   }
 
   .divider {

@@ -38,6 +38,12 @@
     loadEnvironmentSnapshotEntries
   } from '../../stores/playground.js'
 
+  import {
+    liveCodeEditorMenuExpanded,
+    modelEditorMenuExpanded,
+    debuggersMenuExpanded,
+  } from '../../stores/sidebar.js';
+
   import * as doNotZip from 'do-not-zip';
 	import downloadBlob from '../../utils/downloadBlob.js'
 
@@ -296,9 +302,6 @@
     itemDeletionSubscriptionToken = messaging.subscribe("plaground-item-deletion", activateSelectOnItemDeletion);
     changingPlaygroundSubscriptionToken = messaging.subscribe("changing-playground", setButtonsStateOnChange);
     disableSidebarSubscriptionToken = messaging.subscribe("disable-sidebar", disableAllButtons);
-    //otherwise debugger dropdown doesnt come up with text.
-    // we set this now with the others in playground.js
-    // $selectedDebuggerOption = $sidebarDebuggerOptions[0];
   })
 
   onDestroy(() => {
@@ -306,8 +309,49 @@
   });
 
 
-  
+  function launchLiveCodeEditorMenu(){
+    //open livecode editor menu, close the others
+    $liveCodeEditorMenuExpanded = !$liveCodeEditorMenuExpanded;
+    $modelEditorMenuExpanded = false;
+    $debuggersMenuExpanded = false;
+  }
 
+  function launchModelEditorMenu(){
+    $liveCodeEditorMenuExpanded = false;
+    $modelEditorMenuExpanded = !$modelEditorMenuExpanded;
+    $debuggersMenuExpanded = false;
+  }
+
+  function launchDebuggersMenu(){
+    $liveCodeEditorMenuExpanded = false;
+    $modelEditorMenuExpanded = false;
+    $debuggersMenuExpanded = !$debuggersMenuExpanded;
+  }
+
+  function closeAllMenus(){
+    $liveCodeEditorMenuExpanded = $modelEditorMenuExpanded = $debuggersMenuExpanded = false;
+  }
+
+  function launchLiveCodeEditor (liveCodeOption) {
+    $selectedLiveCodeOption = liveCodeOption;
+    dispatchAdd('live', $selectedLiveCodeOption)
+    $isSelectLiveCodeEditorDisabled = true;
+    $liveCodeEditorMenuExpanded = false; //close menu
+  }
+
+  function launchModelEditor(modelOption) {
+    $selectedModelOption = modelOption;
+    dispatchAdd('model', $selectedModelOption);
+    $isSelectModelEditorDisabled = true;
+    $modelEditorMenuExpanded = false; // close menu
+  }
+
+  function launchDebugger(debuggerOption) {
+    $selectedDebuggerOption = debuggerOption;
+    dispatchAdd('debugger', $selectedDebuggerOption);
+    $selectedDebuggerOption.disabled = true;
+    $debuggersMenuExpanded = false;
+  }
 </script>
 
 <style>
@@ -330,45 +374,27 @@
     margin-right: 5px;
   }
 
-
   .layout-sidebar-group-widgets-container {
     /* height: 100%; */
-    padding-top: 15px;
+    /* padding-top: 15px; */
     margin-left: 0.5em;
     margin-right:2px;
     background-color: #262a2e;
     border-radius: 5px;
-  }
-
-  .layout-sidebar-group-properties-container {
-    /* height: 100%; */
-    padding-top: 3px;
-    margin-left:3px;
-    margin-right:2px;
-  }
-
-  .combobox-dark{
-    padding: 20;
-		background-color: #262a2e;
-		color: grey;
-		border: none;
-    width: 42px;
-  	/* height: 42px; */
-  	margin: 8px 8px 8px 8px;
-  	border-radius: 5px;
-  	background-color: #262a2e;
+    width: 50px;
   }
 
   .button-dark{
     padding: 20;
-		background-color: #262a2e;
-		color: grey;
-		border: none;
-    width: 42px;
-  	/* height: 42px; */
-  	margin: 8px 8px 8px 8px;
-  	border-radius: 5px;
-  	background-color: #262a2e;
+    background-color: #262a2e;
+    /* background-color: #22262b; */
+    color: #999;
+    border: none;
+    /* width: 42px; */
+    /* height: 42px; */
+    margin: 8px 8px 8px 8px;
+    border-radius: 5px;
+    /* display: block; */
   }
 
   .button-dark:hover {
@@ -381,445 +407,84 @@
     background-color: grey;
   }
 
-  /* .combobox-light {
-    display: block;
-    font-size: medium;
-    font-family: sans-serif;
-    font-weight: 400;
-    cursor: pointer;
-    line-height: 1.3;
-    padding: 0.7em 1em 0.7em 1em;
-    width: 8em;
-    box-sizing: border-box;
-    margin: 0;
-    border: 0 solid #333;
-    text-align: left;
-    border-radius: .6em;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    background-color: rgba(16, 16, 16, 0.04);
-    background-repeat: no-repeat, repeat;
-    background-position: right .7em top 50%, 0 0;
-    background-size: .65em auto, 100%;
-    box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
-    -moz-box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
-    -webkit-box-shadow:  2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
-  }
-
-  .combobox-light:disabled {
-    display: block;
-    font-size: medium;
-    font-family: sans-serif;
-    font-weight: 400;
-    cursor: not-allowed;
-    color: #888;
-    line-height: 1.3;
-    padding: 0.7em 1em 0.7em 1em;
-    width: 8em;
-    box-sizing: border-box;
-    margin: 0;
-    border: 0 solid #333;
-    text-align: left;
-    border-radius: .6em;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    background-color: rgba(16, 16, 16, 0.04);
-    background-repeat: no-repeat, repeat;
-    background-position: right .7em top 50%, 0 0;
-    background-size: .65em auto, 100%;
-    box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
-    -moz-box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
-    -webkit-box-shadow:  2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
-  }
-
-
-
-  .combobox-dark {
-    display: block;
-    font-size: medium;
-    font-family: sans-serif;
-    font-weight: 400;
-    cursor: pointer;
-    color: white;
-    line-height: 1.3;
-    padding: 0.7em 1em 0.7em 1em;
-    width: 8em;
-    box-sizing: border-box;
-    margin: 0;
-    border: 0 solid #333;
-    text-align: left;
-    border-radius: .6em;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    background-color: rgba(16, 16, 16, 0.04);
-    background-repeat: no-repeat, repeat;
-    background-position: right .7em top 50%, 0 0;
-    background-size: .65em auto, 100%;
-    -webkit-box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
-    -moz-box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
-    box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
-  }
-
-
-  .combobox-dark:hover {
-    display: block;
-    font-size: medium;
-    font-family: sans-serif;
-    font-weight: 500;
-    cursor: pointer;
-    color: white;
-    line-height: 1.3;
-    padding: 0.7em 1em 0.7em 1em;
-    width: 8em;
-    box-sizing: border-box;
-    margin: 0;
-    border: 0 solid #333;
-    text-align: left;
-    border-radius: .6em;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    background-color: linear-gradient(rgba(16, 16, 16, 1), rgba(16, 16, 16, 0.2));
-    background-repeat: no-repeat, repeat;
-    background-position: right .7em top 50%, 0 0;
-    background-size: .65em auto, 100%;
-    -webkit-box-shadow: 5px 5px 20px -5px rgba(0,0,0,0.75), -5px -5px 20px rgba(255, 255, 255, 0.954);
-    -moz-box-shadow: 5px 5px 20px -5px rgba(0,0,0,0.75), -5px -5px 20px rgba(255, 255, 255, 0.954);
-    box-shadow: 2px 2px 3px rgb(0, 0, 0), -1px -1px 3px #ffffff61;
-  }
-
-  .combobox-dark:focus {
-    display: block;
-    font-size: medium;
-    font-family: sans-serif;
-    font-weight: 500;
-    cursor: pointer;
-    color: #fff;
-    line-height: 1.3;
-    padding: 0.7em 1em 0.7em 1em;
-    width: 8em;
-    box-sizing: border-box;
-    margin: 0;
-    border: 0 solid #333;
-    text-align: left;
-    border-radius: .6em;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    background-color: rgba(16, 16, 16, 0.04);
-    background-repeat: no-repeat, repeat;
-    background-position: right .7em top 50%, 0 0;
-    background-size: .65em auto, 100%;
-    -webkit-box-shadow: 5px 5px 20px -5px rgba(0,0,0,0.75), -5px -5px 20px rgba(255, 255, 255, 0.954);
-    -moz-box-shadow: 5px 5px 20px -5px rgba(0,0,0,0.75), -5px -5px 20px rgba(255, 255, 255, 0.954);
-    box-shadow: 2px 2px 3px rgb(0, 0, 0), -1px -1px 3px #ffffff61;
-  }
-
-  .combobox-dark:disabled {
-    display: block;
-    font-size: medium;
-    font-family: sans-serif;
-    font-weight: 400;
-    cursor: not-allowed;
-    color: #888;
-    line-height: 1.3;
-    padding: 0.7em 1em 0.7em 1em;
-    width: 8em;
-    box-sizing: border-box;
-    margin: 0;
-    border: 0 solid #333;
-    text-align: left;
-    border-radius: .6em;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    background-color: rgba(16, 16, 16, 0.04);
-    background-repeat: no-repeat, repeat;
-    background-position: right .7em top 50%, 0 0;
-    background-size: .65em auto, 100%;
-    -webkit-box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
-    -moz-box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
-    box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
-  }
-
-  .button-dark {
-    display: block;
-    font-size: medium;
-    font-family: sans-serif;
-    font-weight: 400;
-    cursor: pointer;
-    color: white;
-    line-height: 1.3;
-    padding: 0.7em 1em 0.7em 1em;
-    width: 8em;
-    max-width: 100%;
-    box-sizing: border-box;
-    border: 0 solid #333;
-    text-align: left;
-    border-radius: .6em;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    background-color:  rgba(16, 16, 16, 0.04);
-    background-repeat: no-repeat, repeat;
-    background-position: right .7em top 50%, 0 0;
-    background-size: .65em auto, 100%;
-    -webkit-box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
-    -moz-box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
-    box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
-  }
-
-  .button-dark:hover {
-    display: block;
-    font-size: medium;
-    font-family: sans-serif;
-    font-weight: 500;
-    cursor: pointer;
-    color: white;
-    line-height: 1.3;
-    padding: 0.7em 1em 0.7em 1em;
-    width: 8em;
-    max-width: 100%;
-    box-sizing: border-box;
-    border: 0 solid #333;
-    text-align: left;
-    border-radius: .6em;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    background-color:  linear-gradient(rgba(16, 16, 16, 0.8), rgba(16, 16, 16, 0.08));
-    background-repeat: no-repeat, repeat;
-    background-position: right .7em top 50%, 0 0;
-    background-size: .65em auto, 100%;
-    -webkit-box-shadow: 2px 2px 5px rgba(0,0,0),-0.5px -0.5px 3px rgb(34, 34, 34);
-    -moz-box-shadow: 2px 2px 5px rgba(0,0,0), -0.5px -0.5px 3px rgb(34, 34, 34);;
-    box-shadow: 2px 2px 3px rgb(0, 0, 0), -1px -1px 3px #ffffff61;
-
-  }
-
-  .button-dark:active {
-    display: block;
-    font-size: medium;
-    font-family: sans-serif;
-    font-weight: 400;
-    cursor: pointer;
-    color: white;
-    line-height: 1.3;
-    width: 8em;
-    max-width: 100%;
-    box-sizing: border-box;
-    text-align: left;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    background-color:  rgba(16, 16, 16, 0.04);;
-    background-repeat: no-repeat, repeat;
-    background-size: .65em auto, 100%;
-    box-shadow:  -1px -1px 3px rgba(16, 16, 16, 0.4), 0.5px 0.5px 0.5px rgba(16, 16, 16, 0.04);
-  }
-
   .button-dark:disabled {
-    display: block;
-    font-size: medium;
-    font-family: sans-serif;
-    font-weight: 400;
-    cursor: not-allowed;
-    color: #888;
-    line-height: 1.3;
-    padding: 0.7em 1em 0.7em 1em;
-    width: 8em;
-    max-width: 100%;
-    box-sizing: border-box;
-    border: 0 solid #333;
-    text-align: left;
-    border-radius: .6em;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    background-color:  rgba(16, 16, 16, 0.04);
-    background-repeat: no-repeat, repeat;
-    background-position: right .7em top 50%, 0 0;
-    background-size: .65em auto, 100%;
-    box-shadow: 2px 2px 3px rgb(0, 0, 0), -1px -1px 3px #ffffff61;
-    -moz-box-shadow: 2px 2px 3px rgb(0, 0, 0), -1px -1px 3px #ffffff61;
-    -webkit-box-shadow: 2px 2px 3px rgb(0, 0, 0), -1px -1px 3px #ffffff61;
-  }
-
-  .button-light {
-    display: block;
-    font-size: medium;
-    font-family: sans-serif;
-    font-weight: 400;
-    cursor: pointer;
-    color: black;
-    line-height: 1.3;
-    padding: 0.7em 1em 0.7em 1em;
-    width: 8em;
-    max-width: 100%;
-    box-sizing: border-box;
-    border: 0 solid #333;
-    text-align: left;
-    border-radius: .6em;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    background-color:  rgba(16, 16, 16, 0.04);
-    background-repeat: no-repeat, repeat;
-    background-position: right .7em top 50%, 0 0;
-    background-size: .65em auto, 100%;
-    box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
-    -moz-box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
-    -webkit-box-shadow:  2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
-  }
-
-  .button-light:active {
-    display: block;
-    font-size: medium;
-    font-family: sans-serif;
-    font-weight: 400;
-    cursor: pointer;
-    color: black;
-    line-height: 1.3;
-    padding: 0.7em 1em 0.7em 1em;
-    width: 8em;
-    max-width: 100%;
-    box-sizing: border-box;
-    border: 0 solid #333;
-    text-align: left;
-    border-radius: .6em;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    background-color:  rgba(16, 16, 16, 0.04);
-    background-repeat: no-repeat, repeat;
-    background-position: right .7em top 50%, 0 0;
-    background-size: .65em auto, 100%;
-    box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
-    -moz-box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
-    -webkit-box-shadow:  2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0)
-  }
-  .button-light:disabled {
-    display: block;
-    font-size: medium;
-    font-family: sans-serif;
-    font-weight: 400;
-    cursor: pointer;
-    color: #888;
-    line-height: 1.3;
-    padding: 0.7em 1em 0.7em 1em;
-    width: 8em;
-    max-width: 100%;
-    box-sizing: border-box;
-    border: 0 solid #333;
-    text-align: left;
-    border-radius: .6em;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    background-color:  rgba(16, 16, 16, 0.04);
-    background-repeat: no-repeat, repeat;
-    background-position: right .7em top 50%, 0 0;
-    background-size: .65em auto, 100%;
-    box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
-    -moz-box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
-    -webkit-box-shadow:  2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0)
-  } */
-
-  .group-labels {
-    padding-left:5px;
-    margin-bottom: 10px;
-  }
-
-  .group-label {
-    /* color: #666; */
-    font-size: medium;
-    font-family: sans-serif;
-    font-weight: 400
-  }
-
-  /*for the dropdown menu of the comboboxes, we set the color to fix css issue on linux
-  and windows*/
-  /* .dropdown-content {
-    color: black;
-  } */
-
-  /* .dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #282828;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
-  } */
-
-  .dropdown {
-    float: left;
-    overflow: hidden;
-  }
-  .dropdown .dropbtn {
-    font-size: 16px;  
-    border: none;
-    outline: none;
-    color: white;
-    padding: 14px 16px;
-    background-color: inherit;
-    font-family: inherit;
-    margin: 0;
-  }
-  .dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #282828;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
-  }
-
-  .dropdown-content a {
-    float: none;
-    color: #f9f9f9;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-    text-align: left;
-  }
-
-  .dropdown-content a:hover {
-    background-color: #404040;
-  }
-
-  .dropdown:focus .dropdown-content {
-    display: block;
-  }
-
-  .dropdown:hover .dropbtn {
-    background-color: #282828;
-  }
-
-  .dropdown-content:disabled {
     color:grey;
+    /* background-color:grey; */
+    cursor:not-allowed;
   }
 
+  .button-dark[aria-expanded="true"] {
+    background-color: #212529;
+    color:white;
+    border-radius: 5px 0px 0px 5px;
+  }
+
+  .menu-contents{
+    position:absolute;
+    z-index:1;
+    display: inline;
+    background-color: #212529;
+    border-radius: 0px 5px 5px 5px;
+    margin-top: 8px;
+    margin-left: 8px;
+  }
+
+  .menu-contents-button {
+    display: block;
+    background-color: #212529;
+  }
+
+  .menu-connector {
+    background-color:#212529;
+    width:18px;
+    height:36.5px;
+    position:absolute;
+    z-index:1;
+    display: inline;
+    right:150px;
+  }
 
 </style>
 
 
 <div class="sidebar">
   <div class="layout-sidebar-group-widgets-container">
-    <!-- Widgets title -->
-    <!-- <div class="group-labels" >
-      <span class="group-label">Widgets</span>
-    </div> -->
+
+    <div class='collapsible'>
+    <button class='button-dark'
+      aria-expanded={$liveCodeEditorMenuExpanded} 
+      on:click={launchLiveCodeEditorMenu}
+      disabled={$isSelectLiveCodeEditorDisabled}>
+      <svg 
+      xmlns="http://www.w3.org/2000/svg" 
+      width="18" 
+      height="18" 
+      fill="currentColor" 
+      class="bi bi-plus-lg" 
+      viewBox="0 0 16 16" >
+      <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
+    </svg>
+    </button>
+    {#if $liveCodeEditorMenuExpanded == true}
+      
+      <div class='menu-contents' hidden={!$liveCodeEditorMenuExpanded}>
+        <div class='menu-connector'></div>
+        {#each $sidebarLiveCodeOptions as liveCodeOption}
+          {#if liveCodeOption.text != 'livecode'}
+          <button disabled={$isSelectLiveCodeEditorDisabled} on:click={ () => launchLiveCodeEditor(liveCodeOption)} class='button-dark menu-contents-button'>{liveCodeOption.text}</button>
+          <!-- <p on:click={ () => dispatchAdd('live', liveCodeOption)}>{liveCodeOption.text}</p> -->
+          {/if}
+        {/each}
+      </div>
+    {/if}
+    </div>
 
 
-    <SidebarDropdown>
+    <!-- <SidebarDropdown disabled={$isSelectLiveCodeEditorDisabled}>
       <svg 
         xmlns="http://www.w3.org/2000/svg" 
-        width="16" 
-        height="16" 
+        width="18" 
+        height="18" 
         fill="currentColor" 
         class="bi bi-plus-lg" 
         viewBox="0 0 16 16" 
@@ -829,127 +494,80 @@
 
       <div slot='content'>
         {#each $sidebarLiveCodeOptions as liveCodeOption}
-          <p on:click={ () => dispatchAdd('live', liveCodeOption)}>{liveCodeOption.text}</p>
+          {#if liveCodeOption.text != 'livecode'}
+          <button disabled={$isSelectLiveCodeEditorDisabled} on:click={ () => launchLiveCodeEditor(liveCodeOption)} class='button-dark'>{liveCodeOption.text}</button>
+          {/if}
         {/each}
       </div>
 
-    </SidebarDropdown>
-
+    </SidebarDropdown> -->
+<!-- 
     <SidebarDropdown>
-      <svg 
-        xmlns="http://www.w3.org/2000/svg" 
-        width="16" 
-        height="16" 
-        fill="currentColor" 
-        class="bi bi-plus-lg" 
-        viewBox="0 0 16 16" 
-        slot='icon'>
-        <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-braces" viewBox="0 0 16 16" slot="icon">
+        <path d="M2.114 8.063V7.9c1.005-.102 1.497-.615 1.497-1.6V4.503c0-1.094.39-1.538 1.354-1.538h.273V2h-.376C3.25 2 2.49 2.759 2.49 4.352v1.524c0 1.094-.376 1.456-1.49 1.456v1.299c1.114 0 1.49.362 1.49 1.456v1.524c0 1.593.759 2.352 2.372 2.352h.376v-.964h-.273c-.964 0-1.354-.444-1.354-1.538V9.663c0-.984-.492-1.497-1.497-1.6zM13.886 7.9v.163c-1.005.103-1.497.616-1.497 1.6v1.798c0 1.094-.39 1.538-1.354 1.538h-.273v.964h.376c1.613 0 2.372-.759 2.372-2.352v-1.524c0-1.094.376-1.456 1.49-1.456V7.332c-1.114 0-1.49-.362-1.49-1.456V4.352C13.51 2.759 12.75 2 11.138 2h-.376v.964h.273c.964 0 1.354.444 1.354 1.538V6.3c0 .984.492 1.497 1.497 1.6z"/>
       </svg>
 
       <div slot='content'>
         {#each $sidebarModelOptions as modelOption}
-          <p on:click={ () => dispatchAdd('model', modelOption)}>{modelOption.text}</p>
+          {#if modelOption.text != 'javascript'}
+          <button disabled={$isSelectModelEditorDisabled} on:click={ () => launchModelEditor(modelOption)} class='button-dark'>{modelOption.text}</button>
+          {/if}
         {/each}
       </div>
 
-    </SidebarDropdown>
+    </SidebarDropdown> -->
 
-    <SidebarDropdown 
-    >
-      <svg xmlns="http://www.w3.org/2000/svg" 
-        width="16" 
-        height="16" 
-        fill="currentColor" 
-        class="bi bi-tools" 
-        viewBox="0 0 16 16" 
-        slot='icon'>
-        <path d="M1 0 0 1l2.2 3.081a1 1 0 0 0 .815.419h.07a1 1 0 0 1 .708.293l2.675 2.675-2.617 2.654A3.003 3.003 0 0 0 0 13a3 3 0 1 0 5.878-.851l2.654-2.617.968.968-.305.914a1 1 0 0 0 .242 1.023l3.356 3.356a1 1 0 0 0 1.414 0l1.586-1.586a1 1 0 0 0 0-1.414l-3.356-3.356a1 1 0 0 0-1.023-.242L10.5 9.5l-.96-.96 2.68-2.643A3.005 3.005 0 0 0 16 3c0-.269-.035-.53-.102-.777l-2.14 2.141L12 4l-.364-1.757L13.777.102a3 3 0 0 0-3.675 3.68L7.462 6.46 4.793 3.793a1 1 0 0 1-.293-.707v-.071a1 1 0 0 0-.419-.814L1 0zm9.646 10.646a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708zM3 11l.471.242.529.026.287.445.445.287.026.529L5 13l-.242.471-.026.529-.445.287-.287.445-.529.026L3 15l-.471-.242L2 14.732l-.287-.445L1.268 14l-.026-.529L1 13l.242-.471.026-.529.445-.287.287-.445.529-.026L3 11z"/>
-      </svg>
-
-      <div slot='content'>
-        {#each $sidebarDebuggerOptions as debuggerOption}
-          <p on:click={ () => dispatchAdd('live', debuggerOption)}>{debuggerOption.text}</p>
-        {/each}
-      </div>
-
-    </SidebarDropdown>
-
-
-    
-    <!-- <div class="dropdown">
-      <button class="dropbtn">
-
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
-          <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
+    <!-- MODEL EDITOR LAUNCHER -->
+    <div class='collapsible'>
+      <button class='button-dark'
+        aria-expanded={$modelEditorMenuExpanded} 
+        on:click={launchModelEditorMenu}
+        disabled={$isSelectModelEditorDisabled}>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-braces" viewBox="0 0 16 16">
+          <path d="M2.114 8.063V7.9c1.005-.102 1.497-.615 1.497-1.6V4.503c0-1.094.39-1.538 1.354-1.538h.273V2h-.376C3.25 2 2.49 2.759 2.49 4.352v1.524c0 1.094-.376 1.456-1.49 1.456v1.299c1.114 0 1.49.362 1.49 1.456v1.524c0 1.593.759 2.352 2.372 2.352h.376v-.964h-.273c-.964 0-1.354-.444-1.354-1.538V9.663c0-.984-.492-1.497-1.497-1.6zM13.886 7.9v.163c-1.005.103-1.497.616-1.497 1.6v1.798c0 1.094-.39 1.538-1.354 1.538h-.273v.964h.376c1.613 0 2.372-.759 2.372-2.352v-1.524c0-1.094.376-1.456 1.49-1.456V7.332c-1.114 0-1.49-.362-1.49-1.456V4.352C13.51 2.759 12.75 2 11.138 2h-.376v.964h.273c.964 0 1.354.444 1.354 1.538V6.3c0 .984.492 1.497 1.497 1.6z"/>
         </svg>
-
       </button>
-      <div class="dropdown-content">
-        {#each $sidebarLiveCodeOptions as liveCodeOption}
-          <p>{liveCodeOption.text}</p>
-        {/each}
-      </div>
-    </div>  -->
+      {#if $modelEditorMenuExpanded == true}
+        
+        <div class='menu-contents' hidden={!$modelEditorMenuExpanded}>
+          <div class='menu-connector' style='right:198px;'></div>
+          {#each $sidebarModelOptions as modelOption}
+            {#if modelOption.text != 'javascript'}
+            <button disabled={$isSelectModelEditorDisabled} on:click={ () => launchModelEditor(modelOption)} class='button-dark menu-contents-button'>{modelOption.text}</button>
+            <!-- <p on:click={ () => dispatchAdd('model', modelOption)}>{modelOption.text}</p> -->
+            {/if}
+          {/each}
+        </div>
+      {/if}
+    </div>
 
-
-    <!-- Live Code Combobox Selector -->
-    <!-- <div class="controls">
-      <select class="{ $siteMode === 'dark'? 'combobox-dark' :'combobox-light'}"
-              bind:value={ $selectedLiveCodeOption }
-              on:change={ () => dispatchAdd('live', $selectedLiveCodeOption) }
-              on:click={ () => $sidebarLiveCodeOptions[0].disabled = true }
-              disabled={ $isSelectLiveCodeEditorDisabled }
-              cursor={ () => ( $isSelectLiveCodeEditorDisabled ? 'not-allowed' : 'pointer') }
-              >
-        {#each $sidebarLiveCodeOptions as liveCodeOption}
-          <option class="dropdown-content" disabled={ liveCodeOption.disabled }
-                  value={liveCodeOption}
-                  >
-            {liveCodeOption.text}
-          </option>
-        {/each}
-      </select>
-    </div> -->
-
-    <!-- Model Combobox Selector -->
-    <!-- <div class="controls">
-      <select class="{ $siteMode === 'dark'? 'combobox-dark' :'combobox-light'}"
-              bind:value={ $selectedModelOption }
-              on:change={ () => dispatchAdd('model', $selectedModelOption) }
-              on:click={ () => $sidebarModelOptions[0].disabled = true }
-              disabled={ $isSelectModelEditorDisabled }
-              cursor={ () => ( $isSelectModelEditorDisabled ? 'not-allowed' : 'pointer' )}
-              >
-        {#each $sidebarModelOptions as modelOption}
-          <option class="dropdown-content" disabled={modelOption.disabled}
-                  value={modelOption}
-                  >
-            { modelOption.text }
-          </option>
-        {/each}
-      </select>
-    </div> -->
-
-
-    <!-- Debuggers Combobox Selector -->
-    <!-- <div class="controls">
-      <select class="{ $siteMode === 'dark'? 'combobox-dark' :'combobox-light' }"
-              bind:value={ $selectedDebuggerOption }
-              on:change={ () => dispatchAdd('debugger', $selectedDebuggerOption) }
-              on:click={ () => $sidebarDebuggerOptions[0].disabled = true  }
-              >
-        {#each $sidebarDebuggerOptions as debuggerOption}
-          <option class="dropdown-content" disabled={ debuggerOption.disabled }
-                  value={ debuggerOption }>
-            { debuggerOption.text }
-          </option>
-        {/each}
-      </select>
-    </div> -->
+    <!-- DEBUGGER LAUNCHER -->
+    <div class='collapsible'>
+      <button class='button-dark'
+        aria-expanded={$debuggersMenuExpanded} 
+        on:click={launchDebuggersMenu}
+        disabled={$isSelectDebuggerDisabled}>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-nut" viewBox="0 0 16 16">
+          <path d="m11.42 2 3.428 6-3.428 6H4.58L1.152 8 4.58 2h6.84zM4.58 1a1 1 0 0 0-.868.504l-3.428 6a1 1 0 0 0 0 .992l3.428 6A1 1 0 0 0 4.58 15h6.84a1 1 0 0 0 .868-.504l3.429-6a1 1 0 0 0 0-.992l-3.429-6A1 1 0 0 0 11.42 1H4.58z"/>
+          <path d="M6.848 5.933a2.5 2.5 0 1 0 2.5 4.33 2.5 2.5 0 0 0-2.5-4.33zm-1.78 3.915a3.5 3.5 0 1 1 6.061-3.5 3.5 3.5 0 0 1-6.062 3.5z"/>
+        </svg>
+      </button>
+      {#if $debuggersMenuExpanded == true}
+        
+        <div class='menu-contents' hidden={!$debuggersMenuExpanded}>
+          <div class='menu-connector' style='right:184px;'></div>
+          {#each $sidebarDebuggerOptions as debuggerOption}
+            {#if debuggerOption.text != 'debug'}
+            <button disabled={$isSelectDebuggerDisabled} on:click={ () => launchDebugger(debuggerOption)} class='button-dark menu-contents-button'>{debuggerOption.text}</button>
+            <!-- <p on:click={ () => dispatchAdd('model', modelOption)}>{modelOption.text}</p> -->
+            {/if}
+          {/each}
+        </div>
+      {/if}
+    </div>
 
     <div>
-      <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' } controls"
+      <button class="button-dark"
               on:click={ () => dispatchAdd('analyser') }
               disabled={ $isAddAnalyserDisabled }
               >
@@ -991,79 +609,5 @@
 
   </div>
 
-
-  <!-- <div class="layout-sidebar-group-properties-container">
-
-    <div class="group-labels" >
-      <span class="group-label">Widget Settings</span>
-    </div>
-    <div>
-      <ItemProps></ItemProps>
-    </div>
-
-    <br>
-
-
-  </div> -->
-
-
-
-  <!-- <div class="layout-combobox-container">
-
-
-    <div class="group-labels">
-      <span class="group-label">Environment</span>
-    </div>
-    <div class="controls">
-      <button class="button-dark"
-              on:click={ () => resetEnvironment() }
-              >
-        reset
-      </button>
-    </div>
-    <div class="controls">
-      <button class="button-dark"
-              on:click={ () => storeEnvironment() }
-              >
-        store
-      </button>
-    </div>
-
-    <div class="controls">
-      svelte-ignore a11y-no-onchange
-      <select class="combobox-dark"
-              bind:value={ $selectedLoadEnvironmentOption }
-              on:change={ () => loadEnvironment() }
-              on:click={ () => $loadEnvironmentOptions[0].disabled = true }
-              cursor={ () => ( $isLoadEnvironmentOptionsDisabled ? 'not-allowed' : 'pointer') }
-              >
-        {#each $loadEnvironmentOptions as loadEnvironmentOption }
-          <option disabled={ loadEnvironmentOption.disabled }
-                  value={loadEnvironmentOption}
-                  >
-            { loadEnvironmentOption.text }
-          </option>
-        {/each}
-      </select>
-    </div>
-
-    <div class="controls">
-      <button class="button-dark"
-              on:click={ () => uploadEnvironment() }
-              >
-        upload
-      </button>
-    </div>
-
-    <div class="controls">
-      <button class="button-dark"
-              on:click={ () => downloadEnvironment() }
-              >
-        download
-      </button>
-    </div>
-
-    <br>
-  </div> -->
 
 </div>

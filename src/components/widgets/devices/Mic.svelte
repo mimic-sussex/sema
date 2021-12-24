@@ -36,9 +36,9 @@
     .button-dark {
       padding: 20;
       background-color: #262a2e;
-      color: grey;
+      color: #999;
       border: none;
-      width: 42px;
+      /* width: 42px; */
       /* height: 42px; */
       margin: 8px 8px 8px 8px;
       border-radius: 5px;
@@ -68,7 +68,7 @@
 
 <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
         title="microphone"
-        style='padding: 0.1em 0.35em 0.9em 0.65em;'
+        style=''
         on:click={ handleConnectInputStream }>
     <div class="icon-container">
         <!-- <svg version="1.1"

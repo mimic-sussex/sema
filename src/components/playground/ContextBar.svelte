@@ -38,6 +38,8 @@
 
   import { createEventDispatcher } from 'svelte';
 
+  import SaveStatus from './SaveStatus.svelte';
+
 	const dispatch = createEventDispatcher();
 
 
@@ -146,15 +148,58 @@
   }
 
   .input-dark{
-
+    padding: 0px 20px 0px 20px;
+    margin: 0;
+    background-color: #262a2e;
+    color: #999;
+    border: none;
+    /* width: 42px; */
+    /* height: 42px; */
+    /* margin: 8px 8px 8px 8px; */
+    border-radius: 5px;
+    background-color: #262a2e;
   }
 
-  .button-dark{
-    padding: 0;
+  /* .button-dark{
+    
     margin: 0;
     background-color: #262a2e;
     color:white;
     border: 0;
+  } */
+
+  .button-dark{
+    /* padding: 20; */
+    padding: 0px 20px 0px 20px;
+    margin: 0;
+    background-color: #262a2e;
+    color: #999;
+    border: none;
+    /* width: 42px; */
+    /* height: 42px; */
+    /* margin: 8px 8px 8px 8px; */
+    border-radius: 5px;
+    background-color: #262a2e;
+  }
+
+  .button-dark:hover {
+    /* background-color: blue; */
+    color: white;
+  }
+
+  .button-dark:active{
+    color: white;
+    background-color: grey;
+  }
+
+  .button-dark:disabled {
+    color:grey;
+    background-color: black;
+    cursor:not-allowed;
+  }
+
+  .item-props-container{
+    width:100%
   }
 </style>
 
@@ -168,7 +213,7 @@
 
 <div class="context-bar-container">
 
-  <div>
+  <div class='item-props-container'>
 
     <!-- {#if $focusedItem}
       {$focusedItem.data.type}
@@ -193,7 +238,7 @@
       {:else if itemProp.lineNumbers }
 
         <div class="controls">
-          <label class="input-dark">numbers
+          <label class="input-dark">Line Numbers
             <input  type="checkbox"
                     class="checkbox-input"
                     checked="checked"
@@ -206,7 +251,7 @@
       {:else if itemProp.channelID }
 
         <div class="controls">
-          <label class="input-dark">channel
+          <label class="input-dark">Channel
             <input  type="number"
                     class="number-input"
                     name="channel"
@@ -229,7 +274,7 @@
           <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
                   on:click={ () => messaging.publish('restart-ml') }
                   >
-                  restart
+                  Restart JS Worker
           </button>
         </div>
 
@@ -239,7 +284,7 @@
           <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
                   on:click={ () => messaging.publish("playground-add", { type: 'visor' } )}
                   >
-                  visor
+                  Visor
           </button>
         </div>
 
@@ -251,7 +296,7 @@
                   on:click={ () => dispatchAdd('grammar') }
                   disabled={ $isAddGrammarEditorDisabled }
                   >
-                  grammar
+                  Grammar Editor
           </button>
         </div>
 
@@ -259,5 +304,7 @@
 
     {/each}
   </div>
+
+  <SaveStatus />
 
 </div>
