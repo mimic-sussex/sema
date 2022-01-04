@@ -38,6 +38,7 @@
 
 	let searchTerms = '';
 	let processedSearchTerms = '';
+	let searchCol = 'name'; //column to search in
 
 	//ID of project that user clicks to share
 	let shareID = $uuid; //set it to $uuid by default;
@@ -123,7 +124,7 @@
 				.eq('author', $user.id)
 				.range(projectLoadRange.start, projectLoadRange.end)
 				.order(orderBy.col, {ascending:orderBy.ascending})
-				.textSearch('name', `${processedSearchTerms}`)
+				.textSearch(searchCol, `${processedSearchTerms}`)
 
 			} else {
 				playgrounds = await supabase
@@ -167,7 +168,7 @@
 				.eq('isPublic', true)
 				.range(projectLoadRange.start, projectLoadRange.end)
 				.order(orderBy.col, {ascending:orderBy.ascending})
-				.textSearch('name', `${processedSearchTerms}`)
+				.textSearch(searchCol, `${processedSearchTerms}`)
 			} else {
 				playgrounds = await supabase
 				.from('playgrounds')
@@ -208,7 +209,7 @@
 				.match({"isPublic": true, example: true})
 				.range(projectLoadRange.start, projectLoadRange.end)
 				.order(orderBy.col, {ascending:orderBy.ascending})
-				.textSearch('name', `${processedSearchTerms}`)
+				.textSearch(searchCol, `${processedSearchTerms}`)
 			} else {
 				playgrounds = await supabase
 				.from('playgrounds')
@@ -452,6 +453,10 @@ label {
  color: white;
 }
 
+.author-name {
+	color: white;
+}
+
 .dropdown {
   float: center;
   overflow: hidden;
@@ -593,6 +598,53 @@ button {
 	margin-right: -32px;
 }
 
+.search-settings-button{
+	margin-left: -32px;
+	/* border-radius: 1px; */
+	border-style: solid;
+	border-color: #ccc;
+	border-width: 0px 0px 0px 1px;
+	padding: 2px 8px 2px 8px;
+}
+
+.search-settings-button:active{
+	background-color:white;
+}
+
+.search-settings-dropdown{
+	display:none;
+}
+
+.search-settings-container{
+	display:inline-flex;
+}
+
+.search-settings-container:hover .search-settings-dropdown {
+  display: block;
+}
+
+.search-settings-container:hover .search-settings-button {
+	background-color: #282828;
+}
+
+.search-settings-dropdown {
+  display: none;
+  position: absolute;
+  background-color: #282828;
+  /* min-width: 300px; */
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.search-settings-dropdown input label {
+  float: none;
+  color: #f9f9f9;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+
 </style>
 <!-- 
 <button on:click={getMyProjects} >My Projects</button>
@@ -621,15 +673,26 @@ button {
 		</svg>
 		<input bind:value={searchTerms} class='search-box' type="text" id="search-box" name="seach-box">
 
-		<!-- <button style='border-radius: 5px;
-		border-style: solid;
-		border-width: 1px;
-		border-color: #ccc;'>
-			<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gear-wide" viewBox="0 0 16 16">
-				<path d="M8.932.727c-.243-.97-1.62-.97-1.864 0l-.071.286a.96.96 0 0 1-1.622.434l-.205-.211c-.695-.719-1.888-.03-1.613.931l.08.284a.96.96 0 0 1-1.186 1.187l-.284-.081c-.96-.275-1.65.918-.931 1.613l.211.205a.96.96 0 0 1-.434 1.622l-.286.071c-.97.243-.97 1.62 0 1.864l.286.071a.96.96 0 0 1 .434 1.622l-.211.205c-.719.695-.03 1.888.931 1.613l.284-.08a.96.96 0 0 1 1.187 1.187l-.081.283c-.275.96.918 1.65 1.613.931l.205-.211a.96.96 0 0 1 1.622.434l.071.286c.243.97 1.62.97 1.864 0l.071-.286a.96.96 0 0 1 1.622-.434l.205.211c.695.719 1.888.03 1.613-.931l-.08-.284a.96.96 0 0 1 1.187-1.187l.283.081c.96.275 1.65-.918.931-1.613l-.211-.205a.96.96 0 0 1 .434-1.622l.286-.071c.97-.243.97-1.62 0-1.864l-.286-.071a.96.96 0 0 1-.434-1.622l.211-.205c.719-.695.03-1.888-.931-1.613l-.284.08a.96.96 0 0 1-1.187-1.186l.081-.284c.275-.96-.918-1.65-1.613-.931l-.205.211a.96.96 0 0 1-1.622-.434L8.932.727zM8 12.997a4.998 4.998 0 1 1 0-9.995 4.998 4.998 0 0 1 0 9.996z"/>
-			</svg>
-		</button> -->
+		<div class="search-settings-container">
+			<button class='search-settings-button'>
+				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gear-wide" viewBox="0 0 16 16">
+					<path d="M8.932.727c-.243-.97-1.62-.97-1.864 0l-.071.286a.96.96 0 0 1-1.622.434l-.205-.211c-.695-.719-1.888-.03-1.613.931l.08.284a.96.96 0 0 1-1.186 1.187l-.284-.081c-.96-.275-1.65.918-.931 1.613l.211.205a.96.96 0 0 1-.434 1.622l-.286.071c-.97.243-.97 1.62 0 1.864l.286.071a.96.96 0 0 1 .434 1.622l-.211.205c-.719.695-.03 1.888.931 1.613l.284-.08a.96.96 0 0 1 1.187 1.187l-.081.283c-.275.96.918 1.65 1.613.931l.205-.211a.96.96 0 0 1 1.622.434l.071.286c.243.97 1.62.97 1.864 0l.071-.286a.96.96 0 0 1 1.622-.434l.205.211c.695.719 1.888.03 1.613-.931l-.08-.284a.96.96 0 0 1 1.187-1.187l.283.081c.96.275 1.65-.918.931-1.613l-.211-.205a.96.96 0 0 1 .434-1.622l.286-.071c.97-.243.97-1.62 0-1.864l-.286-.071a.96.96 0 0 1-.434-1.622l.211-.205c.719-.695.03-1.888-.931-1.613l-.284.08a.96.96 0 0 1-1.187-1.186l.081-.284c.275-.96-.918-1.65-1.613-.931l-.205.211a.96.96 0 0 1-1.622-.434L8.932.727zM8 12.997a4.998 4.998 0 1 1 0-9.995 4.998 4.998 0 0 1 0 9.996z"/>
+				</svg>
+			</button>
+			<div class="search-settings-dropdown">
+				<!-- <span>Filter by:</span> -->
+				<input type="radio" id="name_search" bind:group={searchCol} value="name" name='search_col'>
+				<label for="name_search">Name</label><br>
+				<input type="radio" id="author_search" bind:group={searchCol} value="author.username" name='search_col'>
+				<label for="author_search">Author</label><br>
+				
+			</div>
+		</div> 
+
 	</div>
+
+
+	
 	
 </div>
 
@@ -805,7 +868,7 @@ button {
 							<td>
 								{#if record.author}
 									{#if record.author.username}
-										{record.author.username}
+										<a class='author-name' href="/user/{record.author.username}">{record.author.username}</a>
 									{:else}
 										No Username
 									{/if}
