@@ -5,6 +5,9 @@
 
 // declare global: DOMRect
 
+// import { get } from "svelte/store";
+// import { links } from "../../stores/docs.js";
+
 (function(mod) {
     if (typeof exports == "object" && typeof module == "object") // CommonJS
       mod(require("codemirror"));
@@ -19,7 +22,16 @@
     var ACTIVE_HINT_ELEMENT_CLASS = "CodeMirror-hint-active";
   
     var DOCS_ROOT_DIRECTORY = "/docs"; // TODO: import from a file
-  
+    var LANGUAGE_DIRECTORY = "/default-language"; //for now we just use default lang.
+    
+
+    // var LANGUAGE_DOC_DIRECTORIES = get(links) //get doc link structure from svelte store.
+
+    //get language directories
+    // if (LANGUAGE_DOC_DIRECTORIES){
+    //   console.log(LANGUAGE_DOC_DIRECTORIES)
+    // }
+
     // This is the old interface, kept around for now to stay
     // backwards-compatible.
     CodeMirror.showHint = function(cm, getHints, options) {
@@ -462,7 +474,7 @@
         if(completion.category){
           var catText = "<b>Category:</b> " 
           if(completion.links){
-            catText += `<a target="_blank" href=${DOCS_ROOT_DIRECTORY + "#" + completion.links}>${completion.category}</a>`
+            catText += `<a target="_blank" href=${DOCS_ROOT_DIRECTORY + LANGUAGE_DIRECTORY+ '#' + completion.links}>${LANGUAGE_DIRECTORY+': '}${completion.category}</a>`
           } else {
             catText += `${completion.category}`
           }

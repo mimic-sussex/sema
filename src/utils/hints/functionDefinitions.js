@@ -348,7 +348,7 @@ export const functionDefinitions = [
         "description": "Clock phasor, rises from 0 to 1 each period",
         "arguments": "Rise time, in multiples of the bar length; Phase offset (0 - 1)",
         "category": "Sequencing",
-        "links": "clp"
+        "links": "sequencing"
     },
     {
         "text": "clt",
