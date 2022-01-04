@@ -31,6 +31,15 @@ The *DSP Code* widget shows the code that Sema generates (Maximilian DSP JavaScr
 
 This DSP code is injected into and runs in the Sema audio engine.
 
+## Console
+The *Console* shows javascript logging output from three seperate sources.
+
+- PROCESSOR: This is logging information from the maximillian processor.
+- LEARNER: shows logging information from the Javscript widget.
+- MAIN: shows logging information from the main javascript thread.
+
+You can fine tune the output of the console by filtering either by source or log type using the toggle buttons at the top of the widget. All are enabled by default.
+
 <!-- the Maximilian DSP -->
 
 <!-- ## Post-It Window -->
