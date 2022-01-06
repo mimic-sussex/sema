@@ -558,7 +558,7 @@
           <div class='menu-connector' style='right:184px;'></div>
           {#each $sidebarDebuggerOptions as debuggerOption}
             {#if debuggerOption.text != 'debug'}
-            <button disabled={$isSelectDebuggerDisabled} on:click={ () => launchDebugger(debuggerOption)} class='button-dark menu-contents-button'>{debuggerOption.text}</button>
+            <button disabled={debuggerOption.disabled} on:click={ () => launchDebugger(debuggerOption)} class='button-dark menu-contents-button'>{debuggerOption.text}</button>
             <!-- <p on:click={ () => dispatchAdd('model', modelOption)}>{modelOption.text}</p> -->
             {/if}
           {/each}
