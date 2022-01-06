@@ -300,7 +300,7 @@
 
 <style>
   .app-dark {
-    background-color: #262a2e; /*#151515; */
+    background-color: #3a4147; /*#262a2e;*/ /*#151515; */
     color:white;
   }
 
