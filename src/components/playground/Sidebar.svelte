@@ -382,6 +382,7 @@
     background-color: #262a2e;
     border-radius: 5px;
     width: 50px;
+    text-align:center;
   }
 
   .button-dark{
@@ -395,6 +396,7 @@
     margin: 8px 8px 8px 8px;
     border-radius: 5px;
     /* display: block; */
+    height: 35px; /* we set the heigth explicitly in this case since we need it to be constant for the menu connector*/
   }
 
   .button-dark:hover {
@@ -437,11 +439,24 @@
   .menu-connector {
     background-color:#212529;
     width:18px;
-    height:36.5px;
+    height:35px;
     position:absolute;
     z-index:1;
     display: inline;
-    right:150px;
+    margin-top: 8px;
+    /* right:150px; */
+  }
+
+  .menu-connector-relative {
+    background-color: #212529;
+    width: 25px;
+    height: 35px;
+    position: absolute;
+    z-index: 1;
+    display: inline;
+    /* margin-top: 8px; */
+    /* padding-right: 30px; */
+    right: 5px;
   }
 
 </style>
@@ -466,9 +481,11 @@
     </svg>
     </button>
     {#if $liveCodeEditorMenuExpanded == true}
-      
+    <div class='menu-connector'>
+      <div class='menu-connector-relative'></div>
+    </div>
       <div class='menu-contents' hidden={!$liveCodeEditorMenuExpanded}>
-        <div class='menu-connector'></div>
+        <!-- <div class='menu-connector'></div> -->
         {#each $sidebarLiveCodeOptions as liveCodeOption}
           {#if liveCodeOption.text != 'livecode'}
           <button disabled={$isSelectLiveCodeEditorDisabled} on:click={ () => launchLiveCodeEditor(liveCodeOption)} class='button-dark menu-contents-button'>{liveCodeOption.text}</button>
@@ -527,10 +544,14 @@
           <path d="M2.114 8.063V7.9c1.005-.102 1.497-.615 1.497-1.6V4.503c0-1.094.39-1.538 1.354-1.538h.273V2h-.376C3.25 2 2.49 2.759 2.49 4.352v1.524c0 1.094-.376 1.456-1.49 1.456v1.299c1.114 0 1.49.362 1.49 1.456v1.524c0 1.593.759 2.352 2.372 2.352h.376v-.964h-.273c-.964 0-1.354-.444-1.354-1.538V9.663c0-.984-.492-1.497-1.497-1.6zM13.886 7.9v.163c-1.005.103-1.497.616-1.497 1.6v1.798c0 1.094-.39 1.538-1.354 1.538h-.273v.964h.376c1.613 0 2.372-.759 2.372-2.352v-1.524c0-1.094.376-1.456 1.49-1.456V7.332c-1.114 0-1.49-.362-1.49-1.456V4.352C13.51 2.759 12.75 2 11.138 2h-.376v.964h.273c.964 0 1.354.444 1.354 1.538V6.3c0 .984.492 1.497 1.497 1.6z"/>
         </svg>
       </button>
+
+
       {#if $modelEditorMenuExpanded == true}
-        
+      <div class='menu-connector'>
+        <div class='menu-connector-relative'></div>
+      </div>
         <div class='menu-contents' hidden={!$modelEditorMenuExpanded}>
-          <div class='menu-connector' style='right:198px;'></div>
+          <!-- <div class='menu-connector' style='right:99%'></div> -->
           {#each $sidebarModelOptions as modelOption}
             {#if modelOption.text != 'javascript'}
             <button disabled={$isSelectModelEditorDisabled} on:click={ () => launchModelEditor(modelOption)} class='button-dark menu-contents-button'>{modelOption.text}</button>
@@ -553,9 +574,10 @@
         </svg>
       </button>
       {#if $debuggersMenuExpanded == true}
-        
+      <div class='menu-connector'>
+        <div class='menu-connector-relative'></div>
+      </div>
         <div class='menu-contents' hidden={!$debuggersMenuExpanded}>
-          <div class='menu-connector' style='right:184px;'></div>
           {#each $sidebarDebuggerOptions as debuggerOption}
             {#if debuggerOption.text != 'debug'}
             <button disabled={debuggerOption.disabled} on:click={ () => launchDebugger(debuggerOption)} class='button-dark menu-contents-button'>{debuggerOption.text}</button>
