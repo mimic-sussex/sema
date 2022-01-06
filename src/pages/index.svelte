@@ -693,7 +693,7 @@
   .canvas-logo {
 
     /* opacity:0.1; */
-    background-color: rgb(16, 16, 16);
+    background-color: #3a4147; /*rgb(16, 16, 16);*/
     height: 100% !important;
     width: 100% !important;
     visibility: visible;
