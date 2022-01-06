@@ -194,7 +194,7 @@
 
   .button-dark:disabled {
     color:grey;
-    background-color: black;
+    background-color: #181a1d;
     cursor:not-allowed;
   }
 

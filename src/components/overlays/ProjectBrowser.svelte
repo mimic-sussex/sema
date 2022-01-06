@@ -166,7 +166,7 @@
 		flex-direction:column;
     font-size:16px;
     /* background-color: rgba(16,12,12,0.8); */
-    background-color: #212121;
+    background-color: #181a1d;
     margin-left:auto;
     margin-right:auto;
     margin-top:auto;
