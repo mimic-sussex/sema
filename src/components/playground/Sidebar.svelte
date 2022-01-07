@@ -429,6 +429,7 @@
     border-radius: 0px 5px 5px 5px;
     margin-top: 8px;
     margin-left: 8px;
+    /* float:right; */
   }
 
   .menu-contents-button {
@@ -445,9 +446,10 @@
     display: inline;
     margin-top: 8px;
     /* right:150px; */
+    /* float:left; */
   }
 
-  .menu-connector-relative {
+  .menu-connector-inside {
     background-color: #212529;
     width: 25px;
     height: 35px;
@@ -457,6 +459,10 @@
     /* margin-top: 8px; */
     /* padding-right: 30px; */
     right: 5px;
+  }
+
+  .collapsible {
+    display: ruby-base-container;
   }
 
 </style>
@@ -481,9 +487,9 @@
     </svg>
     </button>
     {#if $liveCodeEditorMenuExpanded == true}
-    <div class='menu-connector'>
-      <div class='menu-connector-relative'></div>
-    </div>
+      <div class='menu-connector'>
+        <div class='menu-connector-inside'></div>
+      </div>
       <div class='menu-contents' hidden={!$liveCodeEditorMenuExpanded}>
         <!-- <div class='menu-connector'></div> -->
         {#each $sidebarLiveCodeOptions as liveCodeOption}
@@ -548,7 +554,7 @@
 
       {#if $modelEditorMenuExpanded == true}
       <div class='menu-connector'>
-        <div class='menu-connector-relative'></div>
+        <div class='menu-connector-inside'></div>
       </div>
         <div class='menu-contents' hidden={!$modelEditorMenuExpanded}>
           <!-- <div class='menu-connector' style='right:99%'></div> -->
@@ -575,7 +581,7 @@
       </button>
       {#if $debuggersMenuExpanded == true}
       <div class='menu-connector'>
-        <div class='menu-connector-relative'></div>
+        <div class='menu-connector-inside'></div>
       </div>
         <div class='menu-contents' hidden={!$debuggersMenuExpanded}>
           {#each $sidebarDebuggerOptions as debuggerOption}
