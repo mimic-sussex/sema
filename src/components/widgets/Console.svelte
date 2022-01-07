@@ -149,7 +149,7 @@
     /* position: relative; */
     width: 100%;
     height: 90%;
-    background-color: #151515;
+    background-color: #181a1d;
     /* padding-top: 5%; */
     /* padding-bottom: 5%; */
     /* column-count: 2; */
@@ -162,7 +162,7 @@
     vertical-align: top;
     overflow: hidden;
     white-space:nowrap;
-    background-color: #212121;/*#1d1d1d;*/
+    background-color: #212529;/*#1d1d1d;*/
     /* position: fixed; Set the navbar to fixed position */
     /*width: 80%; /* Full width */
     height: 5%;
