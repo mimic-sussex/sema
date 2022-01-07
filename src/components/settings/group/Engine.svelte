@@ -91,7 +91,6 @@
 
   .button-dark {
 		padding: 20;
-		background-color: #262a2e;
 		color: grey;
 		border: none;
     width: 42px;
@@ -220,6 +219,10 @@
   .mute-audio {
     padding: 0.1em 0px 0em 0.1em;
     fill: rgb(133, 130, 130);
+  }
+
+  .audio-active:hover, .audio-inactive:hover, .no-audio:hover, .mute-audio:hover{
+    fill:white;
   }
 
   .engine-sound-level-text-container {
