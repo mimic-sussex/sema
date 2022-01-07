@@ -28,7 +28,7 @@
       const x = e.pageX/window.innerWidth;
       const y = e.pageY/window.innerHeight;
       if(outputText){
-        outputText.innerText = `X:${parseFloat(x).toFixed(5)} Y:${parseFloat(y).toFixed(5)}`;
+        outputText.innerText = `X:${parseFloat(x).toFixed(2)} Y:${parseFloat(y).toFixed(2)}`;
       }
       if(engine){
         engine.pushDataToSharedBuffer(id, [ x, y ]);
@@ -162,8 +162,9 @@
   
   
     .mouse-outputText{
-      padding-top:0.1em;
-      width:10em;
+      /* padding-top:0.1em; */
+      /* width:10em; */
+      font-size:medium;
     }
   
     .mouse {
