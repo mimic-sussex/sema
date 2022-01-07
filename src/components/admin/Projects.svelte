@@ -359,15 +359,15 @@ td {
 	text-align:center;
 }
 
-tr:nth-child(even) {background: #212121}
-tr:nth-child(odd) {background: #151515}
+tr:nth-child(even) {background: #262a2e;}
+tr:nth-child(odd) {background:#212529;}
 
 .table-header:hover {
 	cursor: pointer;
 }
 
 .record-entry:hover {
-	background-color: #333;
+	background-color:#3a4147;
 }
 
 input[type=radio] {
