@@ -878,7 +878,7 @@
 
 <div class="container">
   <div  class="{ $siteMode === 'dark' ? 'sidebar-container': 'sidebar-container-light' }"
-        style="{ $sideBarVisible ? 'width: auto; visibility: visible;': 'width: 0px; visibility: hidden;' }"
+        style="{ $sideBarVisible ? 'width: auto; visibility: visible;': 'width: 0.4em; visibility: hidden;' }"
         >
     <Sidebar />
   </div>
