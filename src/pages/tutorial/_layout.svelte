@@ -6,6 +6,8 @@
 
   import Settings from '../../components/settings/Settings.svelte';
   import Loading from '../../components/overlays/Loading.svelte';
+  import Mouse from '../../components/widgets/devices/Mouse.svelte';
+  import Mic from '../../components/widgets/devices/Mic.svelte';
   // import Dashboard from '../../components/layouts/Dashboard.svelte';
   // import Markdown from "../../components/tutorial/Markdown.svelte";
 
@@ -237,8 +239,13 @@
       <button class="button-dark left"
 							on:click={ e => handleButtonClick(0) }
 							>
-        ◄
+        <!-- ◄ -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-left" viewBox="0 0 16 16">
+          <path d="M10 12.796V3.204L4.519 8 10 12.796zm-.659.753-5.48-4.796a1 1 0 0 1 0-1.506l5.48-4.796A1 1 0 0 1 11 3.204v9.592a1 1 0 0 1-1.659.753z"/>
+        </svg>
       </button>
+
+      <!-- <div class="divider-left"></div> -->
 
       <div class="combobox-dark middle">
         <!-- svelte-ignore a11y-no-onchange -->
@@ -267,10 +274,15 @@
         </select>
       </div>
 
+      <!-- <div class="divider-right"></div> -->
+
       <button class="button-dark right"
 							on:click={ e => handleButtonClick(1) }
 							>
-        ►
+        <!-- ► -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right" viewBox="0 0 16 16">
+          <path d="M6 12.796V3.204L11.481 8 6 12.796zm.659.753 5.48-4.796a1 1 0 0 0 0-1.506L6.66 2.451C6.011 1.885 5 2.345 5 3.204v9.592a1 1 0 0 0 1.659.753z"/>
+        </svg>
       </button>
 
     </div>
@@ -286,6 +298,16 @@
 <!--
       on:adjust={onAdjust}
       on:mount={onChildMount} -->
+
+  <div class='devices-container'>
+    <div class='' style=''>
+      <Mouse />
+    </div>
+
+    <div class='' style=''>
+      <Mic />
+    </div>
+  </div>
 
   <div  class="mouse-overlay-container" style='visibility:{$isMouseOverlayVisible? "visible": "hidden"}'
         >
@@ -307,7 +329,7 @@
     >
 
       <div class='chrome'
-          style="background: #1c1c1c;"
+          style="background: #262a2e;"
           >
           <div class='item-header-type'>
             <span>{ dataItem.data.type }</span>
@@ -336,8 +358,8 @@
   	grid-template-columns: auto 1fr;
     grid-template-rows: auto 1fr;
   	grid-template-areas:
-  		"sidebar settings"
-  		"sidebar layout";
+  		"sidebar settings devices"
+  		"sidebar layout layout";
     overflow: hidden;
     /* background: linear-gradient(150deg, rgba(0,18,1,1) 0%, rgba(7,5,17,1) 33%, rgba(16,12,12,1) 67%, rgb(12, 12, 12) 100%); */
   }
@@ -380,7 +402,24 @@
     height: 100%;
     width: auto; /* width is defined by child */
   }
+  
+  .devices-container {
+    width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-self: flex-end;
+  margin-left: 0.5em;
+  background-color: #262a2e;
+  grid-area:devices;
 
+  display: flex;
+flex-direction: row;
+align-self: flex-end;
+background-color: #262a2e;
+border-radius: 5px;
+height: 50px;
+margin: 0.5em 0px 0.5em 0em;
+  }
 
   .tutorial-navigator {
     display: grid;
@@ -403,6 +442,7 @@
     /* background: rgba(25, 25, 25, 0.6); */
     /* border-width: 1px 1px 1px 1px; */
     /* top: 1.4em; */
+    border-radius: 5px 5px 0px 0px;
     padding: 0.2em 0.1em 0.1em 0.1em;
     z-index: 1500;
   }
@@ -414,13 +454,21 @@
   }
 
   .content {
-    grid-row: 2/2;
+    /* grid-row: 2/2;
     grid-column: 1/3;
     width: 100%;
     height: 100%;
     border-radius: 0px;
     border-top-left-radius: 0px;
     border-bottom-right-radius: 0px;
+    overflow-y:hidden; */
+
+    grid-row: 2/2;
+    grid-column: 1/3;
+    width: 100%;
+    height: 100%;
+    /* border-radius: 0px; */
+    border-radius: 0px 0px 5px 5px;
     overflow-y:hidden;
 
   }
@@ -448,9 +496,6 @@
     margin-left: 0.2em;
   }
 
-  .combobox-dark {
-    border: 0;
-  }
 
   .mouse-overlay-container {
     grid-area: layout;
@@ -468,11 +513,25 @@
 
 
   .combobox-dark select {
+    width:100%;
+    height: 50px;
+    background-color: #262a2e;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    margin: 8px 0px 8px 0px;
+    padding:0px;
+  }
+  /* .combobox-dark {
+    border: 0;
+  }
+
+
+  .combobox-dark select {
     width: 100%;
     height: 2.5em;
     display: block;
     font-size: medium;
-    /* font-size: 12px; */
     font-family: sans-serif;
     font-weight: 400;
     cursor: pointer;
@@ -481,7 +540,6 @@
     padding: 0.7em 1em 0.7em 1em;
     max-width: 100%;
     box-sizing: border-box;
-    /* margin: 0; */
     border: 0 solid #333;
     border-radius: .6em;
     -moz-appearance: none;
@@ -498,9 +556,9 @@
 
   .combobox-dark select optgroup{
     color:black;
-  }
+  } */
 
-  .button-dark {
+  .button-dark-tutorial {
     width: 2.5em;
     height: 2.5em;
     padding: 0.7em 1em 0.7em 1em;
@@ -529,21 +587,67 @@
   }
 
 
+  .button-dark {
+		padding: 20;
+		background-color: #262a2e;
+		color: grey;
+		border: none;
+    /* width: 42px; */
+  	/* height: 42px; */
+  	margin: 8px 8px 8px 8px;
+  	border-radius: 5px;
+  	background-color: #262a2e;
+	}
+
+  .button-dark:hover {
+    /* background-color: blue; */
+    color: white;
+  }
+
+  .button-dark:active{
+    color: white;
+    background-color: grey;
+  }
+
 
 
 
   .left {
     grid-column: 1;
+    height: 50px; /*to match the size of the settings bar*/
   }
+
+  .divider-left {
+    width: 4px;
+    /* height: 50px; */
+    /* margin: 1px 11px 1px 17px; */
+    border-radius: 2px;
+    box-shadow: inset 1px 1px 4px 0 #070709, inset -1px -1px 4px 0 rgba(255, 255, 255, 0.05);
+    margin: 0.5em 0px 0.5em 0em;
+    grid-column:2;
+  }
+
 
   .middle {
-    margin-left: 4px;
-    margin-right: 4px;
-    grid-column: 2;
+    /* margin-left: 4px; */
+    /* margin-right: 4px; */
+    grid-column: 3;
   }
 
+  .divider-right {
+    width: 4px;
+    /* height: 50px; */
+    /* margin: 1px 11px 1px 17px; */
+    border-radius: 2px;
+    box-shadow: inset 1px 1px 4px 0 #070709, inset -1px -1px 4px 0 rgba(255, 255, 255, 0.05);
+    margin: 0.5em 0px 0.5em 0em;
+    grid-column: 4;
+  }
+
+
   .right {
-    grid-column: 3;
+    grid-column: 5;
+    height: 50px; /*to match the size of the settings bar*/
   }
 
   .overlay-container {
