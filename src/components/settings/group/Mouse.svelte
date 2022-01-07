@@ -330,6 +330,7 @@ import { Engine } from 'sema-engine';
   .mouse-outputText{
     padding-top:0.1em;
     width:10em;
+    font-size:small;
   }
 
   .mouse {
