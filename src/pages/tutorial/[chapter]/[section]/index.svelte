@@ -141,22 +141,9 @@
 
   .markdown-section-container {
     overflow: auto;
-    /* margin-left: 1px; */
-    /* margin-right: 2px;
-    margin-bottom: 2px; */
-    /* border: solid 5px #aaaaaa; eee*/
-    border-radius: 5px;
-    /* height: 85vh; */
-    background: #212121;
+    /* border-radius: 5px; */
+    background: #3a4147;
     color: #ccc;
-    /* Chrome 49+ */
-		/* -webkit-user-select: all; */
-    /* Firefox 43+ */
-	  /* -moz-user-select: all; */
-    /* No support yet */
-	  /* -ms-user-select: all; */
-    /* Likely future */
-	  /* user-select: all; */
   }
 
 </style>
