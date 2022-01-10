@@ -107,6 +107,7 @@
     width: 250px;
     /* height: 100%; */
     position: relative;
+    font-size:medium;
   }
 
   .save-status-text {
