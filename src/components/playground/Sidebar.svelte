@@ -46,6 +46,7 @@
 
   import * as doNotZip from 'do-not-zip';
 	import downloadBlob from '../../utils/downloadBlob.js'
+  import {clickOutside} from '../../utils/clickOutside.js';
 
   import { PubSub } from "../../utils/pubSub.js";
   const messaging = new PubSub();
@@ -471,7 +472,7 @@
 <div class="sidebar">
   <div class="layout-sidebar-group-widgets-container">
 
-    <div class='collapsible'>
+    <div class='collapsible' use:clickOutside on:click_outside={()=>$liveCodeEditorMenuExpanded = false}>
     <button class='button-dark'
       aria-expanded={$liveCodeEditorMenuExpanded} 
       on:click={launchLiveCodeEditorMenu}
@@ -547,7 +548,7 @@
     </SidebarDropdown> -->
 
     <!-- MODEL EDITOR LAUNCHER -->
-    <div class='collapsible'>
+    <div class='collapsible'  use:clickOutside on:click_outside={()=>$modelEditorMenuExpanded = false}>
       <button class='button-dark'
         aria-expanded={$modelEditorMenuExpanded} 
         on:click={launchModelEditorMenu}
@@ -581,7 +582,7 @@
     </div>
 
     <!-- DEBUGGER LAUNCHER -->
-    <div class='collapsible'>
+    <div class='collapsible'  use:clickOutside on:click_outside={()=>$debuggersMenuExpanded = false}>
       <button class='button-dark'
         aria-expanded={$debuggersMenuExpanded} 
         on:click={launchDebuggersMenu}
