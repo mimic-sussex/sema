@@ -276,6 +276,7 @@
                     class="checkbox-input"
                     checked="checked"
                     value={$focusedItem.lineNumbers}
+                    title='Toggle line numbers'
                     >
             <span  class="checkbox-span"></span>
           </label>
@@ -328,6 +329,7 @@
           <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
                   on:click={ () => dispatchAdd('grammar') }
                   disabled={ $isAddGrammarEditorDisabled }
+                  title='{$isAddGrammarEditorDisabled? 'Launch grammar editor (already launched)':'Launch grammar editor'}'
                   >
                   Grammar Editor
           </button>
