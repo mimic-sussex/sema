@@ -221,8 +221,9 @@
         <!-- style="{ $fullScreen? `visibility:visible;`: `visibility:hidden` }" -->
 {#if $isActive('/playground') }
   <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
-          title="sidebar visibility"
-          style="{( $isActive('/playground') )? `visibility:visible;`: `visibility:collapse`};"
+          title="Toggle sidebar visibility"
+          style="{( $isActive('/playground') )? `visibility:visible;`: `visibility:collapse`};
+                 {$sideBarVisible? '': 'color:red'};"
           on:click={ handleClickSideBar }
           >
     <svg  version="1.1"
@@ -252,7 +253,8 @@
 {/if}
 
 <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
-        title="navbar visibility"
+        title="Toggle navbar visibility"
+        style="{$hideNavbar? 'color:red': ''};"
         on:click={ handleClickNavbar }
         >
   <svg  version="1.1"
@@ -283,7 +285,8 @@
 
 
 <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
-        title="fullscreen mode"
+        title="Toggle fullscreen mode"
+        style="{$fullScreen? '' : 'color: #0050A0'};"
         on:click={ handleClickFullScreen }
         >
   <svg version="1.1"

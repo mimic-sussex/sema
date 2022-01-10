@@ -358,7 +358,7 @@ import { Engine } from 'sema-engine';
 
 
   <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
-          title="Mouse data"
+          title="Display mouse coordinates"
           on:click={ handleClick }
           >
     <div class="icon-container">

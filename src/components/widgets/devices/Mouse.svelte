@@ -189,7 +189,7 @@
   <!-- <div style='width:7em; display: flex; {$fullScreen? `visibility:visible;`: `visibility:hidden`}; margin-left:2px' -->
   <div>
     <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
-            title="Mouse data"
+            title="{$mouseActivated? 'Disable mouse coordinates': 'Display mouse coordinates'}"
             on:click={ handleClick }
             >
       <!-- <div class="icon-container"> -->

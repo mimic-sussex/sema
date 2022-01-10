@@ -67,7 +67,7 @@
 
 
 <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
-        title="microphone"
+        title="{$inputStreamConnected? 'Disable microphone' : 'Enable microphone'}"
         style=''
         on:click={ handleConnectInputStream }>
     <div class="icon-container">

@@ -475,7 +475,9 @@
     <button class='button-dark'
       aria-expanded={$liveCodeEditorMenuExpanded} 
       on:click={launchLiveCodeEditorMenu}
-      disabled={$isSelectLiveCodeEditorDisabled}>
+      disabled={$isSelectLiveCodeEditorDisabled}
+      title="{$isSelectLiveCodeEditorDisabled ? 'Launch live code editor (already launched)' : 'Launch live code editor'}"
+      >
       <svg 
       xmlns="http://www.w3.org/2000/svg" 
       width="18" 
@@ -494,7 +496,11 @@
         <!-- <div class='menu-connector'></div> -->
         {#each $sidebarLiveCodeOptions as liveCodeOption}
           {#if liveCodeOption.text != 'livecode'}
-          <button disabled={$isSelectLiveCodeEditorDisabled} on:click={ () => launchLiveCodeEditor(liveCodeOption)} class='button-dark menu-contents-button'>{liveCodeOption.text}</button>
+          <button disabled={$isSelectLiveCodeEditorDisabled} 
+                  title='{`Launch live code editor with ${liveCodeOption.text} language`}'
+                  on:click={ () => launchLiveCodeEditor(liveCodeOption)} 
+                  class='button-dark menu-contents-button'>{liveCodeOption.text}
+                </button>
           <!-- <p on:click={ () => dispatchAdd('live', liveCodeOption)}>{liveCodeOption.text}</p> -->
           {/if}
         {/each}
@@ -545,7 +551,9 @@
       <button class='button-dark'
         aria-expanded={$modelEditorMenuExpanded} 
         on:click={launchModelEditorMenu}
-        disabled={$isSelectModelEditorDisabled}>
+        disabled={$isSelectModelEditorDisabled}
+        title="{$isSelectModelEditorDisabled ? 'Launch JavaScript editor (already launched)' : 'Launch JavaScript editor'}"
+        >
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-braces" viewBox="0 0 16 16">
           <path d="M2.114 8.063V7.9c1.005-.102 1.497-.615 1.497-1.6V4.503c0-1.094.39-1.538 1.354-1.538h.273V2h-.376C3.25 2 2.49 2.759 2.49 4.352v1.524c0 1.094-.376 1.456-1.49 1.456v1.299c1.114 0 1.49.362 1.49 1.456v1.524c0 1.593.759 2.352 2.372 2.352h.376v-.964h-.273c-.964 0-1.354-.444-1.354-1.538V9.663c0-.984-.492-1.497-1.497-1.6zM13.886 7.9v.163c-1.005.103-1.497.616-1.497 1.6v1.798c0 1.094-.39 1.538-1.354 1.538h-.273v.964h.376c1.613 0 2.372-.759 2.372-2.352v-1.524c0-1.094.376-1.456 1.49-1.456V7.332c-1.114 0-1.49-.362-1.49-1.456V4.352C13.51 2.759 12.75 2 11.138 2h-.376v.964h.273c.964 0 1.354.444 1.354 1.538V6.3c0 .984.492 1.497 1.497 1.6z"/>
         </svg>
@@ -560,7 +568,11 @@
           <!-- <div class='menu-connector' style='right:99%'></div> -->
           {#each $sidebarModelOptions as modelOption}
             {#if modelOption.text != 'javascript'}
-            <button disabled={$isSelectModelEditorDisabled} on:click={ () => launchModelEditor(modelOption)} class='button-dark menu-contents-button'>{modelOption.text}</button>
+            <button disabled={$isSelectModelEditorDisabled} 
+                    title='{ modelOption.text == '* new *'? 'Launch empty JavaScript editor': `Launch ${modelOption.text} example`}'
+                    on:click={ () => launchModelEditor(modelOption)} 
+                    class='button-dark menu-contents-button'>{modelOption.text}
+                  </button>
             <!-- <p on:click={ () => dispatchAdd('model', modelOption)}>{modelOption.text}</p> -->
             {/if}
           {/each}
@@ -573,7 +585,9 @@
       <button class='button-dark'
         aria-expanded={$debuggersMenuExpanded} 
         on:click={launchDebuggersMenu}
-        disabled={$isSelectDebuggerDisabled}>
+        disabled={$isSelectDebuggerDisabled}
+        title="{$isSelectDebuggerDisabled ? 'Launch a debugger widget (all already launched)' : 'Launch a debugger widget'}"
+        >
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-nut" viewBox="0 0 16 16">
           <path d="m11.42 2 3.428 6-3.428 6H4.58L1.152 8 4.58 2h6.84zM4.58 1a1 1 0 0 0-.868.504l-3.428 6a1 1 0 0 0 0 .992l3.428 6A1 1 0 0 0 4.58 15h6.84a1 1 0 0 0 .868-.504l3.429-6a1 1 0 0 0 0-.992l-3.429-6A1 1 0 0 0 11.42 1H4.58z"/>
           <path d="M6.848 5.933a2.5 2.5 0 1 0 2.5 4.33 2.5 2.5 0 0 0-2.5-4.33zm-1.78 3.915a3.5 3.5 0 1 1 6.061-3.5 3.5 3.5 0 0 1-6.062 3.5z"/>
@@ -586,7 +600,11 @@
         <div class='menu-contents' hidden={!$debuggersMenuExpanded}>
           {#each $sidebarDebuggerOptions as debuggerOption}
             {#if debuggerOption.text != 'debug'}
-            <button disabled={debuggerOption.disabled} on:click={ () => launchDebugger(debuggerOption)} class='button-dark menu-contents-button'>{debuggerOption.text}</button>
+            <button disabled={debuggerOption.disabled}
+                    title='{debuggerOption.disabled? `Launch ${debuggerOption.text} (already launched)`: `Launch ${debuggerOption.text}`}'
+                    on:click={ () => launchDebugger(debuggerOption)} 
+                    class='button-dark menu-contents-button'>{debuggerOption.text}
+                  </button>
             <!-- <p on:click={ () => dispatchAdd('model', modelOption)}>{modelOption.text}</p> -->
             {/if}
           {/each}
@@ -598,6 +616,7 @@
       <button class="button-dark"
               on:click={ () => dispatchAdd('analyser') }
               disabled={ $isAddAnalyserDisabled }
+              title='{$isAddAnalyserDisabled? 'Launch audio analyser (already launched)': 'Launch audio analyser' }'
               >
               <div class='icon-container'>
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-activity" viewBox="0 0 16 16">

@@ -135,7 +135,10 @@
       
       
 
-      <button class="button-launcher" on:click={() => $screenSettings = !$screenSettings}>
+      <button class="button-launcher" 
+              on:click={() => $screenSettings = !$screenSettings}
+              title="{$screenSettings? 'Close screen settings menu':'Open screen settings menu'}"
+      >
         
         <!-- <Icon name='buttonHorizontal'/> -->
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-eye" viewBox="0 0 20 20"
@@ -158,7 +161,10 @@
     <!-- <div style="{( $isActive('/playground') )? `visibility:visible;`: `visibility:collapse;`}"> -->
       <div class='environment-container'>
         
-        <button class="button-launcher" on:click={() => $environmentSettings = !$environmentSettings}>
+        <button class="button-launcher" 
+                on:click={() => $environmentSettings = !$environmentSettings}
+                title="{$environmentSettings? 'Close project settings menu' : 'Open project settings menu'}"
+        >
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-cloud" viewBox="0 0 20 20"
           style='{ $environmentSettings? 'fill:white' : ''}'
           >
@@ -173,7 +179,10 @@
 
     <div class='engine-container'>
       
-      <button class="button-launcher" on:click={() => $engineSettings = !$engineSettings}>
+      <button class="button-launcher" 
+              on:click={() => $engineSettings = !$engineSettings}
+              title="{$engineSettings? 'Close sound engine settings menu' : 'Open sound engine settings menu'}"
+              >
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-speaker" viewBox="0 0 20 20"
         style='{ $engineSettings? 'fill:white' : ''}'>
           <path d="M12 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h8zM4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H4z"/>
