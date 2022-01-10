@@ -164,7 +164,7 @@
         $focusedItem = item;
         // console.log("DEBUG: focusedItem in setFocused, lineNumbers:", $focusedItem.data.lineNumbers);
         $focusedItemProperties = itemProperties;
-        console.log("focusedItemproperties", $focusedItem, $focusedItemProperties);
+        // console.log("focusedItemproperties", $focusedItem, $focusedItemProperties);
         // set unfocused items through the rest of the list
         $items = $items.map(i => i === item ? ({ ...i, ['hasFocus']: true }) : ({ ...i, ['hasFocus']: false }) );
         //USED
@@ -294,6 +294,16 @@
       engine.removeAnalyser({ id: item.id });
       // messaging.publish('remove-engine-analyser', { id: item.id }); // notify audio engine to remove associated analyser
     }
+
+    // if item is focused clear focused.
+    if ($focusedItem.data){
+      if (item.data.type == $focusedItem.data.type){
+        //clear it
+        console.log('Clearing focused item:', $focusedItem)
+        clearFocused();
+      }
+    }
+
     // console.log("DEBUG:dashboard:remove:", item);
     messaging.publish("plaground-item-deletion", item.data.type);
 
