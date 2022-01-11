@@ -1,11 +1,9 @@
 <script>
   import {
-    siteMode,
-    fullScreen
+    siteMode
   } from '../../../stores/common.js';
 
   import { isActive, goto, url, params } from "@roxi/routify";
-	// import { authStore } from '../../../auth'
 
 	import {
     onMount,
@@ -13,14 +11,11 @@
   } from 'svelte';
 
 	import {
-		supabase,
 		updatePlayground,
-    createPlayground,
     forkPlayground,
     savePlayground
   } from  "../../../db/client";
   
-  // import Icon from "../../icons/Icon.svelte";
 
   import { Engine } from 'sema-engine';
 
@@ -29,32 +24,10 @@
       ;
 
 
-	// const { user, signout } = authStore;
-
   import {
-    sidebarLiveCodeOptions,
-    selectedLiveCodeOption,
-    isSelectLiveCodeEditorDisabled,
-
-    sidebarModelOptions,
-    selectedModelOption,
-    isSelectModelEditorDisabled,
-
-
     loadEnvironmentOptions,
     selectedLoadEnvironmentOption,
     isLoadEnvironmentOptionsDisabled,
-
-    // sidebarGrammarOptions,
-    isAddGrammarEditorDisabled,
-
-    isAddAnalyserDisabled,
-
-    sidebarDebuggerOptions,
-    selectedDebuggerOption,
-    isSelectDebuggerDisabled,
-
-    focusedItemProperties,
     isSaveOverlayVisible,
     isUploadOverlayVisible,
     isDeleteOverlayVisible,
@@ -64,16 +37,12 @@
     isDoesNotExistOverlayVisible,
     isProjectBrowserOverlayVisible,
     items,
-    // assignNewID,
     hydrateJSONcomponent,
     loadEnvironmentSnapshotEntries,
 		uuid,
     name,
     allowEdits,
-                  isPublic,
-    author,
-    saving,
-    saveRequired
+    isPublic,
   } from '../../../stores/playground'
 
   import {
@@ -83,32 +52,14 @@
 
   import * as doNotZip from 'do-not-zip';
 	import downloadBlob from '../../../utils/downloadBlob.js';
-// import { link } from 'fs';
-
-  $: permission = checkPermissions($loggedIn, $allowEdits, $user, $author);
 
   let handleClick = () => {
     window.localStorage["tutorial-" + new Date(Date.now()).toISOString()] = JSON.stringify($items)
   }
 
-  let overlayStates = [
-    $isSaveOverlayVisible,
-    $isUploadOverlayVisible,
-    $isDeleteOverlayVisible,
-    $isClearOverlayVisible,
-    $isNewOverlayVisible,
-    $isShareOverlayVisible,
-    $isDoesNotExistOverlayVisible,
-    $isProjectBrowserOverlayVisible,
-  ];
-
-  // toggles given overlay switch all others off.
+  // Toggles given overlay switch all others off.
   function toggleOverlay(overlay){
     // //set all to false
-    // for (let i=0; i<overlayStates.length;i++){
-    //   overlayStates[i] = false;
-    // }
-
     $isSaveOverlayVisible = false;
     $isUploadOverlayVisible = false;
     $isDeleteOverlayVisible = false;
@@ -141,7 +92,7 @@
     // console.log('overlay states', overlayStates);
   }
 
-  //seperate from toggleOverlay since project browser must be able to open and close from the launch button.
+  //Project browser seperate from toggleOverlay since project browser must be able to open and close from the launch button.
   function toggleProjectBrowser () {
     $isSaveOverlayVisible = false;
     $isUploadOverlayVisible = false;
@@ -157,6 +108,7 @@
     }
   }
 
+  // On project name change, update the database
 	const onNameChange = async () => {
 		try {
 			updatePlayground($uuid, $name, $items, $allowEdits, $user)
@@ -178,92 +130,15 @@
       $uuid = fork.id;
       $name = fork.name;
       $items = fork.content.map(item => hydrateJSONcomponent(item));
-      $goto($url(`/playground/${$uuid}`)); // reload page cos otherwise the no changes allowed link is still there.
+      $goto($url(`/playground/${$uuid}`)); // reload page because otherwise the no changes allowed link is still there.
       // window.history.pushState("", "", `/playground/${$uuid}`); //changes the url without realoading;
     }
     else
       throw new Error ('Cant find UUID for project')
   }
 
-  // let openProjectBrowser = () => {
-  //   $isUploadOverlayVisible = false;
-  //   $isSaveOverlayVisible = false;
-	// 	$isNewOverlayVisible = false;
-  //   $isDeleteOverlayVisible = false;
-  //   $isClearOverlayVisible = false;
-  //   $isDoesNotExistOverlayVisible = false;
-  //   $isShareOverlayVisible = false;
-  //   $isProjectBrowserOverlayVisible = true;
-  // }
 
-  // let shareProjectLink = () => {
-  //   $isUploadOverlayVisible = false;
-  //   $isSaveOverlayVisible = false;
-	// 	$isNewOverlayVisible = false;
-  //   $isDeleteOverlayVisible = false;
-  //   $isClearOverlayVisible = false;
-  //   $isDoesNotExistOverlayVisible = false;
-  //   $isProjectBrowserOverlayVisible = false;
-  //   $isShareOverlayVisible = true;
-  // }
-
-  // function clearEnvironment(){
-  //   $isUploadOverlayVisible = false;
-  //   $isSaveOverlayVisible = false;
-  //   $isNewOverlayVisible = false;
-  //   $isShareOverlayVisible = false;
-  //   $isDoesNotExistOverlayVisible = false;
-  //   $isDeleteOverlayVisible = false;
-  //   $isProjectBrowserOverlayVisible = false;
-  //   $isClearOverlayVisible = true;
-  // }
-
-  // async function newEnvironment(){
-	// 	try {
-	// 		$isUploadOverlayVisible = false;
-	// 		$isSaveOverlayVisible = false;
-  //     $isDeleteOverlayVisible = false;
-  //     $isClearOverlayVisible = false;
-  //     $isShareOverlayVisible = false;
-  //     $isDoesNotExistOverlayVisible = false;
-  //     $isProjectBrowserOverlayVisible = false;
-	// 		$isNewOverlayVisible = true;
-
-	// 		// $items = data.content.map(item => hydrateJSONcomponent(item))
-	// 		// loadEnvironmentSnapshotEntries();
-	// 	} catch (error) {
-	// 		console.error(error);
-	// 	}
-  // }
-
-  //   function uploadEnvironment(){
-
-  // $isUploadOverlayVisible = true;
-  // $isSaveOverlayVisible = false;
-  // $isDeleteOverlayVisible = false;
-  // $isClearOverlayVisible = false;
-  // $isShareOverlayVisible = false;
-  // $isDoesNotExistOverlayVisible = false;
-  // $isProjectBrowserOverlayVisible = false;
-  // $isNewOverlayVisible = false;
-  // }
-  // function storeEnvironment(){
-	// 	try {
-	// 		$isUploadOverlayVisible = false;
-	// 		$isSaveOverlayVisible = true;
-  //     $isDeleteOverlayVisible = false;
-  //     $isClearOverlayVisible = false;
-  //     $isShareOverlayVisible = false;
-  //     $isDoesNotExistOverlayVisible = false;
-  //     $isProjectBrowserOverlayVisible = false;
-	// 		$isNewOverlayVisible = false;
-
-	// 		loadEnvironmentSnapshotEntries();
-	// 	} catch (error) {
-	// 		console.error(error);
-	// 	}
-  // }
-
+  // for loading local environments.
   function loadEnvironment(){
 
     // Retrieve item, hydrate JSON into grid-items
@@ -279,7 +154,7 @@
 
   
 
-  //no longer used REMOVE
+  //Download environment as .zip
   function downloadEnvironmentAsZip(){
 
     let timestamp = new Date().toISOString();
@@ -298,6 +173,7 @@
 		downloadBlob(blob, 'sema-' + `${timestamp}` + '.zip');
   }
 
+  // Download environment as .json
   function downloadEnvironment(){
     let filename;
     if ($name != null) {
@@ -308,7 +184,6 @@
 
     let timestamp = new Date().toISOString();
 
-    // const blob = doNotZip.toBlob($items)
     const blob = new Blob(
       [ JSON.stringify($items) ], 
       { type: 'text/json;charset=utf-8' }
@@ -325,29 +200,9 @@
     engine = null;
 	});
 
-  function checkPermissions(loggedIn, allowEdits, user, author){
-    if (allowEdits){
-      return true //anyone can edit
-    } 
-    else if (!allowEdits){
-      if (user != null){ 
-        
-        if (user.id == author){
-          return true
-        } else {
-          return false
-        }
-      }  else {
-        return false
-      } 
-    }
-  }
-
-
 </script>
 
 <style>
-
 
   .icon-container {
     /* width: 10px; */
@@ -380,83 +235,24 @@
     background-color: grey;
   }
 
-  /* .button-dark {
-    width: 2.5em;
-    height: 2.5em;
-    padding: 0.2em 0.2em 0.8em 0.8em;
-    display: block;
-    font-family: sans-serif;
-    font-weight: 400;
-    cursor: pointer;
-    color: red;
-    line-height: 1.3;
-    max-width: 100%;
-    box-sizing: border-box;
-    border: 0 solid #333;
-    text-align: left;
-    margin-right: 5px;
-    border-radius: .6em;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    background-color:  rgba(16, 16, 16, 0.04);
-    background-repeat: no-repeat, repeat;
-    background-position: right .7em top 50%, 0 0;
-    background-size: .65em auto, 100%;
-    -webkit-box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
-    -moz-box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
-    box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
-  } */
+  .button-light {
+		padding: 20;
+		color: grey;
+		border: none;
+    width: 42px;
+  	margin: 8px 8px 8px 8px;
+  	border-radius: 5px;
+  	background-color: #fdf6e3;
+	}
 
-  /* .button-dark:hover {
-    width: 2.5em;
-    height: 2.5em;
-    padding: 0.2em 0.2em 0.8em 0.8em;
-    font-family: sans-serif;
-    font-weight: 500;
-    cursor: pointer;
-    color: red;
-    line-height: 1.3;
-    max-width: 100%;
-    box-sizing: border-box;
-    border: 0 solid #333;
-    text-align: left;
-    margin-right: 5px;
-    border-radius: .6em;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    background-color:  linear-gradient(rgba(16, 16, 16, 1), rgba(16, 16, 16, 0.08));
-    background-repeat: no-repeat, repeat;
-    background-position: right .7em top 50%, 0 0;
-    background-size: .65em auto, 100%;
-    -webkit-box-shadow: 2px 2px 5px rgba(0,0,0),-0.5px -0.5px 3px rgb(34, 34, 34);
-    -moz-box-shadow: 2px 2px 5px rgba(0,0,0), -0.5px -0.5px 3px rgb(34, 34, 34);;
-    box-shadow: 2px 2px 3px rgb(0, 0, 0), -1px -1px 3px #ffffff61;
-  } */
-  /* .button-dark:active {
-    width: 2.5em;
-    height: 2.5em;
-    padding: 0.2em 0.2em 0.8em 0.8em;
-    display: block;
-    font-size: medium;
-    font-family: sans-serif;
-    font-weight: 400;
-    cursor: pointer;
-    color: red;
-    line-height: 1.3;
-    max-width: 100%;
-    box-sizing: border-box;
-    margin-right: 5px;
-    text-align: left;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    background-color:  rgba(16, 16, 16, 0.04);
-    background-repeat: no-repeat, repeat;
-    background-size: .65em auto, 100%;
-    box-shadow:  -1px -1px 3px rgba(16, 16, 16, 0.4), 0.5px 0.5px 0.5px rgba(16, 16, 16, 0.04);
-  } */
+  .button-light:hover {
+    color: black;
+  }
+
+  .button-light:active{
+    color: black;
+    background-color: grey;
+  }
 
 
   .light-mode {
@@ -472,92 +268,6 @@
     padding-bottom:3px;
     width: 15px;
   }
-
-
-  /* .button-light {
-    width: 2.5em;
-    height: 2.5em;
-    display: block;
-    font-size: medium;
-    font-family: sans-serif;
-    font-weight: 400;
-    cursor: pointer;
-    color: black;
-    line-height: 1.3;
-    padding: 0.7em 1em 0.7em 1em;
-    max-width: 100%;
-    box-sizing: border-box;
-    border: 0 solid #333;
-    text-align: left;
-    border-radius: .6em;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    background-color:  rgba(16, 16, 16, 0.04);
-    background-repeat: no-repeat, repeat;
-    background-position: right .7em top 50%, 0 0;
-    background-size: .65em auto, 100%;
-    box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
-    -moz-box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
-    -webkit-box-shadow:  2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
-  }
-
-  .button-light:active {
-    width: 2.5em;
-    height: 2.5em;
-    display: block;
-    font-size: medium;
-    font-family: sans-serif;
-    font-weight: 400;
-    cursor: pointer;
-    color: black;
-    line-height: 1.3;
-    padding: 0.7em 1em 0.7em 1em;
-    max-width: 100%;
-    box-sizing: border-box;
-    border: 0 solid #333;
-    text-align: left;
-    border-radius: .6em;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    background-color:  rgba(16, 16, 16, 0.04);
-    background-repeat: no-repeat, repeat;
-    background-position: right .7em top 50%, 0 0;
-    background-size: .65em auto, 100%;
-    box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
-    -moz-box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
-    -webkit-box-shadow:  2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0)
-  }
-  .button-light:disabled {
-    width: 2.5em;
-    height: 2.5em;
-    display: block;
-    font-size: medium;
-    font-family: sans-serif;
-    font-weight: 400;
-    cursor: pointer;
-    color: #888;
-    line-height: 1.3;
-    padding: 0.7em 1em 0.7em 1em;
-    width: 8em;
-    max-width: 100%;
-    box-sizing: border-box;
-    border: 0 solid #333;
-    text-align: left;
-    border-radius: .6em;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    background-color:  rgba(16, 16, 16, 0.04);
-    background-repeat: no-repeat, repeat;
-    background-position: right .7em top 50%, 0 0;
-    background-size: .65em auto, 100%;
-    box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
-    -moz-box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
-    -webkit-box-shadow:  2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0)
-  } */
-
 
 	input {
 		resize: none;
@@ -588,48 +298,6 @@
     border:none;
   }
   
-  .no-changes-link {
-    color: grey;
-    text-decoration: underline;
-  }
-
-  .login-to-save-link {
-    color: grey;
-    text-decoration: underline;
-  }
-
-  /* when no changes link is hovered make fork icon turn green to indicate the user
-  can fork the project to save their changes. */
-  .no-changes-link:hover ~ .button-dark >.icon-container > .fork-icon{
-    transition-duration: 0.8s;
-    fill: green;
-    /* background-color: red; */
-  }
-
-  .no-changes-link:hover ~ .button-light >.icon-container > .fork-icon{
-    transition-duration: 0.8s;
-    fill: green;
-    /* background-color: red; */
-  }
-
-  /* when no changes allowed link has been click make the background colour of fork button change
-  to show the project has been forked visually */
-  .no-changes-link:active ~ #fork-button {
-    transition-duration: 0.1s;
-    background-color: grey;
-  }
-
-  .save-status-container {
-    width: 180px;
-    /* height: 100%; */
-    position: relative;
-  }
-
-  .save-status-text {
-    width: 80%;
-    /* text-align:left; */
-    color: grey;
-  }
 
   .dropdown-button-dark {
     width: 2.5em;
@@ -654,8 +322,6 @@
     z-index:1;
   }
 
-  
-
   .playground-visibility-icon {
     height: 2.3em;
     margin-right: -24px;
@@ -669,7 +335,7 @@
 
 
 
-        <!-- style="{( $fullScreen && $isActive('/playground') )? `visibility:visible;`: `visibility:hidden`}; ! important;" -->
+<!-- LOCAL SAVE DROPDOWN SELECTOR -->
 <!-- svelte-ignore a11y-no-onchange -->
 <!-- <select class="combobox-dark"
         title="load environment"
@@ -744,10 +410,8 @@
   {/each}
 </select> -->
 
-        <!-- style="{( $fullScreen && $isActive('/playground') )? `visibility:visible;`: `visibility:hidden`}; margin-left: 2px;" -->
-
 <!-- NEW -->
-{#if !$isDoesNotExistOverlayVisible}
+{#if !$isDoesNotExistOverlayVisible} <!--If project doesnt exist don't show these buttons-->
   {#if $user}
   <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
           title="new project"
@@ -756,60 +420,12 @@
           >
     <div class="icon-container">
       {#if $siteMode === 'dark' }
-        <!-- <svg version="1.1"
-          id="Layer_1"
-          xmlns="http://www.w3.org/2000/svg"
-          xmlns:xlink="http://www.w3.org/1999/xlink"
-          x="0px" y="0px"
-          viewBox="0 0 512 512"
-          style="enable-background:new 0 0 512 512;width:15px;"
-          class="light-mode"
-          xml:space="preserve"
-          >
-          <g id="XMLID_1_">
-            <path id="XMLID_9_" d="M466.5,0h-381L0,83.6v382.8C0,491.6,20.4,512,45.5,512h420.9c25.1,0,45.5-20.4,45.5-45.5V45.5
-              C512,20.4,491.6,0,466.5,0z M256.5,150.5c-57.6,0-105,47.4-105,105s47.4,105,105,105s105-47.4,105-105
-              S314.1,150.5,256.5,150.5z M256.5,330.8c-41.8,0-75.3-33.5-75.3-75.3s33.5-75.3,75.3-75.3s75.3,33.5,75.3,75.3
-              S298.3,330.8,256.5,330.8z"/>
-          </g>
-        </svg> -->
-
-        <!-- NEW LOGO DESIGN NOT READY YET -->
-        <!-- <svg xmlns="http://www.w3.org/2000/svg" 
-        width="18" 
-        height="18" 
-        fill="rgb(133, 130, 130)" 
-        class="bi bi-columns-gap" viewBox="0 0 16 16">
-          <path d="M6 1 v 3 H 1 V 1 h 5 z M 1 0 a 1 1 0 0 0 -1 1 v 3 a 1 1 0 0 0 1 1 h 5 a 1 1 0 0 0 1 -1 V 1 a 1 1 0 0 0 -1 -1 H 1 z M 6 8 v 7 H 1 V 8 h 5 z M 1 7 a 1 1 0 0 0 -1 1 v 7 a 1 1 0 0 0 1 1 h 5 a 1 1 0 0 0 1 -1 V 8 a 1 1 0 0 0 -1 -1 H 1 z m 14 -6 v 7 h -5 V 1 h 5 z m -5 -1 a 1 1 0 0 0 -1 1 v 7 a 1 1 0 0 0 1 1 h 5 a 1 1 0 0 0 1 -1 V 1 a 1 1 0 0 0 -1 -1 h -5 z"/>
-        
-          <path d="M 15.4 13.2 a 2.8 2.8 90 1 1 -5.6 0 a 2.8 2.8 90 0 1 5.6 0 Z m -2.8 -1.6 a 0.4 0.4 90 0 0 -0.4 0.4 v 0.8 h -0.8 a 0.4 0.4 90 0 0 0 0.8 h 0.8 v 0.8 a 0.4 0.4 90 0 0 0.8 0 v -0.8 h 0.8 a 0.4 0.4 90 0 0 0 -0.8 h -0.8 v -0.8 a 0.4 0.4 90 0 0 -0.4 -0.4 Z"/>
-        </svg> -->
         <!-- CLOUD PLUS ICON -->
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-cloud-plus" viewBox="0 0 16 16">
           <path fill-rule="evenodd" d="M8 5.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V10a.5.5 0 0 1-1 0V8.5H6a.5.5 0 0 1 0-1h1.5V6a.5.5 0 0 1 .5-.5z"/>
           <path d="M4.406 3.342A5.53 5.53 0 0 1 8 2c2.69 0 4.923 2 5.166 4.579C14.758 6.804 16 8.137 16 9.773 16 11.569 14.502 13 12.687 13H3.781C1.708 13 0 11.366 0 9.318c0-1.763 1.266-3.223 2.942-3.593.143-.863.698-1.723 1.464-2.383zm.653.757c-.757.653-1.153 1.44-1.153 2.056v.448l-.445.049C2.064 6.805 1 7.952 1 9.318 1 10.785 2.23 12 3.781 12h8.906C13.98 12 15 10.988 15 9.773c0-1.216-1.02-2.228-2.313-2.228h-.5v-.5C12.188 4.825 10.328 3 8 3a4.53 4.53 0 0 0-2.941 1.1z"/>
         </svg>
-
-
       {:else if $siteMode === 'light' }
-        <!-- <svg  version="1.1"
-              id="Layer_1"
-              xmlns="http://www.w3.org/2000/svg"
-              xmlns:xlink="http://www.w3.org/1999/xlink"
-              x="0px" y="0px"
-              style="enable-background:new 0 0 512 512; width:15px;"
-              viewBox="0 0 512 512"
-              xml:space="preserve"
-              >
-          <g>
-            <path id="XMLID_9_" d="M466.5,0h-381L0,83.6v382.8C0,491.6,20.4,512,45.5,512h420.9c25.1,0,45.5-20.4,45.5-45.5V45.5
-              C512,20.4,491.6,0,466.5,0z M392.1,29.7v60.4H151.5V29.7H392.1z M91.1,481.3v-30.7h330.8v29.7H91.1V481.3z M482.3,465.5
-              c0,8.4-6.5,14.9-14.9,14.9h-15.8V420H61.3v60.4H46.5c-8.4,0-14.9-6.5-14.9-14.9V95.7l67.8-66h22.3v90.1h301.1V29.7h45.5
-              c8.4,0,14.9,6.5,14.9,14.9v420.9H482.3z M256.5,150.5c-57.6,0-105,47.4-105,105s47.4,105,105,105s105-47.4,105-105
-              S314.1,150.5,256.5,150.5z M256.5,330.8c-41.8,0-75.3-33.5-75.3-75.3s33.5-75.3,75.3-75.3s75.3,33.5,75.3,75.3
-              S298.3,330.8,256.5,330.8z"/>
-          </g>
-        </svg> -->
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-cloud-plus" viewBox="0 0 16 16">
           <path fill-rule="evenodd" d="M8 5.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V10a.5.5 0 0 1-1 0V8.5H6a.5.5 0 0 1 0-1h1.5V6a.5.5 0 0 1 .5-.5z"/>
           <path d="M4.406 3.342A5.53 5.53 0 0 1 8 2c2.69 0 4.923 2 5.166 4.579C14.758 6.804 16 8.137 16 9.773 16 11.569 14.502 13 12.687 13H3.781C1.708 13 0 11.366 0 9.318c0-1.763 1.266-3.223 2.942-3.593.143-.863.698-1.723 1.464-2.383zm.653.757c-.757.653-1.153 1.44-1.153 2.056v.448l-.445.049C2.064 6.805 1 7.952 1 9.318 1 10.785 2.23 12 3.781 12h8.906C13.98 12 15 10.988 15 9.773c0-1.216-1.02-2.228-2.313-2.228h-.5v-.5C12.188 4.825 10.328 3 8 3a4.53 4.53 0 0 0-2.941 1.1z"/>
@@ -819,67 +435,6 @@
   </button>
   {/if}
 
-  <!-- SAVE -->
-  <!-- {#if $user}
-    <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
-            title="save project"
-            style="{( $isActive('/playground') )? `visibility:visible;`: `visibility:collapse`}; margin-left: 2px;"
-            on:click={ () => toggleOverlay('save') }
-            >
-      
-      {#if $saving}
-        <div style=''>
-          <Icon name='spinner' size=20/>
-        </div>
-      {/if}
-
-      <div class="icon-container">
-        {#if $siteMode === 'dark' }
-          <svg version="1.1"
-            id="Layer_1"
-            xmlns="http://www.w3.org/2000/svg"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            x="0px" y="0px"
-            viewBox="0 0 512 512"
-            style="enable-background:new 0 0 512 512;width:15px;"
-            class="light-mode"
-            xml:space="preserve"
-            >
-            <g id="XMLID_1_">
-              <path id="XMLID_9_" d="M466.5,0h-381L0,83.6v382.8C0,491.6,20.4,512,45.5,512h420.9c25.1,0,45.5-20.4,45.5-45.5V45.5
-                C512,20.4,491.6,0,466.5,0z M392.1,29.7v60.4H151.5V29.7H392.1z M91.1,481.3v-30.7h330.8v29.7H91.1V481.3z M482.3,465.5
-                c0,8.4-6.5,14.9-14.9,14.9h-15.8V420H61.3v60.4H46.5c-8.4,0-14.9-6.5-14.9-14.9V95.7l67.8-66h22.3v90.1h301.1V29.7h45.5
-                c8.4,0,14.9,6.5,14.9,14.9v420.9H482.3z M256.5,150.5c-57.6,0-105,47.4-105,105s47.4,105,105,105s105-47.4,105-105
-                S314.1,150.5,256.5,150.5z M256.5,330.8c-41.8,0-75.3-33.5-75.3-75.3s33.5-75.3,75.3-75.3s75.3,33.5,75.3,75.3
-                S298.3,330.8,256.5,330.8z"/>
-            </g>
-          </svg>
-        {:else if $siteMode === 'light' }
-          <svg  version="1.1"
-                id="Layer_1"
-                xmlns="http://www.w3.org/2000/svg"
-                xmlns:xlink="http://www.w3.org/1999/xlink"
-                x="0px" y="0px"
-                style="enable-background:new 0 0 512 512; width:15px;"
-                viewBox="0 0 512 512"
-                xml:space="preserve"
-                >
-            <g>
-              <path id="XMLID_9_" d="M466.5,0h-381L0,83.6v382.8C0,491.6,20.4,512,45.5,512h420.9c25.1,0,45.5-20.4,45.5-45.5V45.5
-                C512,20.4,491.6,0,466.5,0z M392.1,29.7v60.4H151.5V29.7H392.1z M91.1,481.3v-30.7h330.8v29.7H91.1V481.3z M482.3,465.5
-                c0,8.4-6.5,14.9-14.9,14.9h-15.8V420H61.3v60.4H46.5c-8.4,0-14.9-6.5-14.9-14.9V95.7l67.8-66h22.3v90.1h301.1V29.7h45.5
-                c8.4,0,14.9,6.5,14.9,14.9v420.9H482.3z M256.5,150.5c-57.6,0-105,47.4-105,105s47.4,105,105,105s105-47.4,105-105
-                S314.1,150.5,256.5,150.5z M256.5,330.8c-41.8,0-75.3-33.5-75.3-75.3s33.5-75.3,75.3-75.3s75.3,33.5,75.3,75.3
-                S298.3,330.8,256.5,330.8z"/>
-            </g>
-          </svg>
-        {/if}
-      </div>
-    </button>
-  {/if} -->
-
-
-          <!-- style="{ ( $fullScreen && $isActive('/playground') ) ? `visibility:visible;`: `visibility:hidden`}" -->
   <!-- CLEAR -->
   <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
           title="clear project"
@@ -888,26 +443,6 @@
           >
     <div class="icon-container">
       {#if $siteMode === 'dark' }
-        <!-- <svg version="1.1"
-              id="Layer_1"
-              xmlns="http://www.w3.org/2000/svg"
-              xmlns:xlink="http://www.w3.org/1999/xlink"
-              x="0px" y="0px"
-              viewBox="0 0 512 512"
-              class="light-mode"
-              style="enable-background:new 0 0 512 512;width:19px;"
-              xml:space="preserve"
-              >
-          <g>
-            <path d="M317.667,214.42l5.667-86.42h20.951V38h-98.384V0H132.669v38H34.285v90h20.951l20,305h140.571
-              c23.578,24.635,56.766,40,93.478,40c71.368,0,129.43-58.062,129.43-129.43C438.715,275.019,385.143,218.755,317.667,214.42z
-              M162.669,30h53.232v8h-53.232V30z M64.285,68h250v30h-250V68z M103.334,403L85.301,128H293.27l-5.77,87.985
-              c-61.031,10.388-107.645,63.642-107.645,127.586c0,21.411,5.231,41.622,14.475,59.43H103.334z M309.285,443
-              c-54.826,0-99.43-44.604-99.43-99.43s44.604-99.429,99.43-99.429s99.43,44.604,99.43,99.429S364.111,443,309.285,443z"/>
-            <polygon points="342.248,289.395 309.285,322.358 276.322,289.395 255.109,310.608 288.072,343.571 255.109,376.533
-              276.322,397.746 309.285,364.783 342.248,397.746 363.461,376.533 330.498,343.571 363.461,310.608 	"/>
-          </g>
-        </svg> -->
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
           <path fill-rule="evenodd" d="M13.854 2.146a.5.5 0 0 1 0 .708l-11 11a.5.5 0 0 1-.708-.708l11-11a.5.5 0 0 1 .708 0Z"/>
           <path fill-rule="evenodd" d="M2.146 2.146a.5.5 0 0 0 0 .708l11 11a.5.5 0 0 0 .708-.708l-11-11a.5.5 0 0 0-.708 0Z"/>
@@ -935,6 +470,7 @@
       {/if}
     </div>
   </button>
+
   <!-- DOWNLOAD BUTTON -->
   <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
           title="download project"
@@ -1036,7 +572,6 @@
     </button>
   {/if}
 
-          <!-- style="{ $fullScreen? `visibility:visible;`: `visibility:hidden`}; padding: 0.25em 0.3em 0.75em 0.7em;" -->
   <!-- SHARE -->
   {#if $params.playgroundId} <!-- if there is a playground uuid in the adress.-->
     <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
@@ -1075,8 +610,8 @@
     </button>
   {/if}
 {/if}
-<!--NAME PROJECT TEXT BOX-->
 
+<!--NAME PROJECT TEXT BOX-->
 {#if $isPublic && $isActive(`/playground`)}
   <svg xmlns="http://www.w3.org/2000/svg" 
     width="16" 
@@ -1134,52 +669,3 @@
     </div>
   </button>
 {/if}
-
-
-<!-- SAVE STATUS **MOVED TO ITS OWN COMPONENT -->
- <!--if playground loaded is readonly say that user doesnt have permission to save-->
-<!-- <div class='save-status-container' title='All changes are saved automatically'>
-  {#if !permission && $user != null}
-      <a href={'#'} class="no-changes-link" 
-      on:click={forkProject} 
-      title="You do not have permission to save this playground. To save your changes, click to make a copy."
-      style="{( $isActive('/playground') )? `visibility:visible;`: `visibility:collapse`}; margin-left: 2px;"
-      >No permission to save</a>
-  {:else if (!$user) }
-    <a href={'/login'} class="login-to-save-link" 
-    title="Your changes will not be saved since you are not logged in. Click here to Login/Sign up."
-    style="{( $isActive('/playground') )? `visibility:visible;`: `visibility:collapse`}; margin-left: 2px;"
-    >Login to enable saving</a>
-  {/if}
-
-  {#if $user && permission}
-    {#if $saving && saveRequired}
-          <p class='save-status-text'
-            style='{( $isActive('/playground') )? `visibility:visible;`: `visibility:collapse`};'
-            >Saving...       </p>
-    {:else if !$saving && $saveRequired}
-          <p class='save-status-text'
-            style='{( $isActive('/playground') )? `visibility:visible;`: `visibility:collapse`};'
-            >Not yet saved.</p>
-    {:else if !$saving && !$saveRequired}
-          <p class='save-status-text'
-            style='{( $isActive('/playground') )? `visibility:visible;`: `visibility:collapse`};'
-            >Saved.          </p>
-    {/if}
-  {/if}
-</div> -->
-
-
-
-
-
-
-<!-- <div style='width: 2px;'></div> -->
-
-
-
-
-
-
-
-

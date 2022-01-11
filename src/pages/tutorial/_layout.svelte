@@ -405,20 +405,14 @@
   
   .devices-container {
     width: 100%;
-  display: flex;
-  flex-direction: row;
-  align-self: flex-end;
-  margin-left: 0.5em;
-  background-color: #262a2e;
-  grid-area:devices;
-
-  display: flex;
-flex-direction: row;
-align-self: flex-end;
-background-color: #262a2e;
-border-radius: 5px;
-height: 50px;
-margin: 0.5em 0px 0.5em 0em;
+    grid-area:devices;
+    display: flex;
+    flex-direction: row;
+    align-self: flex-end;
+    background-color: #262a2e;
+    border-radius: 5px;
+    height: 50px;
+    margin: 0.5em 0px 0.5em 0em;
   }
 
   .tutorial-navigator {
@@ -450,7 +444,6 @@ margin: 0.5em 0px 0.5em 0em;
   .item-header-type {
     grid-column: 2/2;
     /* padding-top: 0.2em; */
-
   }
 
   .content {
@@ -483,10 +476,8 @@ margin: 0.5em 0px 0.5em 0em;
     border-radius: 5px;
     /* background: #aaaaaa; */
     overflow-y: scroll;
-
-
-
   }
+
   .tutorial-dashboard-container {
     grid-area: layout;
     /* grid-row: 0 / 2; */
@@ -522,85 +513,17 @@ margin: 0.5em 0px 0.5em 0em;
     margin: 8px 0px 8px 0px;
     padding:0px;
   }
-  /* .combobox-dark {
-    border: 0;
-  }
-
-
-  .combobox-dark select {
-    width: 100%;
-    height: 2.5em;
-    display: block;
-    font-size: medium;
-    font-family: sans-serif;
-    font-weight: 400;
-    cursor: pointer;
-    color: #fff;
-    line-height: 1.3;
-    padding: 0.7em 1em 0.7em 1em;
-    max-width: 100%;
-    box-sizing: border-box;
-    border: 0 solid #333;
-    border-radius: .6em;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    background-color: rgba(16, 16, 16, 0.04);
-    background-repeat: no-repeat, repeat;
-    background-position: right .7em top 50%, 0 0;
-    background-size: .65em auto, 100%;
-    -webkit-box-shadow: 5px 5px 20px -5px rgba(0,0,0,0.75), -5px -5px 20px rgba(255, 255, 255, 0.954);
-    -moz-box-shadow: 5px 5px 20px -5px rgba(0,0,0,0.75), -5px -5px 20px rgba(255, 255, 255, 0.954);
-    box-shadow: -1px -1px 3px #ffffff61, 2px 2px 3px rgb(0, 0, 0) ;
-  }
-
-  .combobox-dark select optgroup{
-    color:black;
-  } */
-
-  .button-dark-tutorial {
-    width: 2.5em;
-    height: 2.5em;
-    padding: 0.7em 1em 0.7em 1em;
-    display: block;
-    /* font-size: 12px; */
-    font-size: medium;
-    font-family: sans-serif;
-    font-weight: 400;
-    cursor: pointer;
-    color: #fff;
-    line-height: 1.3;
-    max-width: 100%;
-    box-sizing: border-box;
-    border: 0 solid #333;
-    border-radius: .6em;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    background-color:  rgba(16, 16, 16, 0.04);
-    background-repeat: no-repeat, repeat;
-    background-position: right .7em top 50%, 0 0;
-    background-size: .65em auto, 100%;
-    -webkit-box-shadow: 2px 2px 5px rgba(0,0,0),-1px -1px 1px rgb(34, 34, 34);
-    -moz-box-shadow: 2px 2px 5px rgba(0,0,0), -1px -1px 1px rgb(34, 34, 34);;
-    box-shadow: 2px 2px 3px rgb(0, 0, 0), -1px -1px 3px #ffffff61;
-  }
-
 
   .button-dark {
 		padding: 20;
-		background-color: #262a2e;
 		color: grey;
 		border: none;
-    /* width: 42px; */
-  	/* height: 42px; */
   	margin: 8px 8px 8px 8px;
   	border-radius: 5px;
   	background-color: #262a2e;
 	}
 
   .button-dark:hover {
-    /* background-color: blue; */
     color: white;
   }
 
@@ -608,9 +531,6 @@ margin: 0.5em 0px 0.5em 0em;
     color: white;
     background-color: grey;
   }
-
-
-
 
   .left {
     grid-column: 1;

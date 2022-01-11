@@ -2,11 +2,9 @@
 
   import { onMount, onDestroy } from "svelte";
 
-  import ItemProps from './ItemProps.svelte';
   import Mouse from '../widgets/devices/Mouse.svelte';
   import Mic from '../widgets/devices/Mic.svelte';
-  import SidebarDropdown from './SidebarDropdown.svelte';
-
+ 
   import {
     sidebarLiveCodeOptions,
     selectedLiveCodeOption,
@@ -16,12 +14,6 @@
     selectedModelOption,
     isSelectModelEditorDisabled,
 
-
-    loadEnvironmentOptions,
-    selectedLoadEnvironmentOption,
-    isLoadEnvironmentOptionsDisabled,
-
-    // sidebarGrammarOptions,
     isAddGrammarEditorDisabled,
 
     isAddAnalyserDisabled,
@@ -30,12 +22,7 @@
     selectedDebuggerOption,
     isSelectDebuggerDisabled,
 
-    focusedItemProperties,
-
-    items,
-    isUploadOverlayVisible,
-    hydrateJSONcomponent,
-    loadEnvironmentSnapshotEntries
+    items
   } from '../../stores/playground.js'
 
   import {
@@ -44,82 +31,19 @@
     debuggersMenuExpanded,
   } from '../../stores/sidebar.js';
 
-  import * as doNotZip from 'do-not-zip';
-	import downloadBlob from '../../utils/downloadBlob.js'
   import {clickOutside} from '../../utils/clickOutside.js';
 
   import { PubSub } from "../../utils/pubSub.js";
   const messaging = new PubSub();
 
-  let itemDeletionSubscriptionToken;
-  let changingPlaygroundSubscriptionToken;
-  let disableSidebarSubscriptionToken;
-
 	import { createEventDispatcher } from 'svelte';
   import { siteMode } from "../../stores/common";
 	const dispatch = createEventDispatcher();
 
+  let itemDeletionSubscriptionToken;
+  let changingPlaygroundSubscriptionToken;
+  let disableSidebarSubscriptionToken;
 
-  // let selectModel;
-  let selectedGrammarOption;
-  // let selectedModelOption;
-  let selectedVisualisationOption;
-
-
-  function resetEnvironment(){
-
-    $items = $items.slice($items.length);
-
-    $isSelectLiveCodeEditorDisabled = false;
-    $isSelectModelEditorDisabled = false;
-    $isAddGrammarEditorDisabled = false;
-    $isAddAnalyserDisabled = false;
-    $sidebarDebuggerOptions.map( option => option.disabled = false );
-  }
-
-  function storeEnvironment(){
-
-    // Add to playground history, e.g.
-    // Key – playground-2020-03-02T15:48:31.080Z,
-    // Value: [{"2":{"fixed":false,"resizable":true,"draggable":true,"min":{"w":1,"h":1},"max":{}, ...]
-	  window.localStorage["playground-" + new Date(Date.now()).toISOString()] = JSON.stringify($items);
-
-    loadEnvironmentSnapshotEntries();
-  }
-
-  function loadEnvironment(){
-
-    // Retrieve item, hydrate JSON into grid-items
-    let json = window.localStorage.getItem($selectedLoadEnvironmentOption.content);
-    $items = JSON.parse(json).map(item => hydrateJSONcomponent(item))
-
-    // Reset UI
-    $selectedLoadEnvironmentOption = $loadEnvironmentOptions[0];
-    $isLoadEnvironmentOptionsDisabled = true;
-  }
-
-  function downloadEnvironment(){
-
-    let timestamp = new Date(Date.now()).toISOString();
-
-    // Create blob from current playround state and filtered content from editor widgets
-    const blob = doNotZip.toBlob($items
-      .reduce(
-        (acc, val) => {
-          if (val.data && val.data.content) // if 'val' is an editor type (liveCode, grammar or model), `data.content` if defined
-            acc.push({ path: `${val.data.type}`+`.txt`, data: val.data.content });
-          return acc
-        }, [{ path: `playground.json`, data: localStorage.getItem("playground") }]
-      )
-    );
-    // Trigger a browser file download
-		downloadBlob(blob, 'sema-' + `${timestamp}` + '.zip');
-  }
-
-  function uploadEnvironment(){
-
-    $isUploadOverlayVisible = true;
-  }
 
   function dispatchAdd(type, selected){
     // console.log(`DEBUG:Sidebar:dispatchAdd: /add/${type}/${selected.id}`);
@@ -274,6 +198,7 @@
     }
   }
 
+
   function setButtonsStateOnChange(){
     //set all to enabled first
     $isSelectLiveCodeEditorDisabled = false;
@@ -284,6 +209,7 @@
     //then disable those which need disabling
     setButtonsStateOnLoad()
   }
+
 
   //disable all buttons
   //we use this when the DoesNotExist overlay is triggered to make sure
@@ -296,19 +222,6 @@
     $isAddAnalyserDisabled = true;
     $sidebarDebuggerOptions.map( option => option.disabled = true );
   }
-
-
-  onMount(() => {
-    setButtonsStateOnLoad();
-    itemDeletionSubscriptionToken = messaging.subscribe("plaground-item-deletion", activateSelectOnItemDeletion);
-    changingPlaygroundSubscriptionToken = messaging.subscribe("changing-playground", setButtonsStateOnChange);
-    disableSidebarSubscriptionToken = messaging.subscribe("disable-sidebar", disableAllButtons);
-  })
-
-  onDestroy(() => {
-    messaging.unsubscribe(itemDeletionSubscriptionToken);
-  });
-
 
   function launchLiveCodeEditorMenu(){
     //open livecode editor menu, close the others
@@ -353,6 +266,23 @@
     $selectedDebuggerOption.disabled = true;
     $debuggersMenuExpanded = false;
   }
+
+  onMount(() => {
+    setButtonsStateOnLoad();
+    itemDeletionSubscriptionToken = messaging.subscribe("plaground-item-deletion", activateSelectOnItemDeletion);
+
+    //when a new playground is loaded make sure sidebar is updated
+    changingPlaygroundSubscriptionToken = messaging.subscribe("changing-playground", setButtonsStateOnChange);
+    
+    disableSidebarSubscriptionToken = messaging.subscribe("disable-sidebar", disableAllButtons);
+  })
+
+  onDestroy(() => {
+    messaging.unsubscribe(itemDeletionSubscriptionToken);
+    messaging.unsubscribe(changingPlaygroundSubscriptionToken);
+    messaging.unsubscribe(disableSidebarSubscriptionToken);
+  });
+
 </script>
 
 <style>
@@ -369,12 +299,6 @@
     justify-content: flex-start;
   }
 
-  .controls {
-    margin-bottom: 10px;
-    margin-left: 3px;
-    margin-right: 5px;
-  }
-
   .layout-sidebar-group-widgets-container {
     /* height: 100%; */
     /* padding-top: 15px; */
@@ -389,14 +313,10 @@
   .button-dark{
     padding: 20;
     background-color: #262a2e;
-    /* background-color: #22262b; */
     color: #999;
     border: none;
-    /* width: 42px; */
-    /* height: 42px; */
     margin: 8px 8px 8px 8px;
     border-radius: 5px;
-    /* display: block; */
     height: 35px; /* we set the heigth explicitly in this case since we need it to be constant for the menu connector*/
   }
 
@@ -462,7 +382,7 @@
     right: 5px;
   }
 
-  .collapsible {
+  .collapsible-menu-container {
     display: ruby-base-container;
   }
 
@@ -472,7 +392,8 @@
 <div class="sidebar">
   <div class="layout-sidebar-group-widgets-container">
 
-    <div class='collapsible' use:clickOutside on:click_outside={()=>$liveCodeEditorMenuExpanded = false}>
+    <!-- LIVE CODE EDITOR LAUNCHER -->
+    <div class='collapsible-menu-container' use:clickOutside on:click_outside={()=>$liveCodeEditorMenuExpanded = false}>
     <button class='button-dark'
       aria-expanded={$liveCodeEditorMenuExpanded} 
       on:click={launchLiveCodeEditorMenu}
@@ -509,46 +430,8 @@
     {/if}
     </div>
 
-
-    <!-- <SidebarDropdown disabled={$isSelectLiveCodeEditorDisabled}>
-      <svg 
-        xmlns="http://www.w3.org/2000/svg" 
-        width="18" 
-        height="18" 
-        fill="currentColor" 
-        class="bi bi-plus-lg" 
-        viewBox="0 0 16 16" 
-        slot='icon'>
-        <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
-      </svg>
-
-      <div slot='content'>
-        {#each $sidebarLiveCodeOptions as liveCodeOption}
-          {#if liveCodeOption.text != 'livecode'}
-          <button disabled={$isSelectLiveCodeEditorDisabled} on:click={ () => launchLiveCodeEditor(liveCodeOption)} class='button-dark'>{liveCodeOption.text}</button>
-          {/if}
-        {/each}
-      </div>
-
-    </SidebarDropdown> -->
-<!-- 
-    <SidebarDropdown>
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-braces" viewBox="0 0 16 16" slot="icon">
-        <path d="M2.114 8.063V7.9c1.005-.102 1.497-.615 1.497-1.6V4.503c0-1.094.39-1.538 1.354-1.538h.273V2h-.376C3.25 2 2.49 2.759 2.49 4.352v1.524c0 1.094-.376 1.456-1.49 1.456v1.299c1.114 0 1.49.362 1.49 1.456v1.524c0 1.593.759 2.352 2.372 2.352h.376v-.964h-.273c-.964 0-1.354-.444-1.354-1.538V9.663c0-.984-.492-1.497-1.497-1.6zM13.886 7.9v.163c-1.005.103-1.497.616-1.497 1.6v1.798c0 1.094-.39 1.538-1.354 1.538h-.273v.964h.376c1.613 0 2.372-.759 2.372-2.352v-1.524c0-1.094.376-1.456 1.49-1.456V7.332c-1.114 0-1.49-.362-1.49-1.456V4.352C13.51 2.759 12.75 2 11.138 2h-.376v.964h.273c.964 0 1.354.444 1.354 1.538V6.3c0 .984.492 1.497 1.497 1.6z"/>
-      </svg>
-
-      <div slot='content'>
-        {#each $sidebarModelOptions as modelOption}
-          {#if modelOption.text != 'javascript'}
-          <button disabled={$isSelectModelEditorDisabled} on:click={ () => launchModelEditor(modelOption)} class='button-dark'>{modelOption.text}</button>
-          {/if}
-        {/each}
-      </div>
-
-    </SidebarDropdown> -->
-
     <!-- MODEL EDITOR LAUNCHER -->
-    <div class='collapsible'  use:clickOutside on:click_outside={()=>$modelEditorMenuExpanded = false}>
+    <div class='collapsible-menu-container'  use:clickOutside on:click_outside={()=>$modelEditorMenuExpanded = false}>
       <button class='button-dark'
         aria-expanded={$modelEditorMenuExpanded} 
         on:click={launchModelEditorMenu}
@@ -582,7 +465,7 @@
     </div>
 
     <!-- DEBUGGER LAUNCHER -->
-    <div class='collapsible'  use:clickOutside on:click_outside={()=>$debuggersMenuExpanded = false}>
+    <div class='collapsible-menu-container'  use:clickOutside on:click_outside={()=>$debuggersMenuExpanded = false}>
       <button class='button-dark'
         aria-expanded={$debuggersMenuExpanded} 
         on:click={launchDebuggersMenu}
@@ -613,6 +496,7 @@
       {/if}
     </div>
 
+    <!-- ANALYSER LAUNCHER -->
     <div>
       <button class="button-dark"
               on:click={ () => dispatchAdd('analyser') }
@@ -627,35 +511,33 @@
       </button>
     </div>
 
+    <!-- MOUSE LAUNCHER -->
     <div>
       <Mouse />
     </div>
 
+
+    <!-- MIC LAUNCHER -->
     <div>
       <Mic />
     </div>
 
-    <!--
-    <div>
-      <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' } controls"
+    <!-- Currently commented out as not implemented fully -->
+    <!-- <div>
+      <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
               on:click={ () => dispatchAdd('visualiser') }
               >
         visualiser
       </button>
     </div>
 
-    <div>
-      <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' } controls"
+    <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
               on:click={ () => dispatchAdd('MIDI') }
               >
         MIDI
       </button>
-    </div>
-    -->
-
-    <br>
+    </div> -->
 
   </div>
-
 
 </div>

@@ -1,10 +1,8 @@
 <script>
 
   import {
-    fullScreen,
     engineStatus,
     engineSoundLevel,
-    inputStreamConnected,
     siteMode
   } from '../../../stores/common.js';
 
@@ -55,19 +53,6 @@
     }
   }
 
-  // let handleConnectInputStream = async () => {
-
-  //   if(!engine){
-  //     engine = new Engine();
-  //   }
-  //   if( !$inputStreamConnected ) {
-  //     $inputStreamConnected = await engine.connectMediaStream();
-  //   } else {
-  //     $inputStreamConnected = await engine.disconnectMediaStream();
-  //   }
-  // }
-
-
   onMount( async () => {
     engine = new Engine();
   });
@@ -75,7 +60,6 @@
   onDestroy( () => {
     engine = null;
 	});
-
 
 </script>
 
@@ -111,96 +95,23 @@
   }
 
   .button-light {
-    width: 2.5em;
-    height: 2.5em;
-    display: block;
-    font-size: medium;
-    font-family: sans-serif;
-    font-weight: 400;
-    cursor: pointer;
+		padding: 20;
+		color: grey;
+		border: none;
+    width: 42px;
+  	margin: 8px 8px 8px 8px;
+  	border-radius: 5px;
+  	background-color: #fdf6e3;
+	}
+
+  .button-light:hover {
     color: black;
-    line-height: 1.3;
-    padding: 0.7em 1em 0.7em 1em;
-    max-width: 100%;
-    box-sizing: border-box;
-    border: 0 solid #333;
-    text-align: left;
-    border-radius: .6em;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    background-color:  rgba(16, 16, 16, 0.04);
-    background-repeat: no-repeat, repeat;
-    background-position: right .7em top 50%, 0 0;
-    background-size: .65em auto, 100%;
-    box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
-    -moz-box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
-    -webkit-box-shadow:  2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
   }
 
-  .button-light:active {
-    width: 2.5em;
-    height: 2.5em;
-    display: block;
-    font-size: medium;
-    font-family: sans-serif;
-    font-weight: 400;
-    cursor: pointer;
+  .button-light:active{
     color: black;
-    line-height: 1.3;
-    padding: 0.7em 1em 0.7em 1em;
-    max-width: 100%;
-    box-sizing: border-box;
-    border: 0 solid #333;
-    text-align: left;
-    border-radius: .6em;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    background-color:  rgba(16, 16, 16, 0.04);
-    background-repeat: no-repeat, repeat;
-    background-position: right .7em top 50%, 0 0;
-    background-size: .65em auto, 100%;
-    box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
-    -moz-box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
-    -webkit-box-shadow:  2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0)
-  }
-
-  .button-light:disabled {
-    width: 2.5em;
-    height: 2.5em;
-    display: block;
-    font-size: medium;
-    font-family: sans-serif;
-    font-weight: 400;
-    cursor: pointer;
-    color: #888;
-    line-height: 1.3;
-    padding: 0.7em 1em 0.7em 1em;
-    max-width: 100%;
-    box-sizing: border-box;
-    border: 0 solid #333;
-    text-align: left;
-    border-radius: .6em;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    background-color:  rgba(16, 16, 16, 0.04);
-    background-repeat: no-repeat, repeat;
-    background-position: right .7em top 50%, 0 0;
-    background-size: .65em auto, 100%;
-    box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
-    -moz-box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
-    -webkit-box-shadow:  2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0)
-  }
-
-
-
-/* DO WE NEED THIS? */
-/* 
-  path {
-    transform: translate(-3px, -5px)
-  } */
+    background-color: grey;
+  }  
 
   .audio-active {
     fill: #0050A0;
@@ -210,10 +121,8 @@
     fill: rgb(133, 130, 130);
   }
 
-
   .no-audio {
     fill: red;
-
   }
 
   .mute-audio {
@@ -226,17 +135,6 @@
   }
 
   .engine-sound-level-text-container {
-    /* width: 2em; */
-    /* margin: 0em 0.1em 0em 0em; */
-    /* display: flex;
-    align-items: center;
-    align-content: flex-end; */
-    /* width: 42px; */
-    /* display: inline-block; */
-  	/* height: 42px; */
-  	/* margin: 8px 8px 8px 8px; */
-  	/* border-radius: 5px; */
-  	/* background-color: #262a2e; */
     margin: 13px 0px 0px 0px;
   }
 
@@ -247,7 +145,6 @@
     color: #ccc;
     font-size: medium;
   }
-
 
 </style>
 
@@ -320,10 +217,3 @@
 
   </div>
 </button>
-
-
-
-
-
-
-

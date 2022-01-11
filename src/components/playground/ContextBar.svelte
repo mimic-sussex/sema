@@ -4,29 +4,13 @@
     onDestroy,
   } from 'svelte';
 
-
   import {
-    sidebarLiveCodeOptions,
-    selectedLiveCodeOption,
-    isSelectLiveCodeEditorDisabled,
-
-    sidebarModelOptions,
-    selectedModelOption,
-    isSelectModelEditorDisabled,
-
     // sidebarGrammarOptions,
     isAddGrammarEditorDisabled,
-
     isAddAnalyserDisabled,
-
-    sidebarDebuggerOptions,
-    selectedDebuggerOption,
-    isSelectDebuggerDisabled,
     // sidebarVisualisationOptions,
-
     focusedItem,
     focusedItemProperties,
-
     // editorThemes,
     // selectedModel,
   } from '../../stores/playground.js';
@@ -95,34 +79,43 @@
     }
   }
 
+  // Not currently working, need to reload component for it to work.
+  function toggleLineNumbers(){
+    console.log("DEBUG: Toggle line numbers", $focusedItem.data.lineNumbers, typeof $focusedItem.data.lineNumbers)
+    if ($focusedItem.data.lineNumbers == true){
+      $focusedItem.data.lineNumbers = false;
+    }
+    else if ($focusedItem.data.lineNumbers == false){
+      $focusedItem.data.lineNumbers = true;
+    }
+    console.log("DEBUG: Toggle line numbers", $focusedItem.data.lineNumbers, typeof $focusedItem.data.lineNumbers)
+    // $items = $items;
+  }
+
   // Props
-  
   // export let lineNumbers;
 	// export let hasFocus;
 	// export let content;      // liveCode Value that is injected and to which CodeMirror is bound
   // export let grammarSource;
   // export let grammar;
 
-
-
   // export let liveCodeSource;
   // export let component;
   // export let className;
 
   onMount( async () => {
-  
-    console.log('onMount context bar', $focusedItemProperties);
+    // console.log('DEBUG: onMount context bar', $focusedItemProperties);
   });
 
-  function logFocused(){
-    console.log($focusedItem.data.type);
-  }
+  onDestroy(() => {
+    // console.log('DEBUG: onDestroy context bar', $focusedItemProperties);
+  });
 
 </script>
 
 <style>
+
   .context-bar-container{
-    
     width: 100%;
     height: 1.2em;
     display: flex;
@@ -133,7 +126,12 @@
     /* border-bottom: 1px solid #080808; */
     /* margin-left: 0.5em; */
     background-color:#262a2e;
-
+    border-top: 1px solid #212529;
+    /* border-left: 1px solid #212529;
+    border-right: 1px solid #212529;
+    border-bottom: 1px solid #181a1d; */
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
   }
 
   .controls{
@@ -161,30 +159,16 @@
     background-color: #262a2e;
   }
 
-  /* .button-dark{
-    
-    margin: 0;
-    background-color: #262a2e;
-    color:white;
-    border: 0;
-  } */
-
   .button-dark{
-    /* padding: 20; */
     padding: 0px 20px 0px 20px;
     margin: 0;
-    background-color: #262a2e;
     color: #999;
     border: none;
-    /* width: 42px; */
-    /* height: 42px; */
-    /* margin: 8px 8px 8px 8px; */
     border-radius: 5px;
     background-color: #262a2e;
   }
 
   .button-dark:hover {
-    /* background-color: blue; */
     color: white;
   }
 
@@ -217,15 +201,9 @@
     vertical-align: middle;
     fill:#999;
   }
+
 </style>
 
-
-<!-- 
-<div>
-  <button>Language</button>
-  <button>Grammar</button>
-
-</div> -->
 
 <div class="context-bar-container">
 
@@ -258,25 +236,10 @@
       <span>None</span>
     {/if}
     
-      <!-- {$focusedItem.data.type} -->
-    
-    <!-- {#if $focusedItem}
-      {#if focusedItem.data}
-        <button>{$focusedItem.data.type}<>
-      {/if}
-    {/if}
-     -->
-    <!-- <button on:click={ logFocused }>test</button> -->
+    <!-- Loop through and display focused item properties -->
     {#each $focusedItemProperties as itemProp }
-       <!-- {#if itemProp.type}
-        <div class="controls">
-        </div>
-        
-      {/if} -->
-      {#if itemProp.type}
-        <span>No properties for {itemProp.type}</span>
-        
-      {:else if itemProp.lineNumbers }
+      
+      {#if itemProp.lineNumbers }
 
         <div class="controls">
           <label class="input-dark">Line Numbers
@@ -289,7 +252,19 @@
             <span  class="checkbox-span"></span>
           </label>
         </div>
+      <!-- {#if itemProp.lineNumbers == true || itemProp.lineNumbers == false }
 
+        <div class="controls">
+          <label class="input-dark">Line Numbers
+            <input  type="checkbox"
+                    class="checkbox-input"
+                    checked="checked"
+              
+                    on:click={toggleLineNumbers}
+                    >
+            <span  class="checkbox-span"></span>
+          </label>
+        </div> -->
       {:else if itemProp.channelID }
 
         <div class="controls">
@@ -342,7 +317,10 @@
                   Grammar Editor
           </button>
         </div>
-
+      
+      {:else if itemProp.type}
+        <span>No properties for {itemProp.type}</span>
+        
       {/if}
 
     {/each}
