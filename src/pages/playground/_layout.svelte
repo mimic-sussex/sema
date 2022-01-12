@@ -644,7 +644,7 @@
   }
   .sidebar-container {
     /* background: linear-gradient(150deg, rgba(0,18,1,1) 0%, rgba(7,5,17,1) 33%, rgba(16,12,12,1) 67%, rgb(12, 12, 12) 100%); */
-    background: #151515;
+    background: #3a4147;
     grid-area: sidebar;
     height: 100%;
     /* width: auto; width is defined by child */
@@ -681,7 +681,7 @@
   }
 
   .dashboard-container-dark {
-    background: #212121;
+    background: #3a4147;
   }
 
   .dashboard-container-light {

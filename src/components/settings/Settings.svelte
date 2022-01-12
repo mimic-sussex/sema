@@ -31,7 +31,7 @@
 
   .screen-container {
     /* width: 7.5em; */
-    width: 10.0em;
+    /* width: 10.0em; */
     display:inline-flex;
     justify-content:space-between;
   }
@@ -44,7 +44,7 @@
   }
 
   .engine-container {
-    width: 12.5em;
+    /* width: 12.5em; */
     display:inline-flex;
     justify-content:space-between;
   }
