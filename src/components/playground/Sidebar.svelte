@@ -289,11 +289,11 @@
   .sidebar {
     /* width: 160px; */
     /* height: calc(100vh - 43px); */
+    width: 64px;
     height: 100%;
     margin-top: 0px;
     display: flex;
     flex-direction: column;
-    /* justify-content: flex-start; */
     justify-content: flex-start;
   }
 
