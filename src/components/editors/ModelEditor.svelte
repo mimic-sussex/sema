@@ -289,6 +289,7 @@
 
       //subcribe to restart-ml message, made by restart button from itemProps.
       messaging.subscribe('restart-ml', async () =>{ 
+        console.log("DEBUG: restarting learner")
         if (learner.worker){
           learner.terminate()
         }
