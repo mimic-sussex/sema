@@ -51,7 +51,9 @@
 
 </script>
 
-
+<svelte:head>
+	<title>Sema – Change Password</title>
+</svelte:head>
 
 <div class='container-change-password'>
 

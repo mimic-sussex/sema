@@ -109,6 +109,15 @@ async function fetchProjects (username) {
 
 </script>
 
+<svelte:head>
+  {#if view == 'profile'}
+	  <title>Sema – {$params.userId}'s Profile</title>
+  {:else if view == 'user-list'}
+    <title>Sema – User List</title>
+  {:else if view='user-not-found'}
+    <title>Sema – User Not Found</title>
+  {/if}
+</svelte:head>
 
 {#if view == ''}
   loading...

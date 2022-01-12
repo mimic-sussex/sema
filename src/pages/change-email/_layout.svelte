@@ -51,12 +51,14 @@
 
 </script>
 
+<svelte:head>
+	<title>Sema – Change Email</title>
+</svelte:head>
 
-
-<div class='container-change-password'>
+<div class='container-change-email'>
 
   
-  <div class='container-change-password-form'>
+  <div class='container-change-email-form'>
     <h1>Change Email</h1>
 
     
@@ -68,7 +70,7 @@
             />
     
     <br>
-    <!-- NEW PASSWORD -->
+    <!-- NEW EMAIL -->
     <label for="new-email">New Email:
       <div class=input>
         <input type="email" id="new-email" name="new-email"
@@ -78,7 +80,7 @@
 
     
 
-    <!-- CONFIRM PASSWORD -->
+    <!-- CONFIRM EMAIL -->
     <label for="confirm-email">Confirm new email:
       <div class=input>
         <input type="email" id="confirm-email" name="new-email"
@@ -87,7 +89,7 @@
     </label>
     
 
-    <input style="" type="submit" value="Submit" alt='Clicking submit will update your password, <br> then redirect you to the login page.'on:click={() => checkAndSend()}>
+    <input style="" type="submit" value="Submit" alt='Clicking submit will update your email, <br> then redirect you to the login page.'on:click={() => checkAndSend()}>
 
     <!-- <br><span></span> -->
           
@@ -104,13 +106,13 @@
 
 <style>
 
-  .container-change-password {
+  .container-change-email {
     display:flex;
     justify-content:center;
     align-items:center;
   }
 
-  .container-change-password-form {
+  .container-change-email-form {
     padding: 50px 0 100px 0;
   }
 
