@@ -85,6 +85,10 @@
     text-decoration: underline;
   } */
 
+  nav {
+    background-color: #262a2e;
+  }
+
   [aria-current] {
     /* font-weight: bold; */
     /* background-color: #cc33ff; */

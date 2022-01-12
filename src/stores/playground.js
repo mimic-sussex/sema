@@ -474,7 +474,7 @@ export async function createNewItem (type, content){
 		case "liveCodeEditor":
 			data = {
 				component: LiveCodeEditor,
-				background: "#151515",
+				background: "#262a2e",
 				theme: "icecoder",
 				grammarSource: content.grammar,
 				liveCodeSource: content.livecode,
@@ -492,7 +492,7 @@ export async function createNewItem (type, content){
 		case "grammarEditor":
 			data = {
 				component: GrammarEditor,
-				background: '#151515',
+				background: '#262a2e',
 				theme: 'monokai',
 				grammarSource: content.grammarSource,
 				content: content.grammar, // Get the store value with Svelte's get
@@ -509,7 +509,7 @@ export async function createNewItem (type, content){
 		case "modelEditor":
 			data = {
 				component: ModelEditor,
-				background: '#151515',
+				background: '#262a2e',
 				theme: 'monokai',
 				content: content,
 			}

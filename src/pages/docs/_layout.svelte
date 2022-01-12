@@ -100,7 +100,7 @@
     display: flex;
     flex-direction: column;
     padding: 20px 2px 0px 2px;
-    background-color: #212121;/*#999;*/
+    background-color: #262a2e;/*#999;*/
     /* border-radius: 5px; */
     border-right: 1px solid white;
     overflow-y: auto;
@@ -131,7 +131,7 @@
   }
 
   .sub-headings-container {
-    background-color: #212121;
+    background-color: #262a2e;
     color: white;
     width: 200px;
     height: calc(100vh - 58px);
@@ -154,12 +154,12 @@
   }
 
   .sub-nav-links:hover {
-    background-color: #333;
+    background-color: #3a4147;
     /* transition-delay:1s; */
   }
 
   [aria-current] {
-    background-color: #333;
+    background-color: #181a1d;
   }
 
 </style>

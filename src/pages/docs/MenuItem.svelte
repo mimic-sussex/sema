@@ -49,12 +49,12 @@ a.button {
 }
 
 .nav-links:hover {
-  background-color: #333;
+  background-color: #3a4147;
 }
 
 
 [aria-current] {
-  background-color: #404040;
+  background-color: #181a1d;
   font-weight: bold;
   /* transition-delay:0.1s; */
 }

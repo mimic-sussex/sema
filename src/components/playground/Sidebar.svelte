@@ -2,8 +2,9 @@
 
   import { onMount, onDestroy } from "svelte";
 
-  import ItemProps from './ItemProps.svelte';
-
+  import Mouse from '../widgets/devices/Mouse.svelte';
+  import Mic from '../widgets/devices/Mic.svelte';
+ 
   import {
     sidebarLiveCodeOptions,
     selectedLiveCodeOption,
@@ -13,12 +14,6 @@
     selectedModelOption,
     isSelectModelEditorDisabled,
 
-
-    loadEnvironmentOptions,
-    selectedLoadEnvironmentOption,
-    isLoadEnvironmentOptionsDisabled,
-
-    // sidebarGrammarOptions,
     isAddGrammarEditorDisabled,
 
     isAddAnalyserDisabled,
@@ -27,89 +22,28 @@
     selectedDebuggerOption,
     isSelectDebuggerDisabled,
 
-    focusedItemProperties,
-
-    items,
-    isUploadOverlayVisible,
-    hydrateJSONcomponent,
-    loadEnvironmentSnapshotEntries
+    items
   } from '../../stores/playground.js'
 
-  import * as doNotZip from 'do-not-zip';
-	import downloadBlob from '../../utils/downloadBlob.js'
+  import {
+    liveCodeEditorMenuExpanded,
+    modelEditorMenuExpanded,
+    debuggersMenuExpanded,
+  } from '../../stores/sidebar.js';
+
+  import {clickOutside} from '../../utils/clickOutside.js';
 
   import { PubSub } from "../../utils/pubSub.js";
   const messaging = new PubSub();
-
-  let itemDeletionSubscriptionToken;
-  let changingPlaygroundSubscriptionToken;
-  let disableSidebarSubscriptionToken;
 
 	import { createEventDispatcher } from 'svelte';
   import { siteMode } from "../../stores/common";
 	const dispatch = createEventDispatcher();
 
+  let itemDeletionSubscriptionToken;
+  let changingPlaygroundSubscriptionToken;
+  let disableSidebarSubscriptionToken;
 
-  // let selectModel;
-  let selectedGrammarOption;
-  // let selectedModelOption;
-  let selectedVisualisationOption;
-
-
-  function resetEnvironment(){
-
-    $items = $items.slice($items.length);
-
-    $isSelectLiveCodeEditorDisabled = false;
-    $isSelectModelEditorDisabled = false;
-    $isAddGrammarEditorDisabled = false;
-    $isAddAnalyserDisabled = false;
-    $sidebarDebuggerOptions.map( option => option.disabled = false );
-  }
-
-  function storeEnvironment(){
-
-    // Add to playground history, e.g.
-    // Key – playground-2020-03-02T15:48:31.080Z,
-    // Value: [{"2":{"fixed":false,"resizable":true,"draggable":true,"min":{"w":1,"h":1},"max":{}, ...]
-	  window.localStorage["playground-" + new Date(Date.now()).toISOString()] = JSON.stringify($items);
-
-    loadEnvironmentSnapshotEntries();
-  }
-
-  function loadEnvironment(){
-
-    // Retrieve item, hydrate JSON into grid-items
-    let json = window.localStorage.getItem($selectedLoadEnvironmentOption.content);
-    $items = JSON.parse(json).map(item => hydrateJSONcomponent(item))
-
-    // Reset UI
-    $selectedLoadEnvironmentOption = $loadEnvironmentOptions[0];
-    $isLoadEnvironmentOptionsDisabled = true;
-  }
-
-  function downloadEnvironment(){
-
-    let timestamp = new Date(Date.now()).toISOString();
-
-    // Create blob from current playround state and filtered content from editor widgets
-    const blob = doNotZip.toBlob($items
-      .reduce(
-        (acc, val) => {
-          if (val.data && val.data.content) // if 'val' is an editor type (liveCode, grammar or model), `data.content` if defined
-            acc.push({ path: `${val.data.type}`+`.txt`, data: val.data.content });
-          return acc
-        }, [{ path: `playground.json`, data: localStorage.getItem("playground") }]
-      )
-    );
-    // Trigger a browser file download
-		downloadBlob(blob, 'sema-' + `${timestamp}` + '.zip');
-  }
-
-  function uploadEnvironment(){
-
-    $isUploadOverlayVisible = true;
-  }
 
   function dispatchAdd(type, selected){
     // console.log(`DEBUG:Sidebar:dispatchAdd: /add/${type}/${selected.id}`);
@@ -263,6 +197,7 @@
     }
   }
 
+
   function setButtonsStateOnChange(){
     //set all to enabled first
     $isSelectLiveCodeEditorDisabled = false;
@@ -273,6 +208,7 @@
     //then disable those which need disabling
     setButtonsStateOnLoad()
   }
+
 
   //disable all buttons
   //we use this when the DoesNotExist overlay is triggered to make sure
@@ -286,23 +222,65 @@
     $sidebarDebuggerOptions.map( option => option.disabled = true );
   }
 
+  function launchLiveCodeEditorMenu(){
+    //open livecode editor menu, close the others
+    $liveCodeEditorMenuExpanded = !$liveCodeEditorMenuExpanded;
+    $modelEditorMenuExpanded = false;
+    $debuggersMenuExpanded = false;
+  }
+
+  function launchModelEditorMenu(){
+    $liveCodeEditorMenuExpanded = false;
+    $modelEditorMenuExpanded = !$modelEditorMenuExpanded;
+    $debuggersMenuExpanded = false;
+  }
+
+  function launchDebuggersMenu(){
+    $liveCodeEditorMenuExpanded = false;
+    $modelEditorMenuExpanded = false;
+    $debuggersMenuExpanded = !$debuggersMenuExpanded;
+  }
+
+  function closeAllMenus(){
+    $liveCodeEditorMenuExpanded = $modelEditorMenuExpanded = $debuggersMenuExpanded = false;
+  }
+
+  function launchLiveCodeEditor (liveCodeOption) {
+    $selectedLiveCodeOption = liveCodeOption;
+    dispatchAdd('live', $selectedLiveCodeOption)
+    $isSelectLiveCodeEditorDisabled = true;
+    $liveCodeEditorMenuExpanded = false; //close menu
+  }
+
+  function launchModelEditor(modelOption) {
+    $selectedModelOption = modelOption;
+    dispatchAdd('model', $selectedModelOption);
+    $isSelectModelEditorDisabled = true;
+    $modelEditorMenuExpanded = false; // close menu
+  }
+
+  function launchDebugger(debuggerOption) {
+    $selectedDebuggerOption = debuggerOption;
+    dispatchAdd('debugger', $selectedDebuggerOption);
+    $selectedDebuggerOption.disabled = true;
+    $debuggersMenuExpanded = false;
+  }
 
   onMount(() => {
     setButtonsStateOnLoad();
     itemDeletionSubscriptionToken = messaging.subscribe("plaground-item-deletion", activateSelectOnItemDeletion);
+
+    //when a new playground is loaded make sure sidebar is updated
     changingPlaygroundSubscriptionToken = messaging.subscribe("changing-playground", setButtonsStateOnChange);
+    
     disableSidebarSubscriptionToken = messaging.subscribe("disable-sidebar", disableAllButtons);
-    //otherwise debugger dropdown doesnt come up with text.
-    // we set this now with the others in playground.js
-    // $selectedDebuggerOption = $sidebarDebuggerOptions[0];
   })
 
   onDestroy(() => {
     messaging.unsubscribe(itemDeletionSubscriptionToken);
+    messaging.unsubscribe(changingPlaygroundSubscriptionToken);
+    messaging.unsubscribe(disableSidebarSubscriptionToken);
   });
-
-
-  
 
 </script>
 
@@ -319,422 +297,92 @@
     justify-content: flex-start;
   }
 
-  .controls {
-    margin-bottom: 10px;
-    margin-left: 3px;
-    margin-right: 5px;
-  }
-
-
   .layout-sidebar-group-widgets-container {
     /* height: 100%; */
-    padding-top: 15px;
-    margin-left:3px;
+    /* padding-top: 15px; */
+    margin-left: 0.5em;
     margin-right:2px;
+    background-color: #262a2e;
+    border-radius: 5px;
+    width: 50px;
+    text-align:center;
   }
 
-  .layout-sidebar-group-properties-container {
-    /* height: 100%; */
-    padding-top: 3px;
-    margin-left:3px;
-    margin-right:2px;
-  }
-
-  .combobox-light {
-    display: block;
-    font-size: medium;
-    font-family: sans-serif;
-    font-weight: 400;
-    cursor: pointer;
-    /* color: #000; */
-    line-height: 1.3;
-    padding: 0.7em 1em 0.7em 1em;
-    width: 8em;
-    box-sizing: border-box;
-    margin: 0;
-    border: 0 solid #333;
-    text-align: left;
-    border-radius: .6em;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    background-color: rgba(16, 16, 16, 0.04);
-    background-repeat: no-repeat, repeat;
-    background-position: right .7em top 50%, 0 0;
-    background-size: .65em auto, 100%;
-    box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
-    -moz-box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
-    -webkit-box-shadow:  2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
-  }
-
-  .combobox-light:disabled {
-    display: block;
-    font-size: medium;
-    font-family: sans-serif;
-    font-weight: 400;
-    cursor: not-allowed;
-    color: #888;
-    line-height: 1.3;
-    padding: 0.7em 1em 0.7em 1em;
-    width: 8em;
-    box-sizing: border-box;
-    margin: 0;
-    border: 0 solid #333;
-    text-align: left;
-    border-radius: .6em;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    background-color: rgba(16, 16, 16, 0.04);
-    background-repeat: no-repeat, repeat;
-    background-position: right .7em top 50%, 0 0;
-    background-size: .65em auto, 100%;
-    box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
-    -moz-box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
-    -webkit-box-shadow:  2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
-  }
-
-
-
-  .combobox-dark {
-    display: block;
-    font-size: medium;
-    font-family: sans-serif;
-    font-weight: 400;
-    cursor: pointer;
-    color: white;
-    line-height: 1.3;
-    padding: 0.7em 1em 0.7em 1em;
-    width: 8em;
-    box-sizing: border-box;
-    margin: 0;
-    border: 0 solid #333;
-    text-align: left;
-    border-radius: .6em;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    background-color: rgba(16, 16, 16, 0.04);
-    background-repeat: no-repeat, repeat;
-    background-position: right .7em top 50%, 0 0;
-    background-size: .65em auto, 100%;
-    -webkit-box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
-    -moz-box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
-    box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
-  }
-
-
-  .combobox-dark:hover {
-    display: block;
-    font-size: medium;
-    font-family: sans-serif;
-    font-weight: 500;
-    cursor: pointer;
-    color: white;
-    line-height: 1.3;
-    padding: 0.7em 1em 0.7em 1em;
-    width: 8em;
-    box-sizing: border-box;
-    margin: 0;
-    border: 0 solid #333;
-    text-align: left;
-    border-radius: .6em;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    background-color: linear-gradient(rgba(16, 16, 16, 1), rgba(16, 16, 16, 0.2));
-    background-repeat: no-repeat, repeat;
-    background-position: right .7em top 50%, 0 0;
-    background-size: .65em auto, 100%;
-    -webkit-box-shadow: 5px 5px 20px -5px rgba(0,0,0,0.75), -5px -5px 20px rgba(255, 255, 255, 0.954);
-    -moz-box-shadow: 5px 5px 20px -5px rgba(0,0,0,0.75), -5px -5px 20px rgba(255, 255, 255, 0.954);
-    box-shadow: 2px 2px 3px rgb(0, 0, 0), -1px -1px 3px #ffffff61;
-  }
-
-  .combobox-dark:focus {
-    display: block;
-    font-size: medium;
-    font-family: sans-serif;
-    font-weight: 500;
-    cursor: pointer;
-    color: #fff;
-    line-height: 1.3;
-    padding: 0.7em 1em 0.7em 1em;
-    width: 8em;
-    box-sizing: border-box;
-    margin: 0;
-    border: 0 solid #333;
-    text-align: left;
-    border-radius: .6em;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    background-color: rgba(16, 16, 16, 0.04);
-    background-repeat: no-repeat, repeat;
-    background-position: right .7em top 50%, 0 0;
-    background-size: .65em auto, 100%;
-    -webkit-box-shadow: 5px 5px 20px -5px rgba(0,0,0,0.75), -5px -5px 20px rgba(255, 255, 255, 0.954);
-    -moz-box-shadow: 5px 5px 20px -5px rgba(0,0,0,0.75), -5px -5px 20px rgba(255, 255, 255, 0.954);
-    box-shadow: 2px 2px 3px rgb(0, 0, 0), -1px -1px 3px #ffffff61;
-  }
-
-  .combobox-dark:disabled {
-    display: block;
-    font-size: medium;
-    font-family: sans-serif;
-    font-weight: 400;
-    cursor: not-allowed;
-    color: #888;
-    line-height: 1.3;
-    padding: 0.7em 1em 0.7em 1em;
-    width: 8em;
-    box-sizing: border-box;
-    margin: 0;
-    border: 0 solid #333;
-    text-align: left;
-    border-radius: .6em;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    background-color: rgba(16, 16, 16, 0.04);
-    background-repeat: no-repeat, repeat;
-    background-position: right .7em top 50%, 0 0;
-    background-size: .65em auto, 100%;
-    -webkit-box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
-    -moz-box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
-    box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
-  }
-
-  .button-dark {
-    display: block;
-    font-size: medium;
-    font-family: sans-serif;
-    font-weight: 400;
-    cursor: pointer;
-    color: white;
-    line-height: 1.3;
-    padding: 0.7em 1em 0.7em 1em;
-    width: 8em;
-    max-width: 100%;
-    box-sizing: border-box;
-    border: 0 solid #333;
-    text-align: left;
-    border-radius: .6em;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    background-color:  rgba(16, 16, 16, 0.04);
-    background-repeat: no-repeat, repeat;
-    background-position: right .7em top 50%, 0 0;
-    background-size: .65em auto, 100%;
-    -webkit-box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
-    -moz-box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
-    box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
+  .button-dark{
+    padding: 20;
+    background-color: #262a2e;
+    color: #999;
+    border: none;
+    margin: 8px 8px 8px 8px;
+    border-radius: 5px;
+    height: 35px; /* we set the heigth explicitly in this case since we need it to be constant for the menu connector*/
   }
 
   .button-dark:hover {
-    display: block;
-    font-size: medium;
-    font-family: sans-serif;
-    font-weight: 500;
-    cursor: pointer;
+    /* background-color: blue; */
     color: white;
-    line-height: 1.3;
-    padding: 0.7em 1em 0.7em 1em;
-    width: 8em;
-    max-width: 100%;
-    box-sizing: border-box;
-    border: 0 solid #333;
-    text-align: left;
-    /* box-shadow: 0 1px 0 0px rgba(4, 4, 4, 0.04); */
-    border-radius: .6em;
-    /* border-right-color: rgba(34,37,45, 0.1);
-    border-right-style: solid;
-    border-right-width: 1px;
-    border-bottom-color: rgba(34,37,45, 0.1);
-    border-bottom-style: solid;
-    border-bottom-width: 1px; */
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    background-color:  linear-gradient(rgba(16, 16, 16, 0.8), rgba(16, 16, 16, 0.08));
-    /* background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007CB2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'),
-      linear-gradient(to bottom, #ffffff 0%,#e5e5e5 100%); */
-    background-repeat: no-repeat, repeat;
-    background-position: right .7em top 50%, 0 0;
-    background-size: .65em auto, 100%;
-    -webkit-box-shadow: 2px 2px 5px rgba(0,0,0),-0.5px -0.5px 3px rgb(34, 34, 34);
-    -moz-box-shadow: 2px 2px 5px rgba(0,0,0), -0.5px -0.5px 3px rgb(34, 34, 34);;
-    box-shadow: 2px 2px 3px rgb(0, 0, 0), -1px -1px 3px #ffffff61;
-
   }
 
-  .button-dark:active {
-    display: block;
-    font-size: medium;
-    font-family: sans-serif;
-    font-weight: 400;
-    cursor: pointer;
+  .button-dark:active{
     color: white;
-    line-height: 1.3;
-    /* padding: 0.7em 1em 0.7em 1em; */
-    width: 8em;
-    max-width: 100%;
-    box-sizing: border-box;
-    /* border: 0 solid #333; */
-    text-align: left;
-    /* box-shadow: 0 1px 0 0px rgba(4, 4, 4, 0.04); */
-    /* border-radius: .6em; */
-    /* border-right-color: rgba(34,37,45, 0.1);
-    border-right-style: solid;
-    border-right-width: 1px;
-    border-bottom-color: rgba(34,37,45, 0.1);
-    border-bottom-style: solid;
-    border-bottom-width: 1px; */
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    background-color:  rgba(16, 16, 16, 0.04);;
-    /* background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007CB2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'),
-      linear-gradient(to bottom, #ffffff 0%,#e5e5e5 100%); */
-    background-repeat: no-repeat, repeat;
-    /* background-position: right .7em top 50%, 0 0; */
-    background-size: .65em auto, 100%;
-    /* -webkit-box-shadow: -1px -1px 1px rgb(34, 34, 34), 2px 2px 5px rgba(0,0,0),;
-    -moz-box-shadow: -1px -1px 1px rgb(34, 34, 34), 2px 2px 5px rgba(0,0,0), ;
-    box-shadow:  -1px -1px 3px #ffffff61, 2px 2px 3px rgb(0, 0, 0); */
-    box-shadow:  -1px -1px 3px rgba(16, 16, 16, 0.4), 0.5px 0.5px 0.5px rgba(16, 16, 16, 0.04);
+    background-color: grey;
   }
 
   .button-dark:disabled {
-    display: block;
-    font-size: medium;
-    font-family: sans-serif;
-    font-weight: 400;
-    cursor: not-allowed;
-    color: #888;
-    line-height: 1.3;
-    padding: 0.7em 1em 0.7em 1em;
-    width: 8em;
-    max-width: 100%;
-    box-sizing: border-box;
-    border: 0 solid #333;
-    text-align: left;
-    border-radius: .6em;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    background-color:  rgba(16, 16, 16, 0.04);
-    background-repeat: no-repeat, repeat;
-    background-position: right .7em top 50%, 0 0;
-    background-size: .65em auto, 100%;
-    box-shadow: 2px 2px 3px rgb(0, 0, 0), -1px -1px 3px #ffffff61;
-    -moz-box-shadow: 2px 2px 3px rgb(0, 0, 0), -1px -1px 3px #ffffff61;
-    -webkit-box-shadow: 2px 2px 3px rgb(0, 0, 0), -1px -1px 3px #ffffff61;
-  }
-
-  .group-labels {
-    padding-left:5px;
-    margin-bottom: 10px;
-  }
-
-  .group-label {
-    /* color: #666; */
-    font-size: medium;
-    font-family: sans-serif;
-    font-weight: 400
-  }
-
-  .button-light {
-    display: block;
-    font-size: medium;
-    font-family: sans-serif;
-    font-weight: 400;
-    cursor: pointer;
-    color: black;
-    line-height: 1.3;
-    padding: 0.7em 1em 0.7em 1em;
-    width: 8em;
-    max-width: 100%;
-    box-sizing: border-box;
-    border: 0 solid #333;
-    text-align: left;
-    border-radius: .6em;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    background-color:  rgba(16, 16, 16, 0.04);
-    background-repeat: no-repeat, repeat;
-    background-position: right .7em top 50%, 0 0;
-    background-size: .65em auto, 100%;
-    box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
-    -moz-box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
-    -webkit-box-shadow:  2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
-  }
-
-  .button-light:active {
-    display: block;
-    font-size: medium;
-    font-family: sans-serif;
-    font-weight: 400;
-    cursor: pointer;
-    color: black;
-    line-height: 1.3;
-    padding: 0.7em 1em 0.7em 1em;
-    width: 8em;
-    max-width: 100%;
-    box-sizing: border-box;
-    border: 0 solid #333;
-    text-align: left;
-    border-radius: .6em;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    background-color:  rgba(16, 16, 16, 0.04);
-    background-repeat: no-repeat, repeat;
-    background-position: right .7em top 50%, 0 0;
-    background-size: .65em auto, 100%;
-    box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
-    -moz-box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
-    -webkit-box-shadow:  2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0)
-  }
-  .button-light:disabled {
-    display: block;
-    font-size: medium;
-    font-family: sans-serif;
-    font-weight: 400;
-    cursor: pointer;
-    color: #888;
-    line-height: 1.3;
-    padding: 0.7em 1em 0.7em 1em;
-    width: 8em;
-    max-width: 100%;
-    box-sizing: border-box;
-    border: 0 solid #333;
-    text-align: left;
-    border-radius: .6em;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    background-color:  rgba(16, 16, 16, 0.04);
-    background-repeat: no-repeat, repeat;
-    background-position: right .7em top 50%, 0 0;
-    background-size: .65em auto, 100%;
-    box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
-    -moz-box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
-    -webkit-box-shadow:  2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0)
-  }
-
-  /*for the dropdown menu of the comboboxes, we set the color to fix css issue on linux
-  and windows*/
-  .dropdown-content {
-    color: black;
-  }
-
-  .dropdown-content:disabled {
     color:grey;
+    /* background-color:grey; */
+    cursor:not-allowed;
   }
 
+  .button-dark[aria-expanded="true"] {
+    background-color: #212529;
+    color:white;
+    border-radius: 5px 0px 0px 5px;
+  }
+
+  .menu-contents{
+    position:absolute;
+    z-index:1;
+    display: inline;
+    background-color: #212529;
+    border-radius: 0px 5px 5px 5px;
+    margin-top: 8px;
+    margin-left: 8px;
+    /* float:right; */
+  }
+
+  .menu-contents-button {
+    display: block;
+    background-color: #212529;
+  }
+
+  .menu-connector {
+    background-color:#212529;
+    width:18px;
+    height:35px;
+    position:absolute;
+    z-index:1;
+    display: inline;
+    margin-top: 8px;
+    /* right:150px; */
+    /* float:left; */
+  }
+
+  .menu-connector-inside {
+    background-color: #212529;
+    width: 25px;
+    height: 35px;
+    position: absolute;
+    z-index: 1;
+    display: inline;
+    /* margin-top: 8px; */
+    /* padding-right: 30px; */
+    right: 5px;
+  }
+
+  .collapsible-menu-container {
+    display: ruby-base-container;
+  }
 
 </style>
 
@@ -742,174 +390,148 @@
 <div class="sidebar">
   <div class="layout-sidebar-group-widgets-container">
 
-    <div class="group-labels" >
-      <span class="group-label">Widgets</span>
-    </div>
-    <!-- Live Code Combobox Selector -->
-    <div class="controls">
-      <!-- on:click={ () => $sidebarLiveCodeOptions[0].disabled = true }  -->
-      <!-- svelte-ignore a11y-no-onchange -->
-      <select class="{ $siteMode === 'dark'? 'combobox-dark' :'combobox-light'}"
-              bind:value={ $selectedLiveCodeOption }
-              on:change={ () => dispatchAdd('live', $selectedLiveCodeOption) }
-              on:click={ () => $sidebarLiveCodeOptions[0].disabled = true }
-              disabled={ $isSelectLiveCodeEditorDisabled }
-              cursor={ () => ( $isSelectLiveCodeEditorDisabled ? 'not-allowed' : 'pointer') }
-              >
+    <!-- LIVE CODE EDITOR LAUNCHER -->
+    <div class='collapsible-menu-container' use:clickOutside on:click_outside={()=>$liveCodeEditorMenuExpanded = false}>
+    <button class='button-dark'
+      aria-expanded={$liveCodeEditorMenuExpanded} 
+      on:click={launchLiveCodeEditorMenu}
+      disabled={$isSelectLiveCodeEditorDisabled}
+      title="{$isSelectLiveCodeEditorDisabled ? 'Launch live code editor (already launched)' : 'Launch live code editor'}"
+      >
+      <svg 
+      xmlns="http://www.w3.org/2000/svg" 
+      width="18" 
+      height="18" 
+      fill="currentColor" 
+      class="bi bi-plus-lg" 
+      viewBox="0 0 16 16" >
+      <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
+    </svg>
+    </button>
+    {#if $liveCodeEditorMenuExpanded == true}
+      <div class='menu-connector'>
+        <div class='menu-connector-inside'></div>
+      </div>
+      <div class='menu-contents' hidden={!$liveCodeEditorMenuExpanded}>
+        <!-- <div class='menu-connector'></div> -->
         {#each $sidebarLiveCodeOptions as liveCodeOption}
-          <option class="dropdown-content" disabled={ liveCodeOption.disabled }
-                  value={liveCodeOption}
-                  >
-            {liveCodeOption.text}
-          </option>
+          {#if liveCodeOption.text != 'livecode'}
+          <button disabled={$isSelectLiveCodeEditorDisabled} 
+                  title='{`Launch live code editor with ${liveCodeOption.text} language`}'
+                  on:click={ () => launchLiveCodeEditor(liveCodeOption)} 
+                  class='button-dark menu-contents-button'>{liveCodeOption.text}
+                </button>
+          <!-- <p on:click={ () => dispatchAdd('live', liveCodeOption)}>{liveCodeOption.text}</p> -->
+          {/if}
         {/each}
-      </select>
+      </div>
+    {/if}
     </div>
 
-    <!-- Model Combobox Selector -->
-    <div class="controls">
-      <!-- <select class="combobox" bind:value={$selectedTutorial} > -->
-      <!-- on:click={ () => $sidebarModelOptions[0].disabled = true }   -->
-      <!-- svelte-ignore a11y-no-onchange -->
-      <select class="{ $siteMode === 'dark'? 'combobox-dark' :'combobox-light'}"
-              bind:value={ $selectedModelOption }
-              on:change={ () => dispatchAdd('model', $selectedModelOption) }
-              on:click={ () => $sidebarModelOptions[0].disabled = true }
-              disabled={ $isSelectModelEditorDisabled }
-              cursor={ () => ( $isSelectModelEditorDisabled ? 'not-allowed' : 'pointer' )}
-              >
-        {#each $sidebarModelOptions as modelOption}
-          <option class="dropdown-content" disabled={modelOption.disabled}
-                  value={modelOption}
-                  >
-            { modelOption.text }
-          </option>
-        {/each}
-      </select>
+    <!-- MODEL EDITOR LAUNCHER -->
+    <div class='collapsible-menu-container'  use:clickOutside on:click_outside={()=>$modelEditorMenuExpanded = false}>
+      <button class='button-dark'
+        aria-expanded={$modelEditorMenuExpanded} 
+        on:click={launchModelEditorMenu}
+        disabled={$isSelectModelEditorDisabled}
+        title="{$isSelectModelEditorDisabled ? 'Launch JavaScript editor (already launched)' : 'Launch JavaScript editor'}"
+        >
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-braces" viewBox="0 0 16 16">
+          <path d="M2.114 8.063V7.9c1.005-.102 1.497-.615 1.497-1.6V4.503c0-1.094.39-1.538 1.354-1.538h.273V2h-.376C3.25 2 2.49 2.759 2.49 4.352v1.524c0 1.094-.376 1.456-1.49 1.456v1.299c1.114 0 1.49.362 1.49 1.456v1.524c0 1.593.759 2.352 2.372 2.352h.376v-.964h-.273c-.964 0-1.354-.444-1.354-1.538V9.663c0-.984-.492-1.497-1.497-1.6zM13.886 7.9v.163c-1.005.103-1.497.616-1.497 1.6v1.798c0 1.094-.39 1.538-1.354 1.538h-.273v.964h.376c1.613 0 2.372-.759 2.372-2.352v-1.524c0-1.094.376-1.456 1.49-1.456V7.332c-1.114 0-1.49-.362-1.49-1.456V4.352C13.51 2.759 12.75 2 11.138 2h-.376v.964h.273c.964 0 1.354.444 1.354 1.538V6.3c0 .984.492 1.497 1.497 1.6z"/>
+        </svg>
+      </button>
+
+
+      {#if $modelEditorMenuExpanded == true}
+      <div class='menu-connector'>
+        <div class='menu-connector-inside'></div>
+      </div>
+        <div class='menu-contents' hidden={!$modelEditorMenuExpanded}>
+          <!-- <div class='menu-connector' style='right:99%'></div> -->
+          {#each $sidebarModelOptions as modelOption}
+            {#if modelOption.text != 'javascript'}
+            <button disabled={$isSelectModelEditorDisabled} 
+                    title='{ modelOption.text == '* new *'? 'Launch empty JavaScript editor': `Launch ${modelOption.text} example`}'
+                    on:click={ () => launchModelEditor(modelOption)} 
+                    class='button-dark menu-contents-button'>{modelOption.text}
+                  </button>
+            <!-- <p on:click={ () => dispatchAdd('model', modelOption)}>{modelOption.text}</p> -->
+            {/if}
+          {/each}
+        </div>
+      {/if}
     </div>
 
-
-    <!-- Debuggers Combobox Selector -->
-    <div class="controls">
-      <!-- svelte-ignore a11y-no-onchange -->
-      <select class="{ $siteMode === 'dark'? 'combobox-dark' :'combobox-light' }"
-              bind:value={ $selectedDebuggerOption }
-              on:change={ () => dispatchAdd('debugger', $selectedDebuggerOption) }
-              on:click={ () => $sidebarDebuggerOptions[0].disabled = true  }
-              >
-        {#each $sidebarDebuggerOptions as debuggerOption}
-          <option class="dropdown-content" disabled={ debuggerOption.disabled }
-                  value={ debuggerOption }>
-            { debuggerOption.text }
-          </option>
-        {/each}
-      </select>
+    <!-- DEBUGGER LAUNCHER -->
+    <div class='collapsible-menu-container'  use:clickOutside on:click_outside={()=>$debuggersMenuExpanded = false}>
+      <button class='button-dark'
+        aria-expanded={$debuggersMenuExpanded} 
+        on:click={launchDebuggersMenu}
+        disabled={$isSelectDebuggerDisabled}
+        title="{$isSelectDebuggerDisabled ? 'Launch a debugger widget (all already launched)' : 'Launch a debugger widget'}"
+        >
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-nut" viewBox="0 0 16 16">
+          <path d="m11.42 2 3.428 6-3.428 6H4.58L1.152 8 4.58 2h6.84zM4.58 1a1 1 0 0 0-.868.504l-3.428 6a1 1 0 0 0 0 .992l3.428 6A1 1 0 0 0 4.58 15h6.84a1 1 0 0 0 .868-.504l3.429-6a1 1 0 0 0 0-.992l-3.429-6A1 1 0 0 0 11.42 1H4.58z"/>
+          <path d="M6.848 5.933a2.5 2.5 0 1 0 2.5 4.33 2.5 2.5 0 0 0-2.5-4.33zm-1.78 3.915a3.5 3.5 0 1 1 6.061-3.5 3.5 3.5 0 0 1-6.062 3.5z"/>
+        </svg>
+      </button>
+      {#if $debuggersMenuExpanded == true}
+      <div class='menu-connector'>
+        <div class='menu-connector-inside'></div>
+      </div>
+        <div class='menu-contents' hidden={!$debuggersMenuExpanded}>
+          {#each $sidebarDebuggerOptions as debuggerOption}
+            {#if debuggerOption.text != 'debug'}
+            <button disabled={debuggerOption.disabled}
+                    title='{debuggerOption.disabled? `Launch ${debuggerOption.text} (already launched)`: `Launch ${debuggerOption.text}`}'
+                    on:click={ () => launchDebugger(debuggerOption)} 
+                    class='button-dark menu-contents-button'>{debuggerOption.text}
+                  </button>
+            <!-- <p on:click={ () => dispatchAdd('model', modelOption)}>{modelOption.text}</p> -->
+            {/if}
+          {/each}
+        </div>
+      {/if}
     </div>
 
+    <!-- ANALYSER LAUNCHER -->
     <div>
-      <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' } controls"
+      <button class="button-dark"
               on:click={ () => dispatchAdd('analyser') }
               disabled={ $isAddAnalyserDisabled }
+              title='{$isAddAnalyserDisabled? 'Launch audio analyser (already launched)': 'Launch audio analyser' }'
               >
         analyser
       </button>
     </div>
 
-    <!--
+    <!-- MOUSE LAUNCHER -->
     <div>
-      <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' } controls"
+      <Mouse />
+    </div>
+
+
+    <!-- MIC LAUNCHER -->
+    <div>
+      <Mic />
+    </div>
+
+    <!-- Currently commented out as not implemented fully -->
+    <!-- <div>
+      <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
               on:click={ () => dispatchAdd('visualiser') }
               >
         visualiser
       </button>
     </div>
 
-    <div>
-      <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' } controls"
+    <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
               on:click={ () => dispatchAdd('MIDI') }
               >
         MIDI
       </button>
-    </div>
-    -->
-
-    <br>
+    </div> -->
 
   </div>
-
-
-  <div class="layout-sidebar-group-properties-container">
-
-    <div class="group-labels" >
-      <span class="group-label">Widget Settings</span>
-    </div>
-    <div>
-      <ItemProps></ItemProps>
-    </div>
-
-    <br>
-
-
-  </div>
-
-
-
-  <!-- <div class="layout-combobox-container">
-
-
-    <div class="group-labels">
-      <span class="group-label">Environment</span>
-    </div>
-    <div class="controls">
-      <button class="button-dark"
-              on:click={ () => resetEnvironment() }
-              >
-        reset
-      </button>
-    </div>
-    <div class="controls">
-      <button class="button-dark"
-              on:click={ () => storeEnvironment() }
-              >
-        store
-      </button>
-    </div>
-
-    <div class="controls">
-      svelte-ignore a11y-no-onchange
-      <select class="combobox-dark"
-              bind:value={ $selectedLoadEnvironmentOption }
-              on:change={ () => loadEnvironment() }
-              on:click={ () => $loadEnvironmentOptions[0].disabled = true }
-              cursor={ () => ( $isLoadEnvironmentOptionsDisabled ? 'not-allowed' : 'pointer') }
-              >
-        {#each $loadEnvironmentOptions as loadEnvironmentOption }
-          <option disabled={ loadEnvironmentOption.disabled }
-                  value={loadEnvironmentOption}
-                  >
-            { loadEnvironmentOption.text }
-          </option>
-        {/each}
-      </select>
-    </div>
-
-    <div class="controls">
-      <button class="button-dark"
-              on:click={ () => uploadEnvironment() }
-              >
-        upload
-      </button>
-    </div>
-
-    <div class="controls">
-      <button class="button-dark"
-              on:click={ () => downloadEnvironment() }
-              >
-        download
-      </button>
-    </div>
-
-    <br>
-  </div> -->
 
 </div>

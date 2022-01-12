@@ -26,6 +26,7 @@
   import LoadingPlayground from '../../components/overlays/LoadingPlayground.svelte';
   import Sidebar from '../../components/playground/Sidebar.svelte';
   import Settings from '../../components/settings/Settings.svelte';
+  import ContextBar from '../../components/playground/ContextBar.svelte';
   // import Dashboard from '../components/layouts/Dashboard.svelte';
 
 	import {
@@ -132,6 +133,9 @@
     if(item){
       try {
         let itemProperties = [];
+
+        itemProperties.push({type: item.data.type}) //add the type regardless
+
         if( item.data.type === "liveCodeEditor" || item.data.type === "grammarEditor" || item.data.type === 'modelEditor' ){
           itemProperties = [ { lineNumbers: item.data.lineNumbers}, { theme: item.data.theme } ];
 
@@ -160,6 +164,7 @@
         $focusedItem = item;
         // console.log("DEBUG: focusedItem in setFocused, lineNumbers:", $focusedItem.data.lineNumbers);
         $focusedItemProperties = itemProperties;
+        // console.log("focusedItemproperties", $focusedItem, $focusedItemProperties);
         // set unfocused items through the rest of the list
         $items = $items.map(i => i === item ? ({ ...i, ['hasFocus']: true }) : ({ ...i, ['hasFocus']: false }) );
         //USED
@@ -289,6 +294,16 @@
       engine.removeAnalyser({ id: item.id });
       // messaging.publish('remove-engine-analyser', { id: item.id }); // notify audio engine to remove associated analyser
     }
+
+    // if item is focused clear focused.
+    if ($focusedItem.data){
+      if (item.data.type == $focusedItem.data.type){
+        //clear it
+        console.log('Clearing focused item:', $focusedItem)
+        clearFocused();
+      }
+    }
+
     // console.log("DEBUG:dashboard:remove:", item);
     messaging.publish("plaground-item-deletion", item.data.type);
 
@@ -620,8 +635,9 @@
     grid-template-rows: auto 1fr;
 
     grid-template-areas:
-      "sidebar settings"
-      "sidebar layout";
+      "settings settings"
+      "sidebar layout"
+      "context-bar context-bar";
   	/* background-color: #6f7262; */
     /* background-color: #212121; */
     /* overflow: hidden; */
@@ -644,7 +660,7 @@
 
   .settings-container {
     /* background: linear-gradient(150deg, rgba(0,18,1,1) 0%, rgba(7,5,17,1) 33%, rgba(16,12,12,1) 67%, rgb(12, 12, 12) 100%); */
-    background: #151515;
+    background-color: #3a4147;
     grid-area: settings;
     height: 100%;
     width: auto; /* width is defined by child */
@@ -690,14 +706,17 @@
   .upload-overlay-container {
     grid-area: layout;
     z-index: 1000;
-    background-color: rgba(16,12,12,0.8);
+    background-color: rgba(38,42,46,0.8);
     visibility: hidden;
-    width: 100%;
+    /* width: 50%; */
 
-    /* display:flex; */
-    /* justify-content:center;
+    /* display:flex;
+    justify-content:center;
     align-items:center; */
+
+    
     font-size:16px;
+    border-radius: 5px;
   }
 
   .project-browser-overlay-container{
@@ -723,7 +742,9 @@
     visibility: hidden;
   }
 
-
+  .context-bar-container {
+    grid-area: context-bar;
+  }
 
 
   :global(body) {
@@ -776,6 +797,7 @@
     /* background: rgba(25, 25, 25, 0.6); */
     /* border-width: 1px 1px 1px 1px; */
     /* top: 1.4em; */
+    border-radius: 5px 5px 0px 0px;
     padding: 0.2em 0.1em 0.1em 0.1em;
     z-index: 1500;
   }
@@ -794,7 +816,10 @@
   .item-header-type {
     grid-column: 2/2;
     /* padding-top: 0.2em; */
+  }
 
+  .item-header-type:hover{
+    cursor: default;
   }
 
   .close {
@@ -826,9 +851,10 @@
     width: 100%;
     /* height: calc(100%-2.5em); */
     height: 100%;
-    border-radius: 0px;
-    border-top-left-radius: 0px;
-    border-bottom-right-radius: 0px;
+    /* border-radius: 0px; */
+    border-radius: 0px 0px 5px 5px;
+    /* border-top-left-radius: 0px; */
+    /* border-bottom-right-radius: 0px; */
     /* padding: 10px; */
     /* padding: 10px; */
     /* background: #FFF; */
@@ -839,9 +865,9 @@
     height: calc(100%-2.5em);
   } */
 
- 	.scrollable {
-		flex: 1 1 auto;
-		margin: 0 0 0.5em 0;
+ 	.scrollable-area {
+		/* flex: 1 1 auto; */
+		/* margin: 0 0 0.5em 0; */
 		overflow-y: auto;
 	}
 
@@ -862,7 +888,7 @@
 
 <div class="container">
   <div  class="{ $siteMode === 'dark' ? 'sidebar-container': 'sidebar-container-light' }"
-        style="{ $sideBarVisible ? 'width: auto; visibility: visible;': 'width: 0px; visibility: hidden;' }"
+        style="{ $sideBarVisible ? 'width: auto; visibility: visible;': 'width: 0.4em; visibility: hidden;' }"
         >
     <Sidebar />
   </div>
@@ -917,7 +943,11 @@
     <Settings/>
   </div>
 
-  <div class="dashboard-container { $siteMode === 'dark'? 'dashboard-container-dark' : 'dashboard-container-light'}  scrollable"
+  <div class='context-bar-container'>
+    <ContextBar/>
+  </div>
+
+  <div class="dashboard-container { $siteMode === 'dark'? 'dashboard-container-dark' : 'dashboard-container-light'} scrollable-area"
     bind:this={ container }
     >
     <Grid
@@ -937,7 +967,7 @@
 
 
       <div class='chrome'
-        style="background: #1c1c1c;"
+        style="background: #262a2e;"
         >
         <div class='move'>
           <svg version="1.1"
