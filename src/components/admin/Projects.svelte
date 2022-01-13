@@ -245,7 +245,8 @@
 
 	const deleteProject = async (id) => {
 		await deletePlayground(id);
-		updateProjectPage(projectPage);
+		updateProjectPage(projectPage, orderBy);
+		getTotalNumProjects(projectPage)
 	}
 
 	const toggleVisibility = async (id, state) => {
