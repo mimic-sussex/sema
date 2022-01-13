@@ -43,7 +43,7 @@ a.button {
   text-align: left;
   justify-content: flex-start;
   color:white;
-  width: 100%;
+  width: 97%;
   display:inline-block;
   padding: 4px 4px 4px 4px;
 }

@@ -104,7 +104,7 @@
     /* border-radius: 5px; */
     border-right: 1px solid white;
     overflow-y: auto;
-    height: calc(100vh - 58px);
+    /* height: calc(100vh - 58px); */
     bottom:0;
     margin: 0px 0px 0px 0px;
   }
@@ -134,7 +134,7 @@
     background-color: #262a2e;
     color: white;
     width: 200px;
-    height: calc(100vh - 58px);
+    /* height: calc(100vh - 58px); */
     border-left: 1px solid white;
   }
 
