@@ -14,7 +14,8 @@
     allowEdits,
     author,
     saving,
-    saveRequired
+    saveRequired,
+    hydrateJSONcomponent
   } from '../../stores/playground'
 
   import {
