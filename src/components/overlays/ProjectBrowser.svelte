@@ -9,6 +9,8 @@
 
   import Projects from "../admin/Projects.svelte";
 
+  import {clickOutside} from '../../utils/clickOutside.js';
+
   export let id;
 
   import { onMount, onDestroy } from 'svelte';
@@ -43,21 +45,30 @@
     // engine = null;
 	});
 
+  // function handleClick(event){
+  //   console.log('click outside event:',event, event.explicitOriginalTarget)
+  //   if (event.explicitOriginalTarget.id != 'project-browser-launcher-button'){
+  //     $isProjectBrowserOverlayVisible = false
+  //   }
+  // }
+  // event=>handleClick(event)
+
 </script>
 
 <div  in:fly="{{ y: -50, duration: 300 }}"
       class="projectBrowser-overlay-component"
       style='visibility:{ $isProjectBrowserOverlayVisible ? "visible": "hidden"}'
+      use:clickOutside={['project-browser-launcher-button']} on:click_outside={()=> $isProjectBrowserOverlayVisible = false}
       >
 
       <Projects />
 
-  <div class="projectBrowser-overlay-button-container">
+  <!-- <div class="projectBrowser-overlay-button-container">
    
     <button class="button-dark"
             on:click={ closeOverlay }
             >Close</button>
-  </div>
+  </div> -->
 </div>
 
 <style>

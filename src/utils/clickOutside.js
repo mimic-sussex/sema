@@ -1,11 +1,29 @@
 /** Dispatch event on click outside of node */
-export function clickOutside(node) {
+
+//excluded should contain an array of id's to be excluded from registering as a 'click_outside' event if it occurs.
+// dont have to pass excluded if its not needed.
+export function clickOutside(node, excluded) {
   
   const handleClick = event => {
+
     if (node && !node.contains(event.target) && !event.defaultPrevented) {
-      node.dispatchEvent(
-        new CustomEvent('click_outside', node)
-      )
+
+      if (excluded) {
+        for (let i=0; i<excluded.length; i++){
+          console.log('exlcuded', excluded[i])
+          if (event.explicitOriginalTarget.id != excluded[i]){
+            
+            node.dispatchEvent(
+              new CustomEvent('click_outside', node)
+            )
+          
+          }
+        }
+      } else {
+        node.dispatchEvent(
+          new CustomEvent('click_outside', node)
+        )
+      }
     }
   }
 
@@ -16,4 +34,4 @@ export function clickOutside(node) {
       document.removeEventListener('click', handleClick, true);
     }
 	}
-}
+} 
