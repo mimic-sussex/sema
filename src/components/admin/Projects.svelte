@@ -59,14 +59,14 @@
 		loading = true;
 		// console.log("Updating project page", projectPage, "ordering by", orderBy);
 		if (projectPage == 'my-projects'){
-			// console.log('refreshing my-projects page', projectPage)
-			await getMyProjects();
+				// console.log('refreshing my-projects page', projectPage)
+				await getMyProjects();
 		} else if (projectPage == 'all-projects'){
-			// console.log('refreshing all-projects page', projectPage)
-			await getAllProjects();
+				// console.log('refreshing all-projects page', projectPage)
+				await getAllProjects();
 		} else if (projectPage == 'example-projects'){
-			// console.log('getting example projects')
-			await getExampleProjects();
+				// console.log('getting example projects')
+				await getExampleProjects();
 		}
 		loading = false;
 	}
@@ -90,9 +90,10 @@
 					out+= "'"+arr[i]+"'" +":*"; // "'"+arr[i]+"'" + ' | ' +
 				}
 			}
-			console.log('search:',out)
+			console.log('search:',out, 'in col', searchCol)
 			processedSearchTerms = out;
 			updateProjectPage(projectPage, orderBy);
+			getTotalNumProjects(projectPage); //update total number of projects
 		}
 		else {
 			console.log('search: array too short')
@@ -343,32 +344,64 @@
 		if (projectPage == 'my-projects'){
 			const user = supabase.auth.user()
 
-			const { data, count } = await supabase
-				.from('playgrounds')
-				.select('*', { count: 'exact' })
-				.eq('author', user.id)
-				// console.log('data my-projects', data);
-				// console.log(data.length, count);
-				totalProjectNum = count;
-				return count;
+			if (searchTerms != ''){
+				const { data, count } = await supabase
+					.from('playgrounds')
+					.select('*', { count: 'exact' })
+					.eq('author', user.id)
+					.textSearch(searchCol, `${processedSearchTerms}`);
+					// console.log('data my-projects', data);
+					// console.log(data.length, count);
+					totalProjectNum = count;
+					return count;
+			}
+			else {
+				const { data, count } = await supabase
+					.from('playgrounds')
+					.select('*', { count: 'exact' })
+					.eq('author', user.id)
+					totalProjectNum = count;
+					return count;
+			}
 		}
 		else if (projectPage == 'all-projects') {
-			const { data, count } = await supabase
-				.from('playgrounds')
-				.select('*', { count: 'exact' })
-				.eq('isPublic', true);
-				// console.log(data.length, count);
-				// console.log('data all-projects', data);
+			if (searchTerms != ''){
+				const { data, count } = await supabase
+					.from('playgrounds')
+					.select('*', { count: 'exact' })
+					.eq('isPublic', true)
+					.textSearch(searchCol, `${processedSearchTerms}`);
+					// console.log(data.length, count);
+					// console.log('data all-projects', data);
 
-				totalProjectNum = count;
-				return count;
+					totalProjectNum = count;
+					return count;
+			} else {
+				const { data, count } = await supabase
+					.from('playgrounds')
+					.select('*', { count: 'exact' })
+					.eq('isPublic', true);
+					totalProjectNum = count;
+					return count;
+			}
 		} else if (projectPage == 'example-projects'){
-			const { data, count } = await supabase
-				.from('playgrounds')
-				.select('*', { count: 'exact' })
-				.match({"isPublic": true, example: true})
-				totalProjectNum = count;
-				return count;
+			if (searchTerms != ''){
+				const { data, count } = await supabase
+					.from('playgrounds')
+					.select('*', { count: 'exact' })
+					.match({"isPublic": true, example: true})
+					.textSearch(searchCol, `${processedSearchTerms}`);
+					totalProjectNum = count;
+					return count;
+			} else {
+				const { data, count } = await supabase
+					.from('playgrounds')
+					.select('*', { count: 'exact' })
+					.match({"isPublic": true, example: true})
+					totalProjectNum = count;
+					return count;
+			}
+			
 		}
 	}
 
@@ -912,15 +945,17 @@ button {
 										</a>
 										<!-- Only show delete button if the logged in user is the author-->
 										{#if $user}
-											{#if record.author.id == $user.id}
-												<a href={'#'} on:click={deleteProject(record.id)}>Delete
-													<div class="svg-icon-div">
-														<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="delete-icon" viewBox="0 0 16 16">
-															<path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
-															<path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
-														</svg>
-													</div>
-												</a>
+											{#if record.author}
+												{#if record.author.id == $user.id}
+													<a href={'#'} on:click={deleteProject(record.id)}>Delete
+														<div class="svg-icon-div">
+															<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="delete-icon" viewBox="0 0 16 16">
+																<path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+																<path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+															</svg>
+														</div>
+													</a>
+												{/if}
 											{/if}
 										{/if}
 									</div>
