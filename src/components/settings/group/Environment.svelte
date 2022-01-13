@@ -647,19 +647,22 @@
           />
 
   <!-- Project browser launcher -->
-  <button class="{ $siteMode === 'dark'? 'dropdown-button-dark' :'button-light' }"
+  <button 
+  id = 'project-browser-launcher-button'
+  class="{ $siteMode === 'dark'? 'dropdown-button-dark' :'button-light' }"
   title="project browser"
   style="{( $isActive('/playground') )? `visibility:visible;`: `visibility:collapse`};
   {($isProjectBrowserOverlayVisible)? 'background-color: #181a1d;' :''}
   margin-left: -50px;"
   on:click={ () => toggleProjectBrowser()}>
 
-    <div class='icon-container'>
+    <div id='project-browser-launcher-button' class='icon-container'>
       <svg xmlns="http://www.w3.org/2000/svg" 
       width="16" 
       height="16" 
       fill="currentColor" 
       class="bi bi-chevron-down" 
+      id = 'project-browser-launcher-button'
       viewBox="0 0 16 16"
       style='{ ($isProjectBrowserOverlayVisible)? 'transform: rotate(180deg); transition: 0.3s;' :'transform: rotate(0deg); transition: 0.1s;'}'
       >
