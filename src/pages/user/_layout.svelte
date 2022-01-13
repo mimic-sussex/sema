@@ -79,11 +79,11 @@ async function fetchProjects (username) {
       // let profileData;
       try {
         profileData = await fetchProfile(username);
-        console.log(profileData)
+        // console.log(profileData)
         if (profileData !== null){
           userExists = true;
           projectData = await fetchProjects(username);
-          console.log(projectData)
+          // console.log(projectData)
           view = 'profile'
         } else {
           view = 'user-not-found'
@@ -96,7 +96,7 @@ async function fetchProjects (username) {
     } else {
       //display list of all users in system with a search bar.
       userList = await fetchUserList()
-      console.log(userList)
+      // console.log(userList)
       view = 'user-list';
     }
   }
@@ -125,15 +125,27 @@ async function fetchProjects (username) {
 
   {#if view == 'user-list'}
       <!-- view: {view} -->
-      <a href='/user'>Go back</a>
       <UserList userList={userList}/>
-    {:else if view == 'profile'}
-      <!-- view: {view} -->
-      <a href='/user'>Go back</a>
-      <Profile username={'blah'} profileData={profileData} projects={projectData}/>
-    {:else if view == 'user-not-found'}
-      <!-- view: {view} -->
-      <a href='/user'>Go back</a>
+  {:else if view == 'profile'}
+    
+    <a href='/user'>
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+      </svg>
+      Go to user directory
+    </a>
+
+    <Profile username={'blah'} profileData={profileData} projects={projectData}/>
+  {:else if view == 'user-not-found'}
+    
+      <a href='/user'>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
+          <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+        </svg>
+        Go to user directory
+      </a>
+
       <UserNotFound />
-    {/if}
+  {/if}
+
 {/if}
