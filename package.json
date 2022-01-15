@@ -73,7 +73,7 @@
 		"do-not-zip": "^1.0.0",
 		"highlight.js": "^10.6.0",
 		"js-beautify": "^1.13.5",
-		"marked": "^2.0.0",
+		"marked": "^4.0.10",
 		"mouse-change": "^1.4.0",
 		"nearley": "^2.20.1",
 		"regl": "^2.1.0",
