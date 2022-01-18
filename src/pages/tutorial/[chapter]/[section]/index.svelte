@@ -140,6 +140,7 @@
   }
 
   .markdown-section-container {
+    /* height: 100%; */
     overflow: auto;
     /* border-radius: 5px; */
     background: #3a4147;

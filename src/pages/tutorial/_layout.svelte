@@ -468,7 +468,9 @@
 
 
   .markdown-container {
-    height: calc(100vh - 86px);
+    /* height: calc(100vh - 86px); */
+    /* height:90%; */
+    height: calc(100vh - 113px);
     padding-left: 0.1em;
     padding-right: 0.1em;
     /* margin-bottom: 2px; */
