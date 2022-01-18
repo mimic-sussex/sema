@@ -200,7 +200,7 @@
 
 <style>
   .markdown-container {
-    height: calc(100vh - 150px); /* this fixed scrolling issue */
+    height: calc(100vh - 56px); /* this fixed scrolling issue */
     padding: 10px 20px 0px 20px;
     background-color: #3a4147;
     /* background: #aaaaaa; */

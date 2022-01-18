@@ -85,7 +85,7 @@
   }
 
   .container-docs {
-    background-color: #212121;
+    background-color: #262a2e;
     display: grid;
   	grid-template-areas:
   		"header header header"
@@ -96,14 +96,21 @@
     /* color: #999999; */
   }
 
-  .sidebar-menu {
+
+  .sidebar-menu-container {
+    grid-area: sidebar-menu;
+    overflow-y: auto;
+    height: calc(100vh - 46px);
+    border-right: 1px solid white;
+  }
+  .sidebar-menu-item {
+    /* grid-area: sidebar-menu; */
     display: flex;
     flex-direction: column;
     padding: 20px 2px 0px 2px;
     background-color: #262a2e;/*#999;*/
     /* border-radius: 5px; */
-    border-right: 1px solid white;
-    overflow-y: auto;
+    /* overflow-y: auto; */
     /* height: calc(100vh - 58px); */
     bottom:0;
     margin: 0px 0px 0px 0px;
@@ -117,9 +124,9 @@
   }
 
 
-  .sidebar-item {
+  /* .sidebar-item {
     padding: 5px 5px 0px 5px;
-  }
+  } */
 
   h2 {
     text-align: center;
@@ -131,17 +138,19 @@
   }
 
   .sub-headings-container {
+    grid-area: sub-headings-menu;
     background-color: #262a2e;
     color: white;
     width: 200px;
-    /* height: calc(100vh - 58px); */
     border-left: 1px solid white;
+    overflow-y: auto;
+    height: calc(100vh - 46px);
   }
 
   .sub-headings-menu {
     display: flex;
     flex-direction: column;
-    overflow-y: auto;
+    /* overflow-y: auto; */
   }
 
   .sub-nav-links {
@@ -162,6 +171,10 @@
     background-color: #181a1d;
   }
 
+  .markdown-slot {
+    grid-area: markdown-container;
+  }
+
 </style>
 
 <svelte:head>
@@ -172,20 +185,23 @@
 
 <div class='container-docs' data-routify="scroll-lock">
   
-  <ul class='sidebar-menu'>
-    <!-- Commenting out search box until we have completed algolia search application -->
-    <!-- <Search></Search> -->
-    {#each $links as link}
-      <MenuTree node={link} let:node></MenuTree>
-    {/each}
-  </ul>
+  <div class='sidebar-menu-container'>
+    <ul class='sidebar-menu-item'>
+      <!-- Commenting out search box until we have completed algolia search application -->
+      <!-- <Search></Search> -->
+      {#each $links as link}
+        <MenuTree node={link} let:node></MenuTree>
+      {/each}
+    </ul>
+  </div>
   
-  <div>
+  <div class='markdown-slot'>
     <slot>
       <!-- optional fallback -->
       <!--inject the markdown here-->
     </slot>
   </div>
+
   <div class="sub-headings-container">
     <ul class="sub-headings-menu">
       {#each $subHeadingsInMenu as subs}
