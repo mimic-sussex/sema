@@ -12,6 +12,7 @@
   import {
     tutorials,
     selected,
+    selectedSection,
     isLoadingOverlayInTutorialVisible
   } from '../../stores/tutorial.js';
 
@@ -51,8 +52,14 @@
       // $isLoadingOverlayInTutorialVisible = true;
       await controller.init(document.location.origin);
       // $isLoadingOverlayInTutorialVisible = false;
-    console.log("index mount", $selected);
-    promise = fetchMarkdown($selected.chapter_dir, $selected.section_dir); // Reactive statement, var 'promise' reacts to 'section' changes
+    // console.log("tutorial index mount", $selected, $selected.chapter_dir, $selected.section_dir);
+    // promise = fetchMarkdown($selected.chapter_dir, $selected.section_dir); // Reactive statement, var 'promise' reacts to 'section' changes
+
+      // this is the load case on index (so no $params.chapter or $params.section).
+      promise = fetchMarkdown($selectedSection.chapter_dir, $selectedSection.section_dir)
+      window.history.pushState("", "", `/tutorial/${$selectedSection.chapter_dir}/${$selectedSection.section_dir}`);
+
+
     // console.log(`index:url:${$params.chapter}:params:${$params.section}}`);
     // console.log($url())
 
@@ -69,20 +76,21 @@
 <style global>
 
   .markdown-index-container {
-    overflow: auto;
-    /* margin-left: 10px;
-    margin-right: 10px;
-    margin-bottom: 10px;
-    border: solid 5px #999; */
+    /* height: calc(100vh - 86px); */
+
+    height: calc(100vh - 113px);
+    padding-left: 0.1em;
+    padding-right: 0.1em;
+    /* margin-bottom: 2px; */
+    /* border: solid 2px #aaaaaa; */
     border-radius: 5px;
-    /* height: 85vh; */
-    background: #999;
+    /* background: #aaaaaa; */
+    overflow-y: scroll;
   }
 
   .markdown-output {
     /* width: 100%; */
-    padding: 0em 0.6em 0em 0.5em;
-
+    padding: 0em 0.5em 0em 0.5em;
   }
 
 </style>
