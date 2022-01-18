@@ -410,274 +410,280 @@
 
 <style>
 
-.container-records {
-	/* overflow: auto; */
-	width: 100%;
-	height: 80%;
-	margin-bottom: 20px;
-	/* background-color: #333; */
-}
+	.container-records {
+		/* overflow: auto; */
+		width: 100%;
+		height: 80%;
+		margin-bottom: 20px;
+		/* background-color: #333; */
+	}
 
-.page-controls-container{
-	display:flex;
-	/* position:fixed;
-	bottom: 0; */
-	width: 100%;
-	border-top: 1px solid #ccc;
-	justify-content: space-between;
-}
+	.page-controls-container{
+		display:flex;
+		/* position:fixed;
+		bottom: 0; */
+		width: 100%;
+		border-top: 1px solid #ccc;
+		justify-content: space-between;
+	}
 
-.record-name {
-	display: inline-block;
-	/* font-style: italic; */
-	/* font-weight: bold; */
-	font-size: medium;
-	padding-right: 0.5em;
-	min-width: 20rem;
-	max-width: 20rem;
-}
+	.record-name {
+		display: inline-block;
+		/* font-style: italic; */
+		/* font-weight: bold; */
+		font-size: medium;
+		padding-right: 0.5em;
+		min-width: 20rem;
+		max-width: 20rem;
+	}
 
-.record {
-	margin-bottom: 0.5em;
-}
+	.record {
+		margin-bottom: 0.5em;
+	}
 
 
-table {
-	width:100%;
-	border-collapse: collapse;
-}
+	table {
+		width:100%;
+		border-collapse: collapse;
+	}
 
-th {
-	text-align:left;
-	color: #ccc;
-	font-size:18px;
-	padding: 10px;
-	text-align:center;
-}
+	th {
+		text-align:left;
+		color: #ccc;
+		font-size:18px;
+		padding: 10px;
+		text-align:center;
+	}
 
-td {
-	text-align:center;
-}
+	td {
+		text-align:center;
+	}
 
-tr:nth-child(even) {background: #262a2e;}
-tr:nth-child(odd) {background:#212529;}
+	tr:nth-child(even) {background: #262a2e;}
+	tr:nth-child(odd) {background:#212529;}
 
-.table-header:hover {
-	cursor: pointer;
-}
+	.table-header:hover {
+		cursor: pointer;
+	}
 
-.record-entry:hover {
-	background-color:#3a4147;
-}
+	.record-entry:hover {
+		background-color:#3a4147;
+	}
 
-input[type=radio] {
-  float: left;
-  clear: none;
-  margin: 2px 0 0 2px;
-}
+	input[type=radio] {
+		float: left;
+		clear: none;
+		margin: 2px 0 0 2px;
+	}
 
-label {
-	float: left;
-	clear: none;
-	display: block;
-	padding: 0px 1em 0px 8px;
-}
+	label {
+		float: left;
+		clear: none;
+		display: block;
+		padding: 0px 1em 0px 8px;
+	}
 
-.file-name {
- color: white;
-}
-
-.author-name {
+	.file-name {
 	color: white;
-}
+	}
 
-.dropdown {
-  float: center;
-  overflow: hidden;
-}
-.dropdown .dropbtn {
-  font-size: 16px;  
-  border: none;
-  outline: none;
-  color: white;
-  padding: 14px 16px;
-  background-color: inherit;
-  font-family: inherit;
-  margin: 0;
-	/* display: block;
-	margin: auto; */
-}
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #282828;
-  min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
-}
+	.author-name {
+		color: white;
+	}
 
-.dropdown-content a {
-  float: none;
-  color: #f9f9f9;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-  text-align: left;
-}
+	.dropdown {
+		float: center;
+		overflow: hidden;
+	}
+	.dropdown .dropbtn {
+		font-size: 16px;  
+		border: none;
+		outline: none;
+		color: white;
+		padding: 14px 16px;
+		background-color: inherit;
+		font-family: inherit;
+		margin: 0;
+		/* display: block;
+		margin: auto; */
+	}
+	.dropdown-content {
+		display: none;
+		position: absolute;
+		background-color: #282828;
+		min-width: 160px;
+		box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+		z-index: 1;
+	}
 
-.dropdown-content a:hover {
-  background-color: #404040;
-}
+	.dropdown-content a {
+		float: none;
+		color: #f9f9f9;
+		padding: 12px 16px;
+		text-decoration: none;
+		display: block;
+		text-align: left;
+	}
 
-.dropdown:hover .dropdown-content {
-  display: block;
-}
+	.dropdown-content a:hover {
+		background-color: #404040;
+	}
 
-.dropdown:hover .dropbtn {
-	background-color: #282828;
-}
+	.dropdown:hover .dropdown-content {
+		display: block;
+	}
 
-.toggle-icon:hover {
-	cursor:pointer;
-	fill: #282828;
-}
+	.dropdown:hover .dropbtn {
+		background-color: #282828;
+	}
 
-.container-project-filter {
-	/* display: inline-block; */
-	width:100%;
-	border-bottom: 1px solid #ccc;
-	font-size:18px;
-}
+	.toggle-icon:hover {
+		cursor:pointer;
+		fill: #282828;
+	}
 
-.project-tab {
+	.container-project-filter {
+		/* display: inline-block; */
+		width:100%;
+		border-bottom: 1px solid #ccc;
+		font-size:18px;
+	}
 
-}
+	.project-tab {
 
-button {
-	background: none;
-	border: none;
-	/* border-bottom: 1px solid white; */
-	border-radius: 0;
-	margin: 0;
-	color: #ccc;
-}
+	}
 
-.project-tab-selected {
-	border-bottom: 3px solid #ccc;
-	color: white;
-	/* background-color: red; */
-}
+	button {
+		background: none;
+		border: none;
+		/* border-bottom: 1px solid white; */
+		border-radius: 0;
+		margin: 0;
+		color: #ccc;
+	}
 
-.svg-icon-div {
-	
-	/* white-space:nowrap;
-	overflow: hidden; */
-	/* display: flex; */
-	float: right;
-	display: inline-flex;
-  align-self: center;
-	/* text-align: right; */
-}
+	.project-tab-selected {
+		border-bottom: 3px solid #ccc;
+		color: white;
+		/* background-color: red; */
+	}
 
-.fork-icon {
-	fill: grey;
-}
+	.svg-icon-div {
+		
+		/* white-space:nowrap;
+		overflow: hidden; */
+		/* display: flex; */
+		float: right;
+		display: inline-flex;
+		align-self: center;
+		/* text-align: right; */
+	}
 
-.share-icon {
-	fill: grey;
-}
+	.fork-icon {
+		fill: grey;
+	}
 
-.delete-icon {
-	fill: grey;
-}
+	.share-icon {
+		fill: grey;
+	}
 
-.overlay-container {
-	z-index: 1000;
-	background-color: rgba(16,12,12,0.8);
-	visibility: hidden;
-	width: 100%;
+	.delete-icon {
+		fill: grey;
+	}
 
-	/* display:flex; */
-	/* justify-content:center;
-	align-items:center; */
-	font-size:16px;
-}
+	.overlay-container {
+		z-index: 1000;
+		background-color: rgba(16,12,12,0.8);
+		visibility: hidden;
+		width: 100%;
 
-.loading-bar {
-	padding: 14px 16px;
-}
+		/* display:flex; */
+		/* justify-content:center;
+		align-items:center; */
+		font-size:16px;
+	}
 
-.search-box-container{
-	float:right;
-}
+	.loading-bar {
+		padding: 14px 16px;
+	}
 
-.search-box {
-	/* font-size: 0.9rem; */
-	font-weight: 300;
-	background: transparent;
-	border-radius: 5px;
-	border-style: solid;
-	border-width: 1px;
-	border-color: #ccc;
-	box-sizing: border-box;
-	/* display: block; */
-	/* flex: 1; */
-	padding: 2px 3px 2px 35px;
-	color:white;
-	/* display:inline; */
-	/* float:right; */
-}
+	.search-box-container{
+		float:right;
+	}
 
-.search-icon{
-	margin-right: -32px;
-}
+	.search-box {
+		/* font-size: 0.9rem; */
+		font-weight: 300;
+		background: transparent;
+		border-radius: 5px;
+		border-style: solid;
+		border-width: 1px;
+		border-color: #ccc;
+		box-sizing: border-box;
+		/* display: block; */
+		/* flex: 1; */
+		padding: 2px 3px 2px 35px;
+		color:white;
+		/* display:inline; */
+		/* float:right; */
+	}
 
-.search-settings-button{
-	margin-left: -32px;
-	/* border-radius: 1px; */
-	border-style: solid;
-	border-color: #ccc;
-	border-width: 0px 0px 0px 1px;
-	padding: 2px 8px 2px 8px;
-}
+	.search-icon{
+		margin-right: -32px;
+	}
 
-.search-settings-button:active{
-	background-color:white;
-}
+	.search-settings-button{
+		margin-left: -32px;
+		/* border-radius: 1px; */
+		border-style: solid;
+		border-color: #ccc;
+		border-width: 0px 0px 0px 1px;
+		padding: 2px 8px 2px 8px;
+	}
 
-.search-settings-dropdown{
-	display:none;
-}
+	.search-settings-button:active{
+		background-color:white;
+	}
 
-.search-settings-container{
-	display:inline-flex;
-}
+	.search-settings-dropdown{
+		display:none;
+	}
 
-.search-settings-container:hover .search-settings-dropdown {
-  display: block;
-}
+	.search-settings-container{
+		display:inline-flex;
+	}
 
-.search-settings-container:hover .search-settings-button {
-	background-color: #282828;
-}
+	.search-settings-container:hover .search-settings-dropdown {
+		display: block;
+	}
 
-.search-settings-dropdown {
-  display: none;
-  position: absolute;
-  background-color: #282828;
-  /* min-width: 300px; */
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
-}
+	.search-settings-container:hover .search-settings-button {
+		background-color: #282828;
+	}
 
-.search-settings-dropdown input label {
-  float: none;
-  color: #f9f9f9;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-  text-align: left;
-}
+	.search-settings-dropdown {
+		display: none;
+		position: absolute;
+		background-color: #282828;
+		/* min-width: 300px; */
+		box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+		z-index: 1;
+	}
+
+	.search-settings-dropdown input label {
+		float: none;
+		color: #f9f9f9;
+		padding: 12px 16px;
+		text-decoration: none;
+		display: block;
+		text-align: left;
+	}
+
+	.page-arrow-icons {
+		width: 1.5em;
+		vertical-align: middle;
+		/* fill: #999; */
+	}
 
 </style>
 <!-- 
@@ -973,13 +979,22 @@ button {
 
 				<div class='page-controls-container'>
 					<a href={'#'} on:click={getPreviousProjects} 
-					style="{( projectLoadRange.start <= 0 )? `visibility:collapse;`: `visibility:visible`}; color:#ccc;">Previous</a>
+					style="{( projectLoadRange.start <= 0 )? `visibility:collapse;`: `visibility:visible`}; color:#ccc;">
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="page-arrow-icons bi bi-chevron-left" viewBox="0 0 16 16">
+						<path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+					</svg>
+					Previous</a>
 
 					<span style='float:center; color:#ccc'>
 						Page { Math.ceil(projectLoadRange.end / projectLoadStep) } of { Math.ceil(totalProjectNum / projectLoadStep)} | Total number of projects: {totalProjectNum} 
 					</span>
+
 					<a href={'#'} on:click={getNextProjects}
-					style="{( projectLoadRange.end >= totalProjectNum )? `visibility:collapse;`: `visibility:visible`}; color:#ccc;">Next</a>
+					style="{( projectLoadRange.end >= totalProjectNum )? `visibility:collapse;`: `visibility:visible`}; color:#ccc;">Next
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="page-arrow-icons bi bi-chevron-right" viewBox="0 0 16 16">
+						<path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+					</svg>
+				</a>
 				</div>
 				<!-- <button on:click={() => blah}>Previous Page</button> -->
 				<!-- <button on:click={() => getNextProjects}>Next Page</button> -->
