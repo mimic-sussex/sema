@@ -295,7 +295,7 @@
           </button>
         </div>
 
-      {:else if itemProp.visor }
+      <!-- {:else if itemProp.visor }
 
         <div class="controls">
           <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
@@ -303,7 +303,7 @@
                   >
                   Visor
           </button>
-        </div>
+        </div> -->
 
 
       {:else if itemProp.grammar }
