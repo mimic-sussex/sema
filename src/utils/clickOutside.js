@@ -10,15 +10,13 @@ export function clickOutside(node, excluded) {
 
       if (excluded) {
         for (let i=0; i<excluded.length; i++){
-          console.log('exlcuded', excluded[i])
-          if (event.explicitOriginalTarget.id != excluded[i]){
-            
+          if (event.target.id != excluded[i]){
             node.dispatchEvent(
               new CustomEvent('click_outside', node)
             )
-          
           }
         }
+        
       } else {
         node.dispatchEvent(
           new CustomEvent('click_outside', node)
