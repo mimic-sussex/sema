@@ -147,6 +147,11 @@
     color: #ccc;
   }
 
+  .markdown-output {
+    /* width: 100%; */
+    padding: 0em 0.5em 0em 0.5em;
+  }
+
 </style>
 <div class="markdown-section-container">
 {#await promise}
