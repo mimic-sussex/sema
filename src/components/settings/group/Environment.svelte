@@ -273,12 +273,13 @@
 		white-space: nowrap;
 		overflow-x: scroll;
 		height: 2.0em;
-    padding: 0.7em 1.2em 0.7em 1.3em;
-		margin-top: 0.3em;
+    padding: 0.7em 1.2em 0.7em 1.5em;
+		margin-top: 0.55em;
 		margin-right: 0.3em;
 		color: white;
 		background:#262a2e;
 		border: 0.1px solid #ffffff61;
+    font-size: medium;
     /* border:none; */
     /* box-shadow: 2px 2px 3px rgb(0 0 0), -0.5px -0.5px 3px #ffffff61; */
   }
@@ -300,7 +301,7 @@
 
   .dropdown-button-dark {
     width: 2.5em;
-    height: 2.0em;
+    height: 1.75em;
     font-family: sans-serif;
     font-weight: 400;
     cursor: pointer;
@@ -310,7 +311,9 @@
     box-sizing: border-box;
     border: 0.1px solid #ffffff61;
     /* text-align: left; */
+    margin-top:0.50em;
     margin-right: 5px;
+    padding:0;
     -moz-appearance: none;
     -webkit-appearance: none;
     appearance: none;
@@ -325,7 +328,7 @@
     height: 2.3em;
     margin-right: -24px;
     z-index: 1;
-    padding-top:3px;
+    padding-top:4px;
     /* position:absolute; */
   }
   
@@ -656,7 +659,7 @@
   margin-left: -50px;"
   on:click={ () => toggleProjectBrowser()}>
 
-    <div id='project-browser-launcher-button' class='icon-container'>
+    <div id='project-browser-launcher-button' class='icon-container' style='margin-top:5px;'>
       <svg xmlns="http://www.w3.org/2000/svg" 
       width="16" 
       height="16" 
