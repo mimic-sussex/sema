@@ -23,7 +23,7 @@
 
   // used to track whether the url has been copied to clipboard yet.
   let copied = false;
-  let playgroundURL = `https://dev.sema.codes/playground/${id}`
+  let playgroundURL = `https://sema.codes/playground/${id}`
 
   const closeOverlay = () => {
     $isShareOverlayVisible = false;

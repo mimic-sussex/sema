@@ -237,7 +237,7 @@
 
 	const shareProject = async (id) => {
 		// console.log(id);
-		// navigator.clipboard.writeText(`https://dev.sema.codes/playground/${id}`);
+		// navigator.clipboard.writeText(`https://sema.codes/playground/${id}`);
 		shareID = id;
 		$isShareOverlayVisible = true;
 		// window.alert("Project ID copied");
