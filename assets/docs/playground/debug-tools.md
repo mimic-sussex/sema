@@ -15,7 +15,7 @@ Severity Levels.
 # Live Code Parser
 The _Live Code Parser_ provides feedback on your custom-language compilation. It will show errors if your language has a syntax error.
 
-Otherwise it shows the Abstract Syntax Tree (AST) that results from parsing your live code. You can unfold the branches by click on them.
+Otherwise it shows the Abstract Syntax Tree (AST) that results from parsing your live code. You can unfold the branches by clicking on them.
 
 # DSP Code
 The _DSP Code_ widget shows the code that Sema generates (Maximilian DSP JavaScript) when you evaluate your live code.
