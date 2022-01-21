@@ -1,4 +1,4 @@
-<!-- PROFILE component for /user/username -->
+<!-- PROFILE component for /users/username -->
 
 <script>
 

@@ -22,7 +22,7 @@
     {#if userList}
       <ul>
       {#each userList as user}
-        <li><a href="{`user/${user.username}`}" >{user.username}</a></li>
+        <li><a href="{`users/${user.username}`}" >{user.username}</a></li>
       {/each}
       </ul>
     {/if}
