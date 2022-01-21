@@ -180,6 +180,10 @@
     .mouse-off {
       fill:rgb(133, 130, 130);
     }
+
+    .button-dark:hover .mouse{
+      fill:white;
+    }
   
   </style>
   

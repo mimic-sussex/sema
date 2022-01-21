@@ -62,6 +62,13 @@
   .audio-inactive {
     fill: rgb(133, 130, 130);
   }
+
+  .button-dark:hover .audio-active{
+      fill:white;
+  }
+  .button-dark:hover .audio-inactive{
+      fill:white;
+  }
   
 </style>
 

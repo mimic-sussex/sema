@@ -91,7 +91,9 @@
 
   .button-dark:active{
     color: white;
-    background-color: grey;
+    background-color: #212529;
+    border-radius: 5px;
+    box-shadow: inset 0.25px 0.25px 0.1px 0 #201f1f, inset -0.25px -0.25px 0.1px 0 rgba(255, 255, 255, 0.05);
   }
 
   .button-light {
@@ -130,9 +132,13 @@
     fill: rgb(133, 130, 130);
   }
 
-  .audio-active:hover, .audio-inactive:hover, .no-audio:hover, .mute-audio:hover{
+  .button-dark:hover .audio-active {
     fill:white;
   }
+
+  /* .audio-active:hover, .audio-inactive:hover, .no-audio:hover, .mute-audio:hover{
+    fill:white;
+  } */
 
   .engine-sound-level-text-container {
     margin: 13px 0px 0px 0px;

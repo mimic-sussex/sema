@@ -232,7 +232,9 @@
 
   .button-dark:active{
     color: white;
-    background-color: grey;
+    background-color: #212529;
+    border-radius:5px;
+    box-shadow: inset 0.25px 0.25px 0.1px 0 #201f1f, inset -0.25px -0.25px 0.1px 0 rgba(255, 255, 255, 0.05);
   }
 
   .button-light {
@@ -276,17 +278,29 @@
     padding: 0.7em 1.2em 0.7em 1.5em;
 		margin-top: 0.55em;
 		margin-right: 0.3em;
-		color: white;
+    margin: 8px 8px 8px 8px;
+		color: #ccc;
 		background:#262a2e;
-		border: 0.1px solid #ffffff61;
+		/* border: 0.1px solid #999; */
+    border:0.1px solid transparent;
     font-size: medium;
+    border-radius:5px;
+    /* box-shadow: inset 0.25px 0.25px 0.1px 0 #201f1f, inset -0.25px -0.25px 0.1px 0 rgba(255, 255, 255, 0.05); */
+    box-shadow: inset 1px 1px 1px 0 #201f1f, inset -1px -1px 1px 0 rgba(255, 255, 255, 0.05);
     /* border:none; */
     /* box-shadow: 2px 2px 3px rgb(0 0 0), -0.5px -0.5px 3px #ffffff61; */
   }
 
   input:hover{
-    /* border-color: blue; */
     color:white;
+    border: 0.1px solid #999;
+  }
+
+  input:hover + .dropdown-button-dark {
+    /* border-left: 0.1px solid #999; */
+    border-right: 0.1px solid #999;
+    border-top: 0.1px solid #999;
+    border-bottom: 0.1px solid #999;
   }
 
   input:active{
@@ -300,28 +314,38 @@
   
 
   .dropdown-button-dark {
-    width: 2.5em;
+    width: 42px;
     height: 1.75em;
     font-family: sans-serif;
     font-weight: 400;
     cursor: pointer;
-    color: white;
+    color: #ccc;
     line-height: 1.3;
     max-width: 100%;
     box-sizing: border-box;
-    border: 0.1px solid #ffffff61;
+    /* border: 0.1px solid #999; */
+    border:0.1px solid transparent;
     /* text-align: left; */
-    margin-top:0.50em;
-    margin-right: 5px;
+    /* margin-top:0.50em;
+    margin-right: 5px; */
+    margin: 8px 8px 8px 8px;
     padding:0;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
     background-color:  #262a2e;
-    background-repeat: no-repeat, repeat;
-    background-position: right .7em top 50%, 0 0;
-    background-size: .65em auto, 100%;
     z-index:1;
+    border-radius: 0px 5px 5px 0px;
+    box-shadow: inset 1px 1px 1px 0 #201f1f, inset -1px -1px 1px 0 rgba(255, 255, 255, 0.05);
+  }
+
+  .dropdown-button-dark:active{
+    color: white;
+    background-color: #212529;
+    border-radius: 0px 5px 5px 0px;
+    box-shadow: inset 0.25px 0.25px 0.1px 0 #201f1f, inset -0.25px -0.25px 0.1px 0 rgba(255, 255, 255, 0.05);
+  }
+
+  .dropdown-button-dark:hover{
+    color:white;
+    border: 0.1px solid #999;
   }
 
   .playground-visibility-icon {
@@ -329,6 +353,7 @@
     margin-right: -24px;
     z-index: 1;
     padding-top:4px;
+    color: #ccc;
     /* position:absolute; */
   }
   
