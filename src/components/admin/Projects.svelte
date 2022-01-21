@@ -812,12 +812,24 @@
 						<th 
 						class="table-header" 
 						on:click={() => {orderBy = {col:'name', ascending:true }} }
-						>Name</th>
+						>Name 
+						{#if orderBy.col =='name'}
+						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16" style="float:right;">
+							<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+						</svg>
+						{/if}
+						</th>
 						
 						<th 
 						class="table-header" 
 						on:click={()=>{orderBy = {col:'isPublic', ascending:true }}} 
-						>Visibility</th>
+						>Visibility
+						{#if orderBy.col =='isPublic'}
+						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16" style="float:right;">
+							<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+						</svg>
+						{/if}
+						</th>
 						
 						<!-- <th 
 						class="table-header" 
@@ -827,11 +839,23 @@
 						<th 
 						class="table-header" 
 						on:click={()=>{orderBy = {col:'author', ascending:true }}}
-						>Author</th>
+						>Author
+						{#if orderBy.col =='author'}
+						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16" style="float:right;">
+							<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+						</svg>
+						{/if}
+						</th>
 
 						<th class="table-header" 
 						on:click={()=>{orderBy = {col:'updated', ascending:false }}}
-						>Updated</th>
+						>Updated
+						{#if orderBy.col =='updated'}
+						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16" style="float:right;">
+							<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+						</svg>
+						{/if}
+						</th>
 
 						<th>Options</th> <!--Fork or delete (depending on permissions)-->
 					</tr>
@@ -908,7 +932,7 @@
 							<td>
 								{#if record.author}
 									{#if record.author.username}
-										<a class='author-name' href="/user/{record.author.username}">{record.author.username}</a>
+										<a class='author-name' href="/users/{record.author.username}">{record.author.username}</a>
 									{:else}
 										No Username
 									{/if}
