@@ -43,7 +43,7 @@ _____
 model.predict(tf.tensor2d([9], [1, 1])).print();
 ```
 
-Lalolib is also available.
+<!-- Lalolib is also available.
 https://mlweb.loria.fr/lalolab/lalolib.html
 
 Lalolib supplies useful linear algebra functions that aren't present in tensorflow.js.  You can see examples of how it's used in the conceptor and echo state network examples.
@@ -55,7 +55,7 @@ ____
 let a = ones(10);
 mul(a,10)
 
-```
+``` -->
 
 It's also possible to import other javascript libraries.  Code in this window runs in a web worker, which means you can pull in libraries using ImportScripts. For example, the lodash library is very useful for array processing.
 
