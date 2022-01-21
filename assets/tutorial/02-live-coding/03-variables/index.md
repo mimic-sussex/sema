@@ -1,6 +1,6 @@
 # Variables
 
-In the default language, variables always begin and end with a ```:``` symbol, for example ```:mysound:```.
+In the default language, variables optionally begin and always end with a ```:``` symbol, for example ```:mysound:``` or ```mysound:```.
 
 To store a value in a variable, simply put the variable to the left of a function to capture the result. To read from a variable, use it as a parameter to a function.
 
