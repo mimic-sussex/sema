@@ -307,6 +307,10 @@
     color:white;
   }
 
+  input:focus {
+    background-color: #181a1d;
+  }
+
   input:disabled {
     cursor:not-allowed;
     border:none;
