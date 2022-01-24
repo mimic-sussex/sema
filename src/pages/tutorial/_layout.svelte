@@ -236,54 +236,56 @@
 
     <div class="tutorial-navigator">
 
-      <button class="button-dark left"
-							on:click={ e => handleButtonClick(0) }
-							>
-        <!-- ◄ -->
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-left" viewBox="0 0 16 16">
-          <path d="M10 12.796V3.204L4.519 8 10 12.796zm-.659.753-5.48-4.796a1 1 0 0 1 0-1.506l5.48-4.796A1 1 0 0 1 11 3.204v9.592a1 1 0 0 1-1.659.753z"/>
-        </svg>
-      </button>
-
-      <!-- <div class="divider-left"></div> -->
-
-      <div class="combobox-dark middle">
-        <!-- svelte-ignore a11y-no-onchange -->
-        <select
-                bind:value={ $selectedSection }
-                on:change={ e => handleSelect(e) }
+      <div class='tutorial-navigator-inside-container'>
+        <button class="button-dark left"
+                on:click={ e => handleButtonClick(0) }
                 >
-          {#if $tutorials !== undefined}
-            {#each $tutorials as chapter, i}
-              <optgroup label="{i + 1}. {chapter.title}">
-                {#if chapter.sections !== undefined}
-                  {#each chapter.sections as section, i}
-                    {#if $selectedSection}
-                      {#if section.title == $selectedSection.title}
-                        <option value={section} selected=true>{i + 1}. {section.title}</option>
-                      {:else}
-                        <option value={section} >{i + 1}. {section.title}</option>
+          <!-- ◄ -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-left" viewBox="0 0 16 16">
+            <path d="M10 12.796V3.204L4.519 8 10 12.796zm-.659.753-5.48-4.796a1 1 0 0 1 0-1.506l5.48-4.796A1 1 0 0 1 11 3.204v9.592a1 1 0 0 1-1.659.753z"/>
+          </svg>
+        </button>
+
+        <div class="divider-left"></div>
+
+        <div class="combobox-dark middle">
+          <!-- svelte-ignore a11y-no-onchange -->
+          <select
+                  bind:value={ $selectedSection }
+                  on:change={ e => handleSelect(e) }
+                  >
+            {#if $tutorials !== undefined}
+              {#each $tutorials as chapter, i}
+                <optgroup label="{i + 1}. {chapter.title}">
+                  {#if chapter.sections !== undefined}
+                    {#each chapter.sections as section, i}
+                      {#if $selectedSection}
+                        {#if section.title == $selectedSection.title}
+                          <option value={section} selected=true>{i + 1}. {section.title}</option>
+                        {:else}
+                          <option value={section} >{i + 1}. {section.title}</option>
+                        {/if}
                       {/if}
-                    {/if}
-                    <!-- <option value={section}>{String.fromCharCode(i + 97)}. {section.title}</option> -->                    
-                  {/each}
-                {/if}
-              </optgroup>
-            {/each}
-          {/if}
-        </select>
-      </div>
+                      <!-- <option value={section}>{String.fromCharCode(i + 97)}. {section.title}</option> -->                    
+                    {/each}
+                  {/if}
+                </optgroup>
+              {/each}
+            {/if}
+          </select>
+        </div>
 
-      <!-- <div class="divider-right"></div> -->
+        <div class="divider-right"></div>
 
-      <button class="button-dark right"
-							on:click={ e => handleButtonClick(1) }
-							>
-        <!-- ► -->
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right" viewBox="0 0 16 16">
-          <path d="M6 12.796V3.204L11.481 8 6 12.796zm.659.753 5.48-4.796a1 1 0 0 0 0-1.506L6.66 2.451C6.011 1.885 5 2.345 5 3.204v9.592a1 1 0 0 0 1.659.753z"/>
-        </svg>
-      </button>
+        <button class="button-dark right"
+                on:click={ e => handleButtonClick(1) }
+                >
+          <!-- ► -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right" viewBox="0 0 16 16">
+            <path d="M6 12.796V3.204L11.481 8 6 12.796zm.659.753 5.48-4.796a1 1 0 0 0 0-1.506L6.66 2.451C6.011 1.885 5 2.345 5 3.204v9.592a1 1 0 0 0 1.659.753z"/>
+          </svg>
+        </button>
+     </div>
 
     </div>
 
@@ -300,11 +302,13 @@
       on:mount={onChildMount} -->
 
   <div class='devices-container'>
-    <div class='' style=''>
+    <div class='' style='display:inline-flex;
+    justify-content:space-between;'>
       <Mouse />
     </div>
 
-    <div class='' style=''>
+    <div class='' style='display:inline-flex;
+    justify-content:space-between;'>
       <Mic />
     </div>
   </div>
@@ -404,7 +408,7 @@
   }
   
   .devices-container {
-    width: 100%;
+    /* width: 100%;
     grid-area:devices;
     display: flex;
     flex-direction: row;
@@ -412,7 +416,16 @@
     background-color: #262a2e;
     border-radius: 5px;
     height: 50px;
-    margin: 0.5em 0px 0.5em 0em;
+    margin: 0.5em 0px 0.5em 0em; */
+    
+    grid-area: devices;
+    display: flex;
+    flex-direction: row;
+    align-self: flex-end;
+    background-color: #262a2e;
+		border-radius: 5px;
+    height:50px;
+    margin: 0.5em 0.5em 0.5em 0em;
   }
 
   .tutorial-navigator {
@@ -425,6 +438,16 @@
     margin-bottom: 0.05em;
     /* margin-left: 3px; */
     /* margin-right: 0.4em; */
+  }
+
+  .tutorial-navigator-inside-container{
+    display: flex;
+    flex-direction: row;
+    align-self: flex-end;
+    background-color: #262a2e;
+    border-radius: 5px;
+    height: 50px;
+    margin: 0.5em 0px 0.5em 0em;
   }
 
   .chrome {
@@ -507,46 +530,66 @@
 
   .combobox-dark select {
     width:100%;
-    height: 50px;
+    height: 42px;
     background-color: #262a2e;
-    color: white;
+    color: #ccc;
     border: none;
     border-radius: 5px;
-    margin: 8px 0px 8px 0px;
+    /* margin: 8px 0px 8px 0px; */
+    margin-left:8px;
+    margin-right:8px;
     padding:0px;
+    font-size: medium;
+    
+    min-width: 12em;
+    max-width: 16em;
+  }
+
+  select:focus{
+    box-shadow: inset 1px 1px 1px 0 #201f1f, inset -1px -1px 1px 0 rgba(255, 255, 255, 0.05);
+  }
+  select:hover{
+    color:white
   }
 
   .button-dark {
 		padding: 20;
 		color: grey;
 		border: none;
+    /* width: 42px; */
+  	/* height: 42px; */
   	margin: 8px 8px 8px 8px;
   	border-radius: 5px;
   	background-color: #262a2e;
 	}
 
   .button-dark:hover {
+    /* background-color: blue; */
     color: white;
   }
 
   .button-dark:active{
     color: white;
-    background-color: grey;
+    background-color: #212529;
+    border-radius:5px;
+    box-shadow: inset 0.25px 0.25px 0.1px 0 #201f1f, inset -0.25px -0.25px 0.1px 0 rgba(255, 255, 255, 0.05);
+  }
+
+  button:not(:disabled):active{
+    background-color: #212529;
   }
 
   .left {
     grid-column: 1;
-    height: 50px; /*to match the size of the settings bar*/
+    /* height: 50px; to match the size of the settings bar */
   }
 
   .divider-left {
     width: 4px;
-    /* height: 50px; */
-    /* margin: 1px 11px 1px 17px; */
     border-radius: 2px;
-    box-shadow: inset 1px 1px 4px 0 #070709, inset -1px -1px 4px 0 rgba(255, 255, 255, 0.05);
-    margin: 0.5em 0px 0.5em 0em;
-    grid-column:2;
+    /* margin: 0.5em 0px 0.5em 0em; */
+    box-shadow: inset 1px 1px 1px 0 #201f1f, inset -1px -1px 1px 0 rgba(255, 255, 255, 0.05);
+    margin: 8px 8px 8px 0px;
   }
 
 
@@ -558,18 +601,16 @@
 
   .divider-right {
     width: 4px;
-    /* height: 50px; */
-    /* margin: 1px 11px 1px 17px; */
     border-radius: 2px;
-    box-shadow: inset 1px 1px 4px 0 #070709, inset -1px -1px 4px 0 rgba(255, 255, 255, 0.05);
     margin: 0.5em 0px 0.5em 0em;
-    grid-column: 4;
+    box-shadow: inset 1px 1px 1px 0 #201f1f, inset -1px -1px 1px 0 rgba(255, 255, 255, 0.05);
+    margin: 8px 0px 8px 8px;
   }
 
 
   .right {
     grid-column: 5;
-    height: 50px; /*to match the size of the settings bar*/
+    /* height: 50px; to match the size of the settings bar */
   }
 
   .overlay-container {
