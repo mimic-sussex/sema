@@ -157,34 +157,29 @@
     overflow-y: scroll;
     
   }
-
-  .console-settings-container{
-    vertical-align: top;
+  
+  .console-settings-container {
     overflow: hidden;
-    white-space:nowrap;
-    background-color: #212529;/*#1d1d1d;*/
-    /* position: fixed; Set the navbar to fixed position */
-    /*width: 80%; /* Full width */
+    background-color: #212529;
     height: 5%;
     display: flex;
-    /* justify-content: space-between; */
     align-items: center;
-    padding: 10px 10%;
+    padding: 9px 2%;
   }
-
   .clear-container {
+    white-space:nowrap;
   }
 
   .totals-container {
-
+    white-space: nowrap;
   }
 
   .origin-container {
-    
+    white-space: nowrap;
   }
 
   .log-level-container {
-
+    white-space: nowrap;
   }
 
 	.scrollable-textarea {
@@ -205,15 +200,19 @@
   }
 
   .console-PROCESSOR {
-    color: green;
+    /* color: green; */
+    color: #859900;
+    
   }
 
   .console-LEARNER {
-    color: red;
+    /* color: red; */
+    color: #cb4b16;
   }
 
   .console-MAIN{
-    color: white;
+    /* color: white; */
+    color: #6c71c4;
   }
 
   /* .clear-button {
@@ -256,6 +255,7 @@
     display: inline-block;
     font-weight: bold;
     font-family: monospace;
+    color:#ccc;
   }
 
   form {
@@ -265,13 +265,23 @@
   
   /* toggle buttons */
   .active {
-    background-color: grey;
+    background-color:#181a1d;
   }
 
   button {
     font-family: monospace;
     padding: 1px 2px 1px 2px;
     border: none;
+    background-color: #212529;
+    color: #ccc;
+    border-radius: 5px;
+  }
+
+  button:active{
+    color: white;
+    background-color: #212529;
+    border-radius:5px;
+    box-shadow: inset 0.25px 0.25px 0.1px 0 #201f1f, inset -0.25px -0.25px 0.1px 0 rgba(255, 255, 255, 0.05);
   }
 
   .clear-button {
@@ -287,6 +297,18 @@
 
   .clear-button:active {
     background-color: transparent;
+  }
+
+  .divider {
+    height: 20px;
+    width: 4px;
+    /* height: 50px; */
+    /* margin: 1px 11px 1px 17px; */
+    border-radius: 2px;
+    /* box-shadow: inset 1px 1px 4px 0 #070709, inset -1px -1px 4px 0 rgba(255, 255, 255, 0.05); */
+    /* margin: 0.5em 0px 0.5em 0em; */
+    margin: 0.5em 5px 0.5em 5px;
+    box-shadow:inset 1px 1px 1px 0 #201f1f, inset -1px -1px 1px 0 rgba(255, 255, 255, 0.05);
   }
 
 </style>
@@ -306,7 +328,10 @@
 
     </div>
 
-    <hr style="height: 20px; display: inline-block;">
+    <!-- <hr style="height: 20px; display: inline-block;"> -->
+
+    <div class="divider" style='display:inline-block;'></div>
+
 
     <div class=origin-container>
 
@@ -316,7 +341,8 @@
 
     </div>
 
-    <hr style="height: 20px; display: inline-block;">
+    <!-- <hr style="height: 20px; display: inline-block;"> -->
+    <div class="divider" style='display:inline-block;'></div>
 
     <div class=log-level-container>
 
@@ -327,7 +353,8 @@
 
     </div>
 
-    <hr style="height: 20px; display: inline-block;">
+    <!-- <hr style="height: 20px; display: inline-block;"> -->
+    <div class="divider" style='display:inline-block;'></div>
 
     <div class = totals-container>
       <p class="totals-text">
