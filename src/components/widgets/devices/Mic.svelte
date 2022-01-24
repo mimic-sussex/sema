@@ -33,27 +33,29 @@
       align-items:center;
     }
 
-    .button-dark {
-      padding: 20;
-      background-color: #262a2e;
-      color: #999;
-      border: none;
-      /* width: 42px; */
-      /* height: 42px; */
-      margin: 8px 8px 8px 8px;
-      border-radius: 5px;
-      background-color: #262a2e;
-    }
+  .button-dark {
+		padding: 20;
+		background-color: #262a2e;
+		color: grey;
+		border: none;
+    width: 42px;
+  	/* height: 42px; */
+  	margin: 8px 0px 8px 0px;
+  	border-radius: 5px;
+  	background-color: #262a2e;
+	}
 
-    .button-dark:hover {
-      /* background-color: blue; */
-      color: white;
-    }
+  .button-dark:hover {
+    /* background-color: blue; */
+    color: white;
+  }
 
-    .button-dark:active{
-      color: white;
-      background-color: grey;
-    }
+  .button-dark:active{
+    color: white;
+    background-color: #212529;
+    border-radius:5px;
+    box-shadow: inset 0.25px 0.25px 0.1px 0 #201f1f, inset -0.25px -0.25px 0.1px 0 rgba(255, 255, 255, 0.05);
+  }
 
   .audio-active {
     fill: #0050A0;
