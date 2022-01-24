@@ -102,9 +102,10 @@
     /* margin: 10px 10px 10px 10px; */
     font-weight: bold;
     display: inline-block;
+    /* padding-left: 12px; */
+    padding-right: 12px;
     /* content */
     /* padding: 0px 10px 0px 10px; */
-
   }
 
   .container-links {
