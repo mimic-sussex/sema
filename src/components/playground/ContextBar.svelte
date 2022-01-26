@@ -241,7 +241,9 @@
     <!-- Loop through and display focused item properties -->
     {#each $focusedItemProperties as itemProp }
       
-      {#if itemProp.lineNumbers }
+    <!-- COMMENTING OUT LINE NUMBERS CASE SINCE IT ISN'T WORKING.
+    ITEMS NEED TO BE RESPAWNED/FULLY RELOADED ON LINE NUMBER CHANGE BUT THIS ISN'T IMPLEMENTED YET -->
+      <!-- {#if itemProp.lineNumbers }
 
         <div class="controls">
           <label class="input-dark">Line Numbers
@@ -253,7 +255,7 @@
                     >
             <span  class="checkbox-span"></span>
           </label>
-        </div>
+        </div> -->
       <!-- {#if itemProp.lineNumbers == true || itemProp.lineNumbers == false }
 
         <div class="controls">
@@ -267,7 +269,7 @@
             <span  class="checkbox-span"></span>
           </label>
         </div> -->
-      {:else if itemProp.channelID }
+      {#if itemProp.channelID }
 
         <div class="controls">
           <label class="input-dark">Channel
