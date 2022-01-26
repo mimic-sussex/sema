@@ -7,7 +7,7 @@
 	"contributors": [
 		"Chris Kiefer <c.kiefer@sussex.ac.uk> (http://luuma.net)",
 		"Thor Magnusson <t.magnusson@sussex.ac.uk> (http://www.ixi-audio.net)",
-		"Milo Beuzeval <mb743@sussex.ac.uk>"
+		"Milo Beuzeval <mb743@sussex.ac.uk> (https://www.amalgah.net)"
 	],
 	"license": "MIT",
 	"engines": {
@@ -80,7 +80,7 @@
 		"nearley": "^2.20.1",
 		"rollup-plugin-workbox": "^6.1.1",
 		"sema-engine": "^0.1.4",
-		"supabase-ui-svelte": "git+https://github.com/smilo7/supabase-ui-svelte",
+		"supabase-ui-svelte": "https://github.com/mimic-sussex/supabase-ui-svelte",
 		"svelte-codemirror": "git+https://github.com/frantic0/svelte-codemirror.git",
 		"svelte-highlight": "^3.2.0",
 		"svelte-preprocess": "^4.0.9",
