@@ -463,97 +463,37 @@
     messaging.publish("changing-playground");
   }
 
-  // //loads playground from url params if they exist and if not from local storage.
-  // const loadPlaygroundOld = async () => {
-  //   //if there is a playground/SOMETHINg in the url try look it up in the DB
-  //   if ($params.playgroundId){
-  //     let playground;
-  //     try {
-  //       playground = await fetchPlayground($params.playgroundId);
-
-  //       //check its not private
-  //       if (!playground.isPublic && playground.author != $user){
-  //         $isPrivateOverlayVisible = true;
-  //       } else {
-  //         setPlayground(playground);
-  //         //write url to local storage
-  //         localStorage.setItem("last-session-playground-uuid", `${$uuid}`);
-  //       }
-        
-  //     } catch (error) {
-  //       if (playground == null){ //cant find playground with that ID.
-  //         $isDoesNotExistOverlayVisible = true; //trigger overlay DoesNotExist
-  //       } else {
-  //         console.error(error)
-  //       }
-  //     }
-  //   } else if (localStorage.getItem("last-session-playground-uuid") && $user) {
-  //     let playground
-  //     try {
-  //       // console.log("going to url in local storage", localStorage.getItem("last-session-playground-uuid"))
-  //       // $goto('/playground/'+localStorage.getItem("last-session-playground-uuid"));
-  //       playground = await fetchPlayground(localStorage.getItem("last-session-playground-uuid"));
-
-  //       //check its not private
-  //       if (!playground.isPublic && playground.author != $user){
-  //         $isPrivateOverlayVisible = true;
-  //       } else {
-  //         setPlayground(playground);
-  //       }
-
-  //       window.history.pushState("", "", `/playground/${$uuid}`); //put the new UUID in the URL without reloading
-  //     } catch (error) {
-  //       if (playground == null){ //cant find playground with that ID.
-  //         $isDoesNotExistOverlayVisible = true; //trigger overlay DoesNotExist
-  //       } else {
-  //         console.error(error)
-  //       }
-  //     }
-  //   } else if (!params.playgroundId && !localStorage.getItem("last-session-playground-uuid") && $user){
-  //     //create a new playground
-  //     let playground;
-  //     try{
-  //       playground = await createPlayground();
-  //       // setPlayground(playground)
-  //       console.log("new playground ", playground)
-  //       $uuid = playground.id;
-  //       $name = playground.name;
-  //       $items = $items //make with the existing data in items (they might have made changes) //$items.slice($items.length);
-  //       $allowEdits = playground.allowEdits;
-  //       $author = playground.author;
-  //       window.history.pushState("", "", `/playground/${$uuid}`); //put the new UUID in the URL without reloading
-  //     } catch (error){
-  //       console.log(error)
-  //     }
-  //   } else if (!params.playgroundId && !localStorage.getItem("last-session-playground-uuid") && !$user){
-      
-  //     //choose random playground from examples
-  //     let playgrounds
-  //     try {
-  //       playgrounds = await getExamplePlaygrounds()
-  //       let randomExample = playgrounds[Math.floor(Math.random() * playgrounds.length)]
-  //       setPlayground(randomExample);
-  //       window.history.pushState("", "", `/playground/${$uuid}`);
-  //     } catch (error){
-  //       console.log(error)
-  //     }
-
-  //   }
-  // }
-
+  /*
+  Start the auto save cycle
+  */
   const autoSaveCycle = async () => {
       const interval = setInterval(async function() {
         await savePlayground($uuid, $name, $items, $allowEdits, $user)
       }, 15000); //save every 15 seconds
   }
 
-  // export const savePlayground = async () => {
-  //   if ($saveRequired){
-  //     await updatePlayground($uuid, $name, $items, $allowEdits, $user);
-  //     $saveRequired = false;
-  //   }
-  // }
+  /*
+  warn user before leaving page if they have unsaved changes.
+  */
+  $beforeUrlChange( async (event, route) => {
+    await savePlayground($uuid, $name, $items, $allowEdits, $user)
+    return true;
+  })
 
+  const beforeUnloadListener = async (event) => {
+    event.preventDefault();
+    await savePlayground($uuid, $name, $items, $allowEdits, $user);
+    return true;
+  };
+
+  $: addAndRemoveUnloadListener($saveRequired)
+  function addAndRemoveUnloadListener($saveRequired){
+    if ($saveRequired){
+      addEventListener("beforeunload", beforeUnloadListener, {capture: true});
+    } else {
+      removeEventListener("beforeunload", beforeUnloadListener, {capture: true});
+    }
+  }
 
   onMount( async () => {
 
@@ -598,31 +538,7 @@
     resetStores();
   });
 
-  $beforeUrlChange( async (event, route) => {
-    await savePlayground($uuid, $name, $items, $allowEdits, $user)
-    return true;
-  // if($saveRequired){
-  //   // alert('Please save your changes before leaving.')
-  //   await updatePlayground($uuid, $name, $items, $allowEdits, $user);
-  //   $saveRequired = false;
-  //   return true
-  // }
-  })
 
-  const beforeUnloadListener = async (event) => {
-    event.preventDefault();
-    await savePlayground($uuid, $name, $items, $allowEdits, $user);
-    return true;
-  };
-
-  $: addAndRemoveUnloadListener($saveRequired)
-  function addAndRemoveUnloadListener($saveRequired){
-    if ($saveRequired){
-      addEventListener("beforeunload", beforeUnloadListener, {capture: true});
-    } else {
-      removeEventListener("beforeunload", beforeUnloadListener, {capture: true});
-    }
-  }
 </script>
 
 
@@ -689,7 +605,7 @@
   }
 
 
-  .overlay-container {
+  /* .overlay-container {
     grid-area: layout;
     z-index: 1000;
     background-color: rgba(16,12,12,0.8);
@@ -701,20 +617,13 @@
     align-items:center;
     font-size:16px;
     visibility: hidden;
-  }
+  } */
 
-  .upload-overlay-container {
+  .overlay-container {
     grid-area: layout;
     z-index: 1000;
     background-color: rgba(38,42,46,0.8);
     visibility: hidden;
-    /* width: 50%; */
-
-    /* display:flex;
-    justify-content:center;
-    align-items:center; */
-
-    
     font-size:16px;
     border-radius: 5px;
   }
@@ -893,7 +802,7 @@
     <Sidebar />
   </div>
 
-  <div  class="upload-overlay-container"
+  <div  class="overlay-container"
         style='visibility:{ ( $isNewOverlayVisible || $isUploadOverlayVisible || $isDeleteOverlayVisible || $isClearOverlayVisible || $isSaveOverlayVisible || $isShareOverlayVisible || $isPrivateOverlayVisible || $isLoadingOverlayVisible || $isLoadingPlaygroundOverlayVisible ) ? "visible" : "hidden"}'
         >
     <span class='close-overlay'

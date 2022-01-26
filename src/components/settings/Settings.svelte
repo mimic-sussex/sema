@@ -77,10 +77,6 @@
   .button-launcher:hover .button-launcher-menu-dots{
     color:#999;
   }
-	
-	/* svg{
-		fill: #999999;
-	} */
 
   .outer-settings-container{
     display: flex;
@@ -95,12 +91,8 @@
 
   .divider {
     width: 4px;
-    /* height: 50px; */
-    /* margin: 1px 11px 1px 17px; */
     border-radius: 2px;
-    /* box-shadow: inset 1px 1px 4px 0 #070709, inset -1px -1px 4px 0 rgba(255, 255, 255, 0.05); */
     margin: 0.5em 0px 0.5em 0em;
-
     box-shadow:inset 1px 1px 1px 0 #201f1f, inset -1px -1px 1px 0 rgba(255, 255, 255, 0.05);
   }
   
