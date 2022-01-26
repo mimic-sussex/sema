@@ -36,8 +36,7 @@ This project and everyone participating in it is governed by the [Sema Code of C
 
 ## I don't want to read this whole thing I just have a question!!!
 
-> **Note:** [Please don't file an issue to ask a question.]() You'll get faster results by using the resources below.
-
+> **Note:** [Please don't file an issue to ask a question.]() You'll get faster results by using the resources below. Reach out on our community Discord channel if you are stuck.
 
 ## What should I know before
 
@@ -45,7 +44,7 @@ This project and everyone participating in it is governed by the [Sema Code of C
 
 ### Reporting Bugs
 
-This section guides you through submitting a bug report for Atom. Following these guidelines helps maintainers and the community understand your report :pencil:, reproduce the behavior :computer: :computer:, and find related reports :mag_right:.
+This section guides you through submitting a bug report for Sema. Following these guidelines helps maintainers and the community understand your report :pencil:, reproduce the behavior :computer: :computer:, and find related reports :mag_right:.
 
 Before creating bug reports, please check [this list](#before-submitting-a-bug-report) as you might find out that you don't need to create one. When you are creating a bug report, please [include as many details as possible](#how-do-i-submit-a-good-bug-report).
 
@@ -53,8 +52,8 @@ Before creating bug reports, please check [this list](#before-submitting-a-bug-r
 
 #### Before Submitting A Bug Report
 
-* **Check the [debugging guide](https://github.com/mimic-sussex/sema/wiki/3.-How-can-I-debug-Sema%3F).** You might be able to find the cause of the problem and fix things yourself. Most importantly, check if you can reproduce the problem [in the latest version of Atom]
-<!-- * **Check the [FAQs on the forum](https://discuss.atom.io/c/faq)** for a list of common questions and problems. -->
+* **Check the [debugging guide](https://github.com/mimic-sussex/sema/wiki/3.-How-can-I-debug-Sema%3F).** You might be able to find the cause of the problem and fix things yourself. Most importantly, check if you can reproduce the problem in the latest version of Sema. This will always be on the [develop branch](https://github.com/mimic-sussex/sema/tree/develop).
+
 * **Perform a [cursory search](https://github.com/search?q=+is:issue+user:mimic-sussex)** to see if the problem has already been reported. If it has **and the issue is still open**, add a comment to the existing issue instead of opening a new one.
 
 #### How Do I Submit A (Good) Bug Report?
