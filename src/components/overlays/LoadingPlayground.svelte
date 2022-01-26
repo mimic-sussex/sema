@@ -1,3 +1,4 @@
+<!-- OVERLAY FOR WHEN PLAYGROUND IS LOADING -->
 <script>
   import { Engine } from 'sema-engine';
 
@@ -67,7 +68,7 @@
     </div>
 
     <div class='loading-bar'>
-        <ContentLoader primaryColor='#404040' secondaryColor='#ccc' speed='1' width="200" height="16">
+        <ContentLoader primaryColor='grey' secondaryColor='#ccc' speed='1' width="200" height="16">
           <rect x="0" y="0" rx="3" ry="3" width="200" height="16" />
         </ContentLoader>
     </div>
