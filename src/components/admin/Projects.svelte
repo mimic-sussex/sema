@@ -706,9 +706,9 @@
 	<label for="my-projects-radio">Browse All Projects</label> -->
 	
 	{#if $user}
-		<button class:project-tab-selected={projectPage == "my-projects"} on:click={() => {projectPage = "my-projects"; projectLoadRange = {start:0, end:projectLoadStep};}}>My Playgrounds</button>
+		<button class:project-tab-selected={projectPage == "my-projects"} on:click={() => {projectPage = "my-projects"; projectLoadRange = {start:0, end:projectLoadStep};}}>My Projects</button>
 	{/if}
-	<button class:project-tab-selected={projectPage == "all-projects"} on:click={() => {projectPage = "all-projects"; projectLoadRange = {start:0, end:projectLoadStep};}}>All Playgrounds</button>
+	<button class:project-tab-selected={projectPage == "all-projects"} on:click={() => {projectPage = "all-projects"; projectLoadRange = {start:0, end:projectLoadStep};}}>All Projects</button>
 	<button class:project-tab-selected={projectPage == "example-projects"} on:click={() => {projectPage = "example-projects"; projectLoadRange = {start:0, end:projectLoadStep};}}>Examples</button>
 	
 	<!-- <div style='width:100%'></div> -->
