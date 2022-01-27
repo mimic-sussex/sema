@@ -198,6 +198,10 @@
     border: none;
   }
 
+  .focused-item-text {
+    font-weight:bold;
+  }
+
   svg {
     width: 1.5em;
     vertical-align: middle;
@@ -226,11 +230,30 @@
     {#if $focusedItem}
       {#if $focusedItem.data}
       
-      <span style='font-weight:bold' title='Selected widget: {$focusedItem.data.type}'>{$focusedItem.data.type}</span>
+        {#if $focusedItem.data.type =='liveCodeEditor'}
+          <span class='focused-item-text' title='Selected widget: '>Live Code Editor</span>
+        {:else if $focusedItem.data.type == 'modelEditor'}
+          <span class='focused-item-text' title='Selected widget: '>JavaScript Editor</span>
+        {:else if $focusedItem.data.type == 'grammarEditor'}
+          <span class='focused-item-text' title='Selected widget: '>Grammar Editor</span>
+        {:else if $focusedItem.data.type == 'console'}
+          <span class='focused-item-text' title='Selected widget: '>Console</span>
+        {:else if $focusedItem.data.type == 'liveCodeParseOutput'}
+          <span class='focused-item-text' title='Selected widget: '>Live Code Parse Output</span>
+        {:else if $focusedItem.data.type == 'dspCode'}
+          <span class='focused-item-text' title='Selected widget: '>DSP Code</span>
+        {:else if $focusedItem.data.type == 'grammarCompileOutput'}
+          <span class='focused-item-text' title='Selected widget: '>Grammar Compilation Output</span>
+        {:else if $focusedItem.data.type == 'analyser'}
+          <span class='focused-item-text' title='Selected widget: '>Audio Analyser</span>
+        {:else}
+          <span class='focused-item-text' title='Selected widget: '>{ $focusedItem.data.type }</span>
+        {/if}
+      <!-- <span style='font-weight:bold' title='Selected widget: {$focusedItem.data.type}'>{$focusedItem.data.type}</span> -->
       
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16">
-        <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
-      </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16">
+          <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+        </svg>
       {:else}
         <span>None</span>
       {/if}

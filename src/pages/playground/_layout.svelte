@@ -717,9 +717,18 @@
     position: absolute;
     padding: 0em 0.3em ;
     cursor: move;
-    color: lightgray;
+    color: #ccc;
+    fill: #ccc;
     /* margin-left: 0.2em; */
     grid-column: 1/1;
+  }
+
+  .move:hover svg path{
+    fill:white !important;
+  }
+
+  .move svg path{
+    fill: #ccc !important;
   }
 
   .item-header-type {
@@ -740,6 +749,11 @@
     cursor: pointer;
     /* z-index: 1500; */
     text-shadow: 1px 1px 1px #000000;
+    color: #ccc;
+  }
+
+  .close:hover{
+    color:white;
   }
 
   .close-overlay {
@@ -786,6 +800,15 @@
 
   path {
     fill: white;
+  }
+
+  /* svelte grid item header (eg Live Code Editor widget header) */
+  .grid-item-header-text {
+    color: #ccc;
+  }
+
+  .grid-item-header-text:hover{
+    color:white;
   }
 
 </style>
@@ -879,33 +902,31 @@
         style="background: #262a2e;"
         >
         <div class='move'>
-          <svg version="1.1"
-            id="Capa_1"
-            xmlns="http://www.w3.org/2000/svg"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            x="0px" y="0px"
-            viewBox="0 0 489.9 489.9"
-            style="enable-background:new 0 0 489.9 489.9;"
-            xml:space="preserve"
-            width='16px'
-            >
-            <g>
-              <g>
-                <path d="M406.2,173.55c-4.8,4.8-4.8,12.5,0,17.3l41.8,41.8H333.3v-63.9c0-6.8-5.5-12.3-12.3-12.3h-63.9V41.85l41.8,41.8
-                  c2.4,2.4,5.5,3.6,8.7,3.6s6.3-1.2,8.7-3.6c4.8-4.8,4.8-12.5,0-17.3l-62.7-62.7c-2.3-2.3-5.4-3.6-8.7-3.6s-6.4,1.3-8.7,3.6
-                  l-62.7,62.7c-4.8,4.8-4.8,12.5,0,17.3s12.5,4.8,17.3,0l41.8-41.8v114.7h-63.9c-6.8,0-12.3,5.5-12.3,12.3v63.9H41.8l41.8-41.8
-                  c4.8-4.8,4.8-12.5,0-17.3s-12.5-4.8-17.3,0l-62.7,62.7c-4.8,4.8-4.8,12.5,0,17.3l62.7,62.7c2.4,2.4,5.5,3.6,8.7,3.6
-                  s6.3-1.2,8.7-3.6c4.8-4.8,4.8-12.5,0-17.3l-41.8-41.8h114.7v63.9c0,6.8,5.5,12.3,12.3,12.3h63.9v114.7l-41.9-41.9
-                  c-4.8-4.8-12.5-4.8-17.3,0s-4.8,12.5,0,17.3l62.7,62.7c2.3,2.3,5.4,3.6,8.7,3.6s6.4-1.3,8.7-3.6l62.7-62.7
-                  c4.8-4.8,4.8-12.5,0-17.3s-12.5-4.8-17.3,0l-41.8,41.8v-114.7h63.9c6.8,0,12.3-5.5,12.3-12.3v-63.9h114.7l-42,41.8
-                  c-4.8,4.8-4.8,12.5,0,17.3c2.4,2.4,5.5,3.6,8.7,3.6s6.3-1.2,8.7-3.6l62.7-62.7c2.3-2.3,3.6-5.4,3.6-8.7s-1.3-6.4-3.6-8.7
-                  l-62.7-62.7C418.7,168.75,411,168.75,406.2,173.55z M308.8,308.85H181v-127.8h127.8L308.8,308.85L308.8,308.85z"/>
-              </g>
-            </g>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrows-move" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M7.646.146a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 1.707V5.5a.5.5 0 0 1-1 0V1.707L6.354 2.854a.5.5 0 1 1-.708-.708l2-2zM8 10a.5.5 0 0 1 .5.5v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 14.293V10.5A.5.5 0 0 1 8 10zM.146 8.354a.5.5 0 0 1 0-.708l2-2a.5.5 0 1 1 .708.708L1.707 7.5H5.5a.5.5 0 0 1 0 1H1.707l1.147 1.146a.5.5 0 0 1-.708.708l-2-2zM10 8a.5.5 0 0 1 .5-.5h3.793l-1.147-1.146a.5.5 0 0 1 .708-.708l2 2a.5.5 0 0 1 0 .708l-2 2a.5.5 0 0 1-.708-.708L14.293 8.5H10.5A.5.5 0 0 1 10 8z"/>
           </svg>
         </div>
         <div class='item-header-type'>
-          <span>{ dataItem.data.type }</span>
+          <!-- adding via if statements here for backwards compaitibility of layouts. -->
+          {#if dataItem.data.type =='liveCodeEditor'}
+            <span class='grid-item-header-text'>Live Code Editor</span>
+          {:else if dataItem.data.type == 'modelEditor'}
+            <span class='grid-item-header-text'>JavaScript Editor</span>
+          {:else if dataItem.data.type == 'grammarEditor'}
+            <span class='grid-item-header-text'>Grammar Editor</span>
+          {:else if dataItem.data.type == 'console'}
+            <span class='grid-item-header-text'>Console</span>
+          {:else if dataItem.data.type == 'liveCodeParseOutput'}
+            <span class='grid-item-header-text'>Live Code Parse Output</span>
+          {:else if dataItem.data.type == 'dspCode'}
+            <span class='grid-item-header-text'>DSP Code</span>
+          {:else if dataItem.data.type == 'grammarCompileOutput'}
+            <span class='grid-item-header-text'>Grammar Compilation Output</span>
+          {:else if dataItem.data.type == 'analyser'}
+            <span class='grid-item-header-text'>Audio Analyser</span>
+          {:else}
+            <span class='grid-item-header-text'>{ dataItem.data.type }</span>
+          {/if}
         </div>
         <span class='close'
               on:click={ () => remove(dataItem) }
