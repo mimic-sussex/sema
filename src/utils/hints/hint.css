@@ -10,27 +10,33 @@
 	-webkit-box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.2);
 	-moz-box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.2);
 	box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.2);
-	border-radius: 3px;
-	border: 1px solid silver;
+	border-radius: 0px 5px 5px 5px;
+	/* border: 1px solid silver; */
 
-	background: white;
+	background: #212529;
 	font-size: 90%;
 	font-family: monospace;
+	color: #ccc;
 
-	max-height: 20em;
+	max-height: 30em;
 	overflow-y: auto;
 }
 
+/* inside the ul element */
 .CodeMirror-hint {
 	margin: 0;
 	padding: 0 4px;
-	border-radius: 2px;
+	border-radius: 5px;
 	white-space: pre;
-	color: black;
+	color: #ccc;
 	cursor: pointer;
 }
 
 li.CodeMirror-hint-active {
-	background: #08f;
+	background: #3a4147;/*#08f; */
 	color: white;
+}
+
+.CodeMirror-left-hint-box {
+	border-radius: 5px 0px 0px 5px;
 }

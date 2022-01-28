@@ -249,7 +249,7 @@
   
       var hints = this.hints = ownerDocument.createElement("ul");
       var theme = completion.cm.options.theme;
-      hints.className = "CodeMirror-hints " + theme;
+      hints.className = "CodeMirror-left-hint-box CodeMirror-hints " + theme;
       this.selectedHint = data.selectedHint || 0;
   
       var descriptions = this.descriptions = ownerDocument.createElement("div");
@@ -473,8 +473,11 @@
         }
         if(completion.category){
           var catText = "<b>Category:</b> " 
-          if(completion.links){
-            catText += `<a target="_blank" href=${DOCS_ROOT_DIRECTORY + LANGUAGE_DIRECTORY+ '#' + completion.links}>${LANGUAGE_DIRECTORY+': '}${completion.category}</a>`
+          if (completion.linksCategory){ // link to broad category (big headers in docs)
+            catText += `<a target="_blank" href=${DOCS_ROOT_DIRECTORY + LANGUAGE_DIRECTORY+ '#' + completion.linksCategory}>${LANGUAGE_DIRECTORY+'#'}${completion.linksCategory}</a>`
+          }
+          else if(completion.links){
+            catText += `<a target="_blank" href=${DOCS_ROOT_DIRECTORY + LANGUAGE_DIRECTORY+ '#' + completion.linksCategory}>${LANGUAGE_DIRECTORY+': '}${completion.category}</a>`
           } else {
             catText += `${completion.category}`
           }
