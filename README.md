@@ -121,6 +121,8 @@ Sema is an open-source project and hopefully the underlying vision, aims and str
 
 ## Publications
 
+Bernardo, F., Kiefer, C., Magnusson, T. (2021). *Assessing the Support for Creativity of a Playground for Live Coding Machine Learning,* In: Baalsrud Hauge J., C. S. Cardoso J., Roque L., Gonzalez-Calero P.A. (eds) Entertainment Computing – ICEC 2021. ICEC 2021. Lecture Notes in Computer Science, vol 13056. Springer, Cham. https://doi.org/10.1007/978-3-030-89394-1_38
+
 Bernardo, F., Kiefer, C., Magnusson, T. (2020). *A Signal Engine for a Live Coding Language Ecosystem,* J. Audio Eng. Soc., vol. 68, no. 10, pp. 756-766. doi: https://doi.org/10.17743/jaes.2020.0016
 
 Bernardo, F., Kiefer, C., Magnusson, T. (2020). *Designing for a Pluralist and User-Friendly Live Code Language Ecosystem with Sema.* 5th International Conference on Live Coding,
