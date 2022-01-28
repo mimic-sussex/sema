@@ -19,6 +19,9 @@ let liveCode = "";
 let modelCode = "";
 let grammarCode = "";
 
+// overlay for when engine is loading up
+export const isLoadingOverlayInTutorialVisible = writable(false);
+
 /*******                                        ********/
 /*******                                        ********/
 /*******   Tutorial Language Design Stores    ********/
@@ -365,6 +368,8 @@ export let tutorials = writable(tutorialOptions);
 
 // Store for SELECTED tutorial options in Sidebar component
 export let selected = writable({});
+export let selectedChapter = writable({});
+export let selectedSection = writable({})
 // export let selected = storable("selectedTutorial", {}, false) ;
 
 export let items = writable(testItems); // localStorageWrapper

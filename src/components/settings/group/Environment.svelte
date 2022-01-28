@@ -1,58 +1,55 @@
 <script>
   import {
-    siteMode,
-    fullScreen
+    siteMode
   } from '../../../stores/common.js';
 
-  import { isActive } from "@roxi/routify";
-	import { authStore } from '../../../auth'
+  import { isActive, goto, url, params } from "@roxi/routify";
+  import ContentLoader from 'svelte-content-loader';
 
 	import {
     onMount,
     onDestroy
   } from 'svelte';
 
-  import { Engine } from 'sema-engine/sema-engine';
+	import {
+		updatePlayground,
+    forkPlayground,
+    savePlayground
+  } from  "../../../db/client";
+  
+
+  import { Engine } from 'sema-engine';
 
   let engine,
       engineLoaded = false
       ;
 
 
-	const { user, signout } = authStore;
-
   import {
-    sidebarLiveCodeOptions,
-    selectedLiveCodeOption,
-    isSelectLiveCodeEditorDisabled,
-
-    sidebarModelOptions,
-    selectedModelOption,
-    isSelectModelEditorDisabled,
-
-
     loadEnvironmentOptions,
     selectedLoadEnvironmentOption,
     isLoadEnvironmentOptionsDisabled,
-
-    // sidebarGrammarOptions,
-    isAddGrammarEditorDisabled,
-
-    isAddAnalyserDisabled,
-
-    sidebarDebuggerOptions,
-    selectedDebuggerOption,
-    isSelectDebuggerDisabled,
-
-    focusedItemProperties,
     isSaveOverlayVisible,
     isUploadOverlayVisible,
     isDeleteOverlayVisible,
+    isClearOverlayVisible,
+    isNewOverlayVisible,
+    isShareOverlayVisible,
+    isDoesNotExistOverlayVisible,
+    isProjectBrowserOverlayVisible,
     items,
-    // assignNewID,
     hydrateJSONcomponent,
-    loadEnvironmentSnapshotEntries
-  } from '../../../stores/playground.js'
+    loadEnvironmentSnapshotEntries,
+		uuid,
+    name,
+    allowEdits,
+    isPublic,
+  } from '../../../stores/playground'
+
+  import {
+    user,
+    loggedIn
+  } from '../../../stores/user'
 
   import * as doNotZip from 'do-not-zip';
 	import downloadBlob from '../../../utils/downloadBlob.js';
@@ -61,25 +58,88 @@
     window.localStorage["tutorial-" + new Date(Date.now()).toISOString()] = JSON.stringify($items)
   }
 
-  function resetEnvironment(){
-    $isUploadOverlayVisible = false;
+  // Toggles given overlay switch all others off.
+  function toggleOverlay(overlay){
+    // //set all to false
     $isSaveOverlayVisible = false;
-    $isDeleteOverlayVisible = true;
-  }
-
-  function storeEnvironment(){
-
     $isUploadOverlayVisible = false;
-    $isSaveOverlayVisible = true;
     $isDeleteOverlayVisible = false;
-    // Add to playground history, e.g.
-    // Key – playground-2020-03-02T15:48:31.080Z,
-    // Value: [{"2":{"fixed":false,"resizable":true,"draggable":true,"min":{"w":1,"h":1},"max":{}, ...]
+    $isClearOverlayVisible = false;
+    $isNewOverlayVisible = false;
+    $isShareOverlayVisible = false;
+    $isDoesNotExistOverlayVisible = false;
+    $isProjectBrowserOverlayVisible = false
 
-
-    loadEnvironmentSnapshotEntries();
+    //set given overlay to true
+    if (overlay == 'save'){
+      $isSaveOverlayVisible = true;
+    } else if (overlay == 'upload'){
+      $isUploadOverlayVisible = true;
+    } else if (overlay == 'delete'){
+      $isDeleteOverlayVisible = true;
+    } else if (overlay == 'clear'){
+      $isClearOverlayVisible = true;
+    } else if (overlay == 'new'){
+      $isNewOverlayVisible = true;
+    } else if (overlay == 'share'){
+      $isShareOverlayVisible = !$isShareOverlayVisible;
+    } else if (overlay == 'doesNotExist'){
+      $isDoesNotExistOverlayVisible = true;
+    } else if (overlay == 'projectBrowser'){
+      $isProjectBrowserOverlayVisible = true;
+    } else {
+      console.error('cant launch overlay', overlay);
+    }
+    // console.log('overlay states', overlayStates);
   }
 
+  //Project browser seperate from toggleOverlay since project browser must be able to open and close from the launch button.
+  function toggleProjectBrowser () {
+    $isSaveOverlayVisible = false;
+    $isUploadOverlayVisible = false;
+    $isDeleteOverlayVisible = false;
+    $isClearOverlayVisible = false;
+    $isNewOverlayVisible = false;
+    $isShareOverlayVisible = false;
+    // $isDoesNotExistOverlayVisible = false;
+    if($isProjectBrowserOverlayVisible == true){
+      $isProjectBrowserOverlayVisible = false;
+    } else {
+      $isProjectBrowserOverlayVisible = true;
+    }
+  }
+
+  // On project name change, update the database
+	const onNameChange = async () => {
+		try {
+			updatePlayground($uuid, $name, $items, $allowEdits, $user)
+		} catch (error) {
+			console.error(error);
+		}
+  }
+  
+  //give option to fork project when it is read only (allowEdits false)
+  const forkProject = async () => {
+    console.log("DEBUG: Forking playground as is readOnly")
+
+    //make sure playground is saved
+    await savePlayground($uuid, $name, $items, $allowEdits, $user)
+
+    if ($uuid){
+      
+      let fork = await forkPlayground($uuid);
+      $uuid = fork.id;
+      $name = fork.name;
+      $items = fork.content.map(item => hydrateJSONcomponent(item));
+      $goto($url(`/playground/${$uuid}`)); // reload page because otherwise the no changes allowed link is still there.
+      // window.history.pushState("", "", `/playground/${$uuid}`); //changes the url without realoading;
+    }
+    else
+      throw new Error ('Cant find UUID for project')
+  }
+
+
+  // for loading local environments.
   function loadEnvironment(){
 
     // Retrieve item, hydrate JSON into grid-items
@@ -93,16 +153,12 @@
     $isLoadEnvironmentOptionsDisabled = true;
   }
 
-  function uploadEnvironment(){
+  
 
-    $isUploadOverlayVisible = true;
-    $isSaveOverlayVisible = false;
-    $isDeleteOverlayVisible = false;
-  }
+  //Download environment as .zip
+  function downloadEnvironmentAsZip(){
 
-  function downloadEnvironment(){
-
-    let timestamp = new Date(Date.now()).toISOString();
+    let timestamp = new Date().toISOString();
 
     // Create blob from current playround state and filtered content from editor widgets
     const blob = doNotZip.toBlob($items
@@ -118,6 +174,24 @@
 		downloadBlob(blob, 'sema-' + `${timestamp}` + '.zip');
   }
 
+  // Download environment as .json
+  function downloadEnvironment(){
+    let filename;
+    if ($name != null) {
+      filename = $name;
+    } else {
+      filename = "playground";
+    }
+
+    let timestamp = new Date().toISOString();
+
+    const blob = new Blob(
+      [ JSON.stringify($items) ], 
+      { type: 'text/json;charset=utf-8' }
+    );   
+    downloadBlob(blob, `${filename}` + '-' + `${timestamp}` + '.json')
+  }
+
   onMount( async () => {
     engine = new Engine();
 
@@ -127,217 +201,61 @@
     engine = null;
 	});
 
-
-
-
 </script>
 
 <style>
 
-  .icon-container {
-    width: 10px;
-    height: 10px;
-  }
+.icon-container {
+    /* width: 10px; */
+    /* height: 10px; */
+    /* display:flex; */
 
+    justify-content:center;
+    align-items:center;
+  }
 
   .button-dark {
-    width: 2.5em;
-    height: 2.5em;
-    padding: 0.2em 0.2em 0.8em 0.8em;
-    display: block;
-    /* font-size: 12px; */
-    font-family: sans-serif;
-    font-weight: 400;
-    cursor: pointer;
-    color: red;
-    line-height: 1.3;
-    max-width: 100%;
-    box-sizing: border-box;
-    border: 0 solid #333;
-    text-align: left;
-    /* margin-top: 5px; */
-    margin-right: 5px;
-    border-radius: .6em;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    background-color:  rgba(16, 16, 16, 0.04);
-    /* background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007CB2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'),
-      linear-gradient(to bottom, #ffffff 0%,#e5e5e5 100%); */
-    background-repeat: no-repeat, repeat;
-    background-position: right .7em top 50%, 0 0;
-    background-size: .65em auto, 100%;
-    -webkit-box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
-    -moz-box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
-    box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
-
-  }
+		padding: 20;
+		background-color: #262a2e;
+		color: grey;
+		border: none;
+    width: 42px;
+  	/* height: 42px; */
+  	margin: 8px 8px 8px 8px;
+  	border-radius: 5px;
+  	background-color: #262a2e;
+	}
 
   .button-dark:hover {
-    width: 2.5em;
-    height: 2.5em;
-    padding: 0.2em 0.2em 0.8em 0.8em;
-    display: block;
-    /* font-size: 12px; */
-    font-family: sans-serif;
-    font-weight: 500;
-    cursor: pointer;
-    color: red;
-    line-height: 1.3;
-    max-width: 100%;
-    box-sizing: border-box;
-    border: 0 solid #333;
-    text-align: left;
-    /* margin-top: 5px; */
-    margin-right: 5px;
-    /* box-shadow: 0 1px 0 0px rgba(4, 4, 4, 0.04); */
-    border-radius: .6em;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    background-color:  linear-gradient(rgba(16, 16, 16, 1), rgba(16, 16, 16, 0.08));
-    /* background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007CB2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'),
-      linear-gradient(to bottom, #ffffff 0%,#e5e5e5 100%); */
-    background-repeat: no-repeat, repeat;
-    background-position: right .7em top 50%, 0 0;
-    background-size: .65em auto, 100%;
-    -webkit-box-shadow: 2px 2px 5px rgba(0,0,0),-0.5px -0.5px 3px rgb(34, 34, 34);
-    -moz-box-shadow: 2px 2px 5px rgba(0,0,0), -0.5px -0.5px 3px rgb(34, 34, 34);;
-    box-shadow: 2px 2px 3px rgb(0, 0, 0), -1px -1px 3px #ffffff61;
-  }
-  .button-dark:active {
-    width: 2.5em;
-    height: 2.5em;
-    padding: 0.2em 0.2em 0.8em 0.8em;
-    display: block;
-    font-size: medium;
-    /* font-size: 12px; */
-    font-family: sans-serif;
-    font-weight: 400;
-    cursor: pointer;
-    color: red;
-    line-height: 1.3;
-    max-width: 100%;
-    box-sizing: border-box;
-    /* margin-top: 5px; */
-    margin-right: 5px;
-    /* border: 0 solid #333; */
-    text-align: left;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    background-color:  rgba(16, 16, 16, 0.04);
-    background-repeat: no-repeat, repeat;
-    /* background-position: right .7em top 50%, 0 0; */
-    background-size: .65em auto, 100%;
-    /* -webkit-box-shadow: -1px -1px 1px rgb(34, 34, 34), 2px 2px 5px rgba(0,0,0),;
-    -moz-box-shadow: -1px -1px 1px rgb(34, 34, 34), 2px 2px 5px rgba(0,0,0), ;
-    box-shadow:  -1px -1px 3px #ffffff61, 2px 2px 3px rgb(0, 0, 0); */
-    box-shadow:  -1px -1px 3px rgba(16, 16, 16, 0.4), 0.5px 0.5px 0.5px rgba(16, 16, 16, 0.04);
+    /* background-color: blue; */
+    color: white;
   }
 
-  .combobox-dark {
-    width: 10em;
-    height: 2.5em;
-    padding: 0.2em 0.2em 0.8em 0.8em;
-    /* margin-top: 5px; */
-    margin-right: 5px;
-    font-size: medium;
-    font-family: sans-serif;
-    font-weight: 400;
-    cursor: pointer;
-    color: #ccc;
-    line-height: 1.3;
-    padding: 0.7em 1em 0.7em 1em;
-    box-sizing: border-box;
-    border: 0 solid #333;
-    text-align: left;
-    border-radius: .6em;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    background-color: rgba(16, 16, 16, 0.04);
-    background-repeat: no-repeat, repeat;
-    background-position: right .7em top 50%, 0 0;
-    background-size: .65em auto, 100%;
-    -webkit-box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
-    -moz-box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
-    box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
+  .button-dark:active{
+    color: white;
+    background-color: #212529;
+    border-radius:5px;
+    box-shadow: inset 0.25px 0.25px 0.1px 0 #201f1f, inset -0.25px -0.25px 0.1px 0 rgba(255, 255, 255, 0.05);
   }
 
+  .button-light {
+		padding: 20;
+		color: grey;
+		border: none;
+    width: 42px;
+  	margin: 8px 8px 8px 8px;
+  	border-radius: 5px;
+  	background-color: #fdf6e3;
+	}
 
-  .combobox-dark:hover {
-    width: 10em;
-    height: 2.5em;
-    padding: 0.2em 0.2em 0.8em 0.8em;
-    /* margin-top: 5px; */
-    margin-right: 5px;
-    font-family: sans-serif;
-    font-weight: 500;
-    cursor: pointer;
-    color: #fff;
-    line-height: 1.3;
-    padding: 0.7em 1em 0.7em 1em;
-    box-sizing: border-box;
-    border: 0 solid #333;
-    text-align: left;
-    border-radius: .6em;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    background-color: linear-gradient(rgba(16, 16, 16, 1), rgba(16, 16, 16, 0.2));
-    background-repeat: no-repeat, repeat;
-    background-position: right .7em top 50%, 0 0;
-    background-size: .65em auto, 100%;
-    -webkit-box-shadow: 5px 5px 20px -5px rgba(0,0,0,0.75), -5px -5px 20px rgba(255, 255, 255, 0.954);
-    -moz-box-shadow: 5px 5px 20px -5px rgba(0,0,0,0.75), -5px -5px 20px rgba(255, 255, 255, 0.954);
-    box-shadow: 2px 2px 3px rgb(0, 0, 0), -1px -1px 3px #ffffff61;
+  .button-light:hover {
+    color: black;
   }
 
-  .combobox-dark:focus {
-    width: 10em;
-    height: 2.5em;
-    padding: 0.2em 0.2em 0.8em 0.8em;
-    /* margin-top: 5px; */
-    margin-right: 5px;
-    font-size: medium;
-    font-family: sans-serif;
-    font-weight: 500;
-    cursor: pointer;
-    /* color: #fff; */
-    line-height: 1.3;
-    padding: 0.7em 1em 0.7em 1em;
-    box-sizing: border-box;
-    border: 0 solid #333;
-    text-align: left;
-    border-radius: .6em;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    background-color: rgba(16, 16, 16, 0.04);
-    background-repeat: no-repeat, repeat;
-    background-position: right .7em top 50%, 0 0;
-    background-size: .65em auto, 100%;
-    -webkit-box-shadow: 5px 5px 20px -5px rgba(0,0,0,0.75), -5px -5px 20px rgba(255, 255, 255, 0.954);
-    -moz-box-shadow: 5px 5px 20px -5px rgba(0,0,0,0.75), -5px -5px 20px rgba(255, 255, 255, 0.954);
-    box-shadow: 2px 2px 3px rgb(0, 0, 0), -1px -1px 3px #ffffff61;
+  .button-light:active{
+    color: black;
+    background-color: grey;
   }
-
-/* select {
-    padding: 15px;
-    border-radius: 3px !important;
-    height: 50px !important;
-    color: #ffffff !important;
-    padding-right: 30px !important;
-    font-size: 14px !important;
-    border-color: blue !important;
-    position: relative;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    border: none;
-    background: white url('data:image/svg+xml;utf8,<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;width:15px;" class="light-mode" xml:space="preserve"><g id="XMLID_1_"><path id="XMLID_9_" d="M466.5,0h-381L0,83.6v382.8C0,491.6,20.4,512,45.5,512h420.9c25.1,0,45.5-20.4,45.5-45.5V45.5 C512,20.4,491.6,0,466.5,0z M392.1,29.7v60.4H151.5V29.7H392.1z M91.1,481.3v-30.7h330.8v29.7H91.1V481.3z M482.3,465.5 c0,8.4-6.5,14.9-14.9,14.9h-15.8V420H61.3v60.4H46.5c-8.4,0-14.9-6.5-14.9-14.9V95.7l67.8-66h22.3v90.1h301.1V29.7h45.5 c8.4,0,14.9,6.5,14.9,14.9v420.9H482.3z M256.5,150.5c-57.6,0-105,47.4-105,105s47.4,105,105,105s105-47.4,105-105 S314.1,150.5,256.5,150.5z M256.5,330.8c-41.8,0-75.3-33.5-75.3-75.3s33.5-75.3,75.3-75.3s75.3,33.5,75.3,75.3 S298.3,330.8,256.5,330.8z"/></g></svg>") no-repeat !important; background-position-x: 100%; background-position-y: 5px;')
-  } */
 
   .light-mode {
     fill: rgb(133, 130, 130);
@@ -353,100 +271,105 @@
     width: 15px;
   }
 
-
-  .button-light {
-    width: 2.5em;
-    height: 2.5em;
-    display: block;
+	input {
+		resize: none;
+		white-space: nowrap;
+		overflow-x: scroll;
+		height: 2.0em;
+    padding: 0.7em 1.2em 0.7em 1.5em;
+		margin-top: 0.55em;
+		margin-right: 0.3em;
+    margin: 8px 8px 8px 8px;
+		color: #ccc;
+		background:#262a2e;
+		/* border: 0.1px solid #999; */
+    border:0.1px solid transparent;
     font-size: medium;
+    border-radius:5px;
+    /* box-shadow: inset 0.25px 0.25px 0.1px 0 #201f1f, inset -0.25px -0.25px 0.1px 0 rgba(255, 255, 255, 0.05); */
+    box-shadow: inset 1px 1px 1px 0 #201f1f, inset -1px -1px 1px 0 rgba(255, 255, 255, 0.05);
+    /* border:none; */
+    /* box-shadow: 2px 2px 3px rgb(0 0 0), -0.5px -0.5px 3px #ffffff61; */
+  }
+
+  input:hover{
+    color:white;
+    border: 0.1px solid #999;
+  }
+
+  input:hover + .dropdown-button-dark {
+    /* border-left: 0.1px solid #999; */
+    border-right: 0.1px solid #999;
+    border-top: 0.1px solid #999;
+    border-bottom: 0.1px solid #999;
+  }
+
+  input:active{
+    color:white;
+  }
+
+  input:focus {
+    background-color: #181a1d;
+  }
+
+  input:disabled {
+    cursor:not-allowed;
+    border:none;
+  }
+  
+
+  .dropdown-button-dark {
+    width: 42px;
+    height: 1.75em;
     font-family: sans-serif;
     font-weight: 400;
     cursor: pointer;
-    color: black;
+    color: #ccc;
     line-height: 1.3;
-    padding: 0.7em 1em 0.7em 1em;
     max-width: 100%;
     box-sizing: border-box;
-    border: 0 solid #333;
-    text-align: left;
-    border-radius: .6em;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    background-color:  rgba(16, 16, 16, 0.04);
-    background-repeat: no-repeat, repeat;
-    background-position: right .7em top 50%, 0 0;
-    background-size: .65em auto, 100%;
-    box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
-    -moz-box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
-    -webkit-box-shadow:  2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
+    /* border: 0.1px solid #999; */
+    border:0.1px solid transparent;
+    /* text-align: left; */
+    /* margin-top:0.50em;
+    margin-right: 5px; */
+    margin: 8px 8px 8px 8px;
+    padding:0;
+    background-color:  #262a2e;
+    z-index:1;
+    border-radius: 0px 5px 5px 0px;
+    box-shadow: inset 1px 1px 1px 0 #201f1f, inset -1px -1px 1px 0 rgba(255, 255, 255, 0.05);
   }
 
-  .button-light:active {
-    width: 2.5em;
-    height: 2.5em;
-    display: block;
-    font-size: medium;
-    font-family: sans-serif;
-    font-weight: 400;
-    cursor: pointer;
-    color: black;
-    line-height: 1.3;
-    padding: 0.7em 1em 0.7em 1em;
-    max-width: 100%;
-    box-sizing: border-box;
-    border: 0 solid #333;
-    text-align: left;
-    border-radius: .6em;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    background-color:  rgba(16, 16, 16, 0.04);
-    background-repeat: no-repeat, repeat;
-    background-position: right .7em top 50%, 0 0;
-    background-size: .65em auto, 100%;
-    box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
-    -moz-box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
-    -webkit-box-shadow:  2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0)
-  }
-  .button-light:disabled {
-    width: 2.5em;
-    height: 2.5em;
-    display: block;
-    font-size: medium;
-    font-family: sans-serif;
-    font-weight: 400;
-    cursor: pointer;
-    color: #888;
-    line-height: 1.3;
-    padding: 0.7em 1em 0.7em 1em;
-    width: 8em;
-    max-width: 100%;
-    box-sizing: border-box;
-    border: 0 solid #333;
-    text-align: left;
-    border-radius: .6em;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    background-color:  rgba(16, 16, 16, 0.04);
-    background-repeat: no-repeat, repeat;
-    background-position: right .7em top 50%, 0 0;
-    background-size: .65em auto, 100%;
-    box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
-    -moz-box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
-    -webkit-box-shadow:  2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0)
+  .dropdown-button-dark:active{
+    color: white;
+    background-color: #212529;
+    border-radius: 0px 5px 5px 0px;
+    box-shadow: inset 0.25px 0.25px 0.1px 0 #201f1f, inset -0.25px -0.25px 0.1px 0 rgba(255, 255, 255, 0.05);
   }
 
+  .dropdown-button-dark:hover{
+    color:white;
+    border: 0.1px solid #999;
+  }
 
+  .playground-visibility-icon {
+    height: 2.3em;
+    margin-right: -24px;
+    z-index: 1;
+    padding-top:4px;
+    color: #ccc;
+    /* position:absolute; */
+  }
+  
 
 </style>
 
 
 
-        <!-- style="{( $fullScreen && $isActive('/playground') )? `visibility:visible;`: `visibility:hidden`}; ! important;" -->
+<!-- LOCAL SAVE DROPDOWN SELECTOR -->
 <!-- svelte-ignore a11y-no-onchange -->
-<select class="combobox-dark"
+<!-- <select class="combobox-dark"
         title="load environment"
         bind:value={ $selectedLoadEnvironmentOption }
         on:change={ () => loadEnvironment() }
@@ -517,340 +440,347 @@
       { loadEnvironmentOption.text }
     </option>
   {/each}
-</select>
+</select> -->
 
-        <!-- style="{( $fullScreen && $isActive('/playground') )? `visibility:visible;`: `visibility:hidden`}; margin-left: 2px;" -->
-<!-- SAVE -->
-<button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
-        title="save environment"
-        style="{( $isActive('/playground') )? `visibility:visible;`: `visibility:collapse`}; margin-left: 2px;"
-        on:click={ () => storeEnvironment() }
-        >
-  <div class="icon-container">
-    {#if $siteMode === 'dark' }
-      <svg version="1.1"
-        id="Layer_1"
-        xmlns="http://www.w3.org/2000/svg"
-        xmlns:xlink="http://www.w3.org/1999/xlink"
-        x="0px" y="0px"
-        viewBox="0 0 512 512"
-        style="enable-background:new 0 0 512 512;width:15px;"
-        class="light-mode"
-        xml:space="preserve"
-        >
-        <g id="XMLID_1_">
-          <path id="XMLID_9_" d="M466.5,0h-381L0,83.6v382.8C0,491.6,20.4,512,45.5,512h420.9c25.1,0,45.5-20.4,45.5-45.5V45.5
-            C512,20.4,491.6,0,466.5,0z M392.1,29.7v60.4H151.5V29.7H392.1z M91.1,481.3v-30.7h330.8v29.7H91.1V481.3z M482.3,465.5
-            c0,8.4-6.5,14.9-14.9,14.9h-15.8V420H61.3v60.4H46.5c-8.4,0-14.9-6.5-14.9-14.9V95.7l67.8-66h22.3v90.1h301.1V29.7h45.5
-            c8.4,0,14.9,6.5,14.9,14.9v420.9H482.3z M256.5,150.5c-57.6,0-105,47.4-105,105s47.4,105,105,105s105-47.4,105-105
-            S314.1,150.5,256.5,150.5z M256.5,330.8c-41.8,0-75.3-33.5-75.3-75.3s33.5-75.3,75.3-75.3s75.3,33.5,75.3,75.3
-            S298.3,330.8,256.5,330.8z"/>
-        </g>
-      </svg>
-    {:else if $siteMode === 'light' }
-      <svg  version="1.1"
-            id="Layer_1"
-            xmlns="http://www.w3.org/2000/svg"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            x="0px" y="0px"
-            style="enable-background:new 0 0 512 512; width:15px;"
-            viewBox="0 0 512 512"
-            xml:space="preserve"
-            >
-        <g>
-          <path id="XMLID_9_" d="M466.5,0h-381L0,83.6v382.8C0,491.6,20.4,512,45.5,512h420.9c25.1,0,45.5-20.4,45.5-45.5V45.5
-            C512,20.4,491.6,0,466.5,0z M392.1,29.7v60.4H151.5V29.7H392.1z M91.1,481.3v-30.7h330.8v29.7H91.1V481.3z M482.3,465.5
-            c0,8.4-6.5,14.9-14.9,14.9h-15.8V420H61.3v60.4H46.5c-8.4,0-14.9-6.5-14.9-14.9V95.7l67.8-66h22.3v90.1h301.1V29.7h45.5
-            c8.4,0,14.9,6.5,14.9,14.9v420.9H482.3z M256.5,150.5c-57.6,0-105,47.4-105,105s47.4,105,105,105s105-47.4,105-105
-            S314.1,150.5,256.5,150.5z M256.5,330.8c-41.8,0-75.3-33.5-75.3-75.3s33.5-75.3,75.3-75.3s75.3,33.5,75.3,75.3
-            S298.3,330.8,256.5,330.8z"/>
-        </g>
-      </svg>
-    {/if}
-  </div>
-</button>
+<!-- NEW -->
+{#if !$isDoesNotExistOverlayVisible} <!--If project doesnt exist don't show these buttons-->
+  {#if $user}
+  <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
+          title="new project"
+          style="{( $isActive('/playground') )? `visibility:visible;`: `visibility:collapse`}; margin-left: 2px;"
+          on:click={ () => toggleOverlay('new') }
+          >
+    <div class="icon-container">
+      {#if $siteMode === 'dark' }
+        <!-- CLOUD PLUS ICON -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-cloud-plus" viewBox="0 0 16 16">
+          <path fill-rule="evenodd" d="M8 5.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V10a.5.5 0 0 1-1 0V8.5H6a.5.5 0 0 1 0-1h1.5V6a.5.5 0 0 1 .5-.5z"/>
+          <path d="M4.406 3.342A5.53 5.53 0 0 1 8 2c2.69 0 4.923 2 5.166 4.579C14.758 6.804 16 8.137 16 9.773 16 11.569 14.502 13 12.687 13H3.781C1.708 13 0 11.366 0 9.318c0-1.763 1.266-3.223 2.942-3.593.143-.863.698-1.723 1.464-2.383zm.653.757c-.757.653-1.153 1.44-1.153 2.056v.448l-.445.049C2.064 6.805 1 7.952 1 9.318 1 10.785 2.23 12 3.781 12h8.906C13.98 12 15 10.988 15 9.773c0-1.216-1.02-2.228-2.313-2.228h-.5v-.5C12.188 4.825 10.328 3 8 3a4.53 4.53 0 0 0-2.941 1.1z"/>
+        </svg>
+      {:else if $siteMode === 'light' }
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-cloud-plus" viewBox="0 0 16 16">
+          <path fill-rule="evenodd" d="M8 5.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V10a.5.5 0 0 1-1 0V8.5H6a.5.5 0 0 1 0-1h1.5V6a.5.5 0 0 1 .5-.5z"/>
+          <path d="M4.406 3.342A5.53 5.53 0 0 1 8 2c2.69 0 4.923 2 5.166 4.579C14.758 6.804 16 8.137 16 9.773 16 11.569 14.502 13 12.687 13H3.781C1.708 13 0 11.366 0 9.318c0-1.763 1.266-3.223 2.942-3.593.143-.863.698-1.723 1.464-2.383zm.653.757c-.757.653-1.153 1.44-1.153 2.056v.448l-.445.049C2.064 6.805 1 7.952 1 9.318 1 10.785 2.23 12 3.781 12h8.906C13.98 12 15 10.988 15 9.773c0-1.216-1.02-2.228-2.313-2.228h-.5v-.5C12.188 4.825 10.328 3 8 3a4.53 4.53 0 0 0-2.941 1.1z"/>
+        </svg>
+      {/if}
+    </div>
+  </button>
+  {/if}
 
-
-        <!-- style="{ ( $fullScreen && $isActive('/playground') ) ? `visibility:visible;`: `visibility:hidden`}" -->
-<!-- DELETE -->
-<button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
-        title="clear environment"
-        style="{ ( $isActive('/playground') ) ? `visibility:visible;`: `visibility:collapse`}"
-        on:click={ () => resetEnvironment() }
-        >
-  <div class="icon-container">
-    {#if $siteMode === 'dark' }
-      <svg version="1.1"
-            id="Layer_1"
-            xmlns="http://www.w3.org/2000/svg"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            x="0px" y="0px"
-            viewBox="0 0 512 512"
-            class="light-mode"
-            style="enable-background:new 0 0 512 512;width:19px;"
-            xml:space="preserve"
-            >
-        <g>
-          <path d="M317.667,214.42l5.667-86.42h20.951V38h-98.384V0H132.669v38H34.285v90h20.951l20,305h140.571
-            c23.578,24.635,56.766,40,93.478,40c71.368,0,129.43-58.062,129.43-129.43C438.715,275.019,385.143,218.755,317.667,214.42z
-            M162.669,30h53.232v8h-53.232V30z M64.285,68h250v30h-250V68z M103.334,403L85.301,128H293.27l-5.77,87.985
-            c-61.031,10.388-107.645,63.642-107.645,127.586c0,21.411,5.231,41.622,14.475,59.43H103.334z M309.285,443
-            c-54.826,0-99.43-44.604-99.43-99.43s44.604-99.429,99.43-99.429s99.43,44.604,99.43,99.429S364.111,443,309.285,443z"/>
-          <polygon points="342.248,289.395 309.285,322.358 276.322,289.395 255.109,310.608 288.072,343.571 255.109,376.533
-            276.322,397.746 309.285,364.783 342.248,397.746 363.461,376.533 330.498,343.571 363.461,310.608 	"/>
-        </g>
-      </svg>
-    {:else if $siteMode === 'light' }
-      <svg version="1.1"
-            id="Layer_1"
-            xmlns="http://www.w3.org/2000/svg"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            x="0px" y="0px"
-            viewBox="0 0 512 512"
-            style="enable-background:new 0 0 512 512;width:19px;"
-            xml:space="preserve"
-            >
-        <g>
-          <path d="M317.667,214.42l5.667-86.42h20.951V38h-98.384V0H132.669v38H34.285v90h20.951l20,305h140.571
-            c23.578,24.635,56.766,40,93.478,40c71.368,0,129.43-58.062,129.43-129.43C438.715,275.019,385.143,218.755,317.667,214.42z
-            M162.669,30h53.232v8h-53.232V30z M64.285,68h250v30h-250V68z M103.334,403L85.301,128H293.27l-5.77,87.985
-            c-61.031,10.388-107.645,63.642-107.645,127.586c0,21.411,5.231,41.622,14.475,59.43H103.334z M309.285,443
-            c-54.826,0-99.43-44.604-99.43-99.43s44.604-99.429,99.43-99.429s99.43,44.604,99.43,99.429S364.111,443,309.285,443z"/>
-          <polygon points="342.248,289.395 309.285,322.358 276.322,289.395 255.109,310.608 288.072,343.571 255.109,376.533
-            276.322,397.746 309.285,364.783 342.248,397.746 363.461,376.533 330.498,343.571 363.461,310.608 	"/>
-        </g>
-      </svg>
-    {/if}
-  </div>
-</button>
-
-<button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
-        title="download environment"
-        style="padding: 0.2em 0.4em 0.8em 0.6em ! important;"
-        on:click={ () => downloadEnvironment() }
-        >
-  <div class="icon-container">
-    {#if $siteMode === 'dark' }
-      <svg version="1.1"
-            id="Capa_1"
-            xmlns="http://www.w3.org/2000/svg"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            x="0px" y="0px"
-            viewBox="0 0 512 512"
-            class="light-mode"
-            style="enable-background:new 0 0 512 512; width: 24px; "
-            xml:space="preserve"
-            >
-      <g>
-        <path d="M266.052,350.322c-5.167-4.324-12.869-3.655-17.198,1.507l-8.104,9.654v-151.01
-          c0-6.739-5.461-12.205-12.205-12.205c-6.744,0-12.205,5.466-12.205,12.205v151.016l-8.099-9.654
-          c-4.329-5.156-12.02-5.842-17.198-1.507c-5.162,4.335-5.836,12.037-1.501,17.198l29.659,35.343
-          c0.098,0.114,0.223,0.196,0.326,0.31c0.354,0.397,0.745,0.767,1.153,1.104c0.239,0.207,0.468,0.413,0.718,0.598
-          c0.451,0.326,0.93,0.604,1.43,0.865c0.245,0.136,0.479,0.283,0.734,0.402c0.571,0.256,1.175,0.441,1.784,0.604
-          c0.212,0.054,0.408,0.141,0.626,0.19c0.832,0.179,1.692,0.283,2.573,0.283c0.887,0,1.746-0.103,2.578-0.283
-          c0.218-0.049,0.413-0.136,0.626-0.19c0.609-0.169,1.213-0.348,1.784-0.604c0.256-0.12,0.49-0.267,0.734-0.402
-          c0.495-0.261,0.979-0.544,1.43-0.865c0.25-0.185,0.479-0.392,0.718-0.598c0.408-0.343,0.794-0.707,1.153-1.104
-          c0.103-0.114,0.228-0.19,0.326-0.31l29.659-35.343C271.888,362.364,271.214,354.662,266.052,350.322z"/>
-        <path d="M339.36,105.412c-4.525,0-9.051,0.337-13.538,0.984c-17.497-18.275-39.52-31.128-64.23-37.388
-          c-0.326-0.087-0.653-0.158-0.979-0.218l-15.936-3.013c-19.499-24.383-49.011-38.71-80.52-38.71
-          c-54.179,0-98.735,42.006-102.798,95.167C24.661,136.083,0,171.018,0,211.196c0,52.503,42.724,95.227,95.238,95.227
-          c13.549,0,26.809-2.861,38.987-8.349c14.99,14.462,33.026,25.031,52.607,31.275v-34.696c-13.957-6.113-26.575-15.219-36.937-27.38
-          c-3.193-3.747-7.762-5.722-12.396-5.722c-3.013,0-6.059,0.832-8.757,2.567c-9.975,6.38-21.566,9.747-33.51,9.747
-          c-34.565,0-62.685-28.115-62.685-62.674c0-28.881,20.456-54.538,48.636-61.026c7.68-1.762,12.994-8.779,12.608-16.654
-          l-0.109-1.741c-0.038-0.533-0.087-1.071-0.087-1.61c0-38.9,31.65-70.545,70.55-70.545c23.524,0,45.422,11.672,58.579,31.22
-          c3.024,4.498,8.088,7.19,13.5,7.19c0.022,0,0.049,0,0.076,0l3.671-0.016l14.082,2.654c20.989,5.428,39.406,17.133,53.27,33.88
-          c4.03,4.873,10.497,6.967,16.6,5.379c5.069-1.311,10.258-1.969,15.42-1.969c34.402,0,62.392,27.989,62.392,62.392
-          s-27.989,62.381-62.392,62.381c-5.162,0-10.351-0.658-15.414-1.969c-6.113-1.588-12.581,0.517-16.6,5.374
-          c-10.182,12.287-22.969,21.593-37.089,27.94v35.055c20.93-6.842,40.042-18.634,55.565-34.832
-          c4.493,0.653,9.018,0.984,13.543,0.984c52.351,0,94.944-42.588,94.944-94.933C434.304,148,391.711,105.412,339.36,105.412z"/>
-      </g>
-      </svg>
-    {:else if $siteMode === 'light' }
-      <svg version="1.1"
-            id="Capa_1"
-            xmlns="http://www.w3.org/2000/svg"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            x="0px" y="0px"
-            viewBox="0 0 512 512"
-            class="light-mode"
-            style="enable-background:new 0 0 512 512; width: 24px;"
-            xml:space="preserve"
-            >
-        <g>
-          <path d="M266.052,350.322c-5.167-4.324-12.869-3.655-17.198,1.507l-8.104,9.654v-151.01
-            c0-6.739-5.461-12.205-12.205-12.205c-6.744,0-12.205,5.466-12.205,12.205v151.016l-8.099-9.654
-            c-4.329-5.156-12.02-5.842-17.198-1.507c-5.162,4.335-5.836,12.037-1.501,17.198l29.659,35.343
-            c0.098,0.114,0.223,0.196,0.326,0.31c0.354,0.397,0.745,0.767,1.153,1.104c0.239,0.207,0.468,0.413,0.718,0.598
-            c0.451,0.326,0.93,0.604,1.43,0.865c0.245,0.136,0.479,0.283,0.734,0.402c0.571,0.256,1.175,0.441,1.784,0.604
-            c0.212,0.054,0.408,0.141,0.626,0.19c0.832,0.179,1.692,0.283,2.573,0.283c0.887,0,1.746-0.103,2.578-0.283
-            c0.218-0.049,0.413-0.136,0.626-0.19c0.609-0.169,1.213-0.348,1.784-0.604c0.256-0.12,0.49-0.267,0.734-0.402
-            c0.495-0.261,0.979-0.544,1.43-0.865c0.25-0.185,0.479-0.392,0.718-0.598c0.408-0.343,0.794-0.707,1.153-1.104
-            c0.103-0.114,0.228-0.19,0.326-0.31l29.659-35.343C271.888,362.364,271.214,354.662,266.052,350.322z"/>
-          <path d="M339.36,105.412c-4.525,0-9.051,0.337-13.538,0.984c-17.497-18.275-39.52-31.128-64.23-37.388
-            c-0.326-0.087-0.653-0.158-0.979-0.218l-15.936-3.013c-19.499-24.383-49.011-38.71-80.52-38.71
-            c-54.179,0-98.735,42.006-102.798,95.167C24.661,136.083,0,171.018,0,211.196c0,52.503,42.724,95.227,95.238,95.227
-            c13.549,0,26.809-2.861,38.987-8.349c14.99,14.462,33.026,25.031,52.607,31.275v-34.696c-13.957-6.113-26.575-15.219-36.937-27.38
-            c-3.193-3.747-7.762-5.722-12.396-5.722c-3.013,0-6.059,0.832-8.757,2.567c-9.975,6.38-21.566,9.747-33.51,9.747
-            c-34.565,0-62.685-28.115-62.685-62.674c0-28.881,20.456-54.538,48.636-61.026c7.68-1.762,12.994-8.779,12.608-16.654
-            l-0.109-1.741c-0.038-0.533-0.087-1.071-0.087-1.61c0-38.9,31.65-70.545,70.55-70.545c23.524,0,45.422,11.672,58.579,31.22
-            c3.024,4.498,8.088,7.19,13.5,7.19c0.022,0,0.049,0,0.076,0l3.671-0.016l14.082,2.654c20.989,5.428,39.406,17.133,53.27,33.88
-            c4.03,4.873,10.497,6.967,16.6,5.379c5.069-1.311,10.258-1.969,15.42-1.969c34.402,0,62.392,27.989,62.392,62.392
-            s-27.989,62.381-62.392,62.381c-5.162,0-10.351-0.658-15.414-1.969c-6.113-1.588-12.581,0.517-16.6,5.374
-            c-10.182,12.287-22.969,21.593-37.089,27.94v35.055c20.93-6.842,40.042-18.634,55.565-34.832
-            c4.493,0.653,9.018,0.984,13.543,0.984c52.351,0,94.944-42.588,94.944-94.933C434.304,148,391.711,105.412,339.36,105.412z"/>
-        </g>
-      </svg>
-    {/if}
-  </div>
-</button>
-
-
-<button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
-        title="upload environment"
-        style="{( $isActive('/playground') ) ? `visibility:visible;`: `visibility:collapse`}; padding: 0.2em 0.4em 0.8em 0.6em ! important;"
-        on:click={ () => uploadEnvironment() }
-        >
-  <div class="icon-container">
-    {#if $siteMode === 'dark' }
-      <svg version="1.1"
-            id="Capa_1"
-            xmlns="http://www.w3.org/2000/svg"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            x="0px" y="0px"
-            viewBox="0 0 512 512"
-            class="light-mode"
-            style="enable-background:new 0 0 512 512; width: 130px"
-            xml:space="preserve"
-            >
-        <g>
-          <path d="M50.283,44.999l-5.453-6.498c-0.016-0.019-0.038-0.032-0.055-0.051c-0.086-0.095-0.178-0.18-0.278-0.259
-            c-0.012-0.01-0.022-0.021-0.036-0.029c-0.377-0.286-0.841-0.463-1.351-0.463c-0.511,0-0.974,0.177-1.351,0.463
-            c-0.013,0.009-0.023,0.019-0.037,0.029c-0.099,0.079-0.192,0.164-0.276,0.259c-0.017,0.019-0.039,0.032-0.056,0.051l-5.453,6.498
-            c-0.797,0.948-0.673,2.364,0.276,3.162c0.95,0.795,2.366,0.672,3.162-0.277l1.49-1.774v27.765c0,1.239,1.004,2.244,2.244,2.244
-            c1.239,0,2.243-1.005,2.243-2.244V46.108l1.49,1.775c0.443,0.528,1.08,0.801,1.721,0.801c0.508,0,1.021-0.172,1.44-0.523
-            C50.956,47.362,51.08,45.947,50.283,44.999z"/>
-          <path d="M62.393,18.133c-0.832,0-1.664,0.062-2.489,0.181c-3.216-3.36-7.267-5.723-11.81-6.874
-            c-0.059-0.016-0.119-0.029-0.18-0.04l-2.93-0.554c-3.584-4.482-9.01-7.117-14.803-7.117c-9.962,0-18.153,7.723-18.9,17.496
-            C4.534,23.771,0,30.194,0,37.582c0,9.653,7.854,17.507,17.509,17.507c2.491,0,4.93-0.525,7.169-1.535
-            c3.032,2.925,6.745,4.978,10.766,6.062v-6.255c-3.007-1.095-5.712-2.921-7.884-5.47c-0.587-0.69-1.427-1.053-2.279-1.053
-            c-0.554,0-1.114,0.153-1.611,0.473c-1.834,1.173-3.964,1.792-6.161,1.792c-6.355,0-11.525-5.169-11.525-11.523
-            c0-5.31,3.761-10.027,8.943-11.219c1.412-0.325,2.389-1.615,2.318-3.063l-0.02-0.32c-0.006-0.098-0.015-0.197-0.015-0.297
-            c0-7.152,5.819-12.97,12.971-12.97c4.325,0,8.351,2.146,10.77,5.74c0.557,0.827,1.486,1.322,2.482,1.322c0.004,0,0.008,0,0.014,0
-            l0.675-0.003l2.589,0.488c3.858,0.998,7.245,3.15,9.794,6.229c0.741,0.896,1.931,1.281,3.052,0.989
-            c0.933-0.241,1.887-0.362,2.836-0.362c6.324,0,11.471,5.146,11.471,11.471c0,6.325-5.146,11.468-11.471,11.468
-            c-0.949,0-1.903-0.121-2.834-0.361c-1.125-0.292-2.313,0.095-3.053,0.988c-1.605,1.938-3.564,3.474-5.726,4.613v6.59
-            c3.419-1.297,6.542-3.332,9.123-6.025c0.825,0.12,1.657,0.182,2.489,0.182c9.625,0,17.455-7.83,17.455-17.455
-            C79.848,25.963,72.016,18.133,62.393,18.133z"
-            />
-        </g>
-      </svg>
-    {:else if $siteMode === 'light' }
-      <svg version="1.1"
-            id="Capa_1"
-            xmlns="http://www.w3.org/2000/svg"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            x="0px" y="0px"
-            viewBox="0 0 512 512"
-            style="enable-background:new 0 0 512 512; width:130px"
-            xml:space="preserve"
-            >
-        <g>
+  <!-- CLEAR -->
+  <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
+          title="clear project"
+          style="{ ( $isActive('/playground') ) ? `visibility:visible;`: `visibility:collapse`}"
+          on:click={ () => toggleOverlay('clear') }
+          >
+    <div class="icon-container">
+      {#if $siteMode === 'dark' }
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+          <path fill-rule="evenodd" d="M13.854 2.146a.5.5 0 0 1 0 .708l-11 11a.5.5 0 0 1-.708-.708l11-11a.5.5 0 0 1 .708 0Z"/>
+          <path fill-rule="evenodd" d="M2.146 2.146a.5.5 0 0 0 0 .708l11 11a.5.5 0 0 0 .708-.708l-11-11a.5.5 0 0 0-.708 0Z"/>
+        </svg>
+      {:else if $siteMode === 'light' }
+        <svg version="1.1"
+              id="Layer_1"
+              xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+              x="0px" y="0px"
+              viewBox="0 0 512 512"
+              style="enable-background:new 0 0 512 512;width:19px;"
+              xml:space="preserve"
+              >
           <g>
-            <path d="M50.283,44.999l-5.453-6.498c-0.016-0.019-0.038-0.032-0.055-0.051c-0.086-0.095-0.178-0.18-0.278-0.259
-              c-0.012-0.01-0.022-0.021-0.036-0.029c-0.377-0.286-0.841-0.463-1.351-0.463c-0.511,0-0.974,0.177-1.351,0.463
-              c-0.013,0.009-0.023,0.019-0.037,0.029c-0.099,0.079-0.192,0.164-0.276,0.259c-0.017,0.019-0.039,0.032-0.056,0.051l-5.453,6.498
-              c-0.797,0.948-0.673,2.364,0.276,3.162c0.95,0.795,2.366,0.672,3.162-0.277l1.49-1.774v27.765c0,1.239,1.004,2.244,2.244,2.244
-              c1.239,0,2.243-1.005,2.243-2.244V46.108l1.49,1.775c0.443,0.528,1.08,0.801,1.721,0.801c0.508,0,1.021-0.172,1.44-0.523
-              C50.956,47.362,51.08,45.947,50.283,44.999z"/>
-            <path d="M62.393,18.133c-0.832,0-1.664,0.062-2.489,0.181c-3.216-3.36-7.267-5.723-11.81-6.874
-              c-0.059-0.016-0.119-0.029-0.18-0.04l-2.93-0.554c-3.584-4.482-9.01-7.117-14.803-7.117c-9.962,0-18.153,7.723-18.9,17.496
-              C4.534,23.771,0,30.194,0,37.582c0,9.653,7.854,17.507,17.509,17.507c2.491,0,4.93-0.525,7.169-1.535
-              c3.032,2.925,6.745,4.978,10.766,6.062v-6.255c-3.007-1.095-5.712-2.921-7.884-5.47c-0.587-0.69-1.427-1.053-2.279-1.053
-              c-0.554,0-1.114,0.153-1.611,0.473c-1.834,1.173-3.964,1.792-6.161,1.792c-6.355,0-11.525-5.169-11.525-11.523
-              c0-5.31,3.761-10.027,8.943-11.219c1.412-0.325,2.389-1.615,2.318-3.063l-0.02-0.32c-0.006-0.098-0.015-0.197-0.015-0.297
-              c0-7.152,5.819-12.97,12.971-12.97c4.325,0,8.351,2.146,10.77,5.74c0.557,0.827,1.486,1.322,2.482,1.322c0.004,0,0.008,0,0.014,0
-              l0.675-0.003l2.589,0.488c3.858,0.998,7.245,3.15,9.794,6.229c0.741,0.896,1.931,1.281,3.052,0.989
-              c0.933-0.241,1.887-0.362,2.836-0.362c6.324,0,11.471,5.146,11.471,11.471c0,6.325-5.146,11.468-11.471,11.468
-              c-0.949,0-1.903-0.121-2.834-0.361c-1.125-0.292-2.313,0.095-3.053,0.988c-1.605,1.938-3.564,3.474-5.726,4.613v6.59
-              c3.419-1.297,6.542-3.332,9.123-6.025c0.825,0.12,1.657,0.182,2.489,0.182c9.625,0,17.455-7.83,17.455-17.455
-              C79.848,25.963,72.016,18.133,62.393,18.133z"/>
+            <path d="M317.667,214.42l5.667-86.42h20.951V38h-98.384V0H132.669v38H34.285v90h20.951l20,305h140.571
+              c23.578,24.635,56.766,40,93.478,40c71.368,0,129.43-58.062,129.43-129.43C438.715,275.019,385.143,218.755,317.667,214.42z
+              M162.669,30h53.232v8h-53.232V30z M64.285,68h250v30h-250V68z M103.334,403L85.301,128H293.27l-5.77,87.985
+              c-61.031,10.388-107.645,63.642-107.645,127.586c0,21.411,5.231,41.622,14.475,59.43H103.334z M309.285,443
+              c-54.826,0-99.43-44.604-99.43-99.43s44.604-99.429,99.43-99.429s99.43,44.604,99.43,99.429S364.111,443,309.285,443z"/>
+            <polygon points="342.248,289.395 309.285,322.358 276.322,289.395 255.109,310.608 288.072,343.571 255.109,376.533
+              276.322,397.746 309.285,364.783 342.248,397.746 363.461,376.533 330.498,343.571 363.461,310.608 	"/>
           </g>
-        </g>
+        </svg>
+      {/if}
+    </div>
+  </button>
+
+  <!-- DOWNLOAD BUTTON -->
+  <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
+          title="download project"
+          style="{( $isActive('/playground') ) ? `visibility:visible;`: `visibility:collapse`};"
+          on:click={ () => downloadEnvironment() }
+          >
+    <div class="icon-container">
+      {#if $siteMode === 'dark' }
+        <svg xmlns="http://www.w3.org/2000/svg" 
+        width="16" 
+        height="16" 
+        fill="currentColor" 
+        class="bi bi-download" 
+        viewBox="0 0 16 16">
+          <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+          <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+        </svg>
+      {:else if $siteMode === 'light' }
+        <svg xmlns="http://www.w3.org/2000/svg" 
+        width="16" 
+        height="16" 
+        fill="currentColor" 
+        class="bi bi-download" 
+        viewBox="0 0 16 16">
+          <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+          <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+        </svg>
+      {/if}
+    </div>
+  </button>
+
+  <!-- UPLOAD -->
+  <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
+          title="upload project"
+          style="{( $isActive('/playground') ) ? `visibility:visible;`: `visibility:collapse`};"
+          on:click={ () => toggleOverlay('upload') }
+          >
+    <div class="icon-container">
+      {#if $siteMode === 'dark' }
+        <svg xmlns="http://www.w3.org/2000/svg" 
+        width="16" 
+        height="16" 
+        fill="currentColor" 
+        class="bi bi-upload" 
+        viewBox="0 0 16 16">
+          <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+          <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/>
+        </svg>  
+      {:else if $siteMode === 'light' }
+        <svg xmlns="http://www.w3.org/2000/svg" 
+        width="16" 
+        height="16" 
+        fill="currentColor" 
+        class="bi bi-upload" 
+        viewBox="0 0 16 16">
+          <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+          <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/>
+        </svg>  
+      {/if}
+    </div>
+  </button>
+
+  <!-- FORK -->
+  {#if $user} <!--if there is a user logged in-->
+    <button id='fork-button' class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
+            title="fork project (make a copy)"
+            style="{( $isActive('/playground') ) ? `visibility:visible;`: `visibility:collapse`};"
+            on:click={ () => forkProject() }
+            >
+      <div class="icon-container">
+        {#if $siteMode === 'dark' }
+          <svg aria-hidden="true" 
+          height="16" 
+          viewBox="0 0 16 16" 
+          version="1.1"
+          width="16"
+          fill="currentColor" 
+          data-view-component="true" 
+          class="fork-icon"
+          >
+            <path fill-rule="evenodd" d="M5 3.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm0 2.122a2.25 2.25 0 10-1.5 0v.878A2.25 2.25 0 005.75 8.5h1.5v2.128a2.251 2.251 0 101.5 0V8.5h1.5a2.25 2.25 0 002.25-2.25v-.878a2.25 2.25 0 10-1.5 0v.878a.75.75 0 01-.75.75h-4.5A.75.75 0 015 6.25v-.878zm3.75 7.378a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm3-8.75a.75.75 0 100-1.5.75.75 0 000 1.5z"></path>
+          </svg>
+        
+        {:else if $siteMode === 'light' }
+          <svg aria-hidden="true" 
+          height="16" 
+          viewBox="0 0 16 16" 
+          version="1.1"
+          width="16"
+          fill="currentColor" 
+          data-view-component="true" 
+          class="fork-icon"
+          >
+            <path fill-rule="evenodd" d="M5 3.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm0 2.122a2.25 2.25 0 10-1.5 0v.878A2.25 2.25 0 005.75 8.5h1.5v2.128a2.251 2.251 0 101.5 0V8.5h1.5a2.25 2.25 0 002.25-2.25v-.878a2.25 2.25 0 10-1.5 0v.878a.75.75 0 01-.75.75h-4.5A.75.75 0 015 6.25v-.878zm3.75 7.378a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm3-8.75a.75.75 0 100-1.5.75.75 0 000 1.5z"></path>
+          </svg>
+
+        {/if}
+      </div>
+    </button>
+  {/if}
+
+  <!-- SHARE -->
+  {#if $params.playgroundId} <!-- if there is a playground uuid in the adress.-->
+    <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
+            title="share project"
+            style="{( $isActive('/playground') ) ? `visibility:visible;`: `visibility:collapse`};"
+            on:click={ () => toggleOverlay('share') }>
+      <div class="icon-container">
+        {#if $siteMode === 'dark' }
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-share" viewBox="0 0 16 16">
+          <path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5zm-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/>
+        </svg>
+        {:else if $siteMode === 'light' }
+          <svg  version="1.1"
+                id="Layer_1"
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                x="0px" y="0px"
+                viewBox="0 0 512 512"
+                style="enable-background:new 0 0 512 512;width:15px;"
+                fill="currentColor"
+                xml:space="preserve"
+                >
+            <g>
+              <path d="M404.9,0c45.1,0,81.5,37.1,81.5,82.8c0,45.7-36.5,82.8-81.5,82.8c-24.2,0-46-10.7-60.9-27.7l-160.9,88.1
+                c3.6,9.3,5.5,19.5,5.5,30.1c0,13.9-3.3,26.9-9.3,38.4l153.8,95.4c13.8-25.8,40.7-43.4,71.7-43.4c45.1,0,81.5,37.1,81.5,82.8
+                c0,45.7-36.5,82.8-81.5,82.8s-81.5-37.1-81.5-82.8l0.1-3.5L156.3,322.1c-13.7,10.5-30.7,16.7-49.1,16.7
+                c-45.1,0-81.5-37.1-81.5-82.8s36.5-82.8,81.5-82.8c21.8,0,41.6,8.7,56.3,22.9l163.4-89.4c-2.2-7.5-3.4-15.5-3.4-23.8
+                C323.4,37.1,359.8,0,404.9,0z M404.9,382.1c-25.4,0-46.1,21-46.1,47.1c0,26,20.7,47.1,46.1,47.1s46.1-21,46.1-47.1
+                C451,403.1,430.3,382.1,404.9,382.1z M107.1,208.9c-25.4,0-46.1,21-46.1,47.1s20.7,47.1,46.1,47.1s46.1-21,46.1-47.1
+                S132.5,208.9,107.1,208.9z M404.9,35.7c-25.4,0-46.1,21-46.1,47.1c0,26,20.7,47.1,46.1,47.1s46.1-21,46.1-47.1
+                C451,56.8,430.3,35.7,404.9,35.7z"/>
+            </g>
+          </svg>
+        {/if}
+      </div>
+    </button>
+  {/if}
+{/if}
+
+<!--PROJECT NAME BOX-->
+
+<!-- only show in playround -->
+{#if $isActive(`/playground`)} 
+  {#if $name != null}
+  <!-- PROJECT VISIBILITY ICON -->
+    {#if $isPublic}
+      <svg xmlns="http://www.w3.org/2000/svg" 
+        width="16" 
+        height="16" 
+        fill="currentColor" 
+        class="playground-visibility-icon" 
+        style=""
+        viewBox="0 0 16 16" 
+        >
+          <title>Public. This project will appear in the 'All Projects' tab.</title>
+          <path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm7.5-6.923c-.67.204-1.335.82-1.887 1.855A7.97 7.97 0 0 0 5.145 4H7.5V1.077zM4.09 4a9.267 9.267 0 0 1 .64-1.539 6.7 6.7 0 0 1 .597-.933A7.025 7.025 0 0 0 2.255 4H4.09zm-.582 3.5c.03-.877.138-1.718.312-2.5H1.674a6.958 6.958 0 0 0-.656 2.5h2.49zM4.847 5a12.5 12.5 0 0 0-.338 2.5H7.5V5H4.847zM8.5 5v2.5h2.99a12.495 12.495 0 0 0-.337-2.5H8.5zM4.51 8.5a12.5 12.5 0 0 0 .337 2.5H7.5V8.5H4.51zm3.99 0V11h2.653c.187-.765.306-1.608.338-2.5H8.5zM5.145 12c.138.386.295.744.468 1.068.552 1.035 1.218 1.65 1.887 1.855V12H5.145zm.182 2.472a6.696 6.696 0 0 1-.597-.933A9.268 9.268 0 0 1 4.09 12H2.255a7.024 7.024 0 0 0 3.072 2.472zM3.82 11a13.652 13.652 0 0 1-.312-2.5h-2.49c.062.89.291 1.733.656 2.5H3.82zm6.853 3.472A7.024 7.024 0 0 0 13.745 12H11.91a9.27 9.27 0 0 1-.64 1.539 6.688 6.688 0 0 1-.597.933zM8.5 12v2.923c.67-.204 1.335-.82 1.887-1.855.173-.324.33-.682.468-1.068H8.5zm3.68-1h2.146c.365-.767.594-1.61.656-2.5h-2.49a13.65 13.65 0 0 1-.312 2.5zm2.802-3.5a6.959 6.959 0 0 0-.656-2.5H12.18c.174.782.282 1.623.312 2.5h2.49zM11.27 2.461c.247.464.462.98.64 1.539h1.835a7.024 7.024 0 0 0-3.072-2.472c.218.284.418.598.597.933zM10.855 4a7.966 7.966 0 0 0-.468-1.068C9.835 1.897 9.17 1.282 8.5 1.077V4h2.355z"/>
+      </svg>
+    {:else if !$isPublic}
+      <svg xmlns="http://www.w3.org/2000/svg" 
+        width="16" 
+        height="16" 
+        fill="currentColor" 
+        class="playground-visibility-icon" 
+        style=""
+        viewBox="0 0 16 16" 
+        >
+          <title>Private. This project will only appear in the 'My Projects' tab.</title>
+          <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zM5 8h6a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/>
       </svg>
     {/if}
-  </div>
-</button>
+    
+    <!-- PROJECT NAME TEXT BOX-->
+    
+    {#if $params.playgroundId} 
+      <input type="text"
+              bind:value={ $name }
+              on:change={ onNameChange }
+              placeholder='Choose a project!'
+              style="{( $isActive(`/playground`) )? `visibility:visible;`: `visibility:collapse`}; margin-left: 2px;"
+              disabled={!$user}
+              />
 
+      <!-- Project browser launcher dropdown button -->
+      <button 
+      id = 'project-browser-launcher-button'
+      class="{ $siteMode === 'dark'? 'dropdown-button-dark' :'button-light' }"
+      title="project browser"
+      style="{( $isActive('/playground') )? `visibility:visible;`: `visibility:collapse`};
+      {($isProjectBrowserOverlayVisible)? 'background-color: #181a1d;' :''}
+      margin-left: -50px;"
+      on:click={ () => toggleProjectBrowser()}>
 
-        <!-- style="{ $fullScreen? `visibility:visible;`: `visibility:hidden`}; padding: 0.25em 0.3em 0.75em 0.7em;" -->
-<!-- SHARE -->
-<button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
-        title="share environment"
-        style="padding: 0.25em 0.3em 0.75em 0.7em;"
-        on:click={ handleClick }>
-  <div class="icon-container">
-    {#if $siteMode === 'dark' }
-
-      <svg version="1.1"
-            id="Layer_1"
-            xmlns="http://www.w3.org/2000/svg"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            x="0px" y="0px"
-            viewBox="0 0 512 512"
-            class='dark-mode'
-            style="enable-background:new 0 0 512 512;"
-            xml:space="preserve"
-
-            >
-        <g>
-          <path class="st0"
-            d="M404.9,0c45.1,0,81.5,37.1,81.5,82.8c0,45.7-36.5,82.8-81.5,82.8c-24.2,0-46-10.7-60.9-27.7l-160.9,88.1
-            c3.6,9.3,5.5,19.5,5.5,30.1c0,13.9-3.3,26.9-9.3,38.4l153.8,95.4c13.8-25.8,40.7-43.4,71.7-43.4c45.1,0,81.5,37.1,81.5,82.8
-            c0,45.7-36.5,82.8-81.5,82.8s-81.5-37.1-81.5-82.8l0.1-3.5L156.3,322.1c-13.7,10.5-30.7,16.7-49.1,16.7
-            c-45.1,0-81.5-37.1-81.5-82.8s36.5-82.8,81.5-82.8c21.8,0,41.6,8.7,56.3,22.9l163.4-89.4c-2.2-7.5-3.4-15.5-3.4-23.8
-            C323.4,37.1,359.8,0,404.9,0z M404.9,382.1c-25.4,0-46.1,21-46.1,47.1c0,26,20.7,47.1,46.1,47.1s46.1-21,46.1-47.1
-            C451,403.1,430.3,382.1,404.9,382.1z M107.1,208.9c-25.4,0-46.1,21-46.1,47.1s20.7,47.1,46.1,47.1s46.1-21,46.1-47.1
-            S132.5,208.9,107.1,208.9z M404.9,35.7c-25.4,0-46.1,21-46.1,47.1c0,26,20.7,47.1,46.1,47.1s46.1-21,46.1-47.1
-            C451,56.8,430.3,35.7,404.9,35.7z"/>
-        </g>
-      </svg>
-    {:else if $siteMode === 'light' }
-      <svg  version="1.1"
-            id="Layer_1"
-            xmlns="http://www.w3.org/2000/svg"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            x="0px" y="0px"
-            viewBox="0 0 512 512"
-            style="enable-background:new 0 0 512 512;width:15px;"
-            class='light-mode'
-            xml:space="preserve"
-            >
-        <g>
-          <path d="M404.9,0c45.1,0,81.5,37.1,81.5,82.8c0,45.7-36.5,82.8-81.5,82.8c-24.2,0-46-10.7-60.9-27.7l-160.9,88.1
-            c3.6,9.3,5.5,19.5,5.5,30.1c0,13.9-3.3,26.9-9.3,38.4l153.8,95.4c13.8-25.8,40.7-43.4,71.7-43.4c45.1,0,81.5,37.1,81.5,82.8
-            c0,45.7-36.5,82.8-81.5,82.8s-81.5-37.1-81.5-82.8l0.1-3.5L156.3,322.1c-13.7,10.5-30.7,16.7-49.1,16.7
-            c-45.1,0-81.5-37.1-81.5-82.8s36.5-82.8,81.5-82.8c21.8,0,41.6,8.7,56.3,22.9l163.4-89.4c-2.2-7.5-3.4-15.5-3.4-23.8
-            C323.4,37.1,359.8,0,404.9,0z M404.9,382.1c-25.4,0-46.1,21-46.1,47.1c0,26,20.7,47.1,46.1,47.1s46.1-21,46.1-47.1
-            C451,403.1,430.3,382.1,404.9,382.1z M107.1,208.9c-25.4,0-46.1,21-46.1,47.1s20.7,47.1,46.1,47.1s46.1-21,46.1-47.1
-            S132.5,208.9,107.1,208.9z M404.9,35.7c-25.4,0-46.1,21-46.1,47.1c0,26,20.7,47.1,46.1,47.1s46.1-21,46.1-47.1
-            C451,56.8,430.3,35.7,404.9,35.7z"/>
-        </g>
-      </svg>
+        <div id='project-browser-launcher-button' class='icon-container' style='margin-top:5px;'>
+          <svg xmlns="http://www.w3.org/2000/svg" 
+          width="16" 
+          height="16" 
+          fill="currentColor" 
+          class="bi bi-chevron-down" 
+          id = 'project-browser-launcher-button'
+          viewBox="0 0 16 16"
+          style='{ ($isProjectBrowserOverlayVisible)? 'transform: rotate(180deg); transition: 0.3s;' :'transform: rotate(0deg); transition: 0.1s;'}'
+          >
+            <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+          </svg>
+        </div>
+      </button>
     {/if}
-  </div>
-</button>
 
+  {:else}
+  <!-- show loading -->
+    <!-- Loading... -->
+    <div class=''>
+      <ContentLoader primaryColor='grey' secondaryColor='#ccc' speed={0.4} width="200" height="16">
+        <rect x="0" y="0" rx="3" ry="3" width="200" height="16" />
+      </ContentLoader>
+    </div>
+  {/if}
 
+{/if}
 
+<!-- {#if $isPublic && $isActive(`/playground`)}
+  <svg xmlns="http://www.w3.org/2000/svg" 
+    width="16" 
+    height="16" 
+    fill="currentColor" 
+    class="playground-visibility-icon" 
+    style=""
+    viewBox="0 0 16 16" 
+    >
+      <title>Public. This project will appear in the 'All Projects' tab.</title>
+      <path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm7.5-6.923c-.67.204-1.335.82-1.887 1.855A7.97 7.97 0 0 0 5.145 4H7.5V1.077zM4.09 4a9.267 9.267 0 0 1 .64-1.539 6.7 6.7 0 0 1 .597-.933A7.025 7.025 0 0 0 2.255 4H4.09zm-.582 3.5c.03-.877.138-1.718.312-2.5H1.674a6.958 6.958 0 0 0-.656 2.5h2.49zM4.847 5a12.5 12.5 0 0 0-.338 2.5H7.5V5H4.847zM8.5 5v2.5h2.99a12.495 12.495 0 0 0-.337-2.5H8.5zM4.51 8.5a12.5 12.5 0 0 0 .337 2.5H7.5V8.5H4.51zm3.99 0V11h2.653c.187-.765.306-1.608.338-2.5H8.5zM5.145 12c.138.386.295.744.468 1.068.552 1.035 1.218 1.65 1.887 1.855V12H5.145zm.182 2.472a6.696 6.696 0 0 1-.597-.933A9.268 9.268 0 0 1 4.09 12H2.255a7.024 7.024 0 0 0 3.072 2.472zM3.82 11a13.652 13.652 0 0 1-.312-2.5h-2.49c.062.89.291 1.733.656 2.5H3.82zm6.853 3.472A7.024 7.024 0 0 0 13.745 12H11.91a9.27 9.27 0 0 1-.64 1.539 6.688 6.688 0 0 1-.597.933zM8.5 12v2.923c.67-.204 1.335-.82 1.887-1.855.173-.324.33-.682.468-1.068H8.5zm3.68-1h2.146c.365-.767.594-1.61.656-2.5h-2.49a13.65 13.65 0 0 1-.312 2.5zm2.802-3.5a6.959 6.959 0 0 0-.656-2.5H12.18c.174.782.282 1.623.312 2.5h2.49zM11.27 2.461c.247.464.462.98.64 1.539h1.835a7.024 7.024 0 0 0-3.072-2.472c.218.284.418.598.597.933zM10.855 4a7.966 7.966 0 0 0-.468-1.068C9.835 1.897 9.17 1.282 8.5 1.077V4h2.355z"/>
+  </svg>
+{:else if !$isPublic && $isActive(`/playground`)}
+  <svg xmlns="http://www.w3.org/2000/svg" 
+    width="16" 
+    height="16" 
+    fill="currentColor" 
+    class="playground-visibility-icon" 
+    style=""
+    viewBox="0 0 16 16" 
+    >
+      <title>Private. This project will only appear in the 'My Projects' tab.</title>
+      <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zM5 8h6a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/>
+  </svg>
+{/if}
 
+{#if $params.playgroundId} 
+  <input type="text"
+          bind:value={ $name }
+          on:change={ onNameChange }
+          placeholder='Choose a project!'
+          style="{( $isActive(`/playground`) )? `visibility:visible;`: `visibility:collapse`}; margin-left: 2px;"
+          disabled={!$user}
+          />
 
+  
+  <button 
+  id = 'project-browser-launcher-button'
+  class="{ $siteMode === 'dark'? 'dropdown-button-dark' :'button-light' }"
+  title="project browser"
+  style="{( $isActive('/playground') )? `visibility:visible;`: `visibility:collapse`};
+  {($isProjectBrowserOverlayVisible)? 'background-color: #181a1d;' :''}
+  margin-left: -50px;"
+  on:click={ () => toggleProjectBrowser()}>
 
-<!-- <div style='width: 2px;'></div> -->
-
-
-
-
-
-
-
-
+    <div id='project-browser-launcher-button' class='icon-container' style='margin-top:5px;'>
+      <svg xmlns="http://www.w3.org/2000/svg" 
+      width="16" 
+      height="16" 
+      fill="currentColor" 
+      class="bi bi-chevron-down" 
+      id = 'project-browser-launcher-button'
+      viewBox="0 0 16 16"
+      style='{ ($isProjectBrowserOverlayVisible)? 'transform: rotate(180deg); transition: 0.3s;' :'transform: rotate(0deg); transition: 0.1s;'}'
+      >
+        <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+      </svg>
+    </div>
+  </button>
+{/if} -->

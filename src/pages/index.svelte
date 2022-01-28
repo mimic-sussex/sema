@@ -1,7 +1,8 @@
 <script>
   import { onMount, onDestroy } from 'svelte';
-	import { metatags } from '@roxi/routify'
-  import ReGL from 'regl';
+  import { metatags, isActive, goto } from '@roxi/routify'
+  import { slide, fly } from 'svelte/transition';
+  // import ReGL from 'regl';
   // import mouse from 'mouse-change';
   // import regl as RGL from 'regl';
 
@@ -81,8 +82,55 @@
   //   })
   // }
 
+  import {
+    getUserProfile,
+    supabase
+	} from '../db/client'
+
+  import {
+		user,
+		userName,
+		websiteURL,
+		avatarURL,
+		loggedIn,
+		loading
+	} from '../stores/user'
+
+  $: getProfile();
+  async function getProfile() {
+    console.log('getting profile')
+    try {
+      $loading = true
+      let { username, website, avatar_url } = await getUserProfile()
+      if (username){
+        $userName = username;
+      }
+      if (website){
+        $websiteURL = website;
+      }
+      if (avatar_url){
+        $avatarURL = avatar_url;
+      }
+    } catch (error) {
+      alert(error.message)
+    } finally {
+      $loading = false
+			$loggedIn = true
+    }
+  }
+
+  //listen for reset password event
+  supabase.auth.onAuthStateChange((event, session) => {
+    if (event === "PASSWORD_RECOVERY") {
+      // redirect user to the page where it creates a new password
+      // console.log('DEBUG: password recovery event. event : session:',event, session)
+      $goto('/change-password');
+    }
+  });
+      
   onMount(async () => {
     // setupReGL();
+    console.log('DEBUG:onMount!rootindex')
   })
 
   /**
@@ -96,6 +144,36 @@
 </script>
 
 <div class="center-all">
+  {#if !$loading}
+    {#if !$userName && $user}
+      <div style='width:100%;'>
+        <div style='float:right'>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-bell" viewBox="0 0 16 16">
+            <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zM8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z"/>
+          </svg>
+        </div>
+        <div in:fly="{{ x: 200, duration: 500 }}">
+        <span style='
+        float:right; 
+        border: solid #ccc 1px; 
+        padding: 0px 10px 10px 10px;
+        background: #212121;
+        border-radius: 5px;
+        box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
+        '>
+        <h3>Welcome to Sema!</h3>
+        <ul>
+          <li>You are now logged in.</li>
+          <li>Set a username at the admin page above.</li>
+        </ul>
+          </span>
+        </div>
+      </div>
+    <!-- {:else if $userName && $user} -->
+      <!-- show notifcation for a short while then dissapear just saying you are now lgoged in -->
+    {/if}
+  {/if}
+  
   <div class='container-logo'>
     <div class='container-svg'>
       <svg
@@ -625,7 +703,7 @@
   .canvas-logo {
 
     /* opacity:0.1; */
-    background-color: rgb(16, 16, 16);
+    background-color: #3a4147; /*rgb(16, 16, 16);*/
     height: 100% !important;
     width: 100% !important;
     visibility: visible;

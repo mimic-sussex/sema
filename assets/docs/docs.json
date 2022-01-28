@@ -1,0 +1,164 @@
+[
+  {
+    "container": true,
+    "title": "Getting Started",
+    "children": [
+      {
+        "container": false,
+        "title": "What Is Sema?",
+        "file": "getting-started/whatissema",
+        "path": "./whatissema"
+      },
+      {
+        "container": false,
+        "title": "What can you create in Sema?",
+        "file": "getting-started/what-can-you-create-in-sema",
+        "path": "./what-can-you-create-in-sema"
+      },
+      {
+        "container": false,
+        "title": "Community",
+        "file": "getting-started/community",
+        "path": "./community"
+      }
+    ]
+  },
+  {
+    "container": true,
+    "title": "Playground",
+    "children": [
+      {
+        "container": false,
+        "title": "Getting around",
+        "file": "playground/getting-around",
+        "path": "./getting-around"
+      },
+      {
+        "container": false,
+        "title": "Settings Bar",
+        "file": "playground/settings-bar",
+        "path": "./settings-bar"
+      },
+      {
+        "container": false,
+        "title": "Editors",
+        "file": "playground/editors",
+        "path": "./editors"
+      },
+      {
+        "container": false,
+        "title": "Debug Tools",
+        "file": "playground/debug-tools",
+        "path": "./debug-tools"
+      },
+      {
+        "container": false,
+        "title": "Visualisers",
+        "file": "playground/visualisers",
+        "path": "./visualisers"
+      }
+    ]
+  },
+  {
+    "container": true,
+    "title": "Live coding",
+    "children": [
+      {
+        "container": false,
+        "title": "Sample Loading",
+        "file": "live-coding/sample-loading",
+        "path": "./sample-loading"
+      },
+      {
+        "container": true,
+        "title": "Languages",
+        "children": [
+          {
+            "container": false,
+            "title": "Default Language",
+            "file": "live-coding/languages/default-language",
+            "path": "./default-language"
+          },
+          {
+            "container": false,
+            "title": "Rubber Duckling",
+            "file": "live-coding/languages/rubber-duckling",
+            "path": "./rubber-duckling"
+          },
+          {
+            "container": false,
+            "title": "Quaverseries",
+            "file": "live-coding/languages/quaverseries",
+            "path": "./quaverseries"
+          },
+          {
+            "container": false,
+            "title": "Nibble",
+            "file": "live-coding/languages/nibble",
+            "path": "./nibble"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "container": true,
+    "title": "Machine Learning",
+    "children": [
+      {
+        "container": false,
+        "title": "Introduction to JS editor & ML",
+        "file": "machine-learning/intro-JS-and-ML-in-sema",
+        "path": "./intro-JS-and-ML-in-sema"
+      },
+      {
+        "container": false,
+        "title": "Loading Libraries",
+        "file": "machine-learning/loading-libraries",
+        "path": "./loading-libraries"
+      },
+      {
+        "container": false,
+        "title": "Hardware Acceleration",
+        "file": "machine-learning/hardware-acceleration",
+        "path": "./hardware-acceleration"
+      },
+      {
+        "container": false,
+        "title": "JavaScript Editor API",
+        "file": "machine-learning/js-editor-api",
+        "path": "./js-editor-api"
+      }
+    ]
+  },
+  {
+    "container": true,
+    "title": "Language Creation",
+    "children": [
+      {
+        "container": false,
+        "title": "Introduction to Language Creation",
+        "file": "language-creation/intro-to-language-creation",
+        "path": "./intro-to-language-creation"
+      },
+      {
+        "container": false,
+        "title": "How to use the grammar editor",
+        "file": "language-creation/how-to-use-grammar-editor",
+        "path": "./how-to-use-grammar-editor"
+      },
+      {
+        "container": false,
+        "title": "Intermediate Language Reference",
+        "file": "language-creation/intermediate-language",
+        "path": "./intermediate-language"
+      },
+      {
+        "container": false,
+        "title": "Maximillian Reference",
+        "file": "language-creation/maximilian-dsp-api",
+        "path": "./maximilian-dsp-api"
+      }
+    ]
+  }
+]

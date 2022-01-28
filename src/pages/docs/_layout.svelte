@@ -1,84 +1,44 @@
+
 <script>
-  import { url, route, isActive, goto} from "@roxi/routify";
-  import { onMount } from 'svelte';
+  import { url, route, isActive, goto, params, redirect} from "@roxi/routify";
+  import { onMount, setContext } from 'svelte';
   import marked from 'marked';
-  //import Sidebar from 'https://cdn.skypack.dev/svelte_sidebar';
-  //import SidebarMenu from './sidebar-menu.svelte'
-
-  $: match = $route.path.match(/\/docs\/([^\/]+)\//);
-  $: active = match && match[1];
-
-  let markdown;
-  let doc = 'default-livecoding-language'; //set to default to start with
-  $: promise = fetchMarkdown(doc); //reacts to doc changes
-
-  //console.log(document.location.origin + `/docs/`)
-  //console.log($url())
-
-  const links = [
-    {path:'./default-language', name:'Default Language', file:'default-livecoding-language'},
-    {path:'./intermediate-language', name:'Intermediate Language', file:'sema-intermediate-language'},
-    {path:'./load-sound-files', name:'Load Sound Files', file:'sample-loading'},
-    {path:'./javascript-editor-utils', name:'JS Editor Utils', file:'javascript-editor-utils'},
-    {path:'./maximilian-dsp-api', name:'Maximilian', file:'maximilian-dsp-api'}
-  ];
-
+  // import MenuContainer from './MenuContainer.svelte';
+  import MenuTree from './MenuTree.svelte';
+  import Search from './Search.svelte';
+  import { links, chosenDocs, hashSection, subHeadingsInMenu } from '../../stores/docs.js';
+  import { slide, fly, fade} from 'svelte/transition';
   
+  // import docsearch from '@docsearch/js';
 
-  let fetchMarkdown = async (doc) => {
-    // console.log('fetching markdown')
-    if(doc != undefined){ // There is a call with undefined value when navigating to Playground
-      const res = await fetch(document.location.origin + `/docs/${doc}.md`)
-      const text = await res.text();
-      // console.log(`DEBUG:[/${chapter}]/[${section}]:fetchMarkdown: `, text);
-      // await tick();
-      if (res.ok) {
-        // console.log('markdown processed');
-        markdown = marked(text);
-
-        //change code elements to have a copy button
-        let codeID=0;
-        while(markdown.indexOf("<pre><code>")>-1) {
-          markdown = markdown.replace(
-            "<pre><code>",
-            `<pre style="margin-top:-25px">
-              <button style="font-size:70%; text-align: center; float: right; z-index: 1000; top: 30px; position: relative;" type="button" onclick="copyCode('code${codeID}')">copy</button>
-              <code style="-moz-user-select: text; -html-user-select: text; -webkit-user-select: text; -ms-user-select: text; user-select: text; white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word;" id='code${codeID++}'>`
-            );
-        };
-
-      } else {
-        throw new Error(text);
-      }
-    }
-  }
+  //import docsearch from 'docsearch.js'
+  // import docsearch from '../../../node_modules/docsearch/js';
 
   onMount( async () => {
-
-    promise = fetchMarkdown(doc);
-
+    console.log("DEBUG:routes/docs/_layout:onMount");
+    $redirect($url($chosenDocs+$hashSection)); //jump back to the page and section that user was last on
+    console.log("hash section on mount",$hashSection);
   });
 
-  function handleClick(path){
-    console.log('this is getting called');
-    for (let i = 0; i < links.length; i++) {
-      //console.log(links[i]['path'])
-      
-      if (links[i]['path'] == (path)){
-        // console.log(links[i]['path'])
-        console.log(links[i]['path'], path)
-        doc = links[i]['file'];
-        console.log(doc);
-        //$goto(path);
-      }
-    }
+  function updateHash(hash){
+    $hashSection = "#"+hash;
   }
 
+  /*
+  docsearch({
+    inputSelector: '#search',
+    indexName: 'docsearch',
+    apiKey: '25626fae796133dc1e734c6bcaaeac3c',
+  });
+  */
+  
 
 </script>
 
 
+
 <style>
+
   * :global(.cards) {
     display: flex;
     flex-wrap: wrap;
@@ -125,40 +85,51 @@
   }
 
   .container-docs {
+    background-color: #262a2e;
     display: grid;
   	grid-template-areas:
-  		"header header"
-      "sidebar settings"
-  		"sidebar layout";
-    grid-template-columns: 200px 1fr;
+  		"header header header"
+      "sidebar-menu markdown-container sub-headings-menu"
+  		"sidebar-menu markdown-container sub-headings-menu";
+    grid-template-columns: 260px 1fr;
     grid-template-rows: auto 1fr;
     /* color: #999999; */
   }
 
-  .sidebar-menu {
+
+  .sidebar-menu-container {
+    grid-area: sidebar-menu;
+    overflow-y: auto;
+    height: calc(100vh - 46px);
+    border-right: 1px solid white;
+  }
+  .sidebar-menu-item {
+    /* grid-area: sidebar-menu; */
     display: flex;
     flex-direction: column;
-    padding: 20px 20px 0px 10px;
-    background-color: #999;
-    overflow: scroll;
+    padding: 20px 2px 0px 2px;
+    background-color: #262a2e;/*#999;*/
+    /* border-radius: 5px; */
+    /* overflow-y: auto; */
+    /* height: calc(100vh - 58px); */
+    bottom:0;
+    margin: 0px 0px 0px 0px;
   }
 
-  .sidebar-sub-menu {
-    display: flex;
-    flex-direction: column;
-    padding: 0px 30px 0px 10px;
+  .nav-links-title {
+    text-align: center;
+    width: 100%;
+    justify-content: center;
+    color:white;
   }
 
-  .nav-links {
-    color:white
-  }
 
-  .sidebar-item {
-    padding: 10px 20px 0px 10px;
-  }
+  /* .sidebar-item {
+    padding: 5px 5px 0px 5px;
+  } */
 
   h2 {
-    padding: 0px 0px 0px 0px;
+    text-align: center;
     color: #777777;
     text-decoration: underline;
   }
@@ -166,8 +137,42 @@
     grid-area: header;
   }
 
-  .markdown-container {
-    padding: 10px 20px 0px 10px;
+  .sub-headings-container {
+    grid-area: sub-headings-menu;
+    background-color: #262a2e;
+    color: white;
+    width: 200px;
+    border-left: 1px solid white;
+    overflow-y: auto;
+    height: calc(100vh - 46px);
+  }
+
+  .sub-headings-menu {
+    display: flex;
+    flex-direction: column;
+    /* overflow-y: auto; */
+  }
+
+  .sub-nav-links {
+    color:white;
+    font-size: 14px;
+    padding: 4px 4px 4px 4px;
+    width: 80%;
+    display:inline-block;
+    padding: 4px 4px 4px 4px;
+  }
+
+  .sub-nav-links:hover {
+    background-color: #3a4147;
+    /* transition-delay:1s; */
+  }
+
+  [aria-current] {
+    background-color: #181a1d;
+  }
+
+  .markdown-slot {
+    grid-area: markdown-container;
   }
 
 </style>
@@ -176,74 +181,42 @@
 	<title>Sema – Documentation</title>
 </svelte:head>
 
+
+
 <div class='container-docs' data-routify="scroll-lock">
-
-  <!--
-  <div class='header-docs'>
-    <h2>Reference Documentation</h2>
-  </div>
-  -->
-
-  <!--<h2 class='sidebar-menu'>Reference</h2><br>-->
-  <ul class='sidebar-menu'>
-    {#each links as {path, name, file}, i}
-      <a  class='nav-links' href={$url(path)}
-          class:active={$isActive(path)}
-          on:click={() => handleClick(path)}
-          >
-        {name}
-      </a><br><br>
-    {/each}
-  </ul>
   
+  <div class='sidebar-menu-container'>
+    <ul class='sidebar-menu-item'>
+      <!-- Commenting out search box until we have completed algolia search application -->
+      <!-- <Search></Search> -->
+      {#each $links as link}
+        <MenuTree node={link} let:node></MenuTree>
+      {/each}
+    </ul>
+  </div>
   
-
-  <!---
-  <div class="sidebar-menu">
-    <a href={$url('./default-language')}
-        class="sidebar-item {active === 'default-language' ? 'default-language' : ''}"
-        >
-      Default Language
-    </a>
-    <a href={$url('./intermediate-language')}
-        class="sidebar-item {active === 'intermediate-language' ? 'intermediate-language' : ''}"
-        >
-      Intermediate Language
-    </a>
-    <a href={$url('./load-sound-files')}
-        class="sidebar-item {active === 'load-sound-files' ? 'load-sound-files' : ''}"
-        >
-      Load sound files
-    </a>
-    <a href={$url('./editor-utils')}
-        class="sidebar-item {active === 'editor-utils' ? 'editor-utils' : ''}"
-        >
-      Editor utils
-    </a>
-    <a href={$url('./maximilian-dsp-api')}
-        class="sidebar-item {active === 'maximilian-dsp-api' ? 'maximilian-dsp-api' : ''}"
-        >
-      Load sound files
-    </a>
-  </div>
-  -->
-
-  <div class="markdown-container">
-    {#await promise}
-      <p>...waiting</p>
-    {:then number}
-      <div class="markdown-output">{@html markdown}</div>
-    {:catch error}
-      <p style="color: red">no markdown :(</p>
-    {/await}
-  </div>
-
-  <div>
-
+  <div class='markdown-slot'>
     <slot>
       <!-- optional fallback -->
-      <!--inject the markdwon here-->
+      <!--inject the markdown here-->
     </slot>
+  </div>
+
+  <div class="sub-headings-container">
+    <ul class="sub-headings-menu">
+      {#each $subHeadingsInMenu as subs}
+              <!--the url bit below should have a path tag eg /docs/default-language-->
+              <a class='sub-nav-links' 
+              href={$url('#'+subs.route)} 
+              target="_self"
+              class:active={$isActive(subs.route)}
+              aria-current={ '#'+subs.route==$hashSection ? true : undefined} 
+              on:click={() => updateHash(subs.route)} 
+              in:slide> <!-- TODO should this be route?-->
+                {subs.heading}
+              </a>
+      {/each}
+    </ul>
   </div>
 
 </div>

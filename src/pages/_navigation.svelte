@@ -1,27 +1,45 @@
 <script>
-
   import { isActive, url, params } from "@roxi/routify";
-	import { authStore } from '../auth'
+
+  import {
+		supabase,
+		getUserProfile
+	} from '../db/client'
+
+  import {
+		user,
+		userName,
+		websiteURL,
+		avatarURL,
+		loggedIn,
+		loading
+	} from '../stores/user'
+
+	import {
+		uuid,
+  } from  "../stores/playground.js"
+
+  import { persistentUUID } from "../stores/navigation.js";
+
+	import Session from '../components/navigation/Session.svelte';
+
   import { siteMode } from "../stores/common";
 
   import Controller from "../engine/controller";
   let controller = new Controller(); // this will return the previously created Singleton instance
 
-	const { user, signout } = authStore
-
 	const links = [
-		['/playground', 'playground'],
+		// [`/playground`, 'playground'],
+		[`/playground`, 'playground'],
 		['/tutorial', 'tutorial'],
-		['/docs', 'reference'],
+		['/docs', 'documentation'],
 		['/about', 'about'],
 	]
 
-  let persistentParams = { chapter: '01-basics', section: '01-introduction' };
-  // update url parameters only when navigating tutorials
-  $: if($params.chapter && $params.section) {
-    // console.log(`navigation:url:${$url}:params:${$params}}`);
-    console.log(`navigation:url:${$params.chapter}:params:${$params.section}}`);
-    persistentParams = $params
+  $persistentUUID = {playgroundId: ''};
+
+  $: if ($params.playgroundId){
+    $persistentUUID = $params;
 
     if(!controller){
       controller = new Controller();
@@ -30,6 +48,36 @@
     // does an async hush
     controller.stop();
   }
+
+  let persistentParams = { chapter: '01-basics', section: '01-introduction' };
+  // update url parameters only when navigating tutorials
+  $: if($params.chapter && $params.section) {
+    // console.log(`navigation:url:${$url}:params:${$params}}`);
+    // console.log(`navigation:url:${$params.chapter}:params:${$params.section}}`);
+    persistentParams = $params
+    if(!controller){
+      controller = new Controller();
+    }
+
+    // does an async hush
+    controller.stop();
+  }
+
+	// ( () =>	$loggedIn = true )()
+
+
+  // async function signOut() {
+  //   try {
+  //     let { error } = await supabase.auth.signOut()
+  //     if (error) throw error
+  //   } catch (error) {
+  //     alert(error.message)
+  //   } finally {
+	// 		$loggedIn = false
+  //   }
+  // }
+
+
 </script>
 
 <style>
@@ -37,20 +85,27 @@
     text-decoration: underline;
   } */
 
+  nav {
+    background-color: #262a2e;
+  }
+
   [aria-current] {
     /* font-weight: bold; */
     /* background-color: #cc33ff; */
     /* box-shadow: 0 2px #FF6A00; */
-    box-shadow: 0 0.15em #ccc;
+    box-shadow: 0 0.15em #ccc; /*white underline on nav links*/
+    position: relative; /* to keep the white underline on top!*/
+    z-index: 1; /*keeps white underline on top for the documentation case where things load into DOM async and slowly*/
   }
 
   .container-logo {
     /* margin: 10px 10px 10px 10px; */
     font-weight: bold;
     display: inline-block;
+    padding-left: 12px;
+    padding-right: 12px;
     /* content */
     /* padding: 0px 10px 0px 10px; */
-
   }
 
   .container-links {
@@ -65,6 +120,11 @@
 
   }
 
+	.container-session {
+		/* padding-right: 1em; */
+	}
+
+
   .path-light {
     fill: black;
   }
@@ -72,14 +132,15 @@
   .path-dark {
     fill: white;
   }
-
+/*
   a {
     padding: 0.5em 0em 0.35em 0em;
-  }
+  } */
 
   a:hover {
     text-decoration: none;
   }
+
 
 </style>
 
@@ -103,7 +164,7 @@
               version="1.1"
               style='margin-top:auto;'
               inkscape:version="0.48.3.1 r9886"
-              class='spiral-logo'
+              class='{$siteMode === 'dark'? 'path-dark': 'path-light'}'
               width='25'
 
             >
@@ -522,12 +583,20 @@
   </div>
 	<div class='container-links'>
 		{#each links as [path, name]}
-      {#if path==`tutorial`}
+      {#if name==`tutorial`}
         <div>
           <a class:active={$isActive(path)}
               style='color: {$siteMode === 'dark'? 'white': 'black'};'
               aria-current="{ $isActive(path)? 'page' : undefined}"
-              href={ $url('/tutorial/:chapter/:section/', persistentParams ) }>Tutorial</a>
+              href={ $url('/tutorial/:chapter/:section/', persistentParams ) }>{name}</a>
+        </div>
+      {:else if name==`playground`}
+        <div>
+          <!-- Accessible Rich Internet Applications – aria-current – Indicates the element that represents the current item within a container or set of related elements.-->
+          <a  class:active={$isActive(path)}
+              style='color: {$siteMode === 'dark'? 'white': 'black'};'
+              aria-current="{ $isActive(path)? 'page' : undefined}"
+              href={ $url('/playground/:playgroundId', $persistentUUID )}>{name}</a>
         </div>
       {:else}
         <div>
@@ -542,22 +611,7 @@
 		{/each}
 	</div>
 
-	<div>
-		{#if $user}
-			<a href="/admin"
-        style='color: {$siteMode === 'dark'? 'white': 'black'};'
-      >
-      admin</a>
-			<img src={$user.picture} alt="profile - {$user.nickname}" />
-			<a href="#signout" on:click={signout}
-        style='color: {$siteMode === 'dark'? 'white': 'black'};'
-        >
-        signout</a>
-		{:else}
-			<a href="/login"
-        style='color: {$siteMode === 'dark'? 'white': 'black'};'
-        >
-        login</a>
-		{/if}
+	<div class='container-session'>
+		<Session />
 	</div>
 </nav>

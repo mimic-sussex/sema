@@ -20,7 +20,8 @@
     ASTreeToJavascript,
     ASTreeToDSPcode,
     Engine
-  } from 'sema-engine/sema-engine';
+  } from 'sema-engine';
+  // } from '../../../n sema-engine/sema-engine';
 
   import {
     nil,
@@ -119,16 +120,20 @@ import { edit } from "marked/src/helpers";
           engine = new Engine();
 
         $liveCodeEditorValue = codeMirror.getValue();
-
+        // console.log("DEBUG: liveCodeEditorValue", $liveCodeEditorValue);
+        // console.log('DEBUG: ',$grammarEditorValue)
         // const { errors, dspCode } = compile( $grammarEditorValue, $liveCodeEditorValue );
         const { errors, livecodeParseTree } = parse( $grammarEditorValue, $liveCodeEditorValue );
+        // console.log('DEBUG: liveCodeParsetree', livecodeParseTree);
+        // console.log('DEBUG: parse errors', errors);
         if( livecodeParseTree ){
           $liveCodeAbstractSyntaxTree = livecodeParseTree;
           const { dspCode } = ASTreeToDSPcode(livecodeParseTree[0]);
           if( dspCode ){
             $DSP = dspCode;
             engine.eval(dspCode);
-            engineStatus.set('running');
+            //engineStatus.set('running');
+            $engineStatus = 'running';
             $liveCodeParseErrors = '';
           };
         }
@@ -150,7 +155,8 @@ import { edit } from "marked/src/helpers";
       }
       engine.hush();
       // engine.stop();
-      engineStatus.set('paused');
+      // engineStatus.set('paused');
+      $engineStatus = 'paused';
     }
   }
 
@@ -223,6 +229,7 @@ import { edit } from "marked/src/helpers";
 <div  bind:this={ container }
       class="codemirror-container layout-template-container scrollable"
       >
+  
   <CodeMirror bind:this={ codeMirror }
               bind:value={ content }
               on:change={ e => onChange(e) }

@@ -1,6 +1,6 @@
 
 # Sema – A Playground for Live Coding Music and Machine Learning #
-![version](https://img.shields.io/badge/version-0.7.0-red)
+![version](https://img.shields.io/badge/version-0.8.0-red)
 [![stability-experimental](https://img.shields.io/badge/stability-experimental-orange.svg)](https://github.com/emersion/stability-badges#experimental)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-yellow.svg)](https://github.com/mimic-sussex/eppEditor/blob/master/CONTRIBUTING.md)
 [![Build Status](https://travis-ci.com/mimic-sussex/sema.svg?branch=master)](https://travis-ci.com/mimic-sussex/sema)
@@ -32,6 +32,10 @@ Sema requires the following dependencies to be installed:
  - [Node.js](https://nodejs.org/en/download/) active LTS version (currently v14.4.0). To switch between node versions, you can use [nvm](https://github.com/nvm-sh/nvm).
  - [NPM cli](https://docs.npmjs.com/cli/npm) OR [Yarn](https://yarnpkg.com/en/)
 
+ In order to run, Sema **must connect** with a project url and api key to a **[Supabase backend](https://supabase.com)**.
+ - You can either install supabase locally by following [these instructions](https://supabase.com/docs/guides/local-development), or set up a free hosted project [free hosted project](https://app.supabase.io/).
+ - Next follow the steps on [how to connect to a supabase backend](https://github.com/mimic-sussex/sema/wiki/Getting-set-up-for-development-with-Sema#connecting-to-a-supabase-backend) and then how to replicate the database.
+
 ## How to build and run the Sema playground on your machine
 
 If you decide to use `npm` to build sema, you can follow this list of commands:
@@ -58,14 +62,19 @@ Once you have sema running as a node application, you can load it on your browse
 - npm run dev, go to [http://localhost:5000](http://localhost:5000) on your browser
 
 
-## Hardware acceleration: 
+## Hardware acceleration:
 
-Hardware acceleration will have a drastic effect in Tensorflow.js model training speed. To enable it in Chrome: 
+Hardware acceleration will have a drastic effect in Tensorflow.js model training speed.
 
+To enable it in Chrome:
 * Navigate to chrome://settings
 * Click the **Advanced ▼** button at the bottom of the page
 * In the **System** section, ensure the **Use hardware acceleration when available** checkbox is checked (relaunch Chrome for changes to take effect)
 
+To enable in Firefox:
+- Go to `about:preferences`
+- Scroll till you reach the **Performance section**, or simply search for "performance"
+- Enable **recommended performance settings**, this will enable hardware acceleration if and when it is available
 
 ## Linux Users
 
@@ -76,7 +85,7 @@ Sema uses Web Audio API Audio Worklets. Their performance seems very sensitive t
 
 ## Documentation
 
-Sema's _reference documentation_ aims at supporting the users learning experience. It is integrated in the application and comprises the following elements: 
+Sema's _reference documentation_ aims at supporting the users learning experience. It is integrated in the application and comprises the following elements:
 
 * [Default Livecoding Language](static/docs/default-livecoding-language.md)
 
@@ -87,7 +96,7 @@ Sema's _reference documentation_ aims at supporting the users learning experienc
 * [Javascript Editor Utils](static/docs/javascript-editor-utils.md)
 
 
-Sema's [Wiki](https://github.com/mimic-sussex/sema/wiki) documentation aims at supporting contributions. It focuses on how Sema is designed and built: 
+Sema's [Wiki](https://github.com/mimic-sussex/sema/wiki) documentation aims at supporting contributions. It focuses on how Sema is designed and built:
 
 * [What is the architecture of Sema?](https://github.com/mimic-sussex/sema/wiki/1.-The-Architecture-of-Sema)
 
@@ -103,14 +112,16 @@ Sema's [Wiki](https://github.com/mimic-sussex/sema/wiki) documentation aims at s
 
 ## Contributing
 
-Sema is an open-source project and hopefully the underlying vision, aims and structure will motivate you to contribute to it. Check the following:  
+Sema is an open-source project and hopefully the underlying vision, aims and structure will motivate you to contribute to it. Check the following:
 
-* [How do I contribute to Sema?](https://github.com/mimic-sussex/sema/wiki/7.-How-do-I-contribute-to-Sema%3F) 
+* [How do I contribute to Sema?](https://github.com/mimic-sussex/sema/wiki/7.-How-do-I-contribute-to-Sema%3F)
 
 * [CONTRIBUTING.md](https://github.com/mimic-sussex/sema/blob/master/CONTRIBUTING.md)
 
 
 ## Publications
+
+Bernardo, F., Kiefer, C., Magnusson, T. (2021). *Assessing the Support for Creativity of a Playground for Live Coding Machine Learning,* In: Baalsrud Hauge J., C. S. Cardoso J., Roque L., Gonzalez-Calero P.A. (eds) Entertainment Computing – ICEC 2021. ICEC 2021. Lecture Notes in Computer Science, vol 13056. Springer, Cham. https://doi.org/10.1007/978-3-030-89394-1_38
 
 Bernardo, F., Kiefer, C., Magnusson, T. (2020). *A Signal Engine for a Live Coding Language Ecosystem,* J. Audio Eng. Soc., vol. 68, no. 10, pp. 756-766. doi: https://doi.org/10.17743/jaes.2020.0016
 

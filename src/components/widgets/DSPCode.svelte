@@ -1,11 +1,16 @@
 <script>
-  import { onMount, onDestroy } from 'svelte';
+  import { onMount, onDestroy, afterUpdate} from 'svelte';
 
 
   import { dspCode } from '../../stores/common.js'
   import beautify from 'js-beautify';
+  //import hljs from 'highlight.js';
   import hljs from 'highlight.js/lib/core';
   import javascript from 'highlight.js/lib/languages/javascript';
+
+  // import Highlight from "svelte-highlight";
+  // import typescript from "svelte-highlight/src/languages/typescript";
+  import atomOneDark from "svelte-highlight/src/styles/atom-one-dark";
 
 
   export let id;
@@ -18,10 +23,23 @@
   export let className;
   export { className as class };
 
+  $: highlightOnChange($dspCode); //highlight the dsp code when it changes
+
+  function highlightOnChange(code) {
+    console.log("triggered");
+    hljs.highlightAll();
+    document.querySelectorAll('pre code').forEach((el) => {
+      console.log(el);
+      // hljs.highlightElement(el);
+    });
+  }
+
+  $: code = `const add = (a: number, b: number) => a + b;`;
 
   let log = e => { /* console.log(...e); */ }
 
   hljs.registerLanguage('javascript', javascript);
+  
   // export let items;
 
   let beautifyOptions = {
@@ -47,12 +65,17 @@
 
 
   onMount(async () => {
-
+    //hljs.highlightAll();
     // messaging.subscribe(`${id}-analyser-data`, e => updateAnalyserByteData(e) );
     log( id, name, type, className, hasFocus, theme, background, component );
 
   });
 
+  //after a dom update, highlightAll
+  afterUpdate(() => {
+    // console.log("DOM update, highlight time");
+    //hljs.highlightAll();
+  });
 
 </script>
 
@@ -77,7 +100,7 @@
 
   .prewrap {
     display: inline-flexbox;
-    width: 100%;
+    /* width: 100%; */
     overflow-x: auto;
     white-space: pre-wrap;
     white-space: -moz-pre-wrap;
@@ -96,6 +119,7 @@
   .dspCode-function-bloc-header {
     /* color:red; */
     margin: 25px 10px 5px 5px;
+    font-family: monospace;
   }
 
   .headline {
@@ -105,15 +129,40 @@
     margin-bottom: 10px;
   }
 
+  span {
+    font-family: monospace;
+  }
+
 
 </style>
 
+
+<svelte:head>
+    {@html atomOneDark}
+</svelte:head>
+
 <div class='container-dsp-code-output scrollable'>
   {#if $dspCode}
-  <span class="dspCode-function-bloc-header">Setup:</span>
-  <pre class='prewrap'> { beautify($dspCode.setup, beautifyOptions)  } </pre>
-  <span class="dspCode-function-bloc-header">Loop:</span>
-  <pre class='prewrap'> { beautify($dspCode.loop, beautifyOptions) } </pre>
+    
+    <!-- <Highlight language="{typescript}" {code} /> -->
+    
+    {#if $dspCode.error === 1}
+      <span class="dspCode-function-bloc-header">Setup:</span>
+      <pre class='prewrap language-javascript'><code>{beautify($dspCode.setup, beautifyOptions)}</code></pre>
+      <span class="dspCode-function-bloc-header">Loop:</span>
+      <pre class='prewrap'><code> { beautify($dspCode.loop, beautifyOptions) }</code></pre>
+      <span class="dspCode-function-bloc-header">Error message:</span>
+      <pre class='prewrap language-javascript'><code>{beautify($dspCode.errorMessage, beautifyOptions)}</code></pre>
+    {:else}
+      <span class="dspCode-function-bloc-header">Setup:</span>
+      <pre class='prewrap language-javascript'><code>{beautify($dspCode.setup, beautifyOptions)}</code></pre>
+      <span class="dspCode-function-bloc-header">Loop:</span>
+      <pre class='prewrap'><code> { beautify($dspCode.loop, beautifyOptions) }</code></pre>
+    {/if}
+    
   <!-- <pre> { JSON.stringify($dspCode.loop, null, 2) } </pre> -->
+  {:else}
+    <span>No code run yet. <br> Go to the live code editor and press cmd-Enter [Mac] OR ctrl-Enter [Win/Linux] to evaluate some code.</span>
   {/if}
+  
 </div>

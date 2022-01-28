@@ -1,7 +1,7 @@
 import { get, writable } from "svelte/store";
 
 // import compile from "../compiler/compiler";
-import { compile } from "sema-engine/sema-engine";
+import { compile } from 'sema-engine'
 
 
 import { id, fetchFrom } from "../utils/utils";
@@ -57,6 +57,9 @@ export const dspCode = writable("");
 // export const modelEditorValue = writable(initModelEditorValue());
 export const modelEditorValue = writable("");
 
+export const rawConsoleLogs = writable("");
+
+export const consoleLogs = writable("");
 
 // export const populateStoresWithFetchedProps = async (newItem) => {
 
@@ -82,7 +85,11 @@ async function updateLiveCodeEditorPropsWithFetchedValues(item){
 					localStorage.liveCodeEditorValue &&
 					localStorage.liveCodeEditorValue !== ``
 				) {
-					item.data.content = localStorage.liveCodeEditorValue
+					// item.data.content = localStorage.liveCodeEditorValue
+					// loading from localStorage here causes problems when going navigating from records list
+					// on the user profile area.
+					// since the last viewed playground is in local storage and liveCodeSource is "" when
+					// loading a new project. the item.data.content gets overwritten.
         }
         else if (item.data.content) {
           // all is good, skip the error
@@ -138,7 +145,9 @@ async function updateGrammarEditorPropsWithFetchedValues(item) {
 		} else if (!item.data.grammarSource || item.data.grammarSource === ``) {
 			// fetch data from localStorage
 			// liveCodeEditor with language source
-			item.data.content = localStorage.grammarEditorValue
+			
+			// item.data.content = localStorage.grammarEditorValue
+			// Currently commented out due to same reason listed in updateLiveCodeEditorPropsWithFetchedValues
 		}
 	}
   // else if(item.data !== undefined && item.grammarSource) return; // first load, hardcoded defaults

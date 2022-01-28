@@ -1,0 +1,160 @@
+[
+	{
+		"2": {
+      "drag": { "dragging": false, "top": 0, "left": 0 },
+      "resize": { "resizing": false, "width": 0, "height": 0 },
+      "responsive": { "valueW": 0 },
+      "resizable": false,
+      "fixed": true,
+      "min": {},
+      "max": {},
+      "x": 0,
+      "y": 0,
+      "w": 11,
+      "h": 3
+		},
+		"3": {
+      "drag": { "dragging": false, "top": 0, "left": 0 },
+      "resize": { "resizing": false, "width": 0, "height": 0 },
+      "responsive": { "valueW": 0 },
+      "resizable": false,
+      "fixed": true,
+      "min": {},
+      "max": {},
+      "x": 0,
+      "y": 0,
+      "w": 11,
+      "h": 3
+		},
+		"6": {
+      "drag": { "dragging": false, "top": 0, "left": 0 },
+      "resize": { "resizing": false, "width": 0, "height": 0 },
+      "responsive": { "valueW": 0 },
+      "resizable": false,
+      "fixed": true,
+      "min": {},
+      "max": {},
+      "x": 0,
+      "y": 0,
+      "w": 11,
+      "h": 3
+		},
+		"8": {
+      "drag": { "dragging": false, "top": 0, "left": 0 },
+      "resize": { "resizing": false, "width": 0, "height": 0 },
+      "responsive": { "valueW": 0 },
+      "resizable": false,
+      "fixed": true,
+      "min": {},
+      "max": {},
+      "x": 0,
+      "y": 0,
+      "w": 11,
+      "h": 3
+		},
+		"12": {
+      "drag": { "dragging": false, "top": 0, "left": 0 },
+      "resize": { "resizing": false, "width": 0, "height": 0 },
+      "responsive": { "valueW": 0 },
+      "fixed": true,
+      "resizable": false,
+      "min": {},
+      "max": {},
+      "x": 0,
+      "y": 0,
+      "w": 11,
+      "h": 3
+		},
+		"id": "_6b3c4x6qe",
+		"data": {
+			"id": "_6b3c4x6qe",
+			"type": "liveCodeEditor",
+			"name": "hello-world_y2pqvmh6b_myyx0w13z_5ygcr56yf_6b3c4x6qe",
+			"background": "#151515",
+			"lineNumbers": true,
+			"hasFocus": false,
+			"theme": "icecoder",
+      "content": "// Make sure the audio is ON (click on top right button with RED speaker) \n\n// Place the cursor on this panel \n\n// Press cmd-Enter [Mac] OR ctrl-Enter [Win/Linux] to evaluate this code and playback sound! \n\n:x:{{{{1}clp, [1]}rsq}\\909b,2,0.5}asymclip;\n:z:{{{1}clp,[2,1]}rsq}\\909;\n\n> {:x:,:z:}sum;\n\n// Press cmd-. [Mac] OR ctrl-. [Win/Linux] to stop sound! ",
+			"grammarSource": "/languages/default/grammar.ne",
+			"liveCodeSource": "/languages/default/code.sem"
+		}
+	},
+	{
+		"2": {
+      "drag": { "dragging": false, "top": 0, "left": 0 },
+      "resize": { "resizing": false, "width": 0, "height": 0 },
+      "responsive": { "valueW": 0 },
+      "resizable": false,
+      "fixed": true,
+      "min": {},
+      "max": {},
+      "x": 0,
+      "y": 3,
+      "w": 11,
+      "h": 3
+		},
+		"3": {
+      "drag": { "dragging": false, "top": 0, "left": 0 },
+      "resize": { "resizing": false, "width": 0, "height": 0 },
+      "responsive": { "valueW": 0 },
+      "resizable": false,
+      "fixed": true,
+      "min": {},
+      "max": {},
+      "x": 0,
+      "y": 3,
+      "w": 11,
+      "h": 3
+		},
+		"6": {
+      "drag": { "dragging": false, "top": 0, "left": 0 },
+      "resize": { "resizing": false, "width": 0, "height": 0 },
+      "responsive": { "valueW": 0 },
+      "resizable": false,
+      "fixed": true,
+      "min": {},
+      "max": {},
+      "x": 0,
+      "y": 3,
+      "w": 11,
+      "h": 3
+		},
+		"8": {
+      "drag": { "dragging": false, "top": 0, "left": 0 },
+      "resize": { "resizing": false, "width": 0, "height": 0 },
+      "responsive": { "valueW": 0 },
+      "resizable": false,
+      "fixed": true,
+      "min": {},
+      "max": {},
+      "x": 0,
+      "y": 3,
+      "w": 11,
+      "h": 3
+		},
+		"12": {
+      "drag": { "dragging": false, "top": 0, "left": 0 },
+      "resize": { "resizing": false, "width": 0, "height": 0 },
+      "responsive": { "valueW": 0 },
+      "resizable": false,
+      "fixed": true,
+      "min": {},
+      "max": {},
+      "x": 0,
+      "y": 3,
+      "w": 11,
+      "h": 3
+		},
+		"id": "_nx9yneq25",
+		"data": {
+			"id": "_nx9yneq25",
+			"name": "hello world_au1enazhs_iwu2mp3lh_6l092dg1c_nx9yneq25",
+			"type": "analyser",
+			"lineNumbers": true,
+			"hasFocus": false,
+			"theme": "monokai",
+			"background": "#f0f0f0",
+			"mode": "both"
+		}
+	}
+]

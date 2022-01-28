@@ -1,0 +1,20 @@
+// STORMZY - VOSSI BOP
+
+:arp:{{3}clp, [1,1], [932,784,932,1174,932,739,932,1174]}rsq;
+:tune:{:arp:}sin;
+
+:bass:{{2}clp, [1,0,1,1], [50,0,50,50,0]}rsq;
+:sub:{:bass:}tri;
+
+:trig1:{{2}clp, [1,1]}rsq;
+:speed:{{3}clp, [1,2], [1,2, {0.1}pha]}rsq;
+:closed:{:trig1:,:speed:}\909closed;
+
+:trig3:{{1}clp, [3,1,3,3,1,1]}rsq;
+:beat:{:trig3:,1}\909b;
+
+>{{:closed:,0.9}mul,{:tune:,0.1}mul,{:beat:,0.5}mul,{:sub:,0.5}mul}mix;
+
+// Press cmd-Enter [Mac] OR ctrl-Enter [Win/Linux] to evaluate this code and playback sound!
+
+// Press cmd-. [Mac] OR ctrl-. [Win/Linux] to stop sound!

@@ -28,28 +28,44 @@ import Console from "../components/widgets/Console.svelte";
 import MIDI from "../components/widgets/MIDI.svelte";
 
 
-import default_grammar from "../../static/languages/default/grammar.ne";
+import default_grammar from "../../assets/languages/default/grammar.ne";
 // import gabber_grammar from "../../assets/languages/gabber/grammar.ne";
 // import nibble_grammar from "../../assets/languages/nibble/grammar.ne";
 
-import default_liveCode from "../../static/languages/default/code.sem";
+import default_liveCode from "../../assets/languages/default/code.sem";
 
 
-import default_playground_layout from '../../static/layouts/default-stormzy-vossi-bop.json';
+import default_playground_layout from '../../assets/layouts/default-stormzy-vossi-bop.json';
 
-import hello_world_code_example           from "../../static/learners/hello-world/hello-world.tf";
-import two_layer_non_linear_code_example  from "../../static/learners/non-linear/two-layer-non-linear.tf";
-import binary_classification_code_example from "../../static/learners/non-linear/binary-classification.tf";
-import echo_state_network_code_example    from "../../static/learners/echo-state/echo-state-network.tf";
-import lstm_txt_gen_code_example          from "../../static/learners/rnn/lstm-txt-gen.tf";
-import new_learner_template               from '../../static/learners/new/new.tf'
+import hello_world_code_example           from "../../assets/learners/hello-world/hello-world.tf";
+import two_layer_non_linear_code_example  from "../../assets/learners/non-linear/two-layer-non-linear.tf";
+import binary_classification_code_example from "../../assets/learners/non-linear/binary-classification.tf";
+import echo_state_network_code_example    from "../../assets/learners/echo-state/echo-state-network.tf";
+import lstm_txt_gen_code_example          from "../../assets/learners/rnn/lstm-txt-gen.tf";
+import new_learner_template               from '../../assets/learners/new/new.tf'
 // import music_rnn_example                  from "../machineLearning/magenta/music-rnn.tf";
 
 
+export const name = writable("");
+export const uuid = writable("");
+export const allowEdits = writable(""); //whether the playground is readOnly or not.
+export const isPublic = writable(false); // whether the playground is public or private
+export const author = writable(""); //the author of the playground
+
+export const saveRequired = writable(false); // we use this to keep track of whether a change that needs saving has happened.
+export const saving = writable(false); // whether the playground is currently being saved to the database 
 
 export const isUploadOverlayVisible = writable(false);
 export const isSaveOverlayVisible = writable(false)
 export const isDeleteOverlayVisible = writable(false);
+export const isClearOverlayVisible = writable(false);
+export const isNewOverlayVisible = writable(false);
+export const isShareOverlayVisible = writable(false);
+export const isDoesNotExistOverlayVisible = writable(false);
+export const isProjectBrowserOverlayVisible = writable(false);
+export const isPrivateOverlayVisible = writable(false);
+export const isLoadingOverlayVisible = writable(false);
+export const isLoadingPlaygroundOverlayVisible = writable(false);
 
 export const cm_theme_cobalt = writable("");
 export const cm_theme_icecoder = writable("");
@@ -76,7 +92,7 @@ export const isSelectLiveCodeEditorDisabled = writable(false);
 // Store for TFJS model options in Sidebar component
 // export const sidebarModelOptions = writable([]);
 export const sidebarModelOptions = writable([
-	{ id: 0, disabled: false, text: `Javascript`, content: "" },
+	{ id: 0, disabled: false, text: `javascript`, content: "" },
 	{ id: 1, disabled: false, text: `hello-world`, content: hello_world_code_example },
 	{
 		id: 2,
@@ -120,29 +136,29 @@ export const isAddGrammarEditorDisabled = writable(false);
 // Dashboard Store for Live Code Editor options in Sidebar component
 export const sidebarDebuggerOptions = writable([
 	{ id: 0, disabled: false, type: ``, text: `debug`, content: "" },
-	// {
-	// 	id: 1,
-	// 	disabled: false,
-	// 	type: `console`,
-	// 	text: `Console`,
-	// 	content: "",
-	// },
 	{
 		id: 1,
+		disabled: false,
+		type: `console`,
+		text: `Console`,
+		content: "",
+	},
+	{
+		id: 2,
 		disabled: false,
 		type: `liveCodeParseOutput`,
 		text: `Live Code Parser`,
 		content: "",
 	},
 	{
-		id: 2,
+		id: 3,
 		disabled: false,
 		type: `dspCode`,
 		text: `DSP Code`,
 		content: "",
 	},
 	{
-		id: 3,
+		id: 4,
 		disabled: false,
 		type: `grammarCompileOutput`,
 		text: `Grammar Compiler`,
@@ -157,7 +173,7 @@ export const sidebarDebuggerOptions = writable([
 	// },
 ]);
 
-export let selectedDebuggerOption = writable({});
+export let selectedDebuggerOption = writable(sidebarDebuggerOptions[0]);
 export let isSelectDebuggerDisabled = writable(false);
 
 
@@ -458,7 +474,7 @@ export async function createNewItem (type, content){
 		case "liveCodeEditor":
 			data = {
 				component: LiveCodeEditor,
-				background: "#151515",
+				background: "#262a2e",
 				theme: "icecoder",
 				grammarSource: content.grammar,
 				liveCodeSource: content.livecode,
@@ -476,7 +492,7 @@ export async function createNewItem (type, content){
 		case "grammarEditor":
 			data = {
 				component: GrammarEditor,
-				background: '#151515',
+				background: '#262a2e',
 				theme: 'monokai',
 				grammarSource: content.grammarSource,
 				content: content.grammar, // Get the store value with Svelte's get
@@ -493,7 +509,7 @@ export async function createNewItem (type, content){
 		case "modelEditor":
 			data = {
 				component: ModelEditor,
-				background: '#151515',
+				background: '#262a2e',
 				theme: 'monokai',
 				content: content,
 			}
@@ -768,10 +784,13 @@ export function sessionable(key, initialValue) {
 
 // Dashboard layout in items list
 // export const items = storable('playground', testItems) // localStorageWrapper
-export const items = storable(
-	'playground',
-	default_playground_layout.map((item) => hydrateJSONcomponent(item))
-) // localStorageWrapper
+
+export const items = writable([]);
+// export const items = storable(
+// 	'playground',
+// 	default_playground_layout.map((item) => hydrateJSONcomponent(item))
+// ) 
+// localStorageWrapper
 // export const items = storable("playground", originalItems); // localStorageWrapper
 
 // Dashboard SELECTED item which receives focus and has item controls loaded

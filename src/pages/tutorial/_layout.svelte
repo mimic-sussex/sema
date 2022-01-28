@@ -5,6 +5,9 @@
   import gridHelp from "svelte-grid/build/helper";
 
   import Settings from '../../components/settings/Settings.svelte';
+  import Loading from '../../components/overlays/Loading.svelte';
+  import Mouse from '../../components/widgets/devices/Mouse.svelte';
+  import Mic from '../../components/widgets/devices/Mic.svelte';
   // import Dashboard from '../../components/layouts/Dashboard.svelte';
   // import Markdown from "../../components/tutorial/Markdown.svelte";
 
@@ -15,10 +18,14 @@
 
   import {
     tutorials,
-    selected,
+    // selected,
+		selectedChapter,
+    selectedSection,
     items,
     hydrateJSONcomponent,
-    populateStoresWithFetchedProps
+    populateStoresWithFetchedProps,
+    isLoadingOverlayInTutorialVisible,
+
   } from '../../stores/tutorial.js';
 
   import {
@@ -48,18 +55,77 @@
   let gap = [2, 2];
 
 
+	const setNextTutorial = e => {
+		if($tutorials.indexOf($selectedChapter) + 1 < $tutorials.length){ // if 1st chapter //NEW if anything but the last chapter
+			// if last section of 1st chapter
+			if($selectedChapter.sections.length === $selectedChapter.sections.indexOf($selectedSection) + 1 ){
+				// change chapter, set first section
+				$selectedChapter = $tutorials[$tutorials.indexOf($selectedChapter) + 1];
+				$selectedSection = $selectedChapter.sections[0];
+			}
+      else // if intermediate section, skip to 1st chapters' next section
+        $selectedSection = $selectedChapter.sections[$selectedChapter.sections.indexOf($selectedSection) + 1];
+		}
+		else { // of last chapter
+			if($selectedChapter.sections.length === $selectedChapter.sections.indexOf($selectedSection) + 1){  // if last section of last chapter
+				$selectedChapter = $tutorials[0];
+				$selectedSection = $selectedChapter.sections[0];
+			}
+			else
+				// if intermediate section, skip to last chapters' next section
+				$selectedSection = $selectedChapter.sections[$selectedChapter.sections.indexOf($selectedSection) + 1];
+		}
+  }
+  
+  const setPreviousTutorial = e => {
+		if($tutorials.indexOf($selectedChapter) > 0 ){ //if anything but first chapter
+      //if first section of selected chapter -->change to previous chapter, and last section of that chapter
+			if($selectedChapter.sections.indexOf($selectedSection) === 0 ){
+				$selectedChapter = $tutorials[$tutorials.indexOf($selectedChapter) - 1];
+				$selectedSection = $selectedChapter.sections[$selectedChapter.sections.length - 1];
+			}
+      else 
+        $selectedSection = $selectedChapter.sections[$selectedChapter.sections.indexOf($selectedSection) - 1];
+		}
+    else { //first chapter
+			if($selectedChapter.sections.indexOf($selectedSection) === 0 ){ //if selected section of first chapter is the very first one
+				$selectedChapter = $tutorials[$tutorials.length - 1 ]; //set chapter to last
+				$selectedSection = $selectedChapter.sections[$selectedChapter.sections.length - 1]; //last section of last chapter
+			}
+			else
+        $selectedSection = $selectedChapter.sections[$selectedChapter.sections.indexOf($selectedSection) - 1];
+		}
+  }
+
+	const handleButtonClick = e => {
+		try {
+      // await tick();
+      $items = []; // refresh items to call onDestroy on each (learner need to terminate workers)
+			e? setNextTutorial(): setPreviousTutorial();
+      localStorage.setItem("last-session-tutorial-url", `/tutorial/${$selectedSection.chapter_dir}/${$selectedSection.section_dir}/`);
+      localStorage.setItem("last-session-tutorial-section", JSON.stringify($selectedSection));
+      localStorage.setItem("last-session-tutorial-chapter", JSON.stringify($selectedChapter));
+      $goto(`/tutorial/${$selectedSection.chapter_dir}/${$selectedSection.section_dir}/`);
+		} catch (error) {
+      console.error("Error navigating tutorial environment", error);
+		}
+	}
 
   let handleSelect = e => {
     try{
       // await tick();
       $items = []; // refresh items to call onDestroy on each (learner need to terminate workers)
-      localStorage.setItem("last-session-tutorial-url", `/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/`);
-      $goto(`/tutorial/${$selected.chapter_dir}/${$selected.section_dir}/`);
+      localStorage.setItem("last-session-tutorial-url", `/tutorial/${$selectedSection.chapter_dir}/${$selectedSection.section_dir}/`);
+      $selectedChapter = $tutorials.filter(chapter => chapter.sections.includes($selectedSection)).shift();
+      localStorage.setItem("last-session-tutorial-section", JSON.stringify($selectedSection));
+      localStorage.setItem("last-session-tutorial-chapter", JSON.stringify($selectedChapter));
+      $goto(`/tutorial/${$selectedSection.chapter_dir}/${$selectedSection.section_dir}/`);
     }
     catch(error){
       console.error("Error Selecting and loading tutorial environment", error);
     }
   }
+
 
   const update = (e, dataItem) => {
 
@@ -96,11 +162,15 @@
   };
 
   onMount( async () => {
+    console.log("DEBUG:routes/tutorial/_layout:onMount");
     if(!controller.samplesLoaded){
-      controller.init(document.location.origin + '/sema-engine');
+      $isLoadingOverlayInTutorialVisible = true;
+      console.warn("samples loaded");
+      await controller.init(document.location.origin + '/build/');
       $goto(localStorage.getItem("last-session-tutorial-url"));
+      $isLoadingOverlayInTutorialVisible = false;
     }
-
+    console.log(localStorage.getItem("last-session-tutorial-url"));
     if($items.length === 0 && localStorage["last-session-tutorial-url"]){
       let sessionTutorialURL = document.location.origin + localStorage.getItem("last-session-tutorial-url") + 'layout.json'
       let json = await fetch(sessionTutorialURL)
@@ -109,11 +179,29 @@
       $items = json.map( item => hydrateJSONcomponent(item) );
     }
 
+    console.log("DEBUG onMount tutorial!!", $selectedSection, selectedChapter, $tutorials);
+    // if section and chapter exists in local storage get that otherwise set to first
+    // let fetchedSection = localStorage.getItem("last-session-tutorial-section");
+    // let fetchedChapter = localStorage.getItem("last-session-tutorial-chapter");
+    // if (fetchedSection != null){
+    //   $selectedSection = JSON.parse(fetchedSection);
+    // } else {
+    //   $selectedSection = $selectedChapter.sections[0];
+    // }
+    // if (fetchedChapter != null){
+    //   $selectedChapter = JSON.parse(fetchedChapter);
+    // } else {
+    //   $selectedChapter = $tutorials[0];
+    // }
+    // console.log("DEBUG onMount tutorial!!2", $selectedSection, selectedChapter, $tutorials);
+
     for (const item of $items){
       await updateItemPropsWithFetchedValues(item);
       await populateCommonStoresWithFetchedProps(item);
       updateItemPropsWithCommonStoreValues(item)
     }
+
+    //$goto(localStorage.getItem("last-session-tutorial-url"));
   });
 
   onDestroy(() => {
@@ -134,41 +222,75 @@
 
 <div class="container">
 
+  <div class="overlay-container"
+  style='visibility:{ ( $isLoadingOverlayInTutorialVisible ) ? "visible" : "hidden"}'
+  >
+    {#if $isLoadingOverlayInTutorialVisible}
+      <Loading/>
+    {/if}
+  </div>
+
   <div class="tutorial-sidebar-container"
     bind:this={ container }
     >
 
     <div class="tutorial-navigator">
-      <button class="button-dark left">
-        ◄
-      </button>
-      <div class="combobox-dark middle">
-        <!-- svelte-ignore a11y-no-onchange -->
-        <select
-                bind:value={ $selected }
-                on:change={ e => handleSelect(e) }
+
+      <div class='tutorial-navigator-inside-container'>
+        <button class="button-dark left"
+                on:click={ e => handleButtonClick(0) }
                 >
-          {#if $tutorials !== undefined}
-            {#each $tutorials as chapter, i}
-              <optgroup label="{i + 1}. {chapter.title}">
-                {#if chapter.sections !== undefined}
-                  {#each chapter.sections as section, i}
-                    <!-- <option value={section}>{String.fromCharCode(i + 97)}. {section.title}</option> -->
-                    <option value={section}>{section.title}</option>
-                  {/each}
-                {/if}
-              </optgroup>
-            {/each}
-          {/if}
-        </select>
-      </div>
-      <button class="button-dark right">
-        ►
-      </button>
+          <!-- ◄ -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-left" viewBox="0 0 16 16">
+            <path d="M10 12.796V3.204L4.519 8 10 12.796zm-.659.753-5.48-4.796a1 1 0 0 1 0-1.506l5.48-4.796A1 1 0 0 1 11 3.204v9.592a1 1 0 0 1-1.659.753z"/>
+          </svg>
+        </button>
+
+        <div class="divider-left"></div>
+
+        <div class="combobox-dark middle">
+          <!-- svelte-ignore a11y-no-onchange -->
+          <select
+                  bind:value={ $selectedSection }
+                  on:change={ e => handleSelect(e) }
+                  >
+            {#if $tutorials !== undefined}
+              {#each $tutorials as chapter, i}
+                <optgroup label="{i + 1}. {chapter.title}">
+                  {#if chapter.sections !== undefined}
+                    {#each chapter.sections as section, i}
+                      {#if $selectedSection}
+                        {#if section.title == $selectedSection.title}
+                          <option value={section} selected=true>{i + 1}. {section.title}</option>
+                        {:else}
+                          <option value={section} >{i + 1}. {section.title}</option>
+                        {/if}
+                      {/if}
+                      <!-- <option value={section}>{String.fromCharCode(i + 97)}. {section.title}</option> -->                    
+                    {/each}
+                  {/if}
+                </optgroup>
+              {/each}
+            {/if}
+          </select>
+        </div>
+
+        <div class="divider-right"></div>
+
+        <button class="button-dark right"
+                on:click={ e => handleButtonClick(1) }
+                >
+          <!-- ► -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right" viewBox="0 0 16 16">
+            <path d="M6 12.796V3.204L11.481 8 6 12.796zm.659.753 5.48-4.796a1 1 0 0 0 0-1.506L6.66 2.451C6.011 1.885 5 2.345 5 3.204v9.592a1 1 0 0 0 1.659.753z"/>
+          </svg>
+        </button>
+     </div>
+
     </div>
 
     <div class="markdown-container">
-      <slot scoped={ $selected } />
+      <slot scoped={ $selectedSection } />
     </div>
   </div>
 
@@ -178,6 +300,18 @@
 <!--
       on:adjust={onAdjust}
       on:mount={onChildMount} -->
+
+  <div class='devices-container'>
+    <div class='' style='display:inline-flex;
+    justify-content:space-between;'>
+      <Mouse />
+    </div>
+
+    <div class='' style='display:inline-flex;
+    justify-content:space-between;'>
+      <Mic />
+    </div>
+  </div>
 
   <div  class="mouse-overlay-container" style='visibility:{$isMouseOverlayVisible? "visible": "hidden"}'
         >
@@ -199,7 +333,7 @@
     >
 
       <div class='chrome'
-          style="background: rgba(25, 25, 25, 0.6);"
+          style="background: #262a2e;"
           >
           <div class='item-header-type'>
             <span>{ dataItem.data.type }</span>
@@ -228,8 +362,8 @@
   	grid-template-columns: auto 1fr;
     grid-template-rows: auto 1fr;
   	grid-template-areas:
-  		"sidebar settings"
-  		"sidebar layout";
+  		"sidebar settings devices"
+  		"sidebar layout layout";
     overflow: hidden;
     /* background: linear-gradient(150deg, rgba(0,18,1,1) 0%, rgba(7,5,17,1) 33%, rgba(16,12,12,1) 67%, rgb(12, 12, 12) 100%); */
   }
@@ -272,7 +406,27 @@
     height: 100%;
     width: auto; /* width is defined by child */
   }
-
+  
+  .devices-container {
+    /* width: 100%;
+    grid-area:devices;
+    display: flex;
+    flex-direction: row;
+    align-self: flex-end;
+    background-color: #262a2e;
+    border-radius: 5px;
+    height: 50px;
+    margin: 0.5em 0px 0.5em 0em; */
+    
+    grid-area: devices;
+    display: flex;
+    flex-direction: row;
+    align-self: flex-end;
+    background-color: #262a2e;
+		border-radius: 5px;
+    height:50px;
+    margin: 0.5em 0.5em 0.5em 0em;
+  }
 
   .tutorial-navigator {
     display: grid;
@@ -286,6 +440,16 @@
     /* margin-right: 0.4em; */
   }
 
+  .tutorial-navigator-inside-container{
+    display: flex;
+    flex-direction: row;
+    align-self: flex-end;
+    background-color: #262a2e;
+    border-radius: 5px;
+    height: 50px;
+    margin: 0.5em 0px 0.5em 0em;
+  }
+
   .chrome {
     grid-row: 1/1;
     grid-column: 1/3;
@@ -295,6 +459,7 @@
     /* background: rgba(25, 25, 25, 0.6); */
     /* border-width: 1px 1px 1px 1px; */
     /* top: 1.4em; */
+    border-radius: 5px 5px 0px 0px;
     padding: 0.2em 0.1em 0.1em 0.1em;
     z-index: 1500;
   }
@@ -302,24 +467,33 @@
   .item-header-type {
     grid-column: 2/2;
     /* padding-top: 0.2em; */
-
   }
 
   .content {
-    grid-row: 2/2;
+    /* grid-row: 2/2;
     grid-column: 1/3;
     width: 100%;
     height: 100%;
     border-radius: 0px;
     border-top-left-radius: 0px;
     border-bottom-right-radius: 0px;
+    overflow-y:hidden; */
+
+    grid-row: 2/2;
+    grid-column: 1/3;
+    width: 100%;
+    height: 100%;
+    /* border-radius: 0px; */
+    border-radius: 0px 0px 5px 5px;
     overflow-y:hidden;
 
   }
 
 
   .markdown-container {
-    height: calc(100vh - 86px);
+    /* height: calc(100vh - 86px); */
+    /* height:90%; */
+    height: calc(100vh - 113px);
     padding-left: 0.1em;
     padding-right: 0.1em;
     /* margin-bottom: 2px; */
@@ -327,10 +501,8 @@
     border-radius: 5px;
     /* background: #aaaaaa; */
     overflow-y: scroll;
-
-
-
   }
+
   .tutorial-dashboard-container {
     grid-area: layout;
     /* grid-row: 0 / 2; */
@@ -340,9 +512,6 @@
     margin-left: 0.2em;
   }
 
-  .combobox-dark {
-    border: 0;
-  }
 
   .mouse-overlay-container {
     grid-area: layout;
@@ -360,82 +529,97 @@
 
 
   .combobox-dark select {
-    width: 100%;
-    height: 2.5em;
-    display: block;
+    width:100%;
+    height: 42px;
+    background-color: #262a2e;
+    color: #ccc;
+    border: none;
+    border-radius: 5px;
+    /* margin: 8px 0px 8px 0px; */
+    margin-left:8px;
+    margin-right:8px;
+    padding:0px;
     font-size: medium;
-    /* font-size: 12px; */
-    font-family: sans-serif;
-    font-weight: 400;
-    cursor: pointer;
-    color: #fff;
-    line-height: 1.3;
-    padding: 0.7em 1em 0.7em 1em;
-    max-width: 100%;
-    box-sizing: border-box;
-    /* margin: 0; */
-    border: 0 solid #333;
-    border-radius: .6em;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    background-color: rgba(16, 16, 16, 0.04);
-    background-repeat: no-repeat, repeat;
-    background-position: right .7em top 50%, 0 0;
-    background-size: .65em auto, 100%;
-    -webkit-box-shadow: 5px 5px 20px -5px rgba(0,0,0,0.75), -5px -5px 20px rgba(255, 255, 255, 0.954);
-    -moz-box-shadow: 5px 5px 20px -5px rgba(0,0,0,0.75), -5px -5px 20px rgba(255, 255, 255, 0.954);
-    box-shadow: -1px -1px 3px #ffffff61, 2px 2px 3px rgb(0, 0, 0) ;
+    
+    min-width: 12em;
+    max-width: 16em;
   }
 
-  .combobox-dark select optgroup{
-    color:black;
+  select:focus{
+    box-shadow: inset 1px 1px 1px 0 #201f1f, inset -1px -1px 1px 0 rgba(255, 255, 255, 0.05);
+  }
+  select:hover{
+    color:white
   }
 
   .button-dark {
-    width: 2.5em;
-    height: 2.5em;
-    padding: 0.7em 1em 0.7em 1em;
-    display: block;
-    /* font-size: 12px; */
-    font-size: medium;
-    font-family: sans-serif;
-    font-weight: 400;
-    cursor: pointer;
-    color: #fff;
-    line-height: 1.3;
-    max-width: 100%;
-    box-sizing: border-box;
-    border: 0 solid #333;
-    border-radius: .6em;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    background-color:  rgba(16, 16, 16, 0.04);
-    background-repeat: no-repeat, repeat;
-    background-position: right .7em top 50%, 0 0;
-    background-size: .65em auto, 100%;
-    -webkit-box-shadow: 2px 2px 5px rgba(0,0,0),-1px -1px 1px rgb(34, 34, 34);
-    -moz-box-shadow: 2px 2px 5px rgba(0,0,0), -1px -1px 1px rgb(34, 34, 34);;
-    box-shadow: 2px 2px 3px rgb(0, 0, 0), -1px -1px 3px #ffffff61;
+		padding: 20;
+		color: grey;
+		border: none;
+    /* width: 42px; */
+  	/* height: 42px; */
+  	margin: 8px 8px 8px 8px;
+  	border-radius: 5px;
+  	background-color: #262a2e;
+	}
+
+  .button-dark:hover {
+    /* background-color: blue; */
+    color: white;
   }
 
+  .button-dark:active{
+    color: white;
+    background-color: #212529;
+    border-radius:5px;
+    box-shadow: inset 0.25px 0.25px 0.1px 0 #201f1f, inset -0.25px -0.25px 0.1px 0 rgba(255, 255, 255, 0.05);
+  }
 
-
-
+  button:not(:disabled):active{
+    background-color: #212529;
+  }
 
   .left {
     grid-column: 1;
+    /* height: 50px; to match the size of the settings bar */
   }
+
+  .divider-left {
+    width: 4px;
+    border-radius: 2px;
+    /* margin: 0.5em 0px 0.5em 0em; */
+    box-shadow: inset 1px 1px 1px 0 #201f1f, inset -1px -1px 1px 0 rgba(255, 255, 255, 0.05);
+    margin: 8px 8px 8px 0px;
+  }
+
 
   .middle {
-    margin-left: 4px;
-    margin-right: 4px;
-    grid-column: 2;
+    /* margin-left: 4px; */
+    /* margin-right: 4px; */
+    grid-column: 3;
   }
 
+  .divider-right {
+    width: 4px;
+    border-radius: 2px;
+    margin: 0.5em 0px 0.5em 0em;
+    box-shadow: inset 1px 1px 1px 0 #201f1f, inset -1px -1px 1px 0 rgba(255, 255, 255, 0.05);
+    margin: 8px 0px 8px 8px;
+  }
+
+
   .right {
-    grid-column: 3;
+    grid-column: 5;
+    /* height: 50px; to match the size of the settings bar */
+  }
+
+  .overlay-container {
+    grid-area: layout;
+    z-index: 1000;
+    background-color: rgba(16,12,12,0.8);
+    visibility: hidden;
+    width: 100%;
+    font-size:16px;
   }
 
 </style>

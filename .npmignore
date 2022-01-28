@@ -1,5 +1,11 @@
 node_modules/
 /export
+/test
 /dist
+src/maximilian
+src/open303
+
+package-lock.json
+
 .DS_Store
 .history

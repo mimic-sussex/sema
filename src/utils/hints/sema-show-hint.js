@@ -5,6 +5,9 @@
 
 // declare global: DOMRect
 
+// import { get } from "svelte/store";
+// import { links } from "../../stores/docs.js";
+
 (function(mod) {
     if (typeof exports == "object" && typeof module == "object") // CommonJS
       mod(require("codemirror"));
@@ -19,7 +22,16 @@
     var ACTIVE_HINT_ELEMENT_CLASS = "CodeMirror-hint-active";
   
     var DOCS_ROOT_DIRECTORY = "/docs"; // TODO: import from a file
-  
+    var LANGUAGE_DIRECTORY = "/default-language"; //for now we just use default lang.
+    
+
+    // var LANGUAGE_DOC_DIRECTORIES = get(links) //get doc link structure from svelte store.
+
+    //get language directories
+    // if (LANGUAGE_DOC_DIRECTORIES){
+    //   console.log(LANGUAGE_DOC_DIRECTORIES)
+    // }
+
     // This is the old interface, kept around for now to stay
     // backwards-compatible.
     CodeMirror.showHint = function(cm, getHints, options) {
@@ -237,7 +249,7 @@
   
       var hints = this.hints = ownerDocument.createElement("ul");
       var theme = completion.cm.options.theme;
-      hints.className = "CodeMirror-hints " + theme;
+      hints.className = "CodeMirror-left-hint-box CodeMirror-hints " + theme;
       this.selectedHint = data.selectedHint || 0;
   
       var descriptions = this.descriptions = ownerDocument.createElement("div");
@@ -461,8 +473,11 @@
         }
         if(completion.category){
           var catText = "<b>Category:</b> " 
-          if(completion.links){
-            catText += `<a target="_blank" href=${DOCS_ROOT_DIRECTORY + "#" + completion.links}>${completion.category}</a>`
+          if (completion.linksCategory){ // link to broad category (big headers in docs)
+            catText += `<a target="_blank" href=${DOCS_ROOT_DIRECTORY + LANGUAGE_DIRECTORY+ '#' + completion.linksCategory}>${LANGUAGE_DIRECTORY+'#'}${completion.linksCategory}</a>`
+          }
+          else if(completion.links){
+            catText += `<a target="_blank" href=${DOCS_ROOT_DIRECTORY + LANGUAGE_DIRECTORY+ '#' + completion.linksCategory}>${LANGUAGE_DIRECTORY+': '}${completion.category}</a>`
           } else {
             catText += `${completion.category}`
           }

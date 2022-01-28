@@ -5,10 +5,20 @@
     siteMode
   } from '../../../stores/common.js';
 
+  import {
+    hideNavbar
+  } from '../../../stores/navigation.js';
+
+  import { isActive } from "@roxi/routify";
+
   let engineLoaded = false;
 
   let handleClickSideBar = () => {
     $sideBarVisible = !$sideBarVisible;
+  }
+
+  let handleClickNavbar = () => {
+    $hideNavbar = !$hideNavbar
   }
 
   const isFullScreen = () => {
@@ -20,7 +30,7 @@
 
   const exitHandler = () => {
     if (!document.fullscreenElement && !document.webkitIsFullScreen && !document.mozFullScreen && !document.msFullscreenElement) {
-     $fullScreen = $sideBarVisible = !isFullScreen();
+     $fullScreen = !isFullScreen();
     }
   }
 
@@ -52,218 +62,121 @@
         document.msExitFullscreen();
       }
     }
-    $sideBarVisible = $fullScreen = mode;
+    $fullScreen = mode;
   }
 
 
   const handleClickFullScreen = () => {
-    setFullScreenMode(document.querySelector("#routify-app"), isFullScreen());
+    setFullScreenMode(document.querySelector("#sema"), isFullScreen());
   }
 
 </script>
 
 <style>
 
-  .button-dark {
-    width: 2.5em;
-    height: 2.5em;
-    display: block;
-    font-size: medium;
-    /* font-size: 12px; */
-    font-family: sans-serif;
-    font-weight: 400;
-    cursor: pointer;
-    color: red;
-    line-height: 1.3;
-    padding: 0.6em 1em 0.5em 0.8em;
-    max-width: 100%;
-    box-sizing: border-box;
-    border: 0 solid #333;
-    text-align: left;
-    /* margin-top: 5px; */
-    margin-right: 5px;
-    border-radius: .6em;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    background-color:  rgba(16, 16, 16, 0.04);
-    background-repeat: no-repeat, repeat;
-    background-position: right .7em top 50%, 0 0;
-    background-size: .65em auto, 100%;
-    -webkit-box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
-    -moz-box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
-    box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
-
-  }
+.button-dark {
+		padding: 20;
+		color: grey;
+		border: none;
+    width: 42px;
+  	margin: 8px 8px 8px 8px;
+  	border-radius: 5px;
+  	background-color: #262a2e;
+	}
 
   .button-dark:hover {
-     width: 2.5em;
-    height: 2.5em;
-    display: block;
-    font-size: medium;
-    /* font-size: 12px; */
-    font-family: sans-serif;
-    font-weight: 500;
-    cursor: pointer;
-    color: red;
-    line-height: 1.3;
-    padding: 0.6em 1em 0.5em 0.8em;
-    max-width: 100%;
-    box-sizing: border-box;
-    border: 0 solid #333;
-    text-align: left;
-    /* margin-top: 5px; */
-    margin-right: 5px;
-    border-radius: .6em;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    background-color:  linear-gradient(rgba(16, 16, 16, 1), rgba(16, 16, 16, 0.08));
-    background-repeat: no-repeat, repeat;
-    background-position: right .7em top 50%, 0 0;
-    background-size: .65em auto, 100%;
-    -webkit-box-shadow: 2px 2px 5px rgba(0,0,0),-0.5px -0.5px 3px rgb(34, 34, 34);
-    -moz-box-shadow: 2px 2px 5px rgba(0,0,0), -0.5px -0.5px 3px rgb(34, 34, 34);;
-    box-shadow: 2px 2px 3px rgb(0, 0, 0), -1px -1px 3px #ffffff61;
+    color: white;
   }
-  .button-dark:active {
-    width: 2.5em;
-    height: 2.5em;
-    display: block;
-    font-size: medium;
-    /* font-size: 12px; */
-    font-family: sans-serif;
-    font-weight: 400;
-    cursor: pointer;
-    color: red;
-    line-height: 1.3;
-    padding: 0.6em 1em 0.5em 0.8em;
-    max-width: 100%;
-    box-sizing: border-box;
-    /* margin-top: 5px; */
-    margin-right: 5px;
-    text-align: left;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    background-color:  rgba(16, 16, 16, 0.04);
-    background-repeat: no-repeat, repeat;
-    background-size: .65em auto, 100%;
-    box-shadow:  -1px -1px 3px rgba(16, 16, 16, 0.4), 0.5px 0.5px 0.5px rgba(16, 16, 16, 0.04);
+
+  .button-dark:active{
+    color: white;
+    background-color: #212529;
+    border-radius:5px;
+    box-shadow: inset 0.25px 0.25px 0.1px 0 #201f1f, inset -0.25px -0.25px 0.1px 0 rgba(255, 255, 255, 0.05);
   }
 
   .button-light {
-    width: 2.5em;
-    height: 2.5em;
-    display: block;
-    font-size: medium;
-    font-family: sans-serif;
-    font-weight: 400;
-    cursor: pointer;
+		padding: 20;
+		color: grey;
+		border: none;
+    width: 42px;
+  	margin: 8px 8px 8px 8px;
+  	border-radius: 5px;
+  	background-color: #fdf6e3;
+	}
+
+  .button-light:hover {
     color: black;
-    line-height: 1.3;
-    padding: 0.6em 1em 0.5em 0.8em;
-    max-width: 100%;
-    box-sizing: border-box;
-    border: 0 solid #333;
-    text-align: left;
-    border-radius: .6em;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    background-color:  rgba(16, 16, 16, 0.04);
-    background-repeat: no-repeat, repeat;
-    background-position: right .7em top 50%, 0 0;
-    background-size: .65em auto, 100%;
-    box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
-    -moz-box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
-    -webkit-box-shadow:  2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
   }
 
-  .button-light:active {
-    width: 2.5em;
-    height: 2.5em;
-    display: block;
-    font-size: medium;
-    font-family: sans-serif;
-    font-weight: 400;
-    cursor: pointer;
+  .button-light:active{
     color: black;
-    line-height: 1.3;
-    padding: 0.6em 1em 0.5em 0.8em;;
-    max-width: 100%;
-    box-sizing: border-box;
-    border: 0 solid #333;
-    text-align: left;
-    border-radius: .6em;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    background-color:  rgba(16, 16, 16, 0.04);
-    background-repeat: no-repeat, repeat;
-    background-position: right .7em top 50%, 0 0;
-    background-size: .65em auto, 100%;
-    box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
-    -moz-box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
-    -webkit-box-shadow:  2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0)
+    background-color: grey;
   }
-
-  .button-light:disabled {
-    width: 2.5em;
-    height: 2.5em;
-    display: block;
-    font-size: medium;
-    font-family: sans-serif;
-    font-weight: 400;
-    cursor: pointer;
-    color: #888;
-    line-height: 1.3;
-    padding: 0.6em 1em 0.5em 0.8em;
-    max-width: 100%;
-    box-sizing: border-box;
-    border: 0 solid #333;
-    text-align: left;
-    border-radius: .6em;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    background-color:  rgba(16, 16, 16, 0.04);
-    background-repeat: no-repeat, repeat;
-    background-position: right .7em top 50%, 0 0;
-    background-size: .65em auto, 100%;
-    box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
-    -moz-box-shadow:   2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0);
-    -webkit-box-shadow:  2px 2px 3px #ffffff61, -1px -1px 3px  rgb(0, 0, 0)
-  }
-
-
-
 
   path {
-
     transform: translate(-3px, -5px)
   }
 
   .fullscreen {
-    fill: rgb(133, 130, 130);
+    fill: currentColor;
     enable-background:new 0 0 512 512;
     width: 16px;
   }
   .sidebar {
-    fill: rgb(133, 130, 130);
+    fill: currentColor;/*rgb(133, 130, 130);*/
     enable-background:new 0 0 512 512;
     width: 16px;
 
+  }
+
+  .navbar-toggle {
+    fill: currentColor;/*rgb(133, 130, 130);*/
+    enable-background:new 0 0 512 512;
+    width: 16px;
   }
 
   .st0{fill-rule:evenodd;clip-rule:evenodd;}
 
 </style>
 
-        <!-- style="{ $fullScreen? `visibility:visible;`: `visibility:hidden` }" -->
+{#if $isActive('/playground') }
+  <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
+          title="Toggle sidebar visibility"
+          style="{( $isActive('/playground') )? `visibility:visible;`: `visibility:collapse`};
+                 {$sideBarVisible? '': 'color:red'};"
+          on:click={ handleClickSideBar }
+          >
+    <svg  version="1.1"
+          id="Layer_1"
+          xmlns="http://www.w3.org/2000/svg"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+          x="0px" y="0px"
+          viewBox="0 0 512 512"
+          class="sidebar"
+          xml:space="preserve"
+          >
+      <style type="text/css">
+
+      </style>
+      <g>
+        <path class="st0"
+              d="M448,64H64c-17.7,0-32,14.3-32,32v320c0,17.7,14.3,32,32,32h384c17.7,0,32-14.3,32-32V96
+              C480,78.3,465.7,64,448,64z M64,32C28.6,32,0,60.6,0,96v320c0,35.4,28.6,64,64,64h384c35.4,0,64-28.6,64-64V96
+              c0-35.4-28.6-64-64-64H64z"
+              />
+        <rect x="128" y="64"
+              class="st0"
+              width="32" height="384"/>
+      </g>
+    </svg>
+  </button>
+{/if}
+
 <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
-        title="sidebar visibility"
-        on:click={ handleClickSideBar }
+        title="Toggle navbar visibility"
+        style="{$hideNavbar? 'color:red': ''};"
+        on:click={ handleClickNavbar }
         >
   <svg  version="1.1"
         id="Layer_1"
@@ -271,8 +184,9 @@
         xmlns:xlink="http://www.w3.org/1999/xlink"
         x="0px" y="0px"
         viewBox="0 0 512 512"
-        class="sidebar"
+        class="navbar-toggle"
         xml:space="preserve"
+        style='transform: rotate(90deg);'
         >
     <style type="text/css">
 
@@ -290,8 +204,10 @@
   </svg>
 </button>
 
+
 <button class="{ $siteMode === 'dark'? 'button-dark' :'button-light' }"
-        title="fullscreen mode"
+        title="Toggle fullscreen mode"
+        style="{$fullScreen? '' : 'color: #0050A0'};"
         on:click={ handleClickFullScreen }
         >
   <svg version="1.1"
@@ -314,15 +230,3 @@
     </g>
   </svg>
 </button>
-
-<!-- <div style='width: 5px;'></div> -->
-
-
-
-
-
-
-
-
-
-

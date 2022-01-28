@@ -6,7 +6,7 @@
   } from 'svelte';
 
   import WebMidi from 'webmidi';
-  import LibTimidity from 'timidity/libtimidity';
+  // import LibTimidity from 'timidity/libtimidity';
 
   const subscribeMidiEvents = input => {
 
@@ -79,17 +79,17 @@
     // (hex 0x7FFF); dec number 32767; binary, 01111111 11111111
 
 
-    console.log(LibTimidity);
+    // console.log(LibTimidity);
     // console.log(Timidity);
 
     // let player = new Timidity(this.baseUrl)
 
-    LibTimidity({
-      locateFile: file => new URL(file, '/').href
-    }).then((lib) => {
-      this._lib = lib
-      this._onLibReady()
-    })
+    // LibTimidity({
+    //   locateFile: file => new URL(file, '/').href
+    // }).then((lib) => {
+    //   this._lib = lib
+    //   this._onLibReady()
+    // })
 
     // const player = new Timidity()
     // player.load('../static/deadmau5-Deus-Ex-Machina.mid')
@@ -106,7 +106,7 @@
 
     enableMidi();
 
-    enableTimidity();
+    // enableTimidity();
   });
 
 </script>

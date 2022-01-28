@@ -13,7 +13,7 @@
   import {
     Learner,
     Engine
-  } from 'sema-engine/sema-engine';
+  } from 'sema-engine';
 
   import Controller from "../../engine/controller";
   let controller = new Controller(); // this will return the previously created Singleton instance
@@ -130,10 +130,10 @@
   let evalDomCode = (code) => {
     try {
       let evalRes = eval(code);
-      // if (evalRes != undefined) {
-      //   // console.log(evalRes);
-      // }
-      // else console.log("done");
+      if (evalRes != undefined) {
+        // console.log(evalRes);
+      }
+      else console.log("done");
     }catch(e) {
       // console.log(`DOM Code eval exception: ${e}`);
     }
@@ -217,22 +217,22 @@
     // clearTimeout(timeout);
   }
 
-  let postToModelAsync = modelCode => {
-    if(window.Worker){
-      let modelWorkerAsync = new Promise((res, rej) => {
-        // posts model code received from editor to worker
-        // console.log('DEBUG:ModelEditor:postToModelAsync:catch')
+  // function postToModelAsync (modelCode){
+  //   if(window.Worker){
+  //     let modelWorkerAsync = new Promise((res, rej) => {
+  //       // posts model code received from editor to worker
+  //       // console.log('DEBUG:ModelEditor:postToModelAsync:catch')
 
-      })
-      .then(outputs => {
+  //     })
+  //     .then(outputs => {
 
-      })
-      .catch(e => {
-        // console.log('DEBUG:ModelEditor:parserWorkerAsync:catch')
-        // console.log(e);
-      });
-    }
-  }
+  //     })
+  //     .catch(e => {
+  //       // console.log('DEBUG:ModelEditor:parserWorkerAsync:catch')
+  //       // console.log(e);
+  //     });
+  //   }
+  // }
 
   function onModelEditorValueChange(){
     //don't need to save on every key stroke
@@ -286,6 +286,16 @@
 				learner = new Learner();
 				await engine.addLearner(id, learner)
       }
+
+      //subcribe to restart-ml message, made by restart button from itemProps.
+      messaging.subscribe('restart-ml', async () =>{ 
+        console.log("DEBUG: restarting learner")
+        if (learner.worker){
+          learner.terminate()
+        }
+        learner = new Learner();
+				await engine.addLearner(id, learner)
+      });
 
       log( id, name, type, lineNumbers, className, hasFocus, theme, background, content, component );
     }
