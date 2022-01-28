@@ -32,8 +32,9 @@ Sema requires the following dependencies to be installed:
  - [Node.js](https://nodejs.org/en/download/) active LTS version (currently v14.4.0). To switch between node versions, you can use [nvm](https://github.com/nvm-sh/nvm).
  - [NPM cli](https://docs.npmjs.com/cli/npm) OR [Yarn](https://yarnpkg.com/en/)
 
- In order to run, Sema must connect with an api key to a [Supabase backend](https://supabase.com).
- - You can either install supabase locally by following [these instructions](https://supabase.com/docs/guides/local-development), or connect to a [free hosted project](https://app.supabase.io/). We provide more detailed instructions on how to get set up for development on the [wiki](https://github.com/mimic-sussex/sema/wiki/Getting-set-up-for-development-with-Sema).
+ In order to run, Sema **must connect** with a project url and api key to a **[Supabase backend](https://supabase.com)**.
+ - You can either install supabase locally by following [these instructions](https://supabase.com/docs/guides/local-development), or set up a free hosted project [free hosted project](https://app.supabase.io/).
+ - Next follow the steps on [how to connect to a supabase backend](https://github.com/mimic-sussex/sema/wiki/Getting-set-up-for-development-with-Sema#connecting-to-a-supabase-backend) and then how to replicate the database.
 
 ## How to build and run the Sema playground on your machine
 
