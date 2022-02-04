@@ -320,3 +320,49 @@ export const deleteAccount = async() => {
 		console.log(error)
 	}
 }
+
+export const updatePassword = async(newPassword) => {
+	const { user, error } = await supabase.auth.update({password: newPassword})
+	console.log('DEBUG: password updated')
+}
+
+export const updatePasswordNotLoggedIn = async(accessToken, newPassword) => { 
+	const { error, data } = await supabase.auth.api
+			.updateUser(accessToken, { password : new_password })
+};
+
+
+export async function updateProfile(user, userName, websiteURL) {
+	try {
+		// $loading = true
+		// const user = supabase.auth.user()
+
+		const updates = {
+			id: user.id,
+			username: userName,
+			website: websiteURL,
+			updated_at: new Date().toISOString(),
+		}
+
+		let { error } = await supabase.from('profiles').upsert(updates, {
+			returning: 'minimal', // Don't return the value after inserting
+		})
+
+		if (error) throw error
+	} catch (error) {
+		alert(error.message)
+	} finally {
+		alert('Profile updated!')
+		// $loading = false
+	}
+	console.log('UpdateProfile')
+}
+
+// change the email of the currently logged in user
+export async function changeEmail(newEmail){
+	try {
+		const { user, error } = await supabase.auth.update({email: newEmail})
+	} catch(error){
+		alert(error.message)
+	}
+}

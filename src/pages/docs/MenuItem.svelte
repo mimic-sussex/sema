@@ -43,18 +43,18 @@ a.button {
   text-align: left;
   justify-content: flex-start;
   color:white;
-  width: 100%;
+  width: 97%;
   display:inline-block;
   padding: 4px 4px 4px 4px;
 }
 
 .nav-links:hover {
-  background-color: #333;
+  background-color: #3a4147;
 }
 
 
 [aria-current] {
-  background-color: #404040;
+  background-color: #181a1d;
   font-weight: bold;
   /* transition-delay:0.1s; */
 }

@@ -26,6 +26,7 @@
   import LoadingPlayground from '../../components/overlays/LoadingPlayground.svelte';
   import Sidebar from '../../components/playground/Sidebar.svelte';
   import Settings from '../../components/settings/Settings.svelte';
+  import ContextBar from '../../components/playground/ContextBar.svelte';
   // import Dashboard from '../components/layouts/Dashboard.svelte';
 
 	import {
@@ -132,6 +133,9 @@
     if(item){
       try {
         let itemProperties = [];
+
+        itemProperties.push({type: item.data.type}) //add the type regardless
+
         if( item.data.type === "liveCodeEditor" || item.data.type === "grammarEditor" || item.data.type === 'modelEditor' ){
           itemProperties = [ { lineNumbers: item.data.lineNumbers}, { theme: item.data.theme } ];
 
@@ -160,6 +164,7 @@
         $focusedItem = item;
         // console.log("DEBUG: focusedItem in setFocused, lineNumbers:", $focusedItem.data.lineNumbers);
         $focusedItemProperties = itemProperties;
+        // console.log("focusedItemproperties", $focusedItem, $focusedItemProperties);
         // set unfocused items through the rest of the list
         $items = $items.map(i => i === item ? ({ ...i, ['hasFocus']: true }) : ({ ...i, ['hasFocus']: false }) );
         //USED
@@ -289,6 +294,16 @@
       engine.removeAnalyser({ id: item.id });
       // messaging.publish('remove-engine-analyser', { id: item.id }); // notify audio engine to remove associated analyser
     }
+
+    // if item is focused clear focused.
+    if ($focusedItem.data){
+      if (item.data.type == $focusedItem.data.type){
+        //clear it
+        console.log('Clearing focused item:', $focusedItem)
+        clearFocused();
+      }
+    }
+
     // console.log("DEBUG:dashboard:remove:", item);
     messaging.publish("plaground-item-deletion", item.data.type);
 
@@ -448,97 +463,37 @@
     messaging.publish("changing-playground");
   }
 
-  // //loads playground from url params if they exist and if not from local storage.
-  // const loadPlaygroundOld = async () => {
-  //   //if there is a playground/SOMETHINg in the url try look it up in the DB
-  //   if ($params.playgroundId){
-  //     let playground;
-  //     try {
-  //       playground = await fetchPlayground($params.playgroundId);
-
-  //       //check its not private
-  //       if (!playground.isPublic && playground.author != $user){
-  //         $isPrivateOverlayVisible = true;
-  //       } else {
-  //         setPlayground(playground);
-  //         //write url to local storage
-  //         localStorage.setItem("last-session-playground-uuid", `${$uuid}`);
-  //       }
-        
-  //     } catch (error) {
-  //       if (playground == null){ //cant find playground with that ID.
-  //         $isDoesNotExistOverlayVisible = true; //trigger overlay DoesNotExist
-  //       } else {
-  //         console.error(error)
-  //       }
-  //     }
-  //   } else if (localStorage.getItem("last-session-playground-uuid") && $user) {
-  //     let playground
-  //     try {
-  //       // console.log("going to url in local storage", localStorage.getItem("last-session-playground-uuid"))
-  //       // $goto('/playground/'+localStorage.getItem("last-session-playground-uuid"));
-  //       playground = await fetchPlayground(localStorage.getItem("last-session-playground-uuid"));
-
-  //       //check its not private
-  //       if (!playground.isPublic && playground.author != $user){
-  //         $isPrivateOverlayVisible = true;
-  //       } else {
-  //         setPlayground(playground);
-  //       }
-
-  //       window.history.pushState("", "", `/playground/${$uuid}`); //put the new UUID in the URL without reloading
-  //     } catch (error) {
-  //       if (playground == null){ //cant find playground with that ID.
-  //         $isDoesNotExistOverlayVisible = true; //trigger overlay DoesNotExist
-  //       } else {
-  //         console.error(error)
-  //       }
-  //     }
-  //   } else if (!params.playgroundId && !localStorage.getItem("last-session-playground-uuid") && $user){
-  //     //create a new playground
-  //     let playground;
-  //     try{
-  //       playground = await createPlayground();
-  //       // setPlayground(playground)
-  //       console.log("new playground ", playground)
-  //       $uuid = playground.id;
-  //       $name = playground.name;
-  //       $items = $items //make with the existing data in items (they might have made changes) //$items.slice($items.length);
-  //       $allowEdits = playground.allowEdits;
-  //       $author = playground.author;
-  //       window.history.pushState("", "", `/playground/${$uuid}`); //put the new UUID in the URL without reloading
-  //     } catch (error){
-  //       console.log(error)
-  //     }
-  //   } else if (!params.playgroundId && !localStorage.getItem("last-session-playground-uuid") && !$user){
-      
-  //     //choose random playground from examples
-  //     let playgrounds
-  //     try {
-  //       playgrounds = await getExamplePlaygrounds()
-  //       let randomExample = playgrounds[Math.floor(Math.random() * playgrounds.length)]
-  //       setPlayground(randomExample);
-  //       window.history.pushState("", "", `/playground/${$uuid}`);
-  //     } catch (error){
-  //       console.log(error)
-  //     }
-
-  //   }
-  // }
-
+  /*
+  Start the auto save cycle
+  */
   const autoSaveCycle = async () => {
       const interval = setInterval(async function() {
         await savePlayground($uuid, $name, $items, $allowEdits, $user)
       }, 15000); //save every 15 seconds
   }
 
-  // export const savePlayground = async () => {
-  //   if ($saveRequired){
-  //     await updatePlayground($uuid, $name, $items, $allowEdits, $user);
-  //     $saveRequired = false;
-  //   }
-  // }
+  /*
+  warn user before leaving page if they have unsaved changes.
+  */
+  $beforeUrlChange( async (event, route) => {
+    await savePlayground($uuid, $name, $items, $allowEdits, $user)
+    return true;
+  })
 
+  const beforeUnloadListener = async (event) => {
+    event.preventDefault();
+    await savePlayground($uuid, $name, $items, $allowEdits, $user);
+    return true;
+  };
+
+  $: addAndRemoveUnloadListener($saveRequired)
+  function addAndRemoveUnloadListener($saveRequired){
+    if ($saveRequired){
+      addEventListener("beforeunload", beforeUnloadListener, {capture: true});
+    } else {
+      removeEventListener("beforeunload", beforeUnloadListener, {capture: true});
+    }
+  }
 
   onMount( async () => {
 
@@ -583,31 +538,7 @@
     resetStores();
   });
 
-  $beforeUrlChange( async (event, route) => {
-    await savePlayground($uuid, $name, $items, $allowEdits, $user)
-    return true;
-  // if($saveRequired){
-  //   // alert('Please save your changes before leaving.')
-  //   await updatePlayground($uuid, $name, $items, $allowEdits, $user);
-  //   $saveRequired = false;
-  //   return true
-  // }
-  })
 
-  const beforeUnloadListener = async (event) => {
-    event.preventDefault();
-    await savePlayground($uuid, $name, $items, $allowEdits, $user);
-    return true;
-  };
-
-  $: addAndRemoveUnloadListener($saveRequired)
-  function addAndRemoveUnloadListener($saveRequired){
-    if ($saveRequired){
-      addEventListener("beforeunload", beforeUnloadListener, {capture: true});
-    } else {
-      removeEventListener("beforeunload", beforeUnloadListener, {capture: true});
-    }
-  }
 </script>
 
 
@@ -620,15 +551,16 @@
     grid-template-rows: auto 1fr;
 
     grid-template-areas:
-      "sidebar settings"
-      "sidebar layout";
+      "settings settings"
+      "sidebar layout"
+      "context-bar context-bar";
   	/* background-color: #6f7262; */
     /* background-color: #212121; */
     /* overflow: hidden; */
   }
   .sidebar-container {
     /* background: linear-gradient(150deg, rgba(0,18,1,1) 0%, rgba(7,5,17,1) 33%, rgba(16,12,12,1) 67%, rgb(12, 12, 12) 100%); */
-    background: #151515;
+    background: #3a4147;
     grid-area: sidebar;
     height: 100%;
     /* width: auto; width is defined by child */
@@ -644,7 +576,7 @@
 
   .settings-container {
     /* background: linear-gradient(150deg, rgba(0,18,1,1) 0%, rgba(7,5,17,1) 33%, rgba(16,12,12,1) 67%, rgb(12, 12, 12) 100%); */
-    background: #151515;
+    background-color: #3a4147;
     grid-area: settings;
     height: 100%;
     width: auto; /* width is defined by child */
@@ -665,7 +597,7 @@
   }
 
   .dashboard-container-dark {
-    background: #212121;
+    background: #3a4147;
   }
 
   .dashboard-container-light {
@@ -673,7 +605,7 @@
   }
 
 
-  .overlay-container {
+  /* .overlay-container {
     grid-area: layout;
     z-index: 1000;
     background-color: rgba(16,12,12,0.8);
@@ -685,19 +617,15 @@
     align-items:center;
     font-size:16px;
     visibility: hidden;
-  }
+  } */
 
-  .upload-overlay-container {
+  .overlay-container {
     grid-area: layout;
     z-index: 1000;
-    background-color: rgba(16,12,12,0.8);
+    background-color: rgba(38,42,46,0.8);
     visibility: hidden;
-    width: 100%;
-
-    /* display:flex; */
-    /* justify-content:center;
-    align-items:center; */
     font-size:16px;
+    border-radius: 5px;
   }
 
   .project-browser-overlay-container{
@@ -723,7 +651,9 @@
     visibility: hidden;
   }
 
-
+  .context-bar-container {
+    grid-area: context-bar;
+  }
 
 
   :global(body) {
@@ -776,6 +706,7 @@
     /* background: rgba(25, 25, 25, 0.6); */
     /* border-width: 1px 1px 1px 1px; */
     /* top: 1.4em; */
+    border-radius: 5px 5px 0px 0px;
     padding: 0.2em 0.1em 0.1em 0.1em;
     z-index: 1500;
   }
@@ -786,15 +717,27 @@
     position: absolute;
     padding: 0em 0.3em ;
     cursor: move;
-    color: lightgray;
+    color: #ccc;
+    fill: #ccc;
     /* margin-left: 0.2em; */
     grid-column: 1/1;
+  }
+
+  .move:hover svg path{
+    fill:white !important;
+  }
+
+  .move svg path{
+    fill: #ccc !important;
   }
 
   .item-header-type {
     grid-column: 2/2;
     /* padding-top: 0.2em; */
+  }
 
+  .item-header-type:hover{
+    cursor: default;
   }
 
   .close {
@@ -806,6 +749,11 @@
     cursor: pointer;
     /* z-index: 1500; */
     text-shadow: 1px 1px 1px #000000;
+    color: #ccc;
+  }
+
+  .close:hover{
+    color:white;
   }
 
   .close-overlay {
@@ -826,9 +774,10 @@
     width: 100%;
     /* height: calc(100%-2.5em); */
     height: 100%;
-    border-radius: 0px;
-    border-top-left-radius: 0px;
-    border-bottom-right-radius: 0px;
+    /* border-radius: 0px; */
+    border-radius: 0px 0px 5px 5px;
+    /* border-top-left-radius: 0px; */
+    /* border-bottom-right-radius: 0px; */
     /* padding: 10px; */
     /* padding: 10px; */
     /* background: #FFF; */
@@ -839,9 +788,9 @@
     height: calc(100%-2.5em);
   } */
 
- 	.scrollable {
-		flex: 1 1 auto;
-		margin: 0 0 0.5em 0;
+ 	.scrollable-area {
+		/* flex: 1 1 auto; */
+		/* margin: 0 0 0.5em 0; */
 		overflow-y: auto;
 	}
 
@@ -853,6 +802,15 @@
     fill: white;
   }
 
+  /* svelte grid item header (eg Live Code Editor widget header) */
+  .grid-item-header-text {
+    color: #ccc;
+  }
+
+  .grid-item-header-text:hover{
+    color:white;
+  }
+
 </style>
 
 
@@ -862,12 +820,12 @@
 
 <div class="container">
   <div  class="{ $siteMode === 'dark' ? 'sidebar-container': 'sidebar-container-light' }"
-        style="{ $sideBarVisible ? 'width: auto; visibility: visible;': 'width: 0px; visibility: hidden;' }"
+        style="{ $sideBarVisible ? 'width: auto; visibility: visible;': 'width: 0.4em; visibility: hidden;' }"
         >
     <Sidebar />
   </div>
 
-  <div  class="upload-overlay-container"
+  <div  class="overlay-container"
         style='visibility:{ ( $isNewOverlayVisible || $isUploadOverlayVisible || $isDeleteOverlayVisible || $isClearOverlayVisible || $isSaveOverlayVisible || $isShareOverlayVisible || $isPrivateOverlayVisible || $isLoadingOverlayVisible || $isLoadingPlaygroundOverlayVisible ) ? "visible" : "hidden"}'
         >
     <span class='close-overlay'
@@ -917,7 +875,11 @@
     <Settings/>
   </div>
 
-  <div class="dashboard-container { $siteMode === 'dark'? 'dashboard-container-dark' : 'dashboard-container-light'}  scrollable"
+  <div class='context-bar-container'>
+    <ContextBar/>
+  </div>
+
+  <div class="dashboard-container { $siteMode === 'dark'? 'dashboard-container-dark' : 'dashboard-container-light'} scrollable-area"
     bind:this={ container }
     >
     <Grid
@@ -937,36 +899,34 @@
 
 
       <div class='chrome'
-        style="background: #1c1c1c;"
+        style="background: #262a2e;"
         >
         <div class='move'>
-          <svg version="1.1"
-            id="Capa_1"
-            xmlns="http://www.w3.org/2000/svg"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            x="0px" y="0px"
-            viewBox="0 0 489.9 489.9"
-            style="enable-background:new 0 0 489.9 489.9;"
-            xml:space="preserve"
-            width='16px'
-            >
-            <g>
-              <g>
-                <path d="M406.2,173.55c-4.8,4.8-4.8,12.5,0,17.3l41.8,41.8H333.3v-63.9c0-6.8-5.5-12.3-12.3-12.3h-63.9V41.85l41.8,41.8
-                  c2.4,2.4,5.5,3.6,8.7,3.6s6.3-1.2,8.7-3.6c4.8-4.8,4.8-12.5,0-17.3l-62.7-62.7c-2.3-2.3-5.4-3.6-8.7-3.6s-6.4,1.3-8.7,3.6
-                  l-62.7,62.7c-4.8,4.8-4.8,12.5,0,17.3s12.5,4.8,17.3,0l41.8-41.8v114.7h-63.9c-6.8,0-12.3,5.5-12.3,12.3v63.9H41.8l41.8-41.8
-                  c4.8-4.8,4.8-12.5,0-17.3s-12.5-4.8-17.3,0l-62.7,62.7c-4.8,4.8-4.8,12.5,0,17.3l62.7,62.7c2.4,2.4,5.5,3.6,8.7,3.6
-                  s6.3-1.2,8.7-3.6c4.8-4.8,4.8-12.5,0-17.3l-41.8-41.8h114.7v63.9c0,6.8,5.5,12.3,12.3,12.3h63.9v114.7l-41.9-41.9
-                  c-4.8-4.8-12.5-4.8-17.3,0s-4.8,12.5,0,17.3l62.7,62.7c2.3,2.3,5.4,3.6,8.7,3.6s6.4-1.3,8.7-3.6l62.7-62.7
-                  c4.8-4.8,4.8-12.5,0-17.3s-12.5-4.8-17.3,0l-41.8,41.8v-114.7h63.9c6.8,0,12.3-5.5,12.3-12.3v-63.9h114.7l-42,41.8
-                  c-4.8,4.8-4.8,12.5,0,17.3c2.4,2.4,5.5,3.6,8.7,3.6s6.3-1.2,8.7-3.6l62.7-62.7c2.3-2.3,3.6-5.4,3.6-8.7s-1.3-6.4-3.6-8.7
-                  l-62.7-62.7C418.7,168.75,411,168.75,406.2,173.55z M308.8,308.85H181v-127.8h127.8L308.8,308.85L308.8,308.85z"/>
-              </g>
-            </g>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrows-move" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M7.646.146a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 1.707V5.5a.5.5 0 0 1-1 0V1.707L6.354 2.854a.5.5 0 1 1-.708-.708l2-2zM8 10a.5.5 0 0 1 .5.5v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 14.293V10.5A.5.5 0 0 1 8 10zM.146 8.354a.5.5 0 0 1 0-.708l2-2a.5.5 0 1 1 .708.708L1.707 7.5H5.5a.5.5 0 0 1 0 1H1.707l1.147 1.146a.5.5 0 0 1-.708.708l-2-2zM10 8a.5.5 0 0 1 .5-.5h3.793l-1.147-1.146a.5.5 0 0 1 .708-.708l2 2a.5.5 0 0 1 0 .708l-2 2a.5.5 0 0 1-.708-.708L14.293 8.5H10.5A.5.5 0 0 1 10 8z"/>
           </svg>
         </div>
         <div class='item-header-type'>
-          <span>{ dataItem.data.type }</span>
+          <!-- adding via if statements here for backwards compaitibility of layouts. -->
+          {#if dataItem.data.type =='liveCodeEditor'}
+            <span class='grid-item-header-text'>Live Code Editor</span>
+          {:else if dataItem.data.type == 'modelEditor'}
+            <span class='grid-item-header-text'>JavaScript Editor</span>
+          {:else if dataItem.data.type == 'grammarEditor'}
+            <span class='grid-item-header-text'>Grammar Editor</span>
+          {:else if dataItem.data.type == 'console'}
+            <span class='grid-item-header-text'>Console</span>
+          {:else if dataItem.data.type == 'liveCodeParseOutput'}
+            <span class='grid-item-header-text'>Live Code Parse Output</span>
+          {:else if dataItem.data.type == 'dspCode'}
+            <span class='grid-item-header-text'>DSP Code</span>
+          {:else if dataItem.data.type == 'grammarCompileOutput'}
+            <span class='grid-item-header-text'>Grammar Compilation Output</span>
+          {:else if dataItem.data.type == 'analyser'}
+            <span class='grid-item-header-text'>Audio Analyser</span>
+          {:else}
+            <span class='grid-item-header-text'>{ dataItem.data.type }</span>
+          {/if}
         </div>
         <span class='close'
               on:click={ () => remove(dataItem) }

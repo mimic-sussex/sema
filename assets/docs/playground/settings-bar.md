@@ -8,6 +8,9 @@ Note that, if you are not logged in, some of the functionalities discussed will 
 ## Toggle Sidebar
 This toggles the visibility of the sidebar in the playground.
 
+## Toggle Navigation bar
+This toggles the visibility of the navigation bar.
+
 ## Fullscreen
 Makes the website go fullscreen. Immerse yourself!
 
@@ -61,27 +64,13 @@ The project browser window works much in the same way as a normal file manager i
 
 If there are many projects under the chosen viewing category (eg if you are browsing 'All projects'), they will be split over multiple pages. Use the next and previous buttons at the bottom of the project browser to navigate through pages.
 
-## Save status
-If you are logged in and you have permission to edit a project (you are the author) all changes are saved automatically. Changes are saved periodically, or upon events such as navigating to a different page. The current save status is indicated to the right of the project browser.
-
-Possible save states
-- <ins>Unsaved changes</ins>: there have been edits made to the project. These will be automatically saved.
-- <ins>Saved</ins>: All changes have been saved.
-- <ins>Login to enable saving</ins>: You need to login to enable saving on projects.
-
 # Sound Engine and Input Settings
 
 ## Audio status
 Toggles the engine on or off.
 
-## Increase volume
-Increases the volume of the audio engine.
-
 ## Decrease volume
 Decreases the volume of the audio engine.
 
-## Enable mic
-This enables the microphone so that you can use it as an input stream for your project.
-
-## Enable mouse capture
-Clicking this displays the coordinates of your mouse cursor. This is useful when you are using the mouse as input to control some aspect of your project.
+## Increase volume
+Increases the volume of the audio engine.

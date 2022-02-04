@@ -76,8 +76,8 @@
           markdown = markdown.replace(
             "<pre><code>",
             `<pre style="margin-top:-25px">
-              <button style="font-size:70%; text-align: center; float: right; z-index: 1000; top: 30px; position: relative;" type="button" onclick="copyCode('code${codeID}')">copy</button>
-              <code style="-moz-user-select: text; -html-user-select: text; -webkit-user-select: text; -ms-user-select: text; user-select: text; white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word;" id='code${codeID++}'>`
+              <button style="border: none; border-radius:5px; font-size:70%; text-align: center; float: right; z-index: 1000; top: 30px; position: relative;" type="button" onclick="copyCode('code${codeID}')">copy</button>
+              <code style="background-color: #262a2e; color:white; border-radius:5px; box-shadow: inset 1px 1px 1px 0 #201f1f, inset -1px -1px 1px 0 rgba(255, 255, 255, 0.05); border:none;  -moz-user-select: text; -html-user-select: text; -webkit-user-select: text; -ms-user-select: text; user-select: text; white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word;" id='code${codeID++}'>`
             );
 
           // markdown = markdown.replace(
@@ -140,23 +140,16 @@
   }
 
   .markdown-section-container {
+    /* height: 100%; */
     overflow: auto;
-    /* margin-left: 1px; */
-    /* margin-right: 2px;
-    margin-bottom: 2px; */
-    /* border: solid 5px #aaaaaa; eee*/
-    border-radius: 5px;
-    /* height: 85vh; */
-    background: #212121;
+    /* border-radius: 5px; */
+    background: #3a4147;
     color: #ccc;
-    /* Chrome 49+ */
-		/* -webkit-user-select: all; */
-    /* Firefox 43+ */
-	  /* -moz-user-select: all; */
-    /* No support yet */
-	  /* -ms-user-select: all; */
-    /* Likely future */
-	  /* user-select: all; */
+  }
+
+  .markdown-output {
+    /* width: 100%; */
+    padding: 0em 0.5em 0em 0.5em;
   }
 
 </style>

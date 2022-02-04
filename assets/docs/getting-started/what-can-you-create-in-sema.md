@@ -8,11 +8,11 @@ Navigate to the examples tab, using the **project browser**, in either the playg
 # Highlights
 Here are a few highlights you might want to checkout to get you started.
 
-- [Quaverseries Language Example](https://dev.sema.codes/playground/d8de81a1-3058-4fe5-bba3-f6a78ea9a93c)
+- [Quaverseries Language Example](https://sema.codes/playground/b55994ba-a2dc-44ca-be1f-0e2cb570ae8e)
 
-- [Rubber Duckling Language Example](https://dev.sema.codes/playground/40705466-5cf1-4858-99c4-b46b97e991d4)
+- [Rubber Duckling Language Example](https://sema.codes/playground/f732805c-67a2-4e8e-a385-d4db5f550370)
 
-- [Cellular Automata Music Example](https://dev.sema.codes/playground/648a3ae2-5ef0-405d-b5b7-490b22430c34)
+- [Cellular Automata Music Example](https://sema.codes/playground/8c06522a-c148-48a7-8271-b2ae0e0dfd81)
 
-- [Sequencing from lists in the default language](https://dev.sema.codes/playground/6f9bb778-3773-40c4-a448-fe46399b238b)
+- [Sequencing from lists in the default language](https://sema.codes/playground/c46ea630-af1f-4eb7-be95-3b87d9a179c4)
 

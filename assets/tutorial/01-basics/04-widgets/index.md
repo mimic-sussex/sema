@@ -31,6 +31,22 @@ The *DSP Code* widget shows the code that Sema generates (Maximilian DSP JavaScr
 
 This DSP code is injected into and runs in the Sema audio engine.
 
+## Console
+The *Console* collects console output from from all parts of the system. You can fine tune the output of the console by filtering either by origin or severity level using the toggle buttons at the top of the widget. All are enabled by default.
+
+### Origins:
+- Processor: Logs from the maximilian processor.
+- Main: Logs from the main thread.
+- Learner: Logs from the javascript window. For example any logs you might produce from you machine learning model will be collected here.
+
+### Severity Levels
+- log: output from `console.log`.
+- info: output from `console.info`.
+- warns: output from `console.warn`.
+- error: output from `console.error`.
+
+
+
 <!-- the Maximilian DSP -->
 
 <!-- ## Post-It Window -->

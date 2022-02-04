@@ -45,6 +45,10 @@ input{
 
 </style>
 
+<svelte:head>
+	<title>Sema – Login</title>
+</svelte:head>
+
 <div class="container-login"
 			>
 	{#if $user}

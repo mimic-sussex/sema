@@ -1,12 +1,12 @@
 # Console
-The console collects console output from from all parts of the system. You can filter its output by origin and by severity level.
+The *Console* collects console output from from all parts of the system. You can fine tune the output of the console by filtering either by origin or severity level using the toggle buttons at the top of the widget. All are enabled by default.
 
-Origins:
+### Origins:
 - Processor: Logs from the maximilian processor.
 - Main: Logs from the main thread.
 - Learner: Logs from the javascript window. For example any logs you might produce from you machine learning model will be collected here.
 
-Severity Levels.
+### Severity Levels
 - log: output from `console.log`.
 - info: output from `console.info`.
 - warns: output from `console.warn`.
@@ -15,7 +15,7 @@ Severity Levels.
 # Live Code Parser
 The _Live Code Parser_ provides feedback on your custom-language compilation. It will show errors if your language has a syntax error.
 
-Otherwise it shows the Abstract Syntax Tree (AST) that results from parsing your live code. You can unfold the branches by click on them.
+Otherwise it shows the Abstract Syntax Tree (AST) that results from parsing your live code. You can unfold the branches by clicking on them.
 
 # DSP Code
 The _DSP Code_ widget shows the code that Sema generates (Maximilian DSP JavaScript) when you evaluate your live code.

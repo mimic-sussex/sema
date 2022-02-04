@@ -56,7 +56,7 @@
           Sema is developed at the University of Sussex, with ❤️ and funding from two UKRI/AHRC grants 'MIMIC - Musically Intelligent Machines Interacting Collaboratively' and 'Innovating Sema'.
         </span>
         <span>
-          It builds upon many amazing contributions of the open-source community, including <a href="https://svelte.dev/" target="_blank">Svelte</a>, <a href="https://routify.dev/" target="_blank">Routify</a>, <a href="https://nearley.js.org/" target="_blank">Nearley</a> and <a href="https://github.com/micknoise/Maximilian" target="_blank">Maximilian</a>.
+          It builds upon many amazing contributions of the open-source community, including <a href="https://svelte.dev/" target="_blank">Svelte</a>, <a href="https://routify.dev/" target="_blank">Routify</a>, <a href="https://supabase.com/" target="_blank">Supabase</a>, <a href="https://nearley.js.org/" target="_blank">Nearley</a> and <a href="https://github.com/micknoise/Maximilian" target="_blank">Maximilian</a>.
         </span>
       </p>
       <p>
@@ -72,7 +72,7 @@
     width: 100vw;
     height: 100vh;
     color: #999999;
-    overflow: scroll;
+    /* overflow: scroll; */
     display: grid;
     grid-template-rows: auto 1fr;
     grid-template-columns: 1fr 4fr 1fr;

@@ -1,3 +1,4 @@
+<!-- OVERLAY FOR LOADING MENU -->
 <script>
   import { Engine } from 'sema-engine';
 
@@ -177,7 +178,7 @@
       <Icon name='spinner' size=100/>
     </div> -->
 
-    <ContentLoader primaryColor='#404040' secondaryColor='#ccc' speed='1' width="300" height="16">
+    <ContentLoader primaryColor='grey' secondaryColor='#ccc' speed='1' width="300" height="16">
       <rect x="0" y="0" rx="3" ry="3" width="300" height="16" />
     </ContentLoader>
 

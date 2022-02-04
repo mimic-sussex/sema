@@ -38,6 +38,9 @@ To change channel numbers programmatically, use the `dac` function.
 ```
 
 # Audio Input
+
+### adc
+
 Arguments:
 1. Amplitude
 
@@ -131,7 +134,7 @@ Anti-aliased saw wave
 >{500}sawn;
 ```
 
-# Noise
+### noiz
 
 White noise
 
@@ -139,7 +142,53 @@ the argument is the amplitude
 
 ```
 >{0.8}noiz;
+
+
 ```
+
+## PolyBLEP band-limited oscillators
+
+These oscillators are from Martin Finke's PolyBLEP library https://github.com/martinfinke/PolyBLEP
+
+The functions all take one or two arguments: a frequency and an optional pulse width (between 0 and 1). The functions are as follows:
+
+sinb: sin 
+
+cosb: cosine 
+
+trib: triangle
+
+sqrb: square
+
+rectb: rectangle
+
+sawb: saw
+
+rampb: ramp
+
+modtrib: modified triangle
+
+modsqrb: modified square
+
+hrecsinb: half-rectified sine
+
+frecsinb: fully rectified sine
+
+tripulb: triangle-pulse
+
+trapb: fixed trapezoid
+
+vtrapb: variable trapezoid
+
+Lastly, there is a function with modulatable choice of waveform
+
+### polyblep
+
+1. Frequency
+2. Waveform (0-13, corresponding to the above waveforms)
+3. Pulse width (optional)
+
+
 
 # Control
 
@@ -452,6 +501,9 @@ Arguments:
 - `div` : divide
 - `pow` : power of
 - `abs` : absolute value
+- `sum` : sum
+- `mix` : sum and divide by length
+- `prod` : multiply signals
 
 ## Operators over Variable Length Parameters
 
@@ -507,11 +559,14 @@ Individual list elements can be accessed with the ```at``` function, with two ar
 ```
 
 
-# Communication to the JS Window
+# Communication with the JS Window
 
 ### Send data:
 
-Communication to the JavaScript window is done using the `toJS` command. For example:
+Communication to the JavaScript window is done using the `toJS` command. Its arguments are: Frequency of transfer; Channel to send on, Signal to send.
+
+
+For example:
 
 10 times per second (argument 1) on channel 0 (argument 2). The third argument is signal to send (in this case the output of `{1}sin`).
 
@@ -652,13 +707,13 @@ For now, you can do the conversion directly using math functions.
 
 ### quantise
 
-When you evaluate your code, choose whether to bring it in on a new bar or immeadiately
+When you evaluate your code, choose whether to bring it in on a new bar or immediately
 
 Arguments:
 1. On (1) or off (0)
 
 
-To play new code immeadiately:
+To play new code immediately:
 ```
 {0}quantise;
 ```
@@ -748,7 +803,7 @@ Send a value to the javascript console, once per second
 ```
 {{0.1}pha}poll;
 ```
-____
+<!-- ____
 
 Writing good documentation that is up-to-date is difficult. If you notice a mistake, help us out.
-[Open a PR for this file](https://github.com/mimic-sussex/sema/blob/develop/assets/docs/default-livecoding-language.md)
+[Open a PR for this file](https://github.com/mimic-sussex/sema/blob/develop/assets/docs/default-livecoding-language.md) -->

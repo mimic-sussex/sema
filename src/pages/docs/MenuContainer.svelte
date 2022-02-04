@@ -61,7 +61,7 @@
 
 <style>
 .collapsible {
-  border-bottom: 1px solid var(--gray-light, #eee);
+  /* border-bottom: 1px solid var(--gray-light, #eee); */
 }
 
 h3 {
@@ -70,7 +70,7 @@ h3 {
 }
 
 button {
-  background-color: var(--background, #212121);
+  background-color: var(--background, #212529);
   color: var(--gray-darkest, #282828);
   display: flex;
   justify-content: space-between;
@@ -81,12 +81,12 @@ button {
 }
 
 button:hover {
-  background-color: #333;
+  background-color: #3a4147;
 }
 
 button[aria-expanded="true"] {
   border-bottom: 1px solid var(--gray-light, #eee);
-  background-color: var(--background, #333);
+  background-color: var(--background, #181a1d);
 }
 
 button[aria-expanded="true"] .vert {

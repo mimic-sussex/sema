@@ -1,6 +1,6 @@
 <script>
   import { onMount, onDestroy } from 'svelte';
-  import { metatags, isActive } from '@roxi/routify'
+  import { metatags, isActive, goto } from '@roxi/routify'
   import { slide, fly } from 'svelte/transition';
   // import ReGL from 'regl';
   // import mouse from 'mouse-change';
@@ -83,7 +83,8 @@
   // }
 
   import {
-		getUserProfile
+    getUserProfile,
+    supabase
 	} from '../db/client'
 
   import {
@@ -118,6 +119,15 @@
     }
   }
 
+  //listen for reset password event
+  supabase.auth.onAuthStateChange((event, session) => {
+    if (event === "PASSWORD_RECOVERY") {
+      // redirect user to the page where it creates a new password
+      // console.log('DEBUG: password recovery event. event : session:',event, session)
+      $goto('/change-password');
+    }
+  });
+      
   onMount(async () => {
     // setupReGL();
     console.log('DEBUG:onMount!rootindex')
@@ -693,7 +703,7 @@
   .canvas-logo {
 
     /* opacity:0.1; */
-    background-color: rgb(16, 16, 16);
+    background-color: #3a4147; /*rgb(16, 16, 16);*/
     height: 100% !important;
     width: 100% !important;
     visibility: visible;

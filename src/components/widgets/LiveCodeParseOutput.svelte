@@ -1,31 +1,12 @@
 <script>
 	import { onMount, onDestroy } from 'svelte';
-	// import Inspect from 'svelte-inspect';
-
-  // const CustomInspect = Inspect.configure({
-  //   palette: {
-  //     selection: 'hotpink',
-  //     blue: 'dodgerblue',
-  //     black: 'white',
-  //     gray: 'white',
-  //     pink: 'white',
-  //     brown: 'white',
-  //     yellow: 'white',
-  //     orange: 'white',
-  //     purple: 'white',
-  //     blue: 'white',
-  //     red: 'white',
-  //     white: 'white'
-  //   }
-  // });
-
-
 
   import {
     grammarCompilationErrors,
     liveCodeParseErrors,
     liveCodeAbstractSyntaxTree,
-    siteMode
+    siteMode,
+    dspCode
   } from "../../stores/common.js";
 
   import JSONTree from 'svelte-json-tree-auto';
@@ -65,6 +46,23 @@
   onDestroy(async () => {
 
   });
+
+  //update the background depending on the state of errors
+  $:backgroundColour = updateBackground($grammarCompilationErrors, $liveCodeParseErrors, $dspCode)
+  
+  function updateBackground(){
+    if ($grammarCompilationErrors !== ""){
+      return "background-color:rgb(20, 0, 0)";
+    } else if ($liveCodeParseErrors !== "") {
+      return "background-color:rgb(20, 0, 0)";
+    } else if ($dspCode){
+      if ($dspCode.errorMessage !== "") {
+        return "background-color:rgb(20, 0, 0)";
+      } else {
+        return "background-color:rgb(0, 20, 0)";
+      }
+    }
+  }
 
 </script>
 
@@ -131,6 +129,10 @@
     user-select: text;
   }
 
+  span {
+    font-family: monospace;
+  }
+
   /* .inspect {
     font-family: Menlo, Consolas, Lucida Console, Courier New, Dejavu Sans Mono, monospace;
     font-size: 16px;
@@ -150,84 +152,60 @@
     --color-selection: lightskyblue;
   } */
 
-
 </style>
 
 
 <div 	id="liveCodeCompilerOutput"
 			class="liveCodeParse-container flex scrollable"
-			style="{ $liveCodeParseErrors === "" ? "background-color:rgb(0, 20, 0)" : "background-color:rgb(20, 0, 0)" }"
+			style="{ backgroundColour }"
 			>
   {#if $grammarCompilationErrors != ""}
     <div>
       <span class="error-state">Go work on your grammar!</span>
     </div>
-  {:else if $liveCodeParseErrors !=='' }
-    <div>
-      <!-- <span class="error-state">Syntax Error</span> -->
-      <!-- <br> -->
+  {:else if $liveCodeParseErrors !== ""}  
       <div style="margin-left:5px">
-      <!-- <div style="overflow-y: scroll; height:auto;"> -->
         <span class="prewrap  error-state">{ $liveCodeParseErrors } </span>
       </div>
-    </div>
   {:else}
-		{#if showAST }
-			<div class="headline">
-				<span class="correct-state">Abstract Syntax Tree </span>(
-				<span style="cursor:pointer;text-decoration:underline;" on:click="{() => { showAST = false; }}"> show less detail </span>)
-				<br>
-				<!-- <div style="margin-left:5px"> -->
-				{#if $siteMode === 'dark' }
-					<div style="height:auto;"
-								class='inspect'
-                >
-                
-                <JSONTree { value } />
-                
-						<!-- <Inspect.Inverted value={ $liveCodeAbstractSyntaxTree }
-														depth={7}
-														/> -->
-					</div>
-				{:else}
-					<div style="height:auto;"
-								class='inspect'
-                >
-                
-                <JSONTree { value } />
-						<!-- <Inspect value={ $liveCodeAbstractSyntaxTree }
-														depth={7}
-														/> -->
+    {#if $dspCode}
+      {#if $dspCode.errorMessage !== ""}
+      <div style="margin-left:5px">
+          <span class="prewrap error-state">Error: <br> {$dspCode.errorMessage}</span>
+      </div>
+      {:else}
+      
+        {#if showAST }
+          <div class="headline">
+            <span class="correct-state">Abstract Syntax Tree </span>(
+            <span style="cursor:pointer;text-decoration:underline;" on:click="{() => { showAST = false; }}"> show less detail </span>)
+            <br>
+            <!-- <div style="margin-left:5px"> -->
+            {#if $siteMode === 'dark' }
+              <div style="height:auto;"
+                    class='inspect'
+                    >
+                    <JSONTree { value } />
+              </div>
+            {:else}
+              <div style="height:auto;"
+                    class='inspect'
+                    >
+                    <JSONTree { value } />
+              </div>
+            {/if}
+          </div>
+        {:else}
+          <div class="headline">
+            <span class="correct-state">Live Code correct </span>(
+            <span style="cursor:pointer;text-decoration:underline;" on:click="{() => { showAST = true; }}"> show Abstract Syntax Tree </span>)
+          </div>
+        {/if}
+      {/if}
 
-					</div>
-				{/if}
-	    </div>
-		{:else}
-			<div class="headline">
-				<span class="correct-state">Live Code correct </span>(
-			  <span style="cursor:pointer;text-decoration:underline;" on:click="{() => { showAST = true; }}"> show Abstract Syntax Tree </span>)
-				<!-- <div style="margin-left:5px"> -->
-				{#if $siteMode === 'dark' }
-					<div style="overflow-y: scroll; height:auto;"
-								class='inspect'
-                >
-                <!-- <JSONTree { value } /> -->
-						<!-- <Inspect.Inverted value={ $liveCodeAbstractSyntaxTree }
-														depth={7}
-														/> -->
-					</div>
-				{:else}
-					<div style="overflow-y: scroll; height:auto;"
-								class='inspect'
-                >
-                <!-- <JSONTree { value } /> -->
-						<!-- <Inspect value={ $liveCodeAbstractSyntaxTree }
-														depth={7}
-														/> -->
-
-					</div>
-				{/if}
-	    </div>
-		{/if}
+    {:else}
+      <span>No code run yet. <br> Go to the live code editor and press cmd-Enter [Mac] OR ctrl-Enter [Win/Linux] to evaluate some code.</span>
+    {/if}
+  
   {/if}
 </div>

@@ -9,6 +9,8 @@
 
   import Projects from "../admin/Projects.svelte";
 
+  import {clickOutside} from '../../utils/clickOutside.js';
+
   export let id;
 
   import { onMount, onDestroy } from 'svelte';
@@ -16,7 +18,7 @@
 
   // used to track whether the url has been copied to clipboard yet.
   let copied = false;
-  let playgroundURL = `https://dev.sema.codes/playground/${id}`
+  let playgroundURL = `https://sema.codes/playground/${id}`
 
   const closeOverlay = () => {
     $isProjectBrowserOverlayVisible = false;
@@ -43,21 +45,30 @@
     // engine = null;
 	});
 
+  // function handleClick(event){
+  //   console.log('click outside event:',event, event.explicitOriginalTarget)
+  //   if (event.explicitOriginalTarget.id != 'project-browser-launcher-button'){
+  //     $isProjectBrowserOverlayVisible = false
+  //   }
+  // }
+  // event=>handleClick(event)
+
 </script>
 
 <div  in:fly="{{ y: -50, duration: 300 }}"
       class="projectBrowser-overlay-component"
       style='visibility:{ $isProjectBrowserOverlayVisible ? "visible": "hidden"}'
+      use:clickOutside={['project-browser-launcher-button']} on:click_outside={()=> $isProjectBrowserOverlayVisible = false}
       >
 
       <Projects />
 
-  <div class="projectBrowser-overlay-button-container">
+  <!-- <div class="projectBrowser-overlay-button-container">
    
     <button class="button-dark"
             on:click={ closeOverlay }
             >Close</button>
-  </div>
+  </div> -->
 </div>
 
 <style>
@@ -166,12 +177,13 @@
 		flex-direction:column;
     font-size:16px;
     /* background-color: rgba(16,12,12,0.8); */
-    background-color: #212121;
+    background-color: #181a1d;
     margin-left:auto;
     margin-right:auto;
     margin-top:auto;
     border-radius:5px;
-    box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    /* box-shadow: 2px 2px 3px rgb(0, 0, 0), -0.5px -0.5px 3px #ffffff61; */
   }
 
 

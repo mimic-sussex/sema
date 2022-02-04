@@ -159,7 +159,32 @@
         let fetchedSection = localStorage.getItem("last-session-tutorial-section");
         let fetchedChapter = localStorage.getItem("last-session-tutorial-chapter");
         
-        if (fetchedChapter != null && fetchedSection != null) {
+        // try load from url params first
+        if( $params.chapter !== undefined && $params.section !== undefined ){
+          console.log('debug: params in url', $params.chapter, $params.section)
+          
+          let found = false;
+          for (let i=0; i<$tutorials.length; i++){
+            for (let j=0; j<$tutorials[i].sections.length; j++){
+              let a = $tutorials[i].sections[j]
+              if ($params.chapter == a.chapter_dir && $params.section == a.section_dir){
+                $selectedChapter = $tutorials[i];
+                $selectedSection = $tutorials[i].sections[j];
+                found = true;
+                break;
+              }
+            }
+          }
+          if (found == false){
+            //set to default (params must be faulty)
+            $selectedChapter = $tutorials[0];
+            $selectedSection = $selectedChapter.sections[0];
+            //update URL
+            window.history.pushState("", "", `/tutorial/${$selectedChapter.sections[0].chapter_dir}/${$selectedChapter.sections[0].section_dir}`);
+          }
+
+        } else if (fetchedChapter != null && fetchedSection != null) {
+          console.log('debug: loading from local')
           fetchedChapter = JSON.parse(fetchedChapter);
           fetchedSection = JSON.parse(fetchedSection);
           // have to set selectedChapter and selectedSection from tutorials otherwise
@@ -179,10 +204,11 @@
               break;
             }
           }
-      } else {
-        $selectedChapter = $tutorials[0];
-        $selectedSection = $selectedChapter.sections[0];
-      }
+      
+        } else {
+          $selectedChapter = $tutorials[0];
+          $selectedSection = $selectedChapter.sections[0];
+        }
         // if (fetchedChapter != null){
         //   $selectedChapter = JSON.parse(fetchedChapter);
         //   console.log('parsed chapter')
@@ -240,47 +266,9 @@
     const res1 = await fetch(document.location.origin + `/docs/docs.json`);
     const json = await res1.json();
     if (res1.ok){
-      //let tmpLinks = json;
-      //let tmpChosenDocs = tmpLinks[0].path;
       $links = json
-      //let result =  await getSubs(tmpLinks);
-      //$links = result;
     }
   }
-
-  //get subheadings for a page based on the h1 headers in the .md file.
-  //redundant, now we just get these when loading the markdown.
-  /*
-  async function getSubs(list){
-    for (let i=0;i<list.length;i++){
-        let currentHeadings = [];
-        if (list[i].container == true){
-          getSubs(list[i].children);
-        } else {
-          //get headings for that child
-          if(list[i].file != undefined){ // There is a call with undefined value when navigating to Playground
-            const res = await fetch(document.location.origin + `/docs/${list[i].file}.md`)
-            const text = await res.text();
-            if (res.ok) {
-              //get tokens from the marked lexer
-              let tokens = marked.lexer(text);
-              //loop through them
-              for (let i=0; i<tokens.length; i++){
-                if (tokens[i].type == "heading" && tokens[i].depth == 1){
-                  let heading = tokens[i].text;
-                  currentHeadings.push({heading: heading , route: heading.replace(/\s+/g, '-').toLowerCase(), active:false})
-                }
-              }
-              list[i].subs = currentHeadings;
-            } else {
-              throw new Error(text);
-            }
-          }
-        }
-    }
-    return list
-  }
-  */
 
   onMount( async () => {
     console.log('DEBUG: onMount! Root layout')
@@ -300,7 +288,7 @@
 
 <style>
   .app-dark {
-    background-color: #151515;
+    background-color: #3a4147; /*#262a2e;*/ /*#151515; */
     color:white;
   }
 

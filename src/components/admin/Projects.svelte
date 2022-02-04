@@ -36,6 +36,10 @@
 	let projectLoadRange = {start:0, end:projectLoadStep};
 	let totalProjectNum = 0;
 
+	let searchTerms = '';
+	let processedSearchTerms = '';
+	let searchCol = 'name'; //column to search in
+
 	//ID of project that user clicks to share
 	let shareID = $uuid; //set it to $uuid by default;
 
@@ -44,58 +48,98 @@
 	// $: $records = getAllProjects();//fetchRecords();
 	$: updateProjectPage(projectPage, orderBy); //reactive statement reacts to changes in projectPage variable
 	$: getTotalNumProjects(projectPage);
-
+	$: processSearchTerms(searchTerms);
 
 	onMount ( async () => {
 		
 	});
 
-		//updates which list of projects is on display (my projects or all projects)
-		const updateProjectPage = async (projectPage, orderBy) => {
+	//updates which list of projects is on display (my projects or all projects)
+	const updateProjectPage = async (projectPage, orderBy) => {
 		loading = true;
 		// console.log("Updating project page", projectPage, "ordering by", orderBy);
 		if (projectPage == 'my-projects'){
-			// console.log('refreshing my-projects page', projectPage)
-			await getMyProjects();
+				// console.log('refreshing my-projects page', projectPage)
+				await getMyProjects();
 		} else if (projectPage == 'all-projects'){
-			// console.log('refreshing all-projects page', projectPage)
-			await getAllProjects();
+				// console.log('refreshing all-projects page', projectPage)
+				await getAllProjects();
 		} else if (projectPage == 'example-projects'){
-			// console.log('getting example projects')
-			await getExampleProjects();
+				// console.log('getting example projects')
+				await getExampleProjects();
 		}
 		loading = false;
 	}
 
+	function processSearchTerms(searchTerms){
+
+		projectLoadRange = {start:0, end:projectLoadStep}; //reset range so we get search results from page one
+
+		let trimmedTerms = searchTerms.trim()//trim any spaces on each end
+		console.log('search:trimmed terms',trimmedTerms)
+		// const arr = trimmedTerms.split(" ");
+		const arr = trimmedTerms.split(/(\s+)/);
+
+		let out = ``;
+
+		if (arr.length > 0){
+			for (let i=0; i<arr.length; i++){
+				if (arr[i] == " "){
+						out+= ' | '; //add an OR operator
+				} else {
+					out+= "'"+arr[i]+"'" +":*"; // "'"+arr[i]+"'" + ' | ' +
+				}
+			}
+			console.log('search:',out, 'in col', searchCol)
+			processedSearchTerms = out;
+			updateProjectPage(projectPage, orderBy);
+			getTotalNumProjects(projectPage); //update total number of projects
+		}
+		else {
+			console.log('search: array too short')
+		}
+		
+	}
 
 	//get all the projects of the current user from the database
 	const getMyProjects = async () => {
-
+		let playgrounds;
+		let selectCols = `
+						id,
+						name,
+						content,
+						created,
+						updated,
+						isPublic,
+						author (
+							username,
+							id
+						),
+						allowEdits
+					`;
 		try {
-			const user = supabase.auth.user()
-			
-			const playgrounds = await supabase
-			.from('playgrounds')
-			.select(`
-					id,
-					name,
-					content,
-					created,
-					updated,
-					isPublic,
-					author (
-						username,
-						id
-					),
-					allowEdits
-				`)
-			.eq('author', user.id)
-			.range(projectLoadRange.start, projectLoadRange.end)
-			.order(orderBy.col, {ascending:orderBy.ascending})
-			
-			$records = playgrounds.data;
+			if (searchTerms != ''){
+				playgrounds = await supabase
+				.from('playgrounds')
+				.select(selectCols)
+				.eq('author', $user.id)
+				.range(projectLoadRange.start, projectLoadRange.end)
+				.order(orderBy.col, {ascending:orderBy.ascending})
+				.textSearch(searchCol, `${processedSearchTerms}`)
+
+			} else {
+				playgrounds = await supabase
+				.from('playgrounds')
+				.select(selectCols)
+				.eq('author', $user.id)
+				.range(projectLoadRange.start, projectLoadRange.end)
+				.order(orderBy.col, {ascending:orderBy.ascending})
+			}
+
 		} catch(error){
 			console.error(error)
+		} finally {
+			$records = playgrounds.data;
 		}
 		
 	}
@@ -103,11 +147,8 @@
 
 	//get all public projects in the database
 	const getAllProjects = async () => {
-		try {
-
-			const playgrounds = await supabase
-			.from('playgrounds')
-			.select(`
+		let playgrounds;
+		let selectCols = `
 					id,
 					name,
 					content,
@@ -119,23 +160,34 @@
 						id
 					),
 					allowEdits
-				`)
-			.eq('isPublic', true)
-			.range(projectLoadRange.start, projectLoadRange.end)
-			.order(orderBy.col, {ascending:orderBy.ascending})
-			
-			$records = playgrounds.data;
+				`;
+		try {
+			if (searchTerms != '') {
+				playgrounds = await supabase
+				.from('playgrounds')
+				.select(selectCols)
+				.eq('isPublic', true)
+				.range(projectLoadRange.start, projectLoadRange.end)
+				.order(orderBy.col, {ascending:orderBy.ascending})
+				.textSearch(searchCol, `${processedSearchTerms}`)
+			} else {
+				playgrounds = await supabase
+				.from('playgrounds')
+				.select(selectCols)
+				.eq('isPublic', true)
+				.range(projectLoadRange.start, projectLoadRange.end)
+				.order(orderBy.col, {ascending:orderBy.ascending})
+			}
 		} catch(error){
 			console.error(error)
+		} finally {
+			$records = playgrounds.data;
 		}
 	}
 
 	const getExampleProjects = async () => {
-		try {
-
-			const playgrounds = await supabase
-			.from('playgrounds')
-			.select(`
+		let playgrounds;
+		let selectCols = `
 					id,
 					name,
 					content,
@@ -148,14 +200,29 @@
 					),
 					allowEdits,
 					example
-				`)
-			.match({"isPublic": true, example: true})
-			.range(projectLoadRange.start, projectLoadRange.end)
-			.order(orderBy.col, {ascending:orderBy.ascending})
-			
-			$records = playgrounds.data;
+				`;
+		try {
+
+			if (searchTerms != ''){
+				playgrounds = await supabase
+				.from('playgrounds')
+				.select(selectCols)
+				.match({"isPublic": true, example: true})
+				.range(projectLoadRange.start, projectLoadRange.end)
+				.order(orderBy.col, {ascending:orderBy.ascending})
+				.textSearch(searchCol, `${processedSearchTerms}`)
+			} else {
+				playgrounds = await supabase
+				.from('playgrounds')
+				.select(selectCols)
+				.match({"isPublic": true, example: true})
+				.range(projectLoadRange.start, projectLoadRange.end)
+				.order(orderBy.col, {ascending:orderBy.ascending})
+			}
 		} catch(error){
 			console.error(error)
+		} finally {
+			$records = playgrounds.data;
 		}
 	}
 
@@ -170,7 +237,7 @@
 
 	const shareProject = async (id) => {
 		// console.log(id);
-		// navigator.clipboard.writeText(`https://dev.sema.codes/playground/${id}`);
+		// navigator.clipboard.writeText(`https://sema.codes/playground/${id}`);
 		shareID = id;
 		$isShareOverlayVisible = true;
 		// window.alert("Project ID copied");
@@ -178,7 +245,8 @@
 
 	const deleteProject = async (id) => {
 		await deletePlayground(id);
-		updateProjectPage(projectPage);
+		updateProjectPage(projectPage, orderBy);
+		getTotalNumProjects(projectPage)
 	}
 
 	const toggleVisibility = async (id, state) => {
@@ -277,32 +345,64 @@
 		if (projectPage == 'my-projects'){
 			const user = supabase.auth.user()
 
-			const { data, count } = await supabase
-				.from('playgrounds')
-				.select('*', { count: 'exact' })
-				.eq('author', user.id)
-				// console.log('data my-projects', data);
-				// console.log(data.length, count);
-				totalProjectNum = count;
-				return count;
+			if (searchTerms != ''){
+				const { data, count } = await supabase
+					.from('playgrounds')
+					.select('*', { count: 'exact' })
+					.eq('author', user.id)
+					.textSearch(searchCol, `${processedSearchTerms}`);
+					// console.log('data my-projects', data);
+					// console.log(data.length, count);
+					totalProjectNum = count;
+					return count;
+			}
+			else {
+				const { data, count } = await supabase
+					.from('playgrounds')
+					.select('*', { count: 'exact' })
+					.eq('author', user.id)
+					totalProjectNum = count;
+					return count;
+			}
 		}
 		else if (projectPage == 'all-projects') {
-			const { data, count } = await supabase
-				.from('playgrounds')
-				.select('*', { count: 'exact' })
-				.eq('isPublic', true);
-				// console.log(data.length, count);
-				// console.log('data all-projects', data);
+			if (searchTerms != ''){
+				const { data, count } = await supabase
+					.from('playgrounds')
+					.select('*', { count: 'exact' })
+					.eq('isPublic', true)
+					.textSearch(searchCol, `${processedSearchTerms}`);
+					// console.log(data.length, count);
+					// console.log('data all-projects', data);
 
-				totalProjectNum = count;
-				return count;
+					totalProjectNum = count;
+					return count;
+			} else {
+				const { data, count } = await supabase
+					.from('playgrounds')
+					.select('*', { count: 'exact' })
+					.eq('isPublic', true);
+					totalProjectNum = count;
+					return count;
+			}
 		} else if (projectPage == 'example-projects'){
-			const { data, count } = await supabase
-				.from('playgrounds')
-				.select('*', { count: 'exact' })
-				.match({"isPublic": true, example: true})
-				totalProjectNum = count;
-				return count;
+			if (searchTerms != ''){
+				const { data, count } = await supabase
+					.from('playgrounds')
+					.select('*', { count: 'exact' })
+					.match({"isPublic": true, example: true})
+					.textSearch(searchCol, `${processedSearchTerms}`);
+					totalProjectNum = count;
+					return count;
+			} else {
+				const { data, count } = await supabase
+					.from('playgrounds')
+					.select('*', { count: 'exact' })
+					.match({"isPublic": true, example: true})
+					totalProjectNum = count;
+					return count;
+			}
+			
 		}
 	}
 
@@ -310,198 +410,287 @@
 
 <style>
 
-.container-records {
-	/* overflow: auto; */
-	width: 100%;
-	height: 80%;
-	margin-bottom: 20px;
-	/* background-color: #333; */
-}
+	.container-records {
+		/* overflow: auto; */
+		width: 100%;
+		height: 80%;
+		margin-bottom: 20px;
+		/* background-color: #333; */
+	}
 
-.page-controls-container{
-	display:flex;
-	/* position:fixed;
-	bottom: 0; */
-	width: 100%;
-	border-top: 1px solid #ccc;
-	justify-content: space-between;
-}
+	.page-controls-container{
+		display:flex;
+		/* position:fixed;
+		bottom: 0; */
+		width: 100%;
+		border-top: 1px solid #ccc;
+		justify-content: space-between;
+	}
 
-.record-name {
-	display: inline-block;
-	/* font-style: italic; */
-	/* font-weight: bold; */
-	font-size: medium;
-	padding-right: 0.5em;
-	min-width: 20rem;
-	max-width: 20rem;
-}
+	.record-name {
+		display: inline-block;
+		/* font-style: italic; */
+		/* font-weight: bold; */
+		font-size: medium;
+		padding-right: 0.5em;
+		min-width: 20rem;
+		max-width: 20rem;
+	}
 
-.record {
-	margin-bottom: 0.5em;
-}
+	.record {
+		margin-bottom: 0.5em;
+	}
 
 
-table {
-	width:100%;
-	border-collapse: collapse;
-}
+	table {
+		width:100%;
+		border-collapse: collapse;
+	}
 
-th {
-	text-align:left;
-	color: #ccc;
-	font-size:18px;
-	padding: 10px;
-	text-align:center;
-}
+	th {
+		text-align:left;
+		color: #ccc;
+		font-size:18px;
+		padding: 10px;
+		text-align:center;
+	}
 
-td {
-	text-align:center;
-}
+	td {
+		text-align:center;
+	}
 
-tr:nth-child(even) {background: #212121}
-tr:nth-child(odd) {background: #151515}
+	tr:nth-child(even) {background: #262a2e;}
+	tr:nth-child(odd) {background:#212529;}
 
-.table-header:hover {
-	cursor: pointer;
-}
+	.table-header:hover {
+		cursor: pointer;
+	}
 
-.record-entry:hover {
-	background-color: #333;
-}
+	.record-entry:hover {
+		background-color:#3a4147;
+	}
 
-input[type=radio] {
-  float: left;
-  clear: none;
-  margin: 2px 0 0 2px;
-}
+	input[type=radio] {
+		float: left;
+		clear: none;
+		margin: 2px 0 0 2px;
+	}
 
-label {
-	float: left;
-	clear: none;
-	display: block;
-	padding: 0px 1em 0px 8px;
-}
+	label {
+		float: left;
+		clear: none;
+		display: block;
+		padding: 0px 1em 0px 8px;
+	}
 
-.file-name {
- color: white;
-}
-
-.dropdown {
-  float: center;
-  overflow: hidden;
-}
-.dropdown .dropbtn {
-  font-size: 16px;  
-  border: none;
-  outline: none;
-  color: white;
-  padding: 14px 16px;
-  background-color: inherit;
-  font-family: inherit;
-  margin: 0;
-	/* display: block;
-	margin: auto; */
-}
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #282828;
-  min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
-}
-
-.dropdown-content a {
-  float: none;
-  color: #f9f9f9;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-  text-align: left;
-}
-
-.dropdown-content a:hover {
-  background-color: #404040;
-}
-
-.dropdown:hover .dropdown-content {
-  display: block;
-}
-
-.dropdown:hover .dropbtn {
-	background-color: #282828;
-}
-
-.toggle-icon:hover {
-	cursor:pointer;
-	fill: #282828;
-}
-
-.container-project-filter {
-	/* display: inline-block; */
-	width:100%;
-	border-bottom: 1px solid #ccc;
-	font-size:18px;
-}
-
-.project-tab {
-
-}
-
-button {
-	background: none;
-	border: none;
-	/* border-bottom: 1px solid white; */
-	border-radius: 0;
-	margin: 0;
-	color: #ccc;
-}
-
-.project-tab-selected {
-	border-bottom: 3px solid #ccc;
+	.file-name {
 	color: white;
-	/* background-color: red; */
-}
+	}
 
-.svg-icon-div {
-	
-	/* white-space:nowrap;
-	overflow: hidden; */
-	/* display: flex; */
-	float: right;
-	display: inline-flex;
-  align-self: center;
-	/* text-align: right; */
-}
+	.author-name {
+		color: white;
+	}
 
-.fork-icon {
-	fill: grey;
-}
+	.dropdown {
+		float: center;
+		overflow: hidden;
+	}
+	.dropdown .dropbtn {
+		font-size: 16px;  
+		border: none;
+		outline: none;
+		color: white;
+		padding: 14px 16px;
+		background-color: inherit;
+		font-family: inherit;
+		margin: 0;
+		/* display: block;
+		margin: auto; */
+	}
 
-.share-icon {
-	fill: grey;
-}
+	.dropbtn {
+		border-radius: 5px 0px 0px 5px;
+	}
 
-.delete-icon {
-	fill: grey;
-}
+	.dropdown-content {
+		display: none;
+		position: absolute;
+		background-color: #181a1d;
+		min-width: 160px;
+		/* box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); */
+		z-index: 1;
+		border-radius: 0px 5px 5px 5px;
+	}
 
-.overlay-container {
-	z-index: 1000;
-	background-color: rgba(16,12,12,0.8);
-	visibility: hidden;
-	width: 100%;
+	.dropdown-content a {
+		float: none;
+		color: #f9f9f9;
+		padding: 12px 16px;
+		text-decoration: none;
+		display: block;
+		text-align: left;
+	}
 
-	/* display:flex; */
-	/* justify-content:center;
-	align-items:center; */
-	font-size:16px;
-}
+	.dropdown-content a:hover {
+		background-color: #3a4147;
+	}
 
-.loading-bar {
-	padding: 14px 16px;
-}
+	.dropdown:hover .dropdown-content {
+		display: inline;
+	}
+
+	.dropdown:hover .dropbtn {
+		background-color: #181a1d;
+	}
+
+	.toggle-icon:hover {
+		cursor:pointer;
+		fill: #282828;
+	}
+
+	.container-project-filter {
+		/* display: inline-block; */
+		width:100%;
+		border-bottom: 1px solid #ccc;
+		font-size:18px;
+	}
+
+	.project-tab {
+
+	}
+
+	button {
+		background: none;
+		border: none;
+		/* border-bottom: 1px solid white; */
+		border-radius: 0;
+		margin: 0;
+		color: #ccc;
+	}
+
+	.project-tab-selected {
+		border-bottom: 3px solid #ccc;
+		color: white;
+		/* background-color: red; */
+	}
+
+	.svg-icon-div {
+		
+		/* white-space:nowrap;
+		overflow: hidden; */
+		/* display: flex; */
+		float: right;
+		display: inline-flex;
+		align-self: center;
+		/* text-align: right; */
+	}
+
+	.fork-icon {
+		fill: grey;
+	}
+
+	.share-icon {
+		fill: grey;
+	}
+
+	.delete-icon {
+		fill: grey;
+	}
+
+	.overlay-container {
+		z-index: 1000;
+		background-color: rgba(16,12,12,0.8);
+		visibility: hidden;
+		width: 100%;
+
+		/* display:flex; */
+		/* justify-content:center;
+		align-items:center; */
+		font-size:16px;
+	}
+
+	.loading-bar {
+		padding: 14px 16px;
+	}
+
+	.search-box-container{
+		float:right;
+	}
+
+	.search-box {
+		/* font-size: 0.9rem; */
+		font-weight: 300;
+		background: transparent;
+		border-radius: 5px;
+		border-style: solid;
+		border-width: 1px;
+		border-color: #ccc;
+		box-sizing: border-box;
+		/* display: block; */
+		/* flex: 1; */
+		padding: 2px 3px 2px 35px;
+		color:white;
+		/* display:inline; */
+		/* float:right; */
+	}
+
+	.search-icon{
+		margin-right: -32px;
+	}
+
+	.search-settings-button{
+		margin-left: -32px;
+		/* border-radius: 1px; */
+		border-style: solid;
+		border-color: #ccc;
+		border-width: 0px 0px 0px 1px;
+		padding: 2px 8px 2px 8px;
+	}
+
+	.search-settings-button:active{
+		background-color:white;
+	}
+
+	.search-settings-dropdown{
+		display:none;
+	}
+
+	.search-settings-container{
+		display:inline-flex;
+	}
+
+	.search-settings-container:hover .search-settings-dropdown {
+		display: block;
+	}
+
+	.search-settings-container:hover .search-settings-button {
+		background-color: #181a1d;
+	}
+
+	.search-settings-dropdown {
+		display: none;
+		position: absolute;
+		background-color: #181a1d;
+		border-radius: 0px 5px 5px 5px;
+		/* min-width: 300px; */
+		box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+		z-index: 1;
+	}
+
+	.search-settings-dropdown input label {
+		float: none;
+		color: #f9f9f9;
+		padding: 12px 16px;
+		text-decoration: none;
+		display: block;
+		text-align: left;
+	}
+
+	.page-arrow-icons {
+		width: 1.5em;
+		vertical-align: middle;
+		/* fill: #999; */
+	}
 
 </style>
 <!-- 
@@ -517,11 +706,41 @@ button {
 	<label for="my-projects-radio">Browse All Projects</label> -->
 	
 	{#if $user}
-		<button class:project-tab-selected={projectPage == "my-projects"} on:click={() => {projectPage = "my-projects"; projectLoadRange = {start:0, end:projectLoadStep};}}>My Playgrounds</button>
+		<button class:project-tab-selected={projectPage == "my-projects"} on:click={() => {projectPage = "my-projects"; projectLoadRange = {start:0, end:projectLoadStep};}}>My Projects</button>
 	{/if}
-	<button class:project-tab-selected={projectPage == "all-projects"} on:click={() => {projectPage = "all-projects"; projectLoadRange = {start:0, end:projectLoadStep};}}>All Playgrounds</button>
+	<button class:project-tab-selected={projectPage == "all-projects"} on:click={() => {projectPage = "all-projects"; projectLoadRange = {start:0, end:projectLoadStep};}}>All Projects</button>
 	<button class:project-tab-selected={projectPage == "example-projects"} on:click={() => {projectPage = "example-projects"; projectLoadRange = {start:0, end:projectLoadStep};}}>Examples</button>
+	
+	<!-- <div style='width:100%'></div> -->
 
+	<!-- <label for="fname">Search:</label> -->
+	<div class='search-box-container'>
+		<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" class='search-icon'>
+			<path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+		</svg>
+		<input bind:value={searchTerms} class='search-box' type="text" id="search-box" name="seach-box">
+
+		<div class="search-settings-container">
+			<button class='search-settings-button'>
+				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gear-wide" viewBox="0 0 16 16">
+					<path d="M8.932.727c-.243-.97-1.62-.97-1.864 0l-.071.286a.96.96 0 0 1-1.622.434l-.205-.211c-.695-.719-1.888-.03-1.613.931l.08.284a.96.96 0 0 1-1.186 1.187l-.284-.081c-.96-.275-1.65.918-.931 1.613l.211.205a.96.96 0 0 1-.434 1.622l-.286.071c-.97.243-.97 1.62 0 1.864l.286.071a.96.96 0 0 1 .434 1.622l-.211.205c-.719.695-.03 1.888.931 1.613l.284-.08a.96.96 0 0 1 1.187 1.187l-.081.283c-.275.96.918 1.65 1.613.931l.205-.211a.96.96 0 0 1 1.622.434l.071.286c.243.97 1.62.97 1.864 0l.071-.286a.96.96 0 0 1 1.622-.434l.205.211c.695.719 1.888.03 1.613-.931l-.08-.284a.96.96 0 0 1 1.187-1.187l.283.081c.96.275 1.65-.918.931-1.613l-.211-.205a.96.96 0 0 1 .434-1.622l.286-.071c.97-.243.97-1.62 0-1.864l-.286-.071a.96.96 0 0 1-.434-1.622l.211-.205c.719-.695.03-1.888-.931-1.613l-.284.08a.96.96 0 0 1-1.187-1.186l.081-.284c.275-.96-.918-1.65-1.613-.931l-.205.211a.96.96 0 0 1-1.622-.434L8.932.727zM8 12.997a4.998 4.998 0 1 1 0-9.995 4.998 4.998 0 0 1 0 9.996z"/>
+				</svg>
+			</button>
+			<div class="search-settings-dropdown">
+				<!-- <span>Filter by:</span> -->
+				<input type="radio" id="name_search" bind:group={searchCol} value="name" name='search_col'>
+				<label for="name_search">Name</label><br>
+				<input type="radio" id="author_search" bind:group={searchCol} value="author.username" name='search_col'>
+				<label for="author_search">Author</label><br>
+				
+			</div>
+		</div> 
+
+	</div>
+
+
+	
+	
 </div>
 
 
@@ -545,35 +764,35 @@ button {
 				<tr class="record-entry">
 					<td>
 						<div class='loading-bar'>
-						<ContentLoader primaryColor='#404040' secondaryColor='#ccc' speed={0.4} width="350" height="16">
-							<rect x="0" y="0" rx="3" ry="3" width="342" height="16" />
+						<ContentLoader primaryColor='grey' secondaryColor='#ccc' speed={0.4} width="332" height="16">
+							<rect x="0" y="0" rx="3" ry="3" width="332" height="16" />
 						</ContentLoader>
 					</div>
 					</td>
 					<td>
 						<div class='loading-bar'>
-						<ContentLoader primaryColor='#404040' secondaryColor='#ccc' speed={0.4} width="16" height="16">
+						<ContentLoader primaryColor='grey' secondaryColor='#ccc' speed={0.4} width="16" height="16">
 							<rect x="0" y="0" rx="3" ry="3" width="16" height="16" />
 						</ContentLoader>
 					</div>
 					</td>
 					<td>
 						<div class='loading-bar'>
-						<ContentLoader primaryColor='#404040' secondaryColor='#ccc' speed={0.4} width="50" height="16">
+						<ContentLoader primaryColor='grey' secondaryColor='#ccc' speed={0.4} width="50" height="16">
 							<rect x="0" y="0" rx="3" ry="3" width="50" height="16" />
 						</ContentLoader>
 					</div>
 					</td>
 					<td>
 						<div class='loading-bar'>
-						<ContentLoader primaryColor='#404040' secondaryColor='#ccc' speed={0.4} width="90" height="16">
+						<ContentLoader primaryColor='grey' secondaryColor='#ccc' speed={0.4} width="90" height="16">
 							<rect x="0" y="0" rx="3" ry="3" width="90" height="16" />
 						</ContentLoader>
 					</div>
 					</td>
 					<td>
 						<div class='loading-bar'>
-						<ContentLoader primaryColor='#404040' secondaryColor='#ccc' speed={0.4} width="16" height="16">
+						<ContentLoader primaryColor='grey' secondaryColor='#ccc' speed={0.4} width="16" height="16">
 							<rect x="0" y="0" rx="3" ry="3" width="16" height="16" />
 						</ContentLoader>
 					</div>
@@ -600,12 +819,24 @@ button {
 						<th 
 						class="table-header" 
 						on:click={() => {orderBy = {col:'name', ascending:true }} }
-						>Name</th>
+						>Name 
+						{#if orderBy.col =='name'}
+						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16" style="float:right;">
+							<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+						</svg>
+						{/if}
+						</th>
 						
 						<th 
 						class="table-header" 
 						on:click={()=>{orderBy = {col:'isPublic', ascending:true }}} 
-						>Visibility</th>
+						>Visibility
+						{#if orderBy.col =='isPublic'}
+						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16" style="float:right;">
+							<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+						</svg>
+						{/if}
+						</th>
 						
 						<!-- <th 
 						class="table-header" 
@@ -615,11 +846,23 @@ button {
 						<th 
 						class="table-header" 
 						on:click={()=>{orderBy = {col:'author', ascending:true }}}
-						>Author</th>
+						>Author
+						{#if orderBy.col =='author'}
+						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16" style="float:right;">
+							<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+						</svg>
+						{/if}
+						</th>
 
 						<th class="table-header" 
 						on:click={()=>{orderBy = {col:'updated', ascending:false }}}
-						>Updated</th>
+						>Updated
+						{#if orderBy.col =='updated'}
+						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16" style="float:right;">
+							<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+						</svg>
+						{/if}
+						</th>
 
 						<th>Options</th> <!--Fork or delete (depending on permissions)-->
 					</tr>
@@ -696,7 +939,7 @@ button {
 							<td>
 								{#if record.author}
 									{#if record.author.username}
-										{record.author.username}
+										<a class='author-name' href="/users/{record.author.username}">{record.author.username}</a>
 									{:else}
 										No Username
 									{/if}
@@ -740,15 +983,17 @@ button {
 										</a>
 										<!-- Only show delete button if the logged in user is the author-->
 										{#if $user}
-											{#if record.author.id == $user.id}
-												<a href={'#'} on:click={deleteProject(record.id)}>Delete
-													<div class="svg-icon-div">
-														<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="delete-icon" viewBox="0 0 16 16">
-															<path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
-															<path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
-														</svg>
-													</div>
-												</a>
+											{#if record.author}
+												{#if record.author.id == $user.id}
+													<a href={'#'} on:click={deleteProject(record.id)}>Delete
+														<div class="svg-icon-div">
+															<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="delete-icon" viewBox="0 0 16 16">
+																<path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+																<path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+															</svg>
+														</div>
+													</a>
+												{/if}
 											{/if}
 										{/if}
 									</div>
@@ -765,13 +1010,22 @@ button {
 
 				<div class='page-controls-container'>
 					<a href={'#'} on:click={getPreviousProjects} 
-					style="{( projectLoadRange.start <= 0 )? `visibility:collapse;`: `visibility:visible`}; color:#ccc;">Previous</a>
+					style="{( projectLoadRange.start <= 0 )? `visibility:collapse;`: `visibility:visible`}; color:#ccc;">
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="page-arrow-icons bi bi-chevron-left" viewBox="0 0 16 16">
+						<path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+					</svg>
+					Previous</a>
 
 					<span style='float:center; color:#ccc'>
 						Page { Math.ceil(projectLoadRange.end / projectLoadStep) } of { Math.ceil(totalProjectNum / projectLoadStep)} | Total number of projects: {totalProjectNum} 
 					</span>
+
 					<a href={'#'} on:click={getNextProjects}
-					style="{( projectLoadRange.end >= totalProjectNum )? `visibility:collapse;`: `visibility:visible`}; color:#ccc;">Next</a>
+					style="{( projectLoadRange.end >= totalProjectNum )? `visibility:collapse;`: `visibility:visible`}; color:#ccc;">Next
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="page-arrow-icons bi bi-chevron-right" viewBox="0 0 16 16">
+						<path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+					</svg>
+				</a>
 				</div>
 				<!-- <button on:click={() => blah}>Previous Page</button> -->
 				<!-- <button on:click={() => getNextProjects}>Next Page</button> -->

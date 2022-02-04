@@ -1,10 +1,4 @@
 <script>
-
-  import {
-		supabase,
-    getUserProfile,
-	} from '../../db/client'
-
   import {
 		user,
 		userName,
@@ -13,123 +7,22 @@
 		loggedIn,
 		loading
   } from '../../stores/user'
-  
+
   import {
-    isDeleteAccountOverlayVisible
+    isEditAccountOverlayVisible
   } from '../../stores/profile.js'
-
-  import Avatar from '../login/Avatar.svelte'
-
-  // let loading = true
-  // let username = null
-  // let website = null
-  // let avatar_url = null
-
-
-  async function getProfile() {
-    try {
-      $loading = true
-
-      let { username, website, avatar_url } = await getUserProfile()
-      if (username){
-        $userName = username;
-      }
-      if (website){
-        $websiteURL = website;
-      }
-      if (avatar_url){
-        $avatarURL = avatar_url;
-      }
-      
-      
-      // if ( username && website && avatar_url) {
-      //   $userName = username;
-      //   $websiteURL = website;
-      //   $avatarURL = avatar_url;
-      // }
-    } catch (error) {
-      // console.log("DEBUG:",$userName, $websiteURL, $avatarURL);
-      alert(error.message)
-    } finally {
-      $loading = false
-			$loggedIn = true
-    }
-		
-  }
-
-
-  async function updateProfile() {
-    try {
-      $loading = true
-      const user = supabase.auth.user()
-
-      const updates = {
-        id: user.id,
-        username: $userName,
-        website: $websiteURL,
-        avatar_url: $avatarURL,
-        updated_at: new Date().toISOString(),
-      }
-
-      let { error } = await supabase.from('profiles').upsert(updates, {
-        returning: 'minimal', // Don't return the value after inserting
-      })
-
-      if (error) throw error
-    } catch (error) {
-      alert(error.message)
-    } finally {
-      $loading = false
-    }
-		console.log('UpdateProfile')
-  }
-
-
-
-  async function signOut() {
-    try {
-      $loading = true
-      let { error } = await supabase.auth.signOut()
-      if (error) throw error
-    } catch (error) {
-      alert(error.message)
-    } finally {
-      $loading = false
-			$loggedIn = false
-    }
-		console.log('Signout')
-  }
+  
+  import { goto } from "@roxi/routify";
 
 </script>
 
 <style>
-
-  label {
-    font-weight: 500;
-    /* font-size: 1rem; */
-    line-height: 1.25rem;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    margin-top: 1rem;
-  }
+  /* input {
+    color:black;
+  } */
 
   input {
-    /* font-size: 0.9rem; */
-		/* width: 100%; */
-		font-weight: 300;
-    background: transparent;
-    border-radius: 0.375rem;
-    border-style: solid;
-    border-width: 1px;
-    border-color: #ccc;
-    box-sizing: border-box;
-    display: block;
-    flex: 1;
-    /* padding: 5px 3px 8px 35px; */
-  }
-
-  button {
+    font-size: 0.9rem;
     font-weight: 300;
     background: transparent;
     border-radius: 0.375rem;
@@ -139,34 +32,77 @@
     box-sizing: border-box;
     display: block;
     flex: 1;
-    color:red;
+    padding: 5px 3px 8px 35px;
+    color:white;
+    width:90%;
   }
 
-  .icon {
-    position: absolute;
-    margin: 7px;
-    color: #ccc;
-  }
+  button {
+    color: #444;
+    text-shadow: 0px 0px 4px rgb(38 111 78 / 50%);
+    background: none;
 
-  input {
+    border-color: rgba(224, 224, 224);
+    border-style: solid;
+    border-width: 1px;
+    cursor: pointer;
+    
+    gap: 0.5rem;
+    align-items: center;
     position: relative;
+    text-align: center;
+    transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+    border-radius: 0.25rem;
+    font-family: inherit;
+    font-weight: inherit;
+
+    background: #595858;
+    border-color: transparent;
+    color: white;
+
     font-size: 1rem;
-    line-height: 1.25rem;
-    display: flex;
+    line-height: 1.5rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    width:90%;
+
+
+    /* font-size: 0.9rem;
+    font-weight: 300;
+    background: transparent;
+    border-radius: 0.375rem;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #ccc;
+    box-sizing: border-box;
+    display: block;
+    flex: 1;
+    padding: 5px 3px 8px 35px;
+    color:white; */
   }
 
+  button.secondary {
+    background: rgb(18, 162, 97);
+  }
 
+  svg {
+    position: relative;
+    top: 0.15em;
+  }
+  
 </style>
 
-<form use:getProfile class="form-widget"
-			on:submit|preventDefault={ updateProfile }
-      >
-  <!-- {#if $avatarURL != null}    
-  <Avatar bind:path={ $avatarURL }
-					on:upload={ updateProfile }
-          />
-  {/if} -->
-  {#if $user != null}
+<div>
+
+  <!-- <svg xmlns="http://www.w3.org/2000/svg" width="75" height="75" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+    <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+  </svg> -->
+
   <div>
     <label for="email">Email</label>
     <input 	id="email"
@@ -175,14 +111,14 @@
 						disabled
 						/>
   </div>
-  {/if}
 
   <div>
     <label for="username">Name</label>
     <input
       id="username"
       type="text"
-      bind:value={ $userName }
+      value={ $userName }
+      disabled
     	/>
   </div>
 
@@ -191,28 +127,23 @@
     <input
       id="website"
       type="website"
-      bind:value={ $websiteURL }
+      value={ $websiteURL }
+      disabled
     	/>
   </div>
 
-  <div>
-    <input type="submit"
-						class="button block primary"
-						value={ $loading ? 'Loading ...' : 'Update Profile'}
-						disabled={ $loading }
-						/>
-  </div>
+  <button on:click={()=>$isEditAccountOverlayVisible = true}>
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+      <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+    </svg>
+    Edit Profile & Account
+  </button>
 
-  <div>
-    <button on:click={() => $isDeleteAccountOverlayVisible = true}>Delete Account</button>
-  </div>
-
-  <!-- <div>
-    <button class="button block"
-						on:click={ signOut }
-						disabled={ loading }
-						>
-      Sign Out
-    </button>
-  </div> -->
-</form>
+  <button on:click={$goto(`/users/${$userName}`)}>
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
+      <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"/>
+      <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
+    </svg>
+    View Public Profile
+  </button>
+</div>

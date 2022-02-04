@@ -32,7 +32,7 @@
       if (level == 1){
         return `
                 <h${level}>
-                  <a name="${escapedText}" class="anchor" href="#${escapedText}" id="#${escapedText}" target="_self" style="color:#333">
+                  <a name="${escapedText}" class="anchor" href="#${escapedText}" id="#${escapedText}" target="_self" style="color:#262a2e">
                     <span class="header-link"></span>
                   #
                   </a>
@@ -86,8 +86,8 @@
           markdown = markdown.replace(
             "<pre><code>",
             `<pre style="margin-top:-25px">
-              <button style="font-size:70%; text-align: center; float: right; z-index: 1000; top: 30px; position: relative;" type="button" onclick="copyCode('code${codeID}')">copy</button>
-              <code style="-moz-user-select: text; -html-user-select: text; -webkit-user-select: text; -ms-user-select: text; user-select: text; white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word;" id='code${codeID++}'>`
+              <button style="border: none; border-radius:5px; font-size:70%; text-align: center; float: right; z-index: 1000; top: 30px; position: relative;" type="button" onclick="copyCode('code${codeID}')">copy</button>
+              <code style="background-color: #262a2e; color:white; border-radius:5px; box-shadow: inset 1px 1px 1px 0 #201f1f, inset -1px -1px 1px 0 rgba(255, 255, 255, 0.05); border:none;  -moz-user-select: text; -html-user-select: text; -webkit-user-select: text; -ms-user-select: text; user-select: text; white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word;" id='code${codeID++}'>`
             );
         };
         
@@ -200,9 +200,9 @@
 
 <style>
   .markdown-container {
-    height: calc(100vh - 48px); /* this fixed scrolling issue */
+    height: calc(100vh - 56px); /* this fixed scrolling issue */
     padding: 10px 20px 0px 20px;
-    background-color: #151515;
+    background-color: #3a4147;
     /* background: #aaaaaa; */
     overflow-y: auto;
     /* scrollbar-color: #6969dd #e0e0e0; these scroll bar options work for firefox not for chrome TODO */
