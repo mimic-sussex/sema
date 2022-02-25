@@ -658,6 +658,17 @@ Arguments:
 >{{50}saw,:env:}mul;
 ```
 
+## zx2p
+
+Trigger a pulse from a zero crossing
+
+1. A signal
+2. Hold time (in milliseconds)
+
+```
+k:{{2}clp, [3,3,2]}rsq;
+pulse:{k:, 100}zx2p;
+```
 
 ### onchange
 
@@ -690,16 +701,16 @@ Arguments:
 
 ### MIDI to frequency
 
-For now, you can do the conversion directly using math functions.
+# mtof
 
-```
-:freq:{{2,{{:midinote:,69}sub,12}div}pow,440}mul;
-```
+Convert from a MIDI note to a frequency
+
+1. A Midi note number (0-127)
+
 
 ```
 :midinote:{{12}clp, [1],[32,33,34,35,36,37,38,39,40,41,42,43]}rsq;
-:freq:{{2,{{:midinote:,69}sub,12}div}pow,440}mul;
-:osc:{:freq:}saw;
+:osc:{{:midinote:}mtof}saw;
 >{:osc:, 200, 1, 0, 0, 1, 0}svf;
 ```
 
@@ -804,6 +815,61 @@ Send a value to the javascript console, once per second
 {{0.1}pha}poll;
 ```
 <!-- ____
-
-Writing good documentation that is up-to-date is difficult. If you notice a mistake, help us out.
+If you notice a mistake, please help us out.
 [Open a PR for this file](https://github.com/mimic-sussex/sema/blob/develop/assets/docs/default-livecoding-language.md) -->
+
+
+
+# Functional Programming
+
+Define a lambda function with the following format:
+
+```
+<variable name>(<parameter list>@<function body>);
+```
+
+
+After definition the lambda can be called as follows:
+
+```
+{<parameter list>}<variable name>
+```
+
+### Examples:
+
+Add 10 to a number (and print to the console):
+
+addTen:(x:@{x:,10}add);
+
+{{1}addTen:}poll;
+
+
+Multiply two numbers together (and print to the console):
+
+multTwo:(x:,y:@{x:,y:}mul);
+
+{{17,3}multTwo:}poll;
+
+
+A ring modulator:
+
+ringmod:(sig:, freq:@{sig:,{freq:}sin}mul);
+
+>{{100}sawb,{{1}pha,300}mul}ringmod:;
+
+
+
+
+
+
+An example of lambdas:
+
+```
+func:(x:@{{x:}sawb, {{x:,1.01}mul}rectb}mix); //dual detuned oscillator
+seq:{{3}clp, [3,2,5],[1,1.1,2,3,9]}rsq; //a sequence of frequency multipliers
+freqmod:(x:@{x:,seq:}mul); //function to modulate frequency
+oscs:{{[30,30.1,30.2,30.4, 46,60.1],freqmod:}map,func:}expa; //create oscillators and modulate frequency
+mixf:(x:,y:@{x:,y:}add);  //function for mixing
+mx:{oscs:, mixf:}redu; //mix down the list of oscillators
+>{mx:,{{0.01}sin,20,500}bexp,1}hpz;  //filter and output
+```

@@ -397,6 +397,11 @@ Create a trigger when a change occurs in the input signal
 1. A signal
 2. Tolerance (a trigger will be generated if the change is more than +/- this value)
 
+## zx2p
+Trigger a pulse from a zero crossing
+1. A signal
+2. Hold time (in samples)
+
 ## count
 Counts up when receiving a trigger
 1. Input trigger
